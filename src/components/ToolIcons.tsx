@@ -35,7 +35,8 @@ interface Props {
   type: string,
   training: boolean,
   unlocked?: Array<number>
-  history: H.History
+  history: H.History,
+  trainingLiteracy: Types.TrainingLiteracy
 }
 
 /**
@@ -51,6 +52,27 @@ function ToolIcons(props: Props): React.ReactElement {
   const [resultsModal, setResultsModal] = useState(false);
   const [lockedModal, setLockedModal] = useState(false);
   const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
+
+  const foundationalUnlocked=
+    trainingLiteracy.conceptsFoundational
+    && trainingLiteracy.definitionsFoundational
+    && trainingLiteracy.demoFoundational
+    && trainingLiteracy.knowledgeCheckFoundational;
+  const writingUnlocked=
+    trainingLiteracy.conceptsWriting
+    && trainingLiteracy.definitionsWriting
+    && trainingLiteracy.demoWriting
+    && trainingLiteracy.knowledgeCheckWriting;
+  const readingUnlocked=
+    trainingLiteracy.conceptsReading
+    && trainingLiteracy.definitionsReading
+    && trainingLiteracy.demoReading
+    && trainingLiteracy.knowledgeCheckReading;
+  const languageUnlocked=
+    trainingLiteracy.conceptsLanguage
+    && trainingLiteracy.definitionsLanguage
+    && trainingLiteracy.demoLanguage
+    && trainingLiteracy.knowledgeCheckLanguage;
 
   const ObservationPopUp = {
     'TransitionTime': <TransitionTimeObservationPopUp />,
@@ -180,37 +202,10 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="LiteracyInstruction"
                 icon={LiteracyIconImage}
                 onClick={handleClick}
-                foundational={
-                  trainingLiteracy.conceptsFoundational
-                  && trainingLiteracy.definitionsFoundational
-                  && trainingLiteracy.demoFoundational
-                  && trainingLiteracy.knowledgeCheckFoundational
-                }
-                writing={
-                  trainingLiteracy.conceptsWriting
-                  && trainingLiteracy.definitionsWriting
-                  && trainingLiteracy.demoWriting
-                  && trainingLiteracy.knowledgeCheckWriting
-                }
-                reading={
-                  trainingLiteracy.conceptsReading
-                  && trainingLiteracy.definitionsReading
-                  && trainingLiteracy.demoReading
-                  && trainingLiteracy.knowledgeCheckReading
-                }
-                language={
-                  trainingLiteracy.conceptsLanguage
-                  && trainingLiteracy.definitionsLanguage
-                  && trainingLiteracy.demoLanguage
-                  && trainingLiteracy.knowledgeCheckLanguage
-                }
-                /* unlocked={
-                  (trainingLiteracy.conceptsFoundational && trainingLiteracy.definitionsFoundational && trainingLiteracy.demoFoundational && trainingLiteracy.knowledgeCheckFoundational)
-                  || (trainingLiteracy.conceptsWriting && trainingLiteracy.definitionsWriting && trainingLiteracy.demoWriting && trainingLiteracy.knowledgeCheckWriting)
-                  || (trainingLiteracy.conceptsReading && trainingLiteracy.definitionsReading && trainingLiteracy.demoReading && trainingLiteracy.knowledgeCheckReading)
-                  || (trainingLiteracy.conceptsLanguage && trainingLiteracy.definitionsLanguage && trainingLiteracy.demoLanguage && trainingLiteracy.knowledgeCheckLanguage)
-                  // Object.values(trainingLiteracy).some(el => el)
-                } */
+                foundational={foundationalUnlocked}
+                writing={writingUnlocked}
+                reading={readingUnlocked}
+                language={languageUnlocked}
                 training={training}
                 type={type}
               />
@@ -237,30 +232,10 @@ function ToolIcons(props: Props): React.ReactElement {
           handleClose={(): void => setObserveModal(false)}
           tool={selected}
           type='Observe'
-          foundational={
-            trainingLiteracy.conceptsFoundational
-            && trainingLiteracy.definitionsFoundational
-            && trainingLiteracy.demoFoundational
-            && trainingLiteracy.knowledgeCheckFoundational
-          }
-          writing={
-            trainingLiteracy.conceptsWriting
-            && trainingLiteracy.definitionsWriting
-            && trainingLiteracy.demoWriting
-            && trainingLiteracy.knowledgeCheckWriting
-          }
-          reading={
-            trainingLiteracy.conceptsReading
-            && trainingLiteracy.definitionsReading
-            && trainingLiteracy.demoReading
-            && trainingLiteracy.knowledgeCheckReading
-          }
-          language={
-            trainingLiteracy.conceptsLanguage
-            && trainingLiteracy.definitionsLanguage
-            && trainingLiteracy.demoLanguage
-            && trainingLiteracy.knowledgeCheckLanguage
-          }
+          foundational={foundationalUnlocked}
+          writing={writingUnlocked}
+          reading={readingUnlocked}
+          language={languageUnlocked}
         />
       ) : (
         <ObservationModal
@@ -286,30 +261,10 @@ function ToolIcons(props: Props): React.ReactElement {
           handleClose={(): void => setResultsModal(false)}
           tool={selected}
           type='Results'
-          foundational={
-            trainingLiteracy.conceptsFoundational
-            && trainingLiteracy.definitionsFoundational
-            && trainingLiteracy.demoFoundational
-            && trainingLiteracy.knowledgeCheckFoundational
-          }
-          writing={
-            trainingLiteracy.conceptsWriting
-            && trainingLiteracy.definitionsWriting
-            && trainingLiteracy.demoWriting
-            && trainingLiteracy.knowledgeCheckWriting
-          }
-          reading={
-            trainingLiteracy.conceptsReading
-            && trainingLiteracy.definitionsReading
-            && trainingLiteracy.demoReading
-            && trainingLiteracy.knowledgeCheckReading
-          }
-          language={
-            trainingLiteracy.conceptsLanguage
-            && trainingLiteracy.definitionsLanguage
-            && trainingLiteracy.demoLanguage
-            && trainingLiteracy.knowledgeCheckLanguage
-          }
+          foundational={foundationalUnlocked}
+          writing={writingUnlocked}
+          reading={readingUnlocked}
+          language={languageUnlocked}
         />
       ) : (
         <ResultsModal
@@ -333,30 +288,10 @@ function ToolIcons(props: Props): React.ReactElement {
         handleClose={(): void => setLiteracyTrainingModal(false)}
         tool={selected}
         type='Training'
-        foundational={
-          trainingLiteracy.conceptsFoundational
-          && trainingLiteracy.definitionsFoundational
-          && trainingLiteracy.demoFoundational
-          && trainingLiteracy.knowledgeCheckFoundational
-        }
-        writing={
-          trainingLiteracy.conceptsWriting
-          && trainingLiteracy.definitionsWriting
-          && trainingLiteracy.demoWriting
-          && trainingLiteracy.knowledgeCheckWriting
-        }
-        reading={
-          trainingLiteracy.conceptsReading
-          && trainingLiteracy.definitionsReading
-          && trainingLiteracy.demoReading
-          && trainingLiteracy.knowledgeCheckReading
-        }
-        language={
-          trainingLiteracy.conceptsLanguage
-          && trainingLiteracy.definitionsLanguage
-          && trainingLiteracy.demoLanguage
-          && trainingLiteracy.knowledgeCheckLanguage
-        }
+        foundational={foundationalUnlocked}
+        writing={writingUnlocked}
+        reading={readingUnlocked}
+        language={languageUnlocked}
       />
     </div>
   );
