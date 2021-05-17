@@ -6,6 +6,24 @@ export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction'
 'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
 export interface ReduxState {
+  trainingLiteracyState: {
+    conceptsFoundational: boolean,
+    conceptsWriting: boolean,
+    conceptsReading: boolean,
+    conceptsLanguage: boolean,
+    definitionsFoundational: boolean,
+    definitionsWriting: boolean,
+    definitionsReading: boolean,
+    definitionsLanguage: boolean,
+    demoFoundational: boolean,
+    demoWriting: boolean,
+    demoReading: boolean,
+    demoLanguage: boolean,
+    knowledgeCheckFoundational: boolean,
+    knowledgeCheckWriting: boolean,
+    knowledgeCheckReading: boolean,
+    knowledgeCheckLanguage: boolean
+  };
   associativeCenterState: {
     associativeCenters: Array<{
       name: string,

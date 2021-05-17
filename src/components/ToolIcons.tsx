@@ -21,6 +21,7 @@ import ListeningToChildrenObservationPopUp from './ListeningComponents/Listening
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import LiteracyModal from './LiteracyComponents/LiteracyModal';
+import LiteracyIconCard from './LiteracyComponents/LiteracyIconCard';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
@@ -43,7 +44,7 @@ interface Props {
  * @return {ReactElement}
  */
 function ToolIcons(props: Props): React.ReactElement {
-  const { history, type, training, unlocked } = props;
+  const { history, type, training, unlocked, trainingLiteracy } = props;
   const [selected, setSelected] = useState<Types.Selected>('none');
   const [resultsTrainingModal, setResultsTrainingModal] = useState(false);
   const [observeModal, setObserveModal] = useState(false);
@@ -175,11 +176,41 @@ function ToolIcons(props: Props): React.ReactElement {
               />
             </Grid>
             <Grid item>
-              <Magic8Card
+              <LiteracyIconCard
                 title="LiteracyInstruction"
                 icon={LiteracyIconImage}
                 onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(9) : false}
+                foundational={
+                  trainingLiteracy.conceptsFoundational
+                  && trainingLiteracy.definitionsFoundational
+                  && trainingLiteracy.demoFoundational
+                  && trainingLiteracy.knowledgeCheckFoundational
+                }
+                writing={
+                  trainingLiteracy.conceptsWriting
+                  && trainingLiteracy.definitionsWriting
+                  && trainingLiteracy.demoWriting
+                  && trainingLiteracy.knowledgeCheckWriting
+                }
+                reading={
+                  trainingLiteracy.conceptsReading
+                  && trainingLiteracy.definitionsReading
+                  && trainingLiteracy.demoReading
+                  && trainingLiteracy.knowledgeCheckReading
+                }
+                language={
+                  trainingLiteracy.conceptsLanguage
+                  && trainingLiteracy.definitionsLanguage
+                  && trainingLiteracy.demoLanguage
+                  && trainingLiteracy.knowledgeCheckLanguage
+                }
+                /* unlocked={
+                  (trainingLiteracy.conceptsFoundational && trainingLiteracy.definitionsFoundational && trainingLiteracy.demoFoundational && trainingLiteracy.knowledgeCheckFoundational)
+                  || (trainingLiteracy.conceptsWriting && trainingLiteracy.definitionsWriting && trainingLiteracy.demoWriting && trainingLiteracy.knowledgeCheckWriting)
+                  || (trainingLiteracy.conceptsReading && trainingLiteracy.definitionsReading && trainingLiteracy.demoReading && trainingLiteracy.knowledgeCheckReading)
+                  || (trainingLiteracy.conceptsLanguage && trainingLiteracy.definitionsLanguage && trainingLiteracy.demoLanguage && trainingLiteracy.knowledgeCheckLanguage)
+                  // Object.values(trainingLiteracy).some(el => el)
+                } */
                 training={training}
                 type={type}
               />
@@ -267,10 +298,29 @@ ToolIcons.propTypes = {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  unlocked: Array<number>
+  unlocked: Array<number>,
+  trainingLiteracy: {
+    conceptsFoundational: boolean,
+    conceptsWriting: boolean,
+    conceptsReading: boolean,
+    conceptsLanguage: boolean,
+    definitionsFoundational: boolean,
+    definitionsWriting: boolean,
+    definitionsReading: boolean,
+    definitionsLanguage: boolean,
+    demoFoundational: boolean,
+    demoWriting: boolean,
+    demoReading: boolean,
+    demoLanguage: boolean,
+    knowledgeCheckFoundational: boolean,
+    knowledgeCheckWriting: boolean,
+    knowledgeCheckReading: boolean,
+    knowledgeCheckLanguage: boolean
+  }
 } => {
   return {
-    unlocked: state.unlockedState.unlocked
+    unlocked: state.unlockedState.unlocked,
+    trainingLiteracy: state.trainingLiteracyState
   };
 };
 

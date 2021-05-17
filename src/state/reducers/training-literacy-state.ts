@@ -45,7 +45,6 @@ export default (state = initialState, action: TrainingLiteracyTypes): TrainingLi
   switch (action.type) {
     case GET_TRAINING:
       return {
-        // ...state,
         conceptsFoundational: action.literacyTraining.conceptsFoundational,
         conceptsWriting: action.literacyTraining.conceptsWriting,
         conceptsReading: action.literacyTraining.conceptsReading,
