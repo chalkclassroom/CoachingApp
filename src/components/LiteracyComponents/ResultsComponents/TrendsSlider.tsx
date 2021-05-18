@@ -7,9 +7,10 @@ import Grid from "@material-ui/core/Grid/Grid";
 import LiteracyTrendsFoundationalTeacher from './LiteracyTrendsFoundationalTeacher';
 import LiteracyTrendsFoundationalChild from './LiteracyTrendsFoundationalChild';
 import LiteracyTrendsWriting from './LiteracyTrendsWriting';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
-  type: number,
+  type: string,
   teacherData: Array<{
     startDate: string,
     literacy1: number,
@@ -70,7 +71,7 @@ class TrendsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid container justify={"center"} direction={"column"}>
-            {this.props.type === 1 ? (
+            {this.props.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
               <LiteracyTrendsFoundationalTeacher
                 teacherData={this.props.teacherData}
               />
@@ -84,7 +85,7 @@ class TrendsSlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid container justify={"center"} direction={"column"}>
-            {this.props.type === 1 ? (
+            {this.props.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
               <LiteracyTrendsFoundationalChild
                 childData={this.props.childData}
               />

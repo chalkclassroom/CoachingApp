@@ -38,8 +38,6 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  // handleBegin(checklistType: number | string): void,
-  // handleClose(): void,
   handleAccept(): void,
   handleClose(): void,
   open: boolean,
@@ -54,7 +52,6 @@ interface Props {
  */
 function ActivitySettingModal(props: Props): React.ReactElement {
   const { handleAccept, handleClose, open, handleLiteracyActivitySetting } = props;
-  const [type, setType] = useState(0);
   const [activitySetting, setActivitySetting] = useState(0);
   const classes = useStyles();
   const activitySettings = [

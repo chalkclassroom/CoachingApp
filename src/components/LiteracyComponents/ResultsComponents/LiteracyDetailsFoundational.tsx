@@ -49,11 +49,6 @@ export default function LiteracyDetailsFoundational(props: Props) {
         </Grid>
         <Grid container justify={"center"} direction={"column"}>
           <Grid item>
-            <Typography align="left" variant="body2" style={{fontFamily: 'Arimo', paddingLeft: '1em'}}>
-              {who === 'Teacher' ? 'What strategies did the teacher use during the observation?' : 'What foundational skills activities did children do during the observation?'}
-            </Typography>
-          </Grid>
-          <Grid item>
             <Grid container direction="column" justify="flex-start">
               <Typography align="left" variant="body2" style={{fontFamily: 'Arimo', paddingLeft: '1em'}}>
                 How often did {who === 'Teacher' ? 'the teacher' : 'children'} focus on:
