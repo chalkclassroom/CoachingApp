@@ -524,7 +524,7 @@ class Dashboard extends React.Component<Props, State> {
                               firebase.endSession();
                             }
                           }}
-                          literacy={this.typeString==='LI'}
+                          literacy={this.typeString==='LI' ? this.props.checklistType : ''}
                           handleLiteracyActivitySetting={firebase.handleLiteracyActivitySetting}
                         />
                       )}

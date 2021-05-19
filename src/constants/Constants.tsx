@@ -247,6 +247,41 @@ export enum LiteracyTypes {
   LANGUAGE = 'Language'
 }
 
+const activitySettingsFoundational = [
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Morning Meeting',
+  'Shared Reading',
+  'Shared Writing',
+  'Individual Child Activity',
+  'Center Time Activities'
+];
+
+const activitySettingsWriting = [
+  'Morning Meeting',
+  'Shared Writing',
+  'Individual Child Writing',
+  'Journals',
+  'Writing Center Activities',
+  'Center Time Activities',
+  'Small Group Lesson'
+];
+
+const activitySettingsLanguage = [
+  'Morning Meeting',
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Center Time Activities',
+  'Mealtime'
+];
+
+export const LiteracyActivitySettings = {
+  'FoundationalChild': activitySettingsFoundational,
+  'FoundationalTeacher': activitySettingsFoundational,
+  'WritingChild': activitySettingsWriting,
+  'WritingTeacher': activitySettingsWriting,
+  'Language': activitySettingsLanguage
+};
 
 // Team Members
 export const CC = {

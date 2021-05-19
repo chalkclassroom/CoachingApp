@@ -26,7 +26,7 @@ interface Props {
   buttonMargin?: number,
   dialogTitle?: string,
   onAcceptParams?: number,
-  literacy: boolean,
+  literacy: string,
   handleLiteracyActivitySetting(activitySetting: string): Promise<void>
 }
 
@@ -105,7 +105,13 @@ class YesNoDialog extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <ActivitySettingModal open={this.props.literacy && this.state.open} handleClose={this.handleClose} handleAccept={this.handleAccept} handleLiteracyActivitySetting={this.props.handleLiteracyActivitySetting} />
+        <ActivitySettingModal
+          open={(this.props.literacy!=='') && this.state.open}
+          handleClose={this.handleClose}
+          handleAccept={this.handleAccept}
+          handleLiteracyActivitySetting={this.props.handleLiteracyActivitySetting}
+          checklistType={this.props.literacy}
+        />
         <Button
           onClick={this.handleClickOpen}
           variant={this.props.buttonVariant}

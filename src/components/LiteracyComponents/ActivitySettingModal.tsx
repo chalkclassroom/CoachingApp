@@ -7,7 +7,7 @@ import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
 import CloseIcon from "@material-ui/icons/Close";
-import { Tooltip, Collapse, Card, Divider, List, ListItem, ListItemText, ListItemIcon, Checkbox } from "@material-ui/core";
+import { Tooltip, List, ListItem, ListItemText, ListItemIcon, Checkbox } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import * as Constants from '../../constants/Constants';
 
@@ -41,7 +41,8 @@ interface Props {
   handleAccept(): void,
   handleClose(): void,
   open: boolean,
-  handleLiteracyActivitySetting(activitySetting: string): Promise<void>
+  handleLiteracyActivitySetting(activitySetting: string): Promise<void>,
+  checklistType: string
 }
 
 /**
@@ -51,17 +52,10 @@ interface Props {
  * @return {ReactElement}
  */
 function ActivitySettingModal(props: Props): React.ReactElement {
-  const { handleAccept, handleClose, open, handleLiteracyActivitySetting } = props;
+  const { handleAccept, handleClose, open, handleLiteracyActivitySetting, checklistType } = props;
   const [activitySetting, setActivitySetting] = useState(0);
   const classes = useStyles();
-  const activitySettings = [
-    'Morning Meeting',
-    'Teacher-Directed Lesson',
-    'Shared Reading',
-    'Shared Writing',
-    'Individual Child Activity',
-    'Center Time Activity'
-  ];
+  type activitySettingsKey = 'FoundationalChild' | 'FoundationalTeacher' | 'WritingChild' | 'WritingTeacher' | 'Language'
   
   return (
     <div>
@@ -82,7 +76,12 @@ function ActivitySettingModal(props: Props): React.ReactElement {
                 justify="flex-end"
                 style={{width: '100%'}}
               >
-                <Grid item xs={11} />
+                <Grid item xs={1} />
+                <Grid item xs={10}>
+                  <Typography variant='h5' align='center' style={{fontFamily: 'Arimo'}}>
+                    Activity Setting
+                  </Typography>
+                </Grid>
                 <Grid item xs={1}>
                   <Grid
                     container
@@ -99,14 +98,14 @@ function ActivitySettingModal(props: Props): React.ReactElement {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item style={{width: '100%'}}>
-              <Typography>
+            <Grid item style={{width: '100%', paddingTop: '0.5em'}}>
+              <Typography style={{fontFamily: 'Arimo'}}>
                 Select or create a label describing the type of activity that was happening for most of this observation:
               </Typography>
             </Grid>
             <Grid item>
               <List>
-                {activitySettings.map((value, index) => {
+                {Constants.LiteracyActivitySettings[checklistType as activitySettingsKey].map((value, index) => {
                   return(
                     <ListItem
                       key={index}
@@ -130,7 +129,7 @@ function ActivitySettingModal(props: Props): React.ReactElement {
               <Grid container direction="row" justify="center" alignItems="center">
                 <Button
                   onClick={(): void => {
-                    handleLiteracyActivitySetting(activitySettings[activitySetting-1]).then(() => {
+                    handleLiteracyActivitySetting(Constants.LiteracyActivitySettings[checklistType as activitySettingsKey][activitySetting-1]).then(() => {
                       handleAccept();
                     })
                   }}
