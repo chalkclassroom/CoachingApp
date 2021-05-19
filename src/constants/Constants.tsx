@@ -280,7 +280,7 @@ export const LiteracyActivitySettings = {
   'FoundationalTeacher': activitySettingsFoundational,
   'WritingChild': activitySettingsWriting,
   'WritingTeacher': activitySettingsWriting,
-  'Language': activitySettingsLanguage
+  'LanguageTeacher': activitySettingsLanguage
 };
 
 // Team Members
@@ -419,7 +419,8 @@ export const Checklist: {
     FoundationalChild: Array<JSX.Element>,
     FoundationalTeacher: Array<JSX.Element>,
     WritingChild: Array<JSX.Element>,
-    WritingTeacher: Array<JSX.Element>
+    WritingTeacher: Array<JSX.Element>,
+    LanguageTeacher: Array<JSX.Element>
   }
 } = {
   'MI': {
@@ -636,6 +637,32 @@ export const Checklist: {
       </div>,
       <div key={7}>
         <b>Invites children to read the message</b> (e.g., “Read what you wrote to me!” or “What does that say?”)
+      </div>
+    ],
+    'LanguageTeacher': [
+      <div key={0}>
+        Discussing, defining, and/or promoting use of <b>advanced vocabulary and concepts</b>
+      </div>,
+      <div key={1}>
+        Having a conversation with children about a <b>social-emotional topic</b>
+      </div>,
+      <div key={2}>
+        Encouraing children to tell and/or act out <b>stories from experiences in their lives</b>
+      </div>,
+      <div key={3}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={4}>
+        <b>Asking open-ended questions</b> or prompts to encourage conversation
+      </div>,
+      <div key={5}>
+        Observing or using questions/prompts in order to <b>enter children's ongoing play or activity</b>
+      </div>,
+      <div key={6}>
+        <b>Repeating or clarifying</b> children's comments
+      </div>,
+      <div key={7}>
+        Responding to children with <b>follow-up questions and/or comments</b> to extend their thinking
       </div>
     ]
   }

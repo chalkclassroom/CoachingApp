@@ -184,6 +184,28 @@ function LiteracyModal(props: Props): React.ReactElement {
                       childInstruction1="Observe children writing independently or with teachers/peers."
                       childInstruction2="Select the types of child writing behaviors that occur."
                     />
+                    <LiteracyObservationOptions
+                      handleBegin={handleBegin}
+                      type={Constants.LiteracyTypes.LANGUAGE}
+                      literacyType={literacyType}
+                      teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
+                      teacherInstruction2={
+                        <div>
+                          Select the types of behaviors that show teachers:
+                          <ul>
+                            <li>
+                              Talking with children about vocabulary or social-emotional topics
+                            </li>
+                            <li>
+                              Encouraging children to talk
+                            </li>
+                            <li>
+                              Responding to children
+                            </li>
+                          </ul>
+                        </div>
+                      }
+                    />
                   </div>
                 ) : ( <div /> )}
               </Grid>

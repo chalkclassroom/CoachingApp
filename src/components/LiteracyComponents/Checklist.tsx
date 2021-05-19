@@ -19,7 +19,7 @@ import { updateListeningCount } from "../../state/actions/listening-to-children"
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 
-type ChecklistType = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild';
+type ChecklistType = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'LanguageTeacher';
 
 const styles: object = {
   root: {
@@ -278,6 +278,7 @@ class Checklist extends React.Component<Props, State> {
       : this.props.checklist === 'FoundationalChild' ? 'Child Foundational Skills Checklist'
       : this.props.checklist === 'WritingTeacher' ? 'Teacher Writing Checklist'
       : this.props.checklist === 'WritingChild' ? 'Child Writing Checklist'
+      : this.props.checklist === 'LanguageTeacher' ? 'Teacher Language Environment Checklist'
       : 'Unknown Checklist';
     return (
       <div className={this.props.classes.root}>

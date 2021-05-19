@@ -10,9 +10,9 @@ interface Props {
   type: Constants.LiteracyTypes,
   literacyType: Constants.LiteracyTypes,
   teacherInstruction1: string,
-  teacherInstruction2: string,
-  childInstruction1: string,
-  childInstruction2: string
+  teacherInstruction2: string | JSX.Element,
+  childInstruction1?: string,
+  childInstruction2?: string
 }
 
 /**
@@ -31,12 +31,12 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
     childInstruction1,
     childInstruction2
   } = props;
-  
+
   return (
     <Collapse in={literacyType===type}>
       <Grid item>
         <Grid container direction='row' justify='center' alignItems='center'>
-          <Grid item xs={5}>
+          <Grid item xs={childInstruction1 ? 5 : 10}>
             <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
               <ul>
                 <li>
@@ -53,28 +53,31 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
               </Button>
             </Grid>
           </Grid>
-          <Grid item xs={2} style={{height: '100%'}}>
-            <Grid container direction="row" justify="center" alignItems="center">
-              <Divider orientation="vertical" flexItem style={{height: '5em'}} />
-            </Grid>
-          </Grid>
-          <Grid item xs={5}>
-            <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-              <ul>
-                <li>
-                  {childInstruction1}
-                </li>
-                <li>
-                  {childInstruction2}
-                </li>
-              </ul>
-            </Typography>
-            <Grid container direction="row" justify="center" alignItems="center">
-              <Button onClick={(): void => {handleBegin(literacyType + 'Child')}} variant="contained" color="primary">
-                BEGIN CHILD OBSERVATION
-              </Button>
-            </Grid>
-          </Grid>
+          {childInstruction1 ? (
+              <Grid item xs={2} style={{height: '100%'}}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Divider orientation="vertical" flexItem style={{height: '5em'}} />
+                </Grid>
+              </Grid>) : (null)}
+            {childInstruction1 ? (
+              <Grid item xs={5}>
+                <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
+                  <ul>
+                    <li>
+                      {childInstruction1}
+                    </li>
+                    <li>
+                      {childInstruction2}
+                    </li>
+                  </ul>
+                </Typography>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Button onClick={(): void => {handleBegin(literacyType + 'Child')}} variant="contained" color="primary">
+                    BEGIN CHILD OBSERVATION
+                  </Button>
+                </Grid>
+              </Grid>
+          ) : (null)}
         </Grid>
       </Grid>
     </Collapse>

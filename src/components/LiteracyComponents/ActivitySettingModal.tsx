@@ -55,7 +55,7 @@ function ActivitySettingModal(props: Props): React.ReactElement {
   const { handleAccept, handleClose, open, handleLiteracyActivitySetting, checklistType } = props;
   const [activitySetting, setActivitySetting] = useState(0);
   const classes = useStyles();
-  type activitySettingsKey = 'FoundationalChild' | 'FoundationalTeacher' | 'WritingChild' | 'WritingTeacher' | 'Language'
+  type activitySettingsKey = 'FoundationalChild' | 'FoundationalTeacher' | 'WritingChild' | 'WritingTeacher' | 'LanguageTeacher'
   
   return (
     <div>
