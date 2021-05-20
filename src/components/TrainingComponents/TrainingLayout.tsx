@@ -214,14 +214,14 @@ class TrainingLayout extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.main}>
-          <Grid container justify="center" alignItems="center" className={classes.grid}>
+          <Grid container justify="center" alignItems="flex-start" className={classes.grid}>
             <Grid item className={classes.dashboardContainer}>
               <Grid
                 container
                 alignItems='center'
                 justify='center'
                 direction='column'
-                style={{height: '100%'}}
+                style={{height: '85vh'}}
               >
                 <TrainingObservationDashboard
                   ViewEnum={ViewEnum}
@@ -237,19 +237,27 @@ class TrainingLayout extends React.Component<Props, State> {
               </Grid>
             </Grid>
             <Grid item className={classes.trainingContentCard}>
-              {view === ViewEnum.CONCEPTS ? (
-                <TrainingVideo videoUrl={this.props.conceptsUrl} />
-              ) : view === ViewEnum.DEFINITIONS ? (
-                <div>
-                  {this.props.definitions}
-                </div>
-              ) : view === ViewEnum.DEMONSTRATION ? (
-                <div>
-                  <TrainingVideo videoUrl={this.props.demonstrationUrl} />
-                </div>
-              ) : view === ViewEnum.KNOWLEDGECHECK ? (
-                <TrainingQuestionnaire section={this.props.section} />
-              ) : null}
+              <Grid
+                container
+                alignItems='center'
+                justify='center'
+                direction='column'
+                style={{minHeight: '85vh'}}
+              >
+                {view === ViewEnum.CONCEPTS ? (
+                  <TrainingVideo videoUrl={this.props.conceptsUrl} />
+                ) : view === ViewEnum.DEFINITIONS ? (
+                  <div>
+                    {this.props.definitions}
+                  </div>
+                ) : view === ViewEnum.DEMONSTRATION ? (
+                  <div>
+                    <TrainingVideo videoUrl={this.props.demonstrationUrl} />
+                  </div>
+                ) : view === ViewEnum.KNOWLEDGECHECK ? (
+                  <TrainingQuestionnaire section={this.props.section} />
+                ) : null}
+              </Grid>
             </Grid>
           </Grid>
         </div>
