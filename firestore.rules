@@ -3,6 +3,22 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if request.auth.uid != null;
     }
+    match /observations/{document=**} {
+      allow read, update, delete: if canEditObservation(request.auth.uid, resource.data);
+      allow create: if isAdmin(request.auth.uid) || teacherIsAssignedToUser(request.auth.uid, request.resource.data);
+      function canEditObservation(userId, resourceData){
+        return isUserAdmin(userId) || didUserObserve(userId, resourceData);
+      }
+      function teacherIsAssignedToUser(userId, resourceData){
+        return resourceData.teacher[6:resourceData.teacher.size-1] in get(/databases/$(database)/documents/users/$(userId)/partners);
+      }
+      function didUserObserve(userId, resourceData){
+        return resourceData.observedBy[6:resourceData.teacher.size-1] == userId;
+      }
+      function isUserAdmin(userId){
+        return get(/databases/$(database)/documents/users/$(userId)).role == 'admin';
+      }
+    }
     match /pilotForm/{document=**} {
     	allow write;
     }

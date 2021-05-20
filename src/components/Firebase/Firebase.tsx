@@ -63,12 +63,12 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
-      /* if (location.hostname === 'localhost') {
+      if (process.env.USE_LOCAL_FIRESTORE) {
         this.db.settings({
-          host: 'localhost:8080',
+          host: 'localhost:8081',
           ssl: false,
         })
-      } */
+      }
       this.db
           .enablePersistence({ experimentalTabSynchronization: true })
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))

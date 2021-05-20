@@ -103,7 +103,8 @@ module.exports = (env, argv) => {
             },
             plugins: [
                 new DefinePlugin({
-                    'process.env.USE_LOCAL_FUNCTIONS': process.env.REACT_APP_USE_LOCAL_FUNCTIONS === 'true'
+                    'process.env.USE_LOCAL_FUNCTIONS': process.env.USE_LOCAL_FUNCTIONS === 'true',
+                    'process.env.USE_LOCAL_FIRESTORE': process.env.USE_LOCAL_FIRESTORE === 'true'
                 }),
                 new HtmlWebpackPlugin({
                     template: "./public/template/index.html"
