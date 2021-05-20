@@ -95,15 +95,9 @@ export default function LiteracyTrendsFoundational(props: Props) {
     setView(newView);
   };
 
-  const activitySettings = [
-    'None',
-    'Morning Meeting',
-    'Teacher-Directed Lesson',
-    'Shared Reading',
-    'Shared Writing',
-    'Individual Child Activity',
-    'Center Time Activity'
-  ];
+  type ActivitySettingsKey = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'LanguageTeacher'
+
+  const activitySettings = Constants.LiteracyActivitySettings['FoundationalTeacher']
 
   return (
     <Grid container direction="column">

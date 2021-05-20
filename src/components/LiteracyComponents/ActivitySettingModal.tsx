@@ -105,7 +105,7 @@ function ActivitySettingModal(props: Props): React.ReactElement {
             </Grid>
             <Grid item>
               <List>
-                {Constants.LiteracyActivitySettings[checklistType as activitySettingsKey].map((value, index) => {
+                {Constants.LiteracyActivitySettings[checklistType as activitySettingsKey].slice(1).map((value, index) => {
                   return(
                     <ListItem
                       key={index}

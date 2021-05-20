@@ -248,6 +248,7 @@ export enum LiteracyTypes {
 }
 
 const activitySettingsFoundational = [
+  'All',
   'Whole Group Lesson',
   'Small Group Lesson',
   'Morning Meeting',
@@ -258,6 +259,7 @@ const activitySettingsFoundational = [
 ];
 
 const activitySettingsWriting = [
+  'All',
   'Morning Meeting',
   'Shared Writing',
   'Individual Child Writing',
@@ -268,6 +270,7 @@ const activitySettingsWriting = [
 ];
 
 const activitySettingsLanguage = [
+  'All',
   'Morning Meeting',
   'Whole Group Lesson',
   'Small Group Lesson',
@@ -647,7 +650,7 @@ export const Checklist: {
         Having a conversation with children about a <b>social-emotional topic</b>
       </div>,
       <div key={2}>
-        Encouraing children to tell and/or act out <b>stories from experiences in their lives</b>
+        Encouraging children to tell and/or act out <b>stories from experiences in their lives</b>
       </div>,
       <div key={3}>
         Encouraging children to <b>listen and respond to peer comments/ideas</b>

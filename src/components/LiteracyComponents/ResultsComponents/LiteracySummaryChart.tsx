@@ -7,6 +7,7 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   literacy: number,
   noLiteracy: number,
+  type: Constants.LiteracyTypes
 }
 
 /**
@@ -23,6 +24,7 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     literacy: PropTypes.number.isRequired,
     noLiteracy: PropTypes.number.isRequired,
+    type: PropTypes.string.isRequired
   }
 
   /**
@@ -31,7 +33,11 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const literacyData = {
-      labels: ["Foundational Skills Instruction", "No Target Behaviors Observed"],
+      labels: [
+        this.props.type === Constants.LiteracyTypes.FOUNDATIONAL ? "Foundational Skills Instruction" : 
+        this.props.type === Constants.LiteracyTypes.WRITING ? "Writing Instruction" :
+        "Supporting Language Development",
+        "No Target Behaviors Observed"],
       datasets: [
         {
           data: [this.props.literacy, this.props.noLiteracy],

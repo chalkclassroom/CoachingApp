@@ -1075,9 +1075,9 @@ class Firebase {
    * cloud function
    * gets ids and start dates of each literacy observation for a particular teacher and focus
    * @param {string} teacherId
-   * @param {number} checklist
+   * @param {string} checklist
    */
-   fetchLiteracySessionDates = async (teacherId: string, checklist: number):
+   fetchLiteracySessionDates = async (teacherId: string, checklist: string):
    Promise<Array<{id: string, sessionStart: {value: string}, who: string}> | void> =>
  {
    const getLiteracySessionDatesFirebaseFunction = this.functions.httpsCallable(
@@ -1085,7 +1085,7 @@ class Firebase {
    );
    return getLiteracySessionDatesFirebaseFunction({
      teacherId: teacherId,
-     type: checklist === 1 ? 'Foundational' : 'Writing'
+     type: checklist
    })
      .then(
        (result: {data: Array<Array<{id: string, sessionStart: {value: string}, who: string}>>}) =>
@@ -1636,7 +1636,8 @@ class Firebase {
   } | void> => {
     const getLiteracySummaryFirebaseFunction = type === 'Foundational' ? this.functions.httpsCallable(
       "funcLiteracySummaryFoundational"
-    ) : this.functions.httpsCallable("funcLiteracySummaryWriting");
+    ) : type === 'Writing' ? this.functions.httpsCallable("funcLiteracySummaryWriting")
+    : this.functions.httpsCallable("funcLiteracySummaryLanguage");
     return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type, who: who })
       .then(
         (result: {data: Array<Array<{literacy: number, noLiteracy: number}>>}) =>
@@ -1707,6 +1708,44 @@ class Firebase {
   } | void> => {
     const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcLiteracyDetailsWriting"
+    );
+    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number
+        }>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting literacy details: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets counts of each literacy behavior type
+   * @param {string} sessionId
+   * @param {string} who
+   */
+   fetchLiteracyDetailsLanguage = async (sessionId: string, who: string): Promise<{
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number
+  } | void> => {
+    const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyDetailsLanguage"
     );
     return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, who: who })
       .then(
@@ -1839,6 +1878,49 @@ class Firebase {
   }> | void> => {
     const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
       "funcLiteracyTrendWriting"
+    );
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          total: number,
+          activitySetting: string
+        }>>}) =>
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets literacy data for each language observation
+   * @param {string} teacherId
+   */
+   fetchLiteracyTrendLanguage = async (teacherId: string, who: string): Promise<Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    total: number,
+    activitySetting: string
+  }> | void> => {
+    const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyTrendLanguage"
     );
     return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, who: who })
       .then(

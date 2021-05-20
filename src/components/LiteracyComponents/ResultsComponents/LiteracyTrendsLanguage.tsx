@@ -45,25 +45,14 @@ function createData(name: string, backgroundColor: string) {
 }
 
 const dataRowsTeacher = [
-  createData('Talks to children about content or meaning', '#c8dfe4'),
-  createData('Invites children to write part of a message', '#c8dfe4'),
-  createData('Writes a meaningful message in front of children', '#f4cccc'),
-  createData('Demonstrates and talks about writing processes', '#f4cccc'),
-  createData('Invites children to write their name', '#f4cccc'),
-  createData('Responds positively to all writing forms', '#f4cccc'),
-  createData('Supports children’s inventive and/or conventional spelling', '#f4cccc'),
-  createData('Invites children to read the message', '#f4cccc'),
-];
-
-const dataRowsChild = [
-  createData('Talks about the content or meaning of the writing/drawing', '#c8dfe4'),
-  createData('Draws to communicate meaning', '#c8dfe4'),
-  createData('Makes writing forms', '#c8dfe4'),
-  createData('Says aloud the message to be written', '#f4cccc'),
-  createData('Writes one or more letters in their name', '#f4cccc'),
-  createData('Uses knowledge of the alphabet and/or letter-sound correspondence', '#f4cccc'),
-  createData('Invents spellings or generates conventional spellings', '#f4cccc'),
-  createData('“Reads” the message', '#f4cccc'),
+  createData('Discussing advanced vocabulary and concepts', '#cfe2f3'),
+  createData('Having a conversation with children about a social-emotional topic', '#cfe2f3'),
+  createData('Encouraging children to tell stories from experiences in their lives', '#d9ead3'),
+  createData('Encouraging children to listen and respond to peers', '#d9ead3'),
+  createData('Asking open-ended questions', '#d9ead3'),
+  createData('Observing or using questions to enter children\'s ongoing activity', '#f4cccc'),
+  createData('Repeating or clarifying children\'s comments', '#f4cccc'),
+  createData('Responding to children with follow-up questions or comments', '#f4cccc'),
 ];
 
 const useStyles = makeStyles({
@@ -78,7 +67,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function LiteracyTrendsFoundational(props: Props) {
+export default function LiteracyTrendsLanguage(props: Props) {
   const classes = useStyles();
   const { data, who } = props;
   const [page, setPage] = useState(0);
@@ -105,9 +94,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
 
   type ActivitySettingsKey = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'LanguageTeacher'
 
-  const activitySettings = Constants.LiteracyActivitySettings['Writing'+who as ActivitySettingsKey]
-
-  const dataRows = who === 'Teacher' ? dataRowsTeacher : dataRowsChild;
+  const activitySettings = Constants.LiteracyActivitySettings['Language'+who as ActivitySettingsKey]
 
   return (
     <Grid container direction="column">
@@ -212,7 +199,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataRows.map((row, index) => {
+              {dataRowsTeacher.map((row, index) => {
                 const checklistItem = 'literacy' + (index+1).toString();
                 return(
                 <TableRow key={index} hover role="checkbox" tabIndex={-1}>

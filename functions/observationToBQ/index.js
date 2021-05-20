@@ -607,6 +607,53 @@ exports.observationsToBQ = functions.firestore
                         console.log("Error getting documents", err);
                         return err;
                     });
+              } else if (session.type === "LI" && session.checklist === "LanguageTeacher") {
+                let rows=[]
+                return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
+                    .then(entries => {
+                        entries.forEach(entry => {
+                            console.log(entry.id, "=>", entry.data());
+                            let entryData = entry.data();
+                            if (entryData.Type === "UNDO") {
+                                rows.pop();
+                            } else {
+                                let row = {
+                                    insertId: entry.id,
+                                    json: {
+                                        id: context.params.observationID,
+                                        sessionStart: Math.floor(session.start.toDate() / 1000),
+                                        sessionEnd: Math.floor(session.end.toDate() / 1000),
+                                        teacher: session.teacher,
+                                        observedBy: session.observedBy,
+                                        activitySetting: session.activitySetting,
+                                        checklist: {
+                                          item1: entryData.Checked.includes(1),
+                                          item2: entryData.Checked.includes(2),
+                                          item3: entryData.Checked.includes(3),
+                                          item4: entryData.Checked.includes(4),
+                                          item5: entryData.Checked.includes(5),
+                                          item6: entryData.Checked.includes(6),
+                                          item7: entryData.Checked.includes(7),
+                                          item8: entryData.Checked.includes(8),
+                                          item9: entryData.Checked.includes(9)
+                                        },
+                                        time: Math.floor(entryData.Timestamp.toDate() / 1000),
+                                    }
+                                };
+                                console.log(row);
+                                rows.push(row);
+                            }
+                        });
+                        console.log(rows);
+  
+                        return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
+                    })
+                    .catch(err => {
+                        console.log("Error getting documents", err);
+                        return err;
+                    });
               } else {
                 console.log("Next Magic 8 will be filled");
             }
