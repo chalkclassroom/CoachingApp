@@ -5,6 +5,8 @@ export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' |
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
 'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
+export type ToolNamesKey = 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC';
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -103,7 +105,8 @@ export interface Teacher {
   id: string,
   phone: string,
   role: string,
-  school: string
+  school: string,
+  unlocked: Array<number>
 }
 
 /* export interface History {

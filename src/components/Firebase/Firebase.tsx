@@ -449,6 +449,103 @@ class Firebase {
       );}
   };
 
+  // Gets five most recent observation of each type for a teacher
+  // @param:string partnerID -> iD of teacher
+  // @return:Promise -> onFulfilled: returns Array of dates of most recent observations
+  //                '-> onRejected: prints error to console
+  // NOTE: Index specified in Firebase console in order to execute Query
+  /**
+   * gets most recent observation of each type for a teacher
+   * @param {string} partnerID
+   */
+   getRecentObservations2 = async (partnerID: string): Promise<Array<string> | void> => {
+    if (this.auth.currentUser) {const obsRef = this.db
+      .collection("observations")
+      .where("teacher", "==", `/user/${partnerID}`)
+      .where("observedBy", "==", `/user/${this.auth.currentUser.uid}`);
+    // ONLY 'transition','climate', & 'AC' types specified in dB! The rest are subject to change!
+    return Promise.all([
+      obsRef
+        .where("type", "==", "transition")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "climate")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "listening")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "level")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "math")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "engagement")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "sequential")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "LI")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get(),
+      obsRef
+        .where("type", "==", "AC")
+        .orderBy("end", "desc")
+        .limit(5)
+        .get()
+    ])
+      .then(snapshots => {
+        console.log('what are the snapshots', snapshots);
+        const recentObs = new Array(9).fill(null);
+        snapshots.forEach((snapshot, index) =>{
+          console.log('snapshot', snapshot, 'index', index)
+          const mySnapshot: Array<{
+            start: string,
+            end: string,
+            teacher: string,
+            tool: string
+          }> = [];
+          snapshot.forEach(
+            (doc: firebase.firestore.QueryDocumentSnapshot) => {
+              console.log('doc', doc.data())
+              mySnapshot.push({
+                start: doc.data().start.toDate().toLocaleDateString(),
+                end: doc.data().end.toDate().toLocaleDateString(),
+                teacher: doc.data().teacher,
+                tool: doc.data().type
+              })
+              /* (recentObs[index] = doc
+                .data()
+                .end.toDate()
+                .toLocaleDateString()) */
+              })
+            recentObs[index] = mySnapshot
+          });
+        console.log('recent obs are ', recentObs);
+        return recentObs;
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred during Promise.all() resolution: ", error)
+      );}
+  };
+
   /* getCoachList = async function() {
     return this.db
       .collection("users")

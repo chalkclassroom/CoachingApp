@@ -10,6 +10,18 @@ import {
 } from "@material-ui/core/colors";
 import red from "@material-ui/core/colors/red";
 
+export const ToolNames = {
+  'TT': 'Transition Time',
+  'CC': 'Classroom Climate',
+  'MI': 'Math Instruction',
+  'SE': 'Student Engagement',
+  'IN': 'Level of Instruction',
+  'LC': 'Listening to Children',
+  'SA': 'Sequential Activities',
+  'LI': 'Literacy Instruction',
+  'AC': 'Associative and Cooperative Interactions',
+}
+
 // Colors
 export const Colors = {
   'AppBar': "#459aeb",

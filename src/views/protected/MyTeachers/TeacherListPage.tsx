@@ -15,6 +15,20 @@ import ConferencePlanImage from "../../../assets/images/ConferencePlanImage.png"
 import ActionPlanImage from "../../../assets/images/ActionPlanImage.png";
 import { withStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
+  Typography,
+  Popover,
+  Modal,
+  IconButton,
+  Tooltip
+} from '@material-ui/core';
+import CloseIcon from "@material-ui/icons/Close";
 import Fab from "@material-ui/core/Fab";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import AddIcon from "@material-ui/icons/Add";
@@ -31,9 +45,43 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import ObserveIcon from "@material-ui/icons/Visibility";
+import ActionPlansIcon from "@material-ui/icons/CastForEducation";
+import ConferencePlansIcon from "@material-ui/icons/ListAlt";
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
+import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
+import * as Constants from '../../../constants/Constants';
+
+const localizer = momentLocalizer(moment);
+
+interface Event {
+  title: string,
+  start: Date,
+  end: Date,
+  allDay?: boolean
+  resource: string,
+  hexColor?: string,
+  type: string
+}
+
+/**
+ * specifies styling for modal
+ * @return {CSSProperties}
+ */
+ function getModalStyle(): React.CSSProperties {
+  return {
+    position: "fixed",
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`
+  } as React.CSSProperties;
+}
 
 const styles = (theme: Theme): object => ({
   root: {
@@ -48,7 +96,17 @@ const styles = (theme: Theme): object => ({
     // border: '1px solid #FFD800',
     display: "flex",
     flexDirection: "column",
-    margin: "2% 5% 2% 5%"
+    paddingLeft: '2em',
+    paddingRight: '2em'
+    // margin: "2% 5% 2% 5%"
+  },
+  paper: {
+    position: "absolute",
+    backgroundColor: 'white',
+    width: '60%',
+    height: '70%',
+    padding: '2em',
+    borderRadius: 8,
   },
   row: {
     transitionDuration: "0.2s",
@@ -239,6 +297,7 @@ const sortedAltText = [
 interface Style {
   root: string,
   container: string,
+  paper: string,
   title: string,
   actionContainer: string,
   search: string,
@@ -260,7 +319,8 @@ interface Style {
 type Props = RouteComponentProps & {
   history: H.History,
   classes: Style,
-  type: string
+  type: string,
+  teacherList: Array<Types.Teacher>
 }
 
 interface Teacher {
@@ -293,6 +353,14 @@ interface State {
   notesErrorText: string,
   addAlert: boolean,
   alertText: string,
+  // anchorEl: React.BaseSyntheticEvent<globalThis.Event, EventTarget & Element, EventTarget>;currentTarget: EventTarget & Element | null,
+  anchorEl: EventTarget & Element | null,
+  clickedEvent: Event | null,
+  newEventModal: boolean,
+  newEventDate: Date | null,
+  newEventTeacher: Types.Teacher | null,
+  newEventTool: Types.ToolNamesKey | null,
+  newEventType: string
   // type: string
 }
 
@@ -323,21 +391,202 @@ class TeacherListPage extends React.Component<Props, State> {
       notesErrorText: "",
       addAlert: false,
       alertText: "",
+      anchorEl: null,
+      clickedEvent: null,
+      newEventModal: false,
+      newEventDate: new Date(),
+      newEventTeacher: null,
+      newEventTool: null,
+      newEventType: ''
       // type: ''
     };
   }
 
-  /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
+  /**
+   * hi
+   */
+  clickMe(): void {
     const firebase = this.context;
     firebase
       .getTeacherList()
       .then((teachers: Array<Promise<Teacher>>) => {
         console.log('teachers', teachers);
+        const recentObservations = [];
+        teachers.forEach((teacher: Promise<Teacher>) => {
+          console.log('HI')
+          teacher.then((data: Teacher) => {
+            console.log('HERE I AM')
+            firebase
+            .getRecentObservations2(data.id)
+            .then((recentObs: Array<string>) => {
+              /* this.setState({
+                recentObs: recentObs
+              }) */
+              console.log('recent obs HELLO', recentObs);
+              recentObservations.push(recentObs)
+            })
+            .catch((error: Error) =>
+              console.error("Error occurred getting recent observations: ", error)
+            );
+          })
+          
+        })
+          }
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred fetching teacher list: ", error)
+      );
+  }
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    const firebase = this.context;
+    console.log('COMPONENTDIDMOUNT')
+    this.setState({
+      teachers: this.props.teacherList
+    }, () => {
+      console.log('and now the teachers are', this.state.teachers);
+      const recentObservations = [];
+        /* this.state.teachers.forEach((teacher: Promise<Teacher>) => {
+          console.log('HI')
+          teacher.then((data: Teacher) => {
+            console.log('HERE I AM', data.id)
+            firebase
+            .getRecentObservations2(data.id)
+            .then((recentObs: Array<string>) => {
+              /* this.setState({
+                recentObs: recentObs
+              })
+              console.log('recent obs HELLO', recentObs);
+              recentObservations.push(recentObs)
+            })
+            .catch((error: Error) =>
+              console.error("Error occurred getting recent observations: ", error)
+            );
+          })
+          
+        }) */
+        /* this.state.teachers.forEach((teacher: Types.Teacher) => {
+          console.log('teacher', teacher);
+          // teacher.then((data: Teacher) => {
+            if (teacher.id !== 'rJxNhJmzjRZP7xg29Ko6') {
+            console.log('data', teacher);
+             
+            firebase
+            .getRecentObservations2(teacher.id)
+            .then((recentObs: Array<string>) => {
+              console.log('recent obs HELLO?', recentObs);
+              recentObservations.push(recentObs);
+              const observations = {
+                'TT': recentObs[0],
+                'CC': recentObs[1],
+                'LC': recentObs[2],
+                'IN': recentObs[3],
+                'MI': recentObs[4],
+                'SE': recentObs[5],
+                'SA': recentObs[6],
+                'LI': recentObs[7],
+                'AC': recentObs[8]
+              }
+              console.log('adding this to whatever', {...teacher, ...observations})
+              this.setState(prevState => {
+                const copyOfState = [...prevState.teachers];
+                const index = copyOfState.findIndex(x => x.id === teacher.id);
+                const copyOfTeacher = {...copyOfState[index]};
+                const updatedTeacher = Object.assign(copyOfTeacher, observations);
+                // copyOfTeacher.concat({...observations});
+                copyOfState[index] = updatedTeacher;
+                return {
+                  // teachers: prevState.teachers.concat({...teacher, ...observations}),
+                  teachers: copyOfState,
+                  searched: prevState.teachers.concat(teacher)
+                };
+              }, () => console.log('WHAT IS STATE NOW', this.state.teachers))
+            })
+            
+            .catch((error: Error) =>
+              console.error("Error occurred getting recent observations: ", error)
+            );
+            this.setState(prevState => {
+              return {
+                // teachers: prevState.teachers.concat(data),
+                searched: prevState.teachers.concat(teacher)
+              };
+            })
+          } 
+        } */
+        // )
+    })
+    
+    
+    /* firebase
+      .getTeacherList()
+      .then((teachers: Array<Promise<Teacher>>) => {
+        console.log('teachers', teachers);
+        const recentObservations = [];
+        teachers.forEach((teacher: Promise<Teacher>) => {
+          console.log('HI')
+          teacher.then((data: Teacher) => {
+            console.log('HERE I AM', data.id)
+            firebase
+            .getRecentObservations2(data.id)
+            .then((recentObs: Array<string>) => {
+              this.setState({
+                recentObs: recentObs
+              })
+              console.log('recent obs HELLO', recentObs);
+              recentObservations.push(recentObs)
+            })
+            .catch((error: Error) =>
+              console.error("Error occurred getting recent observations: ", error)
+            );
+          })
+          
+        })
         teachers.forEach((teacher: Promise<Teacher>) => {
           console.log('teacher', teacher);
           teacher.then((data: Teacher) => {
+            if (data.id !== 'rJxNhJmzjRZP7xg29Ko6') {
             console.log('data', data);
+             
+            firebase
+            .getRecentObservations2(data.id)
+            .then((recentObs: Array<string>) => {
+              this.setState({
+                recentObs: recentObs
+              })
+              console.log('recent obs HELLO?', recentObs);
+              recentObservations.push(recentObs);
+              const observations = {
+                'TT': recentObs[0],
+                'CC': recentObs[1],
+                'LC': recentObs[2],
+                'IN': recentObs[3],
+                'MI': recentObs[4],
+                'SE': recentObs[5],
+                'SA': recentObs[6],
+                'LI': recentObs[7],
+                'AC': recentObs[8]
+              }
+              console.log('adding this to whatever', {...data, ...observations})
+              this.setState(prevState => {
+                return {
+                  teachers: prevState.teachers.concat({...data, ...observations}),
+                  searched: prevState.teachers.concat(data)
+                };
+              })
+            })
+            
+            .catch((error: Error) =>
+              console.error("Error occurred getting recent observations: ", error)
+            );
+            this.setState(prevState => {
+              return {
+                teachers: prevState.teachers.concat(data),
+                searched: prevState.teachers.concat(data)
+              };
+            })
+          } else {
             this.setState(prevState => {
               return {
                 teachers: prevState.teachers.concat(data),
@@ -345,14 +594,26 @@ class TeacherListPage extends React.Component<Props, State> {
               };
             })
           }
+        }
           )
         }
         )
           }
+      ) */
+      /* .catch((error: Error) =>
+        console.error("Error occurred fetching teacher list: ", error)
+      ); */
+
+      /* firebase
+      .getRecentObservations2(this.state.teacherUID)
+      .then((recentObs: Array<string>) =>
+        this.setState({
+          recentObs: recentObs
+        })
       )
       .catch((error: Error) =>
-        console.error("Error occurred fetching teacher list: ", error)
-      );
+        console.error("Error occurred getting recent observations: ", error)
+      ); */
   }
 
   /**
@@ -651,8 +912,160 @@ class TeacherListPage extends React.Component<Props, State> {
       emailErrorText,
       schoolErrorText,
       phoneErrorText,
-      notesErrorText
+      notesErrorText,
+      anchorEl,
+      clickedEvent,
+      newEventModal,
+      newEventDate,
+      newEventTeacher,
+      newEventTool,
+      newEventType
     } = this.state;
+
+    // const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event: Event, target: React.SyntheticEvent): void => {
+    target.persist();
+    this.setState({
+      anchorEl: target.currentTarget,
+      clickedEvent: event
+    });
+  };
+
+  const handleClose = (): void => {
+    this.setState({
+      anchorEl: null,
+    });
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+    const getInitials = (name: string): string => {
+      let i = 0;
+      let initials = name.charAt(0);
+      while (i < name.length) {
+        const space = name.indexOf(' ', i);
+        if (space === -1) {
+          break
+        }
+        initials = initials.concat(name.charAt(space + 1));
+        i = space + 1
+      }
+      return initials
+    };
+
+    const myEventsList: Array<Event> = [
+      {
+        title: 'Observation',
+        start: new Date(2021, 5, 14, 8, 30, 14, 0),
+        end: new Date(2021, 5, 14, 9, 10, 47, 0),
+        allDay: false,
+        resource: 'Katherine Newman',
+        hexColor: 'a0febf',
+        type: 'LI'
+      },
+      {
+        title: 'Conference Plan',
+        start: new Date(2021, 5, 20, 13, 30, 14, 0),
+        end: new Date(2021, 5, 20, 13, 30, 14, 0),
+        allDay: false,
+        resource: 'Katherine Newman',
+        hexColor: 'a0febf',
+        type: 'LI'
+      },
+      {
+        title: 'Observation',
+        start: new Date(2021, 5, 17, 8, 30, 14, 0),
+        end: new Date(2021, 5, 17, 9, 10, 47, 0),
+        allDay: false,
+        resource: 'Caroline Christopher',
+        hexColor: 'ead2a2',
+        type: 'CC'
+      },
+      {
+        title: 'Action Plan',
+        start: new Date(2021, 5, 24, 9, 10, 47, 0),
+        end: new Date(2021, 5, 24, 9, 10, 47, 0),
+        allDay: false,
+        resource: 'Deanna Meador',
+        hexColor: 'fde1f0',
+        type: 'MI'
+      },
+      {
+        title: 'Observation',
+        start: new Date(2021, 5, 24, 9, 10, 47, 0),
+        end: new Date(2021, 5, 24, 9, 10, 47, 0),
+        allDay: false,
+        resource: 'Deanna Meador',
+        hexColor: 'fde1f0',
+        type: 'TT'
+      },
+      {
+        title: 'Observation',
+        start: new Date(2021, 5, 26, 9, 10, 47, 0),
+        end: new Date(2021, 5, 26, 9, 10, 47, 0),
+        allDay: false,
+        resource: 'Deanna Meador',
+        hexColor: 'fde1f0',
+        type: 'TT'
+      }
+    ];
+
+    const allViews = Object.keys(Views).map(k => Views[k]);
+
+    const ColoredDateCellWrapper = ({ children }) =>
+      React.cloneElement(React.Children.only(children), {
+        style: {
+          backgroundColor: 'black',
+        },
+      })
+
+    const eventStyleGetter = (event: Event, start, end, isSelected) => {
+      const backgroundColor = '#' + event.hexColor;
+      const style = {
+          // backgroundColor: backgroundColor,
+          // backgroundColor: 'white',
+          backgroundColor: Constants.Colors[event.type as Types.DashboardType],
+          borderRadius: '0px',
+          opacity: 0.8,
+          color: 'white',
+          // border: '1px solid gray',
+          display: 'block'
+      };
+      return {
+          style: style
+      };
+  };
+
+    const EventComponent = (event: {
+      event: Event,
+      continuesAfter: boolean,
+      continuesPrior: boolean,
+      isAllDay: boolean,
+      title: string,
+      slotEnd: Date,
+      slotStart: Date
+    }): JSX.Element => {
+      return (
+        <Grid container direction='row' justify='flex-start' alignItems='center'>
+          <Grid item xs={2}>
+            <Typography variant="body2" style={{fontFamily: 'Arimo'}}>
+              {getInitials(event.event.resource)}:
+            </Typography>
+          </Grid>
+          <Grid item xs={9} wrap='nowrap' style={{paddingLeft: '0.5em'}}>
+            <Typography variant="body2" style={{fontFamily: 'Arimo', whiteSpace: "normal",
+              // wordWrap: "break-word"
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {event.event.title}
+            </Typography>
+          </Grid>
+        </Grid>
+      );
+    }
 
     return (
       <div className={classes.root}>
@@ -661,7 +1074,36 @@ class TeacherListPage extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
-          <div className={classes.actionContainer}>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            style={{padding: '1em'}}
+          >
+            {clickedEvent !== null ? (
+              <Grid container direction="column" style={{padding: '1em'}}>
+                <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                  {clickedEvent.resource}
+                </Typography>
+                <Typography variant="h6" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                  {clickedEvent.title}
+                </Typography>
+                <Typography>
+                  {Constants.ToolNames[clickedEvent.type as Types.ToolNamesKey]}
+                </Typography>
+              </Grid>
+            ) : (<Typography>no event</Typography>)}
+          </Popover>
+          {/* <div className={classes.actionContainer}>
             <TextField
               id="teacher-search"
               label="Search"
@@ -678,8 +1120,71 @@ class TeacherListPage extends React.Component<Props, State> {
             >
               <AddIcon style={{ color: "#FFFFFF" }} />
             </Fab>
+          </div> */}
+          {/* <button
+            onClick={(): void => {
+              console.log('teachers', this.state.
+              teachers)
+            }}
+          >
+            click me
+          </button> */}
+          <div>
+            <Grid container direction='row' justify='center' alignItems='center'>
+              {/* <Grid item xs={3}>
+                <List>
+                  {this.state.teachers.length > 0 ? this.state.teachers.map((teacher, index) => {
+                    return (
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <Checkbox>
+
+                          </Checkbox>
+                        </ListItemIcon>
+                        <ListItemText>
+                          {teacher.firstName + ' ' + teacher .lastName}
+                        </ListItemText>
+                      </ListItem>
+                    )
+                  }) : 'no teachers'}
+                </List>
+              </Grid> */}
+              <Grid item xs={12}>
+                <Calendar
+                  popup
+                  localizer={localizer}
+                  events={myEventsList}
+                  selectable
+                  step={60}
+                  showMultiDayTimes
+                  components={{
+                    event: EventComponent,
+                    timeSlotWrapper: ColoredDateCellWrapper,
+                    // eventPropGetter: eventStyleGetter
+                  }}
+                  style={{height: '70vh'}}
+                  eventPropGetter={eventStyleGetter}
+                  // onSelectEvent={(event: Event): void => console.log(typeof event, event)}
+                  // onSelectEvent={handleSelectEvent}
+                  onSelectEvent={(event: Event, target: React.SyntheticEvent): void => {handleClick(event, target)}}
+                  onSelectSlot={(slot: {
+                    action: string,
+                    bounds: {},
+                    box: undefined,
+                    start: Date,
+                    end: Date,
+                    slots: Array<Date>
+                  }): void => {
+                    this.setState({newEventDate: slot.start}, () => {
+                      this.setState({newEventModal: true})
+                    });
+                  }}
+                  longPressThreshold={20}
+                />
+              </Grid>
+            </Grid>
           </div>
-          <div className={classes.tableContainer}>
+          {/* <div className={classes.tableContainer}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -747,7 +1252,6 @@ class TeacherListPage extends React.Component<Props, State> {
                       </TableCell>
                     ))}
                     <TableCell className={classes.nameField}>
-                      {/* {teacher.goals !== undefined && teacher.goals} */}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -775,7 +1279,46 @@ class TeacherListPage extends React.Component<Props, State> {
               />
               = Co-created Action plan
             </div>
-          </div>
+          </div> */}
+          <Modal open={newEventModal}>
+            <div style={getModalStyle()} className={classes.paper}>
+              <Grid container direction="column" style={{height: '100%', overflowY: 'auto'}}>
+                <Grid item style={{height: '20%'}}>
+                  <Grid container direction="row" style={{height: '100%'}}>
+                    <Grid item xs={1} />
+                    <Grid item xs={10}>
+                      <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', padding: '1em'}}>
+                        Create New Event
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <IconButton style={{ padding: 10 }}>
+                        <Tooltip title={"Close"} placement={"right"}>
+                          <CloseIcon
+                            onClick={(): void => {this.setState({newEventModal: false})}}
+                          />
+                        </Tooltip>
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item style={{height: '80%'}}>
+                  <NewEventStepper
+                    date={newEventDate}
+                    setDate={(newDate: Date): void => {this.setState({newEventDate: newDate})}}
+                    teacher={newEventTeacher}
+                    setTeacher={(newTeacher: Types.Teacher): void => {this.setState({newEventTeacher: newTeacher})}}
+                    tool={newEventTool}
+                    setTool={(newTool: Types.ToolNamesKey): void => {this.setState({newEventTool: newTool})}}
+                    type={newEventType}
+                    setType={(newType: string): void => {this.setState({newEventType: newType})}}
+                    teacherList={this.state.teachers}
+                    closeModal={(): void => this.setState({newEventModal: false})}
+                  />
+                </Grid>
+              </Grid>
+            </div>
+          </Modal>
           <Dialog
             open={isAdding}
             onClose={this.handleCloseModal}
@@ -891,5 +1434,18 @@ class TeacherListPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: Types.ReduxState): {
+  // teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    // teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
 TeacherListPage.contextType = FirebaseContext;
-export default withStyles(styles)(withRouter(TeacherListPage));
+export default withRouter(connect(
+  mapStateToProps
+)(withStyles(styles)(TeacherListPage)));
+// export default withStyles(styles)(withRouter(TeacherListPage));
