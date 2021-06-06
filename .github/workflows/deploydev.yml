@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Assign Author
+        uses: technote-space/assign-author@v1.2.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js for use with actions
+        uses: actions/setup-node@v1.1.0
+
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: ${{ github.event.after }}
+
+      - name: NPM Install Packages
+        working-directory: ./
+        run: |
+          npm ci
+        env:
+          CI: true
+
+      - name: Running ESLinter to Find Errors
+        working-directory: ./
+        run: npm run lint
+        env:
+          CI: true
+
+      - name: Running Cypress Test in CLI Mode
+        working-directory: ./
+        run: npm run test
+        env:
+          CI: true
+
+      - name: Generate on Dev Server Code
+        working-directory: ./
+        run: |
+          npm run removebuild
+          npm run dev
+          npm run copy
+        env:
+          CI: true
+
+      - name: Deploy on DevServer
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting,functions,firestore
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+
