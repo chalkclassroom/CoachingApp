@@ -10,6 +10,7 @@ import ListeningIconImage from "../../../assets/images/ListeningIconImage.svg";
 import MathIconImage from "../../../assets/images/MathIconImage.svg";
 import InstructionIconImage from "../../../assets/images/InstructionIconImage.svg";
 import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIconImage.svg";
+import LiteracyIconImage from "../../../assets/images/LiteracyIconImage.svg";
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import ConferencePlanImage from "../../../assets/images/ConferencePlanImage.png";
 import ActionPlanImage from "../../../assets/images/ActionPlanImage.png";
@@ -48,7 +49,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import ObserveIcon from "@material-ui/icons/Visibility";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
 import ConferencePlansIcon from "@material-ui/icons/ListAlt";
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer, SlotInfo, Views, EventProps } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
 import moment from 'moment';
@@ -355,12 +356,14 @@ interface State {
   alertText: string,
   // anchorEl: React.BaseSyntheticEvent<globalThis.Event, EventTarget & Element, EventTarget>;currentTarget: EventTarget & Element | null,
   anchorEl: EventTarget & Element | null,
-  clickedEvent: Event | null,
+  clickedEvent: Types.CalendarEvent | null,
   newEventModal: boolean,
   newEventDate: Date | null,
   newEventTeacher: Types.Teacher | null,
   newEventTool: Types.ToolNamesKey | null,
-  newEventType: string
+  newEventType: string,
+  actionPlanEvents: Array<Types.CalendarEvent>,
+  conferencePlanEvents: Array<Types.CalendarEvent>
   // type: string
 }
 
@@ -397,7 +400,9 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventDate: new Date(),
       newEventTeacher: null,
       newEventTool: null,
-      newEventType: ''
+      newEventType: '',
+      actionPlanEvents: [],
+      conferencePlanEvents: []
       // type: ''
     };
   }
@@ -441,7 +446,13 @@ class TeacherListPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    console.log('COMPONENTDIDMOUNT')
+    console.log('COMPONENTDIDMOUNT');
+    firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
+      this.setState({actionPlanEvents: actionPlanEvents})
+    })
+    firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
+      this.setState({conferencePlanEvents: conferencePlanEvents})
+    })
     this.setState({
       teachers: this.props.teacherList
     }, () => {
@@ -924,7 +935,7 @@ class TeacherListPage extends React.Component<Props, State> {
 
     // const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event: Event, target: React.SyntheticEvent): void => {
+  const handleClick = (event: Types.CalendarEvent, target: React.SyntheticEvent): void => {
     target.persist();
     this.setState({
       anchorEl: target.currentTarget,
@@ -941,6 +952,15 @@ class TeacherListPage extends React.Component<Props, State> {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  const getName = (id: string): string => {
+    const teacher = this.props.teacherList.find(obj => obj.id === id);
+    if (teacher) {
+      return (teacher.firstName + ' ' + teacher.lastName)
+    } else {
+      return ''
+    }
+  }
+
     const getInitials = (name: string): string => {
       let i = 0;
       let initials = name.charAt(0);
@@ -955,13 +975,13 @@ class TeacherListPage extends React.Component<Props, State> {
       return initials
     };
 
-    const myEventsList: Array<Event> = [
+    const myEventsList: Array<Types.CalendarEvent> = [
       {
         title: 'Observation',
         start: new Date(2021, 5, 14, 8, 30, 14, 0),
         end: new Date(2021, 5, 14, 9, 10, 47, 0),
         allDay: false,
-        resource: 'Katherine Newman',
+        resource: '7OTNaap61PbpMsM2p2JS',
         hexColor: 'a0febf',
         type: 'LI'
       },
@@ -970,7 +990,7 @@ class TeacherListPage extends React.Component<Props, State> {
         start: new Date(2021, 5, 20, 13, 30, 14, 0),
         end: new Date(2021, 5, 20, 13, 30, 14, 0),
         allDay: false,
-        resource: 'Katherine Newman',
+        resource: '7OTNaap61PbpMsM2p2JS',
         hexColor: 'a0febf',
         type: 'LI'
       },
@@ -979,7 +999,7 @@ class TeacherListPage extends React.Component<Props, State> {
         start: new Date(2021, 5, 17, 8, 30, 14, 0),
         end: new Date(2021, 5, 17, 9, 10, 47, 0),
         allDay: false,
-        resource: 'Caroline Christopher',
+        resource: 'EYaU6BCbNUcPTSsxU14G9IaGXHJ3',
         hexColor: 'ead2a2',
         type: 'CC'
       },
@@ -988,7 +1008,7 @@ class TeacherListPage extends React.Component<Props, State> {
         start: new Date(2021, 5, 24, 9, 10, 47, 0),
         end: new Date(2021, 5, 24, 9, 10, 47, 0),
         allDay: false,
-        resource: 'Deanna Meador',
+        resource: '7OTNaap61PbpMsM2p2JS',
         hexColor: 'fde1f0',
         type: 'MI'
       },
@@ -997,7 +1017,7 @@ class TeacherListPage extends React.Component<Props, State> {
         start: new Date(2021, 5, 24, 9, 10, 47, 0),
         end: new Date(2021, 5, 24, 9, 10, 47, 0),
         allDay: false,
-        resource: 'Deanna Meador',
+        resource: 'EYaU6BCbNUcPTSsxU14G9IaGXHJ3',
         hexColor: 'fde1f0',
         type: 'TT'
       },
@@ -1006,7 +1026,7 @@ class TeacherListPage extends React.Component<Props, State> {
         start: new Date(2021, 5, 26, 9, 10, 47, 0),
         end: new Date(2021, 5, 26, 9, 10, 47, 0),
         allDay: false,
-        resource: 'Deanna Meador',
+        resource: 'EYaU6BCbNUcPTSsxU14G9IaGXHJ3',
         hexColor: 'fde1f0',
         type: 'TT'
       }
@@ -1021,7 +1041,7 @@ class TeacherListPage extends React.Component<Props, State> {
         },
       })
 
-    const eventStyleGetter = (event: Event, start, end, isSelected) => {
+    const eventStyleGetter = (event: Types.CalendarEvent, start, end, isSelected) => {
       const backgroundColor = '#' + event.hexColor;
       const style = {
           // backgroundColor: backgroundColor,
@@ -1039,7 +1059,7 @@ class TeacherListPage extends React.Component<Props, State> {
   };
 
     const EventComponent = (event: {
-      event: Event,
+      event: Types.CalendarEvent,
       continuesAfter: boolean,
       continuesPrior: boolean,
       isAllDay: boolean,
@@ -1051,7 +1071,7 @@ class TeacherListPage extends React.Component<Props, State> {
         <Grid container direction='row' justify='flex-start' alignItems='center'>
           <Grid item xs={2}>
             <Typography variant="body2" style={{fontFamily: 'Arimo'}}>
-              {getInitials(event.event.resource)}:
+              {getInitials(getName(event.event.resource))}:
             </Typography>
           </Grid>
           <Grid item xs={9} wrap='nowrap' style={{paddingLeft: '0.5em'}}>
@@ -1091,15 +1111,48 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             {clickedEvent !== null ? (
               <Grid container direction="column" style={{padding: '1em'}}>
-                <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                  {clickedEvent.resource}
-                </Typography>
-                <Typography variant="h6" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                  {clickedEvent.title}
-                </Typography>
-                <Typography>
-                  {Constants.ToolNames[clickedEvent.type as Types.ToolNamesKey]}
-                </Typography>
+                <Grid item>
+                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                    {getName(clickedEvent.resource)}
+                  </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '0.5em', paddingBottom: '0.5em', height: '2em'}}>
+                  <Grid container direction="row" justify="flex-start" alignItems="center">
+                    {/* <Grid item style={{paddingRight: '0.5em'}}>
+                      {clickedEvent.title === 'Observation' ? <ObserveIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
+                        : clickedEvent.title === 'Action Plan' ? <ActionPlansIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
+                        : <ConferencePlansIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
+                      }
+                    </Grid> */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                        {clickedEvent.title}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item style={{height: '4em', paddingTop: '0.5em'}}>
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Grid item xs={9}>
+                      <Typography>
+                        {Constants.ToolNames[clickedEvent.type as Types.ToolNamesKey]}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <img src={
+                        clickedEvent.type === 'TT' ? TransitionTimeIconImage
+                        : clickedEvent.type === 'CC' ? ClassroomClimateIconImage
+                        : clickedEvent.type === 'MI' ? MathIconImage
+                        : clickedEvent.type === 'IN' ? InstructionIconImage
+                        : clickedEvent.type === 'SE' ? EngagementIconImage
+                        : clickedEvent.type === 'LC' ? ListeningIconImage
+                        : clickedEvent.type === 'SA' ? SequentialIconImage
+                        : clickedEvent.type === 'LI' ? LiteracyIconImage
+                        : AssocCoopIconImage
+                      } style={{height: '3em', width: '3em'}} />
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
             ) : (<Typography>no event</Typography>)}
           </Popover>
@@ -1121,14 +1174,13 @@ class TeacherListPage extends React.Component<Props, State> {
               <AddIcon style={{ color: "#FFFFFF" }} />
             </Fab>
           </div> */}
-          {/* <button
+          <button
             onClick={(): void => {
-              console.log('teachers', this.state.
-              teachers)
+              console.log('blahBLAHBLAH2', myEventsList.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents))
             }}
           >
             click me
-          </button> */}
+          </button>
           <div>
             <Grid container direction='row' justify='center' alignItems='center'>
               {/* <Grid item xs={3}>
@@ -1153,28 +1205,30 @@ class TeacherListPage extends React.Component<Props, State> {
                 <Calendar
                   popup
                   localizer={localizer}
-                  events={myEventsList}
+                  // events={[...myEventsList, ...this.state.actionPlanEvents]}
+                  events={myEventsList.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents)}
                   selectable
                   step={60}
                   showMultiDayTimes
                   components={{
                     event: EventComponent,
-                    timeSlotWrapper: ColoredDateCellWrapper,
+                    // timeSlotWrapper: ColoredDateCellWrapper,
                     // eventPropGetter: eventStyleGetter
                   }}
                   style={{height: '70vh'}}
                   eventPropGetter={eventStyleGetter}
-                  // onSelectEvent={(event: Event): void => console.log(typeof event, event)}
-                  // onSelectEvent={handleSelectEvent}
-                  onSelectEvent={(event: Event, target: React.SyntheticEvent): void => {handleClick(event, target)}}
-                  onSelectSlot={(slot: {
+
+                  onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
+                  onSelectSlot={(slot: SlotInfo
+                    /* {
                     action: string,
                     bounds: {},
                     box: undefined,
                     start: Date,
                     end: Date,
                     slots: Array<Date>
-                  }): void => {
+                  } */
+                  ): void => {
                     this.setState({newEventDate: slot.start}, () => {
                       this.setState({newEventModal: true})
                     });

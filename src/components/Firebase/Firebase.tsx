@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes';
+import * as Types from '../../constants/Types';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -2702,6 +2703,83 @@ class Firebase {
       .catch(() => {
         console.log('error retrieving action steps');
       })
+  }
+
+  /**
+   * finds all action plan events for my teachers calendar
+   */
+  getActionPlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const actionPlanEventsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+              actionPlanEventsArray.push({
+                title: 'Action Plan',
+                start: doc.data().dateModified.toDate(),
+                end: doc.data().dateModified.toDate(),
+                allDay: false,
+                resource: doc.data().teacher,
+                type: doc.data().tool === 'Transition Time' ? 'TT'
+                  : doc.data().tool === 'Classroom Climate' ? 'CC'
+                  : doc.data().tool === 'Math Instruction' ? 'MI'
+                  : doc.data().tool === 'Level of Instruction' ? 'IN'
+                  : doc.data().tool === 'Student Engagement' ? 'SE'
+                  : doc.data().tool === 'Listening to Children' ? 'LC'
+                  : doc.data().tool === 'Sequential Activities' ? 'SA'
+                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
+                  : 'AC'
+              })
+            }
+          })
+          return actionPlanEventsArray;
+        })
+        .catch(() => {
+          console.log('unable to find action plans')
+        })
+    }
+  }
+
+
+  /**
+   * finds all conference plan events for my teachers calendar
+   */
+   getConferencePlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("conferencePlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const conferencePlanEventsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+              conferencePlanEventsArray.push({
+                title: 'Conference Plan',
+                start: doc.data().dateModified.toDate(),
+                end: doc.data().dateModified.toDate(),
+                allDay: false,
+                resource: doc.data().teacher,
+                type: doc.data().tool === 'Transition Time' ? 'TT'
+                  : doc.data().tool === 'Classroom Climate' ? 'CC'
+                  : doc.data().tool === 'Math Instruction' ? 'MI'
+                  : doc.data().tool === 'Level of Instruction' ? 'IN'
+                  : doc.data().tool === 'Student Engagement' ? 'SE'
+                  : doc.data().tool === 'Listening to Children' ? 'LC'
+                  : doc.data().tool === 'Sequential Activities' ? 'SA'
+                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
+                  : 'AC'
+              })
+            }
+          })
+          return conferencePlanEventsArray;
+        })
+        .catch(() => {
+          console.log('unable to find conference plans')
+        })
+    }
   }
 
 }

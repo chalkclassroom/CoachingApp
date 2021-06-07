@@ -191,3 +191,13 @@ export interface FirebaseAppBar {
   firebaseSignOut(): Promise<void>,
   getTeacherList(): Promise<Teacher[]>
 }
+
+export interface CalendarEvent {
+  title: string,
+  start: Date,
+  end: Date,
+  allDay?: boolean
+  resource: string,
+  hexColor?: string,
+  type: string
+}
