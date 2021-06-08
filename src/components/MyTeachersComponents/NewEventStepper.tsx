@@ -360,10 +360,10 @@ export default function NewEventStepper(props: Props): React.ReactElement {
             variant="contained"
             color="primary"
             disabled={
-              (activeStep === 0 && date === undefined)
-              || (activeStep === 1 && teacher === undefined)
-              || (activeStep === 2 && tool === undefined)
-              || (activeStep === 3 && type === undefined)
+              (activeStep === 0 && date === null)
+              || (activeStep === 1 && teacher === null)
+              || (activeStep === 2 && tool === null)
+              || (activeStep === 3 && type === '')
             }
             onClick={activeStep === steps.length - 1 ? handleFinish : handleNext}
             className={classes.button}

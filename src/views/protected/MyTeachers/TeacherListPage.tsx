@@ -1174,13 +1174,13 @@ class TeacherListPage extends React.Component<Props, State> {
               <AddIcon style={{ color: "#FFFFFF" }} />
             </Fab>
           </div> */}
-          <button
+          {/* <button
             onClick={(): void => {
               console.log('blahBLAHBLAH2', myEventsList.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents))
             }}
           >
             click me
-          </button>
+          </button> */}
           <div>
             <Grid container direction='row' justify='center' alignItems='center'>
               {/* <Grid item xs={3}>
