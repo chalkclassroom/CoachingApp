@@ -92,7 +92,7 @@ export default function LiteracyTrendsLanguage(props: Props) {
     setView(newView);
   };
 
-  type ActivitySettingsKey = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'LanguageTeacher'
+  type ActivitySettingsKey = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'ReadingTeacher' | 'LanguageTeacher'
 
   const activitySettings = Constants.LiteracyActivitySettings['Language'+who as ActivitySettingsKey]
 

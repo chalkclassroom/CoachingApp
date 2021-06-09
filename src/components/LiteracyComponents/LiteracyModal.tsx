@@ -146,7 +146,8 @@ function LiteracyModal(props: Props): React.ReactElement {
                   setLiteracyType={setLiteracyType}
                   title="Book Reading"
                   descriptionText={<div>
-                    Observe interactive book readings that support children&apos;s vocabulary
+                    Observe interactive read alouds of various texts (picture books, poems,
+                    text on chart paper) that support children&apos;s vocabulary
                     and content knowledge, text comprehension, and speaking/listening skills.
                     <i>To observe shared book readings focusing on print concepts,
                     select the Foundational Skills tool.</i>
@@ -186,12 +187,34 @@ function LiteracyModal(props: Props): React.ReactElement {
                     />
                     <LiteracyObservationOptions
                       handleBegin={handleBegin}
+                      type={Constants.LiteracyTypes.READING}
+                      literacyType={literacyType}
+                      teacherInstruction1="Observe the teacher reading and discussing a book with children."
+                      teacherInstruction2={
+                        <div>
+                          Select the types of behaviors that show teachers supporting children's
+                          <ul>
+                            <li>
+                              Vocabulary and content knowledge
+                            </li>
+                            <li>
+                              Text comprehension
+                            </li>
+                            <li>
+                              Speaking and listening skills
+                            </li>
+                          </ul>
+                        </div>
+                      }
+                    />
+                    <LiteracyObservationOptions
+                      handleBegin={handleBegin}
                       type={Constants.LiteracyTypes.LANGUAGE}
                       literacyType={literacyType}
                       teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
                       teacherInstruction2={
                         <div>
-                          Select the types of behaviors that show teachers:
+                          Select the types of behaviors that show teachers
                           <ul>
                             <li>
                               Talking with children about vocabulary or social-emotional topics

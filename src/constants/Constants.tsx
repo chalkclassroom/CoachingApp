@@ -269,6 +269,17 @@ const activitySettingsWriting = [
   'Small Group Lesson'
 ];
 
+const activitySettingsReading = [
+  'All',
+  'Fiction',
+  'Nonfiction/Informational',
+  'Rhyming',
+  'Predictable',
+  'Poem',
+  'Alphabet/Counting',
+  'Class-Made Book'
+];
+
 const activitySettingsLanguage = [
   'All',
   'Morning Meeting',
@@ -283,6 +294,7 @@ export const LiteracyActivitySettings = {
   'FoundationalTeacher': activitySettingsFoundational,
   'WritingChild': activitySettingsWriting,
   'WritingTeacher': activitySettingsWriting,
+  'ReadingTeacher': activitySettingsReading,
   'LanguageTeacher': activitySettingsLanguage
 };
 
@@ -423,6 +435,7 @@ export const Checklist: {
     FoundationalTeacher: Array<JSX.Element>,
     WritingChild: Array<JSX.Element>,
     WritingTeacher: Array<JSX.Element>,
+    ReadingTeacher: Array<JSX.Element>,
     LanguageTeacher: Array<JSX.Element>
   }
 } = {
@@ -587,8 +600,7 @@ export const Checklist: {
       </div>,
       <div key={9}>
         Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
-      </div>,
-      
+      </div>
     ],
     'WritingChild': [
       <div key={0}>
@@ -640,6 +652,45 @@ export const Checklist: {
       </div>,
       <div key={7}>
         <b>Invites children to read the message</b> (e.g., “Read what you wrote to me!” or “What does that say?”)
+      </div>
+    ],
+    'ReadingTeacher': [
+      <div key={0}>
+        <b>Defining and/or discussing vocabulary words</b>
+      </div>,
+      <div key={1}>
+        <b>Discussing concepts related to a text </b> before, during,
+        and/or after the book reading
+      </div>,
+      <div key={2}>
+        Encouraging children to <b> retell, reenact, sequence, or summarize a
+        text</b> or part of a text
+      </div>,
+      <div key={3}>
+        <b>Relating the book to children's experiences</b> inside and/or
+        outside the classroom
+      </div>,
+      <div key={4}>
+        Encouraging children to <b>make connections to books that reflect
+        their language and/or cultural backgrounds</b>
+      </div>,
+      <div key={5}>
+        <b>Asking children open-ended questions/prompts </b> (e.g., to
+        make predictions or inferences)
+      </div>,
+      <div key={6}>
+        <b>Responding to children with follow-up questions and/or comments </b> to
+        extend children's thinking
+      </div>,
+      <div key={7}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={8}>
+        Facilitating discussion of <b>social issues around equity/fairness</b>
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> to support comprehension and/or
+        word learning (e.g., props, gestures, sounds, visuals, book illustrations)
       </div>
     ],
     'LanguageTeacher': [
