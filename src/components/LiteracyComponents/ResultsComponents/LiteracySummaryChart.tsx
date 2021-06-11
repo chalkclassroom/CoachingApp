@@ -36,6 +36,7 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
       labels: [
         this.props.type === Constants.LiteracyTypes.FOUNDATIONAL ? "Foundational Skills Instruction" : 
         this.props.type === Constants.LiteracyTypes.WRITING ? "Writing Instruction" :
+        this.props.type === Constants.LiteracyTypes.READING ? "Book Reading Instruction" :
         "Supporting Language Development",
         "No Target Behaviors Observed"],
       datasets: [

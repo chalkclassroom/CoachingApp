@@ -651,7 +651,6 @@ class Firebase {
    * @param {string} activitySetting
    */
    handleLiteracyActivitySetting = async (activitySetting: string): Promise<void> => {
-    console.log('what is this sessionref', this.sessionRef)
     this.sessionRef
     .update({
       activitySetting: activitySetting
@@ -1637,6 +1636,7 @@ class Firebase {
     const getLiteracySummaryFirebaseFunction = type === 'Foundational' ? this.functions.httpsCallable(
       "funcLiteracySummaryFoundational"
     ) : type === 'Writing' ? this.functions.httpsCallable("funcLiteracySummaryWriting")
+    : type === 'Reading' ? this.functions.httpsCallable("funcLiteracySummaryReading")
     : this.functions.httpsCallable("funcLiteracySummaryLanguage");
     return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type, who: who })
       .then(
@@ -1720,6 +1720,48 @@ class Firebase {
           literacy6: number,
           literacy7: number,
           literacy8: number
+        }>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting literacy details: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets counts of each literacy behavior type
+   * @param {string} sessionId
+   * @param {string} who
+   */
+   fetchLiteracyDetailsReading = async (sessionId: string, who: string): Promise<{
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    literacy10: number
+  } | void> => {
+    const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyDetailsReading"
+    );
+    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          literacy9: number,
+          literacy10: number
         }>>}) =>
           result.data[0][0]
       )
@@ -1934,6 +1976,53 @@ class Firebase {
           literacy6: number,
           literacy7: number,
           literacy8: number,
+          total: number,
+          activitySetting: string
+        }>>}) =>
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets literacy data for each language observation
+   * @param {string} teacherId
+   */
+   fetchLiteracyTrendReading = async (teacherId: string, who: string): Promise<Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    literacy10: number,
+    total: number,
+    activitySetting: string
+  }> | void> => {
+    const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyTrendReading"
+    );
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          literacy9: number,
+          literacy10: number,
           total: number,
           activitySetting: string
         }>>}) =>

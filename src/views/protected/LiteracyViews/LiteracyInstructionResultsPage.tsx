@@ -13,6 +13,8 @@ import LiteracyDetailsFoundationalChart from "../../../components/LiteracyCompon
 import LiteracyDetailsWritingChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsWritingChart";
 import LiteracyDetailsFoundational from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundational";
 import LiteracyDetailsWriting from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsWriting";
+import LiteracyDetailsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsReading";
+import LiteracyTrendsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsReading";
 import LiteracyDetailsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage";
 import LiteracyTrendsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage";
 import LiteracyTrendsFoundationalTeacher from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsFoundationalTeacher";
@@ -59,6 +61,7 @@ interface Style {
 interface State {
   literacy: number,
   noLiteracy: number,
+  sessionTime: number,
   sessionId: string,
   who: string,
   conferencePlanId: string,
@@ -130,6 +133,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     this.state = {
       literacy: 0,
       noLiteracy: 0,
+      sessionTime: 0,
       sessionId: '',
       who: '',
       conferencePlanId: '',
@@ -202,6 +206,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     this.setState({
       literacy: 0,
       noLiteracy: 0,
+      sessionTime: 0,
       sessionId: '',
       who: '',
       conferencePlanId: '',
@@ -337,12 +342,17 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational' : this.props.location.state.type===Constants.LiteracyTypes.WRITING ? 'Writing' : 'Language', who)
-    .then((summary: {literacy: number, noLiteracy: number}) => {
+    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational' : this.props.location.state.type===Constants.LiteracyTypes.WRITING ? 'Writing' : this.props.location.state.type===Constants.LiteracyTypes.READING ? 'Reading' : 'Language', who)
+    .then((summary: {literacy: number, noLiteracy: number, sessionTotal?: number}) => {
       this.setState({
         literacy: summary.literacy,
         noLiteracy: summary.noLiteracy,
       });
+      if (summary.sessionTotal !== undefined) {
+        this.setState({
+          sessionTime: summary.sessionTotal
+        })
+      }
     });
     if (this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL) {
       firebase.fetchLiteracyDetailsFoundational(this.state.sessionId, who)
@@ -471,6 +481,52 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
           childTrends: trends
         })
       })
+    } else if (this.props.location.state.type===Constants.LiteracyTypes.READING) {
+      firebase.fetchLiteracyDetailsReading(this.state.sessionId, who)
+      .then((summary: {
+        literacy1: number,
+        literacy2: number,
+        literacy3: number,
+        literacy4: number,
+        literacy5: number,
+        literacy6: number,
+        literacy7: number,
+        literacy8: number,
+        literacy9: number,
+        literacy10: number
+      }) => {
+        this.setState({
+          literacy1: summary.literacy1,
+          literacy2: summary.literacy2,
+          literacy3: summary.literacy3,
+          literacy4: summary.literacy4,
+          literacy5: summary.literacy5,
+          literacy6: summary.literacy6,
+          literacy7: summary.literacy7,
+          literacy8: summary.literacy8,
+          literacy9: summary.literacy9,
+          literacy10: summary.literacy10,
+          who: who
+        })
+      })
+      firebase.fetchLiteracyTrendReading(this.props.teacherSelected.id, 'Teacher')
+      .then((trends: Array<{
+        startDate: string,
+        literacy1: number,
+        literacy2: number,
+        literacy3: number,
+        literacy4: number,
+        literacy5: number,
+        literacy6: number,
+        literacy7: number,
+        literacy8: number,
+        total: number,
+        activitySetting: string
+      }>) => {
+        this.setState({
+          teacherTrends: trends
+        })
+      })
     } else if (this.props.location.state.type===Constants.LiteracyTypes.LANGUAGE) {
       firebase.fetchLiteracyDetailsLanguage(this.state.sessionId, who)
       .then((summary: {
@@ -483,7 +539,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         literacy7: number,
         literacy8: number
       }) => {
-        console.log('the details', summary)
         this.setState({
           literacy1: summary.literacy1,
           literacy2: summary.literacy2,
@@ -510,7 +565,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         total: number,
         activitySetting: string
       }>) => {
-        console.log('these are the trends', trends)
         this.setState({
           teacherTrends: trends
         })
@@ -711,7 +765,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                  Compare how often the teacher was: 
+                  {this.props.location.state.type === Constants.LiteracyTypes.READING ? 'Compare how often the teacher engaged in:' : 'Compare how often the teacher was:'} 
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
@@ -723,6 +777,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                         <ListItemText
                           primary={this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? "Supporting children’s foundational skills development"
                             : this.props.location.state.type === Constants.LiteracyTypes.WRITING ? "Supporting children's writing"
+                            : this.props.location.state.type === Constants.LiteracyTypes.READING ? "Book reading instruction: supported children's vocabulary, comprehension, and speaking/listening skills"
                             : "Supporting children's language development"
                           }
                         />
@@ -731,7 +786,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.NotPresent, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Not doing any target behaviors" />
+                        <ListItemText primary={this.props.location.state.type === Constants.LiteracyTypes.READING ? "Other behaviors" : "Not doing any target behaviors"} />
                       </ListItem>
                     </List>
                   </Grid>
@@ -743,6 +798,13 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     type={this.props.location.state.type}
                   />
                 </Grid>
+                {(this.props.location.state.type === Constants.LiteracyTypes.READING) ? (
+                  <Grid item>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Total Length of Observation: {Math.floor((this.state.sessionTime/1000)/60)}m {Math.round((((this.state.sessionTime/1000)/60) % 1) * 60) }s
+                    </Typography>
+                  </Grid>
+                ) : null}
               </Grid>
             }
             details={
@@ -772,6 +834,21 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   literacy8={this.state.literacy8}
                   who={this.state.who}
                 />
+              ) : this.props.location.state.type === Constants.LiteracyTypes.READING ? (
+                <LiteracyDetailsReading
+                  literacy1={this.state.literacy1}
+                  literacy2={this.state.literacy2}
+                  literacy3={this.state.literacy3}
+                  literacy4={this.state.literacy4}
+                  literacy5={this.state.literacy5}
+                  literacy6={this.state.literacy6}
+                  literacy7={this.state.literacy7}
+                  literacy8={this.state.literacy8}
+                  literacy9={this.state.literacy9}
+                  literacy10={this.state.literacy10}
+                  sessionTime={this.state.sessionTime}
+                  who={this.state.who}
+                />
               ) : (
                 <LiteracyDetailsLanguage
                   literacy1={this.state.literacy1}
@@ -787,7 +864,9 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               )
             }
             trendsGraph={
-              this.props.location.state.type === Constants.LiteracyTypes.LANGUAGE ? (
+              this.props.location.state.type === Constants.LiteracyTypes.READING ? (
+                <LiteracyTrendsReading data={this.state.teacherTrends} who={'Teacher'} />
+              ) : this.props.location.state.type === Constants.LiteracyTypes.LANGUAGE ? (
                 <LiteracyTrendsLanguage data={this.state.teacherTrends} who={'Teacher'} />
               ) : (
                 <TrendsSlider type={this.props.location.state.type} teacherData={this.state.teacherTrends} childData={this.state.childTrends} />

@@ -11,15 +11,17 @@ interface Props {
   literacy5: number,
   literacy6: number,
   literacy7: number,
-  literacy8: number
+  literacy8: number,
+  literacy9: number,
+  literacy10: number,
   who: string
 }
 
 /**
  * specifies data sets and formatting for the Literacy Instruction details bar graph
- * @class LiteracyDetailsLanguageChart
+ * @class LiteracyDetailsReadingChart
  */
-class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
+class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -36,6 +38,8 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
     literacy6: PropTypes.number.isRequired,
     literacy7: PropTypes.number.isRequired,
     literacy8: PropTypes.number.isRequired,
+    literacy9: PropTypes.number.isRequired,
+    literacy10: PropTypes.number.isRequired,
     who: PropTypes.string.isRequired
   }
 
@@ -46,14 +50,16 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherData = {  
       labels: [
-        ["Discussing advanced", "vocabulary and concepts"],
-        ["Having a conversation with", "children about a", "social-emotional topic"],
-        ["Encouraging children to", "tell stories from", "experiences in their lives"],
-        ["Encouraging children to", "listen and respond", "to peers"],
-        ["Asking open-ended", "questions"],
-        ["Observing or using questions", "to enter children's", "ongoing activity"],
-        ["Repeating or clarifying", "children's comments"],
-        ["Responding to children", "with follow-up", "questions/comments"]
+        ["Defining and/or discussing vocabulary"],
+        ["Discussing concepts related to a text"],
+        ["Encouraging children to retell, reenact", "sequence, or summarize"],
+        ["Relating the book to children's experiences"],
+        ["Making connections to children's language", "and/or cultural backgrounds"],
+        ["Asking children open-ended", "questions/prompts"],
+        ["Responding to children with follow-up", "questions/comments"],
+        ["Encouraging children to listen and", "respond to peers"],
+        ["Facilitating discussion of social", 'issues around equity/fairness'],
+        ["Using multimodal instruction"]
       ],
       datasets: [{
         data: [
@@ -64,27 +70,33 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
           this.props.literacy5,
           this.props.literacy6,
           this.props.literacy7,
-          this.props.literacy8
+          this.props.literacy8,
+          this.props.literacy9,
+          this.props.literacy10
         ],
         backgroundColor: [
           '#3c78d8',
           '#3c78d8',
+          '#3c78d8',
           '#6aa84f',
           '#6aa84f',
-          '#6aa84f',
+          '#f1c232',
+          '#f1c232',
+          '#f1c232',
           Constants.Colors.LI,
-          Constants.Colors.LI,
-          Constants.Colors.LI
+          '#674ea7'
         ],
         hoverBackgroundColor: [
           '#3c78d8',
           '#3c78d8',
+          '#3c78d8',
           '#6aa84f',
           '#6aa84f',
-          '#6aa84f',
+          '#f1c232',
+          '#f1c232',
+          '#f1c232',
           Constants.Colors.LI,
-          Constants.Colors.LI,
-          Constants.Colors.LI
+          '#674ea7'
         ]
       }]
     };
@@ -107,7 +119,9 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
                       this.props.literacy5,
                       this.props.literacy6,
                       this.props.literacy7,
-                      this.props.literacy8
+                      this.props.literacy8,
+                      this.props.literacy9,
+                      this.props.literacy10
                     ) > 20) ?
                     Math.max(
                       this.props.literacy1,
@@ -117,7 +131,9 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
                       this.props.literacy5,
                       this.props.literacy6,
                       this.props.literacy7,
-                      this.props.literacy8
+                      this.props.literacy8,
+                      this.props.literacy9,
+                      this.props.literacy10
                     ) : 20,
                   fontSize: 16,
                   stepSize: 1
@@ -195,4 +211,4 @@ class LiteracyDetailsLanguageChart extends React.Component<Props, {}> {
   }
 }
 
-export default LiteracyDetailsLanguageChart;
+export default LiteracyDetailsReadingChart;

@@ -10,6 +10,7 @@ import LiteracyFoundationalTeacher from './LiteracyFoundationalTeacher';
 import LiteracyFoundationalChild from './LiteracyFoundationalChild';
 import LiteracyWritingTeacher from './LiteracyWritingTeacher';
 import LiteracyWritingChild from './LiteracyWritingChild';
+import LiteracyReadingTeacher from './LiteracyReadingTeacher';
 
 const useStyles = makeStyles({
   tabBar: {
@@ -144,6 +145,12 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
         <Grid container direction='column'>
           <Grid item>
             <LiteracyWritingTeacher />
+          </Grid>
+        </Grid>
+      ) : type === 'ReadingTeacher' ? (
+        <Grid container direction='column'>
+          <Grid item>
+            <LiteracyReadingTeacher />
           </Grid>
         </Grid>
       ) : (null)}

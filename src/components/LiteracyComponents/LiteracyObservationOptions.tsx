@@ -85,13 +85,7 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
 }
 
 LiteracyObservationOptions.propTypes = {
-  handleBegin: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
-  literacyType: PropTypes.string.isRequired,
-  teacherInstruction1: PropTypes.string.isRequired,
-  teacherInstruction2: PropTypes.string.isRequired,
-  childInstruction1: PropTypes.string.isRequired,
-  childInstruction2: PropTypes.string.isRequired
+  handleBegin: PropTypes.func.isRequired
 }
 
 export default LiteracyObservationOptions;

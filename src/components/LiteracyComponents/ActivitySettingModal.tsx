@@ -129,7 +129,7 @@ function ActivitySettingModal(props: Props): React.ReactElement {
               <Grid container direction="row" justify="center" alignItems="center">
                 <Button
                   onClick={(): void => {
-                    handleLiteracyActivitySetting(Constants.LiteracyActivitySettings[checklistType as activitySettingsKey][activitySetting-1]).then(() => {
+                    handleLiteracyActivitySetting(Constants.LiteracyActivitySettings[checklistType as activitySettingsKey][activitySetting]).then(() => {
                       handleAccept();
                     })
                   }}
