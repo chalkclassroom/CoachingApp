@@ -255,7 +255,7 @@ class TrainingLayout extends React.Component<Props, State> {
                     <TrainingVideo videoUrl={this.props.demonstrationUrl} />
                   </div>
                 ) : view === ViewEnum.KNOWLEDGECHECK ? (
-                  <TrainingQuestionnaire section={this.props.section} />
+                  <TrainingQuestionnaire section={this.props.section} literacyType={this.props.literacyType} />
                 ) : null}
               </Grid>
             </Grid>

@@ -988,6 +988,438 @@ const questionBank = {
       "step-by-step manner that meets a predetermined goal. "
     }
   ],
+  'LIFoundational': [
+    // 1: definition of foundational skills
+    {
+      text: "Foundational skills instruction supports children’s learning about:",
+      options: new Map([
+        ["Science content", false],
+        ["Print concepts", false],
+        ["Alphabet knowledge and letter-sound correspondence", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. Foundational skills instruction supports children as they learn that print (i.e., letters and letter patterns) conveys a message and represents our spoken language."
+    },
+    // 2: phonological awareness
+    {
+      text: "Phonological awareness is the ability to identify and manipulate parts of spoken language. All of these are examples of phonological awareness EXCEPT:",
+      options: new Map([
+        ["Identify and create rhymes", false],
+        ["Segment words into syllables", false],
+        ["Identify written letters", true],
+        ["Notice individual sounds, or phonemes, in spoken words", false]
+      ]),
+      feedback: "The correct answer is C. Phonological awareness refers specifically to the sounds of language, not the written form of language such as letters and words."
+    },
+    // 3: alphabet knowledge
+    {
+      text: "Which of the following is an example of a teacher or child focusing on alphabet knowledge?",
+      options: new Map([
+        ["The teacher says, “What sound do you hear at the beginning of dog?”", false],
+        ["A child points to the first letter of their name and says, “K!”", true],
+        ["The teacher asks children to count the syllables in “dinosaur.”", false],
+        ["The teacher asks children to listen for two words that begin with the /b/ sound.", false]
+      ]),
+      feedback: "The correct answer is B. When the focus of teacher instruction or a child’s activity is alphabet knowledge, the letter form must be part of the instruction. For example, if the teacher asks children to listen for two words that begin with the /b/ sound, then come identify the letter ‘b’ in the shared reading book, that would include a focus on alphabet knowledge in addition to letter-sound correspondence and phonological awareness."
+    },
+    // 4: letter-sound correspondence
+    {
+      text: "Letter-sound correspondence means that individual letters and letter combinations represent sounds.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True. When children understand that each letter or combinations of letters (e.g., sh) from the alphabet match specific sounds, they have learned letter-sound correspondence."
+    },
+    // 5: inventive/conventional spelling
+    {
+      text: "A child is doing inventive spelling in which of these examples:",
+      options: new Map([
+        ["A child copies the word “Wednesday” from the morning message.", false],
+        ["A child writes ‘M’ next to a drawing of his mother.", true],
+        ["A child writes their name.", false],
+        ["None of the above.", false]
+      ]),
+      feedback: "The correct answer is B. Children engage in inventive spelling when they segment a sound in a word, select a letter to represent the sound, and write the selected letter(s) to represent the word."
+    },
+    // 6: print concepts
+    {
+      text: "Which of the following is NOT an example of print concepts:",
+      options: new Map([
+        ["The teacher asks children what words rhyme with “hat.”", true],
+        ["The teacher shows children where to start reading on the page.", false],
+        ["The teacher asks a child to identify an upper-case letter.", false],
+        ["A child counts the words in a sentence.", false]
+      ]),
+      feedback: "The correct answer is A. Print concepts refers to an understanding that print conveys a message and is organized in predictable ways (e.g., we always read left-to-right; words are separated by spaces)."
+    },
+    // 7: match spoken words to print
+    {
+      text: "A child points to the words as he “reads” predictable or familiar nursery rhyme printed on chart paper. Which literacy behavior is this?",
+      options: new Map([
+        ["Using knowledge of individual sounds (phonemes)", false],
+        ["Responding to open-ended questions of prompts about foundational skills", false],
+        ["Inventing spellings or generating conventional spellings", false],
+        ["Matching spoken words to print", true]
+      ]),
+      feedback: "The correct answer is D. When children point to printed words as they say them out loud, they show an understanding that print represents spoken language, or that writing can record our speech."
+    },
+    // 8: open-ended q’s
+    {
+      text: "Which of the following is an example of an open-ended question about foundational skills?",
+      options: new Map([
+        ["“Look at these two pictures. Point to the one that begins with /k/.”", false],
+        ["I'm thinking about the book we read yesterday. Can you tell me the name of the big red dog that starts with /c/?”", false],
+        ["“When I say ‘go’, let’s search the classroom for things that begin with /k/!”", true],
+        ["The teacher writes a ‘k’ on the board and asks, “What letter is this?”", false]
+      ]),
+      feedback: "The correct answer is C. Open-ended questions or prompts have more than one correct answer. They require children to come up with a unique response rather than selecting from a set of choices, such as choosing from a group of pictures or letters."
+    },
+    // 9: multi modal instruction
+    {
+      text: "A teacher invites children to trace the letter ‘S’ in a tray of sand. The teacher is focusing on ___________ and using _____________ instruction.",
+      options: new Map([
+        ["Alphabet knowledge; multimodal ", true],
+        ["Alphabet knowledge; vocabulary", false],
+        ["Individual sounds; multimodal", false],
+        ["Individual sounds; vocabulary", false]
+      ]),
+      feedback: "The correct answer is A. This activity supports alphabet knowledge and children’s ability to write letters. Asking children to trace letters in sand is an example of multimodal instruction because the children are experiencing the letter’s form through gesture and their sense of touch.  This would not be considered high-level instruction because the task does not involve abstract thought. This would not be considered vocabulary instruction because the teacher is not talking about the meaning of words."
+    },
+    // 10: realistic reading/writing tasks
+    {
+      text: "Tracing the letter M on a worksheet is building ________; however, if a child were to write the letter M next to a drawing of their mother, they would be using foundational skills in an activity that focuses on _________.",
+      options: new Map([
+        ["Alphabet knowledge; a skill out of context", false],
+        ["Alphabet knowledge; a realistic writing task", true],
+        ["Phonological awareness; a realistic writing task", false],
+        ["Phonological awareness; a skill out of context", false]
+      ]),
+      feedback: "The correct answer is B. Tracing or writing letters on a worksheet is an example of focusing on a skill out of context, or teaching a skill in isolation. In contrast, if a child were to write the letter ‘M’ next to a drawing of their mother, that would be an example of using foundational skills for realistic writing purpose."
+    },
+    // 11: inventive/conventional spelling
+    {
+      text: "When a teacher helps children segment the first sound in a word, select a letter to represent the sound, and write the selected letter to represent the word, what foundational skills are they focusing on?",
+      options: new Map([
+        ["Individual sounds (phonemes)", false],
+        ["Inventive spelling", false],
+        ["Rhyming, alliteration, and/or syllables", false],
+        ["A and B", true]
+      ]),
+      feedback: "The correct answer is D. When children segment a sound in a word, they are noticing individual sounds, or phonemes. When they match the sound that they isolated to a letter and write that letter down to label a drawing or create a message, they are engaging in inventive spelling."
+    },
+    // 12: phonological awareness
+    {
+      text: "Phonological awareness is the ability to:",
+      options: new Map([
+        ["Identify rhyming words", false],
+        ["Identify and manipulate parts of spoken language", false],
+        ["Segment words into syllables", false],
+        ["All of the above", true]
+      ]),
+      feedback: "The correct answer is D. Phonological awareness is the ability to notice the sounds of language, including rhyming words, syllables or parts of words, alliteration, and individual sounds in words (phonemes). It also refers to the ability to manipulate sounds, such as creating a new word by replacing the initial sounds in a word with a different sound (e.g. cat becomes bat)."
+    },
+    // 13: open-ended q’s
+    {
+      text: "Which of the following is NOT an open-ended question or prompt about foundational skills?",
+      options: new Map([
+        ["“Let’s think of words that rhyme with big...”", false],
+        ["“What sound do you hear at the beginning of ‘sand’?”", true],
+        ["“Can you think of words that begin with /s/?”", false],
+        ["“What are rhyming words?”", false]
+      ]),
+      feedback: "The correct answer is B. There is only one correct answer to the question about the sound at the beginning of ‘sand’. The other questions are open-ended because there are many possible correct responses. The children must generate their own response based on their knowledge instead of selecting from a set of choices or identifying the single correct answer."
+    },
+    // 14: match spoken words to print
+    {
+      text: "A teacher leads children in reciting a favorite nursery rhyme. This is an example of matching spoken words to print.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. If the teacher pointed to each word of a nursery rhyme that was printed or written on chart paper while reciting it, that would count as matching spoken words to print."
+    },
+    // 15: multi modal instruction
+    {
+      text: "A teacher encourages children to stomp their feet as they count syllables in words. This is an example of:",
+      options: new Map([
+        ["Inventive or conventional spelling", false],
+        ["Focusing on individual sounds in words", false],
+        ["Matching spoken words to print", false],
+        ["None of the above", true]
+      ]),
+      feedback: "The correct answer is D. This is an example of multi modal instruction (i.e., communicating content through visuals, actions, objects, etc.) with a focus on syllables, which is part of phonological awareness, or the sounds of language."
+    },
+    // 16: alphabet knowledge
+    {
+      text: "The teacher asks a child to come identify a capital or uppercase letter in the morning message. Then the teacher asks the child to identify the letter. What is the focus of the instruction?",
+      options: new Map([
+        ["Alphabet knowledge and inventive spelling", false],
+        ["Alphabet knowledge and phonological awareness", false],
+        ["Print concepts and alphabet knowledge", true],
+        ["Print concepts and inventive spelling", false]
+      ]),
+      feedback: "The correct answer is C. The child uses their alphabet knowledge to identify the letter and demonstrates an understanding of print concepts when identifying an upper-case letter."
+    },
+    // 17: realistic reading/writing tasks
+    {
+      text: "Which of the following is NOT an example of using foundational skills for a realistic reading or writing purpose?",
+      options: new Map([
+        ["Handwriting practice", true],
+        ["Writing a thank you card", false],
+        ["Reading the morning message", false],
+        ["Labeling a drawing", false]
+      ]),
+      feedback: "The correct answer is A. Handwriting practice is an example of focusing on foundational skills in isolation, or outside of a real-world reading/writing task."
+    },
+    // 18: Realistic reading/writing tasks; print concepts
+    {
+      text: "A teacher reads a big book with children, then asks them to come up and identify the sight word ‘me’. The teacher is focusing on:",
+      options: new Map([
+        ["Print concepts", false],
+        ["Teaching skills during a realistic reading or writing task", false],
+        ["Word identification skills", false],
+        ["All of the above", true]
+      ]),
+      feedback: "The correct answer is D. When teachers embed skills instruction within a reading or writing activity that is meaningful to children, such as reading a favorite big book, they have opportunities to focus on several skills at one time."
+    },
+    // 19: print concepts
+    {
+      text: "A teacher says, “Stand up if you hear the /d/ sound in these words…” The focus of instruction is:",
+      options: new Map([
+        ["Rhyming, alliteration, and or/syllables", false],
+        ["Individual sounds (phonemes)", true],
+        ["Alphabet knowledge", false],
+        ["None of the above", false]
+      ]),
+      feedback: "The correct answer is B. When the teacher asks children to isolate or segment one sound in a spoken word, they are focusing on individual sounds or phonemes."
+    },
+    // 20: letter-sound correspondence
+    {
+      text: "Children at the library center work together to sort objects into alphabet tubs by initial sound. They are using their knowledge of:",
+      options: new Map([
+        ["Letter-sound correspondence", false],
+        ["How to match spoken words to print", false],
+        ["Individual sounds (phonemes)", false],
+        ["A and C", true]
+      ]),
+      feedback: "The correct answer is D. In order to sort an object by initial sound, a child must be able to identify the first sound in a spoken word and then remember the letter that is associated with that sound to sort it into that specific tub."
+    },
+  ],
+  "LIWriting": [
+    // 1 - talks about the content or meaning of the writing/drawing
+    {
+      text: "Which of the following is NOT an example of talking about the content or meaning of a piece of writing or drawing?",
+      options: new Map([
+        ["The teacher asks a child what they want to draw about in their journal.", false],
+        ["The teacher tells a child that the ‘B’ they wrote is backwards.", true],
+        ["A child tells the teacher about a drawing of their brother.", false],
+        ["The teacher and a group of children discuss what to add to their list of favorite places in the community.", false]
+      ]),
+      feedback: "The correct answer is B. When teachers and children talk about the content or meaning of writing and/or drawing, they focus on ideas and what they want to communicate. In contrast, when teachers and children talk about a backwards ‘B’, they are focusing on letter formation and alphabet knowledge."
+    },
+    // 2 - draws to communicate meaning/makes writing forms
+    {
+      text: "Which of the following is an example of a child drawing to communicate meaning or making writing forms?",
+      options: new Map([
+        ["A child tells the teacher that they want to draw a picture for their grandpa during centers.", false],
+        ["A child draws an ice cream cone.", false],
+        ["A child draws their mom and writes the letter ‘M’.", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. Talking about an idea for drawing is not the same as actively drawing to communicate meaning or making writing forms. If the child were drawing a picture while talking to the teacher about their drawing, that would count."
+    },
+    // 3 - says aloud the message to be written
+    {
+      text: "A child looks at their drawing and says, “I’m going to write ‘my mom’ on this.” Which writing behavior is this?",
+      options: new Map([
+        ["Writes one or more letters in their name", false],
+        ["Invents spellings or generates conventional spellings", false],
+        ["Says aloud the message to be written", true],
+        ["“Reads” the message", false]
+      ]),
+      feedback: "The correct answer is C. This child made a plan for what they wanted to write and verbalized it, or said it out loud. They have not yet written their name or any other letters."
+    },
+    // 4 - writes one or more letters in their name/invites children to write name
+    {
+      text: "A child named Donovan draws a picture of his family at a baseball game and writes ‘DON’ on the top of the paper. He has:",
+      options: new Map([
+        ["Written one or more letters in his name", true],
+        ["Talked with a teacher about the content or meaning of his drawing", false],
+        ["“Read” the message", false],
+        ["Invented spellings", false]
+      ]),
+      feedback: "The correct answer is A. Donovan wrote three letters in his name. Therefore, his behavior counts as name writing."
+    },
+    // 5 - uses knowledge of the alphabet or letter-sound correspondence
+    {
+      text: "During a whole group interactive writing lesson, the teacher says, “The next word starts with the /b/ sound.” The children reply, “B!” The children are using knowledge of ___________.",
+      options: new Map([
+        ["Vocabulary", false],
+        ["Syllables", false],
+        ["The alphabet and/or letter-sound correspondence", true],
+        ["None of the above", false]
+      ]),
+      feedback: "The correct answer is C. When children hear a sound and can match the sound to a specific letter, they are using knowledge of the alphabet and letter-sound correspondence."
+    },
+    // 6- T supports and C invents spellings or generates conventional spellings
+    {
+      text: "A child wants to write “me” next to their drawing. The teacher says, “Now you say the word and listen for the sounds you hear!” Which teacher behavior is this?",
+      options: new Map([
+        ["Inviting children to write their name", false],
+        ["Supporting children’s inventive and/or conventional spelling", true],
+        ["Talking to children about the content of meaning of the writing/drawing", false],
+        ["Writing a meaningful message in front of children", false]
+      ]),
+      feedback: "The correct answer is B. Teachers support children’s inventive spelling when they prompt children to use their phonological awareness, alphabet knowledge, and letter-sound correspondence skills to write labels. Saying a word out loud will help the child notice the beginning sound and select a letter to represent the sound."
+    },
+    // 7- T invites/C “reads” the message
+    {
+      text: "Which of the following is an example of a teacher inviting children to “read” a message?",
+      options: new Map([
+        ["“Let’s read the morning message. Ready?”", false],
+        ["“What did you write?”", false],
+        ["“Read that to me!”", false],
+        ["All of the above", true]
+      ]),
+      feedback: "The correct answer is D. Any time a teacher suggests or prompts children to “read” their emergent writing, which can be scribbles, letter-like forms, or invented/conventional spellings, it counts as inviting children to “read” a message. The teacher may also ask children to read a message that the class composed together, like a morning message."
+    },
+    // 8- T writes a meaningful message in front of children/demonstrates and talks about processes
+    {
+      text: "A teacher points to the question of the day in front of children (e.g., ‘What animal do you think this is?’), then reads it to them. In this example, the teacher demonstrates and talks about writing processes.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. In this example, the teacher has only written a meaningful message in front of children. If the teacher showed or modeled for children the procedures for writing or the mechanics of writing, such as explaining why they added a question mark at the end, that would count as demonstrating and talking about writing processes."
+    },
+    // 9- T responds positively to all writing forms
+    {
+      text: "A teacher points to a child's scribble marks next to their drawing and says, “I see you wrote a message- tell me about it!” This is an example of a teacher responding positively to all writing forms.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True. The teacher accepts and celebrates the child’s scribble marks even though the child is not forming conventional letters yet. This child is experimenting with emergent writing forms (e.g., scribbles), which is developmentally appropriate for preschool children."
+    },
+    // 10- T invites children to write part of a message
+    {
+      text: "The teacher asks a child to write the letter ‘T’ on a group thank you card the class is writing for their 3rd grade buddies who read to the children on Friday afternoons. This is an example of:",
+      options: new Map([
+        ["Inviting children to write part of a message", true],
+        ["Supporting children’s inventive spelling", false],
+        ["Inviting children to “read” the message", false],
+        ["Talking to children about the content or meaning of the writing", false]
+      ]),
+      feedback: "The correct answer is A. A teacher can prompt children to write a message or part of a message in whole group and individual child settings. Teachers can encourage children to “write” at any stage of development (e.g., scribbles, letter-like forms, inventive spelling, etc.). Examples include “Why don’t you write about that on your picture?” and “You should write the words on that!”"
+    },
+    // 11 - talks about the content or meaning of the writing/drawing
+    {
+      text: "A teacher sits with a group of children at the writing table during centers. The teacher draws a picture as she describes what she is drawing. She encourages children to draw on her paper and add to the story. Which teacher behavior is this?",
+      options: new Map([
+        ["Demonstrates and talks about writing processes", false],
+        ["Responds positively to all writing forms", false],
+        ["Writes a meaningful message in front of children", false],
+        ["Talks to children about the content or meaning of the writing/drawing", true]
+      ]),
+      feedback: "The correct answer is D. The teacher is focusing children’s attention on the content of the drawing. They are generating ideas together as the teacher models how to start a writing project by drawing. If the teacher had added print to the drawing, she would also be writing a meaningful message in front of children."
+    },
+    // 12 - draws to communicate meaning/makes writing forms
+    {
+      text: "A child must produce conventional letters in order to get credit for making writing forms.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. Any instance in which children produce emergent writing forms, including scribbles, zig zags, letter-like forms, or conventional letters, counts as ‘making writing forms."
+    },
+    // 13 - C says aloud the message to be written and T invites children to write part of a message
+    {
+      text: "All of the following are examples of a teacher inviting children to write part of a message EXCEPT:",
+      options: new Map([
+        ["Children build a race track in the blocks center. The teacher asks if they want to make signs that say “start” and “finish” with her.", false],
+        ["Teacher watches a child drawing and says, “You should write the words on that!”", false],
+        ["Teacher encourages children to write their name.", true],
+        ["Teacher invites a child to write ‘M’ for Monday in the morning message.", false]
+      ]),
+      feedback: "The correct answer is C. The Writing observation tool has a separate checklist item for when teachers invite children to write their name. Inviting children to write their name is different from inviting children to write part of a message, which could be written by individual children or composed by a group of children with the teacher (a label, list, note, caption, email, card, etc.)."
+    },
+    // 14 - writes one or more letters in their name/invites children to write name
+    {
+      text: "The teacher looks at a child’s paper and says, “I see the ‘S’ for Sammy. What other letters are in your name? The child says, “A” as he writes that letter. The teacher is ________________; the child is ______________________ and _______________________.",
+      options: new Map([
+        ["Inviting the child to write part of a message; using knowledge of letter-sound correspondence and writing one or more letters in their name", false],
+        ["Inviting the child to write part of a message; using knowledge of the alphabet and writing part of a message", false],
+        ["Inviting the child to write their name; using knowledge of the alphabet and writing one or more letters in their name", true],
+        ["Inviting the child to write their name; using knowledge of letter-sound correspondence and writing part of a message", false]
+      ]),
+      feedback: "The correct answer is C. Children and teachers often do more than one behavior at a time during writing activities. In this example, the teacher is inviting the child to write their name, and the child is using knowledge of the alphabet as they write their name."
+    },
+    // 15 - talks about the content or meaning of the writing/drawing
+    {
+      text: "The teacher joins a few children at the science center as they look at caterpillars. The teacher responds to the children as they talk about the caterpillars (e.g., “I see those little hairs on it’s back, too! I wonder why caterpillars have hair!?”). The teacher then draws some of their observations in the science log and says, “Here, let’s write the words together.” Which type of teacher support for writing is happening?",
+      options: new Map([
+        ["Responds positively to all writing forms", false],
+        ["Invites children to write their name", false],
+        ["Invites children to read the message", false],
+        ["None of the above", true]
+      ]),
+      feedback: "The correct answer is D. The teacher is talking about what they could draw and write about in the class science log. The teacher also invites children to write part of a message (e.g., (labeling their observation as a group). However, the children have not started writing yet, so there is no opportunity for the teacher to respond positively to children’s writing forms or to invite them to read the message."
+    },
+    // 16- T supports and C invents spellings or generates conventional spellings
+    {
+      text: "A child wants to write “dog” on their paper and asks the teacher if the first letter is K. The teacher replies, “K makes the /k/ sound. Dog begins with D like Dylan.” The teacher is:",
+      options: new Map([
+        ["Inviting children to read the message", false],
+        ["Supporting children’s inventive or conventional spelling", true],
+        ["Writing a meaningful message in front of children", false],
+        ["Talking to children about the content of meaning of the writing/drawing", false]
+      ]),
+      feedback: "The correct answer is B. One way that teachers can support children’s inventive spelling skills is to remind them about tools (like an alphabet chart or a friend’s name) in the classroom that can help them remember letter-sound matches."
+    },
+    // 17- T invites/C “reads” the message
+    {
+      text: "The lead teacher encourages a child to read a sign they wrote for the new pet store in the dramatic play center to the co-teacher. This is an example of:",
+      options: new Map([
+        ["Inviting children to “read” a message", true],
+        ["Supporting children’s inventive or conventional spelling", false],
+        ["Writing a meaningful message in front of children", false],
+        ["Demonstrating and talking about writing processes", false]
+      ]),
+      feedback: "The correct answer is A. The teacher can invite children to “read” their message to various audiences, such as a co-teacher, class visitor, peers, etc."
+    },
+    // 18- T writes a meaningful message in front of children/demonstrates and talks about processes
+    {
+      text: "When teachers write a meaningful message in front of children, they model writing for a realistic or authentic purpose. All of the following are examples of this EXCEPT:",
+      options: new Map([
+        ["Writing a list of what children want to learn about the ocean", false],
+        ["Writing the morning message with children’s help", false],
+        ["Drawing a web of pictures and words that describe the ocean (sand, waves, seagulls)", false],
+        ["Writing the letter of the week on chart paper and inviting children to trace it", true]
+      ]),
+      feedback: "The correct answer is D. Demonstrating how to write individual letters, while important for teaching the alphabet and letter formation,  is not an example of writing a meaningful message in front of children."
+    },
+    // 19- T responds positively to all writing forms
+    {
+      text: "The teacher looks at a child’s drawing with scribbles separated by spaces and says, “I can’t tell what letter that is.” This is an example of a teacher responding positively to all writing forms.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The teacher in this example encourages the child to produce conventional letters and thus discourages the child from using scribbles to experiment with emergent writing forms. A teacher who accepts and celebrates all children’s writing even if it doesn’t look like correctly formed letters might say, “I see you wrote a message- tell me about it!”"
+    },
+    // 20- Emergent writing definition
+    {
+      text: "Emergent writing refers to young childrens’ _______________ the writing process. As children engage in meaningful early writing experiences, their understanding of __________________, how to make print forms, and authentic purposes for writing develops.",
+      options: new Map([
+        ["first attempts at; print conventions", true],
+        ["first attempts at; cardinality", false],
+        ["mastery of; print conventions", false],
+        ["mastery of; cardinality", false]
+      ]),
+      feedback: "The correct answer is A. Emergent writing refers to the earliest stages of children’s writing development. As children observe and interact with more expert writers (e.g., teachers and peers), they learn about print conventions (e.g., directionality, spaces between words, etc.)."
+    }
+  ],
   'ac':[
     {
       text: "Two children are in the same center with a board game, but they are playing with " + 

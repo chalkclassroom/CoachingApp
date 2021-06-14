@@ -12,12 +12,14 @@ import DialogContentText from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { addUnlocked } from '../../state/actions/unlocked';
 import { connect } from 'react-redux';
+import * as Constants from '../../constants/Constants';
 
 
 const styles: object = {
   root: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: '100%'
   },
   button: {
     margin: '1em'
@@ -27,10 +29,13 @@ const styles: object = {
   }
 };
 
-type Selection = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'ac';
+type Selection = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'literacy' | 'ac';
+
+type QuestionBankKey = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'LIFoundational' | 'LIWriting' | 'ac';
 
 interface Props {
   section: Selection,
+  literacyType?: Constants.LiteracyTypes
   classes: {
     root: string,
     button: string,
@@ -91,7 +96,7 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
       // failed: false
     };
 
-    this.BATCH_LENGTH = 5;
+    this.BATCH_LENGTH = this.props.section === 'literacy' ? 10 : 5;
 
     if (this.props.section === 'transition'){
       this.magic8Number = 1
@@ -116,7 +121,8 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    const questions = QuestionBank[this.props.section];
+    const questionBankSection = this.props.section === 'literacy' ? 'LI'+this.props.literacyType : this.props.section;
+    const questions = QuestionBank[questionBankSection as QuestionBankKey];
     this.setState({
       questions: questions,
       batch: questions.slice(0, this.BATCH_LENGTH),
@@ -363,10 +369,12 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
     const { currentQuestion, modalOpen } = this.state;
     return (
       <div className={classes.root}>
-        <Stepper activeStep={currentQuestion}>
+        <Stepper activeStep={currentQuestion} style={{paddingLeft: 0, paddingRight: 0}}>
           {this.getStepLabels().map((label, index) =>
             <Step key={index} >
-              <StepLabel>{label}</StepLabel>
+              <StepLabel>
+                {this.props.section === 'literacy' ? '' : label}
+              </StepLabel>
             </Step>
           )}
         </Stepper>
