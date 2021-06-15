@@ -66,6 +66,10 @@ export interface ReduxState {
     listeningCount: number,
     noListeningCount: number
   },
+  literacyCountState: {
+    literacyCount: number,
+    noLiteracyCount: number
+  },
   mathCountState: {
     mathCount: number,
     noMathCount: number

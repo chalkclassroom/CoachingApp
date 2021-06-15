@@ -6,10 +6,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-// import ListeningSummaryChart from './ResultsComponents/ListeningSummaryChart';
+import LiteracySummaryChart from './ResultsComponents/LiteracySummaryChart';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
-// import { clearListeningCount } from "../../state/actions/listening-to-children";
+import { clearLiteracyCount } from "../../state/actions/literacy-instruction";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
@@ -19,9 +19,10 @@ interface Props {
   open: boolean,
   history: H.History,
   clearTeacher(): void,
-  listeningCount: number,
-  noListeningCount: number,
-  // clearListeningCount(): void
+  literacyCount: number,
+  noLiteracyCount: number,
+  clearLiteracyCount(): void,
+  literacyType: string | undefined
 }
 
 /**
@@ -33,9 +34,10 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
     open,
     history,
     clearTeacher,
-    listeningCount,
-    noListeningCount,
-    // clearListeningCount
+    literacyCount,
+    noLiteracyCount,
+    clearLiteracyCount,
+    literacyType
   } = props;
 
   return (
@@ -48,7 +50,17 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          {/* <ListeningSummaryChart listening={listeningCount} notListening={noListeningCount} /> */}
+          <LiteracySummaryChart
+            literacy={literacyCount}
+            noLiteracy={noLiteracyCount}
+            type={
+              literacyType === 'FoundationalTeacher' || literacyType === 'FoundationalChild' ? Constants.LiteracyTypes.FOUNDATIONAL
+              : literacyType === 'WritingTeacher' || literacyType === 'WritingChild' ? Constants.LiteracyTypes.WRITING
+              : literacyType === 'ReadingTeacher' || literacyType === 'ReadingChild' ? Constants.LiteracyTypes.READING
+              : literacyType === 'LanguageTeacher' || literacyType === 'LanguageChild' ? Constants.LiteracyTypes.LANGUAGE
+              : Constants.LiteracyTypes.NONE
+            }
+          />
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
@@ -57,7 +69,7 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
                   clearTeacher();
-                  // clearListeningCount();
+                  clearLiteracyCount();
                   history.push('/Home');
                 }}
               >
@@ -66,14 +78,14 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={Constants.ListeningTheme}>
+            <MuiThemeProvider theme={Constants.LiteracyTheme}>
               <Button
                 color="primary"
                 variant="contained"
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
                   history.push("/LiteracyInstructionResults");
-                  // clearListeningCount();
+                  clearLiteracyCount();
                 }}
               >
                 View Results
@@ -87,12 +99,12 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  listeningCount: number,
-  noListeningCount: number
+  literacyCount: number,
+  noLiteracyCount: number
 } => {
   return {
-    listeningCount: state.listeningCountState.listeningCount,
-    noListeningCount: state.listeningCountState.noListeningCount
+    literacyCount: state.literacyCountState.literacyCount,
+    noLiteracyCount: state.literacyCountState.noLiteracyCount
   };
 };
 
@@ -100,9 +112,9 @@ LiteracyResultsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
   clearTeacher: PropTypes.func.isRequired,
-  listeningCount: PropTypes.number.isRequired,
-  noListeningCount: PropTypes.number.isRequired,
-  // clearListeningCount: PropTypes.func.isRequired
+  literacyCount: PropTypes.number.isRequired,
+  noLiteracyCount: PropTypes.number.isRequired,
+  clearLiteracyCount: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, {clearTeacher})(LiteracyResultsDialog);
+export default connect(mapStateToProps, {clearTeacher, clearLiteracyCount})(LiteracyResultsDialog);

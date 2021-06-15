@@ -15,7 +15,7 @@ import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
 import { connect } from 'react-redux';
-import { updateListeningCount } from "../../state/actions/listening-to-children";
+import { updateLiteracyCount } from "../../state/actions/literacy-instruction";
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 
@@ -96,10 +96,10 @@ interface Props {
       }
     },
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-    handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
+    handlePushLiteracy(mEntry: {checked: Array<number>}): Promise<void>
   },
   teacherSelected: Types.Teacher,
-  updateListeningCount(behavior: boolean): void,
+  updateLiteracyCount(behavior: boolean): void,
   checklist: string
 }
 
@@ -210,12 +210,12 @@ class Checklist extends React.Component<Props, State> {
    */
   handleSubmit = (checked: Array<number>): void => {
     if (checked.indexOf(Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1)===0){
-      this.props.updateListeningCount(false)
+      this.props.updateLiteracyCount(false)
     } else {
-      this.props.updateListeningCount(true)
+      this.props.updateLiteracyCount(true)
     }
     this.setState({in: false}, () => {
-      this.props.firebase.handlePushListening({checked}).then(() => {
+      this.props.firebase.handlePushLiteracy({checked}).then(() => {
         this.setState({
           checked: [],
           in: true,
@@ -250,7 +250,7 @@ class Checklist extends React.Component<Props, State> {
         })
       }),
       handleSession: PropTypes.func,
-      handlePushListening: PropTypes.func
+      handlePushLiteracy: PropTypes.func
     }).isRequired,
     classes: PropTypes.object.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
@@ -264,7 +264,7 @@ class Checklist extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
-    updateListeningCount: PropTypes.func.isRequired
+    updateLiteracyCount: PropTypes.func.isRequired
   }
 
   /**
@@ -424,4 +424,4 @@ const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teach
   };
 };
 
-export default connect(mapStateToProps, { updateListeningCount })(withStyles(styles)(Checklist));
+export default connect(mapStateToProps, { updateLiteracyCount })(withStyles(styles)(Checklist));

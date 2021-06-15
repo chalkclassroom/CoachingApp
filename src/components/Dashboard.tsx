@@ -382,6 +382,7 @@ class Dashboard extends React.Component<Props, State> {
         <LiteracyResultsDialog
           open={this.state.resultsDialog==="LI"}
           history={this.props.history}
+          literacyType={this.props.checklistType}
         />
         <ACResultsDialog
           open={this.state.resultsDialog==="AC"}
