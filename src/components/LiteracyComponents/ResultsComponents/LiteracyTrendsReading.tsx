@@ -62,6 +62,8 @@ const dataRowsTeacher = [
 const useStyles = makeStyles({
   root: {
     width: '100%',
+    // maxHeight: '70vh',
+    // border: '1px solid red'
     // overflowX: 'auto'
   },
   container: {
@@ -172,7 +174,7 @@ export default function LiteracyTrendsReading(props: Props) {
         </Grid>
       </Grid>
       <Paper className={classes.root}>
-        <TableContainer className={classes.container}>
+        <TableContainer className={classes.container} style={{maxHeight: '65vh', overflowY: 'scroll', overflowX: 'scroll'}}>
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
@@ -207,7 +209,7 @@ export default function LiteracyTrendsReading(props: Props) {
                 const checklistItem = 'literacy' + (index+1).toString();
                 return(
                 <TableRow key={index} hover role="checkbox" tabIndex={-1}>
-                  <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold', minWidth: 250, position: 'sticky', left: 0}}>
+                  <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold', minWidth: 275, position: 'sticky', left: 0}}>
                     {row.name}
                   </TableCell>
                   {data.filter(obj => {
@@ -223,9 +225,9 @@ export default function LiteracyTrendsReading(props: Props) {
                 );
               })}
             </TableBody>
-            <TableHead>
+            <TableHead style={{position: 'sticky'}}>
               <TableRow>
-                <TableCell style={{minWidth: 250, position: 'sticky', left: 0}}>
+                <TableCell style={{minWidth: 250, position: 'sticky', left: 0, bottom: 0}}>
                   Total number of 1-minute intervals
                 </TableCell>
                 {data.filter(obj => {
@@ -235,7 +237,7 @@ export default function LiteracyTrendsReading(props: Props) {
                     key={index}
                     align={'right'}
                     width="20%"
-                    style={{ fontWeight: 'bold'}}
+                    style={{ fontWeight: 'bold', position: 'sticky', bottom: 0}}
                   >
                     {total}
                   </TableCell>

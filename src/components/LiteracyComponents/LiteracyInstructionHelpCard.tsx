@@ -154,7 +154,19 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
             <LiteracyReadingTeacher />
           </Grid>
         </Grid>
+      ) : type === 'ReadingTeacher' ? (
+        <Grid container direction='column'>
+          <Grid item>
+            <LiteracyReadingTeacher />
+          </Grid>
+        </Grid>
       ) : type === 'Language' ? (
+        <Grid container direction='column'>
+          <Grid item>
+            <LiteracyLanguageTeacher />
+          </Grid>
+        </Grid>
+      ) : type === 'LanguageTeacher' ? (
         <Grid container direction='column'>
           <Grid item>
             <LiteracyLanguageTeacher />

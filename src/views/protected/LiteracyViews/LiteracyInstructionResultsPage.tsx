@@ -799,8 +799,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   />
                 </Grid>
                 {(this.props.location.state.type === Constants.LiteracyTypes.READING) ? (
-                  <Grid item>
-                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h6" style={{textAlign: "center", fontFamily: 'Arimo'}}>
                       Total Length of Observation: {Math.floor((this.state.sessionTime/1000)/60)}m {Math.round((((this.state.sessionTime/1000)/60) % 1) * 60) }s
                     </Typography>
                   </Grid>

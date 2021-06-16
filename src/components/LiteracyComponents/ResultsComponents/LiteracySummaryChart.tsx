@@ -104,7 +104,7 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
             }
           }}
           width={650}
-          height={400}
+          height={350}
         />
       </div>
     );
