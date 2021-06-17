@@ -200,5 +200,6 @@ export interface CalendarEvent {
   resource: string,
   hexColor?: string,
   type: string,
-  id: string
+  id: string,
+  conferencePlanSessionId?: string
 }

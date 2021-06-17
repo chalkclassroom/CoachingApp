@@ -2790,7 +2790,8 @@ class Firebase {
                   : doc.data().tool === 'Sequential Activities' ? 'SA'
                   : doc.data().tool === 'Literacy Instruction' ? 'LI'
                   : 'AC',
-                id: doc.id
+                id: doc.id,
+                conferencePlanSessionId: doc.data().sessionId
               })
             }
           })

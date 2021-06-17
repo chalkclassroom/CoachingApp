@@ -27,7 +27,8 @@ import {
   Popover,
   Modal,
   IconButton,
-  Tooltip
+  Tooltip,
+  Paper
 } from '@material-ui/core';
 import CloseIcon from "@material-ui/icons/Close";
 import Fab from "@material-ui/core/Fab";
@@ -49,6 +50,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import ObserveIcon from "@material-ui/icons/Visibility";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
 import ConferencePlansIcon from "@material-ui/icons/ListAlt";
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { Calendar, momentLocalizer, SlotInfo, Views, EventProps } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
@@ -322,7 +325,8 @@ type Props = RouteComponentProps & {
   history: H.History,
   classes: Style,
   type: string,
-  teacherList: Array<Types.Teacher>
+  teacherList: Array<Types.Teacher>,
+  changeTeacher(teacherInfo: Types.Teacher): Types.Teacher,
 }
 
 interface Teacher {
@@ -366,7 +370,7 @@ interface State {
   actionPlanEvents: Array<Types.CalendarEvent>,
   conferencePlanEvents: Array<Types.CalendarEvent>,
   observationEvents: Array<any>,
-  changeTeacher(teacherInfo: Types.Teacher): Types.Teacher
+  view: number
   // type: string
 }
 
@@ -418,7 +422,8 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventType: '',
       actionPlanEvents: [],
       conferencePlanEvents: [],
-      observationEvents: []
+      observationEvents: [],
+      view: 0
       // type: ''
     };
   }
@@ -462,10 +467,11 @@ class TeacherListPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    console.log('COMPONENTDIDMOUNT');
+    console.log('COMPONENTDIDMOUNT', this.state.view);
     firebase.getRecentObservations3().then((data: Array<{
       id: string,
       sessionStart: {value: Date},
+      sessionEnd: {value: Date},
       teacher: string,
       type: string
     }>) => {
@@ -474,6 +480,7 @@ class TeacherListPage extends React.Component<Props, State> {
       data.forEach((observation: {
         id: string,
         sessionStart: {value: Date},
+        sessionEnd: {value: Date},
         teacher: string,
         type: string
       }) => {
@@ -483,7 +490,7 @@ class TeacherListPage extends React.Component<Props, State> {
         myArr.push({
           title: 'Observation',
           start: observation.sessionStart.value,
-          end: observation.sessionStart.value,
+          end: observation.sessionEnd.value,
           allDay: false,
           resource: observation.teacher.slice(6),
           // hexColor: 'a0febf',
@@ -1150,7 +1157,7 @@ class TeacherListPage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <div className={classes.container}>
+        <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
           <Popover
             id={id}
@@ -1185,7 +1192,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     <Grid item xs={12}>
                       <Typography
                         variant="h6"
-                        onClick={(): void => {
+                        /* onClick={(): void => {
                           const teacherObject = this.props.teacherList.filter(teacher => {
                             return teacher.id === clickedEvent.resource
                           })
@@ -1194,7 +1201,7 @@ class TeacherListPage extends React.Component<Props, State> {
                             pathname: `/${ToolNames[clickedEvent.type as ToolNamesKey]}Results`,
                             state: {sessionId: clickedEvent.id}
                           })
-                        }}
+                        }} */
                         // onClick={(): void => {console.log('tool', ToolNames[clickedEvent.type as ToolNamesKey])}}
                         style={{fontFamily: 'Arimo', fontWeight: 'bold'}}
                       >
@@ -1225,6 +1232,44 @@ class TeacherListPage extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                 </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={(): void => {
+                      if (clickedEvent.title === 'Observation') {
+                        const teacherObject = this.props.teacherList.filter(teacher => {
+                          return teacher.id === clickedEvent.resource
+                        })
+                        this.props.changeTeacher(teacherObject[0])
+                        
+                        this.props.history.push({
+                          pathname: `/${ToolNames[clickedEvent.type]}Results`,
+                          state: {sessionId: clickedEvent.id}
+                        })
+                      } else if (clickedEvent.title === 'Action Plan') {
+                        this.props.history.push({
+                          pathname: "/ActionPlan",
+                          state: {
+                            actionPlanId: clickedEvent.id,
+                            teacherId: clickedEvent.resource
+                          }
+                        })
+                      } else if (clickedEvent.title === 'Conference Plan') {
+                        this.props.history.push({
+                          pathname: "/ConferencePlan",
+                          state: {
+                            conferencePlanId: clickedEvent.id,
+                            teacherId: clickedEvent.resource,
+                            sessionId: clickedEvent.conferencePlanSessionId
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    {clickedEvent.title === 'Observation' ? 'VIEW RESULTS' : clickedEvent.title === 'Action Plan' ? 'VIEW ACTION PLAN' : 'VIEW CONFERENCE PLAN'}
+                  </Button>
+                </Grid>
               </Grid>
             ) : (<Typography>no event</Typography>)}
           </Popover>
@@ -1253,7 +1298,7 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             click me
           </button> */}
-          <div>
+          <Grid item>
             <Grid container direction='row' justify='center' alignItems='center'>
               {/* <Grid item xs={3}>
                 <List>
@@ -1274,42 +1319,117 @@ class TeacherListPage extends React.Component<Props, State> {
                 </List>
               </Grid> */}
               <Grid item xs={12}>
-                {this.state.observationEvents ? (<Calendar
-                  popup
-                  localizer={localizer}
-                  // events={[...myEventsList, ...this.state.actionPlanEvents]}
-                  events={this.state.observationEvents ? this.state.observationEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents) : []}
-                  selectable
-                  step={60}
-                  showMultiDayTimes
-                  components={{
-                    event: EventComponent,
-                    // timeSlotWrapper: ColoredDateCellWrapper,
-                    // eventPropGetter: eventStyleGetter
-                  }}
-                  style={{height: '70vh'}}
-                  eventPropGetter={eventStyleGetter}
+                {this.state.view === 1 ? (
+                  <Calendar
+                    popup
+                    localizer={localizer}
+                    // events={[...myEventsList, ...this.state.actionPlanEvents]}
+                    events={this.state.observationEvents ? this.state.observationEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents) : []}
+                    selectable
+                    step={60}
+                    showMultiDayTimes
+                    components={{
+                      event: EventComponent,
+                      // timeSlotWrapper: ColoredDateCellWrapper,
+                      // eventPropGetter: eventStyleGetter
+                    }}
+                    style={{height: '60vh'}}
+                    eventPropGetter={eventStyleGetter}
 
-                  onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
-                  onSelectSlot={(slot: SlotInfo
-                    /* {
-                    action: string,
-                    bounds: {},
-                    box: undefined,
-                    start: Date,
-                    end: Date,
-                    slots: Array<Date>
-                  } */
-                  ): void => {
-                    this.setState({newEventDate: slot.start}, () => {
-                      this.setState({newEventModal: true})
-                    });
-                  }}
-                  longPressThreshold={20}
-                />) : (<Typography>Fetching data</Typography>)}
+                    onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
+                    onSelectSlot={(slot: SlotInfo
+                      /* {
+                      action: string,
+                      bounds: {},
+                      box: undefined,
+                      start: Date,
+                      end: Date,
+                      slots: Array<Date>
+                    } */
+                    ): void => {
+                      this.setState({newEventDate: slot.start}, () => {
+                        this.setState({newEventModal: true})
+                      });
+                    }}
+                    longPressThreshold={20}
+                  />
+                ) : (
+                  <Table style={{height: '60vh'}}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className={classes.nameCellHeader}>
+                          Last
+                          <br />
+                          Name
+                        </TableCell>
+                        <TableCell className={classes.nameCellHeader}>
+                          First
+                          <br />
+                          Name
+                        </TableCell>
+                        <TableCell className={classes.emailCellHeader}>
+                          Email
+                        </TableCell>
+                        {/* {sortedSvg.map((item, index) => (
+                          <TableCell
+                            className={classes.magicEightCell}
+                            style={{
+                              position: "sticky",
+                              top: 0,
+                              backgroundColor: "#FFFFFF"
+                            }}
+                            key={index}
+                          >
+                            <img
+                              src={item}
+                              alt={sortedAltText[index]}
+                              className={classes.magicEightIcon}
+                            />
+                          </TableCell>
+                        ))} */}
+                        <TableCell className={classes.nameCellHeader}>
+                          Goals
+                          <br />
+                          Met
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {this.props.teacherList.map((teacher, index) => (
+                        <TableRow
+                          className={classes.row}
+                          key={index}
+                          onClick={(): void => this.selectTeacher(teacher)}
+                        >
+                          <TableCell className={classes.nameField}>
+                            {teacher.lastName}
+                          </TableCell>
+                          <TableCell className={classes.nameField}>
+                            {teacher.firstName}
+                          </TableCell>
+                          <TableCell className={classes.emailField}>
+                            {teacher.email}
+                          </TableCell>
+                          {[...Array(8).keys()].map((value, index) => (
+                            <TableCell className={classes.magicEightCell} key={index}>
+                              {teacher.unlocked !== undefined &&
+                                teacher.unlocked.includes(index + 1) && (
+                                  <VisibilityOutlinedIcon
+                                    className={classes.unlockedIcon}
+                                  />
+                                )}
+                            </TableCell>
+                          ))}
+                          <TableCell className={classes.nameField}>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </Grid>
             </Grid>
-          </div>
+          </Grid>
           {/* <div className={classes.tableContainer}>
             <Table>
               <TableHead>
@@ -1406,6 +1526,20 @@ class TeacherListPage extends React.Component<Props, State> {
               = Co-created Action plan
             </div>
           </div> */}
+          <Grid item style={{paddingTop: '2em'}}>
+            <Paper elevation={2}>
+              <BottomNavigation
+                value={this.state.view}
+                onChange={(event, newValue) => {
+                  this.setState({view: newValue});
+                }}
+                showLabels
+              >
+                <BottomNavigationAction label="Teachers" icon={<ConferencePlansIcon />} />
+                <BottomNavigationAction label="Calendar" icon={<ActionPlansIcon />} />
+              </BottomNavigation>
+            </Paper>
+          </Grid>
           <Modal open={newEventModal}>
             <div style={getModalStyle()} className={classes.paper}>
               <Grid container direction="column" style={{height: '100%', overflowY: 'auto'}}>
@@ -1554,7 +1688,7 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             <DialogTitle id="add-alert-title">{alertText}</DialogTitle>
           </Dialog>
-        </div>
+        </Grid>
       </div>
     );
   }

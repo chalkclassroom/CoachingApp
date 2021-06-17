@@ -60,21 +60,21 @@ exports.funcRecentObservations = functions.https.onCall(async(data, context) => 
           idSE, teacherSE, sessionStartSE
         ORDER BY sessionStartAC, sessionStartSA, sessionStartCC, sessionStartTT, sessionStartLC, sessionStartMI, sessionStartIN, sessionStartSE`; */
 
-  const sqlQuery = `SELECT id, teacher, sessionStart, 'AC' as type from cqrefpwa.observations.ac AS ac
+  const sqlQuery = `SELECT id, teacher, sessionStart, sessionEnd, 'AC' as type from cqrefpwa.observations.ac AS ac
     WHERE (ac.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND ac.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'SA' as type FROM cqrefpwa.observations.sequential AS sequential
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SA' as type FROM cqrefpwa.observations.sequential AS sequential
     WHERE (sequential.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND sequential.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'CC' as type FROM cqrefpwa.observations.climate AS climate
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'CC' as type FROM cqrefpwa.observations.climate AS climate
     WHERE (climate.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND climate.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'TT' as type FROM cqrefpwa.observations.transition AS transition
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'TT' as type FROM cqrefpwa.observations.transition AS transition
     WHERE (transition.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND transition.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'MI' as type FROM cqrefpwa.observations.math AS math
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'MI' as type FROM cqrefpwa.observations.math AS math
     WHERE (math.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND math.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'IN' as type FROM cqrefpwa.observations.level AS instruction
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'IN' as type FROM cqrefpwa.observations.level AS instruction
     WHERE (instruction.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND instruction.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'LC' as type FROM cqrefpwa.observations.listening AS listening
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LC' as type FROM cqrefpwa.observations.listening AS listening
     WHERE (listening.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND listening.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, 'SE' as type FROM cqrefpwa.observations.engagement AS engagement
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SE' as type FROM cqrefpwa.observations.engagement AS engagement
     WHERE (engagement.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND engagement.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
     ORDER BY sessionStart desc`;
 
