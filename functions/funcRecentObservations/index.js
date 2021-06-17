@@ -14,14 +14,25 @@ const bigquery = new BigQuery();
 
 exports.funcRecentObservations = functions.https.onCall(async(data, context) => {
   //SQL query to get number of checks for each item on checklist
-  const sqlQuery = `SELECT ac.teacher AS teacherAC, ac.sessionStart AS sessionStartAC, ac.id AS idAC,
+  /* const sqlQuery = `SELECT ac.teacher AS teacherAC, ac.sessionStart AS sessionStartAC, ac.id AS idAC,
           sequential.sessionStart AS sessionStartSA, sequential.id AS idSA, sequential.teacher AS teacherSA,
           climate.teacher AS teacherCC, climate.sessionStart AS sessionStartCC, climate.id AS idCC,
           transition.teacher AS teacherTT, transition.sessionStart AS sessionStartTT, transition.id AS idTT,
           listening.teacher AS teacherLC, listening.sessionStart AS sessionStartLC, listening.id AS idLC,
           math.teacher AS teacherMI, math.sessionStart AS sessionStartMI, math.id AS idMI,
           instruction.teacher AS teacherIN, instruction.sessionStart AS sessionStartIN, instruction.id AS idIN,
-          engagement.teacher AS teacherSE, engagement.sessionStart AS sessionStartSE, engagement.id AS idSE
+          engagement.teacher AS teacherSE, engagement.sessionStart AS sessionStartSE, engagement.id AS idSE,
+          CASE
+            WHEN transition.id IS NOT NULL THEN 'TT'
+            WHEN climate.id IS NOT NULL THEN 'CC'
+            WHEN math.id IS NOT NULL THEN 'MI'
+            WHEN instruction.id IS NOT NULL THEN 'IN'
+            WHEN engagement.id IS NOT NULL THEN 'SE'
+            WHEN listening.id IS NOT NULL THEN 'LC'
+            WHEN sequential.id IS NOT NULL THEN 'SA'
+            WHEN ac.id IS NOT NULL THEN 'AC'
+              ELSE 'LI'
+            END as type
         FROM (cqrefpwa.observations.sequential AS sequential FULL OUTER JOIN cqrefpwa.observations.ac
           AS ac ON ac.id = sequential.id AND ac.teacher = sequential.teacher)
           FULL OUTER JOIN cqrefpwa.observations.climate AS climate ON ac.id = climate.id AND ac.teacher = climate.teacher
@@ -47,7 +58,25 @@ exports.funcRecentObservations = functions.https.onCall(async(data, context) => 
           idMI, teacherMI, sessionStartMI,
           idIN, teacherIN, sessionStartIN,
           idSE, teacherSE, sessionStartSE
-        ORDER BY sessionStartAC, sessionStartSA, sessionStartCC, sessionStartTT, sessionStartLC, sessionStartMI, sessionStartIN, sessionStartSE`;
+        ORDER BY sessionStartAC, sessionStartSA, sessionStartCC, sessionStartTT, sessionStartLC, sessionStartMI, sessionStartIN, sessionStartSE`; */
+
+  const sqlQuery = `SELECT id, teacher, sessionStart, 'AC' as type from cqrefpwa.observations.ac AS ac
+    WHERE (ac.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND ac.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'SA' as type FROM cqrefpwa.observations.sequential AS sequential
+    WHERE (sequential.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND sequential.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'CC' as type FROM cqrefpwa.observations.climate AS climate
+    WHERE (climate.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND climate.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'TT' as type FROM cqrefpwa.observations.transition AS transition
+    WHERE (transition.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND transition.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'MI' as type FROM cqrefpwa.observations.math AS math
+    WHERE (math.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND math.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'IN' as type FROM cqrefpwa.observations.level AS instruction
+    WHERE (instruction.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND instruction.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'LC' as type FROM cqrefpwa.observations.listening AS listening
+    WHERE (listening.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND listening.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    UNION DISTINCT SELECT id, teacher, sessionStart, 'SE' as type FROM cqrefpwa.observations.engagement AS engagement
+    WHERE (engagement.observedBy = '/user/4CPhcZa4VhOelWHk56xmN2BTwJO2' AND engagement.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
+    ORDER BY sessionStart desc`;
 
   console.log(sqlQuery);
 

@@ -55,6 +55,7 @@ import NewEventStepper from '../../../components/MyTeachersComponents/NewEventSt
 import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { changeTeacher } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
@@ -363,8 +364,22 @@ interface State {
   newEventTool: Types.ToolNamesKey | null,
   newEventType: string,
   actionPlanEvents: Array<Types.CalendarEvent>,
-  conferencePlanEvents: Array<Types.CalendarEvent>
+  conferencePlanEvents: Array<Types.CalendarEvent>,
+  observationEvents: Array<any>,
+  changeTeacher(teacherInfo: Types.Teacher): Types.Teacher
   // type: string
+}
+
+const ToolNames = {
+  'TT': 'TransitionTime',
+  'CC': 'ClassroomClimate',
+  'MI': 'MathInstruction',
+  'IN': 'LevelOfInstruction',
+  'SE': 'StudentEngagement',
+  'LC': 'ListeningToChildren',
+  'SA': 'SequentialActivities',
+  'LI': 'LiteracyInstruction',
+  'AC': 'AssociativeCooperativeInteractions'
 }
 
 /**
@@ -402,7 +417,8 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventTool: null,
       newEventType: '',
       actionPlanEvents: [],
-      conferencePlanEvents: []
+      conferencePlanEvents: [],
+      observationEvents: []
       // type: ''
     };
   }
@@ -447,6 +463,47 @@ class TeacherListPage extends React.Component<Props, State> {
   componentDidMount(): void {
     const firebase = this.context;
     console.log('COMPONENTDIDMOUNT');
+    firebase.getRecentObservations3().then((data: Array<{
+      id: string,
+      sessionStart: {value: Date},
+      teacher: string,
+      type: string
+    }>) => {
+      console.log('i got the data here', data);
+      const myArr: Array<Types.CalendarEvent> = [];
+      data.forEach((observation: {
+        id: string,
+        sessionStart: {value: Date},
+        teacher: string,
+        type: string
+      }) => {
+        /* const obsArray = Object.entries(observation).filter(value => value[1] !== null);
+        const obsObject = {id: '', sessionStart: null, teacher: '', type: ''};
+        console.log('obs obj', obsObject) */
+        myArr.push({
+          title: 'Observation',
+          start: observation.sessionStart.value,
+          end: observation.sessionStart.value,
+          allDay: false,
+          resource: observation.teacher.slice(6),
+          // hexColor: 'a0febf',
+          type: observation.type,
+          id: observation.id
+        })
+
+        /* const newObs = {
+          title: 'Observation',
+          start: new Date(2021, 5, 14, 8, 30, 14, 0),
+          end: new Date(2021, 5, 14, 9, 10, 47, 0),
+          allDay: false,
+          resource: '7OTNaap61PbpMsM2p2JS',
+          hexColor: 'a0febf',
+          type: value.idAC ? 'AC': value.idCC ? 'CC' : value.idTT ? 'TT' : value.idSA ? 'SA' : value.idSE ? 'SE' : value.idIN ? 'IN' : value.idLC ? 'LC' : value.idMI ? 'MI' : 'LI'
+        } */
+      })
+      console.log('what is myArr', myArr)
+      this.setState({observationEvents: myArr})
+    });
     firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
       this.setState({actionPlanEvents: actionPlanEvents})
     })
@@ -905,7 +962,8 @@ class TeacherListPage extends React.Component<Props, State> {
       legendIcon: PropTypes.string
     }).isRequired,
     type: PropTypes.string.isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    history: ReactRouterPropTypes.history.isRequired,
+    changeTeacher: PropTypes.string.isRequired
   }
 
   /**
@@ -1125,7 +1183,21 @@ class TeacherListPage extends React.Component<Props, State> {
                       }
                     </Grid> */}
                     <Grid item xs={12}>
-                      <Typography variant="h6" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                      <Typography
+                        variant="h6"
+                        onClick={(): void => {
+                          const teacherObject = this.props.teacherList.filter(teacher => {
+                            return teacher.id === clickedEvent.resource
+                          })
+                          this.props.changeTeacher(teacherObject[0])
+                          this.props.history.push({
+                            pathname: `/${ToolNames[clickedEvent.type as ToolNamesKey]}Results`,
+                            state: {sessionId: clickedEvent.id}
+                          })
+                        }}
+                        // onClick={(): void => {console.log('tool', ToolNames[clickedEvent.type as ToolNamesKey])}}
+                        style={{fontFamily: 'Arimo', fontWeight: 'bold'}}
+                      >
                         {clickedEvent.title}
                       </Typography>
                     </Grid>
@@ -1202,11 +1274,11 @@ class TeacherListPage extends React.Component<Props, State> {
                 </List>
               </Grid> */}
               <Grid item xs={12}>
-                <Calendar
+                {this.state.observationEvents ? (<Calendar
                   popup
                   localizer={localizer}
                   // events={[...myEventsList, ...this.state.actionPlanEvents]}
-                  events={myEventsList.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents)}
+                  events={this.state.observationEvents ? this.state.observationEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents) : []}
                   selectable
                   step={60}
                   showMultiDayTimes
@@ -1234,7 +1306,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     });
                   }}
                   longPressThreshold={20}
-                />
+                />) : (<Typography>Fetching data</Typography>)}
               </Grid>
             </Grid>
           </div>
@@ -1500,6 +1572,6 @@ const mapStateToProps = (state: Types.ReduxState): {
 
 TeacherListPage.contextType = FirebaseContext;
 export default withRouter(connect(
-  mapStateToProps
+  mapStateToProps, {changeTeacher}
 )(withStyles(styles)(TeacherListPage)));
 // export default withStyles(styles)(withRouter(TeacherListPage));

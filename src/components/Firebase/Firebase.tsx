@@ -75,9 +75,9 @@ class Firebase {
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      if (process.env.USE_LOCAL_FUNCTIONS) {
+      // if (process.env.USE_LOCAL_FUNCTIONS) {
         this.functions.useFunctionsEmulator('http://localhost:5001')
-      }
+      // }
       // this.sessionRef = null;
     }
   }
@@ -545,6 +545,24 @@ class Firebase {
       .catch((error: Error) =>
         console.error("Error occurred during Promise.all() resolution: ", error)
       );}
+  };
+
+  /**
+   * Classroom Climate cloud function
+   * get average tone rating for observation session
+   * @param {string} sessionId
+   */
+   getRecentObservations3 = async (): Promise<{} | void> => {
+    const getRecentObservations = this.functions.httpsCallable(
+      "funcRecentObservations"
+    );
+    return getRecentObservations()
+      .then((result) => 
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting average tone rating: ", error)
+      );
   };
 
   /* getCoachList = async function() {
@@ -2731,7 +2749,8 @@ class Firebase {
                   : doc.data().tool === 'Listening to Children' ? 'LC'
                   : doc.data().tool === 'Sequential Activities' ? 'SA'
                   : doc.data().tool === 'Literacy Instruction' ? 'LI'
-                  : 'AC'
+                  : 'AC',
+                id: doc.id
               })
             }
           })
@@ -2770,7 +2789,8 @@ class Firebase {
                   : doc.data().tool === 'Listening to Children' ? 'LC'
                   : doc.data().tool === 'Sequential Activities' ? 'SA'
                   : doc.data().tool === 'Literacy Instruction' ? 'LI'
-                  : 'AC'
+                  : 'AC',
+                id: doc.id
               })
             }
           })

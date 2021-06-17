@@ -35,7 +35,12 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  location: {
+    state: {
+      sessionId: string
+    }
+  },
 }
 
 interface Style {
@@ -172,7 +177,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.state.sessionDates[0].id },
+              this.setState({ sessionId: this.props.location.state.sessionId ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
                 () => {
                   this.getData();
                 }
@@ -430,6 +435,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
+    console.log('location state', this.props.location.state, this.state.sessionId)
     if (this.props.teacherSelected) {
       this.handleDateFetching(this.props.teacherSelected.id);
       this.handleTrendsFetch(this.props.teacherSelected.id);

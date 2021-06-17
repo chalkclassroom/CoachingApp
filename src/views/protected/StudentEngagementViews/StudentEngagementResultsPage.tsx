@@ -29,7 +29,12 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  location: {
+    state: {
+      sessionId: string
+    }
+  },
 }
 
 interface Style {
@@ -159,7 +164,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.state.sessionDates[0].id },
+              this.setState({ sessionId: this.props.location.state.sessionId ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
                 () => {
                   this.getData();
                 }

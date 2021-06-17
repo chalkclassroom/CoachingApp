@@ -199,5 +199,6 @@ export interface CalendarEvent {
   allDay?: boolean
   resource: string,
   hexColor?: string,
-  type: string
+  type: string,
+  id: string
 }
