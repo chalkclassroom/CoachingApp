@@ -521,7 +521,7 @@ class Dashboard extends React.Component<Props, State> {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);
                               firebase.endSession(new Date(sessionEnd));
-                            } else {
+                            } else if (this.props.type !== "LI") {
                               firebase.endSession();
                             }
                           }}

@@ -647,13 +647,32 @@ class Firebase {
   };
 
   /**
+   * adds literacy 1-minute observation to database
+   * @param {object} mEntry
+   */
+   handlePushLiteracy = async (mEntry: {checked: Array<number>}):
+   Promise<firebase.firestore.DocumentReference|void> => {
+     return this.sessionRef
+       .collection("entries")
+       .add({
+         Checked: mEntry.checked,
+         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+       })
+       .catch((error: Error) =>
+         console.error("Error occurred adding observation: ", error)
+       );
+   };
+
+  /**
    * sets fields in document for current observation
    * @param {string} activitySetting
    */
    handleLiteracyActivitySetting = async (activitySetting: string): Promise<void> => {
     this.sessionRef
     .update({
-      activitySetting: activitySetting
+      activitySetting: activitySetting,
+      end: firebase.firestore.FieldValue.serverTimestamp(),
+      completed: true
     })
     .catch((error: Error) =>
       console.error("Error occurred updating session ref: ", error)

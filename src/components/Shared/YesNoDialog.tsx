@@ -105,13 +105,13 @@ class YesNoDialog extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <ActivitySettingModal
+        {this.props.literacy !=='' ? (<ActivitySettingModal
           open={(this.props.literacy!=='') && this.state.open}
           handleClose={this.handleClose}
           handleAccept={this.handleAccept}
           handleLiteracyActivitySetting={this.props.handleLiteracyActivitySetting}
           checklistType={this.props.literacy}
-        />
+        />) : null}
         <Button
           onClick={this.handleClickOpen}
           variant={this.props.buttonVariant}
