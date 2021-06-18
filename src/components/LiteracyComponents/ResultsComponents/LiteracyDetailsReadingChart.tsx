@@ -157,9 +157,6 @@ class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
                   fontColor: 'black',
                   backdropColor: 'blue',
                   font: 'Arimo',
-                  /* callback: function(value: string) {
-                    return <div style={{fontSize: '34'}}>{value}</div>;
-                } */
                 },
                 scaleLabel: {
                   display: false,

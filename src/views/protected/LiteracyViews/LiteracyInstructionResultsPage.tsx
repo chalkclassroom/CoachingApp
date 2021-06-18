@@ -163,14 +163,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       noDataYet: false
     };
   }
-
-  /**
-   * @param {string} teacherId
-   */
-  handleTrendsFetching = (teacherId: string): void => {
-    this.handleTrendsFetch(teacherId);
-  };
-
+  
   /**
    * @param {string} sessionId
    */
@@ -253,31 +246,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         }}
       );
     })
-  };
-
-  /**
-   * @param {string} teacherId
-   */
-  handleTrendsFetch = (teacherId: string): void => {
-    const firebase = this.context;
-    const dateArray: Array<Array<string>> = [];
-    const listeningArray: Array<number> = [];
-    const notListeningArray: Array<number> = [];
-    /* firebase.fetchListeningTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
-      dataSet.forEach(data => {
-        dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
-        ]);
-        listeningArray.push(Math.round((data.listening / (data.listening + data.notListening)) * 100));
-        notListeningArray.push(Math.round((data.notListening / (data.listening + data.notListening)) * 100));
-      });
-      this.setState({
-        trendsDates: dateArray,
-        trendsListening: listeningArray,
-        trendsNotListening: notListeningArray
-      });
-    }); */
   };
 
   /**
@@ -704,7 +672,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
   componentDidMount(): void {
     if (this.props.teacherSelected) {
       this.handleDateFetching(this.props.teacherSelected.id);
-      this.handleTrendsFetch(this.props.teacherSelected.id);
     } else {
       this.setState({ teacherModal: true })
     }
@@ -717,7 +684,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props): void {
     if (this.props.teacherSelected != prevProps.teacherSelected) {
       this.handleDateFetching(this.props.teacherSelected.id);
-      this.handleTrendsFetch(this.props.teacherSelected.id);
     }
   }
 

@@ -51,11 +51,9 @@ function LiteracyTypeCard(props: Props): React.ReactElement {
               }}
               elevation={(unlocked || activity === 'Training') ? 8 : 0}
               style={{
-                // color: (unlocked || activity === 'Training') ? Constants.Colors.LI : Constants.Colors.NotPresent,
                 color: Constants.Colors.LI,
                 height: '7em',
                 borderColor: Constants.Colors.LI,
-                // borderColor: (unlocked || activity === 'Training') ? Constants.Colors.LI : Constants.Colors.NotPresent,
                 borderWidth: '1px',
                 borderStyle: 'solid',
                 width: '100%'

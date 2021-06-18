@@ -54,26 +54,27 @@ function ToolIcons(props: Props): React.ReactElement {
   const [lockedModal, setLockedModal] = useState(false);
   const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
 
+  // add in other sections later (just tracking knowledge check completion for now)
   const foundationalUnlocked=
-    trainingLiteracy.conceptsFoundational
-    && trainingLiteracy.definitionsFoundational
-    && trainingLiteracy.demoFoundational
-    && trainingLiteracy.knowledgeCheckFoundational;
+    // trainingLiteracy.conceptsFoundational &&
+    // trainingLiteracy.definitionsFoundational &&
+    // trainingLiteracy.demoFoundational &&
+    trainingLiteracy.knowledgeCheckFoundational;
   const writingUnlocked=
-    trainingLiteracy.conceptsWriting
-    && trainingLiteracy.definitionsWriting
-    && trainingLiteracy.demoWriting
-    && trainingLiteracy.knowledgeCheckWriting;
+    // trainingLiteracy.conceptsWriting &&
+    // trainingLiteracy.definitionsWriting &&
+    // trainingLiteracy.demoWriting &&
+    trainingLiteracy.knowledgeCheckWriting;
   const readingUnlocked=
-    trainingLiteracy.conceptsReading
-    && trainingLiteracy.definitionsReading
-    && trainingLiteracy.demoReading
-    && trainingLiteracy.knowledgeCheckReading;
+    // trainingLiteracy.conceptsReading &&
+    // trainingLiteracy.definitionsReading &&
+    // trainingLiteracy.demoReading &&
+    trainingLiteracy.knowledgeCheckReading;
   const languageUnlocked=
-    trainingLiteracy.conceptsLanguage
-    && trainingLiteracy.definitionsLanguage
-    && trainingLiteracy.demoLanguage
-    && trainingLiteracy.knowledgeCheckLanguage;
+    // trainingLiteracy.conceptsLanguage &&
+    // trainingLiteracy.definitionsLanguage &&
+    // trainingLiteracy.demoLanguage &&
+    trainingLiteracy.knowledgeCheckLanguage;
 
   const ObservationPopUp = {
     'TransitionTime': <TransitionTimeObservationPopUp />,

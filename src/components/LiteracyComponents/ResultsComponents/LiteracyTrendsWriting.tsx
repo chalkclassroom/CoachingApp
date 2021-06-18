@@ -94,7 +94,6 @@ export default function LiteracyTrendsFoundational(props: Props) {
   };
 
   const handleClose = (index: number) => {
-    console.log('handle close', index)
     setActivityFilter(index);
     setAnchorEl(null);
   };

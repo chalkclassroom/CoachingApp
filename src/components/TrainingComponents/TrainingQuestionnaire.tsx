@@ -11,6 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { addUnlocked } from '../../state/actions/unlocked';
+import { unlockLiteracyKnowledgeCheck } from '../../state/actions/training-literacy';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
 
@@ -41,7 +42,8 @@ interface Props {
     button: string,
     nextButton: string
   },
-  addUnlocked(unlocked: number): void
+  addUnlocked(unlocked: number): void,
+  unlockLiteracyKnowledgeCheck(checklistType: Constants.LiteracyTypes): void
 }
 
 interface State {
@@ -292,8 +294,13 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
     if (this.state.numCorrect / this.BATCH_LENGTH >= 0.8) {
       console.log("passed");
       const firebase = this.context;
-      firebase.handleUnlockSection(this.magic8Number);
-      this.props.addUnlocked(this.magic8Number);
+      if (this.props.section === 'literacy' && this.props.literacyType !== undefined) {
+        firebase.unlockLiteracyKnowledgeCheck(this.props.literacyType);
+        this.props.unlockLiteracyKnowledgeCheck(this.props.literacyType)
+      } else {
+        firebase.handleUnlockSection(this.magic8Number);
+        this.props.addUnlocked(this.magic8Number);
+      }
     } else {
       console.log("failed try again");
     }
@@ -357,7 +364,8 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
       button: PropTypes.string,
       nextButton: PropTypes.string
     }).isRequired,
-    addUnlocked: PropTypes.func.isRequired
+    addUnlocked: PropTypes.func.isRequired,
+    unlockLiteracyKnowledgeCheck: PropTypes.func.isRequired
   }
 
   /**
@@ -397,4 +405,4 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
 }
 
 TrainingQuestionnaire.contextType = FirebaseContext;
-export default withStyles(styles)(connect(null, {addUnlocked})(TrainingQuestionnaire));
+export default withStyles(styles)(connect(null, {addUnlocked, unlockLiteracyKnowledgeCheck})(TrainingQuestionnaire));

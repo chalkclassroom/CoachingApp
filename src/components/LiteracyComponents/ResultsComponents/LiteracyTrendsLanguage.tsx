@@ -83,7 +83,6 @@ export default function LiteracyTrendsLanguage(props: Props) {
   };
 
   const handleClose = (index: number) => {
-    console.log('handle close', index)
     setActivityFilter(index);
     setAnchorEl(null);
   };

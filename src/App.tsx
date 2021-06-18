@@ -123,6 +123,7 @@ interface Props {
     getCoachFirstName(): Promise<string>,
     getUserRole(): Promise<string>,
     getUnlockedSections(): Promise<Array<number>>,
+    // getting literacy training data from firestore
     getLiteracyTraining(): Promise<{
       conceptsFoundational: boolean,
       conceptsWriting: boolean,
@@ -144,6 +145,7 @@ interface Props {
   },
   getCoach(name: string, role: string): void,
   getUnlocked(unlocked: Array<number>): void,
+  // adding literacy training data to redux
   getTraining(result: {
     conceptsFoundational: boolean,
     conceptsWriting: boolean,
@@ -474,7 +476,6 @@ class App extends React.Component<Props, State> {
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <LiteracyTrainingPage {...props}/>}
-              // render={() : React.ReactElement=> <LiteracyTrainingPage />}
             />
             <PrivateRoute
               auth={this.state.auth}

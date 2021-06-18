@@ -89,7 +89,6 @@ export default function LiteracyTrendsReading(props: Props) {
   };
 
   const handleClose = (index: number) => {
-    console.log('handle close', index)
     setActivityFilter(index);
     setAnchorEl(null);
   };

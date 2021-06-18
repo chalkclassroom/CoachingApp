@@ -18,9 +18,6 @@ exports.observationsToBQ = functions.firestore
         // ...or the previous value before this update
         const previousValue = change.before.data();
 
-        console.log('newValue', newValue);
-        console.log('previousValue', previousValue)
-
         // access a particular field as you would any JS property
         if (newValue.end !== previousValue.end) {
             console.log("Session Finished");
@@ -667,8 +664,6 @@ exports.observationsToBQ = functions.firestore
                             if (entryData.Type === "UNDO") {
                                 rows.pop();
                             } else {
-                                console.log('SESSION START IS', session.start, 'as date', session.start.toDate());
-                                console.log('SESSION END IS', session.end, 'as date', session.end.toDate());
                                 let row = {
                                     insertId: entry.id,
                                     json: {

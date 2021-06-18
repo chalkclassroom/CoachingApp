@@ -1,5 +1,6 @@
 import {
   GET_TRAINING,
+  UNLOCK_LITERACY_KNOWLEDGE_CHECK,
   TrainingLiteracyTypes
 } from "../actions/training-literacy";
 
@@ -62,6 +63,29 @@ export default (state = initialState, action: TrainingLiteracyTypes): TrainingLi
         knowledgeCheckReading: action.literacyTraining.knowledgeCheckReading,
         knowledgeCheckLanguage: action.literacyTraining.knowledgeCheckLanguage
       };
+    case UNLOCK_LITERACY_KNOWLEDGE_CHECK: 
+      if (action.checklistType === 'Foundational') {
+        return {
+          ...state,
+          knowledgeCheckFoundational: true
+        };
+      } else if (action.checklistType === 'Writing') {
+        return {
+          ...state,
+          knowledgeCheckWriting: true
+        };
+      } else if (action.checklistType === 'Reading') {
+        return {
+          ...state,
+          knowledgeCheckReading: true
+        };
+      } else {
+        return {
+          ...state,
+          knowledgeCheckLanguage: true
+        };
+      }
+      
     default:
       return state;
   }

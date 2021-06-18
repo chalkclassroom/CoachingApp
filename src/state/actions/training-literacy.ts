@@ -1,4 +1,5 @@
 export const GET_TRAINING = "get_training";
+export const UNLOCK_LITERACY_KNOWLEDGE_CHECK = "unlock_foundational";
 
 export const getTraining = (literacyTraining: {
   conceptsFoundational: boolean,
@@ -20,22 +21,11 @@ export const getTraining = (literacyTraining: {
 }): GetTraining => ({
   type: GET_TRAINING,
   literacyTraining
-  /* .conceptsFoundational,
-  literacyTraining.conceptsWriting,
-  literacyTraining.conceptsReading,
-  literacyTraining.conceptsLanguage,
-  literacyTraining.definitionsFoundational,
-  literacyTraining.definitionsWriting,
-  literacyTraining.definitionsReading,
-  literacyTraining.definitionsLanguage,
-  literacyTraining.demoFoundational,
-  literacyTraining.demoWriting,
-  literacyTraining.demoReading,
-  literacyTraining.demoLanguage,
-  literacyTraining.knowledgeCheckFoundational,
-  literacyTraining.knowledgeCheckWriting,
-  literacyTraining.knowledgeCheckReading,
-  literacyTraining.knowledgeCheckLanguage */
+});
+
+export const unlockLiteracyKnowledgeCheck = (checklistType: string): UnlockLiteracyKnowledgeCheck => ({
+  type: UNLOCK_LITERACY_KNOWLEDGE_CHECK,
+  checklistType
 });
 
 interface GetTraining {
@@ -59,5 +49,10 @@ interface GetTraining {
   }
 }
 
+interface UnlockLiteracyKnowledgeCheck {
+  type: typeof UNLOCK_LITERACY_KNOWLEDGE_CHECK,
+  checklistType: string
+}
+
 export type TrainingLiteracyTypes =
-  GetTraining;
+  GetTraining | UnlockLiteracyKnowledgeCheck;
