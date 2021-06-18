@@ -226,7 +226,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.props.location.state.sessionId ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
+              this.setState({ sessionId: (this.props.location.state !== undefined && this.props.location.state.sessionId !== undefined) ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
                 () => {
                   this.getData();
                 }
