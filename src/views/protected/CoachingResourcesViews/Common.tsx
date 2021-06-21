@@ -3,6 +3,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Link from '@material-ui/core/Link';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import React, { useEffect, useState } from 'react'
 
@@ -78,7 +79,7 @@ interface LazyLoadedResourceCardMediaProps {
  * @return {ReactElement}
  */
 export function LazyLoadedResourceCardMedia({ imageImport }: LazyLoadedResourceCardMediaProps): React.ReactElement {
-  const [ imageSource, setImageSource ] = useState<string | null>(null)
+  const [imageSource, setImageSource] = useState<string | null>(null)
 
   useEffect(() => {
     imageImport().then(image => {
@@ -92,5 +93,52 @@ export function LazyLoadedResourceCardMedia({ imageImport }: LazyLoadedResourceC
     <ResourceCardMedia image={imageSource}/>
   ) : (
     <ResourceCardSkeleton animation="wave" variant="rect" />
+  )
+}
+
+interface LazyLoadedPreviewImageProps {
+  docUrl: string
+  imageImport: () => Promise<typeof import('*.jpg')>
+}
+
+const useLazyPreviewImageStyles = makeStyles(theme => ({
+  previewBox: {
+    maxWidth: '50%'
+  },
+  previewImage: {
+    boxShadow: theme.shadows['3'],
+    maxHeight: 500,
+    objectFit: 'contain',
+    width: '100%'
+  }
+}))
+
+/**
+ * @return {ReactElement}
+ */
+export function LazyLoadedPreviewImage({ docUrl, imageImport } : LazyLoadedPreviewImageProps): React.ReactElement {
+  const [imageSource, setImageSource] = useState<string | null>(null)
+
+  const styles = useLazyPreviewImageStyles()
+
+  useEffect(() => {
+    imageImport().then(image => {
+      setImageSource(image.default)
+    }).catch(() => {
+      console.warn('Could not load preview image')
+    })
+  }, [])
+
+  return imageSource ? (
+    <Box display="flex" flexDirection="column" className={styles.previewBox}>
+      <img src={imageSource} className={styles.previewImage} />
+      <Box pt={4} display="flex" justifyContent="center">
+        <StyledLink href={docUrl} download>
+          Download
+        </StyledLink>
+      </Box>
+    </Box>
+  ) : (
+    <Skeleton animation="wave" variant="rect" width="50%" height={500} className={styles.previewImage} />
   )
 }

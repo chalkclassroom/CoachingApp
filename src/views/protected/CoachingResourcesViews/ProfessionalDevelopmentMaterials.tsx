@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * @return {ReactElement}
  */
-function CoachingCycleAsideContent(): React.ReactElement {
+function ProfessionalDevelopmentMaterialsAsideContent(): React.ReactElement {
   const styles = useStyles()
   const { imageImport, label } = resourceCard
 
@@ -143,7 +143,7 @@ const tilesRowsInfo = [
 /**
  * @return {ReactElement}
  */
-function CoachingCycleMainContent(): React.ReactElement {
+function ProfessionalDevelopmentMaterialsMainContent(): React.ReactElement {
   const styles = useStyles()
 
   return <Grid container spacing={4}>
@@ -180,9 +180,9 @@ function CoachingCycleMainContent(): React.ReactElement {
 /**
  * @return {ReactElement}
  */
-export default function CoachingCycle(): React.ReactElement {
+export default function ProfessionalDevelopmentMaterials(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<CoachingCycleAsideContent />}
-    mainContent={<CoachingCycleMainContent />}
+    asideContent={<ProfessionalDevelopmentMaterialsAsideContent />}
+    mainContent={<ProfessionalDevelopmentMaterialsMainContent />}
   />
 }
