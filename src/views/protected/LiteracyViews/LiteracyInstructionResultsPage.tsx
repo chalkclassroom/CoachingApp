@@ -23,6 +23,7 @@ import ListeningDetailsChart from "../../../components/ListeningComponents/Resul
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
+import LogoImage from '../../../assets/images/LogoImage.svg';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
@@ -163,7 +164,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       noDataYet: false
     };
   }
-  
+
   /**
    * @param {string} sessionId
    */
@@ -845,11 +846,23 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             sessionDates={this.state.sessionDates}
             notes={this.state.notes}
             questions={
-              <ListeningCoachingQuestions
+              /* <ListeningCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
-              />
+              /> */
+              <div>
+                <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}}>
+                  <Grid item>
+                    <img src={LogoImage} alt="CHALK" height="100vh" />
+                  </Grid>
+                  <Grid item style={{paddingTop: '3em'}}>
+                    <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                      Coaching Questions coming soon!
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </div>
             }
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
