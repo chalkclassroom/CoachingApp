@@ -29,6 +29,7 @@ import CoachingListeningToChildren from './views/protected/CoachingResourcesView
 import CoachingSequentialActivities from './views/protected/CoachingResourcesViews/SequentialActivities'
 // import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
 import CoachingAssociativeAndCooperativeInteractions from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
+import CoachingCoachingBestPractices from './views/protected/CoachingResourcesViews/CoachingBestPractices'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -588,6 +589,11 @@ class App extends React.Component<Props, State> {
               path="/CoachingResources/ProfessionalDevelopmentMaterials/AssociativeAndCooperativeInteractions"
               exact
               component={CoachingAssociativeAndCooperativeInteractions}
+            />
+            <Route
+              path="/CoachingResources/CoachingBestPractices"
+              exact
+              component={CoachingCoachingBestPractices}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
