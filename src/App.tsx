@@ -18,6 +18,7 @@ import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
 import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
 import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
 import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
+import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -518,7 +519,13 @@ class App extends React.Component<Props, State> {
 
             <Route
               path="/CoachingResources"
+              exact
               component={CoachingResources}
+            />
+            <Route
+              path="/CoachingResources/CoachingCycle"
+              exact
+              component={CoachingCoachingCycle}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
