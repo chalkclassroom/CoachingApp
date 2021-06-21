@@ -24,6 +24,14 @@ interface TeacherInfo {
   notes: string
 }
 
+export interface UserDocument {
+  firstName: string,
+  lastName: string,
+  role: string,
+  id: string,
+  email: string
+}
+
 interface Note {
   id: string,
   content: string,
@@ -490,6 +498,21 @@ class Firebase {
           .catch((error: Error) => console.error("Error getting cached document:", error));
     }
   }
+
+
+
+
+  getUserInformation = async (): Promise<UserDocument | void> => {
+    if (this.auth.currentUser) {
+      return await this.db
+          .collection("users")
+          .doc(this.auth.currentUser.uid)
+          .get()
+          .then((doc: firebase.firestore.DocumentData) => doc.data())
+          .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
+  }
+
 
   /**
    * gets last name of current user

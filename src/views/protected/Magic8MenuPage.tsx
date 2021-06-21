@@ -134,7 +134,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
       <div className={classes.root}>
         <div>
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         </div>
         <div style={{flexGrow: 1}}>

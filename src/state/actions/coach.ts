@@ -1,11 +1,14 @@
+import { UserDocument } from '../../components/Firebase/Firebase'
+
 export const GET_COACH = "get_coach";
 export const CLEAR_COACH = "clear_coach";
 
 
-export const getCoach = (coachName: string, role: string = ''): GetCoach => ({
+export const getCoach = (coachName: string, role: string = '', userInfo:UserDocument): GetCoach => ({
   type: GET_COACH,
   coachName,
-  role
+  role,
+  userDoc: userInfo
 });
 
 export const clearCoach = (): ClearCoach => ({
@@ -15,7 +18,8 @@ export const clearCoach = (): ClearCoach => ({
 interface GetCoach {
   type: typeof GET_COACH,
   coachName: string,
-  role: string
+  role: string,
+  userDoc: UserDocument
 }
 
 interface ClearCoach {

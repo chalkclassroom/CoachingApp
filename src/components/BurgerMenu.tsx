@@ -360,9 +360,8 @@ class BurgerMenu extends React.Component<Props, State>{
               button
               onClick={(): void => {
                 this.setState({ menu: 12, chalkOpen: false });
-                this.props.history.push("/Account");
+                this.props.history.push("/MyAccount");
               }}
-              disabled
               className={classes.regular}
             >
               <ListItemIcon>

@@ -1,28 +1,26 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import Firebase, { FirebaseContext } from "./components/Firebase";
-import { Provider } from "react-redux";
-import { store } from "./state/store";
-import { AppContainer } from 'react-hot-loader';
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import './index.css'
+import App from './App'
+import Firebase, { FirebaseContext } from './components/Firebase'
+import { Provider } from 'react-redux'
+import { store } from './state/store'
+import { AppContainer } from 'react-hot-loader'
 
 const render = Component => {
     ReactDOM.render(
         <AppContainer>
             <Provider store={store}>
-                <FirebaseContext.Provider value={new Firebase()}>
-                    <FirebaseContext.Consumer>
-                        {firebase => <App firebase={firebase} />}
-                    </FirebaseContext.Consumer>
-                </FirebaseContext.Provider>
+                <FirebaseContext.Consumer>
+                    {(firebase:Firebase) => <App firebase={firebase} />}
+                </FirebaseContext.Consumer>
             </Provider>
         </AppContainer>,
-        document.getElementById("root")
-    );
-};
+        document.getElementById('root'),
+    )
+}
 
-render(App);
+render(App)
 
 // webpack Hot Module Replacement API
 if (module.hot) {
@@ -30,24 +28,24 @@ if (module.hot) {
     // while `hot` would configure HMR for the CURRENT module
     module.hot.accept('./App', () => {
         // if you are using harmony modules ({modules:false})
-        render(App);
+        render(App)
         // else older browsers need
-        render(require('./App'));
+        render(require('./App'))
 
-    });
+    })
 }
 
 if ('serviceWorker' in navigator) {
-   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').then(registration => {
-       console.log('SW registered: ', registration);
-    }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-     });
-   });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('SW registered: ', registration)
+        }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError)
+        })
+    })
 }
 
 // exposes store when running app in cypress
 if (window.Cypress) {
-  window.store = store
+    window.store = store
 }
