@@ -17,6 +17,7 @@ import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanList
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
 import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
 import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
+import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -515,6 +516,10 @@ class App extends React.Component<Props, State> {
                 component={AdminPage}
             />
 
+            <Route
+              path="/CoachingResources"
+              component={CoachingResources}
+            />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>

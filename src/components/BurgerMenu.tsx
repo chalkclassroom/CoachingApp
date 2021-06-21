@@ -283,10 +283,9 @@ class BurgerMenu extends React.Component<Props, State>{
             </ListItem>
             <ListItem
               button
-              disabled
               onClick={(): void => {
                 this.setState({ menu: 8, chalkOpen: false });
-                this.props.history.push("/Messages")
+                this.props.history.push("/CoachingResources")
               }}
               className={classes.regular}
             >
