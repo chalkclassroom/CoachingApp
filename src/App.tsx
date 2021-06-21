@@ -21,6 +21,14 @@ import CoachingResources from './views/protected/CoachingResourcesViews/Coaching
 import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
 import CoachingProfessionalDevelopmentMaterials from './views/protected/CoachingResourcesViews/ProfessionalDevelopmentMaterials'
 import CoachingTransitionTime from './views/protected/CoachingResourcesViews/TransitionTime'
+import CoachingClassroomClimate from './views/protected/CoachingResourcesViews/ClassroomClimate'
+import CoachingMathInstruction from './views/protected/CoachingResourcesViews/MathInstruction'
+import CoachingLevelOfInstruction from './views/protected/CoachingResourcesViews/LevelOfInstruction'
+import CoachingStudentEngagement from './views/protected/CoachingResourcesViews/StudentEngagement'
+import CoachingListeningToChildren from './views/protected/CoachingResourcesViews/ListeningToChildren'
+import CoachingSequentialActivities from './views/protected/CoachingResourcesViews/SequentialActivities'
+// import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
+import CoachingAssociativeAndCooperativeInteractions from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -538,6 +546,48 @@ class App extends React.Component<Props, State> {
               path="/CoachingResources/ProfessionalDevelopmentMaterials/TransitionTime"
               exact
               component={CoachingTransitionTime}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/ClassroomClimate"
+              exact
+              component={CoachingClassroomClimate}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/MathInstruction"
+              exact
+              component={CoachingMathInstruction}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/LevelOfInstruction"
+              exact
+              component={CoachingLevelOfInstruction}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/StudentEngagement"
+              exact
+              component={CoachingStudentEngagement}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/ListeningToChildren"
+              exact
+              component={CoachingListeningToChildren}
+            />
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/SequentialActivities"
+              exact
+              component={CoachingSequentialActivities}
+            />
+            {/*
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/LiteracyInstruction"
+              exact
+              component={CoachingLiteracyInstruction}
+            />
+            */}
+            <Route
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/AssociativeAndCooperativeInteractions"
+              exact
+              component={CoachingAssociativeAndCooperativeInteractions}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>

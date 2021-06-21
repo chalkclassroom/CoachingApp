@@ -13,21 +13,12 @@ import TransitionTimeIcon from '../../../assets/images/TransitionTimeIconImage.s
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Transition Time CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Transition Time CHALK Presentation.pptx'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   asideIcon: {
     objectFit: 'contain',
     width: '100%',
   },
-  previewBox: {
-    maxWidth: '50%'
-  },
-  previewImage: {
-    boxShadow: theme.shadows['3'],
-    maxHeight: 500,
-    objectFit: 'contain',
-    width: '100%'
-  }
-}))
+})
 
 /**
  * @return {ReactElement}
