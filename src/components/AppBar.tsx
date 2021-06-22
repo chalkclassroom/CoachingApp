@@ -273,33 +273,29 @@ class AppBar extends React.Component<Props, State> {
                           </IconButton>
                         </Grid>
                       </Grid>
-                      <Grid item xs={1}>
+                      <IconButton
+                        color="inherit"
+                        aria-label="menu"
+                        className={classes.menuButton}
+                        onClick={(): void => this.handleMenu()}
+                      >
+                        <MenuIcon
+                          color="secondary"
+                          fontSize='large'
+                        />
+                      </IconButton>
+                      {this.props.noBack ? (<div />) : (
                         <IconButton
                           color="inherit"
                           aria-label="menu"
                           className={classes.menuButton}
-                          onClick={(): void => this.handleMenu()}
+                          onClick={(): void => this.props.history.goBack()}
                         >
-                          <MenuIcon
+                          <BackIcon
                             color="secondary"
                             fontSize='large'
                           />
                         </IconButton>
-                      </Grid>
-                      {this.props.noBack ? (<div />) : (
-                        <Grid item xs={1} className={classes.backIcon}>
-                          <IconButton
-                            color="inherit"
-                            aria-label="menu"
-                            className={classes.menuButton}
-                            onClick={(): void => this.props.history.goBack()}
-                          >
-                            <BackIcon
-                              color="secondary"
-                              fontSize='large'
-                            />
-                          </IconButton>
-                        </Grid>
                       )}
                     </Grid>
                   </Grid>
