@@ -30,6 +30,7 @@ import CoachingSequentialActivities from './views/protected/CoachingResourcesVie
 // import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
 import CoachingAssociativeAndCooperativeInteractions from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
 import CoachingCoachingBestPractices from './views/protected/CoachingResourcesViews/CoachingBestPractices'
+import CoachingChalkCrosswalks from './views/protected/CoachingResourcesViews/ChalkCrosswalks'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -594,6 +595,11 @@ class App extends React.Component<Props, State> {
               path="/CoachingResources/CoachingBestPractices"
               exact
               component={CoachingCoachingBestPractices}
+            />
+            <Route
+              path="/CoachingResources/ChalkCrosswalks"
+              exact
+              component={CoachingChalkCrosswalks}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
