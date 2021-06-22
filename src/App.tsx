@@ -532,87 +532,73 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources"
-              exact
               component={CoachingResources}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/CoachingCycle"
-              exact
               component={CoachingCoachingCycle}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials"
-              exact
               component={CoachingProfessionalDevelopmentMaterials}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/TransitionTime"
-              exact
               component={CoachingTransitionTime}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/ClassroomClimate"
-              exact
               component={CoachingClassroomClimate}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/MathInstruction"
-              exact
               component={CoachingMathInstruction}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/LevelOfInstruction"
-              exact
               component={CoachingLevelOfInstruction}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/StudentEngagement"
-              exact
               component={CoachingStudentEngagement}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/ListeningToChildren"
-              exact
               component={CoachingListeningToChildren}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/SequentialActivities"
-              exact
               component={CoachingSequentialActivities}
             />
             {/*
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/LiteracyInstruction"
-              exact
               component={CoachingLiteracyInstruction}
             />
             */}
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/AssociativeAndCooperativeInteractions"
-              exact
               component={CoachingAssociativeAndCooperativeInteractions}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/CoachingBestPractices"
-              exact
               component={CoachingCoachingBestPractices}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ChalkCrosswalks"
-              exact
               component={CoachingChalkCrosswalks}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
