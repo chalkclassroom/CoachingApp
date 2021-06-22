@@ -8,7 +8,7 @@ import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews
 import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
-import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, Switch, useLocation } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
@@ -105,21 +105,16 @@ const styles: Theme = createMuiTheme({
  * @return {ReactElement}
  */
 function PrivateRoute({ auth, ...rest }): React.ReactElement {
+  const location = useLocation()
+
   return (
-    auth === true ? (
+    auth ? (
       <Route
         exact
         {...rest}
       />
     ) : (
-      <Route
-        {...rest}
-        render={(props): React.ReactNode => {
-          return (
-            <Redirect to={{ pathname: '/', state: {from: props.location}}} />
-          )
-        }}
-      />
+      <Redirect to={{ pathname: '/', state: { from: location }}} />
     )
   )
 }
