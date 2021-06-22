@@ -74,6 +74,8 @@ import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
 import * as Types from './constants/Types';
+import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
+import { UserDocument } from './components/Firebase/Firebase'
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -129,6 +131,7 @@ interface Props {
     auth: {
       onAuthStateChanged(arg: any): firebase.User | null
     },
+    getUserInformation():Promise<UserDocument>
     getCoachFirstName(): Promise<string>,
     getUserRole(): Promise<string>,    
     getUnlockedSections(): Promise<Array<number>>,
@@ -165,9 +168,9 @@ class App extends React.Component<Props, State> {
   componentDidMount(): void {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
-        this.props.firebase.getCoachFirstName().then((name: string) => {
+        this.props.firebase.getUserInformation().then((userDoc: UserDocument) => {
           this.props.firebase.getUserRole().then((role: string) => {
-            this.props.getCoach(name, role);
+            this.props.getCoach(userDoc.firstName, role, userDoc);
             this.setState({
               auth: true,
               loading: false
