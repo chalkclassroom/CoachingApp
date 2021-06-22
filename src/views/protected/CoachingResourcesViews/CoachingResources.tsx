@@ -24,7 +24,7 @@ import {
 export default function CoachingResources(): React.ReactElement {
   return <>
     <FirebaseContext.Consumer>
-      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} />}
+      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} noBack />}
     </FirebaseContext.Consumer>
     <Box py={6}>
       <Typography variant='h4' component='h1' align='center'>CHALK Coaching Resources</Typography>

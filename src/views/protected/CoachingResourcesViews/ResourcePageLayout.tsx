@@ -17,7 +17,7 @@ interface ResourcePageLayoutProps {
 export default function ResourcePageLayout({ asideContent, mainContent }: ResourcePageLayoutProps): React.ReactElement {
   return <>
     <FirebaseContext.Consumer>
-      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} />}
+      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} noBack={false}/>}
     </FirebaseContext.Consumer>
     <Box p={4}>
       <Grid container spacing={4}>
