@@ -535,16 +535,19 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources"
+              exact={true}
               component={CoachingResources}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/CoachingCycle"
+              exact={true}
               component={CoachingCoachingCycle}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials"
+              exact={true}
               component={CoachingProfessionalDevelopmentMaterials}
             />
             <PrivateRoute
@@ -597,11 +600,13 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/CoachingBestPractices"
+              exact={true}
               component={CoachingCoachingBestPractices}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ChalkCrosswalks"
+              exact={true}
               component={CoachingChalkCrosswalks}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
