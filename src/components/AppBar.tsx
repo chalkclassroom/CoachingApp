@@ -171,8 +171,8 @@ class AppBar extends React.Component<Props, State> {
     super(props);
     this.state = {
       auth: !(
-        this.props.firebase.auth.currentUser === undefined ||
-        this.props.firebase.auth.currentUser === null
+        this.props.firebase?.auth.currentUser === undefined ||
+        this.props.firebase?.auth.currentUser === null
       ),
       loginModal: false,
       signupModal: false,
@@ -211,7 +211,7 @@ class AppBar extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.auth.onAuthStateChanged((authUser: firebase.User | null) => {
+    this.props.firebase?.auth.onAuthStateChanged((authUser: firebase.User | null) => {
       authUser ? this.setState({ auth: true }) : this.setState({ auth: false });
     });
   }
