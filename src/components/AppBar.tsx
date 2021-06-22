@@ -13,7 +13,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
-import BackIcon from '@material-ui/icons/ArrowBackIos';
+import BackIcon from '@material-ui/icons/ArrowBackIosSharp'
 import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
