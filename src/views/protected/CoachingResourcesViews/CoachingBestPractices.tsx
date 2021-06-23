@@ -14,13 +14,13 @@ import {
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
-import RelationshipBuildingDocument from '../../../assets/coaching-docs/Katherine Newman - Relationship Building.pdf'
-import CoachingCommunicationSkillsDocument from '../../../assets/coaching-docs/Katherine Newman - Coaching Communication Skills.pdf'
-import TeacherDrivenCoachingDocument from '../../../assets/coaching-docs/Katherine Newman - Teacher Driven Coaching.pdf'
-import GoalSettingConversationsDocument from '../../../assets/coaching-docs/Katherine Newman - Goal Setting Conversations.pdf'
-import CoachingStrategiesAndResourcesDocument from '../../../assets/coaching-docs/Katherine Newman - Coaching Strategies and Resources.pdf'
-import ProfessionalLearningCommunitiesAndChalkDocument from '../../../assets/coaching-docs/Katherine Newman - Professional Learning Communities and CHALK.pdf'
-import CompleteManualDocument from '../../../assets/coaching-docs/Katherine Newman - Coaching Best Practices.pdf'
+import RelationshipBuildingDocument from '../../../assets/coaching-docs/Relationship Building.pdf'
+import CoachingCommunicationSkillsDocument from '../../../assets/coaching-docs/Coaching Communication Skills.pdf'
+import TeacherDrivenCoachingDocument from '../../../assets/coaching-docs/Teacher Driven Coaching.pdf'
+import GoalSettingConversationsDocument from '../../../assets/coaching-docs/Goal Setting Conversations.pdf'
+import CoachingStrategiesAndResourcesDocument from '../../../assets/coaching-docs/Coaching Strategies and Resources.pdf'
+import ProfessionalLearningCommunitiesAndChalkDocument from '../../../assets/coaching-docs/Professional Learning Communities and CHALK.pdf'
+import CompleteManualDocument from '../../../assets/coaching-docs/Coaching Best Practices.pdf'
 
 const resourceCard = cards['coaching-best-practices']
 

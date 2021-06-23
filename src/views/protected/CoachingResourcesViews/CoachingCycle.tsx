@@ -13,8 +13,8 @@ import {
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
-import HandbookCoverImage from '../../../assets/images/CoachingResources/Katherine Newman - Coach Handbook Cover Image.svg'
-import HandbookDocument from '../../../assets/coaching-docs/Katherine Newman - Coaching Best Practices.pdf'
+import HandbookCoverImage from '../../../assets/images/CoachingResources/Coach Handbook Cover Image.svg'
+import HandbookDocument from '../../../assets/coaching-docs/Coaching Best Practices.pdf'
 
 const resourceCard = cards['coaching-cycle']
 

@@ -6,9 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
-import ClassDocument from '../../../assets/coaching-docs/Katherine Newman - CLASS CHALK Crosswalk.pdf'
-import ConsciousDisciplineDocument from '../../../assets/coaching-docs/Katherine Newman - Conscious Discipline CHALK Crosswalk.pdf'
-import PyramidModelDocument from '../../../assets/coaching-docs/Katherine Newman - Pyramid Model CHALK crosswalk.pdf'
+import ClassDocument from '../../../assets/coaching-docs/CLASS CHALK Crosswalk.pdf'
+import ConsciousDisciplineDocument from '../../../assets/coaching-docs/Conscious Discipline CHALK Crosswalk.pdf'
+import PyramidModelDocument from '../../../assets/coaching-docs/Pyramid Model CHALK crosswalk.pdf'
 
 import {
   LazyLoadedResourceCardMedia,

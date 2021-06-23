@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import AssociativeAndCooperativeInteractionsIcon from '../../../assets/images/AssocCoopIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Associative and Cooperative Interactions CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Associative and Cooperative CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Associative and Cooperative Interactions CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Associative and Cooperative CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function AssociativeAndCooperativeInteractionsAsideContent(): React.ReactElement
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Associative and Cooperative Interactions CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Associative and Cooperative CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Associative and Cooperative Interactions CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Associative and Cooperative CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

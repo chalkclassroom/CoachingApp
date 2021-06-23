@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import TransitionTimeIcon from '../../../assets/images/TransitionTimeIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Transition Time CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Transition Time CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Transition Time CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Transition Time CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function TransitionTimeAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Transition Time CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Transition Time CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Transition Time CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Transition Time CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

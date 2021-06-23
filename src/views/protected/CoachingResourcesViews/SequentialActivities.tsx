@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import SequentialActivitiesIcon from '../../../assets/images/SequentialIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Sequential Activities CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Sequential Activities CHALK presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Sequential Activities CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Sequential Activities CHALK presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function SequentialActivitiesAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Sequential Activities CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Sequential Activities CHALK presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Sequential Activities CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Sequential Activities CHALK presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

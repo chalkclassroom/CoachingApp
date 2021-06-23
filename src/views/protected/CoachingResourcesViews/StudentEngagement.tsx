@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import StudentEngagementIcon from '../../../assets/images/EngagementIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Student Engagement CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Student Engagement CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Student Engagement CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Student Engagement CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function StudentEngagementAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Student Engagement CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Student Engagement CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Student Engagement CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Student Engagement CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import LiteracyInstructionIcon from '../../../assets/images/LiteracyIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Literacy Instruction CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Literacy Instruction CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function LiteracyInstructionAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Literacy Instruction CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Literacy Instruction CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import ListeningToChildrenIcon from '../../../assets/images/ListeningIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Listening to Children CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Listening to Children CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Listening to Children CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Listening to Children CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function ListeningToChildrenAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Listening to Children CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Listening to Children CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Listening to Children CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Listening to Children CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}

@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import ClassroomClimateIcon from '../../../assets/images/ClassroomClimateIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Katherine Newman - Classroom Climate CHALK Handout.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Katherine Newman - Classroom Climate CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Classroom Climate CHALK Handout.pdf'
+import PresentationUrl from '../../../assets/coaching-docs/Classroom Climate CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -31,8 +31,8 @@ function ClassroomClimateAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Classroom Climate CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Katherine Newman - Classroom Climate CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Classroom Climate CHALK Handout.preview.jpg')
+const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Classroom Climate CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}
