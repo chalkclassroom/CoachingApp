@@ -532,11 +532,17 @@ class TeacherListPage extends React.Component<Props, State> {
         firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
           // this.setState({conferencePlanEvents: conferencePlanEvents})
           allEvents = allEvents.concat(conferencePlanEvents)
+          //  & {completed: boolean, removed: boolean}
         }).then(() => {
-          this.setState({
-            allEvents: allEvents,
-            dataLoaded: true
-          }, () => {console.log('obs EVENTS', this.state.allEvents)})
+          firebase.getAppointments().then((appointmentEvents: Array<Types.CalendarEvent>) => {
+            // this.setState({actionPlanEvents: actionPlanEvents})
+            allEvents = allEvents.concat(appointmentEvents)
+          }).then(() => {
+            this.setState({
+              allEvents: allEvents,
+              dataLoaded: true
+            }, () => {console.log('obs EVENTS', this.state.allEvents)})
+          })
         })
       })
     })
@@ -718,6 +724,26 @@ class TeacherListPage extends React.Component<Props, State> {
       .catch((error: Error) =>
         console.error("Error occurred getting recent observations: ", error)
       ); */
+  }
+
+  createAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    firebase.createAppointment(teacherId, date, tool, type).then((id: string) => {
+      console.log('WHAT IS BLAH', id)
+      const newEvent = {
+        title: type,
+        start: date,
+        end: date,
+        allDay: false,
+        resource: teacherId,
+        type: tool,
+        id: id,
+        appointment: true
+      }
+      console.log('new event is', newEvent)
+      const allEventsUpdated = [...this.state.allEvents, newEvent]
+      this.setState({allEvents: allEventsUpdated})
+    })
   }
 
   /**
@@ -1140,12 +1166,13 @@ class TeacherListPage extends React.Component<Props, State> {
       const style = {
           // backgroundColor: backgroundColor,
           // backgroundColor: 'white',
-          backgroundColor: Constants.Colors[event.type as Types.DashboardType],
+          backgroundColor: event.appointment ? 'white' : Constants.Colors[event.type as Types.DashboardType],
           borderRadius: '0px',
           opacity: 0.8,
-          color: 'white',
+          color: event.appointment ? 'black' : 'white',
           // border: '1px solid gray',
-          display: 'block'
+          display: 'block',
+          border: event.appointment ? '1px solid #ababab' : undefined
       };
       return {
           style: style
@@ -1265,44 +1292,46 @@ class TeacherListPage extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={(): void => {
-                      if (clickedEvent.title === 'Observation') {
-                        const teacherObject = this.props.teacherList.filter(teacher => {
-                          return teacher.id === clickedEvent.resource
-                        })
-                        this.props.changeTeacher(teacherObject[0])
-                        
-                        this.props.history.push({
-                          pathname: `/${ToolNames[clickedEvent.type]}Results`,
-                          state: {sessionId: clickedEvent.id}
-                        })
-                      } else if (clickedEvent.title === 'Action Plan') {
-                        this.props.history.push({
-                          pathname: "/ActionPlan",
-                          state: {
-                            actionPlanId: clickedEvent.id,
-                            teacherId: clickedEvent.resource
-                          }
-                        })
-                      } else if (clickedEvent.title === 'Conference Plan') {
-                        this.props.history.push({
-                          pathname: "/ConferencePlan",
-                          state: {
-                            conferencePlanId: clickedEvent.id,
-                            teacherId: clickedEvent.resource,
-                            sessionId: clickedEvent.conferencePlanSessionId
-                          }
-                        });
-                      }
-                    }}
-                  >
-                    {clickedEvent.title === 'Observation' ? 'VIEW RESULTS' : clickedEvent.title === 'Action Plan' ? 'VIEW ACTION PLAN' : 'VIEW CONFERENCE PLAN'}
-                  </Button>
-                </Grid>
+                {!clickedEvent.appointment ? (
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={(): void => {
+                        if (clickedEvent.title === 'Observation') {
+                          const teacherObject = this.props.teacherList.filter(teacher => {
+                            return teacher.id === clickedEvent.resource
+                          })
+                          this.props.changeTeacher(teacherObject[0])
+                          
+                          this.props.history.push({
+                            pathname: `/${ToolNames[clickedEvent.type]}Results`,
+                            state: {sessionId: clickedEvent.id}
+                          })
+                        } else if (clickedEvent.title === 'Action Plan') {
+                          this.props.history.push({
+                            pathname: "/ActionPlan",
+                            state: {
+                              actionPlanId: clickedEvent.id,
+                              teacherId: clickedEvent.resource
+                            }
+                          })
+                        } else if (clickedEvent.title === 'Conference Plan') {
+                          this.props.history.push({
+                            pathname: "/ConferencePlan",
+                            state: {
+                              conferencePlanId: clickedEvent.id,
+                              teacherId: clickedEvent.resource,
+                              sessionId: clickedEvent.conferencePlanSessionId
+                            }
+                          });
+                        }
+                      }}
+                    >
+                      {clickedEvent.title === 'Observation' ? 'VIEW RESULTS' : clickedEvent.title === 'Action Plan' ? 'VIEW ACTION PLAN' : 'VIEW CONFERENCE PLAN'}
+                    </Button>
+                  </Grid>
+                ) : (null)}
               </Grid>
             ) : (<Typography>no event</Typography>)}
           </Popover>
@@ -1667,6 +1696,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     setType={(newType: string): void => {this.setState({newEventType: newType})}}
                     teacherList={this.state.teachers}
                     closeModal={(): void => this.setState({newEventModal: false})}
+                    createAppointment={this.createAppointment}
                   />
                 </Grid>
               </Grid>

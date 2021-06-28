@@ -201,5 +201,6 @@ export interface CalendarEvent {
   hexColor?: string,
   type: string,
   id: string,
-  conferencePlanSessionId?: string
+  conferencePlanSessionId?: string,
+  appointment?: boolean
 }

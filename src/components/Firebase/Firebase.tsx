@@ -2803,6 +2803,81 @@ class Firebase {
     }
   }
 
+  /**
+   * finds all action plan events for my teachers calendar
+   */
+   getAppointments = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("appointments")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const appointmentsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (!doc.data().completed && !doc.data().removed) {
+              appointmentsArray.push({
+                title: doc.data().type,
+                start: doc.data().date.toDate(),
+                end: doc.data().date.toDate(),
+                allDay: false,
+                resource: doc.data().teacherID,
+                type: doc.data().tool === 'Transition Time' ? 'TT'
+                  : doc.data().tool === 'Classroom Climate' ? 'CC'
+                  : doc.data().tool === 'Math Instruction' ? 'MI'
+                  : doc.data().tool === 'Level of Instruction' ? 'IN'
+                  : doc.data().tool === 'Student Engagement' ? 'SE'
+                  : doc.data().tool === 'Listening to Children' ? 'LC'
+                  : doc.data().tool === 'Sequential Activities' ? 'SA'
+                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
+                  : 'AC',
+                id: doc.id,
+                appointment: true
+                // completed: doc.data().completed,
+                // removed: doc.data().removed
+              })
+            }
+          })
+          return appointmentsArray;
+        })
+        .catch(() => {
+          console.log('unable to find appointments')
+        })
+    }
+  }
+
+  /**
+   * creates appointment in cloud firestore
+   * @param {string} teacherId
+   * @param {Date} date
+   * @param {string} tool
+   * @param {string} type
+   */
+   createAppointment = async (
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string,
+  ): Promise<string|void> => {
+    const data = Object.assign(
+      {},
+      {
+        coach: this.auth.currentUser ? this.auth.currentUser.uid : 'unknown',
+        teacherID: teacherId,
+        tool: tool,
+        type: type,
+        date: date,
+        completed: false,
+        removed: false
+      }
+    );
+    const appointmentRef = firebase.firestore().collection('appointments').doc();
+    return appointmentRef.set(data).then(() => {
+      return (appointmentRef.id)
+    }).catch(() => {
+      console.log('error creating conference plan');
+    })
+  }
+
 }
 
 export default Firebase;

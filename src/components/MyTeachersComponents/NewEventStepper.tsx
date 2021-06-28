@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -29,7 +29,13 @@ interface Props {
   setTool(tool: Types.ToolNamesKey): void,
   setType(type: string): void,
   teacherList: Array<Types.Teacher>,
-  closeModal(): void
+  closeModal(): void,
+  createAppointment(
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string
+  ): void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +74,7 @@ function getSteps(): Array<string> {
  */
 export default function NewEventStepper(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { date, teacher, tool, type, setDate, setTeacher, setTool, setType, teacherList, closeModal } = props;
+  const { date, teacher, tool, type, setDate, setTeacher, setTool, setType, teacherList, closeModal, createAppointment } = props;
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [hours, setHours] = React.useState('00');
@@ -102,6 +108,7 @@ export default function NewEventStepper(props: Props): React.ReactElement {
 
   const handleFinish = (): void => {
     // insert firebase function to add event here
+    createAppointment(teacher ? teacher.id : '', date ? date : new Date(), tool ? tool : '', type);
     closeModal()
   }
 
@@ -386,5 +393,6 @@ NewEventStepper.propTypes = {
   setTool: PropTypes.func,
   setType: PropTypes.func,
   teacherList: PropTypes.array,
-  closeModal: PropTypes.func
+  closeModal: PropTypes.func,
+  createAppointment: PropTypes.func
 }
