@@ -25,8 +25,8 @@ exports.funcLiteracyTrendReading = functions.https.onCall(async(data, context) =
                     COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                     COUNT(CASE WHEN (checklist.item10) THEN 'literacy10' ELSE NULL END) AS literacy10,
                     COUNT (sessionStart) AS total,
-                    FROM cqrefpwa.observations.literacyReading`+data.who+`
-                    WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
+                    FROM cqrefpwa.observations.literacyReading${data.who}
+                    WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
 

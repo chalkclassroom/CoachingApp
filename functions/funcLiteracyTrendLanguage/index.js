@@ -23,8 +23,8 @@ exports.funcLiteracyTrendLanguage = functions.https.onCall(async(data, context) 
                     COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                     COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                     COUNT (sessionStart) AS total,
-                    FROM cqrefpwa.observations.literacyLanguage`+data.who+`
-                    WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
+                    FROM cqrefpwa.observations.literacyLanguage${data.who}
+                    WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
 

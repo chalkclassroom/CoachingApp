@@ -18,13 +18,13 @@ exports.funcLiteracySessionDates = functions.https.onCall(async (data, context) 
   // The SQL query to run
   let sqlQuery = ``;
   if (data.type === 'Foundational' || data.type === 'Writing') {
-    sqlQuery = `SELECT DISTINCT id, sessionStart, who FROM (SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Teacher' AS who FROM cqrefpwa.observations.literacy`+data.type+`Teacher
-    UNION ALL SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Child' as who FROM cqrefpwa.observations.literacy`+data.type+`Child)
-    WHERE observedBy = '/user/`+context.auth.uid+`' AND teacher = '/user/`+data.teacherId+`' 
+    sqlQuery = `SELECT DISTINCT id, sessionStart, who FROM (SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Teacher' AS who FROM cqrefpwa.observations.literacy${data.type}Teacher
+    UNION ALL SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Child' as who FROM cqrefpwa.observations.literacy${data.type}Child)
+    WHERE observedBy = '/user/${context.auth.uid}' AND teacher = '/user/${data.teacherId}' 
     ORDER BY sessionStart DESC LIMIT 100;`
   } else {
-    sqlQuery = `SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Teacher' AS who FROM cqrefpwa.observations.literacy`+data.type+`Teacher
-    WHERE observedBy = '/user/`+context.auth.uid+`' AND teacher = '/user/`+data.teacherId+`' 
+    sqlQuery = `SELECT DISTINCT id, sessionStart, observedBy, teacher, 'Teacher' AS who FROM cqrefpwa.observations.literacy${data.type}Teacher
+    WHERE observedBy = '/user/${context.auth.uid}' AND teacher = '/user/${data.teacherId}' 
     ORDER BY sessionStart DESC LIMIT 100;`
   }
 

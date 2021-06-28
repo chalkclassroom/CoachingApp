@@ -23,8 +23,8 @@ exports.funcLiteracyDetailsWriting = functions.https.onCall(async(data, context)
                       COUNT(CASE WHEN (checklist.item6) THEN 'literacy6' ELSE NULL END) AS literacy6,
                       COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                       COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
-                      FROM cqrefpwa.observations.literacyWriting`+data.who+`
-                      WHERE id ='`+data.sessionId+`'`;
+                      FROM cqrefpwa.observations.literacyWriting${data.who}
+                      WHERE id ='${data.sessionId}'`;
 
     console.log(sqlQuery);
 
