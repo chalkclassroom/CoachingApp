@@ -126,7 +126,8 @@ const styles = (theme: Theme): object => ({
   },
   title: {
     alignSelf: "center",
-    fontSize: "2.2em"
+    fontSize: "2em",
+    fontFamily: 'Arimo'
   },
   tableContainer: {
     // border: '1px solid #00FFF6',
@@ -153,21 +154,25 @@ const styles = (theme: Theme): object => ({
   },
   nameCellHeader: {
     color: "#000000",
-    fontSize: "0.8em",
+    fontSize: "1em",
     padding: "0.5em",
     maxWidth: "12em",
     position: "sticky",
     top: 0,
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold'
   },
   emailCellHeader: {
     color: "#000000",
-    fontSize: "0.8em",
+    fontSize: "1em",
     padding: "0.5em",
     maxWidth: "12em",
     position: "sticky",
     top: 0,
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold'
   },
   magicEightIcon: {
     height: "55px",
@@ -186,14 +191,16 @@ const styles = (theme: Theme): object => ({
     padding: "0.5em",
     overflow: "hidden",
     maxWidth: "7em",
-    color: "inherit"
+    color: "inherit",
+    fontFamily: 'Arimo'
   },
   emailField: {
     textAlign: "left",
     padding: "0.5em",
     overflow: "hidden",
     maxWidth: "18em",
-    color: "inherit"
+    color: "inherit",
+    fontFamily: 'Arimo'
   },
   unlockedIcon: {
     height: "40px",
@@ -367,9 +374,10 @@ interface State {
   newEventTeacher: Types.Teacher | null,
   newEventTool: Types.ToolNamesKey | null,
   newEventType: string,
-  actionPlanEvents: Array<Types.CalendarEvent>,
-  conferencePlanEvents: Array<Types.CalendarEvent>,
-  observationEvents: Array<any>,
+  // actionPlanEvents: Array<Types.CalendarEvent>,
+  // conferencePlanEvents: Array<Types.CalendarEvent>,
+  allEvents: Array<any>,
+  dataLoaded: boolean,
   view: number
   // type: string
 }
@@ -420,9 +428,10 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventTeacher: null,
       newEventTool: null,
       newEventType: '',
-      actionPlanEvents: [],
-      conferencePlanEvents: [],
-      observationEvents: [],
+      // actionPlanEvents: [],
+      // conferencePlanEvents: [],
+      allEvents: [],
+      dataLoaded: false,
       view: 0
       // type: ''
     };
@@ -468,6 +477,10 @@ class TeacherListPage extends React.Component<Props, State> {
   componentDidMount(): void {
     const firebase = this.context;
     console.log('COMPONENTDIDMOUNT', this.state.view);
+    let allEvents: Array<Types.CalendarEvent> = [];
+    this.setState({
+      searched: this.props.teacherList
+    })
     firebase.getRecentObservations3().then((data: Array<{
       id: string,
       sessionStart: {value: Date},
@@ -509,14 +522,30 @@ class TeacherListPage extends React.Component<Props, State> {
         } */
       })
       console.log('what is myArr', myArr)
-      this.setState({observationEvents: myArr})
-    });
-    firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
+      allEvents = allEvents.concat(myArr)
+      // this.setState({allEvents: myArr})
+    }).then(() => {
+      firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
+        // this.setState({actionPlanEvents: actionPlanEvents})
+        allEvents = allEvents.concat(actionPlanEvents)
+      }).then(() => {
+        firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
+          // this.setState({conferencePlanEvents: conferencePlanEvents})
+          allEvents = allEvents.concat(conferencePlanEvents)
+        }).then(() => {
+          this.setState({
+            allEvents: allEvents,
+            dataLoaded: true
+          }, () => {console.log('obs EVENTS', this.state.allEvents)})
+        })
+      })
+    })
+    /* firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
       this.setState({actionPlanEvents: actionPlanEvents})
-    })
-    firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
+    }) */
+    /* firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
       this.setState({conferencePlanEvents: conferencePlanEvents})
-    })
+    }) */
     this.setState({
       teachers: this.props.teacherList
     }, () => {
@@ -1123,6 +1152,10 @@ class TeacherListPage extends React.Component<Props, State> {
       };
   };
 
+  const getStripedStyle = (index: number) => {
+    return { backgroundColor: index % 2 ? '#D9EAFB' : 'white' };
+  }
+
     const EventComponent = (event: {
       event: Types.CalendarEvent,
       continuesAfter: boolean,
@@ -1134,12 +1167,12 @@ class TeacherListPage extends React.Component<Props, State> {
     }): JSX.Element => {
       return (
         <Grid container direction='row' justify='flex-start' alignItems='center'>
-          <Grid item xs={2}>
+          <Grid item>
             <Typography variant="body2" style={{fontFamily: 'Arimo'}}>
               {getInitials(getName(event.event.resource))}:
             </Typography>
           </Grid>
-          <Grid item xs={9} wrap='nowrap' style={{paddingLeft: '0.5em'}}>
+          <Grid item wrap='nowrap' style={{paddingLeft: '0.2em'}}>
             <Typography variant="body2" style={{fontFamily: 'Arimo', whiteSpace: "normal",
               // wordWrap: "break-word"
               overflow: 'hidden',
@@ -1319,114 +1352,174 @@ class TeacherListPage extends React.Component<Props, State> {
                 </List>
               </Grid> */}
               <Grid item xs={12}>
-                {this.state.view === 1 ? (
-                  <Calendar
-                    popup
-                    localizer={localizer}
-                    // events={[...myEventsList, ...this.state.actionPlanEvents]}
-                    events={this.state.observationEvents ? this.state.observationEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents) : []}
-                    selectable
-                    step={60}
-                    showMultiDayTimes
-                    components={{
-                      event: EventComponent,
-                      // timeSlotWrapper: ColoredDateCellWrapper,
-                      // eventPropGetter: eventStyleGetter
-                    }}
-                    style={{height: '60vh'}}
-                    eventPropGetter={eventStyleGetter}
+                <Grid container direction="column" style={{height: '60vh'}}>
+                  {this.state.dataLoaded ? (this.state.view === 1 ? (
+                    <Calendar
+                      popup
+                      localizer={localizer}
+                      // events={[...myEventsList, ...this.state.actionPlanEvents]}
+                      events={this.state.allEvents ? this.state.allEvents : []}
+                      selectable
+                      step={60}
+                      showMultiDayTimes
+                      components={{
+                        event: EventComponent,
+                        // timeSlotWrapper: ColoredDateCellWrapper,
+                        // eventPropGetter: eventStyleGetter
+                      }}
+                      eventPropGetter={eventStyleGetter}
 
-                    onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
-                    onSelectSlot={(slot: SlotInfo
-                      /* {
-                      action: string,
-                      bounds: {},
-                      box: undefined,
-                      start: Date,
-                      end: Date,
-                      slots: Array<Date>
-                    } */
-                    ): void => {
-                      this.setState({newEventDate: slot.start}, () => {
-                        this.setState({newEventModal: true})
-                      });
-                    }}
-                    longPressThreshold={20}
-                  />
-                ) : (
-                  <Table style={{height: '60vh'}}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.nameCellHeader}>
-                          Last
-                          <br />
-                          Name
-                        </TableCell>
-                        <TableCell className={classes.nameCellHeader}>
-                          First
-                          <br />
-                          Name
-                        </TableCell>
-                        <TableCell className={classes.emailCellHeader}>
-                          Email
-                        </TableCell>
-                        {/* {sortedSvg.map((item, index) => (
-                          <TableCell
-                            className={classes.magicEightCell}
-                            style={{
-                              position: "sticky",
-                              top: 0,
-                              backgroundColor: "#FFFFFF"
-                            }}
-                            key={index}
+                      onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
+                      onSelectSlot={(slot: SlotInfo
+                        /* {
+                        action: string,
+                        bounds: {},
+                        box: undefined,
+                        start: Date,
+                        end: Date,
+                        slots: Array<Date>
+                      } */
+                      ): void => {
+                        this.setState({newEventDate: slot.start}, () => {
+                          this.setState({newEventModal: true})
+                        });
+                      }}
+                      longPressThreshold={20}
+                    />
+                  ) : (
+                    <Grid container direction="column" justify="center" alignItems="stretch">
+                      <Grid item>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                          <TextField
+                            id="teacher-search"
+                            label="Search"
+                            type="search"
+                            className={classes.search}
+                            variant="outlined"
+                            onChange={this.onChangeText}
+                          />
+                          <Fab
+                            aria-label="Add Teacher"
+                            onClick={(): void => this.setState({ isAdding: true })}
+                            className={classes.actionButton}
+                            size="small"
                           >
-                            <img
-                              src={item}
-                              alt={sortedAltText[index]}
-                              className={classes.magicEightIcon}
-                            />
-                          </TableCell>
-                        ))} */}
-                        <TableCell className={classes.nameCellHeader}>
-                          Goals
-                          <br />
-                          Met
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {this.props.teacherList.map((teacher, index) => (
-                        <TableRow
-                          className={classes.row}
-                          key={index}
-                          onClick={(): void => this.selectTeacher(teacher)}
-                        >
-                          <TableCell className={classes.nameField}>
-                            {teacher.lastName}
-                          </TableCell>
-                          <TableCell className={classes.nameField}>
-                            {teacher.firstName}
-                          </TableCell>
-                          <TableCell className={classes.emailField}>
-                            {teacher.email}
-                          </TableCell>
-                          {[...Array(8).keys()].map((value, index) => (
-                            <TableCell className={classes.magicEightCell} key={index}>
-                              {teacher.unlocked !== undefined &&
-                                teacher.unlocked.includes(index + 1) && (
-                                  <VisibilityOutlinedIcon
-                                    className={classes.unlockedIcon}
+                            <AddIcon style={{ color: "#FFFFFF" }} />
+                          </Fab>
+                        </Grid>
+                      </Grid>
+                      <Grid item style={{paddingTop: '1em'}}>
+                        <Table style={{overflowY: 'auto'}}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell className={classes.nameCellHeader}>
+                                Last Name
+                              </TableCell>
+                              <TableCell className={classes.nameCellHeader}>
+                                First Name
+                              </TableCell>
+                              {/* <TableCell className={classes.emailCellHeader}>
+                                Email
+                              </TableCell> */}
+                              {/* {sortedSvg.map((item, index) => (
+                                <TableCell
+                                  className={classes.magicEightCell}
+                                  style={{
+                                    position: "sticky",
+                                    top: 0,
+                                    backgroundColor: "#FFFFFF"
+                                  }}
+                                  key={index}
+                                >
+                                  <img
+                                    src={item}
+                                    alt={sortedAltText[index]}
+                                    className={classes.magicEightIcon}
                                   />
-                                )}
-                            </TableCell>
-                          ))}
-                          <TableCell className={classes.nameField}>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
+                                </TableCell>
+                              ))} */}
+                              
+                              <TableCell className={classes.nameCellHeader}>
+                                Recent Activity
+                              </TableCell>
+                              <TableCell className={classes.nameCellHeader}>
+                                Date
+                              </TableCell>
+                              {/* <TableCell className={classes.nameCellHeader}>
+                                Type
+                              </TableCell> */}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.state.searched.map((teacher, index) => {
+                              // const allObsEvents = [...this.state.allEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents)];
+                              const teacherEvents = this.state.allEvents.filter(obj => {
+                                return( obj.resource === teacher.id )
+                              })
+                              const maxDate = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
+                                return (new Date(prev.start) > new Date(current.start)) ? prev : current
+                              })) : ([])
+                              // console.log('maxDate.start', maxDate.start);
+                              // console.log(teacherEvents, 'ets see', new Date(Math.max(...teacherEvents.map(e => new Date(e.start)))))
+
+                              // console.log('maxdate', maxDate, moment(new Date(maxDate.start)).format('MM/DD/YYYY'))
+                              
+                              return (
+                              <TableRow
+                                className={classes.row}
+                                key={index}
+                                onClick={(): void => this.selectTeacher(teacher)}
+                                style={{...getStripedStyle(index+1)}}
+                              >
+                                <TableCell className={classes.nameField}>
+                                  {teacher.lastName}
+                                </TableCell>
+                                <TableCell className={classes.nameField}>
+                                  {teacher.firstName}
+                                </TableCell>
+                                {/* <TableCell className={classes.emailField}>
+                                  {teacher.email}
+                                </TableCell> */}
+                                <TableCell>
+                                  {maxDate.length > 0 ? (maxDate.type) : (
+
+                                    teacherEvents.length > 0 ? teacherEvents.reduce(function(prev, current) {
+                                      return (new Date(prev.start) > new Date(current.start)) ? prev : current
+                                    }).title : 'N/A'
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {maxDate.start !== undefined ? (
+                                  
+                                  // moment(new Date(Math.max(...teacherEvents.map(e => new Date(e.start))))).format('MM/DD/YYYY')
+                                  // moment(new Date(maxDate.start))
+
+                                  // maxDate.id
+                                  moment(new Date(maxDate.start)).format('MM/DD/YYYY')
+                                  ) : ('N/A')
+                                }
+                                </TableCell>
+                                {/* {[...Array(8).keys()].map((value, index) => (
+                                  <TableCell className={classes.magicEightCell} key={index}>
+                                    {teacher.unlocked !== undefined &&
+                                      teacher.unlocked.includes(index + 1) && (
+                                        <VisibilityOutlinedIcon
+                                          className={classes.unlockedIcon}
+                                        />
+                                      )}
+                                  </TableCell>
+                                ))} */}
+                                <TableCell className={classes.nameField}>
+
+                                </TableCell>
+                              </TableRow>
+                            )})}
+                          </TableBody>
+                        </Table>
+                      </Grid>
+                    </Grid>
+                  )) : (<Typography> Fetching data... </Typography>)}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
