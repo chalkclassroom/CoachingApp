@@ -57,6 +57,7 @@ const ChildBehaviorTrendsOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
+      fontFamily: 'Arimo',
       align: "right",
       formatter: function(value: number): string {
         return value + "%";

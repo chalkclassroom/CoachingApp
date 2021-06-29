@@ -5,7 +5,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 interface Props {
-  averageToneRating: number
+  averageToneRating: number,
+  pdf?: boolean
 }
 
 const useStyles = makeStyles({
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
  */
 export default function AverageTone(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { averageToneRating } = props;
+  const { averageToneRating, pdf } = props;
   const marks = [
     {
       value: 1,
@@ -52,11 +53,17 @@ export default function AverageTone(props: Props): React.ReactElement {
     }
   ];
   return (
-    <Grid direction="column" justify="center" alignItems="center">
+    <Grid direction="column" justify="center" alignItems="center" style={{height: 400}}>
       <Grid item style={{paddingTop: '1em'}}>
-        <Typography variant="subtitle1">
-          What was the teacher&apos;s average tone rating?
-        </Typography>
+        {pdf ? (
+          <Typography variant="h6" align="center" style={{fontFamily: 'Arimo', paddingBottom: '2em'}}>
+            <strong>Average Tone</strong>
+          </Typography>
+        ) : (
+          <Typography variant="subtitle1">
+            What was the teacher&apos;s average tone rating?
+          </Typography>
+        )}
       </Grid>
       <Grid item style={{padding: '1em'}}>
         <Slider

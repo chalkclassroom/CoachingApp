@@ -6,6 +6,8 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   sequential: number,
   notSequential: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,6 +26,8 @@ class ChildPieSummary extends React.Component<Props, {}> {
   static propTypes = {
     sequential: PropTypes.number.isRequired,
     notSequential: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -31,6 +35,7 @@ class ChildPieSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         "Sequential Activities",
@@ -50,6 +55,11 @@ class ChildPieSummary extends React.Component<Props, {}> {
       <Pie
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -77,6 +87,14 @@ class ChildPieSummary extends React.Component<Props, {}> {
               fontSize: 14,
               fontFamily: 'Arimo'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Child Summary",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

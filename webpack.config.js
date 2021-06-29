@@ -18,6 +18,11 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, "build"),
                 filename: "bundled.js"
             },
+            node: {
+              net: 'empty',
+              fs: 'empty',
+              tls: 'empty',
+            },
             devServer:{
                 historyApiFallback: true,
                 contentBase: './',
@@ -35,11 +40,11 @@ module.exports = (env, argv) => {
                             cacheDirectory: true,
                         }
                     },
-                    // {
-                    //     test: /\.js$/,
-                    //     use: ["source-map-loader"],
-                    //     enforce:    "pre"
-                    // },
+                    /* {
+                        test: /\.js$/,
+                        use: ["source-map-loader"],
+                        enforce:    "pre"
+                    }, */
                     {//Should remove this rule after JS Migration to TS is Done.
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,

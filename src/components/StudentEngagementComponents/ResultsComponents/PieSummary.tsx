@@ -6,6 +6,8 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   offTask: number,
   engaged: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,6 +26,8 @@ class PieSummary extends React.Component<Props, {}> {
   static propTypes = {
     offTask: PropTypes.number.isRequired,
     engaged: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -31,6 +35,7 @@ class PieSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherBehaviorsData = {
       labels: [
         "Off Task",
@@ -49,6 +54,11 @@ class PieSummary extends React.Component<Props, {}> {
       <Pie
         data={teacherBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -76,6 +86,14 @@ class PieSummary extends React.Component<Props, {}> {
               fontSize: 14,
               fontFamily: 'Arimo'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Summary",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {
