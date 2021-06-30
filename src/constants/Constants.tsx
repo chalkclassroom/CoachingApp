@@ -22,6 +22,18 @@ export const ToolNames = {
   'AC': 'Associative and Cooperative Interactions',
 }
 
+export const ToolAbbreviations = {
+  'Transition Time' : 'TT',
+  'Classroom Climate' : 'CC',
+  'Math Instruction' : 'MI',
+  'Level of Engagement' : 'SE',
+  'Level of Instruction' : 'IN',
+  'Listening to Children' : 'LC',
+  'Sequential Activities' : 'SA',
+  'Literacy Instruction' : 'LI',
+  'AC' : 'AC',
+}
+
 // Colors
 export const Colors = {
   'AppBar': "#459aeb",

@@ -7,6 +7,9 @@ export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction'
 
 export type ToolNamesKey = 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC';
 
+export type ToolAbbreviationsKey = 'Transition Time' | 'Classroom Climate' | 'Math Instruction' | 'Level of Engagement' |
+'Level of Instruction' | 'Listening to Children' | 'Sequential Activities' | 'Literacy Instruction' | 'AC';
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{

@@ -401,6 +401,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     if (!conferencePlanId) {
       firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'AC')
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'AC');
           firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
@@ -460,6 +461,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'AC');
           this.setState({ questionAdded: true }, () => {
             setTimeout(() => {
               this.setState({ questionAdded: false })
@@ -473,6 +475,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'AC');
           firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({

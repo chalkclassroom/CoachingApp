@@ -2857,15 +2857,7 @@ class Firebase {
                 end: doc.data().date.toDate(),
                 allDay: false,
                 resource: doc.data().teacherID,
-                type: doc.data().tool === 'Transition Time' ? 'TT'
-                  : doc.data().tool === 'Classroom Climate' ? 'CC'
-                  : doc.data().tool === 'Math Instruction' ? 'MI'
-                  : doc.data().tool === 'Level of Instruction' ? 'IN'
-                  : doc.data().tool === 'Student Engagement' ? 'SE'
-                  : doc.data().tool === 'Listening to Children' ? 'LC'
-                  : doc.data().tool === 'Sequential Activities' ? 'SA'
-                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
-                  : 'AC',
+                type: doc.data().tool,
                 id: doc.id,
                 appointment: true
                 // completed: doc.data().completed,

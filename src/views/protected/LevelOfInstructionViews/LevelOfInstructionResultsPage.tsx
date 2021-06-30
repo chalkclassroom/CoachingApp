@@ -367,6 +367,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     if (!conferencePlanId) {
       firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Level of Instruction')
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'IN');
           firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
@@ -426,6 +427,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'IN');
           this.setState({ questionAdded: true }, () => {
             setTimeout(() => {
               this.setState({ questionAdded: false })
@@ -439,6 +441,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'IN');
           firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
