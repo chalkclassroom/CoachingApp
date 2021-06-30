@@ -504,6 +504,9 @@ class Dashboard extends React.Component<Props, State> {
                           shouldOpen={true}
                           onAccept={(): void => {
                             this.setState({resultsDialog: this.props.type});
+                            if (this.props.teacherSelected.id !== "rJxNhJmzjRZP7xg29Ko6") {
+                              firebase.completeAppointment(this.props.teacherSelected.id, 'Observation', this.props.type);
+                            }
                             if (this.props.stopTimer) {
                               this.props.stopTimer()
                             }

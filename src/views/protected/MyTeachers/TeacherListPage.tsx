@@ -55,7 +55,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { Calendar, momentLocalizer, SlotInfo, Views, EventProps } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { changeTeacher } from '../../../state/actions/teacher';
@@ -744,6 +744,27 @@ class TeacherListPage extends React.Component<Props, State> {
       const allEventsUpdated = [...this.state.allEvents, newEvent]
       this.setState({allEvents: allEventsUpdated})
     })
+  }
+
+  getAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    firebase.completeAppointment(teacherId, type, tool)
+    /* .then((id: string) => {
+      console.log('WHAT IS BLAH', id)
+      const newEvent = {
+        title: type,
+        start: date,
+        end: date,
+        allDay: false,
+        resource: teacherId,
+        type: tool,
+        id: id,
+        appointment: true
+      }
+      console.log('new event is', newEvent)
+      const allEventsUpdated = [...this.state.allEvents, newEvent]
+      this.setState({allEvents: allEventsUpdated})
+    }) */
   }
 
   /**
@@ -1482,9 +1503,11 @@ class TeacherListPage extends React.Component<Props, State> {
                           <TableBody>
                             {this.state.searched.map((teacher, index) => {
                               // const allObsEvents = [...this.state.allEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents)];
+                              // all completed events (not appointments) for this teacher
                               const teacherEvents = this.state.allEvents.filter(obj => {
-                                return( obj.resource === teacher.id )
+                                return( obj.resource === teacher.id && !obj.appointment )
                               })
+                              // most recent completed event
                               const maxDate = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
                                 return (new Date(prev.start) > new Date(current.start)) ? prev : current
                               })) : ([])
@@ -1500,16 +1523,16 @@ class TeacherListPage extends React.Component<Props, State> {
                                 onClick={(): void => this.selectTeacher(teacher)}
                                 style={{...getStripedStyle(index+1)}}
                               >
-                                <TableCell className={classes.nameField}>
+                                <TableCell className={classes.nameField} style={{width: '22%'}}>
                                   {teacher.lastName}
                                 </TableCell>
-                                <TableCell className={classes.nameField}>
+                                <TableCell className={classes.nameField} style={{width: '22%'}}>
                                   {teacher.firstName}
                                 </TableCell>
                                 {/* <TableCell className={classes.emailField}>
                                   {teacher.email}
                                 </TableCell> */}
-                                <TableCell>
+                                <TableCell style={{width: '22%'}}>
                                   {maxDate.length > 0 ? (maxDate.type) : (
 
                                     teacherEvents.length > 0 ? teacherEvents.reduce(function(prev, current) {
@@ -1517,7 +1540,7 @@ class TeacherListPage extends React.Component<Props, State> {
                                     }).title : 'N/A'
                                   )}
                                 </TableCell>
-                                <TableCell>
+                                <TableCell style={{width: '22%'}}>
                                   {maxDate.start !== undefined ? (
                                   
                                   // moment(new Date(Math.max(...teacherEvents.map(e => new Date(e.start))))).format('MM/DD/YYYY')
@@ -1539,7 +1562,57 @@ class TeacherListPage extends React.Component<Props, State> {
                                   </TableCell>
                                 ))} */}
                                 <TableCell className={classes.nameField}>
-
+                                  <Grid container direction="row" justify="center" alignItems="center">
+                                    {maxDate.type === 'TT' ? (
+                                      <img
+                                        src={TransitionTimeIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'CC' ? (
+                                      <img
+                                        src={ClassroomClimateIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'MI' ? (
+                                      <img
+                                        src={MathIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'SE' ? (
+                                      <img
+                                        src={EngagementIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'IN' ? (
+                                      <img
+                                        src={InstructionIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'LC' ? (
+                                      <img
+                                        src={ListeningIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'SA' ? (
+                                      <img
+                                        src={SequentialIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : maxDate.type === 'AC' ? (
+                                      <img
+                                        src={AssocCoopIconImage}
+                                        alt="Magic 8 Icon"
+                                        style={{maxWidth: '4em'}}
+                                      />
+                                    ) : <div />}
+                                  </Grid>
                                 </TableCell>
                               </TableRow>
                             )})}

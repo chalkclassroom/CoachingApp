@@ -703,6 +703,42 @@ class Firebase {
       );
   };
 
+  completeAppointment = async (teacherId: string, type: string, tool: string): Promise<void> => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("appointments")
+        .where("coach", "==", this.auth.currentUser.uid)
+        .where("teacherID", "==", teacherId)
+        .where("date", ">=", today)
+        .where("date", "<", tomorrow)
+        .where("tool", "==", tool)
+        .where("type", "==", type)
+        .orderBy("date", "asc")
+        .limit(1)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          querySnapshot.forEach(doc => {
+            return this.db
+              .collection("appointments")
+              .doc(doc.id)
+              .update({
+                completed: true
+              })
+              .catch((error: Error) =>
+                console.error("Error occurred unlocking section: ", error)
+              );
+            })
+          return;
+        })
+        .catch((error: Error) => {
+          console.log( 'unable to retrieve action plans', error)
+        })
+    }
+  }
+
   /**
    * submits a single center observation to database
    * @param {object} mEntry
