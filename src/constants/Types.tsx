@@ -1,5 +1,7 @@
 // import { Prompt } from "react-router-dom";
 
+import { Role } from '../state/actions/coach'
+
 export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC' | 'RedGraph' | 'NotPresent';
 
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
@@ -30,7 +32,8 @@ export interface ReduxState {
     }>
   },
   coachState: {
-    coachName: string
+    coachName: string,
+    role: Role
   },
   engagementCountState: {
     engagedCount: number,

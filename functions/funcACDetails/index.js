@@ -2,6 +2,8 @@
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
 
+const { canAccessObservation } = require('../common/accessUtils')
+
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -14,6 +16,12 @@ const bigquery = new BigQuery();
 
 exports.funcACDetails = functions.https.onCall(async(data, context) => {
   //SQL query to get number of checks for each item on checklist
+  if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+    return [];
+  }else{
+    console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+  }
+
   const sqlQuery = `SELECT
                     COUNT(CASE WHEN (checklist.child1) THEN 'ac1' ELSE NULL END) AS ac1,
                     COUNT(CASE WHEN (checklist.child2) THEN 'ac2' ELSE NULL END) AS ac2,

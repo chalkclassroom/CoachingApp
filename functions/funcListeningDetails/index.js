@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessObservation } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -14,6 +15,11 @@ const bigquery = new BigQuery();
 
 exports.funcListeningDetails = functions.https.onCall(async(data, context) => {
     //SQL query to get number of checks for each item on checklist
+    if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+    }
     const sqlQuery = `SELECT
                     COUNT(CASE WHEN (checklist.teacher1) THEN 'listening1' ELSE NULL END) AS listening1,
                     COUNT(CASE WHEN (checklist.teacher2) THEN 'listening2' ELSE NULL END) AS listening2,
@@ -22,7 +28,7 @@ exports.funcListeningDetails = functions.https.onCall(async(data, context) => {
 					          COUNT(CASE WHEN (checklist.teacher5) THEN 'listening5' ELSE NULL END) AS listening5,
                     COUNT(CASE WHEN (checklist.teacher6) THEN 'listening6' ELSE NULL END) AS listening6,
                     FROM cqrefpwa.observations.listening
-                    WHERE id ='`+data.sessionId+`'`;
+                    WHERE id ='${data.sessionId}'`;
 
     console.log(sqlQuery);
 

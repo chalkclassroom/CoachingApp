@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessObservation } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -11,10 +12,15 @@ const bigquery = new BigQuery();
  * @param {!express:Request} req HTTP request context.
  * @param {!express:Response} res HTTP response context.
  */
-exports.funcBehaviourTrend = functions.https.onCall((data, context) => {
+exports.funcBehaviourTrend = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
   console.log(context.auth.uid);
   console.log(data.sessionId);
+  if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+    return [];
+  }else{
+    console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+  }
   // The SQL query to run
   const sqlQuery = `SELECT transitionStart, transitionEnd, type 
                     FROM cqrefpwa.observations.transition
@@ -30,5 +36,5 @@ exports.funcBehaviourTrend = functions.https.onCall((data, context) => {
   };
 
   // Runs the query
-  return bigquery.query(options).then(rows => {return rows});
+  return await bigquery.query(options);
 });

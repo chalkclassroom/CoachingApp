@@ -63,18 +63,18 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
-      /* if (location.hostname === 'localhost') {
+      if (process.env.USE_LOCAL_FIRESTORE) {
         this.db.settings({
           host: 'localhost:8080',
           ssl: false,
         })
-      } */
+      }
       this.db
           .enablePersistence({ experimentalTabSynchronization: true })
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      if (process.env.USE_LOCAL_FUNCTIONS) {
+      if (process.env.REACT_APP_USE_LOCAL_FUNCTIONS) {
         this.functions.useFunctionsEmulator('http://localhost:5001')
       }
       // this.sessionRef = null;
