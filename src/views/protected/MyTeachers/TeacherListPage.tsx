@@ -28,7 +28,7 @@ import {
   Modal,
   IconButton,
   Tooltip,
-  Paper
+  Paper,
 } from '@material-ui/core';
 import CloseIcon from "@material-ui/icons/Close";
 import Fab from "@material-ui/core/Fab";
@@ -53,9 +53,11 @@ import ConferencePlansIcon from "@material-ui/icons/ListAlt";
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { Calendar, momentLocalizer, SlotInfo, Views, EventProps } from 'react-big-calendar';
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { changeTeacher } from '../../../state/actions/teacher';
@@ -378,7 +380,8 @@ interface State {
   // conferencePlanEvents: Array<Types.CalendarEvent>,
   allEvents: Array<any>,
   dataLoaded: boolean,
-  view: number
+  view: number,
+  deleteAppointmentDialog: boolean
   // type: string
 }
 
@@ -432,7 +435,8 @@ class TeacherListPage extends React.Component<Props, State> {
       // conferencePlanEvents: [],
       allEvents: [],
       dataLoaded: false,
-      view: 0
+      view: 0,
+      deleteAppointmentDialog: false
       // type: ''
     };
   }
@@ -728,6 +732,7 @@ class TeacherListPage extends React.Component<Props, State> {
 
   createAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
     const firebase = this.context;
+    console.log('called create')
     firebase.createAppointment(teacherId, date, tool, type).then((id: string) => {
       console.log('WHAT IS BLAH', id)
       const newEvent = {
@@ -743,6 +748,40 @@ class TeacherListPage extends React.Component<Props, State> {
       console.log('new event is', newEvent)
       const allEventsUpdated = [...this.state.allEvents, newEvent]
       this.setState({allEvents: allEventsUpdated})
+    })
+  }
+
+  saveAppointment = (id: string, teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    console.log('called save')
+    firebase.saveAppointment(id, teacherId, date, tool, type).then((id: string) => {
+      const newEvent = {
+        title: type,
+        start: date,
+        end: date,
+        allDay: false,
+        resource: teacherId,
+        type: tool,
+        id: id,
+        appointment: true
+      }
+      const updatedEvents = [...this.state.allEvents]
+      const index = updatedEvents.findIndex(event => event.id === newEvent.id)
+      updatedEvents.splice(index, 1)
+      updatedEvents.push(newEvent)
+      this.setState({allEvents: updatedEvents})
+    })
+  }
+
+  deleteAppointment = (id: string): void => {
+    const firebase = this.context;
+    console.log('called delete')
+    firebase.removeAppointment(id).then(() => {
+      console.log('WHAT IS BLAH', id)
+      const updatedEvents = [...this.state.allEvents]
+      const index = updatedEvents.findIndex(event => event.id === id)
+      updatedEvents.splice(index, 1)
+      this.setState({allEvents: updatedEvents})
     })
   }
 
@@ -1071,22 +1110,39 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventDate,
       newEventTeacher,
       newEventTool,
-      newEventType
+      newEventType,
+      deleteAppointmentDialog
     } = this.state;
 
     // const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event: Types.CalendarEvent, target: React.SyntheticEvent): void => {
+    console.log('event props', event)
     target.persist();
     this.setState({
       anchorEl: target.currentTarget,
       clickedEvent: event
     });
+    if (event.appointment) {
+      console.log('list', this.props.teacherList, 't', event.id)
+      const selectedTeacher = this.props.teacherList.filter(teacher => {
+        return teacher.id === event.resource
+      });
+      console.log('the const', selectedTeacher)
+      console.log('the date', event.start)
+      this.setState({
+        newEventDate: event.start,
+        newEventTeacher: selectedTeacher[0],
+        newEventTool: event.type,
+        newEventType: event.title
+      })
+    }
   };
 
   const handleClose = (): void => {
     this.setState({
       anchorEl: null,
+      clickedEvent: null
     });
   };
 
@@ -1240,6 +1296,7 @@ class TeacherListPage extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
+          {console.log('anchor el', anchorEl)}
           <Popover
             id={id}
             open={open}
@@ -1257,12 +1314,26 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             {clickedEvent !== null ? (
               <Grid container direction="column" style={{padding: '1em'}}>
-                <Grid item>
+                <Grid item style={{paddingBottom: '0.5em'}}>
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Grid item>
+                      <Typography variant="body1" style={{fontFamily: 'Arimo'}}>
+                        {moment(new Date(clickedEvent.start)).format('MM/DD/YYYY')}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" style={{fontFamily: 'Arimo'}}>
+                        {moment(new Date(clickedEvent.start)).format('h:mm a')}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item style={{paddingBottom: '0.5em'}}>
                   <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
                     {getName(clickedEvent.resource)}
                   </Typography>
                 </Grid>
-                <Grid item style={{paddingTop: '0.5em', paddingBottom: '0.5em', height: '2em'}}>
+                <Grid item style={{paddingBottom: '1em', height: '2em'}}>
                   <Grid container direction="row" justify="flex-start" alignItems="center">
                     {/* <Grid item style={{paddingRight: '0.5em'}}>
                       {clickedEvent.title === 'Observation' ? <ObserveIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
@@ -1291,7 +1362,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item style={{height: '4em', paddingTop: '0.5em'}}>
+                <Grid item style={{height: '4em', paddingBottom: '1em'}}>
                   <Grid container direction="row" justify="space-between" alignItems="center">
                     <Grid item xs={9}>
                       <Typography>
@@ -1352,7 +1423,30 @@ class TeacherListPage extends React.Component<Props, State> {
                       {clickedEvent.title === 'Observation' ? 'VIEW RESULTS' : clickedEvent.title === 'Action Plan' ? 'VIEW ACTION PLAN' : 'VIEW CONFERENCE PLAN'}
                     </Button>
                   </Grid>
-                ) : (null)}
+                ) : (
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Fab
+                      aria-label="Edit"
+                      name="Edit"
+                      size="small"
+                      onClick={(): void => this.setState({ newEventModal: true })}
+                      // className={classes.actionButton}
+                      style={{ backgroundColor: "#F9FE49" }}
+                    >
+                      <EditOutlinedIcon style={{ color: "#555555" }} />
+                    </Fab>
+                    <Fab
+                      aria-label="Delete"
+                      size="small"
+                      onClick={(): void => this.setState({ deleteAppointmentDialog: true })}
+                      // className={classes.actionButton}
+                      // size="small"
+                      style={{ backgroundColor: "#FF3836" }}
+                    >
+                      <DeleteForeverIcon style={{ color: "#C9C9C9" }} />
+                    </Fab>
+                  </Grid>
+                )}
               </Grid>
             ) : (<Typography>no event</Typography>)}
           </Popover>
@@ -1759,6 +1853,7 @@ class TeacherListPage extends React.Component<Props, State> {
                 </Grid>
                 <Grid item style={{height: '80%'}}>
                   <NewEventStepper
+                    id={clickedEvent ? clickedEvent.id : undefined}
                     date={newEventDate}
                     setDate={(newDate: Date): void => {this.setState({newEventDate: newDate})}}
                     teacher={newEventTeacher}
@@ -1770,6 +1865,8 @@ class TeacherListPage extends React.Component<Props, State> {
                     teacherList={this.state.teachers}
                     closeModal={(): void => this.setState({newEventModal: false})}
                     createAppointment={this.createAppointment}
+                    saveAppointment={this.saveAppointment}
+                    closeAppointmentModal={handleClose}
                   />
                 </Grid>
               </Grid>
@@ -1884,6 +1981,42 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             <DialogTitle id="add-alert-title">{alertText}</DialogTitle>
           </Dialog>
+          <Dialog
+            open={deleteAppointmentDialog}
+          >
+            <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
+            {
+              clickedEvent ? (
+                "Are you sure you want to delete your appointment with " + getName(clickedEvent.resource) + "?"
+              ) : (
+                "Are you sure you want to delete your appointment?"
+              )
+              
+              }
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                onClick={(): void => this.setState({deleteAppointmentDialog: false})}
+                style={{ color: "#2196f3" }}
+              >
+                No
+              </Button>
+              <Button
+                onClick={(): void => {
+                  if (clickedEvent) {
+                    this.deleteAppointment(clickedEvent.id)
+                  }
+                  /* clickedEvent ? (this.deleteAppointment(clickedEvent.id))
+                    : (null) */
+                  this.setState({deleteAppointmentDialog: false})
+                  handleClose();
+                }}
+                style={{ color: "#F1231C" }}
+              >
+                Yes
+              </Button>
+            </DialogActions>
+            </Dialog>
         </Grid>
       </div>
     );

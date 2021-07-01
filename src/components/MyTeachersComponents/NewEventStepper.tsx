@@ -18,8 +18,10 @@ import InstructionIconImage from "../../assets/images/InstructionIconImage.svg";
 import ClassroomClimateIconImage from "../../assets/images/ClassroomClimateIconImage.svg";
 import LiteracyIconImage from "../../assets/images/LiteracyIconImage.svg";
 import AssocCoopIconImage from "../../assets/images/AssocCoopIconImage.svg";
+import moment from 'moment';
 
 interface Props {
+  id: string | undefined,
   date: Date | null,
   teacher: Types.Teacher | null,
   tool: Types.ToolNamesKey | null,
@@ -35,7 +37,15 @@ interface Props {
     date: Date,
     tool: string,
     type: string
-  ): void
+  ): void,
+  saveAppointment(
+    id: string,
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string
+  ): void,
+  closeAppointmentModal(): void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -74,7 +84,7 @@ function getSteps(): Array<string> {
  */
 export default function NewEventStepper(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { date, teacher, tool, type, setDate, setTeacher, setTool, setType, teacherList, closeModal, createAppointment } = props;
+  const { id, date, teacher, tool, type, setDate, setTeacher, setTool, setType, teacherList, closeModal, createAppointment, saveAppointment, closeAppointmentModal } = props;
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [hours, setHours] = React.useState('00');
@@ -106,8 +116,13 @@ export default function NewEventStepper(props: Props): React.ReactElement {
     setSkipped(newSkipped);
   };
 
+  const handleUpdate = (): void => {
+    saveAppointment(id ? id : '', teacher ? teacher.id : '', date ? date : new Date(), tool ? tool : '', type);
+    closeModal();
+    closeAppointmentModal();
+  }
+
   const handleFinish = (): void => {
-    // insert firebase function to add event here
     createAppointment(teacher ? teacher.id : '', date ? date : new Date(), tool ? tool : '', type);
     closeModal()
   }
@@ -165,6 +180,7 @@ export default function NewEventStepper(props: Props): React.ReactElement {
               inputProps={{
                 step: 300, // 5 min
               }}
+              value={moment(date).format('HH:mm')}
               onChange={(time): void => {
                 time.persist();
                 const splitTime = time.target.value.split(':');
@@ -372,10 +388,10 @@ export default function NewEventStepper(props: Props): React.ReactElement {
               || (activeStep === 2 && tool === null)
               || (activeStep === 3 && type === '')
             }
-            onClick={activeStep === steps.length - 1 ? handleFinish : handleNext}
+            onClick={activeStep === steps.length - 1 ? (id ? handleUpdate : handleFinish) : handleNext}
             className={classes.button}
           >
-            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            {activeStep === steps.length - 1 ? (id ? 'Update' : 'Finish') : 'Next'}
           </Button>
         </Grid>
       </Grid>

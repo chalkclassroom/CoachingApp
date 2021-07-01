@@ -2906,6 +2906,58 @@ class Firebase {
     })
   }
 
+  /**
+   * saves appointment in cloud firestore
+   * @param {string} id
+   * @param {string} teacherId
+   * @param {Date} date
+   * @param {string} tool
+   * @param {string} type
+   */
+  saveAppointment = async (
+    id: string,
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string,
+  ): Promise<string|void> => {
+    if (this.auth.currentUser) {
+      return this.db
+      .collection("appointments")
+      .doc(id)
+      .update({
+        teacherID: teacherId,
+        tool: tool,
+        type: type,
+        date: date,
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred saving appointment: ", error)
+      );
+    }
+  };
+
+  /**
+   * marks appointment in cloud firestore as 'removed'
+   * keep record but don't show on user's calendar
+   * @param {string} id
+   */
+   removeAppointment = async (
+    id: string
+  ): Promise<string|void> => {
+    if (this.auth.currentUser) {
+      return this.db
+      .collection("appointments")
+      .doc(id)
+      .update({
+        removed: true,
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred removing appointment: ", error)
+      );
+    }
+  };
+
 }
 
 export default Firebase;
