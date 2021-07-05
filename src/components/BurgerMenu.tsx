@@ -25,9 +25,10 @@ import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import Practice from '@material-ui/icons/HowToReg';
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { connect } from 'react-redux';
-import { clearCoach } from '../state/actions/coach';
+import { clearCoach, Role } from '../state/actions/coach'
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import * as Constants from '../constants/Constants';
@@ -73,6 +74,7 @@ interface State {
   open: boolean,
   chalkOpen: boolean,
   teacherModal: boolean,
+  practiceOpen: boolean,
   type: string
 }
 
@@ -88,6 +90,7 @@ class BurgerMenu extends React.Component<Props, State>{
     open: this.props.open,
     chalkOpen: false,
     teacherModal: false,
+    practiceOpen: false,
     type: ""
   };
   handleDrawerOpen = (): void => {
@@ -117,6 +120,10 @@ class BurgerMenu extends React.Component<Props, State>{
     }
   };
 
+  togglePracticeCollapse = (): void =>{
+    this.setState({practiceOpen: !this.state.practiceOpen})
+  }
+
   static propTypes = {
     classes: PropTypes.exact({
       toolbarIcon: PropTypes.string,
@@ -125,6 +132,7 @@ class BurgerMenu extends React.Component<Props, State>{
       nested: PropTypes.string,
       regular: PropTypes.string
     }).isRequired,
+    role: PropTypes.string.isRequired,
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
@@ -136,11 +144,216 @@ class BurgerMenu extends React.Component<Props, State>{
   }
 
   /**
+   * returns the navigation menu for a coach user
+   */
+  coachNavigationMenu(classes): React.ReactNode{
+    return <React.Fragment>
+      <ListItem
+          button
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+            this.setState({ menu: 1, chalkOpen: false });
+            this.props.history.push({
+              pathname: "/Training",
+              // state: { type: "Training" }
+            });
+            this.props.handleClose(event);
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <TutorialIcon style={{ fill: Constants.Colors.AC }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Training"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+            this.setState({ menu: 2, chalkOpen: false });
+            this.showTeacherModal("Observe");
+            this.props.handleClose(event);
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ObserveIcon style={{ fill: Constants.Colors.MI }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Observe"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(): void => {
+            this.setState({ menu: 3, chalkOpen: false });
+            this.props.history.push("/MyTeachers");
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <PeopleIcon style={{ fill: Constants.Colors.SA }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="My Teachers"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+            this.setState({ menu: 4, chalkOpen: false });
+            this.showTeacherModal("Results");
+            this.props.handleClose(event);
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ResultsIcon style={{ fill: Constants.Colors.LC }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Results"
+
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(): void => {
+            this.setState({ menu: 5, chalkOpen: false });
+            this.props.history.push("/ActionPlans")
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ActionPlansIcon style={{ fill: Constants.Colors.TT }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Action Plans"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(): void => {
+            this.setState({ menu: 6, chalkOpen: false });
+            this.props.history.push("/ConferencePlans")
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ConferencePlansIcon style={{ fill: Constants.Colors.CC }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Conference Plans"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={(): void => {
+            this.setState({ menu: 7, chalkOpen: false });
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <MessagesIcon style={{ fill: Constants.Colors.SE }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Messages"
+            onClick={(): void => this.props.history.push("/Messaging")}
+        />
+      </ListItem>
+      <ListItem
+          button
+          disabled
+          onClick={(): void => {
+            this.setState({ menu: 8, chalkOpen: false });
+            this.props.history.push("/Messages")
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <Magic8Icon style={{ fill: Constants.Colors.AC }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Coaching Resources"
+        />
+      </ListItem>
+    </React.Fragment>
+  }
+
+  /**
+   * returns the navigation menu for a teacher user
+   */
+  teacherNavigationMenu(classes): React.ReactNode{
+    return <React.Fragment>
+      <ListItem
+          button
+          onClick={(): void => {
+            this.setState({ menu: 5, chalkOpen: false });
+            this.props.history.push("/ActionPlans")
+          }}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ActionPlansIcon style={{ fill: Constants.Colors.TT }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="My Action Plans"
+        />
+      </ListItem>
+      <ListItem button onClick={this.togglePracticeCollapse}>
+        <ListItemIcon>
+          <Practice style={{ fill: Constants.Colors.MI }} />
+        </ListItemIcon>
+        <ListItemText primary="Practice" />
+        {this.state.practiceOpen ? (
+            <ExpandLessIcon />
+        ) : (
+            <ExpandMoreIcon />
+        )}
+      </ListItem>
+      <Collapse in={this.state.practiceOpen} timeout="auto">
+        <ListItem
+            button
+            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+              this.setState({ menu: 2, practiceOpen: false });
+              this.showTeacherModal("Observe");
+              this.props.handleClose(event);
+            }}
+            className={classes.nested}
+        >
+          <ListItemIcon>
+            <ObserveIcon style={{ fill: Constants.Colors.MI }} />
+          </ListItemIcon>
+          <ListItemText
+              primary="Observe"
+          />
+        </ListItem>
+        <ListItem
+            button
+            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+              this.setState({ menu: 4, practiceOpen: false });
+              this.showTeacherModal("Results");
+              this.props.handleClose(event);
+            }}
+            className={classes.nested}
+        >
+          <ListItemIcon>
+            <ResultsIcon style={{ fill: Constants.Colors.LC }} />
+          </ListItemIcon>
+          <ListItemText
+              primary="Results"
+
+          />
+        </ListItem>
+      </Collapse>
+    </React.Fragment>
+  }
+
+  /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, role } = this.props;
     return (
       <div>
         <Drawer
@@ -169,239 +382,113 @@ class BurgerMenu extends React.Component<Props, State>{
                 primary="Home"
               />
             </ListItem>
-            <ListItem
-              button
-              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-                this.setState({ menu: 1, chalkOpen: false });
-                this.props.history.push({
-                  pathname: "/Training",
-                  // state: { type: "Training" }
-                });
-                this.props.handleClose(event);
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <TutorialIcon style={{ fill: Constants.Colors.AC }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Training"
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-                this.setState({ menu: 2, chalkOpen: false });
-                this.showTeacherModal("Observe");
-                this.props.handleClose(event);
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <ObserveIcon style={{ fill: Constants.Colors.MI }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Observe"
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 3, chalkOpen: false });
-                this.props.history.push("/MyTeachers");
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <PeopleIcon style={{ fill: Constants.Colors.SA }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="My Teachers"
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-                this.setState({ menu: 4, chalkOpen: false });
-                this.showTeacherModal("Results");
-                this.props.handleClose(event);
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <ResultsIcon style={{ fill: Constants.Colors.LC }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Results"
-
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 5, chalkOpen: false });
-                this.props.history.push("/ActionPlans")
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <ActionPlansIcon style={{ fill: Constants.Colors.TT }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Action Plans"
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 6, chalkOpen: false });
-                this.props.history.push("/ConferencePlans")
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <ConferencePlansIcon style={{ fill: Constants.Colors.CC }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Conference Plans"
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 7, chalkOpen: false });
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <MessagesIcon style={{ fill: Constants.Colors.SE }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Messages"
-                onClick={(): void => this.props.history.push("/Messaging")}
-              />
-            </ListItem>
-            <ListItem
-              button
-              disabled
-              onClick={(): void => {
-                this.setState({ menu: 8, chalkOpen: false });
-                this.props.history.push("/Messages")
-              }}
-              className={classes.regular}
-            >
-              <ListItemIcon>
-                <Magic8Icon style={{ fill: Constants.Colors.AC }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Coaching Resources"
-              />
-            </ListItem>
+            {role == Role.COACH || role == Role.ADMIN
+                ? this.coachNavigationMenu(classes) : this.teacherNavigationMenu(classes)}
             <ListItem button onClick={this.handleOpenChalk}>
               <ListItemIcon>
                 <ChalkIcon style={{ fill: Constants.Colors.MI }} />
               </ListItemIcon>
               <ListItemText primary="About" />
               {this.state.chalkOpen ? (
-                <ExpandLessIcon />
+                  <ExpandLessIcon />
               ) : (
-                <ExpandMoreIcon />
+                  <ExpandMoreIcon />
               )}
             </ListItem>
             <Collapse in={this.state.chalkOpen} timeout="auto">
               <ListItem
-                button
-                onClick={(): void => {
-                  this.setState({ menu: 9, chalkOpen: false });
-                  this.props.history.push("/Landing");
-                }}
-                className={classes.nested}
+                  button
+                  onClick={(): void => {
+                    this.setState({ menu: 9, chalkOpen: false });
+                    this.props.history.push("/Landing");
+                  }}
+                  className={classes.nested}
               >
                 <ListItemIcon>
                   <AboutIcon style={{ fill: Constants.Colors.LC }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="How It Works"
+                    primary="How It Works"
                 />
               </ListItem>
               <ListItem
-                button
-                onClick={(): void => {
-                  this.setState({ menu: 10, chalkOpen: false });
-                  this.props.history.push("/Team");
-                }}
-                className={classes.nested}
+                  button
+                  onClick={(): void => {
+                    this.setState({ menu: 10, chalkOpen: false });
+                    this.props.history.push("/Team");
+                  }}
+                  className={classes.nested}
               >
                 <ListItemIcon>
                   <TeamIcon style={{ fill: Constants.Colors.CC }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Team"
+                    primary="Team"
                 />
               </ListItem>
               <ListItem
-                button
-                onClick={(): void => {
-                  this.setState({ menu: 11, chalkOpen: false });
-                  this.props.history.push("/About");
-                }}
-                disabled
-                className={classes.nested}
+                  button
+                  onClick={(): void => {
+                    this.setState({ menu: 11, chalkOpen: false });
+                    this.props.history.push("/About");
+                  }}
+                  disabled
+                  className={classes.nested}
               >
                 <ListItemIcon>
                   <ResearchIcon style={{ fill: Constants.Colors.SE }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Research"
+                    primary="Research"
                 />
               </ListItem>
             </Collapse>
             <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 12, chalkOpen: false });
-                this.props.history.push("/Account");
-              }}
-              disabled
-              className={classes.regular}
+                button
+                onClick={(): void => {
+                  this.setState({ menu: 12, chalkOpen: false });
+                  this.props.history.push("/Account");
+                }}
+                disabled
+                className={classes.regular}
             >
               <ListItemIcon>
                 <PersonIcon style={{ fill: Constants.Colors.LI }} />
               </ListItemIcon>
               <ListItemText
-                primary="My Account"
+                  primary="My Account"
               />
             </ListItem>
             <ListItem
-              button
-              disabled
-              onClick={(): void => {
-                this.setState({ menu: 13, chalkOpen: false });
-                this.props.history.push("/help");
-              }}
+                button
+                disabled
+                onClick={(): void => {
+                  this.setState({ menu: 13, chalkOpen: false });
+                  this.props.history.push("/help");
+                }}
             >
               <ListItemIcon>
                 <HelpIcon style={{ fill: Constants.Colors.TT }} />
               </ListItemIcon>
               <ListItemText
-                primary="Help"
+                  primary="Help"
               />
             </ListItem>
             <ListItem
-              button
-              onClick={(): void => {
-                this.setState({ menu: 14, chalkOpen: false });
-                this.props.firebase.firebaseSignOut().then(() => {
-                  this.props.history.push("/");
-                  this.props.clearCoach();
-                });
-              }}
+                button
+                onClick={(): void => {
+                  this.setState({ menu: 14, chalkOpen: false });
+                  this.props.firebase.firebaseSignOut().then(() => {
+                    this.props.history.push("/");
+                    this.props.clearCoach();
+                  });
+                }}
             >
               <ListItemIcon>
                 <LogoutIcon style={{ fill: Constants.Colors.SA }} />
               </ListItemIcon>
               <ListItemText
-                primary="Logout"
+                  primary="Logout"
               />
             </ListItem>
           </List>
@@ -427,4 +514,4 @@ class BurgerMenu extends React.Component<Props, State>{
 }
 
 
-export default withRouter(withStyles(styles)(connect(null, {clearCoach})(BurgerMenu)));
+export default withRouter(withStyles(styles)(connect(state => ({role: state.coachState.role}), {clearCoach})(BurgerMenu)));
