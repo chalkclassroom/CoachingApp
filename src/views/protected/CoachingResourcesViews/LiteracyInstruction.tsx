@@ -10,7 +10,7 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import LiteracyInstructionIcon from '../../../assets/images/LiteracyIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Handout.pdf'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Example.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
@@ -31,8 +31,8 @@ function LiteracyInstructionAsideContent(): React.ReactElement {
   </>
 }
 
-const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Handout.preview.jpg')
-const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Presentation.preview.jpg')
+const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Definitions and Examples.preview.png')
+// const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}
@@ -46,7 +46,7 @@ function LiteracyInstructionMainContent(): React.ReactElement {
       <Box pt={2} display="flex" alignItems="center" justifyContent="space-around">
         <LazyLoadedPreviewImage imageImport={handoutPreviewImport} docUrl={HandoutDocumentUrl} />
         <Box minWidth="2rem" />
-        <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />
+        {/* <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />*/}
       </Box>
     </Grid>
   </Grid>
