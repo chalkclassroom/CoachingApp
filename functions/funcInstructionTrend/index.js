@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessTeacher } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -15,6 +16,11 @@ exports.funcInstructionTrend = functions.https.onCall(async (data, context) => {
     //let message = req.query.message || req.body.message || 'Hello World!';
     console.log(context.auth.uid);
     console.log(data.teacherId);
+    if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+    }
     // The SQL query to run
     const sqlQuery = `SELECT 
                     DATE(sessionStart) AS dayOfEvent, 
@@ -23,7 +29,7 @@ exports.funcInstructionTrend = functions.https.onCall(async (data, context) => {
                     COUNT(CASE WHEN instructionType = 'lowLevel' OR instructionType = 'llq' THEN 'llq' ELSE NULL END) AS llq,
                     COUNT(CASE WHEN instructionType = 'specificSkill' OR instructionType = 'llqResponse' THEN 'llqResponse' ELSE NULL END) AS llqResponse,
                   FROM cqrefpwa.observations.level
-                  WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
+                  WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
                   GROUP BY dayOfEvent
                   ORDER BY dayOfEvent ASC
                   LIMIT 100;`;

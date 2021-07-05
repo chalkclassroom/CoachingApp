@@ -1,31 +1,38 @@
 import { UserDocument } from '../../components/Firebase/Firebase'
 
-export const GET_COACH = "get_coach";
+export const COACH_LOADED = "coach_loaded";
 export const CLEAR_COACH = "clear_coach";
 
+export enum Role {
+  TEACHER = "teacher",
+  COACH = "coach",
+  ADMIN = "admin",
+  ANONYMOUS = "anonymous"
+}
 
-export const getCoach = (coachName: string, role: string = '', userInfo:UserDocument): GetCoach => ({
-  type: GET_COACH,
+
+export const coachLoaded = (coachName: string, role: Role = Role.TEACHER, userInfo: UserDocument): CoachLoadedAction => ({
+  type: COACH_LOADED,
   coachName,
   role,
   userDoc: userInfo
 });
 
-export const clearCoach = (): ClearCoach => ({
+export const clearCoach = (): ClearCoachAction => ({
   type: CLEAR_COACH
 });
 
-interface GetCoach {
-  type: typeof GET_COACH,
+interface CoachLoadedAction {
+  type: typeof COACH_LOADED,
   coachName: string,
   role: string,
   userDoc: UserDocument
 }
 
-interface ClearCoach {
+interface ClearCoachAction {
   type: typeof CLEAR_COACH
 }
 
 export type CoachTypes =
-  GetCoach |
-  ClearCoach;
+  CoachLoadedAction |
+  ClearCoachAction;

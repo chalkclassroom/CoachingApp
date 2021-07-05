@@ -67,7 +67,7 @@ import * as ReactGA from 'react-ga';
 import MessagingView from "./views/protected/MessagingViews/MessagingView.tsx";
 import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
-import { getCoach } from './state/actions/coach';
+import { coachLoaded, getCoach, Role } from './state/actions/coach'
 import { getUnlocked } from './state/actions/unlocked';
 import { getTeacherList } from './state/actions/teacher';
 import { connect } from 'react-redux';
@@ -106,24 +106,43 @@ const styles: Theme = createMuiTheme({
  *
  * @return {ReactElement}
  */
-function PrivateRoute({ auth, ...rest }): React.ReactElement {
-  const location = useLocation()
-
-  return (
-    auth ? (
-      <Route
-        exact
-        {...rest}
+function PrivateRoute({ auth, allowedRoles = [], userRole = Role.ANONYMOUS, ...rest } : {auth: boolean, allowedRoles: Array<Role>, userRole: Role}): React.ReactElement {
+  if (auth){
+    if (allowedRoles.length == 0 || allowedRoles.find(r => r === userRole)){
+      return (
+          <Route
+              exact
+              {...rest}
+          />)
+    }else{
+      return <Route
+          {...rest}
+          render={(props): React.ReactNode => {
+            return (
+                <Redirect to={{ pathname: '/', state: {from: props.location}}} />
+            )
+          }}
       />
-    ) : (
-      <Redirect to={{ pathname: '/', state: { from: location }}} />
-    )
-  )
+    }
+  }else{
+    return <Route
+        {...rest}
+        render={(props): React.ReactNode => {
+          return (
+              <Redirect to={{ pathname: '/', state: {from: props.location}}} />
+          )
+        }}
+    />
+  }
 }
 
 PrivateRoute.propTypes = {
   auth: PropTypes.bool.isRequired,
-  location: PropTypes.object
+  allowedRoles: PropTypes.array,
+  userRole: PropTypes.string,
+  location: PropTypes.object,
+  path: PropTypes.string,
+  render: PropTypes.func
 }
 
 interface Props {
@@ -133,18 +152,19 @@ interface Props {
     },
     getUserInformation():Promise<UserDocument>
     getCoachFirstName(): Promise<string>,
-    getUserRole(): Promise<string>,    
+    getUserRole(): Promise<Role>,
     getUnlockedSections(): Promise<Array<number>>,
     getTeacherList(): Promise<Array<Types.Teacher>>
   },
-  getCoach(name: string): void,
+  coachLoaded(name: string, role: Role, userInfo: UserDocument): void,
   getUnlocked(unlocked: Array<number>): void,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>
 }
 
 interface State {
   auth: boolean,
-  loading: boolean
+  loading: boolean,
+  role: Role
 }
 
 /**
@@ -160,7 +180,8 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       auth: false,
-      loading: true
+      loading: true,
+      role: Role.ANONYMOUS
     };
   }
 
@@ -168,12 +189,13 @@ class App extends React.Component<Props, State> {
   componentDidMount(): void {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
-        this.props.firebase.getUserInformation().then((userDoc: UserDocument) => {
-          this.props.firebase.getUserRole().then((role: string) => {
-            this.props.getCoach(userDoc.firstName, role, userDoc);
+        this.props.firebase.getUserInformation().then((user: UserDocument) => {
+          this.props.firebase.getUserRole().then((role: Role) => {
+            this.props.coachLoaded(user.firstName, role, user);
             this.setState({
               auth: true,
-              loading: false
+              loading: false,
+              role
             });
           })
 
@@ -221,7 +243,12 @@ class App extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    return this.state.loading === true ? (
+    const {
+      loading,
+        role,
+        auth
+    } = this.state;
+    return loading === true ? (
       <Grid
         container
         direction="row"
@@ -239,7 +266,7 @@ class App extends React.Component<Props, State> {
               exact
               path="/"
               render={(props): React.ReactElement =>
-                this.state.auth === true ? (
+                auth === true ? (
                   <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
                 ) : (
                   <WelcomePage />
@@ -248,39 +275,51 @@ class App extends React.Component<Props, State> {
             />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Landing"
               render={(props: object) : React.ReactElement=> <WelcomePage {...props}/>}
+             allowedRoles={[]}
+              userRole={role}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Invite"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Account"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Home"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth || !this.state.auth}
+              auth={auth || !auth}
               path="/team"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: object) : React.ReactElement=> <TeamPage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth || !this.state.auth}
+              auth={auth || !auth}
               path="/Training"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <TrainingPage {...props}/>}
@@ -288,18 +327,24 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Messaging"
+              allowedRoles={[Role.COACH]}
+              userRole={role}
               component={MessagingView}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
+              allowedRoles={[Role.COACH]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ActionPlanListPage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/ActionPlan"
+              allowedRoles={[Role.COACH]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 actionPlanId: string,
@@ -310,7 +355,9 @@ class App extends React.Component<Props, State> {
               }) : React.ReactElement=> <ActionPlanView {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               path="/ConferencePlans"
               render={(props: {
                 history: H.History
@@ -319,6 +366,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 location: H.Location,
@@ -330,6 +379,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <TransitionTimePage {...props}/>}
@@ -337,6 +388,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstruction"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 classes: object
@@ -345,6 +398,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimate"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
@@ -352,6 +407,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildren"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
@@ -359,6 +416,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenResults"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
@@ -366,11 +425,15 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenTraining"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: object) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <AssociativeCooperativeInteractionsPage {...props}/>}
@@ -378,6 +441,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
@@ -385,6 +450,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstruction"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <MathInstructionPage {...props}/>}
@@ -392,6 +459,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionResults"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <MathInstructionResultsPage {...props}/>}
@@ -399,49 +468,67 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <SequentialActivitiesPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/MathInstructionTraining"
               render={(props: object) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesResults"
+              allowedRoles={[]}
+              userRole={role}
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <SequentialActivitiesResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/AssociativeCooperativeInteractionsTraining"
               render={(props: object) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/LevelOfInstructionTraining"
               render={(props: object) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/ClassroomClimateTraining"
               render={(props: object) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/SequentialActivitiesTraining"
               render={(props: object) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/TransitionTimeTraining"
               render={(props: object) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/LiteracyInstructionTraining"
               render={() : React.ReactElement=> <LiteracyTrainingPage />}
             />
@@ -449,6 +536,8 @@ class App extends React.Component<Props, State> {
               exact
               auth={this.state.auth}
               path="/MyTeachers"
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 type: string
@@ -457,6 +546,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path={`/MyTeachers/:teacherid`}
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 location: H.Location,
@@ -469,11 +560,15 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
                 path="/StudentEngagement"
                 render={(props: object) : React.ReactElement=> <StudentEngagementPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
                 path="/StudentEngagementResults"
                 render={(props: {
                   history: H.History
@@ -481,6 +576,8 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
                 path="/StudentEngagementTraining"
                 render={(props: object) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
             />
@@ -509,20 +606,28 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeResults"
+              allowedRoles={[]}
+              userRole={role}
               component={TransitionResultsPage}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/ClassroomClimateResults"
               component={ClassroomClimateResultsPage}
             />
             <PrivateRoute
               auth={this.state.auth}
+              allowedRoles={[]}
+              userRole={role}
               path="/LevelOfInstructionResults"
               component={LevelOfInstructionResultsPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[Role.ADMIN]}
+                userRole={role}
                 path="/Admin"
                 component={AdminPage}
             />
@@ -617,5 +722,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {getCoach, getUnlocked, getTeacherList})(App));
+export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, getTeacherList})(App));
 

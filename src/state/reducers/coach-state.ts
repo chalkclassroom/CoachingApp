@@ -1,5 +1,5 @@
 import {
-  GET_COACH,
+  COACH_LOADED,
   CLEAR_COACH,
   CoachTypes
 } from "../actions/coach";
@@ -15,7 +15,7 @@ const initialState: CoachState = { coachName: null, role: '', user: null };
 
 export default (state = initialState, action: CoachTypes): CoachState => {
   switch (action.type) {
-    case GET_COACH:
+    case COACH_LOADED:
       return {
         ...state,
         coachName: action.coachName,
