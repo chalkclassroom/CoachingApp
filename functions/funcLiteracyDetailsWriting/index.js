@@ -24,7 +24,7 @@ exports.funcLiteracyDetailsWriting = functions.https.onCall(async(data, context)
                       COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                       COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                       FROM cqrefpwa.observations.literacyWriting${data.who}
-                      WHERE id ='${data.sessionId}'`;
+                      WHERE id = @id`;
 
     console.log(sqlQuery);
 
@@ -32,6 +32,7 @@ exports.funcLiteracyDetailsWriting = functions.https.onCall(async(data, context)
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {id: data.sessionId}
     };
 
     const [job] = await bigquery.createQueryJob(options);

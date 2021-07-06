@@ -25,7 +25,7 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
                     COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                     COUNT (sessionStart) AS total,
                     FROM cqrefpwa.observations.literacyFoundationalChild
-                    WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
+                    WHERE teacher = @teacher AND observedBy = @coach
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
 
@@ -35,6 +35,7 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {coach: '/user/' + context.auth.uid, teacher: '/user/' + data.teacherId}
     };
 
     const [job] = await bigquery.createQueryJob(options);

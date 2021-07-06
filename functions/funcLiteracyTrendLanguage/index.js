@@ -24,7 +24,7 @@ exports.funcLiteracyTrendLanguage = functions.https.onCall(async(data, context) 
                     COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                     COUNT (sessionStart) AS total,
                     FROM cqrefpwa.observations.literacyLanguage${data.who}
-                    WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
+                    WHERE teacher = @teacher AND observedBy = @coach
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
 
@@ -34,6 +34,7 @@ exports.funcLiteracyTrendLanguage = functions.https.onCall(async(data, context) 
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {coach: '/user/' + context.auth.uid, teacher: '/user/' + data.teacherId}
     };
 
     const [job] = await bigquery.createQueryJob(options);

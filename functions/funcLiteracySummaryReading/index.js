@@ -21,7 +21,7 @@ exports.funcLiteracySummaryReading = functions.https.onCall(async (data, context
                       COUNT(CASE WHEN (checklist.item11) THEN 'noLiteracy' ELSE NULL END) AS noLiteracy,
                       MAX(TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond)) AS sessionTotal
                       FROM cqrefpwa.observations.literacy${tableType}
-                      WHERE id ='${data.sessionId}'`;
+                      WHERE id = @id`;
 
     console.log(sqlQuery);
 
@@ -29,6 +29,7 @@ exports.funcLiteracySummaryReading = functions.https.onCall(async (data, context
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {id: data.sessionId}
     };
 
     const [job] = await bigquery.createQueryJob(options);
