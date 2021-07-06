@@ -5,6 +5,8 @@ import * as Constants from '../../../constants/Constants';
 
 interface Props {
   avgRating: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -22,6 +24,8 @@ class AvgBarSummary extends React.Component<Props, {}> {
 
   static propTypes = {
     avgRating: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -29,6 +33,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const avgEngagementData = {
       datasets: [
         {
@@ -43,9 +48,14 @@ class AvgBarSummary extends React.Component<Props, {}> {
     return (
       <HorizontalBar
         data={avgEngagementData}
-        width={260}
+        width={650}
         height={50}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           responsive: true,
           maintainAspectRatio: true,
           scales: {
@@ -71,6 +81,14 @@ class AvgBarSummary extends React.Component<Props, {}> {
                 }
               }
             }]
+          },
+          title: {
+            display: this.props.title,
+            text: "Average Rating",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

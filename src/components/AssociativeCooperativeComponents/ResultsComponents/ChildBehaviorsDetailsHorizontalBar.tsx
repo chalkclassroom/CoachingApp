@@ -9,7 +9,9 @@ interface Props {
   ac2: number,
   ac3: number,
   ac4: number,
-  totalVisits: number
+  totalVisits: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -30,7 +32,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     ac2: PropTypes.number.isRequired,
     ac3: PropTypes.number.isRequired,
     ac4: PropTypes.number.isRequired,
-    totalVisits: PropTypes.number.isRequired
+    totalVisits: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -38,6 +42,7 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         ["Doing an activity together", "that does not have a", "predetermined sequence"],
@@ -57,6 +62,11 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
       <HorizontalBar
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -88,6 +98,14 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
           legend: {
             display: false
           },
+          title: {
+            display: this.props.title,
+            text: "Child Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
+          },
           plugins: {
             datalabels: {
               display: 'auto',
@@ -106,7 +124,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
             }
           }
         }}
-        width={260}
+        width={650}
+        height={400}
       />
     );
   }

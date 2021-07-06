@@ -7,7 +7,9 @@ interface Props {
   teacher2: number,
   teacher3: number,
   teacher4: number,
-  totalVisits: number
+  totalVisits: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -28,7 +30,9 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
     teacher4: PropTypes.number.isRequired,
-    totalVisits: PropTypes.number.isRequired
+    totalVisits: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -36,6 +40,7 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherBehaviorsData = {
       labels: [
         ["Participating in children's play"],
@@ -56,6 +61,11 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
       <HorizontalBar
         data={teacherBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -87,6 +97,14 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
           legend: {
             display: false
           },
+          title: {
+            display: this.props.title,
+            text: "Teacher Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
+          },
           plugins: {
             datalabels: {
               display: 'auto',
@@ -105,7 +123,8 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
             }
           }
         }}
-        width={260}
+        width={650}
+        height={400}
       />
     );
   }

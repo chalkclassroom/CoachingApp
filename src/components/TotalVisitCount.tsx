@@ -16,7 +16,8 @@ const styles: object = {
 
 interface Props{
   classes: { count: string },
-  count: number
+  count: number,
+  title?: string
 }
 
 /**
@@ -51,8 +52,8 @@ class TotalVisitCount extends React.Component<Props, {}> {
       >
         <Grid>
           <div style={{ margin: 20 }} />
-          <Typography variant="h5" component="h3" style={{fontFamily: 'Arimo'}}>
-            Total Visits:
+          <Typography variant="h5" component="h3" align="center" style={{fontFamily: 'Arimo'}}>
+            {this.props.title ? this.props.title : 'Total Visits:'}
           </Typography>
           <Typography
             variant="h4"

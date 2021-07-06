@@ -19,6 +19,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns'
 import { connect } from 'react-redux'
+import { Role } from '../../../state/actions/coach'
 
 interface Props {
     isAdmin: boolean
@@ -244,4 +245,4 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
 }
 
 
-export default connect(state => ({isAdmin: state.coachState.role === 'admin'}))(AdminPage)
+export default connect(state => ({isAdmin: state.coachState.role === Role.ADMIN}))(AdminPage)

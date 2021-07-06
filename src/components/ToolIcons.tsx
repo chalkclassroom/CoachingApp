@@ -303,7 +303,8 @@ ToolIcons.propTypes = {
   type: PropTypes.string.isRequired,
   training: PropTypes.bool.isRequired,
   unlocked: PropTypes.array,
-  history: ReactRouterPropTypes.history.isRequired
+  history: ReactRouterPropTypes.history.isRequired,
+  role: PropTypes.string
 }
 
 const mapStateToProps = (state: Types.ReduxState): {

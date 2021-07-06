@@ -9,6 +9,8 @@ interface Props {
   mildlyEngagedDetailSplit: Array<number>,
   engagedDetailSplit: Array<number>,
   highlyEngagedDetailSplit: Array<number>,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -29,6 +31,8 @@ class EngagementBarDetails extends React.Component<Props, {}> {
     mildlyEngagedDetailSplit: PropTypes.array.isRequired,
     engagedDetailSplit: PropTypes.array.isRequired,
     highlyEngagedDetailSplit: PropTypes.array.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -36,6 +40,7 @@ class EngagementBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const engagementData = {
       labels: [
         ["Off Task"],
@@ -56,6 +61,12 @@ class EngagementBarDetails extends React.Component<Props, {}> {
         backgroundColor:  Constants.Colors.TT,
         hoverBackgroundColor:  Constants.Colors.TT
       },{
+        label: 'Centers',
+        stack: '0',
+        data: [this.props.offTaskDetailSplit[3],this.props.mildlyEngagedDetailSplit[3],this.props.engagedDetailSplit[3],this.props.highlyEngagedDetailSplit[3]],
+        backgroundColor:  Constants.Colors.SA,
+        hoverBackgroundColor:  Constants.Colors.SA
+      },{
         label: 'Transition',
         stack: '0',
         data: [this.props.offTaskDetailSplit[2],this.props.mildlyEngagedDetailSplit[2],this.props.engagedDetailSplit[2],this.props.highlyEngagedDetailSplit[2]],
@@ -69,6 +80,11 @@ class EngagementBarDetails extends React.Component<Props, {}> {
       <HorizontalBar
         data={engagementData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -113,6 +129,14 @@ class EngagementBarDetails extends React.Component<Props, {}> {
           },
           legend: {
             display: true
+          },
+          title: {
+            display: this.props.title,
+            text: "Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

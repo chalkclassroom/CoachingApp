@@ -36,7 +36,8 @@ interface Props {
   classes: Style,
   timerTime: number,
   type: Types.DashboardType,
-  time: number
+  time: number,
+  horizontal?: boolean
 }
 
 interface Style {
@@ -56,7 +57,8 @@ function Countdown(props: Props): React.ReactElement {
     classes,
     timerTime,
     type,
-    time
+    time,
+    horizontal
   } = props;
   return (
     <Grid
@@ -66,7 +68,7 @@ function Countdown(props: Props): React.ReactElement {
       alignItems="center"
       style={{width: '100%', height: '100%'}}
     >
-      <Grid item className={classes.lineGrid}>
+      <Grid item className={classes.lineGrid} style={{height: horizontal ? '20%' : '80%'}}>
         <div className={classes.timerContainer} />
         <Line
           className={classes.line}
@@ -78,6 +80,9 @@ function Countdown(props: Props): React.ReactElement {
               : "#E55529"
           }
           trailWidth={18}
+          style={{
+            transform: horizontal ? 'rotate(0deg)' : 'rotate(270deg)'
+          }}
         />
       </Grid>
       <Grid item className={classes.timeText}>
@@ -91,7 +96,8 @@ Countdown.propTypes = {
   classes: PropTypes.object.isRequired,
   timerTime: PropTypes.number.isRequired,
   type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
-  time: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired,
+  horizontal: PropTypes.bool
 }
 
 export default withStyles(styles)(Countdown);

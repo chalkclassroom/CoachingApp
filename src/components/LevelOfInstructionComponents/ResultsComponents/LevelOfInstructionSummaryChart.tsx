@@ -5,7 +5,9 @@ import FirebaseContext from "../../Firebase/FirebaseContext";
 
 interface Props {
   lowLevel: number, 
-  highLevel: number, 
+  highLevel: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -22,6 +24,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     lowLevel: PropTypes.number.isRequired, 
     highLevel: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -29,6 +33,7 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const instructionResponseData = {
       labels: ["High-Level Instruction", "Low-Level Instruction"],
       datasets: [
@@ -44,7 +49,12 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
       <div>
         <Pie
           data={instructionResponseData}
-          options={{ 
+          options={{
+            animation: {
+              onComplete: function(): void {
+                isCompleted ? isCompleted() : null
+              }
+            },
             tooltips: {
               callbacks: {
                 label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -73,9 +83,11 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: false,
-              text: "Teacher Instruction",
+              display: this.props.title,
+              text: "Summary",
               fontSize: 20,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
               fontStyle: "bold"
             },
             plugins: {

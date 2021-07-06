@@ -9,7 +9,9 @@ interface Props {
   waiting: number,
   routines: number,
   behaviorManagement: number,
-  other: number
+  other: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -31,6 +33,8 @@ class TransitionBarChart extends React.Component<Props, {}> {
     routines: PropTypes.number.isRequired,
     behaviorManagement: PropTypes.number.isRequired,
     other: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -38,6 +42,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const transitionData = {
       labels: [
         "Waiting in Line",
@@ -68,6 +73,11 @@ class TransitionBarChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={transitionData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -131,6 +141,14 @@ class TransitionBarChart extends React.Component<Props, {}> {
           },
           legend: {
             display: false,
+          },
+          title: {
+            display: this.props.title,
+            text: "Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

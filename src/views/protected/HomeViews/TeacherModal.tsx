@@ -112,7 +112,7 @@ class TeacherModal extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    if (this.props.firebase) {
+    if (this.props.teacherList.length === 0 && this.props.firebase) {
       this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
         const teacherList = [];
         teacherPromiseList.forEach(tpromise => {
@@ -180,7 +180,6 @@ class TeacherModal extends React.Component<Props, State> {
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
             <Grid
-              // xs={12}
               container
               alignItems="center"
               direction="row"
@@ -203,12 +202,12 @@ class TeacherModal extends React.Component<Props, State> {
               justify="flex-start"
             >
               <List className={classes.list}>
-                {this.state.teachers.length === 0 ? (
-                  <>Fetching... Make sure you have Teachers Paired.</>
+                {this.props.teacherList.length === 0 ? (
+                  <>Fetching your teachers...</>
                 ) : (
                   <></>
                 )}
-                {this.state.teachers.map((teacher, index) => (
+                {this.props.teacherList.map((teacher, index) => (
                   <ListItem
                       key={index}
                       alignItems="center"

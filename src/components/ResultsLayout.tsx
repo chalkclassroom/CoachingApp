@@ -459,7 +459,6 @@ class ResultsLayout extends React.Component<Props, State> {
                               }>>,
                               getActionSteps(actionPlanId: string): Promise<Array<{
                                 step: string,
-                                materials: string,
                                 person: string,
                                 timeline: firebase.firestore.Timestamp
                               }>>,
@@ -473,7 +472,6 @@ class ResultsLayout extends React.Component<Props, State> {
                                 actionPlanId: string,
                                 index: string,
                                 step: string,
-                                materials: string,
                                 person: string,
                                 timeline: Date | null
                               ): Promise<void>,

@@ -7,6 +7,8 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   transitionTime: number,
   learningActivityTime: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,6 +26,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
   static propTypes = {
     transitionTime: PropTypes.number.isRequired,
     learningActivityTime: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -42,11 +46,16 @@ class TransitionTimePie extends React.Component<Props, {}> {
       ]
     };
     const total = this.props.transitionTime + this.props.learningActivityTime;
-
+    const isCompleted = this.props.completed;
     return (
       <Pie
         data={transitionData}
-        options={{ 
+        options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -73,6 +82,14 @@ class TransitionTimePie extends React.Component<Props, {}> {
               fontSize: 14,
               fontFamily: 'Arimo'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Summary",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

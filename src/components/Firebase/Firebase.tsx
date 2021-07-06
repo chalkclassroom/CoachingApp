@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
 import * as Constants from '../../constants/Constants';
+import * as MessagingTypes from '../MessagingComponents/MessagingTypes';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -63,18 +64,18 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
-      /* if (location.hostname === 'localhost') {
+      if (process.env.USE_LOCAL_FIRESTORE) {
         this.db.settings({
           host: 'localhost:8080',
           ssl: false,
         })
-      } */
+      }
       this.db
           .enablePersistence({ experimentalTabSynchronization: true })
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      if (process.env.USE_LOCAL_FUNCTIONS) {
+      if (process.env.REACT_APP_USE_LOCAL_FUNCTIONS) {
         this.functions.useFunctionsEmulator('http://localhost:5001')
       }
       // this.sessionRef = null;
@@ -212,6 +213,22 @@ class Firebase {
       );
   };
 
+  sendEmail = async (msg: string): Promise<void> => {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      "funcSendEmail"
+    );
+    return sendEmailFirebaseFunction(msg)
+      .then(
+        result => {
+          result;
+          console.log('result is', result)
+        }
+      )
+      .catch(error =>
+          error
+      );  
+  };
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -227,6 +244,7 @@ class Firebase {
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
+        console.log('teacher list', teacherList);
         return teacherList;
       })
       .catch((error: Error) => console.error("Error getting partner list: ", error));
@@ -2321,7 +2339,6 @@ class Firebase {
     actionPlansRef.set(data).then(() => {
       const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
       actionStepsRef.set({
-        materials: '',
         person: '',
         step: '',
         timeline: null
@@ -2344,7 +2361,6 @@ class Firebase {
     const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
     actionStepsRef.set({
       step: '',
-      materials: '',
       person: '',
       timeline: null
     }).then(() => {
@@ -2401,7 +2417,7 @@ class Firebase {
   }
 
   /**
-   * finds all action plans for coach and their selected teacher
+   * finds all action plans for coach and their selected teacher for a specific practice
    * @param {string} practice
    * @param {string} teacherId
    */
@@ -2432,6 +2448,83 @@ class Firebase {
         })
         .catch(() => {
           console.log( 'unable to retrieve action plans')
+        })
+      }
+  }
+
+  /**
+   * finds all action plans for coach and their selected teacher
+   * @param {string} teacherId
+   */
+  getAllTeacherActionPlans = async (teacherId: string): Promise<Array<{
+    id: string,
+    date: {seconds: number, nanoseconds: number},
+    practice: string,
+    achieveBy: firebase.firestore.Timestamp
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+        .where("teacher", "==", teacherId)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            date: {seconds: number, nanoseconds: number},
+            practice: string,
+            achieveBy: firebase.firestore.Timestamp
+          }> = [];
+          querySnapshot.forEach(doc => {
+            idArr.push({
+              id: doc.id,
+              date: doc.data().dateModified,
+              practice: doc.data().tool,
+              achieveBy: doc.data().goalTimeline
+            })
+          })
+          return idArr;
+        })
+        .catch(() => {
+          console.log('unable to retrieve action plans')
+        })
+      }
+  }
+
+  /**
+   * finds all observations for coach and their selected teacher
+   * @param {string} teacherId
+   */
+  getAllTeacherObservations = async (teacherId: string): Promise<Array<{
+    id: string,
+    date: firebase.firestore.Timestamp,
+    practice: string
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("observations")
+        .where("observedBy", "==", "/user/" + this.auth.currentUser.uid)
+        .where("teacher", "==", "/user/" + teacherId)
+        .orderBy("start", "desc")
+        .limit(100)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            date: firebase.firestore.Timestamp,
+            practice: string
+          }> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().end > doc.data().start) { // check that session was completed
+              idArr.push({
+                id: doc.id,
+                date: doc.data().start,
+                practice: doc.data().type,
+              })
+            }
+          })
+          return idArr;
+        })
+        .catch((error) => {
+          console.log('unable to retrieve observations', error)
         })
       }
   }
@@ -2491,7 +2584,6 @@ class Firebase {
    */
   getActionSteps = async (actionPlanId: string): Promise<Array<{
     step: string,
-    materials: string,
     person: string,
     timeline: firebase.firestore.Timestamp
   }> | void> => {
@@ -2500,14 +2592,12 @@ class Firebase {
       .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const actionStepsArr: Array<{
           step: string,
-          materials: string,
           person: string,
           timeline: firebase.firestore.Timestamp
         }> = [];
         querySnapshot.forEach(doc =>
           actionStepsArr.push({
             step: doc.data().step,
-            materials: doc.data().materials,
             person: doc.data().person,
             timeline: doc.data().timeline
           })
@@ -2552,7 +2642,6 @@ class Firebase {
    * @param {string} actionPlanId
    * @param {string} index
    * @param {string} step
-   * @param {string} materials
    * @param {string} person
    * @param {Date | null} timeline
    */
@@ -2560,14 +2649,12 @@ class Firebase {
     actionPlanId: string,
     index: string,
     step: string,
-    materials: string,
     person: string,
     timeline: Date | null
   ): Promise<void> => {
     const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
       step: step,
-      materials: materials,
       person: person,
       timeline: timeline ? firebase.firestore.Timestamp.fromDate(timeline) : firebase.firestore.Timestamp.fromDate(new Date())
     })
@@ -2787,6 +2874,276 @@ class Firebase {
         dateModified: firebase.firestore.Timestamp.now()
       })
     })
+  }
+
+  /**
+   * saves email in firestore
+   * @param {string} email
+   * @param {string} subject
+   * @param {object} recipient
+   * @param {string} emailId
+   */
+  saveEmail = async (
+    email?: string,
+    subject?: string,
+    recipient?: {
+      id: string,
+      firstName: string,
+      name: string,
+      email: string
+    },
+    emailId?: string
+  ): Promise<MessagingTypes.Email | void> => {
+    if (this.auth.currentUser) {
+      if (emailId) {
+        const data: MessagingTypes.Email = {
+          id: emailId,
+          emailContent: email ? email : '',
+          subject: subject ? subject : '',
+          recipientId: recipient ? recipient.id : '',
+          recipientFirstName: recipient ? recipient.firstName : '',
+          recipientName: recipient ? recipient.name : '',
+          recipientEmail: recipient ? recipient.email : '',
+          dateModified: firebase.firestore.Timestamp.now(),
+          user: this.auth.currentUser.uid,
+          type: 'draft'
+        };
+        return this.db
+          .collection('emails')
+          .doc(emailId)
+          .update(data).then(() => {
+            return data
+          })
+          .catch((error: Error) =>
+            console.error("Couldn't update email", error)
+          )
+      } else {
+        const emailRef: firebase.firestore.DocumentReference = this.db.collection("emails").doc();
+        const data: MessagingTypes.Email = {
+          emailContent: email ? email : '',
+          subject: subject ? subject : '',
+          recipientId: recipient ? recipient.id : '',
+          recipientFirstName: recipient.firstName ? recipient.firstName : '',
+          recipientName: recipient ? recipient.name : '',
+          recipientEmail: recipient ? recipient.email : '',
+          dateCreated: firebase.firestore.Timestamp.now(),
+          dateModified: firebase.firestore.Timestamp.now(),
+          type: 'draft',
+          user: this.auth.currentUser.uid,
+          id: emailRef.id
+        };
+        emailRef.set(data);
+        return data
+      }    
+    }
+  }
+
+  /**
+   * saves email attachment
+   * @param {string} emailId
+   * @param {object} attachment
+   */
+  saveAttachment = async (
+    emailId: string,
+    attachment: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string,
+      date?: Date
+    }
+  ): Promise<void> => {
+    const attachmentRef = this.db.collection("emails").doc(emailId).collection("attachments").doc(attachment.id);
+    return attachmentRef.set({
+      content: attachment.content,
+      filename: attachment.filename,
+      type: attachment.type,
+      disposition: attachment.disposition,
+      id: attachment.id,
+      teacherId: attachment.teacherId,
+      actionPlan: attachment.actionPlan,
+      result: attachment.result,
+      summary: attachment.summary ? attachment.summary : false,
+      details: attachment.details ? attachment.details : false,
+      trends: attachment.trends ? attachment.trends : false,
+      practice: attachment.practice ? attachment.practice : '',
+      date: attachment.date ? attachment.date : {}
+    })
+    .then(() => {
+      console.log("Attachment saved successfully!");
+    })
+    .catch((error: Error) => {
+      console.error("Error saving attachment: ", error);
+    })
+  }
+
+  /**
+   * deletes draft email from database
+   * @param {string} emailId
+   */
+  deleteEmail = async (
+    emailId?: string
+  ): Promise<MessagingTypes.Email | void> => {
+    if (this.auth.currentUser) {
+      return this.db
+        .collection("emails")
+        .doc(emailId)
+        .delete()
+        .then(() =>
+          console.log("Draft deleted.")
+        )
+        .catch((error: Error) =>
+          console.error(
+            "An error occurred when deleting the draft", error
+          )
+        );
+      }
+    };
+
+    /**
+   * deletes email attachment from database
+   * @param {string} emailId
+   * @param {string} attachmentId
+   */
+  deleteAttachment = async (
+    emailId: string,
+    attachmentId: string
+  ): Promise<MessagingTypes.Email | void> => {
+    if (this.auth.currentUser) {
+      if (this.db.collection("emails").doc(emailId) && this.db.collection("emails").doc(emailId).collection("attachments").doc(attachmentId)) {
+      return this.db
+        .collection("emails")
+        .doc(emailId)
+        .collection("attachments")
+        .doc(attachmentId)
+        .delete()
+        .then(() =>
+          console.log("Attachment deleted.")
+        )
+        .catch((error: Error) =>
+          console.error(
+            "An error occurred when deleting the draft", error
+          )
+        );
+      } else {
+        return;
+      }
+    }
+  };
+
+  /**
+   * deletes draft email from database
+   * @param {string} emailId
+   */
+  changeDraftToSent = async (emailId: string): Promise<void> => {
+    const emailRef = this.db.collection('emails').doc(emailId);
+    return emailRef.update({
+      type: 'sent'
+    })
+    .then(function() {
+      console.log("Document successfully updated!");
+    })
+    .catch(function(error) {
+        console.error("Error updating document: ", error);
+    });
+  }
+
+  getEmail = async (): Promise<string> => {
+    return this.db
+      .collection("emails")
+      .doc('AJHQApd9yei87yfsZgsG')
+      .get()
+      .then((doc: firebase.firestore.DocumentData) => doc.data().emailContent)
+      .catch((error: Error) => console.error("Error getting cached document:", error));
+  }
+
+  getEmail2 = async (): Promise<{emailContent: string, id: string} | void> => {
+    return this.db
+      .collection("emails")
+      .doc('AJHQApd9yei87yfsZgsG')
+      .get()
+      .then((doc: firebase.firestore.DocumentData) => {
+        const email = {
+          id: doc.id,
+          emailContent: doc.data().emailContent
+        };
+        return email
+      })
+      .catch((error: Error) => console.error("Error getting cached document:", error));
+  }
+
+  /**
+   * finds all emails (draft and sent) for particular user
+   */
+  getAllEmails = async (): Promise<Array<MessagingTypes.Email> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("emails")
+        .where("user", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const emailArray: Array<MessagingTypes.Email> = [];
+          querySnapshot.forEach(doc =>
+            emailArray.push({
+              id: doc.data().id,
+              emailContent: doc.data().emailContent,
+              subject: doc.data().subject,
+              recipientId: doc.data().recipientId,
+              recipientFirstName: doc.data().recipientFirstName ? doc.data().recipientFirstName : doc.data().recipientName,
+              recipientName: doc.data().recipientName,
+              recipientEmail: doc.data().recipientEmail,
+              type: doc.data().type,
+              user: doc.data().user,
+              dateCreated: doc.data().dateCreated,
+              dateModified: doc.data().dateModified
+            })
+          )
+          return emailArray;
+        })
+        .catch(() => {
+          console.log('unable to find drafts')
+        })
+    }
+  }
+
+  /**
+   * gets email's attachments
+   * @param {string} emailId
+   */
+  getAttachments = async (emailId: string): Promise<Array<MessagingTypes.Attachment> | void> => {
+    this.query = this.db.collection("emails").doc(emailId).collection("attachments");
+    return this.query.get()
+      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+        const attachmentArray: Array<MessagingTypes.Attachment> = [];
+        querySnapshot.forEach(doc =>
+          attachmentArray.push({
+            content: doc.data().content,
+            filename: doc.data().filename,
+            type: doc.data().type,
+            disposition: doc.data().disposition,
+            id: doc.data().id,
+            teacherId: doc.data().teacherId,
+            actionPlan: doc.data().actionPlan,
+            result: doc.data().result,
+            summary: doc.data().summary,
+            details: doc.data().details,
+            trends: doc.data().trends,
+            practice: doc.data().practice,
+            date: doc.data().date
+          })
+        );
+        return attachmentArray;
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      })
   }
 
 }
