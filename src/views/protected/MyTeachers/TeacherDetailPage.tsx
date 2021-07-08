@@ -11,6 +11,7 @@ import ListeningIconImage from "../../../assets/images/ListeningIconImage.svg";
 import MathIconImage from "../../../assets/images/MathIconImage.svg";
 import InstructionIconImage from "../../../assets/images/InstructionIconImage.svg";
 import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIconImage.svg";
+import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg';
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -23,6 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
 import { TextField } from "@material-ui/core";
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
@@ -73,18 +75,18 @@ const styles: object = {
     alignItems: "stretch",
     flexGrow: 1,
     marginTop: "1em",
-    width: "50%",
+    // width: "50%",
     fontSize: "1.5em"
   },
   magicEightCard: {
     // border: '2px solid #00FFFF',
     padding: "0px",
-    width: "50%",
+    // width: "50%",
     margin: "0",
     flexGrow: 1,
     display: "grid",
-    gridTemplateColumns: "25% 25% 25% 25%",
-    gridTemplateRows: "50% 50%"
+    gridTemplateColumns: "33% 33% 33%",
+    gridTemplateRows: "30% 30% 30%",
   },
   actionButton: {
     marginLeft: "1em",
@@ -99,7 +101,7 @@ const styles: object = {
     textAlign: "center"
   },
   magicEightButton: {
-    marginBottom: "15%",
+    // marginBottom: "15%",
     backgroundColor: "#FFFFFF",
     border: "0 none #FFFFFF",
     borderRadius: "10%",
@@ -167,7 +169,7 @@ const styles: object = {
     },
     magicEightCard: {
       width: "100%",
-      margin: "1em 0 0 0"
+      // margin: "1em 0 0 0"
     }
   },
 
@@ -195,7 +197,7 @@ const styles: object = {
     },
     magicEightCard: {
       width: "100%",
-      margin: "2em 0 0 0"
+      // margin: "2em 0 0 0"
     }
   },
 
@@ -235,11 +237,11 @@ const styles: object = {
       maxWidth: "60%"
     },
     teacherCard: {
-      width: "40%",
+      // width: "40%",
       fontSize: "1.3em"
     },
     magicEightCard: {
-      width: "60%"
+      // width: "60%"
     }
   }
 };
@@ -247,11 +249,12 @@ const styles: object = {
 const sortedSvg = [
   TransitionTimeIconImage,
   ClassroomClimateIconImage,
-  ListeningIconImage,
-  InstructionIconImage,
   MathIconImage,
+  InstructionIconImage,
   EngagementIconImage,
+  ListeningIconImage,
   SequentialIconImage,
+  LiteracyIconImage,
   AssocCoopIconImage
 ];
 
@@ -778,6 +781,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
             alignItems="stretch"
             className={classes.contentContainer}
           >
+            {/* <Grid item xs={6}> */}
             <div className={classes.teacherCard}>
               <div
                 style={{
@@ -794,29 +798,35 @@ class TeacherDetailPage extends React.Component<Props, State> {
               <LabeledInfo label="Phone" field={phone} />
               <LabeledInfo label="Notes" field={notes} />
             </div>
+            {/* </Grid> */}
+            <Grid item xs={6}>
+              <Grid container direction="row" justify="center" alignItems="center">
             <ol className={classes.magicEightCard}>
               {sortedSvg.map((item, key) =>
                 recentObs !== undefined && recentObs[key] !== null ? (
                   <li key={key} className={classes.magicEightItem}>
-                    <Button
-                      variant="contained"
-                      className={classes.magicEightButton}
-                      style={{
-                        border: "1px solid #000000",
-                        backgroundColor: "#000000"
-                      }}
-                    >
-                      <img
-                        src={item}
-                        alt="Magic Eight"
-                        className={classes.img}
-                      />
-                    </Button>
-                    <p>
-                      Last Observed:
-                      <br />
-                      {recentObs[key]}
-                    </p>
+                    <Grid container direction="column" justify="center" alignItems="center">
+                      <Button
+                        variant="contained"
+                        className={classes.magicEightButton}
+                        style={{
+                          // border: "1px solid #000000",
+                          // backgroundColor: "#000000"
+                        }}
+                      >
+                        <img
+                          src={item}
+                          alt="Magic Eight"
+                          className={classes.img}
+                        />
+                      </Button>
+                      
+                      <Typography>
+                        Last Observed:
+                        <br />
+                        {recentObs[key]}
+                      </Typography>
+                    </Grid>
                   </li>
                 ) : (
                   <li key={key} className={classes.magicEightItem}>
@@ -824,7 +834,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
                       disabled
                       variant="contained"
                       className={classes.magicEightButton}
-                      style={{ backgroundColor: "#FFFFFF", opacity: 0.8 }}
+                      style={{ backgroundColor: "#FFFFFF", opacity: 0.5 }}
                     >
                       <img
                         src={item}
@@ -832,17 +842,19 @@ class TeacherDetailPage extends React.Component<Props, State> {
                         className={classes.img}
                       />
                     </Button>
-                    <p>
+                    <Typography>
                       Not Yet
                       <br />
                       Observed
                       <br />
                       <br />
-                    </p>
+                    </Typography>
                   </li>
                 )
               )}
             </ol>
+            </Grid>
+            </Grid>
           </Grid>
           <Dialog
             open={isDeleting}

@@ -3,7 +3,8 @@ import * as PropTypes from "prop-types";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
-import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
+import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
+/* import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import ListeningIconImage from "../../../assets/images/ListeningIconImage.svg";
@@ -13,7 +14,7 @@ import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIc
 import LiteracyIconImage from "../../../assets/images/LiteracyIconImage.svg";
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import ConferencePlanImage from "../../../assets/images/ConferencePlanImage.png";
-import ActionPlanImage from "../../../assets/images/ActionPlanImage.png";
+import ActionPlanImage from "../../../assets/images/ActionPlanImage.png"; */
 import { withStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -57,6 +58,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
+import CalendarEventPopover from '../../../components/MyTeachersComponents/CalendarEventPopover';
+import MyTeachersTable from '../../../components/MyTeachersComponents/MyTeachersTable';
 import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -76,6 +79,14 @@ interface Event {
   hexColor?: string,
   type: string
 }
+
+const RecentActivityTerms = {
+  'Observation': 'Classroom Observed',
+  'Action Plan': 'Action Plan Saved',
+  'Conference Plan': 'Conference Plan Saved'
+}
+
+type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
 
 /**
  * specifies styling for modal
@@ -118,7 +129,7 @@ const styles = (theme: Theme): object => ({
   row: {
     transitionDuration: "0.2s",
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.background.default
+      backgroundColor: 'red'
     },
     "&:hover": {
       backgroundColor: "#555555",
@@ -286,7 +297,7 @@ const styles = (theme: Theme): object => ({
   }
 });
 
-const sortedSvg = [
+/* const sortedSvg = [
   TransitionTimeIconImage,
   ClassroomClimateIconImage,
   ListeningIconImage,
@@ -306,7 +317,7 @@ const sortedAltText = [
   "Student Engagement",
   "Sequential Activities",
   "Assoc Coop Interactions"
-];
+]; */
 
 interface Style {
   root: string,
@@ -1114,50 +1125,66 @@ class TeacherListPage extends React.Component<Props, State> {
       deleteAppointmentDialog
     } = this.state;
 
-    // const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event: Types.CalendarEvent, target: React.SyntheticEvent): void => {
-    console.log('event props', event)
-    target.persist();
-    this.setState({
-      anchorEl: target.currentTarget,
-      clickedEvent: event
-    });
-    if (event.appointment) {
-      console.log('list', this.props.teacherList, 't', event.id)
-      const selectedTeacher = this.props.teacherList.filter(teacher => {
-        return teacher.id === event.resource
-      });
-      console.log('the const', selectedTeacher)
-      console.log('the date', event.start)
+    /**
+     * clicking on calendar event
+     * @param {Types.CalendarEvent} event
+     * @param {SyntheticEvent} target
+     */
+    const handleClick = (event: Types.CalendarEvent, target: React.SyntheticEvent): void => {
+      target.persist();
       this.setState({
-        newEventDate: event.start,
-        newEventTeacher: selectedTeacher[0],
-        newEventTool: event.type,
-        newEventType: event.title
-      })
+        anchorEl: target.currentTarget,
+        clickedEvent: event
+      });
+      if (event.appointment) {
+        const selectedTeacher = this.props.teacherList.filter(teacher => {
+          return teacher.id === event.resource
+        });
+        this.setState({
+          newEventDate: event.start,
+          newEventTeacher: selectedTeacher[0],
+          newEventTool: event.type,
+          newEventType: event.title
+        })
+      }
+    };
+
+    /**
+     * closes event popover or create event dialog
+     */
+    const handleClose = (): void => {
+      this.setState({
+        anchorEl: null,
+        clickedEvent: null,
+        newEventDate: null,
+        newEventTeacher: null,
+        newEventTool: null,
+        newEventType: ''
+      });
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    /**
+     * returns teacher name from id
+     * @param {string} id
+     * @returns {string}
+     */
+    const getName = (id: string): string => {
+      const teacher = this.props.teacherList.find(obj => obj.id === id);
+      if (teacher) {
+        return (teacher.firstName + ' ' + teacher.lastName)
+      } else {
+        return ''
+      }
     }
-  };
 
-  const handleClose = (): void => {
-    this.setState({
-      anchorEl: null,
-      clickedEvent: null
-    });
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  const getName = (id: string): string => {
-    const teacher = this.props.teacherList.find(obj => obj.id === id);
-    if (teacher) {
-      return (teacher.firstName + ' ' + teacher.lastName)
-    } else {
-      return ''
-    }
-  }
-
+    /**
+     * returns teacher initials, given name
+     * @param {string} name
+     * @returns {string}
+     */
     const getInitials = (name: string): string => {
       let i = 0;
       let initials = name.charAt(0);
@@ -1172,7 +1199,7 @@ class TeacherListPage extends React.Component<Props, State> {
       return initials
     };
 
-    const myEventsList: Array<Types.CalendarEvent> = [
+    /* const myEventsList: Array<Types.CalendarEvent> = [
       {
         title: 'Observation',
         start: new Date(2021, 5, 14, 8, 30, 14, 0),
@@ -1227,39 +1254,50 @@ class TeacherListPage extends React.Component<Props, State> {
         hexColor: 'fde1f0',
         type: 'TT'
       }
-    ];
+    ]; */
 
-    const allViews = Object.keys(Views).map(k => Views[k]);
+    /* const allViews = Object.keys(Views).map(k => Views[k]);
 
     const ColoredDateCellWrapper = ({ children }) =>
       React.cloneElement(React.Children.only(children), {
         style: {
           backgroundColor: 'black',
         },
-      })
+      }) */
 
+    // style for calendar event
     const eventStyleGetter = (event: Types.CalendarEvent, start, end, isSelected) => {
-      const backgroundColor = '#' + event.hexColor;
+      // const backgroundColor = '#' + event.hexColor;
       const style = {
-          // backgroundColor: backgroundColor,
-          // backgroundColor: 'white',
-          backgroundColor: event.appointment ? 'white' : Constants.Colors[event.type as Types.DashboardType],
-          borderRadius: '0px',
-          opacity: 0.8,
-          color: event.appointment ? 'black' : 'white',
-          // border: '1px solid gray',
-          display: 'block',
-          border: event.appointment ? '1px solid #ababab' : undefined
+        // backgroundColor: backgroundColor,
+        // backgroundColor: 'white',
+        backgroundColor: event.appointment ? 'white' : Constants.Colors[event.type as Types.DashboardType],
+        borderRadius: '0px',
+        opacity: 0.8,
+        color: event.appointment ? 'black' : 'white',
+        // border: '1px solid gray',
+        display: 'block',
+        border: event.appointment ? '1px solid #ababab' : undefined
       };
       return {
-          style: style
+        style: style
       };
-  };
+    };
 
-  const getStripedStyle = (index: number) => {
-    return { backgroundColor: index % 2 ? '#D9EAFB' : 'white' };
-  }
+    /**
+     * returns background color for table row
+     * @param {number} index
+     * @returns {object} 
+     */
+    const getStripedStyle = (index: number) => {
+      return { backgroundColor: index % 2 ? '#D9EAFB' : 'white' };
+    }
 
+    /**
+     * content for calendar event button
+     * @param {object} event
+     * @returns {JSX.Element}
+     */
     const EventComponent = (event: {
       event: Types.CalendarEvent,
       continuesAfter: boolean,
@@ -1296,7 +1334,6 @@ class TeacherListPage extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
-          {console.log('anchor el', anchorEl)}
           <Popover
             id={id}
             open={open}
@@ -1313,141 +1350,15 @@ class TeacherListPage extends React.Component<Props, State> {
             style={{padding: '1em'}}
           >
             {clickedEvent !== null ? (
-              <Grid container direction="column" style={{padding: '1em'}}>
-                <Grid item style={{paddingBottom: '0.5em'}}>
-                  <Grid container direction="row" justify="space-between" alignItems="center">
-                    <Grid item>
-                      <Typography variant="body1" style={{fontFamily: 'Arimo'}}>
-                        {moment(new Date(clickedEvent.start)).format('MM/DD/YYYY')}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="body1" style={{fontFamily: 'Arimo'}}>
-                        {moment(new Date(clickedEvent.start)).format('h:mm a')}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item style={{paddingBottom: '0.5em'}}>
-                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                    {getName(clickedEvent.resource)}
-                  </Typography>
-                </Grid>
-                <Grid item style={{paddingBottom: '1em', height: '2em'}}>
-                  <Grid container direction="row" justify="flex-start" alignItems="center">
-                    {/* <Grid item style={{paddingRight: '0.5em'}}>
-                      {clickedEvent.title === 'Observation' ? <ObserveIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
-                        : clickedEvent.title === 'Action Plan' ? <ActionPlansIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
-                        : <ConferencePlansIcon style={{fill: Constants.Colors[clickedEvent.type as Types.DashboardType]}} />
-                      }
-                    </Grid> */}
-                    <Grid item xs={12}>
-                      <Typography
-                        variant="h6"
-                        /* onClick={(): void => {
-                          const teacherObject = this.props.teacherList.filter(teacher => {
-                            return teacher.id === clickedEvent.resource
-                          })
-                          this.props.changeTeacher(teacherObject[0])
-                          this.props.history.push({
-                            pathname: `/${ToolNames[clickedEvent.type as ToolNamesKey]}Results`,
-                            state: {sessionId: clickedEvent.id}
-                          })
-                        }} */
-                        // onClick={(): void => {console.log('tool', ToolNames[clickedEvent.type as ToolNamesKey])}}
-                        style={{fontFamily: 'Arimo', fontWeight: 'bold'}}
-                      >
-                        {clickedEvent.title}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item style={{height: '4em', paddingBottom: '1em'}}>
-                  <Grid container direction="row" justify="space-between" alignItems="center">
-                    <Grid item xs={9}>
-                      <Typography>
-                        {Constants.ToolNames[clickedEvent.type as Types.ToolNamesKey]}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <img src={
-                        clickedEvent.type === 'TT' ? TransitionTimeIconImage
-                        : clickedEvent.type === 'CC' ? ClassroomClimateIconImage
-                        : clickedEvent.type === 'MI' ? MathIconImage
-                        : clickedEvent.type === 'IN' ? InstructionIconImage
-                        : clickedEvent.type === 'SE' ? EngagementIconImage
-                        : clickedEvent.type === 'LC' ? ListeningIconImage
-                        : clickedEvent.type === 'SA' ? SequentialIconImage
-                        : clickedEvent.type === 'LI' ? LiteracyIconImage
-                        : AssocCoopIconImage
-                      } style={{height: '3em', width: '3em'}} />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                {!clickedEvent.appointment ? (
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      onClick={(): void => {
-                        if (clickedEvent.title === 'Observation') {
-                          const teacherObject = this.props.teacherList.filter(teacher => {
-                            return teacher.id === clickedEvent.resource
-                          })
-                          this.props.changeTeacher(teacherObject[0])
-                          
-                          this.props.history.push({
-                            pathname: `/${ToolNames[clickedEvent.type]}Results`,
-                            state: {sessionId: clickedEvent.id}
-                          })
-                        } else if (clickedEvent.title === 'Action Plan') {
-                          this.props.history.push({
-                            pathname: "/ActionPlan",
-                            state: {
-                              actionPlanId: clickedEvent.id,
-                              teacherId: clickedEvent.resource
-                            }
-                          })
-                        } else if (clickedEvent.title === 'Conference Plan') {
-                          this.props.history.push({
-                            pathname: "/ConferencePlan",
-                            state: {
-                              conferencePlanId: clickedEvent.id,
-                              teacherId: clickedEvent.resource,
-                              sessionId: clickedEvent.conferencePlanSessionId
-                            }
-                          });
-                        }
-                      }}
-                    >
-                      {clickedEvent.title === 'Observation' ? 'VIEW RESULTS' : clickedEvent.title === 'Action Plan' ? 'VIEW ACTION PLAN' : 'VIEW CONFERENCE PLAN'}
-                    </Button>
-                  </Grid>
-                ) : (
-                  <Grid container direction="row" justify="space-between" alignItems="center">
-                    <Fab
-                      aria-label="Edit"
-                      name="Edit"
-                      size="small"
-                      onClick={(): void => this.setState({ newEventModal: true })}
-                      // className={classes.actionButton}
-                      style={{ backgroundColor: "#F9FE49" }}
-                    >
-                      <EditOutlinedIcon style={{ color: "#555555" }} />
-                    </Fab>
-                    <Fab
-                      aria-label="Delete"
-                      size="small"
-                      onClick={(): void => this.setState({ deleteAppointmentDialog: true })}
-                      // className={classes.actionButton}
-                      // size="small"
-                      style={{ backgroundColor: "#FF3836" }}
-                    >
-                      <DeleteForeverIcon style={{ color: "#C9C9C9" }} />
-                    </Fab>
-                  </Grid>
-                )}
-              </Grid>
+              <CalendarEventPopover
+                push={this.props.history.push}
+                clickedEvent={clickedEvent}
+                teacherList={this.props.teacherList}
+                changeTeacher={this.props.changeTeacher}
+                deleteAppointment={(): void => this.setState({ deleteAppointmentDialog: true })}
+                editEvent={(): void => this.setState({ newEventModal: true })}
+                getName={getName}
+              />
             ) : (<Typography>no event</Typography>)}
           </Popover>
           {/* <div className={classes.actionContainer}>
@@ -1498,6 +1409,7 @@ class TeacherListPage extends React.Component<Props, State> {
               <Grid item xs={12}>
                 <Grid container direction="column" style={{height: '60vh'}}>
                   {this.state.dataLoaded ? (this.state.view === 1 ? (
+                    // calendar
                     <Calendar
                       popup
                       localizer={localizer}
@@ -1531,190 +1443,19 @@ class TeacherListPage extends React.Component<Props, State> {
                       longPressThreshold={20}
                     />
                   ) : (
-                    <Grid container direction="column" justify="center" alignItems="stretch">
-                      <Grid item>
-                        <Grid container direction="row" justify="flex-start" alignItems="center">
-                          <TextField
-                            id="teacher-search"
-                            label="Search"
-                            type="search"
-                            className={classes.search}
-                            variant="outlined"
-                            onChange={this.onChangeText}
-                          />
-                          <Fab
-                            aria-label="Add Teacher"
-                            onClick={(): void => this.setState({ isAdding: true })}
-                            className={classes.actionButton}
-                            size="small"
-                          >
-                            <AddIcon style={{ color: "#FFFFFF" }} />
-                          </Fab>
-                        </Grid>
-                      </Grid>
-                      <Grid item style={{paddingTop: '1em'}}>
-                        <Table style={{overflowY: 'auto'}}>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell className={classes.nameCellHeader}>
-                                Last Name
-                              </TableCell>
-                              <TableCell className={classes.nameCellHeader}>
-                                First Name
-                              </TableCell>
-                              {/* <TableCell className={classes.emailCellHeader}>
-                                Email
-                              </TableCell> */}
-                              {/* {sortedSvg.map((item, index) => (
-                                <TableCell
-                                  className={classes.magicEightCell}
-                                  style={{
-                                    position: "sticky",
-                                    top: 0,
-                                    backgroundColor: "#FFFFFF"
-                                  }}
-                                  key={index}
-                                >
-                                  <img
-                                    src={item}
-                                    alt={sortedAltText[index]}
-                                    className={classes.magicEightIcon}
-                                  />
-                                </TableCell>
-                              ))} */}
-                              
-                              <TableCell className={classes.nameCellHeader}>
-                                Recent Activity
-                              </TableCell>
-                              <TableCell className={classes.nameCellHeader}>
-                                Date
-                              </TableCell>
-                              {/* <TableCell className={classes.nameCellHeader}>
-                                Type
-                              </TableCell> */}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {this.state.searched.map((teacher, index) => {
-                              // const allObsEvents = [...this.state.allEvents.concat(this.state.actionPlanEvents, this.state.conferencePlanEvents)];
-                              // all completed events (not appointments) for this teacher
-                              const teacherEvents = this.state.allEvents.filter(obj => {
-                                return( obj.resource === teacher.id && !obj.appointment )
-                              })
-                              // most recent completed event
-                              const maxDate = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
-                                return (new Date(prev.start) > new Date(current.start)) ? prev : current
-                              })) : ([])
-                              // console.log('maxDate.start', maxDate.start);
-                              // console.log(teacherEvents, 'ets see', new Date(Math.max(...teacherEvents.map(e => new Date(e.start)))))
-
-                              // console.log('maxdate', maxDate, moment(new Date(maxDate.start)).format('MM/DD/YYYY'))
-                              
-                              return (
-                              <TableRow
-                                className={classes.row}
-                                key={index}
-                                onClick={(): void => this.selectTeacher(teacher)}
-                                style={{...getStripedStyle(index+1)}}
-                              >
-                                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                                  {teacher.lastName}
-                                </TableCell>
-                                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                                  {teacher.firstName}
-                                </TableCell>
-                                {/* <TableCell className={classes.emailField}>
-                                  {teacher.email}
-                                </TableCell> */}
-                                <TableCell style={{width: '22%'}}>
-                                  {maxDate.length > 0 ? (maxDate.type) : (
-
-                                    teacherEvents.length > 0 ? teacherEvents.reduce(function(prev, current) {
-                                      return (new Date(prev.start) > new Date(current.start)) ? prev : current
-                                    }).title : 'N/A'
-                                  )}
-                                </TableCell>
-                                <TableCell style={{width: '22%'}}>
-                                  {maxDate.start !== undefined ? (
-                                  
-                                  // moment(new Date(Math.max(...teacherEvents.map(e => new Date(e.start))))).format('MM/DD/YYYY')
-                                  // moment(new Date(maxDate.start))
-
-                                  // maxDate.id
-                                  moment(new Date(maxDate.start)).format('MM/DD/YYYY')
-                                  ) : ('N/A')
-                                }
-                                </TableCell>
-                                {/* {[...Array(8).keys()].map((value, index) => (
-                                  <TableCell className={classes.magicEightCell} key={index}>
-                                    {teacher.unlocked !== undefined &&
-                                      teacher.unlocked.includes(index + 1) && (
-                                        <VisibilityOutlinedIcon
-                                          className={classes.unlockedIcon}
-                                        />
-                                      )}
-                                  </TableCell>
-                                ))} */}
-                                <TableCell className={classes.nameField}>
-                                  <Grid container direction="row" justify="center" alignItems="center">
-                                    {maxDate.type === 'TT' ? (
-                                      <img
-                                        src={TransitionTimeIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'CC' ? (
-                                      <img
-                                        src={ClassroomClimateIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'MI' ? (
-                                      <img
-                                        src={MathIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'SE' ? (
-                                      <img
-                                        src={EngagementIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'IN' ? (
-                                      <img
-                                        src={InstructionIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'LC' ? (
-                                      <img
-                                        src={ListeningIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'SA' ? (
-                                      <img
-                                        src={SequentialIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : maxDate.type === 'AC' ? (
-                                      <img
-                                        src={AssocCoopIconImage}
-                                        alt="Magic 8 Icon"
-                                        style={{maxWidth: '4em'}}
-                                      />
-                                    ) : <div />}
-                                  </Grid>
-                                </TableCell>
-                              </TableRow>
-                            )})}
-                          </TableBody>
-                        </Table>
-                      </Grid>
+                    // table
+                    <MyTeachersTable
+                      onChangeText={this.onChangeText}
+                      searched={this.state.searched}
+                      allEvents={this.state.allEvents}
+                      selectTeacher={this.selectTeacher}
+                      addingTeacher={(): void => this.setState({ isAdding: true })}
+                    />
+                  )) : (
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={CHALKLogoGIF} alt="Loading" width="80%" />
                     </Grid>
-                  )) : (<Typography> Fetching data... </Typography>)}
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -1837,7 +1578,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     <Grid item xs={1} />
                     <Grid item xs={10}>
                       <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', padding: '1em'}}>
-                        Create New Event
+                        {clickedEvent ? 'Update Event' : 'Create New Event'}
                       </Typography>
                     </Grid>
                     <Grid item xs={1}>

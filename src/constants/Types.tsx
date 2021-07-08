@@ -202,7 +202,7 @@ export interface CalendarEvent {
   allDay?: boolean
   resource: string,
   hexColor?: string,
-  type: string,
+  type: ToolNamesKey,
   id: string,
   conferencePlanSessionId?: string,
   appointment?: boolean
