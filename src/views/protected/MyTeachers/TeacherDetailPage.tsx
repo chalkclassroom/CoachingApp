@@ -26,6 +26,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import { TextField } from "@material-ui/core";
+import moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -247,15 +248,42 @@ const styles: object = {
 };
 
 const sortedSvg = [
-  TransitionTimeIconImage,
-  ClassroomClimateIconImage,
-  MathIconImage,
-  InstructionIconImage,
-  EngagementIconImage,
-  ListeningIconImage,
-  SequentialIconImage,
-  LiteracyIconImage,
-  AssocCoopIconImage
+  {
+    type: 'TT',
+    image: TransitionTimeIconImage
+  },
+  {
+    type: 'CC',
+    image: ClassroomClimateIconImage
+  },
+  {
+    type: 'MI',
+    image: MathIconImage
+  },
+  {
+    type: 'IN',
+    image: InstructionIconImage
+  },
+  {
+    type: 'SE',
+    image: EngagementIconImage
+  },
+  {
+    type: 'LC',
+    image: ListeningIconImage
+  },
+  {
+    type: 'SA',
+    image: SequentialIconImage
+  },
+  {
+    type: 'LI',
+    image: LiteracyIconImage
+  },
+  {
+    type: 'AC',
+    image: AssocCoopIconImage
+  }
 ];
 
 interface Style {
@@ -414,6 +442,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
+    console.log('locatiationes', this.props.location.state)
     const firebase = this.context;
     firebase
       .getTeacherInfo(this.state.teacherUID)
@@ -781,7 +810,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
             alignItems="stretch"
             className={classes.contentContainer}
           >
-            {/* <Grid item xs={6}> */}
+            <Grid item xs={6}>
             <div className={classes.teacherCard}>
               <div
                 style={{
@@ -798,12 +827,21 @@ class TeacherDetailPage extends React.Component<Props, State> {
               <LabeledInfo label="Phone" field={phone} />
               <LabeledInfo label="Notes" field={notes} />
             </div>
-            {/* </Grid> */}
+            </Grid>
             <Grid item xs={6}>
               <Grid container direction="row" justify="center" alignItems="center">
             <ol className={classes.magicEightCard}>
-              {sortedSvg.map((item, key) =>
-                recentObs !== undefined && recentObs[key] !== null ? (
+              {sortedSvg.map((item, key) => {
+                console.log(key, 'item', item,)
+                const recentObs = this.props.location.state.recentEvents.filter(obj => {
+                  return( obj.resource === this.props.location.state.teacher.id && obj.type === item.type )
+                });
+                const maxDate = recentObs.length > 0 ? (recentObs.reduce(function(prev, current) {
+                  return (new Date(prev.start) > new Date(current.start)) ? prev : current
+                })) : (undefined)
+                console.log('recent obs', recentObs, 'maxDate bro', maxDate)
+                return(
+                maxDate !== undefined ? (
                   <li key={key} className={classes.magicEightItem}>
                     <Grid container direction="column" justify="center" alignItems="center">
                       <Button
@@ -815,16 +853,16 @@ class TeacherDetailPage extends React.Component<Props, State> {
                         }}
                       >
                         <img
-                          src={item}
+                          src={item.image}
                           alt="Magic Eight"
                           className={classes.img}
                         />
                       </Button>
                       
                       <Typography>
-                        Last Observed:
+                        {maxDate.title}:
                         <br />
-                        {recentObs[key]}
+                        {moment(new Date(maxDate.start)).format('MM/DD/YYYY')}
                       </Typography>
                     </Grid>
                   </li>
@@ -837,21 +875,17 @@ class TeacherDetailPage extends React.Component<Props, State> {
                       style={{ backgroundColor: "#FFFFFF", opacity: 0.5 }}
                     >
                       <img
-                        src={item}
+                        src={item.image}
                         alt="Magic Eight"
                         className={classes.img}
                       />
                     </Button>
                     <Typography>
-                      Not Yet
-                      <br />
-                      Observed
-                      <br />
-                      <br />
+                      No Activity
                     </Typography>
                   </li>
-                )
-              )}
+                ))
+              })}
             </ol>
             </Grid>
             </Grid>

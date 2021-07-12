@@ -32,7 +32,7 @@ const styles: object = {
   notesContainer: {
     overflowY: "scroll",
     maxHeight: "4.5em",
-    borderBottom: "1px solid #C7C7C7"
+    // borderBottom: "1px solid #C7C7C7"
   }
 };
 
