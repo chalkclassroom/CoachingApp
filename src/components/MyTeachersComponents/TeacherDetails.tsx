@@ -349,9 +349,9 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
 
   return (
     <Zoom in={open}>
-    <Paper elevation={3} className={classes.container} style={{margin: '0.5em'}}>
+    <Paper elevation={3} className={classes.container} style={{padding: '1em'}}>
       {teacher ? (
-        <div style={{padding: '1em'}}>
+        <div style={{width: '100%'}}>
           <Grid container direction="row" justify="space-between" >
             <Grid item xs={10}>
               <Grid container direction="row">
@@ -411,6 +411,7 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
             justify="space-between"
             alignItems="stretch"
             className={classes.contentContainer}
+            // style={{width: '100%'}}
           >
             <Grid item xs={6}>
             <div className={classes.teacherCard}>
@@ -430,7 +431,7 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
               <LabeledInfo label="Notes" field={teacher.notes} />
             </div>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{paddingBottom: '1em', overflowY: 'auto'}}>
               <Grid container direction="row" justify="center" alignItems="center">
             <ol className={classes.magicEightCard}>
               {sortedSvg.map((item, key) => {

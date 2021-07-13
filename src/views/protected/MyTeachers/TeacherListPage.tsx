@@ -1235,7 +1235,7 @@ class TeacherListPage extends React.Component<Props, State> {
           <Grid item>
             <Grid container direction='row' justify='center' alignItems='center'>
               <Grid item xs={12}>
-                <Grid container direction="column" style={{height: '60vh'}}>
+                <Grid container direction="column" style={{height: this.state.view === 3 ? '75vh' : '60vh'}}>
                   {this.state.dataLoaded ? (this.state.view === 1 ? (
                     // calendar
                     <Grid item style={{height: '100%', width: '100%'}}>
