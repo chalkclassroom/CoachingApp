@@ -32,7 +32,7 @@ const styles: object = {
 
 type Selection = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'literacy' | 'ac';
 
-type QuestionBankKey = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'LIFoundational' | 'LIWriting' | 'ac';
+type QuestionBankKey = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'LIFoundational' | 'LIWriting' | 'LIReading' | 'LILanguage' | 'ac';
 
 interface Props {
   section: Selection,

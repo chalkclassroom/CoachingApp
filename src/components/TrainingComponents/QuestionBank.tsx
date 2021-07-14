@@ -1420,6 +1420,436 @@ const questionBank = {
       feedback: "The correct answer is A. Emergent writing refers to the earliest stages of children’s writing development. As children observe and interact with more expert writers (e.g., teachers and peers), they learn about print conventions (e.g., directionality, spaces between words, etc.)."
     }
   ],
+  'LIReading': [
+    // 1 - Defining and or/discussing vocabulary words
+    {
+      text: "As the teacher reads a book about the changing seasons, the word “bare” is used to describe a tree. The teacher points to the picture of the tree in the book and says, “Look at these branches. Bare means the tree doesn’t have any leaves.” What behavior is this?",
+      options: new Map([
+        ["Asking children open-ended questions", false],
+        ["Using multimodal instruction", false],
+        ["Defining or discussing vocabulary words", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. The teacher explains the word “bare” with a child-friendly definition. The teacher also uses multimodal instruction to teach the meaning of “bare” when they point to the book illustration and draw children’s attention to the branches with no leaves."
+    },
+    // 2 - Discussing concepts related to a book before, during, and/or after the book reading
+    {
+      text: "The teacher reads a nonfiction book about creatures that live in shells. During the read aloud, the teacher passes around a snail shell and a hermit crab shell for children to examine and asks them to describe what they notice. Which behavior is NOT featured in this example?",
+      options: new Map([
+        ["Discussing concepts related to a book before, during, and/or after the book reading", false],
+        ["Asking children open-ended questions/prompts", false],
+        ["Facilitating discussion of social issues around equity or fairness", true],
+        ["Using multimodal instruction", false]
+      ]),
+      feedback: "The correct answer is C. Exploring facts about animals is not an example of discussing social issues around equity or fairness. Giving children opportunities to talk about and handle real-life animal shells is an example of discussing concepts related to a book and multimodal instruction. Facilitating talk about what children observe when handling the shells is an example of teachers asking open-ended questions or prompts that do not have one correct answer."
+    },
+    // 3 - Relating the book to children’s experiences inside and/or outside the classroom
+    {
+      text: "Before reading a book about a young boy who is nervous about being a ring bearer at his mother’s wedding, the teacher asks children if they have even been to a wedding and what they remember. Which behavior is this?",
+      options: new Map([
+        ["Using multimodal instruction", false],
+        ["Relating the book to children’s experiences inside and/or outside the classroom", true],
+        ["Responding to children with follow-up questions and/or comments to extend children’s thinking", false],
+        ["Facilitating discussion of social issues around equity or fairness", false]
+      ]),
+      feedback: "The correct answer is B. The teacher attempts to relate the book to children’s experiences outside the classroom when they ask children to think about a time they attended a wedding. Activating children’s background knowledge will help them engage in and comprehend the content of the book. This is not an example of multimodal instruction because the teacher isn’t using a prop or pointing to a picture in the book to support children’s comprehension."
+    },
+    // 4 - Encouraging children to make connections to books that reflect their language and/or cultural backgrounds
+    {
+      text: "Given the large number of students in their classroom whose home language is Spanish, the teacher reads a book that incorporates Spanish words into the text and encourages students to help translate some of the Spanish words for their native English-speaking classmates. This is an example of:",
+      options: new Map([
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", true],
+        ["Responding to children with follow-up questions and/or comments", false],
+        ["Discussing concepts related to a book before, during, and/or after the book reading", false],
+        ["Defining or discussing vocabulary words", false]
+      ]),
+      feedback: "The correct answer is A. The teacher selects a book that reflects their students’ language background and facilitates a discussion about the Spanish words in the text."
+    },
+    // 5 - Using multimodal instruction to support comprehension and/or word learning
+    {
+      text: "Which of the following is NOT an example of the teacher using multimodal instruction to  support comprehension or word learning during a book reading?",
+      options: new Map([
+        ["The teacher asks children to make a frightened face as they talk about a character’s emotions", false],
+        ["The teacher shows a video clip of someone playing an African drum called a Dundun before starting a read aloud on instruments", false],
+        ["The teacher tells children that frightened means feeling scared", true],
+        ["The teacher stands up during the read aloud and pretends to be a tree swaying in the wind to support their understanding of the word “sway”", false]
+      ]),
+      feedback: "The correct answer is C. Multimodal instruction happens when teachers use different methods to communicate content, such as showing a video clip, acting out a word's meaning, or using nonverbal modes of communication like facial expressions. Explaining a concept using words alone is not an example of multimodal instruction."
+    },
+    // 6- Asking children open-ended questions/ prompts (e.g., to make predictions or inferences
+    {
+      text: "The teacher reads a book about a child named Jackson who overcomes their fear of the dark. After the reading the teacher asks, “How does Jackson feel differently at the end of the story compared to how he felt at the beginning?” This is an example of asking children an open-ended question.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True. Open-ended questions during book readings often require children to draw conclusions about character emotions, intentions, or motivations based on information that is not clearly stated in the text. Open-ended questions invite children to give multi-word responses and often require children to use their reasoning skills."
+    },
+    // 7- Responding to children with follow-up questions and/or comments to extend children’s thinking
+    {
+      text: "During a book reading about children and animals playing in the snow, a child says, “Look! There’s tracks!” The teacher says, “Yes, I see those tracks. They were probably made by a bird because I see three toe tracks pointing forward.” This is an example of:",
+      options: new Map([
+        ["Responding to children with follow-up questions and/or comments to extend children’s thinking", true],
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", false],
+        ["Using multimodal instruction", false],
+        ["None", false]
+      ]),
+      feedback: "The correct answer is A. The teacher responds directly to the content of the child’s statement about the tracks depicted in the book illustration. This is an example of providing an informative comment to support children’s thinking."
+    },
+    // 8- Encouraging children to retell, reenact, sequence, or summarize a text or part of a text
+    {
+      text: "During the third repeated reading of \"The Little Red Hen\" fable, the teacher invites groups of children to act out different scenes using finger puppets. Which behavior is this?",
+      options: new Map([
+        ["Responding to children with follow-up questions and/or comments to extend children’s thinking", false],
+        ["Encouraging children to retell, reenact, sequence, or summarize a text or part of a text", true],
+        ["Defining and discussing vocabulary words", false],
+        ["None of the above", false]
+      ]),
+      feedback: "The correct answer is B. In this example, the teacher provides opportunities for children to reenact the text with puppets and deepen their understanding of the plot."
+    },
+    // 9- Facilitating discussion of social issues around equity/fairness
+    {
+      text: "Which of the following is an example of facilitating discussion of social issues around equity or fairness during a book reading?",
+      options: new Map([
+        ["Discussing a book about the life cycle of a butterfly", false],
+        ["Discussing a character’s feelings about their new sibling", false],
+        ["Talking about all the different types of homes people live in across the world", false],
+        ["Talking about problems presented in a book about Jackie Robinson, the first African American to play for a Major League Baseball team", true]
+      ]),
+      feedback: "The correct answer is D. The teacher facilitates a discussion about the problem of segregation during a read aloud about Jackie Robinson and his treatment as the first African American to play for a Major League Baseball team."
+    },
+    // 10- book reading tool question
+    {
+      text: "The Book Reading tool was designed to gather information about teacher support for children’s social-emotional development.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The Book Reading tool was designed to gather information about teacher read alouds of various texts that support children’s vocabulary and content knowledge, text comprehension, and speaking/listening skills. While teachers and students may discuss social-emotional topics during book readings, fostering children’s social-emotional development is not the primary focus."
+    },
+    // 11
+    {
+      text: "After a book reading about a child who feels frustrated when things don’t go their way, the teacher asks students to turn and talk to a peer about a time they felt frustrated. What behavior is this?",
+      options: new Map([
+        ["Relating the book to children’s experiences inside and/or outside the classroom", false],
+        ["Using multimodal instruction", false],
+        ["Defining or discussing vocabulary words", false],
+        ["A and C", true]
+      ]),
+      feedback: "The correct answer is D. The teacher facilitates peer discussion about children’s personal experiences of feeling frustrated. The teacher encourages children to relate to their experiences in order to understand a vocabulary word."
+    },
+    // 12
+    {
+      text: "Before a book reading on ocean animals, the teacher asks children to brainstorm things that they want to know about ocean animals and records their questions on chart paper. This is an example of:",
+      options: new Map([
+        ["Discussing concepts related to a book before, during, and/or after the book reading", true],
+        ["Defining or discussing vocabulary words", false],
+        ["Facilitating discussion of social issues around equity or fairness", false],
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", false]
+      ]),
+      feedback: "The correct answer is A. The teacher activates children’s background knowledge by talking about what they want to learn about oceans. This will support their comprehension of new information presented during the book reading."
+    },
+    // 13
+    {
+      text: "During a read aloud about exercise and the body, the teacher asks children to think about the different types of exercises they explored the day before and which ones made their heart beat fast like the exercises described in the book. This is an example of relating the book to children’s experiences inside or outside the classroom.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True. In this example, the teacher encourages children to relate concepts from the book to their experiences in the classroom."
+    },
+    // 14
+    {
+      text: "Through conversations with students’ families, the teacher learned that many of their students celebrate the Mexican holiday Dia de los Muertos. The teacher reads a book about this holiday and encourages students to share their home experiences regarding Dia de los Muertos with classmates. This is an example of:",
+      options: new Map([
+        ["Facilitating discussion of social issues around equity or fairness", false],
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", false],
+        ["Relating the book to children’s experiences inside and/or outside the classroom", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. This book reading about Dia de los Muertos, which connects with children’s cultural and language background, also provides opportunities for children to link the book content to their experiences outside the classroom."
+    },
+    // 15
+    {
+      text: "Which of the following is an example of multimodal instruction to support comprehension or word learning during a book reading?",
+      options: new Map([
+        ["Acting out a word meaning", false],
+        ["Playing a song related to the book", false],
+        ["Passing around an object related to the book", false],
+        ["All of the above", true]
+      ]),
+      feedback: "The correct answer is D. Multimodal instruction refers to many different strategies that teachers use to communicate content to children that extend beyond verbal input. Multimodal strategies often include pictures, objects, movement, sounds, and other tactile or visual methods."
+    },
+    // 16
+    {
+      text: "Which of the following is an open-ended question or prompt that a teacher might ask during a book reading?",
+      options: new Map([
+        ["Is Peter playing alone or with a friend in the snow?", false],
+        ["What color is Peter’s shirt?", false],
+        ["Why does Peter feel upset?", true],
+        ["What did Peter put on his feet before going outside?", false]
+      ]),
+      feedback: "The correct answer is C. A common type of open-ended question during book reading is asking children to make inferences, or draw conclusions about information that has not been clearly stated in the text. In this example, the teacher asks children to make an inference about why Peter feels upset. The other questions have one correct answer, which can be found in the text or book illustrations, such as the color of Peter’s shirt."
+    },
+    // 17
+    {
+      text: " Before the book reading, the teacher shows children the front cover of the book and says, “Today we’re going to read a book about a boy who goes on a long bus ride with his grandma. Have you ever been on a bus?” This is an example of responding to children with follow-up questions and/or comments to extend children’s thinking.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The teacher asks a question at the beginning of the book reading activity before children have had the opportunity to ask questions or make comments. The teacher’s question about riding a bus is not in response to a child’s comment or question. If a child answered that yes, they had ridden a bus before and the teacher replied, “Tell us more about that!” that constitutes a teacher responding to a child with a follow-up question to extend their thinking."
+    },
+    // 18
+    {
+      text: "As the teacher reads a version of the gingerbread man story, they invite children to recall which character the gingerbread man encounters next and place the appropriate felt character on the board. By the end of the story, all of the characters are attached to the felt board in the correct order. This is an example of:",
+      options: new Map([
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", false],
+        ["Responding to children with follow-up questions and/or comments", false],
+        ["Defining or discussing vocabulary words", false],
+        ["Encouraging children to retell, reenact, sequence, or summarize a text or part of a text", true]
+      ]),
+      feedback: "The correct answer is D. The teacher provides children with an opportunity to put the characters from a text in the order in which they appeared. This is an example of a sequencing activity."
+    },
+    // 19
+    {
+      text: "The teacher reads a book about a child who is excluded from activities in his neighborhood due to his stutter. The teacher leads a discussion with children about how they would change the story to make it fair for the child. Which behavior is this?",
+      options: new Map([
+        ["Defining or discussing vocabulary words", false],
+        ["Facilitating discussion of social issues around equity or fairness", true],
+        ["Using multimodal instruction ", false],
+        ["Encouraging children to make connections to books that reflect their language and/or cultural backgrounds", false]
+      ]),
+      feedback: "The correct answer is B. In this example, the teacher uses a fiction text to discuss topics around fairness."
+    },
+    // 20
+    {
+      text: "Which of the following is NOT a behavior included in the Book Reading observation tool?",
+      options: new Map([
+        ["Asking children to identify letters", true],
+        ["Asking open-ended questions", false],
+        ["Defining or discussing vocabulary words", false],
+        ["Using multimodal instruction", false]
+      ]),
+      feedback: "The correct answer is A. The Book Reading Observation tool was designed to collect information on teacher strategies that support children’s vocabulary and content knowledge, text comprehension, and speaking/listening skills. While teaching letter knowledge is important, it is not one of the focus behaviors included in the Book Reading tool. The Foundational Skills and Writing tools include teacher support for alphabet knowledge."
+    }
+  ],
+  'LILanguage': [
+    // 1 - Discussing, defining, and/or promoting use of advanced vocabulary and concepts
+    {
+      text: "Which of the following is an example of discussing, defining, or promoting use of advanced vocabulary and concepts?",
+      options: new Map([
+        ["The teacher asks a child at the writing center to identify the letter S.", false],
+        ["The teacher points to a magazine cover at the science center and says, “That’s an orangutan, it’s a type of monkey.”", true],
+        ["A teacher and a group of children talk about what they’re going to do after school.", false],
+        ["The teacher asks a child to count a set of buttons.", false]
+      ]),
+      feedback: "The correct answer is B. Teachers use many different strategies to draw children’s attention to vocabulary words. In this example, the teacher uses a picture to teach the word orangutan, and classifies it as a type of monkey."
+    },
+    // 2 - Encouraging children to tell and/or act out stories from experiences in their lives
+    {
+      text: "A teacher notices that a child is pretending to make tamales at the dramatic play center. The teacher says, “Is that how your mom makes tamales at home? Tell me what she does next!” Which teacher behavior is this?",
+      options: new Map([
+        ["Encouraging children to tell and/or act out stories from experiences in their lives", true],
+        ["Discussing, defining, or promoting use of advanced vocabulary and concepts", false],
+        ["Encouraging children to listen and respond to peer comments/ideas", false],
+        ["Repeating or clarifying children’s comments", false]
+      ]),
+      feedback: "The correct answer is A. When teachers ask children to share about events that happen in their home or community and incorporate these into their play at school, they encourage children to tell and/or act out stories from their lived experiences."
+    },
+    // 3 - Having a conversation with children about a social-emotional topic
+    {
+      text: "Which of the following is NOT an example of having a conversation with children about a social-emotional topic?",
+      options: new Map([
+        ["Asking two children how they could share the blocks", false],
+        ["Talking with a child about their feelings using a feelings chart", false],
+        ["Having a conversation with a group of children about sorting objects", true],
+        ["Having a conversation with a child about how to ask a friend to play", false]
+      ]),
+      feedback: "The correct answer is C. Social-emotional topics typically include how to solve problems, discussing feelings or emotions, or how to make and keep friends. Talking about sorting objects is focusing on math content. However, if the teacher and children started talking about how to share the objects, that would be considered talking about a social-emotional topic."
+    },
+    // 4 - Encouraging children to listen and respond to peer comments/ideas
+    {
+      text: "The teacher encourages a child to ask their classmate for ideas about what to build in the blocks center. What teacher behavior is this?",
+      options: new Map([
+        ["Asking an open-ended question to encourage conversation", false],
+        ["Responding to children with follow-up questions or comments to extend their thinking", false],
+        ["Repeating or clarifying children's comments", false],
+        ["Encouraging children to listen and respond to peer comments/ideas", true]
+      ]),
+      feedback: "The correct answer is D. The teacher supports peer communication by prompting children to talk about their shared activity. "
+    },
+    // 5 - Observing or using questions/prompts in order to enter children’s ongoing play or activity
+    {
+      text: "Teachers who observe or use questions/prompts in order to enter children’s ongoing play often suggest their own ideas and change the direction of children’s play. ",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. Teachers who watch children or ask open-ended questions to understand what children are doing before entering the play scene build on children’s ideas instead of disrupting or changing the direction of the play."
+    },
+    // 6- Repeating or clarifying children’s comments
+    {
+      text: "The teacher asks a child at the dramatic play center what they are making. The child says something about “donuts.” The teacher replies, “Donuts? Are you making donuts for breakfast?” The teacher is _____________________________________.",
+      options: new Map([
+        ["Defining, discussing, or promoting the use of advanced vocabulary", false],
+        ["Asking an open-ended question to encourage conversation", false],
+        ["Having a conversation with the child about a social-emotional topic", false],
+        ["None of the above", true]
+      ]),
+      feedback: "The correct answer is D. In this example, the teacher repeats the child’s comment, “donuts,” then follows with a clarifying yes or no question about what the child might be trying to communicate. When using  the language environment observation tool, this teacher behavior would be an example of repeating or clarifying children’s comments."
+    },
+    // 7- Responding to children with follow-up questions and/or comments to extend their thinking
+    {
+      text: "A child shows their journal to the teacher and says, “Look at mine!”  Which of the following teacher responses would encourage further conversation?",
+      options: new Map([
+        ["\"Great job!\"", false],
+        ["\"Time to choose a center!\"", false],
+        ["\"Wow!  Tell me about your drawing and writing.\"", true],
+        ["\"I like the way you wrote your letters!\"", false]
+      ]),
+      feedback: "The correct answer is C. The teacher uses a prompt that responds to the child’s desire to share their journal. By prompting the child to describe their drawing and writing, the teacher is eliciting more language from the child and continuing the conversation."
+    },
+    // 8- Asking open-ended questions or prompts to encourage conversation
+    {
+      text: "Which of the following is an open-ended question or prompt?",
+      options: new Map([
+        ["Point to the yellow square.", false],
+        ["How did you figure that out?", true],
+        ["Did you go to grandma’s house yesterday?", false],
+        ["Do you want to write an S or T?", false]
+      ]),
+      feedback: "The correct answer is B. Open-ended questions encourage children to respond with longer sentences and more details than close-ended questions. These questions often involve a wh-word (i.e., what, why, where, how). Open-ended prompts often begin with “tell me about” or “let’s talk about.”"
+    },
+    // 9- Combine vocab and open-ended
+    {
+      text: "The teacher watches a child play with a stuffed kangaroo at the science center and says, “You’re putting the baby kangaroo inside the mommy’s pouch. Why do you think the baby kangaroo stays in the pouch?” The teacher is ________________________________ and ______________________.",
+      options: new Map([
+        ["Repeating or clarifying children’s comments and asking an open-ended question", false],
+        ["Repeating or clarifying children’s comments and encouraging children to listen to peer comments", false],
+        ["Discussing and defining advanced vocabulary and asking an open-ended question", true],
+        ["Discussing and defining advanced vocabulary and encouraging children to listen to peer comments", false]
+      ]),
+      feedback: "The correct answer is C. Teachers may use two or more strategies during one interaction with children. In this example, the teacher provides information about the vocabulary word pouch as the child plays with the kangaroo toy. The teacher also asks an open-ended question to foster the child’s thinking about the function of a pouch and deepen their vocabulary knowledge."
+    },
+    // 10- Definition of language environment
+    {
+      text: "Which of the following is NOT one of the teacher behaviors tracked by the Language Environment observation tool?",
+      options: new Map([
+        ["Defining advanced vocabulary and concepts ", false],
+        ["Teaching letter formation", false],
+        ["Responding positively to writing forms", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. The teacher behaviors included in the Language Environment tool support children’s vocabulary knowledge, listening comprehension, and speaking skills."
+    },
+    // 11 - Discussing, defining, and/or promoting use of advanced vocabulary and concepts
+    {
+      text: "During a small-group lesson, the teacher asks children to hold different objects and describe how they feel. One child says that their rock feels “smooth.” The teacher asks if anyone else has a smooth object. She also asks them to come up with other words that mean “smooth.” What teacher behavior is this?",
+      options: new Map([
+        ["Encouraging children to tell and/or act out stories from experiences in their lives", false],
+        ["Defining, discussing, or promoting the use of advanced vocabulary", true],
+        ["Having a conversation with the child about a social-emotional topic", false],
+        ["None of the above", false]
+      ]),
+      feedback: "The correct answer is B. In this example, the teacher facilitates a discussion with children about vocabulary words that describe texture. In addition, the teacher asks children to generate synonyms for the word “smooth.”"
+    },
+    // 12 - Encouraging children to tell and/or act out stories from experiences in their lives
+    {
+      text: "The teacher has asked families to text or email photos showing favorite moments or events from children’s lives outside of school. During small-group time, the teacher puts children in pairs to describe their photos to a peer. This activity ____________________________________.",
+      options: new Map([
+        ["Teaches children advanced vocabulary and concepts", false],
+        ["Encourages children to tell and/or act out stories from experiences in their lives", false],
+        ["Encourages children to listen and respond to peers", false],
+        ["B and C", true]
+      ]),
+      feedback: "The correct answer is D. This activity features two main instructional goals. It provides an opportunity for children to tell stories from their personal lives and it supports peer communication."
+    },
+    // 13 - Having a conversation with children about a social-emotional topic
+    {
+      text: "The teacher notices that a child is growing frustrated at the writing center. The teacher brings a feelings chart to the table and asks the child to take a deep breath, point to the picture that shows how they feel, and talk about it. What language support strategy is the teacher using?",
+      options: new Map([
+        ["Encouraging children to listen and respond to their classmates’ comments and ideas", false],
+        ["Observing or using questions/prompts in order to enter children’s ongoing play or activity", false],
+        ["Having a conversation with children about a social-emotional topic", true],
+        ["Repeating or clarifying children’s comments", false]
+      ]),
+      feedback: "The correct answer is C. A key social-emotional topic in preschool classrooms is recognizing and labeling one’s feelings or emotions. In this example, the teacher supports the child’s ability to understand and talk about their frustration."
+    },
+    // 14 - Encouraging children to listen and respond to peer comments/ideas
+    {
+      text: "During a small-group lesson, the teacher models how to ask friends what they are playing, then has pairs of children practice with each other. This is an example of which teacher behavior?",
+      options: new Map([
+        ["Encouraging children to listen and respond to peer comments/ideas", true],
+        ["Repeating or clarifying children’s comments", false],
+        ["Responding to children with follow-up questions and/or comments to extend their thinking", false],
+        ["Observing or using questions/prompts in order to enter children’s ongoing play or activity", false]
+      ]),
+      feedback: "The correct answer is A.  One way that teachers can foster peer conversations is by  encouraging children to ask each other questions."
+    },
+    // 15 - Observing or using questions/prompts in order to enter children’s ongoing play or activity
+    {
+      text: "A teacher observes two children in the dramatic play center taking dishes and food out of the cupboards and placing them on the table. She walks over to them and says, “Who wants to play pet store with me?”  This is an example of the teacher observing or using questions/prompts in order to enter children’s ongoing play or activity.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The teacher’s question about the pet store is not responsive to what the children are already playing; therefore, the question does not help the teacher enter the children’s ongoing play. If they had said, “I see you are getting ready for dinner--who is coming to eat?” the teacher would be asking a question to enter children’s play without disrupting children’s play."
+    },
+    // 16- Repeating or clarifying children’s comments
+    {
+      text: "The teacher observes a child during center time stacking blocks and asks, “What are you building?” The child’s response is quiet, although the teacher thinks they said “tower.” The teacher says, “Tower? Are you building a tower?” What teacher behavior is this?",
+      options: new Map([
+        ["Defining, discussing, or promoting the use of advanced vocabulary", false],
+        ["Repeating or clarifying children’s comments", true],
+        ["Asking an open-ended question to encourage conversation", false],
+        ["Having a conversation with the child about a social-emotional topic", false]
+      ]),
+      feedback: "The correct answer is B. In this example, the teacher repeats what they guess is the child’s response, “tower,” then follows with a clarifying question about what the child might be trying to communicate."
+    },
+    // 17- Responding to children with follow-up questions and/or comments to extend their thinking
+    {
+      text: "A child at the art center picks up a paint brush and says, “I’m gonna use blue.” Which of the following would be recorded as the teacher responding to the child with a follow-up question or comment to extend the child’s thinking?",
+      options: new Map([
+        ["\“Okay, that’s a great idea!\”", false],
+        ["\"Don’t get paint on the floor, please.\"", false],
+        ["\"Do I need to tie your smock?\"", false],
+        ["\"Okay, that’s a great idea. Why are you choosing blue?\"", true]
+      ]),
+      feedback: "The correct answer is D. Only option D includes a follow-up question that prompts the child to express their thinking about their painting. While the first comment is responsive, it does not extend the child’s thinking. Options B and C are managerial comments."
+    },
+    // 18- Asking open-ended questions or prompts to encourage conversation
+    {
+      text: "Which of the following is NOT an example of an open-ended question or prompt to encourage conversation?",
+      options: new Map([
+        ["\"How can we make our building more stable?\"", false],
+        ["\"How many buttons do you have?\"", true],
+        ["\"Tell me about your painting.\"", false],
+        ["\"How did you decide what to paint today?\"", false]
+      ]),
+      feedback: "The correct answer is B. Open-ended questions or prompts that encourage conversation do not have one correct answer, such as a correct number of buttons. Open-ended questions or prompts typically lead to multi word responses because the child’s answer is not constrained."
+    },
+    // 19- Combine open-ended and social emotional
+    {
+      text: "The teacher shows children a picture of their classmate at the bottom of the big slide with a huge grin on their face. The teacher says, “Look, Louis feels proud that he went down the big slide for the first time- he is happy about something he did all by himself!” Then the teacher asks the children when they have felt proud. The teacher is facilitating a conversation about a social-emotional topic and ____________________________.",
+      options: new Map([
+        ["Repeating or clarifying children’s comments", false],
+        ["Observing children or using questions in order to enter children’s ongoing play or activity", false],
+        ["Defining and discussing an advanced vocabulary", true],
+        ["None of the above", false]
+      ]),
+      feedback: "The correct answer is C. In addition to facilitating a discussion about feelings, the social-emotional topic, the teacher is defining and discussing an advanced vocabulary term--what it means to feel proud."
+    },
+    // 20- Definition of language environment
+    {
+      text: "The Language Environment tool provides information about the quantity and quality of language-building conversations between teachers, children, and peers in preschool classrooms.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True. The Language Environment tool captures how often responsive and content-rich conversations occur between teachers,children, and peers."
+    },
+  ],
   'ac':[
     {
       text: "Two children are in the same center with a board game, but they are playing with " + 
