@@ -54,7 +54,7 @@ import TeacherDetails from '../../../components/MyTeachersComponents/TeacherDeta
 import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-import { changeTeacher } from '../../../state/actions/teacher';
+import { changeTeacher, updateTeacherInfo } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
@@ -316,6 +316,7 @@ type Props = RouteComponentProps & {
   type: string,
   teacherList: Array<Types.Teacher>,
   changeTeacher(teacherInfo: Types.Teacher): Types.Teacher,
+  updateTeacherInfo(teacher: Types.Teacher): Array<Types.Teacher>
 }
 
 interface Teacher {
@@ -334,6 +335,7 @@ interface State {
   teachers: Array<Teacher>,
   selectedTeacher: Teacher | undefined,
   searched: Array<Teacher>,
+  teacherDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
   isAdding: boolean,
   editing: boolean,
   inputFirstName: string,
@@ -393,6 +395,7 @@ class TeacherListPage extends React.Component<Props, State> {
       teachers: [],
       selectedTeacher: undefined,
       searched: [],
+      teacherDetails: [],
       isAdding: false,
       editing: false,
       inputFirstName: "",
@@ -463,6 +466,26 @@ class TeacherListPage extends React.Component<Props, State> {
       );
   }
 
+  addEventsToTeachers = (): Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> => {
+    const teachers = [...this.state.searched];
+    const teachersWithEvents: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> = [];
+    teachers.forEach((teacher) => {
+      const teacherEvents = this.state.allEvents.filter(obj => {
+        return( obj.resource === teacher.id && !obj.appointment )
+      })
+      const mostRecentEvent = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
+        return (new Date(prev.start) > new Date(current.start)) ? prev : current
+      })) : (undefined)
+      teachersWithEvents.push({
+        ...teacher,
+        start: mostRecentEvent ? mostRecentEvent.start : undefined,
+        title: mostRecentEvent ? mostRecentEvent.title : undefined,
+        type: mostRecentEvent ? mostRecentEvent.type : undefined
+      })
+    })
+    return teachersWithEvents
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
@@ -476,7 +499,7 @@ class TeacherListPage extends React.Component<Props, State> {
       sessionStart: {value: Date},
       sessionEnd: {value: Date},
       teacher: string,
-      type: string
+      type: Types.ToolNamesKey
     }>) => {
       console.log('i got the data here', data);
       const myArr: Array<Types.CalendarEvent> = [];
@@ -485,7 +508,7 @@ class TeacherListPage extends React.Component<Props, State> {
         sessionStart: {value: Date},
         sessionEnd: {value: Date},
         teacher: string,
-        type: string
+        type: Types.ToolNamesKey
       }) => {
         myArr.push({
           title: 'Observation',
@@ -512,9 +535,15 @@ class TeacherListPage extends React.Component<Props, State> {
             allEvents = allEvents.concat(appointmentEvents)
           }).then(() => {
             this.setState({
-              allEvents: allEvents,
-              dataLoaded: true
-            }, () => {console.log('obs EVENTS', this.state.allEvents)})
+              allEvents: allEvents
+            }, () => {
+              const teacherDetails = this.addEventsToTeachers();
+              console.log('teach details', teacherDetails);
+              this.setState({
+                teacherDetails: teacherDetails,
+                dataLoaded: true
+              })
+            })
           })
         })
       })
@@ -837,11 +866,11 @@ class TeacherListPage extends React.Component<Props, State> {
       !inputSchool
     ) {
       return null;
-    } else {
+    } else if (selectedTeacher) {
       // fields are validated
       const firebase = this.context;
       if (
-        firebase.setTeacherInfo(this.state.selectedTeacher.id, {
+        firebase.setTeacherInfo(selectedTeacher.id, {
           firstName: inputFirstName,
           lastName: inputLastName,
           school: inputSchool,
@@ -877,7 +906,19 @@ class TeacherListPage extends React.Component<Props, State> {
             emailErrorText: "",
             notesErrorText: ""
           },
-          () => this.handleEditAlert(true)
+          () => {
+            console.log('it got here')
+            this.handleEditAlert(true);
+            this.props.updateTeacherInfo(selectedTeacher);
+            const oldTeacherList = [...this.state.searched];
+            const updatedTeacherList = oldTeacherList.filter(teacher => {
+              return teacher.id !== selectedTeacher.id
+            });
+            updatedTeacherList.push(selectedTeacher);
+            this.setState({
+              searched: updatedTeacherList
+            })
+          }
         );
       } else {
         this.handleCloseModal();
@@ -1031,7 +1072,7 @@ class TeacherListPage extends React.Component<Props, State> {
     }).isRequired,
     type: PropTypes.string.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
-    changeTeacher: PropTypes.string.isRequired
+    changeTeacher: PropTypes.func.isRequired
   }
 
   /**
@@ -1266,8 +1307,9 @@ class TeacherListPage extends React.Component<Props, State> {
                     // table
                     <MyTeachersTable
                       onChangeText={this.onChangeText}
-                      searched={this.state.searched}
-                      allEvents={this.state.allEvents}
+                      // searched={this.state.searched}
+                      // allEvents={this.state.allEvents}
+                      teacherDetails={this.state.teacherDetails}
                       selectTeacher={this.selectTeacher}
                       addingTeacher={(): void => this.setState({ isAdding: true })}
                     />
@@ -1461,6 +1503,6 @@ const mapStateToProps = (state: Types.ReduxState): {
 
 TeacherListPage.contextType = FirebaseContext;
 export default withRouter(connect(
-  mapStateToProps, {changeTeacher}
+  mapStateToProps, {changeTeacher, updateTeacherInfo}
 )(withStyles(styles)(TeacherListPage)));
 // export default withStyles(styles)(withRouter(TeacherListPage));

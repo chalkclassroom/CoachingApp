@@ -37,8 +37,9 @@ interface Teacher {
 
 interface Props {
   onChangeText(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void,
-  searched: Array<Teacher>,
-  allEvents: Array<Types.CalendarEvent>,
+  // searched: Array<Teacher>,
+  // allEvents: Array<Types.CalendarEvent>,
+  teacherDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
   selectTeacher(teacherInfo: Teacher): void,
   addingTeacher(): void
 }
@@ -144,7 +145,7 @@ type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
 
 export default function MyTeachersTable(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { onChangeText, searched, allEvents, selectTeacher, addingTeacher } = props;
+  const { onChangeText, teacherDetails, selectTeacher, addingTeacher } = props;
 
   return (
     <Grid container direction="column" justify="center" alignItems="stretch">
@@ -187,15 +188,7 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
             </TableRow>
           </TableHead>
           <TableBody>
-            {searched.map((teacher, index) => {
-              // all completed events (not appointments) for this teacher
-              const teacherEvents = allEvents.filter(obj => {
-                return( obj.resource === teacher.id && !obj.appointment )
-              })
-              // most recent completed event
-              const maxDate = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
-                return (new Date(prev.start) > new Date(current.start)) ? prev : current
-              })) : (undefined)
+            {teacherDetails.sort(((a, b) => new Date(b.start).valueOf() - new Date(a.start).valueOf())).map((teacher, index) => {
               return (
               <TableRow
                 className={classes.row}
@@ -209,19 +202,16 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
                   {teacher.firstName}
                 </TableCell>
                 <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {maxDate ? RecentActivityTerms[teacherEvents.reduce(function(prev, current) {
-                      return (new Date(prev.start) > new Date(current.start)) ? prev : current
-                    }).title as RecentActivityTermsKey] : 'N/A'
-                  }
+                  {teacher.title ? teacher.title : 'N/A'}
                 </TableCell>
                 <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {maxDate ? (moment(new Date(maxDate.start)).format('MM/DD/YYYY')) : ('N/A')
+                  {teacher.start ? (moment(new Date(teacher.start)).format('MM/DD/YYYY')) : ('N/A')
                 }
                 </TableCell>
                 <TableCell className={classes.nameField}>
                   <Grid container direction="row" justify="center" alignItems="center">
-                    {maxDate ? (<img
-                      src={ToolIcons[maxDate.type]}
+                    {teacher.type ? (<img
+                      src={ToolIcons[teacher.type]}
                       alt="Icon"
                       style={{maxWidth: '4em'}}
                     />) : null}

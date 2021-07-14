@@ -435,14 +435,12 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
               <Grid container direction="row" justify="center" alignItems="center">
             <ol className={classes.magicEightCard}>
               {sortedSvg.map((item, key) => {
-                console.log(key, 'item', item,)
                 const recentObs = recentEvents.filter(obj => {
                   return( obj.resource === teacher.id && obj.type === item.type )
                 });
                 const maxDate = recentObs.length > 0 ? (recentObs.reduce(function(prev, current) {
                   return (new Date(prev.start) > new Date(current.start)) ? prev : current
                 })) : (undefined)
-                console.log('recent obs', recentObs, 'maxDate bro', maxDate)
                 return(
                 maxDate !== undefined ? (
                   <li key={key} className={classes.magicEightItem}>
