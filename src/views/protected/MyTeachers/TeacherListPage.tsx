@@ -492,8 +492,10 @@ class TeacherListPage extends React.Component<Props, State> {
     console.log('COMPONENTDIDMOUNT', this.state.view);
     let allEvents: Array<Types.CalendarEvent> = [];
     this.setState({
-      searched: this.props.teacherList
-    })
+      searched: this.props.teacherList.filter(teacher => {
+        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+      })
+    });
     firebase.getRecentObservations3().then((data: Array<{
       id: string,
       sessionStart: {value: Date},
@@ -549,7 +551,9 @@ class TeacherListPage extends React.Component<Props, State> {
       })
     })
     this.setState({
-      teachers: this.props.teacherList
+      teachers: this.props.teacherList.filter(teacher => {
+        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+      })
     }, () => {
       console.log('and now the teachers are', this.state.teachers);
       const recentObservations = [];
@@ -1265,7 +1269,11 @@ class TeacherListPage extends React.Component<Props, State> {
               <CalendarEventPopover
                 push={this.props.history.push}
                 clickedEvent={clickedEvent}
-                teacherList={this.props.teacherList}
+                teacherList={
+                  this.props.teacherList.filter(teacher => {
+                    return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+                  })
+                }
                 changeTeacher={this.props.changeTeacher}
                 deleteAppointment={(): void => this.setState({ deleteAppointmentDialog: true })}
                 editEvent={(): void => this.setState({ newEventModal: true })}
