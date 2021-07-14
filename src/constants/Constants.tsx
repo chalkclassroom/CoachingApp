@@ -26,6 +26,14 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
+export const TransparentTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffffff00'
+    }
+  }
+});
+
 export const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
@@ -232,8 +240,66 @@ export const CentersSecondHalf = [
   "Music and Movement",
   "Library",
   "Small Group"
-]
+];
 
+export enum LiteracyTypes {
+  NONE = '',
+  FOUNDATIONAL = 'Foundational',
+  WRITING = 'Writing',
+  READING = 'Reading',
+  LANGUAGE = 'Language'
+}
+
+const activitySettingsFoundational = [
+  'All',
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Morning Meeting',
+  'Shared Reading',
+  'Shared Writing',
+  'Individual Child Activity',
+  'Center Time Activities'
+];
+
+const activitySettingsWriting = [
+  'All',
+  'Morning Meeting',
+  'Shared Writing',
+  'Individual Child Writing',
+  'Journals',
+  'Writing Center Activities',
+  'Center Time Activities',
+  'Small Group Lesson'
+];
+
+const activitySettingsReading = [
+  'All',
+  'Fiction',
+  'Nonfiction/Informational',
+  'Rhyming',
+  'Predictable',
+  'Poem',
+  'Alphabet/Counting',
+  'Class-Made Book'
+];
+
+const activitySettingsLanguage = [
+  'All',
+  'Morning Meeting',
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Center Time Activities',
+  'Mealtime'
+];
+
+export const LiteracyActivitySettings = {
+  'FoundationalChild': activitySettingsFoundational,
+  'FoundationalTeacher': activitySettingsFoundational,
+  'WritingChild': activitySettingsWriting,
+  'WritingTeacher': activitySettingsWriting,
+  'ReadingTeacher': activitySettingsReading,
+  'LanguageTeacher': activitySettingsLanguage
+};
 
 // Team Members
 export const CC = {
@@ -367,6 +433,14 @@ export const Checklist: {
     ChildBehaviors?: Array<JSX.Element>,
     TeacherBehaviors: Array<JSX.Element>
   },
+  LI: {
+    FoundationalChild: Array<JSX.Element>,
+    FoundationalTeacher: Array<JSX.Element>,
+    WritingChild: Array<JSX.Element>,
+    WritingTeacher: Array<JSX.Element>,
+    ReadingTeacher: Array<JSX.Element>,
+    LanguageTeacher: Array<JSX.Element>
+  }
 } = {
   'MI': {
     'ChildInstructions': 'Select the types of math activities children are doing at this center.',
@@ -465,6 +539,188 @@ export const Checklist: {
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
       <div key={5}>Encourages children to <b>talk to peers</b></div>,
+    ]
+  },
+  'LI': {
+    'FoundationalChild': [
+      <div key={0}>
+        Using knowledge of <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Using knowledge of <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Using <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Using knowledge of <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Inventing spellings or generating conventional spellings</b>
+      </div>,
+      <div key={5}>
+        Using knowledge of <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>,
+      <div key={8}>
+        <b>Responding to open-ended questions or prompts</b> about foundational skills
+      </div>
+    ],
+    'FoundationalTeacher': [
+      <div key={0}>
+        Focusing on <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Focusing on <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Focusing on <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Focusing on <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Supporting children&apos;s inventive spelling</b>
+      </div>,
+      <div key={5}>
+        Focusing on <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>,
+      <div key={8}>
+        Asking <b>open-ended questions or prompts</b> about foundational skills
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
+      </div>
+    ],
+    'WritingChild': [
+      <div key={0}>
+        <b>Talks about the content or meaning</b> of the writing/drawing
+      </div>,
+      <div key={1}>
+        <b>Draws to communicate meaning</b>
+      </div>,
+      <div key={2}>
+        <b>Makes writing forms</b> (e.g., scribbles, letter-like forms, random letter strings, letters)
+      </div>,
+      <div key={3}>
+        <b>Says aloud the message to be written</b>
+      </div>,
+      <div key={4}>
+        <b>Writes</b> one or more <b>letters in their name</b>
+      </div>,
+      <div key={5}>
+        Uses knowledge of the <b>alphabet and/or letter-sound correspondence</b>
+      </div>,
+      <div key={6}>
+        <b>Invents spellings</b> or generates conventional spellings
+      </div>,
+      <div key={7}>
+        <b>“Reads”</b> the message
+      </div>
+    ],
+    'WritingTeacher': [
+      <div key={0}>
+        <b>Talks to children about the content or meaning</b> of the writing/drawing
+      </div>,
+      <div key={1}>
+        <b>Invites children to write part of a message</b> (beyond their name)
+      </div>,
+      <div key={2}>
+        <b>Writes a meaningful message</b> in front of children
+      </div>,
+      <div key={3}>
+        <b>Demonstrates and talks about writing processes</b> (e.g., print concepts, handwriting)
+      </div>,
+      <div key={4}>
+        <b>Invites children to write their name</b>
+      </div>,
+      <div key={5}>
+        <b>Responds positively to all writing forms</b> (e.g., child scribbles, letter-like forms, letters)
+      </div>,
+      <div key={6}>
+        Supports children’s <b>inventive and/or conventional spelling</b>
+      </div>,
+      <div key={7}>
+        <b>Invites children to read the message</b> (e.g., “Read what you wrote to me!” or “What does that say?”)
+      </div>
+    ],
+    'ReadingTeacher': [
+      <div key={0}>
+        <b>Defining and/or discussing vocabulary words</b>
+      </div>,
+      <div key={1}>
+        <b>Discussing concepts related to a text </b> before, during,
+        and/or after the book reading
+      </div>,
+      <div key={2}>
+        Encouraging children to <b> retell, reenact, sequence, or summarize a
+        text</b> or part of a text
+      </div>,
+      <div key={3}>
+        <b>Relating the book to children's experiences</b> inside and/or
+        outside the classroom
+      </div>,
+      <div key={4}>
+        Encouraging children to <b>make connections to books that reflect
+        their language and/or cultural backgrounds</b>
+      </div>,
+      <div key={5}>
+        <b>Asking children open-ended questions/prompts </b> (e.g., to
+        make predictions or inferences)
+      </div>,
+      <div key={6}>
+        <b>Responding to children with follow-up questions and/or comments </b> to
+        extend children's thinking
+      </div>,
+      <div key={7}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={8}>
+        Facilitating discussion of <b>social issues around equity/fairness</b>
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> to support comprehension and/or
+        word learning (e.g., props, gestures, sounds, visuals, book illustrations)
+      </div>
+    ],
+    'LanguageTeacher': [
+      <div key={0}>
+        Discussing, defining, and/or promoting use of <b>advanced vocabulary and concepts</b>
+      </div>,
+      <div key={1}>
+        Having a conversation with children about a <b>social-emotional topic</b>
+      </div>,
+      <div key={2}>
+        Encouraging children to tell and/or act out <b>stories from experiences in their lives</b>
+      </div>,
+      <div key={3}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={4}>
+        <b>Asking open-ended questions</b> or prompts to encourage conversation
+      </div>,
+      <div key={5}>
+        Observing or using questions/prompts in order to <b>enter children's ongoing play or activity</b>
+      </div>,
+      <div key={6}>
+        <b>Repeating or clarifying</b> children's comments
+      </div>,
+      <div key={7}>
+        Responding to children with <b>follow-up questions and/or comments</b> to extend their thinking
+      </div>
     ]
   }
 }

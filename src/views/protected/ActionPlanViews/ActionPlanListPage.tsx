@@ -4,6 +4,24 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableSortLabel
+} from '@material-ui/core';
+import * as moment from 'moment';
+import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
+import MathIconImage from '../../../assets/images/MathIconImage.svg';
+import EngagementIconImage from '../../../assets/images/EngagementIconImage.svg';
+import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
+import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
+import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
+import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg';
+import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
 import ActionPlanList from '../../../components/ActionPlanList';
 import * as H from 'history';
 import * as Types from '../../../constants/Types';

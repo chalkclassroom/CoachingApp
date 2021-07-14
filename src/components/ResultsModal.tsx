@@ -71,6 +71,8 @@ function ResultsModal(props: Props): React.ReactElement {
     title = "Listening to Children"
   } else if (tool === "SequentialActivities") {
     title = "Sequential Activities"
+  } else if (tool === "LiteracyInstruction") {
+    title = "Literacy Instruction"
   } else if (tool === "AssociativeCooperativeInteractions") {
     title = "Associative and Cooperative Interactions"
   }

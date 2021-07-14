@@ -20,6 +20,8 @@ import LevelOfInstructionObservationPopUp from './LevelOfInstructionComponents/L
 import ListeningToChildrenObservationPopUp from './ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
+import LiteracyModal from './LiteracyComponents/LiteracyModal';
+import LiteracyIconCard from './LiteracyComponents/LiteracyIconCard';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
@@ -27,13 +29,15 @@ import ResultsTrainingModal from '../components/TrainingComponents/ResultsTraini
 import { useState } from 'react';
 import { connect } from "react-redux";
 import * as Types from '../constants/Types';
+import * as Constants from '../constants/Constants';
 import * as H from 'history';
 
 interface Props {
   type: string,
   training: boolean,
   unlocked?: Array<number>
-  history: H.History
+  history: H.History,
+  trainingLiteracy: Types.TrainingLiteracy
 }
 
 /**
@@ -42,12 +46,35 @@ interface Props {
  * @return {ReactElement}
  */
 function ToolIcons(props: Props): React.ReactElement {
-  const { history, type, training, unlocked } = props;
+  const { history, type, training, unlocked, trainingLiteracy } = props;
   const [selected, setSelected] = useState<Types.Selected>('none');
   const [resultsTrainingModal, setResultsTrainingModal] = useState(false);
   const [observeModal, setObserveModal] = useState(false);
   const [resultsModal, setResultsModal] = useState(false);
   const [lockedModal, setLockedModal] = useState(false);
+  const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
+
+  // add in other sections later (just tracking knowledge check completion for now)
+  const foundationalUnlocked=
+    // trainingLiteracy.conceptsFoundational &&
+    // trainingLiteracy.definitionsFoundational &&
+    // trainingLiteracy.demoFoundational &&
+    trainingLiteracy.knowledgeCheckFoundational;
+  const writingUnlocked=
+    // trainingLiteracy.conceptsWriting &&
+    // trainingLiteracy.definitionsWriting &&
+    // trainingLiteracy.demoWriting &&
+    trainingLiteracy.knowledgeCheckWriting;
+  const readingUnlocked=
+    // trainingLiteracy.conceptsReading &&
+    // trainingLiteracy.definitionsReading &&
+    // trainingLiteracy.demoReading &&
+    trainingLiteracy.knowledgeCheckReading;
+  const languageUnlocked=
+    // trainingLiteracy.conceptsLanguage &&
+    // trainingLiteracy.definitionsLanguage &&
+    // trainingLiteracy.demoLanguage &&
+    trainingLiteracy.knowledgeCheckLanguage;
 
   const ObservationPopUp = {
     'TransitionTime': <TransitionTimeObservationPopUp />,
@@ -57,7 +84,7 @@ function ToolIcons(props: Props): React.ReactElement {
     'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
     'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
     'SequentialActivities': <SequentialActivitiesObservationPopUp />,
-    'LiteracyInstruction': <div />,
+    'LiteracyInstruction': <div />, // Literacy has its own Observation Modal
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
@@ -66,9 +93,13 @@ function ToolIcons(props: Props): React.ReactElement {
     setSelected(tool);
     if (training) {
       if (type === 'Observe') {
-        history.push({
-          pathname: `/${tool}Training`,
-        });
+        if (tool === 'LiteracyInstruction') {
+          setLiteracyTrainingModal(true)
+        } else {
+          history.push({
+            pathname: `/${tool}Training`,
+          });
+        }
       } else {
         setResultsTrainingModal(true);
       }
@@ -169,11 +200,14 @@ function ToolIcons(props: Props): React.ReactElement {
               />
             </Grid>
             <Grid item>
-              <Magic8Card
+              <LiteracyIconCard
                 title="LiteracyInstruction"
                 icon={LiteracyIconImage}
                 onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(9) : false}
+                foundational={foundationalUnlocked}
+                writing={writingUnlocked}
+                reading={readingUnlocked}
+                language={languageUnlocked}
                 training={training}
                 type={type}
               />
@@ -191,27 +225,75 @@ function ToolIcons(props: Props): React.ReactElement {
           </Grid>
         </Grid>
       </Grid>
-      <ObservationModal
-        open={observeModal}
-        content={ObservationPopUp[selected]}
-        handleBegin={(): void => history.push({pathname: `/${selected}`})}
-        handleClose={(): void => setObserveModal(false)}
-      />
+      {selected === 'LiteracyInstruction' ? (
+        <LiteracyModal
+          open={observeModal}
+          handleBegin={(checklistType: Constants.LiteracyTypes): void => {
+            history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
+          }}
+          handleClose={(): void => setObserveModal(false)}
+          tool={selected}
+          type='Observe'
+          foundational={foundationalUnlocked}
+          writing={writingUnlocked}
+          reading={readingUnlocked}
+          language={languageUnlocked}
+        />
+      ) : (
+        <ObservationModal
+          type={selected}
+          open={observeModal}
+          content={ObservationPopUp[selected]}
+          handleBegin={(): void => {
+            history.push({pathname:`/${selected}`})
+          }}
+          handleClose={(): void => setObserveModal(false)}
+        />
+      )}
       <LockedModal
         open={lockedModal}
         handleClose={(): void => setLockedModal(false)}
       />
-      <ResultsModal
-        open={resultsModal}
-        handleBegin={(): void => history.push({pathname: `/${selected}Results`})}
-        handleClose={(): void => setResultsModal(false)}
-        tool={selected}
-      />
+      {selected === 'LiteracyInstruction' ? (
+        <LiteracyModal
+          open={resultsModal}
+          handleBegin={(checklistType: Constants.LiteracyTypes): void => {
+            history.push({pathname:`/${selected}Results`, state: {type: checklistType}})
+          }}
+          handleClose={(): void => setResultsModal(false)}
+          tool={selected}
+          type='Results'
+          foundational={foundationalUnlocked}
+          writing={writingUnlocked}
+          reading={readingUnlocked}
+          language={languageUnlocked}
+        />
+      ) : (
+        <ResultsModal
+          open={resultsModal}
+          handleBegin={(): void => history.push({pathname: `/${selected}Results`})}
+          handleClose={(): void => setResultsModal(false)}
+          tool={selected}
+        />
+      )}
       <ResultsTrainingModal
         open={resultsTrainingModal}
         handleClose={(): void => {
           setResultsTrainingModal(false);
         }}
+      />
+      <LiteracyModal
+        open={literacyTrainingModal}
+        handleBegin={(checklistType: Constants.LiteracyTypes): void => {
+          history.push({pathname:`/${selected}Training`, state: {type: checklistType}})
+        }}
+        handleClose={(): void => setLiteracyTrainingModal(false)}
+        tool={selected}
+        type='Training'
+        foundational={foundationalUnlocked}
+        writing={writingUnlocked}
+        reading={readingUnlocked}
+        language={languageUnlocked}
       />
     </div>
   );
@@ -226,10 +308,29 @@ ToolIcons.propTypes = {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  unlocked: Array<number>
+  unlocked: Array<number>,
+  trainingLiteracy: {
+    conceptsFoundational: boolean,
+    conceptsWriting: boolean,
+    conceptsReading: boolean,
+    conceptsLanguage: boolean,
+    definitionsFoundational: boolean,
+    definitionsWriting: boolean,
+    definitionsReading: boolean,
+    definitionsLanguage: boolean,
+    demoFoundational: boolean,
+    demoWriting: boolean,
+    demoReading: boolean,
+    demoLanguage: boolean,
+    knowledgeCheckFoundational: boolean,
+    knowledgeCheckWriting: boolean,
+    knowledgeCheckReading: boolean,
+    knowledgeCheckLanguage: boolean
+  }
 } => {
   return {
-    unlocked: state.unlockedState.unlocked
+    unlocked: state.unlockedState.unlocked,
+    trainingLiteracy: state.trainingLiteracyState
   };
 };
 

@@ -11,11 +11,6 @@ export default function StudentEngagementObservationPopUp(): React.ReactElement 
   return (
     <div>
       <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
-            Student Engagement Observation
-          </Typography>
-        </Grid>
         <Grid item style={{paddingTop: '1em'}}>
           <Typography variant="h6" align="left">
             <ul>
