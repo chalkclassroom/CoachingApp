@@ -8,6 +8,7 @@ import TrainingVideo from './TrainingVideo';
 import TrainingQuestionnaire from './TrainingQuestionnaire';
 import TrainingObservationDashboard from './TrainingObservationDashboard';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import * as Types from '../../constants/Types';
 import * as Constants from '../../constants/Constants';
 
@@ -245,15 +246,19 @@ class TrainingLayout extends React.Component<Props, State> {
                 style={{minHeight: '85vh'}}
               >
                 {view === ViewEnum.CONCEPTS ? (
-                  <TrainingVideo videoUrl={this.props.conceptsUrl} />
+                  this.props.conceptsUrl ? (
+                    <TrainingVideo videoUrl={this.props.conceptsUrl} />
+                  ) : <Typography variant="h4" style={{fontFamily: 'Arimo'}}>Video coming soon!</Typography>
                 ) : view === ViewEnum.DEFINITIONS ? (
                   <div>
                     {this.props.definitions}
                   </div>
                 ) : view === ViewEnum.DEMONSTRATION ? (
-                  <div>
-                    <TrainingVideo videoUrl={this.props.demonstrationUrl} />
-                  </div>
+                  this.props.demonstrationUrl ? (
+                    <div>
+                      <TrainingVideo videoUrl={this.props.demonstrationUrl} />
+                    </div>
+                  ) : <Typography variant="h4" style={{fontFamily: 'Arimo'}}>Video coming soon!</Typography>
                 ) : view === ViewEnum.KNOWLEDGECHECK ? (
                   <TrainingQuestionnaire section={this.props.section} literacyType={this.props.literacyType} />
                 ) : null}

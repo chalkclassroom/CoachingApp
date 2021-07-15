@@ -846,18 +846,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                 teacherId={this.props.teacherSelected.id}
                 literacyType={this.props.location.state.type}
               />
-              /* <div>
-                <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}}>
-                  <Grid item>
-                    <img src={LogoImage} alt="CHALK" height="100vh" />
-                  </Grid>
-                  <Grid item style={{paddingTop: '3em'}}>
-                    <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                      Coaching Questions coming soon!
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </div> */
             }
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
