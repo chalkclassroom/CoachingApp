@@ -15,6 +15,7 @@ import LiteracyTrendsReading from "../../../components/LiteracyComponents/Result
 import LiteracyDetailsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage";
 import LiteracyTrendsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage";
 import TrendsSlider from "../../../components/LiteracyComponents/ResultsComponents/TrendsSlider";
+import LiteracyCoachingQuestionsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestionsReading";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import LogoImage from '../../../assets/images/LogoImage.svg';
 import { connect } from 'react-redux';
@@ -839,12 +840,13 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             sessionDates={this.state.sessionDates}
             notes={this.state.notes}
             questions={
-              /* <ListeningCoachingQuestions
+              <LiteracyCoachingQuestionsReading
                 handleAddToPlan={this.handleAddToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
-              /> */
-              <div>
+                literacyType={this.props.location.state.type}
+              />
+              /* <div>
                 <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}}>
                   <Grid item>
                     <img src={LogoImage} alt="CHALK" height="100vh" />
@@ -855,7 +857,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     </Typography>
                   </Grid>
                 </Grid>
-              </div>
+              </div> */
             }
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
