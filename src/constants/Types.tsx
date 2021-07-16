@@ -7,7 +7,27 @@ export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' |
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
 'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
+export type TrainingLiteracy = {
+  conceptsFoundational: boolean,
+  conceptsWriting: boolean,
+  conceptsReading: boolean,
+  conceptsLanguage: boolean,
+  definitionsFoundational: boolean,
+  definitionsWriting: boolean,
+  definitionsReading: boolean,
+  definitionsLanguage: boolean,
+  demoFoundational: boolean,
+  demoWriting: boolean,
+  demoReading: boolean,
+  demoLanguage: boolean,
+  knowledgeCheckFoundational: boolean,
+  knowledgeCheckWriting: boolean,
+  knowledgeCheckReading: boolean,
+  knowledgeCheckLanguage: boolean
+};
+
 export interface ReduxState {
+  trainingLiteracyState: TrainingLiteracy,
   associativeCenterState: {
     associativeCenters: Array<{
       name: string,
@@ -48,6 +68,10 @@ export interface ReduxState {
   listeningCountState: {
     listeningCount: number,
     noListeningCount: number
+  },
+  literacyCountState: {
+    literacyCount: number,
+    noLiteracyCount: number
   },
   mathCountState: {
     mathCount: number,

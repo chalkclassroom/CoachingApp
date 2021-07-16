@@ -20,6 +20,7 @@ import EngagementIconImage from '../../../assets/images/EngagementIconImage.svg'
 import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
 import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
+import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg';
 import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
 import * as H from 'history';
 import * as Types from '../../../constants/Types';
@@ -358,6 +359,11 @@ class ConferencePlanListPage extends React.Component<Props, State>{
                                   ) : row.practice === 'Sequential Activities' ? (
                                     <img
                                       src={SequentialIconImage}
+                                      alt="Magic 8 Icon"
+                                    />
+                                  ) : row.practice === 'Literacy Instruction' ? (
+                                    <img
+                                      src={LiteracyIconImage}
                                       alt="Magic 8 Icon"
                                     />
                                   ) : row.practice === 'AC' ? (
