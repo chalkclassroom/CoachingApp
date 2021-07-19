@@ -24,6 +24,15 @@ const styles: object = {
   },
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
     line: {
+      transform: 'rotate(90deg)',
+      display: 'block'
+    },
+    timerContainer: {
+      marginTop: 0
+    }
+  },
+  '@media only screen and (orientation: portrait)': {
+    line: {
       transform: 'rotate(0deg)',
     },
     timerContainer: {
@@ -81,7 +90,7 @@ function Countdown(props: Props): React.ReactElement {
           }
           trailWidth={18}
           style={{
-            transform: horizontal ? 'rotate(0deg)' : 'rotate(270deg)'
+            transform: horizontal ? 'rotate(0deg)' : undefined // timer orientation does not depend on screen orientation
           }}
         />
       </Grid>
