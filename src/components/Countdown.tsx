@@ -24,16 +24,7 @@ const styles: object = {
   },
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
     line: {
-      transform: 'rotate(90deg)',
-      display: 'block'
-    },
-    timerContainer: {
-      marginTop: 0
-    }
-  },
-  '@media only screen and (orientation: portrait)': {
-    line: {
-      transform: 'rotate(0deg)',
+      transform: 'rotate(90deg)'
     },
     timerContainer: {
       marginTop: 0
