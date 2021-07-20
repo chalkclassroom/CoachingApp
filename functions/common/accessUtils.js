@@ -6,18 +6,18 @@ const firestore = new Firestore({
 });
 
 const canAccessTeacher = async (teacher, userId) => {
-    const doc = await firestore.collection("users")
-        .doc(userId)
-        .get().catch(error => console.error("Error getting cached document:", error));
-    const role = doc.data().role
+    const docRef = await firestore.collection("users")
+        .doc(userId);
+    const doc = docRef.get().catch(error => console.error("Error getting cached document:", error));
+    const role = doc.role
 
     if (role === 'admin'){
         return true;
     }else if (role === 'coach'){
-        const partnerCollection = doc.collection("partners")
+        const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists
     }else{
-        return doc.data().email === "practice@teacher.edu" //self or practice teacher
+        return doc.email === "practice@teacher.edu" //self or practice teacher
     }
 }
 
@@ -29,6 +29,9 @@ const canAccessTeacher = async (teacher, userId) => {
  * @returns {Promise<boolean|*>}
  */
 const canAccessObservation = async (observation, userId) => {
+    if (!observation || observation === ""){
+        return false;
+    }
     /*
      * TODO Maybe adjust for roles? I.e. coach can only access
      * observations they submitted, but school admin can access
@@ -37,11 +40,10 @@ const canAccessObservation = async (observation, userId) => {
     const doc = await firestore.collection('observations')
         .doc(observation).get()
         .catch(err => console.error("Error getting observation doc:", err));
-    const obsDoc = doc.data();
-    const teacher = obsDoc.teacher;
-    const observedBy = obsDoc.observedBy;
+    const teacher = doc.teacher;
+    const observedBy = doc.observedBy;
     return userId === observedBy.substring(observedBy.lastIndexOf("/") + 1)
-        ||await canAccessTeacher(teacher.substring(teacher.lastIndexOf("/") + 1))
+        ||await canAccessTeacher(teacher.substring(teacher.lastIndexOf("/") + 1), userId)
 }
 
 const canAccessActionPlans = async (teacher, userId) => {
