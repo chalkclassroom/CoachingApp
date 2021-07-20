@@ -850,7 +850,8 @@ class TeacherListPage extends React.Component<Props, State> {
       emailErrorText,
       schoolErrorText,
       notesErrorText,
-      phoneErrorText
+      phoneErrorText,
+      teacherDetails
     } = this.state;
     this.validateInputText("inputFirstName", inputFirstName);
     this.validateInputText("inputLastName", inputLastName);
@@ -911,9 +912,22 @@ class TeacherListPage extends React.Component<Props, State> {
             notesErrorText: ""
           },
           () => {
-            console.log('it got here')
+            let updatedTeacherDetails = [...teacherDetails];
+            const index = updatedTeacherDetails.findIndex(x => x.id === selectedTeacher.id);
+            const updatedTeacherWithDetails = {...updatedTeacherDetails[index]}
+            updatedTeacherWithDetails.firstName = inputFirstName;
+            updatedTeacherWithDetails.lastName = inputLastName;
+            updatedTeacherWithDetails.email = inputEmail;
+            updatedTeacherWithDetails.school = inputSchool;
+            updatedTeacherWithDetails.phone = inputPhone;
+            updatedTeacherWithDetails.notes = inputNotes;
+            updatedTeacherDetails[index] = {...updatedTeacherWithDetails};
+            this.setState({
+              teacherDetails: updatedTeacherDetails
+            })
+            const updatedTeacher = {...this.state.selectedTeacher}
             this.handleEditAlert(true);
-            this.props.updateTeacherInfo(selectedTeacher);
+            this.props.updateTeacherInfo(updatedTeacher);
             const oldTeacherList = [...this.state.searched];
             const updatedTeacherList = oldTeacherList.filter(teacher => {
               return teacher.id !== selectedTeacher.id
@@ -988,7 +1002,7 @@ class TeacherListPage extends React.Component<Props, State> {
   };
 
   closeTeacherDetails = (): void => {
-    this.setState({view: 0})
+    this.setState({view: 0, selectedTeacher: undefined})
   }
 
   handleEdit = (): void => {

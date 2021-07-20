@@ -42,7 +42,6 @@ const styles: object = {
  */
 function LabeledInfo(props: Props): React.ReactElement {
   const { label, field, classes } = props;
-  console.log('what is field', field)
   return (
     <div className={classes.container}>
       <p className={classes.labelStyle}>{label}:</p>
