@@ -8,8 +8,14 @@ const firestore = new Firestore({
 const canAccessTeacher = async (teacher, userId) => {
     const docRef = await firestore.collection("users")
         .doc(userId);
-    const doc = docRef.get().catch(error => console.error("Error getting cached document:", error));
-    const role = doc.role
+    const docData = await docRef.get().then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Doc does not exist");
+        }
+      }).catch(error => console.error("Error getting cached document:", error));
+    const role = docData.role;
 
     if (role === 'admin'){
         return true;
@@ -17,7 +23,7 @@ const canAccessTeacher = async (teacher, userId) => {
         const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists
     }else{
-        return doc.email === "practice@teacher.edu" //self or practice teacher
+        return docData.email === "practice@teacher.edu" //self or practice teacher
     }
 }
 
@@ -37,11 +43,18 @@ const canAccessObservation = async (observation, userId) => {
      * observations they submitted, but school admin can access
      * any observation for their teachers?
      */
-    const doc = await firestore.collection('observations')
+    const docData = await firestore.collection('observations')
         .doc(observation).get()
+        .then((doc) => {
+            if (doc.exists) {
+              return doc.data();
+            } else {
+              console.log("Doc does not exist");
+            }
+          })
         .catch(err => console.error("Error getting observation doc:", err));
-    const teacher = doc.teacher;
-    const observedBy = doc.observedBy;
+    const teacher = docData.teacher;
+    const observedBy = docData.observedBy;
     return userId === observedBy.substring(observedBy.lastIndexOf("/") + 1)
         ||await canAccessTeacher(teacher.substring(teacher.lastIndexOf("/") + 1), userId)
 }

@@ -17,6 +17,7 @@ exports.funcSessionDates = functions.https.onCall(async (data, context) => {
   console.log(context.auth.uid);
   console.log(data.teacherId);
   if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+    console.log('cant access teacher')
     return [];
   }else{
     console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
@@ -37,7 +38,7 @@ AND teacher = '/user/${data.teacherId}' ORDER BY sessionStart DESC LIMIT 100;`;
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
   const rows = await job.getQueryResults();
-  console.log(rows);
+  console.log('dates', rows);
   return rows;
 });
 

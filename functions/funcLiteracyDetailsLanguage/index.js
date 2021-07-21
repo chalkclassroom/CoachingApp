@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessObservation } = require('../common/accessUtils');
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -13,6 +14,11 @@ const bigquery = new BigQuery();
  */
 
 exports.funcLiteracyDetailsLanguage = functions.https.onCall(async(data, context) => {
+    if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+    }
     //SQL query to get number of checks for each item on checklist
     const sqlQuery = `SELECT
                       COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
