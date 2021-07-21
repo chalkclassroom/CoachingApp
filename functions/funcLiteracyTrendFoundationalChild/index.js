@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessTeacher } = require('../common/accessUtils');
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -12,6 +13,11 @@ const bigquery = new BigQuery();
  * @param {!express:Response} res HTTP response context.
  */
 exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, context) => {
+    if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+    }
     const sqlQuery = `SELECT FORMAT_TIMESTAMP('%m/%d/%Y', DATE(sessionStart)) AS startDate,
                     activitySetting,
                     COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,

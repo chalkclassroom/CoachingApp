@@ -15,7 +15,7 @@ const bigquery = new BigQuery();
 exports.funcBehaviourTypeCount = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
   console.log(context.auth.uid);
-  console.log(data.sessionId);
+  console.log(`SessionID is ${data.sessionId}`);
   if (!await canAccessObservation(data.sessionId, context.auth.uid)){
     return [];
   }else{
