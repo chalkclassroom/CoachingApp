@@ -42,28 +42,37 @@ const styles: object = {
  */
 function LabeledInfo(props: Props): React.ReactElement {
   const { label, field, classes } = props;
+  console.log(label, 'what is field', field)
   return (
     <div className={classes.container}>
       <p className={classes.labelStyle}>{label}:</p>
       {label === "Notes" ? (
         <div className={classes.notesContainer}>
           <p className={classes.fieldStyle}>
-            {field.split("\n").map((item, key) => (
+            {field ? (field.split("\n").map((item, key) => (
               <React.Fragment key={key}>
                 {item}
                 <br />
               </React.Fragment>
-            ))}
+            ))) : (
+              <React.Fragment>
+                {''}
+              </React.Fragment>
+            )}
           </p>
         </div>
       ) : (
         <p className={classes.fieldStyle}>
-          {field.split("\n").map((item, key) => (
+          {field ? (field.split("\n").map((item, key) => (
             <React.Fragment key={key}>
               {item}
               <br />
             </React.Fragment>
-          ))}
+          ))) : (
+            <React.Fragment>
+              {''}
+            </React.Fragment>
+          )}
         </p>
       )}
     </div>
