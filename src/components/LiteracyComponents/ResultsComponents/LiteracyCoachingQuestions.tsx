@@ -79,9 +79,9 @@ type LiteracyLanguageKey =
 
 /**
  * data reflection question layout for listening to children
- * @class LiteracyCoachingQuestionsReading
+ * @class LiteracyCoachingQuestions
  */
-class LiteracyCoachingQuestionsReading extends React.Component<Props, State> {
+class LiteracyCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
@@ -134,7 +134,8 @@ class LiteracyCoachingQuestionsReading extends React.Component<Props, State> {
                           style={{
                             width:'9em',
                             height: '9em',
-                            backgroundColor: this.state.categoryView === index+1 ? Constants.Colors.LI : '#f5f5f5'
+                            backgroundColor: this.state.categoryView === index+1 ? Constants.Colors.LI : '#f5f5f5',
+                            textTransform: 'none'
                           }}
                         >
                           <Typography style={{color: this.state.categoryView === index+1 ? 'white' : 'black'}}>
@@ -176,4 +177,4 @@ class LiteracyCoachingQuestionsReading extends React.Component<Props, State> {
   }
 }
 
-export default LiteracyCoachingQuestionsReading;
+export default LiteracyCoachingQuestions;

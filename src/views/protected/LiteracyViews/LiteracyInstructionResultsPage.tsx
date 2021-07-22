@@ -15,7 +15,7 @@ import LiteracyTrendsReading from "../../../components/LiteracyComponents/Result
 import LiteracyDetailsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage";
 import LiteracyTrendsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage";
 import TrendsSlider from "../../../components/LiteracyComponents/ResultsComponents/TrendsSlider";
-import LiteracyCoachingQuestionsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestionsReading";
+import LiteracyCoachingQuestions from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import LogoImage from '../../../assets/images/LogoImage.svg';
 import { connect } from 'react-redux';
@@ -840,7 +840,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             sessionDates={this.state.sessionDates}
             notes={this.state.notes}
             questions={
-              <LiteracyCoachingQuestionsReading
+              <LiteracyCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}

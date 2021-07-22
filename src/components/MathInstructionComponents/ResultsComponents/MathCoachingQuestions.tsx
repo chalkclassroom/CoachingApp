@@ -136,7 +136,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
                       onClick={value.clickFunction}
                       variant="contained"
                       color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
-                      style={{width:'9em', height: '9em'}}
+                      style={{width:'9em', height: '9em', textTransform: 'none'}}
                     >
                       <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.MI}}>
                         {value.title}

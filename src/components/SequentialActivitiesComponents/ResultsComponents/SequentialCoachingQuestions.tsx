@@ -95,7 +95,8 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
                       style={{
                         width:'9em',
                         height: '9em',
-                        backgroundColor: this.state.categoryView === value.categoryView ? Constants.Colors.SA : '#f5f5f5'
+                        backgroundColor: this.state.categoryView === value.categoryView ? Constants.Colors.SA : '#f5f5f5',
+                        textTransform: 'none'
                       }}
                     >
                       <Typography style={{color: 'black'}}>
