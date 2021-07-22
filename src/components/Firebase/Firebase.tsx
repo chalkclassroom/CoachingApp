@@ -758,50 +758,46 @@ class Firebase {
    * unlocks literacy knowledge check
    */
   unlockLiteracyKnowledgeCheck = async (checklistType: Constants.LiteracyTypes): Promise<void> => {
-    console.log('unlock literacy knowledge check executing')
-    const docRef = this.db.collection("users").doc(this.auth.currentUser.uid).collection('training').doc('LI')
-    /* this.db
-          .collection("users")
-          .doc(this.auth.currentUser.uid)
-          .collection("training")
-          .doc('LI') */
     if (this.auth.currentUser) {
-      if (checklistType === 'Foundational') {
-        return docRef
-          .set({
-            conceptsFoundational: true,
-            definitionsFoundational: true,
-            demoFoundational: true,
-            knowledgeCheckFoundational: true
-          })
-          .catch((error: Error) => console.error("Error getting cached document:", error));
-      } else if (checklistType === 'Writing') {
-        return docRef
-          .set({
-            conceptsWriting: true,
-            definitionsWriting: true,
-            demoWriting: true,
-            knowledgeCheckWriting: true
-          })
-          .catch((error: Error) => console.error("Error getting cached document:", error));
-      } else if (checklistType === 'Reading') {
-        return docRef
-          .set({
-            conceptsReading: true,
-            definitionsReading: true,
-            demoReading: true,
-            knowledgeCheckReading: true
-          })
-          .catch((error: Error) => console.error("Error getting cached document:", error));
-      } else {
-        return docRef
-          .set({
-            conceptsLanguage: true,
-            definitionsLanguage: true,
-            demoLanguage: true,
-            knowledgeCheckLanguage: true
-          })
-          .catch((error: Error) => console.error("Error getting cached document:", error));
+      const docRef = this.db.collection("users").doc(this.auth.currentUser.uid).collection('training').doc('LI')
+      if (this.auth.currentUser) {
+        if (checklistType === 'Foundational') {
+          return docRef
+            .set({
+              conceptsFoundational: true,
+              definitionsFoundational: true,
+              demoFoundational: true,
+              knowledgeCheckFoundational: true
+            })
+            .catch((error: Error) => console.error("Error getting cached document:", error));
+        } else if (checklistType === 'Writing') {
+          return docRef
+            .set({
+              conceptsWriting: true,
+              definitionsWriting: true,
+              demoWriting: true,
+              knowledgeCheckWriting: true
+            })
+            .catch((error: Error) => console.error("Error getting cached document:", error));
+        } else if (checklistType === 'Reading') {
+          return docRef
+            .set({
+              conceptsReading: true,
+              definitionsReading: true,
+              demoReading: true,
+              knowledgeCheckReading: true
+            })
+            .catch((error: Error) => console.error("Error getting cached document:", error));
+        } else {
+          return docRef
+            .set({
+              conceptsLanguage: true,
+              definitionsLanguage: true,
+              demoLanguage: true,
+              knowledgeCheckLanguage: true
+            })
+            .catch((error: Error) => console.error("Error getting cached document:", error));
+        }
       }
     }
   };
