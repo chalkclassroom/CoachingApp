@@ -758,44 +758,47 @@ class Firebase {
    * unlocks literacy knowledge check
    */
   unlockLiteracyKnowledgeCheck = async (checklistType: Constants.LiteracyTypes): Promise<void> => {
-    if (this.auth.currentUser) {
-      if (checklistType === 'Foundational') {
-        return this.db
+    console.log('unlock literacy knowledge check executing')
+    const docRef = this.db.collection("users").doc(this.auth.currentUser.uid).collection('training').doc('LI')
+    /* this.db
           .collection("users")
           .doc(this.auth.currentUser.uid)
           .collection("training")
-          .doc('LI')
-          .update({
+          .doc('LI') */
+    if (this.auth.currentUser) {
+      if (checklistType === 'Foundational') {
+        return docRef
+          .set({
+            conceptsFoundational: true,
+            definitionsFoundational: true,
+            demoFoundational: true,
             knowledgeCheckFoundational: true
           })
           .catch((error: Error) => console.error("Error getting cached document:", error));
       } else if (checklistType === 'Writing') {
-        return this.db
-          .collection("users")
-          .doc(this.auth.currentUser.uid)
-          .collection("training")
-          .doc('LI')
-          .update({
+        return docRef
+          .set({
+            conceptsWriting: true,
+            definitionsWriting: true,
+            demoWriting: true,
             knowledgeCheckWriting: true
           })
           .catch((error: Error) => console.error("Error getting cached document:", error));
       } else if (checklistType === 'Reading') {
-        return this.db
-          .collection("users")
-          .doc(this.auth.currentUser.uid)
-          .collection("training")
-          .doc('LI')
-          .update({
+        return docRef
+          .set({
+            conceptsReading: true,
+            definitionsReading: true,
+            demoReading: true,
             knowledgeCheckReading: true
           })
           .catch((error: Error) => console.error("Error getting cached document:", error));
       } else {
-        return this.db
-          .collection("users")
-          .doc(this.auth.currentUser.uid)
-          .collection("training")
-          .doc('LI')
-          .update({
+        return docRef
+          .set({
+            conceptsLanguage: true,
+            definitionsLanguage: true,
+            demoLanguage: true,
             knowledgeCheckLanguage: true
           })
           .catch((error: Error) => console.error("Error getting cached document:", error));
