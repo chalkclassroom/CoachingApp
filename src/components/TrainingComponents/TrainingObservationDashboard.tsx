@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Button, Card, ListItem } from '@material-ui/core';
+import { Button, Card, ListItem, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   card: {
@@ -144,7 +145,8 @@ interface Props {
   definitionsClick(): void,
   demonstrationClick(): void,
   knowledgeCheckClick(): void,
-  colorTheme: Theme
+  colorTheme: Theme,
+  literacyType: Constants.LiteracyTypes
 }
 
 /**
@@ -162,7 +164,8 @@ function TrainingDashboard(props: Props): React.ReactElement {
     definitionsClick,
     demonstrationClick,
     knowledgeCheckClick,
-    colorTheme
+    colorTheme,
+    literacyType
   } = props;
   return (
     <div className={classes.container}>
@@ -170,6 +173,14 @@ function TrainingDashboard(props: Props): React.ReactElement {
         <ListItem className={classes.iconContainer}>
           <img src={Icon} width={"100px"} alt="Magic Eight" />
         </ListItem>
+        <Typography>
+          {literacyType === Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational Skills'
+            : literacyType === Constants.LiteracyTypes.WRITING ? 'Writing'
+            : literacyType === Constants.LiteracyTypes.READING ? 'Book Reading'
+            : literacyType === Constants.LiteracyTypes.LANGUAGE ? 'Language Environment'
+            : null
+          }
+        </Typography>
         <div className={classes.buttonsListContainer} style={{width:'90%'}}>
           <ListItem>
             <MuiThemeProvider theme={colorTheme}>

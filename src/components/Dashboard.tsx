@@ -38,6 +38,7 @@ import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHe
 import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LiteracyInstructionHelp from './LiteracyComponents/LiteracyInstructionHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog";
@@ -53,6 +54,7 @@ import EngagementResultsDialog from './StudentEngagementComponents/EngagementRes
 import InstructionResultsDialog from './LevelOfInstructionComponents/InstructionResultsDialog';
 import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog';
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
+import LiteracyResultsDialog from './LiteracyComponents/LiteracyResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 import * as Types from '../constants/Types';
 import * as H from 'history';
@@ -167,7 +169,8 @@ type Props = RouteComponentProps & {
   infoDisplay?: React.ReactElement,
   completeObservation: boolean,
   updateSessionTime(time: number): void,
-  stopTimer?(): void
+  stopTimer?(): void,
+  checklistType?: string
 }
 
 interface State {
@@ -376,6 +379,11 @@ class Dashboard extends React.Component<Props, State> {
           open={this.state.resultsDialog==="SA"}
           history={this.props.history}
         />
+        <LiteracyResultsDialog
+          open={this.state.resultsDialog==="LI"}
+          history={this.props.history}
+          literacyType={this.props.checklistType}
+        />
         <ACResultsDialog
           open={this.state.resultsDialog==="AC"}
           history={this.props.history}
@@ -397,6 +405,8 @@ class Dashboard extends React.Component<Props, State> {
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.typeString === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.typeString === "LI" ? 
+            <LiteracyInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} type={this.props.checklistType} />
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
@@ -514,10 +524,12 @@ class Dashboard extends React.Component<Props, State> {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);
                               firebase.endSession(new Date(sessionEnd));
-                            } else {
+                            } else if (this.props.type !== "LI") {
                               firebase.endSession();
                             }
                           }}
+                          literacy={this.typeString==='LI' ? this.props.checklistType : ''}
+                          handleLiteracyActivitySetting={firebase.handleLiteracyActivitySetting}
                         />
                       )}
                     </FirebaseContext.Consumer>

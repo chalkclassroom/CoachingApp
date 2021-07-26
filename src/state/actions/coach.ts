@@ -1,27 +1,34 @@
-export const GET_COACH = "get_coach";
+export const COACH_LOADED = "coach_loaded";
 export const CLEAR_COACH = "clear_coach";
 
+export enum Role {
+  TEACHER = "teacher",
+  COACH = "coach",
+  ADMIN = "admin",
+  ANONYMOUS = "anonymous"
+}
 
-export const getCoach = (coachName: string, role: string = ''): GetCoach => ({
-  type: GET_COACH,
+
+export const coachLoaded = (coachName: string, role: Role = Role.TEACHER): CoachLoadedAction => ({
+  type: COACH_LOADED,
   coachName,
   role
 });
 
-export const clearCoach = (): ClearCoach => ({
+export const clearCoach = (): ClearCoachAction => ({
   type: CLEAR_COACH
 });
 
-interface GetCoach {
-  type: typeof GET_COACH,
+interface CoachLoadedAction {
+  type: typeof COACH_LOADED,
   coachName: string,
   role: string
 }
 
-interface ClearCoach {
+interface ClearCoachAction {
   type: typeof CLEAR_COACH
 }
 
 export type CoachTypes =
-  GetCoach |
-  ClearCoach;
+  CoachLoadedAction |
+  ClearCoachAction;

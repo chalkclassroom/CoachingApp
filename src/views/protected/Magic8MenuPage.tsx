@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { Role } from '../../state/actions/coach'
 
 const styles: object = {
   root: {
@@ -198,7 +199,7 @@ const mapStateToProps = (state: Types.ReduxState): {
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
-    teacherList: state.teacherListState.teachers
+    teacherList: state.teacherListState.teachers,
   };
 };
 

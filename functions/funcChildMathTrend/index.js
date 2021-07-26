@@ -1,6 +1,8 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessTeacher } = require('../common/accessUtils')
+const { canAccessObservation } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -14,6 +16,11 @@ const bigquery = new BigQuery();
 exports.funcChildMathTrend = functions.https.onCall(async(data, context) => {
     console.log(context.auth.uid);
     console.log(data.teacherId);
+    if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
+    }
     //SQL query to get child trends for AC
     const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                     COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'math' ELSE NULL END) AS math,

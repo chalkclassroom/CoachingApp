@@ -1,5 +1,7 @@
 // import { Prompt } from "react-router-dom";
 
+import { Role } from '../state/actions/coach'
+
 export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC' | 'RedGraph' | 'NotPresent';
 
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
@@ -10,7 +12,27 @@ export type ToolNamesKey = 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI'
 export type ToolAbbreviationsKey = 'Transition Time' | 'Classroom Climate' | 'Math Instruction' | 'Level of Engagement' |
 'Level of Instruction' | 'Listening to Children' | 'Sequential Activities' | 'Literacy Instruction' | 'AC';
 
+export type TrainingLiteracy = {
+  conceptsFoundational: boolean,
+  conceptsWriting: boolean,
+  conceptsReading: boolean,
+  conceptsLanguage: boolean,
+  definitionsFoundational: boolean,
+  definitionsWriting: boolean,
+  definitionsReading: boolean,
+  definitionsLanguage: boolean,
+  demoFoundational: boolean,
+  demoWriting: boolean,
+  demoReading: boolean,
+  demoLanguage: boolean,
+  knowledgeCheckFoundational: boolean,
+  knowledgeCheckWriting: boolean,
+  knowledgeCheckReading: boolean,
+  knowledgeCheckLanguage: boolean
+};
+
 export interface ReduxState {
+  trainingLiteracyState: TrainingLiteracy,
   associativeCenterState: {
     associativeCenters: Array<{
       name: string,
@@ -35,7 +57,8 @@ export interface ReduxState {
     }>
   },
   coachState: {
-    coachName: string
+    coachName: string,
+    role: Role
   },
   engagementCountState: {
     engagedCount: number,
@@ -50,6 +73,10 @@ export interface ReduxState {
   listeningCountState: {
     listeningCount: number,
     noListeningCount: number
+  },
+  literacyCountState: {
+    literacyCount: number,
+    noLiteracyCount: number
   },
   mathCountState: {
     mathCount: number,
