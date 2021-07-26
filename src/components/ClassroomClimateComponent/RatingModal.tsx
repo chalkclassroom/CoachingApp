@@ -283,6 +283,8 @@ class RatingModal extends React.Component<Props, State> {
                 onAccept={this.props.handleRatingConfirmation}
                 onAcceptParams={0}
                 shouldOpen={true}
+                literacy=''
+                handleLiteracyActivitySetting={null}
               />
             </Grid>
             <Grid item xs={3} justify={"center"}>
