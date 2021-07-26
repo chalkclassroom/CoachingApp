@@ -338,22 +338,11 @@ export default function NewEventStepper(props: Props): React.ReactElement {
       <Grid item>
         <Stepper activeStep={activeStep}>
           {steps.map((label, index) => {
-            /* const stepProps = {};
-            const labelProps = {};
-            if (isStepOptional(index)) {
-              labelProps.optional = <Typography variant="caption">Optional</Typography>;
-            }
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            } */
             return (
               <Step
                 key={index}
-                // {...stepProps}
               >
-                <StepLabel
-                  // {...labelProps}
-                >
+                <StepLabel>
                   {label}
                 </StepLabel>
               </Step>
@@ -369,16 +358,6 @@ export default function NewEventStepper(props: Props): React.ReactElement {
           <Button variant="contained" disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
             Back
           </Button>
-          {/* {isStepOptional(activeStep) && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSkip}
-              className={classes.button}
-            >
-              Skip
-            </Button>
-          )} */}
           <Button
             variant="contained"
             color="primary"

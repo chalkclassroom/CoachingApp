@@ -4,15 +4,10 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
-import { withStyles, Theme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Checkbox,
   Typography,
   Popover,
   Modal,
@@ -21,30 +16,14 @@ import {
   Paper,
 } from '@material-ui/core';
 import CloseIcon from "@material-ui/icons/Close";
-import Fab from "@material-ui/core/Fab";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import AddIcon from "@material-ui/icons/Add";
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TextField
-} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-import ObserveIcon from "@material-ui/icons/Visibility";
-import ActionPlansIcon from "@material-ui/icons/CastForEducation";
-import ConferencePlansIcon from "@material-ui/icons/ListAlt";
+import PeopleIcon from "@material-ui/icons/People";
+import DateRangeIcon from '@material-ui/icons/DateRange';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import { Calendar, momentLocalizer, SlotInfo, Views, EventProps } from 'react-big-calendar';
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { Calendar, momentLocalizer, SlotInfo } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
 import CalendarEventPopover from '../../../components/MyTeachersComponents/CalendarEventPopover';
@@ -54,30 +33,12 @@ import TeacherDetails from '../../../components/MyTeachersComponents/TeacherDeta
 import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-import { changeTeacher, updateTeacherInfo } from '../../../state/actions/teacher';
+import { changeTeacher, updateTeacherInfo, addTeacher, removeTeacher } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
 const localizer = momentLocalizer(moment);
-
-interface Event {
-  title: string,
-  start: Date,
-  end: Date,
-  allDay?: boolean
-  resource: string,
-  hexColor?: string,
-  type: string
-}
-
-const RecentActivityTerms = {
-  'Observation': 'Classroom Observed',
-  'Action Plan': 'Action Plan Saved',
-  'Conference Plan': 'Conference Plan Saved'
-}
-
-type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
 
 /**
  * specifies styling for modal
@@ -92,9 +53,8 @@ type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
   } as React.CSSProperties;
 }
 
-const styles = (theme: Theme): object => ({
+const styles = (): object => ({
   root: {
-    // border: '1px solid #000000',
     flexGrow: 1,
     width: "100%",
     minHeight: "768px",
@@ -102,12 +62,10 @@ const styles = (theme: Theme): object => ({
     padding: 0
   },
   container: {
-    // border: '1px solid #FFD800',
     display: "flex",
     flexDirection: "column",
     paddingLeft: '2em',
     paddingRight: '2em'
-    // margin: "2% 5% 2% 5%"
   },
   paper: {
     position: "absolute",
@@ -134,7 +92,6 @@ const styles = (theme: Theme): object => ({
     fontFamily: 'Arimo'
   },
   tableContainer: {
-    // border: '1px solid #00FFF6',
     maxWidth: "100%",
     width: "100%",
     overflow: "auto",
@@ -190,7 +147,6 @@ const styles = (theme: Theme): object => ({
     maxWidth: "1.8em"
   },
   nameField: {
-    // border: '1px solid #4C00FF'
     textAlign: "left",
     padding: "0.5em",
     overflow: "hidden",
@@ -223,7 +179,6 @@ const styles = (theme: Theme): object => ({
     overflow: "scroll"
   },
   legendItem: {
-    // border: '1px solid #97FF00'
     display: "flex",
     alignItems: "center",
     fontSize: "1.3em"
@@ -316,7 +271,9 @@ type Props = RouteComponentProps & {
   type: string,
   teacherList: Array<Types.Teacher>,
   changeTeacher(teacherInfo: Types.Teacher): Types.Teacher,
-  updateTeacherInfo(teacher: Types.Teacher): Array<Types.Teacher>
+  updateTeacherInfo(teacher: Types.Teacher): Array<Types.Teacher>,
+  addTeacher(teacher: Types.Teacher): Array<Types.Teacher>,
+  removeTeacher(teacher: Types.Teacher): void
 }
 
 interface Teacher {
@@ -353,7 +310,6 @@ interface State {
   addAlert: boolean,
   editAlert: boolean,
   alertText: string,
-  // anchorEl: React.BaseSyntheticEvent<globalThis.Event, EventTarget & Element, EventTarget>;currentTarget: EventTarget & Element | null,
   anchorEl: EventTarget & Element | null,
   clickedEvent: Types.CalendarEvent | null,
   newEventModal: boolean,
@@ -361,25 +317,10 @@ interface State {
   newEventTeacher: Types.Teacher | null,
   newEventTool: Types.ToolNamesKey | null,
   newEventType: string,
-  // actionPlanEvents: Array<Types.CalendarEvent>,
-  // conferencePlanEvents: Array<Types.CalendarEvent>,
   allEvents: Array<any>,
   dataLoaded: boolean,
   view: number,
   deleteAppointmentDialog: boolean
-  // type: string
-}
-
-const ToolNames = {
-  'TT': 'TransitionTime',
-  'CC': 'ClassroomClimate',
-  'MI': 'MathInstruction',
-  'IN': 'LevelOfInstruction',
-  'SE': 'StudentEngagement',
-  'LC': 'ListeningToChildren',
-  'SA': 'SequentialActivities',
-  'LI': 'LiteracyInstruction',
-  'AC': 'AssociativeCooperativeInteractions'
 }
 
 /**
@@ -420,50 +361,11 @@ class TeacherListPage extends React.Component<Props, State> {
       newEventTeacher: null,
       newEventTool: null,
       newEventType: '',
-      // actionPlanEvents: [],
-      // conferencePlanEvents: [],
       allEvents: [],
       dataLoaded: false,
       view: 0,
       deleteAppointmentDialog: false
-      // type: ''
     };
-  }
-
-  /**
-   * hi
-   */
-  clickMe(): void {
-    const firebase = this.context;
-    firebase
-      .getTeacherList()
-      .then((teachers: Array<Promise<Teacher>>) => {
-        console.log('teachers', teachers);
-        const recentObservations = [];
-        teachers.forEach((teacher: Promise<Teacher>) => {
-          console.log('HI')
-          teacher.then((data: Teacher) => {
-            console.log('HERE I AM')
-            firebase
-            .getRecentObservations2(data.id)
-            .then((recentObs: Array<string>) => {
-              /* this.setState({
-                recentObs: recentObs
-              }) */
-              console.log('recent obs HELLO', recentObs);
-              recentObservations.push(recentObs)
-            })
-            .catch((error: Error) =>
-              console.error("Error occurred getting recent observations: ", error)
-            );
-          })
-          
-        })
-          }
-      )
-      .catch((error: Error) =>
-        console.error("Error occurred fetching teacher list: ", error)
-      );
   }
 
   addEventsToTeachers = (): Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> => {
@@ -489,21 +391,19 @@ class TeacherListPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    console.log('COMPONENTDIDMOUNT', this.state.view);
     let allEvents: Array<Types.CalendarEvent> = [];
     this.setState({
       searched: this.props.teacherList.filter(teacher => {
         return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
       })
     });
-    firebase.getRecentObservations3().then((data: Array<{
+    firebase.getRecentObservations().then((data: Array<{
       id: string,
       sessionStart: {value: Date},
       sessionEnd: {value: Date},
       teacher: string,
       type: Types.ToolNamesKey
     }>) => {
-      console.log('i got the data here', data);
       const myArr: Array<Types.CalendarEvent> = [];
       data.forEach((observation: {
         id: string,
@@ -518,14 +418,11 @@ class TeacherListPage extends React.Component<Props, State> {
           end: observation.sessionEnd.value,
           allDay: false,
           resource: observation.teacher.slice(6),
-          // hexColor: 'a0febf',
           type: observation.type,
           id: observation.id
         })
       })
-      console.log('what is myArr', myArr)
       allEvents = allEvents.concat(myArr)
-      // this.setState({allEvents: myArr})
     }).then(() => {
       firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
         allEvents = allEvents.concat(actionPlanEvents)
@@ -540,7 +437,6 @@ class TeacherListPage extends React.Component<Props, State> {
               allEvents: allEvents
             }, () => {
               const teacherDetails = this.addEventsToTeachers();
-              console.log('teach details', teacherDetails);
               this.setState({
                 teacherDetails: teacherDetails,
                 dataLoaded: true
@@ -554,9 +450,6 @@ class TeacherListPage extends React.Component<Props, State> {
       teachers: this.props.teacherList.filter(teacher => {
         return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
       })
-    }, () => {
-      console.log('and now the teachers are', this.state.teachers);
-      const recentObservations = [];
     })
   }
 
@@ -573,7 +466,6 @@ class TeacherListPage extends React.Component<Props, State> {
         id: id,
         appointment: true
       }
-      console.log('new event is', newEvent)
       const allEventsUpdated = [...this.state.allEvents, newEvent]
       this.setState({allEvents: allEventsUpdated})
     })
@@ -581,7 +473,6 @@ class TeacherListPage extends React.Component<Props, State> {
 
   saveAppointment = (id: string, teacherId: string, date: Date, tool: string, type: string): void => {
     const firebase = this.context;
-    console.log('called save')
     firebase.saveAppointment(id, teacherId, date, tool, type).then((id: string) => {
       const newEvent = {
         title: type,
@@ -603,9 +494,7 @@ class TeacherListPage extends React.Component<Props, State> {
 
   deleteAppointment = (id: string): void => {
     const firebase = this.context;
-    console.log('called delete')
     firebase.removeAppointment(id).then(() => {
-      console.log('WHAT IS BLAH', id)
       const updatedEvents = [...this.state.allEvents]
       const index = updatedEvents.findIndex(event => event.id === id)
       updatedEvents.splice(index, 1)
@@ -646,21 +535,10 @@ class TeacherListPage extends React.Component<Props, State> {
    * @param {Teacher} teacherInfo
    */
   selectTeacher = (teacherInfo: Teacher): void => {
-    /* const recentObs = this.state.allEvents.filter(obj => {
-      return( obj.resource === teacherInfo.id && obj.type === 'CC' )
-    });
-    const maxDate = recentObs.length > 0 ? (recentObs.reduce(function(prev, current) {
-      return (new Date(prev.start) > new Date(current.start)) ? prev : current
-    })) : (undefined)
-    console.log('recnet obs', recentObs, maxDate); */
     this.setState({
       view: 3,
       selectedTeacher: teacherInfo
     })
-    /* this.props.history.push({
-      pathname: `/MyTeachers/${teacherInfo.id}`,
-      state: { teacher: teacherInfo, type: this.props.type , recentEvents: this.state.allEvents}
-    }); */
   };
 
   /**
@@ -804,12 +682,14 @@ class TeacherListPage extends React.Component<Props, State> {
         .then((id: string) =>
           firebase
             .getTeacherInfo(id)
-            .then((teacherInfo: Teacher) =>
+            .then((teacherInfo: Teacher) => {
+              this.props.addTeacher(teacherInfo);
               this.setState(
                 prevState => {
                   return {
                     teachers: prevState.teachers.concat(teacherInfo),
-                    searched: prevState.teachers.concat(teacherInfo)
+                    searched: prevState.teachers.concat(teacherInfo),
+                    teacherDetails: prevState.teacherDetails.concat({...teacherInfo, type: undefined, title: '', start: undefined })
                   };
                 },
                 () => {
@@ -817,7 +697,7 @@ class TeacherListPage extends React.Component<Props, State> {
                   this.handleAddAlert(true);
                 }
               )
-            )
+            })
             .catch((error: Error) => {
               console.error(
                 "Error occurred fetching new teacher's info: ",
@@ -1037,25 +917,22 @@ class TeacherListPage extends React.Component<Props, State> {
     });
   };
 
-  handleDeleteConfirm = (): void => {
+  handleDeleteConfirm = (): Promise<void> => {
     const firebase = this.context;
-    firebase
+    return firebase
       .removePartner(this.state.selectedTeacher.id)
       .then(() => {
-        // remove teacher from redux and my teachers list,
-        // filter out all events for that teacher from this.state.allEvents
-        /* this.setState(this.initialState, () => {
-          if (this.props.location.state !== undefined) {
-            // came from MyTeachers
-            this.props.history.goBack();
-          } else {
-            this.props.history.replace("/MyTeachers");
-          }
-        }); */
+        this.props.removeTeacher(this.state.selectedTeacher.id);
+        let updatedTeacherDetails = [...this.state.teacherDetails];
+        const index = updatedTeacherDetails.findIndex(x => x.id === this.state.selectedTeacher.id);
+        updatedTeacherDetails.splice(index, 1)
+        this.setState({
+          teacherDetails: updatedTeacherDetails
+        })
       })
-      .catch(() => {}
+      .catch(() => {
         // problem with removing teacher
-        /* this.setState(
+        this.setState(
           {
             editAlert: true,
             alertText:
@@ -1063,8 +940,8 @@ class TeacherListPage extends React.Component<Props, State> {
               "try refreshing your page or logging out and back in."
           },
           () => setTimeout(() => this.setState({ editAlert: false }), 3000)
-        )  */
-      ); 
+        )
+      }); 
   };
 
   static propTypes = {
@@ -1197,15 +1074,11 @@ class TeacherListPage extends React.Component<Props, State> {
 
     // style for calendar event
     const eventStyleGetter = (event: Types.CalendarEvent, start, end, isSelected) => {
-      // const backgroundColor = '#' + event.hexColor;
       const style = {
-        // backgroundColor: backgroundColor,
-        // backgroundColor: 'white',
         backgroundColor: event.appointment ? 'white' : Constants.Colors[event.type as Types.DashboardType],
         borderRadius: '0px',
         opacity: 0.8,
         color: event.appointment ? 'black' : 'white',
-        // border: '1px solid gray',
         display: 'block',
         border: event.appointment ? '1px solid #ababab' : undefined
       };
@@ -1213,15 +1086,6 @@ class TeacherListPage extends React.Component<Props, State> {
         style: style
       };
     };
-
-    /**
-     * returns background color for table row
-     * @param {number} index
-     * @returns {object} 
-     */
-    const getStripedStyle = (index: number) => {
-      return { backgroundColor: index % 2 ? '#D9EAFB' : 'white' };
-    }
 
     /**
      * content for calendar event button
@@ -1246,7 +1110,6 @@ class TeacherListPage extends React.Component<Props, State> {
           </Grid>
           <Grid item wrap='nowrap' style={{paddingLeft: '0.2em'}}>
             <Typography variant="body2" style={{fontFamily: 'Arimo', whiteSpace: "normal",
-              // wordWrap: "break-word"
               overflow: 'hidden',
               textOverflow: 'ellipsis'
             }}>
@@ -1260,7 +1123,7 @@ class TeacherListPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
@@ -1305,15 +1168,12 @@ class TeacherListPage extends React.Component<Props, State> {
                       <Calendar
                         popup
                         localizer={localizer}
-                        // events={[...myEventsList, ...this.state.actionPlanEvents]}
                         events={this.state.allEvents ? this.state.allEvents : []}
                         selectable
                         step={60}
                         showMultiDayTimes
                         components={{
-                          event: EventComponent,
-                          // timeSlotWrapper: ColoredDateCellWrapper,
-                          // eventPropGetter: eventStyleGetter
+                          event: EventComponent
                         }}
                         eventPropGetter={eventStyleGetter}
                         onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
@@ -1329,8 +1189,6 @@ class TeacherListPage extends React.Component<Props, State> {
                     // table
                     <MyTeachersTable
                       onChangeText={this.onChangeText}
-                      // searched={this.state.searched}
-                      // allEvents={this.state.allEvents}
                       teacherDetails={this.state.teacherDetails}
                       selectTeacher={this.selectTeacher}
                       addingTeacher={(): void => this.setState({ isAdding: true })}
@@ -1343,37 +1201,25 @@ class TeacherListPage extends React.Component<Props, State> {
                     </Grid>
                   )}
                   <TeacherDetails
-                      /* firstName={firstName}
-                      lastName={lastName}
-                      school={school}
-                      email={email}
-                      phone={phone}
-                      notes={notes} */
-                      teacher={this.state.selectedTeacher}
-                      recentEvents={this.state.allEvents}
-                      handleDeleteConfirm={this.handleDeleteConfirm}
-                      handleCloseModal={this.handleCloseModal}
-                      setEditing={(): void => {
-                        this.setState({
-                          inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
-                          inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
-                          inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
-                          inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
-                          inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
-                          inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
-                        }, (): void => {
-                          this.setState({editing: true})
-                        })
-                      }}
-                      closeTeacherDetails={this.closeTeacherDetails}
-                      open={this.state.view===3}
-                      /* inputFirstName={this.state.inputFirstName}
-                      inputLastName={this.state.inputLastName}
-                      inputEmail={this.state.inputEmail}
-                      inputSchool={this.state.inputSchool}
-                      inputPhone={this.state.inputPhone}
-                      inputNotes={this.state.inputNotes} */
-                    />
+                    teacher={this.state.selectedTeacher}
+                    recentEvents={this.state.allEvents}
+                    handleDeleteConfirm={this.handleDeleteConfirm}
+                    handleCloseModal={this.handleCloseModal}
+                    setEditing={(): void => {
+                      this.setState({
+                        inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
+                        inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
+                        inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
+                        inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
+                        inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
+                        inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
+                      }, (): void => {
+                        this.setState({editing: true})
+                      })
+                    }}
+                    closeTeacherDetails={this.closeTeacherDetails}
+                    open={this.state.view===3}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -1388,8 +1234,8 @@ class TeacherListPage extends React.Component<Props, State> {
                   }}
                   showLabels
                 >
-                  <BottomNavigationAction label="Teachers" icon={<ConferencePlansIcon />} />
-                  <BottomNavigationAction label="Calendar" icon={<ActionPlansIcon />} />
+                  <BottomNavigationAction label="Teachers" icon={<PeopleIcon />} />
+                  <BottomNavigationAction label="Calendar" icon={<DateRangeIcon />} />
                 </BottomNavigation>
               </Paper>
             </Grid>
@@ -1440,7 +1286,6 @@ class TeacherListPage extends React.Component<Props, State> {
           <EditTeacherDialog
             adding={isAdding}
             editing={editing}
-            // open={isAdding || editing}
             handleCloseModal={this.handleCloseModal}
             handleAddText={this.handleAddText}
             inputFirstName={this.state.inputFirstName}
@@ -1477,13 +1322,12 @@ class TeacherListPage extends React.Component<Props, State> {
             open={deleteAppointmentDialog}
           >
             <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
-            {
-              clickedEvent ? (
-                "Are you sure you want to delete your appointment with " + getName(clickedEvent.resource) + "?"
-              ) : (
-                "Are you sure you want to delete your appointment?"
-              )
-              
+              {
+                clickedEvent ? (
+                  "Are you sure you want to delete your appointment with " + getName(clickedEvent.resource) + "?"
+                ) : (
+                  "Are you sure you want to delete your appointment?"
+                )
               }
             </DialogTitle>
             <DialogActions>
@@ -1514,17 +1358,15 @@ class TeacherListPage extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  // teacherSelected: Types.Teacher,
   teacherList: Array<Types.Teacher>
 } => {
   return {
-    // teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers
   };
 };
 
 TeacherListPage.contextType = FirebaseContext;
 export default withRouter(connect(
-  mapStateToProps, {changeTeacher, updateTeacherInfo}
+  mapStateToProps, {changeTeacher, updateTeacherInfo, addTeacher, removeTeacher}
 )(withStyles(styles)(TeacherListPage)));
 // export default withStyles(styles)(withRouter(TeacherListPage));

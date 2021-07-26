@@ -4,16 +4,8 @@ import { makeStyles } from "@material-ui/core/styles/index";
 import {
   Grid,
   Fab,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TextField,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   Typography,
@@ -37,7 +29,6 @@ import InstructionIconImage from "../../assets/images/InstructionIconImage.svg";
 import ClassroomClimateIconImage from "../../assets/images/ClassroomClimateIconImage.svg";
 import LiteracyIconImage from "../../assets/images/LiteracyIconImage.svg";
 import AssocCoopIconImage from "../../assets/images/AssocCoopIconImage.svg";
-import AddIcon from "@material-ui/icons/Add";
 
 interface Teacher {
   email: string,
@@ -52,15 +43,9 @@ interface Teacher {
 };
 
 interface Props {
-  /* firstName: string,
-  lastName: string,
-  school: string,
-  email: string,
-  phone: string,
-  notes: string, */
   teacher: Teacher | undefined,
   recentEvents: Array<Types.CalendarEvent>,
-  handleDeleteConfirm(): void,
+  handleDeleteConfirm(): Promise<void>,
   handleCloseModal(): void,
   setEditing(): void,
   closeTeacherDetails(): void,
@@ -106,8 +91,6 @@ const sortedSvg = [
   }
 ];
 
-// search, actionButton, nameCellHeader, row, nameField
-
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -115,14 +98,10 @@ const useStyles = makeStyles({
     maxHeight: "100%"
   },
   container: {
-    // border: '2px solid #000000',
-    // margin: "2% 10% 0 10%",
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     alignItems: "flex-start",
-    // boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.25)'
-    // maxHeight: "50%"
   },
   button: {
     color: "#333333",
@@ -130,38 +109,30 @@ const useStyles = makeStyles({
     textTransform: "none"
   },
   teacherHeader: {
-    // border: '2px solid #DC143C',
     flexGrow: 1,
     display: "flex",
     justifyContent: "space-between",
     fontSize: "2em",
-    // marginTop: "1em",
     minWidth: "40%",
     maxWidth: "50%"
   },
   contentContainer: {
-    // border: '2px solid #F700FF',
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%"
   },
   teacherCard: {
-    // border: '2px solid #7FFF00',
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "stretch",
     flexGrow: 1,
     marginTop: "1em",
-    // width: "50%",
     fontSize: "1.5em",
-    // paddingLeft: '0.5em'
   },
   magicEightCard: {
-    // border: '2px solid #00FFFF',
     padding: "0px",
-    // width: "50%",
     margin: "0",
     flexGrow: 1,
     display: "grid",
@@ -181,7 +152,6 @@ const useStyles = makeStyles({
     textAlign: "center"
   },
   magicEightButton: {
-    // marginBottom: "15%",
     backgroundColor: "#FFFFFF",
     border: "0 none #FFFFFF",
     borderRadius: "10%",
@@ -326,18 +296,10 @@ const useStyles = makeStyles({
   }
 });
 
-type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
-
 export default function MyTeachersTable(props: Props): React.ReactElement {
   const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const { 
-    /* firstName,
-    lastName,
-    school,
-    email,
-    phone,
-    notes, */
     recentEvents,
     teacher,
     handleDeleteConfirm,
@@ -349,306 +311,193 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
 
   return (
     <Zoom in={open}>
-    <Paper elevation={3} className={classes.container} style={{padding: '1em'}}>
-      {teacher ? (
-        <div style={{width: '100%'}}>
-          <Grid container direction="row" justify="space-between" >
-            <Grid item xs={10}>
-              <Grid container direction="row">
-                <Grid item>
-              <b>
-                <Typography variant="h4" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                {teacher.firstName} {teacher.lastName}
-                </Typography>
-              </b>
-              </Grid>
-              <Grid item>
-              {teacher.id === "rJxNhJmzjRZP7xg29Ko6" ? null : ( // Prevent deleting and editing the Practice Teacher!
-              <div>
-                <Fab
-                  aria-label="Edit"
-                  name="Edit"
-                  size="small"
-                  onClick={(): void => setEditing()}
-                  className={classes.actionButton}
-                  style={{ backgroundColor: "#F9FE49" }}
-                >
-                  <EditOutlinedIcon style={{ color: "#555555" }} />
-                </Fab>
-                <Fab
-                  aria-label="Delete"
-                  onClick={(): void => setDeleting(true)}
-                  className={classes.actionButton}
-                  size="small"
-                  style={{ backgroundColor: "#FF3836" }}
-                >
-                  <DeleteForeverIcon style={{ color: "#C9C9C9" }} />
-                </Fab>
-              </div>
-            )}
-              </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={2}>
-            <Grid
-            container
-            alignItems="center"
-            direction="row"
-            justify="flex-end"
-          >
-            <IconButton onClick={closeTeacherDetails} style={{ padding: 10, boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-              <Tooltip title={"Close"} placement={"right"}>
-                <CloseIcon  />
-              </Tooltip>
-            </IconButton>
-          </Grid>
-            </Grid>
-            
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="stretch"
-            className={classes.contentContainer}
-            // style={{width: '100%'}}
-          >
-            <Grid item xs={6}>
-            <div className={classes.teacherCard}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  minWidth: "45%"
-                }}
-              >
-                <LabeledInfo label="First Name" field={teacher.firstName} />
-                <LabeledInfo label="Last Name" field={teacher.lastName} />
-              </div>
-              <LabeledInfo label="School" field={teacher.school} />
-              <LabeledInfo label="Email" field={teacher.email} />
-              <LabeledInfo label="Phone" field={teacher.phone} />
-              <LabeledInfo label="Notes" field={teacher.notes} />
-            </div>
-            </Grid>
-            <Grid item xs={6} style={{paddingBottom: '1em', overflowY: 'auto'}}>
-              <Grid container direction="row" justify="center" alignItems="center">
-            <ol className={classes.magicEightCard}>
-              {sortedSvg.map((item, key) => {
-                const recentObs = recentEvents.filter(obj => {
-                  return( obj.resource === teacher.id && obj.type === item.type )
-                });
-                const maxDate = recentObs.length > 0 ? (recentObs.reduce(function(prev, current) {
-                  return (new Date(prev.start) > new Date(current.start)) ? prev : current
-                })) : (undefined)
-                return(
-                maxDate !== undefined ? (
-                  <li key={key} className={classes.magicEightItem}>
-                    <Grid container direction="column" justify="center" alignItems="center">
-                      <Button
-                        variant="contained"
-                        className={classes.magicEightButton}
-                        style={{
-                          // border: "1px solid #000000",
-                          // backgroundColor: "#000000"
-                        }}
-                      >
-                        <img
-                          src={item.image}
-                          alt="Magic Eight"
-                          className={classes.img}
-                        />
-                      </Button>
-                      
-                      <Typography>
-                        {maxDate.title}:
-                        <br />
-                        {moment(new Date(maxDate.start)).format('MM/DD/YYYY')}
+      <Paper elevation={3} className={classes.container} style={{padding: '1em'}}>
+        {teacher ? (
+          <div style={{width: '100%'}}>
+            <Grid container direction="row" justify="space-between" >
+              <Grid item xs={10}>
+                <Grid container direction="row">
+                  <Grid item>
+                    <b>
+                      <Typography variant="h4" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                      {teacher.firstName} {teacher.lastName}
                       </Typography>
-                    </Grid>
-                  </li>
-                ) : (
-                  <li key={key} className={classes.magicEightItem}>
-                    <Button
-                      disabled
-                      variant="contained"
-                      className={classes.magicEightButton}
-                      style={{ backgroundColor: "#FFFFFF", opacity: 0.5 }}
-                    >
-                      <img
-                        src={item.image}
-                        alt="Magic Eight"
-                        className={classes.img}
-                      />
-                    </Button>
-                    <Typography>
-                      No Activity
-                    </Typography>
-                  </li>
-                ))
-              })}
-            </ol>
+                    </b>
+                  </Grid>
+                  <Grid item>
+                    {teacher.id === "rJxNhJmzjRZP7xg29Ko6" ? null : ( // Prevent deleting and editing the Practice Teacher!
+                      <div>
+                        <Fab
+                          aria-label="Edit"
+                          name="Edit"
+                          size="small"
+                          onClick={(): void => setEditing()}
+                          className={classes.actionButton}
+                          style={{ backgroundColor: "#F9FE49" }}
+                        >
+                          <EditOutlinedIcon style={{ color: "#555555" }} />
+                        </Fab>
+                        <Fab
+                          aria-label="Delete"
+                          onClick={(): void => setDeleting(true)}
+                          className={classes.actionButton}
+                          size="small"
+                          style={{ backgroundColor: "#FF3836" }}
+                        >
+                          <DeleteForeverIcon style={{ color: "#C9C9C9" }} />
+                        </Fab>
+                      </div>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={2}>
+                <Grid
+                  container
+                  alignItems="center"
+                  direction="row"
+                  justify="flex-end"
+                >
+                  <IconButton onClick={closeTeacherDetails} style={{ padding: 10, boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+                    <Tooltip title={"Close"} placement={"right"}>
+                      <CloseIcon  />
+                    </Tooltip>
+                  </IconButton>
+                </Grid>
+              </Grid>
             </Grid>
-            </Grid>
-          </Grid>
-          <Dialog
-            open={deleting}
-            onClose={handleCloseModal}
-            aria-labelledby="delete-teacher-modal"
-            aria-describedby="prompts a coach to confirm deleting a teacher from My Teachers"
-          >
-            <DialogTitle
-              id="delete-teacher-title"
-              style={{ textAlign: "center" }}
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="stretch"
+              className={classes.contentContainer}
             >
-              Are you sure you want to remove
-              <b style={{ textDecoration: "underline", color: "#2196F3" }}>
-                {teacher.firstName} {teacher.lastName}
-              </b>{" "}
-              from My Teachers?
-            </DialogTitle>
-            <DialogActions className={classes.deleteModalButtonContainer}>
-              <Button
-                onClick={(): void => setDeleting(false)}
-                className={classes.deleteModalButton}
-                autoFocus
-                style={{ borderColor: "#2196F3" }}
+              <Grid item xs={6}>
+                <div className={classes.teacherCard}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      minWidth: "45%"
+                    }}
+                  >
+                    <LabeledInfo label="First Name" field={teacher.firstName} />
+                    <LabeledInfo label="Last Name" field={teacher.lastName} />
+                  </div>
+                  <LabeledInfo label="School" field={teacher.school} />
+                  <LabeledInfo label="Email" field={teacher.email} />
+                  <LabeledInfo label="Phone" field={teacher.phone} />
+                  <LabeledInfo label="Notes" field={teacher.notes} />
+                </div>
+              </Grid>
+              <Grid item xs={6} style={{paddingBottom: '1em', overflowY: 'auto'}}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <ol className={classes.magicEightCard}>
+                    {sortedSvg.map((item, key) => {
+                      const recentObs = recentEvents.filter(obj => {
+                        return( obj.resource === teacher.id && obj.type === item.type )
+                      });
+                      const maxDate = recentObs.length > 0 ? (recentObs.reduce(function(prev, current) {
+                        return (new Date(prev.start) > new Date(current.start)) ? prev : current
+                      })) : (undefined)
+                      return(
+                      maxDate !== undefined ? (
+                        <li key={key} className={classes.magicEightItem}>
+                          <Grid container direction="column" justify="center" alignItems="center">
+                            <Button
+                              variant="contained"
+                              className={classes.magicEightButton}
+                            >
+                              <img
+                                src={item.image}
+                                alt="Magic Eight"
+                                className={classes.img}
+                              />
+                            </Button>
+                            
+                            <Typography>
+                              {maxDate.title}:
+                              <br />
+                              {moment(new Date(maxDate.start)).format('MM/DD/YYYY')}
+                            </Typography>
+                          </Grid>
+                        </li>
+                      ) : (
+                        <li key={key} className={classes.magicEightItem}>
+                          <Button
+                            disabled
+                            variant="contained"
+                            className={classes.magicEightButton}
+                            style={{ backgroundColor: "#FFFFFF", opacity: 0.5 }}
+                          >
+                            <img
+                              src={item.image}
+                              alt="Magic Eight"
+                              className={classes.img}
+                            />
+                          </Button>
+                          <Typography>
+                            No Activity
+                          </Typography>
+                        </li>
+                      ))
+                    })}
+                  </ol>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Dialog
+              open={deleting}
+              onClose={handleCloseModal}
+              aria-labelledby="delete-teacher-modal"
+              aria-describedby="prompts a coach to confirm deleting a teacher from My Teachers"
+            >
+              <DialogTitle
+                id="delete-teacher-title"
+                style={{ textAlign: "center" }}
               >
-                No,
-                <b style={{ color: "#2196F3", padding: "0 0.3em 0 0.3em" }}>
-                  KEEP
-                </b>
-                {teacher.firstName} {teacher.lastName}
-              </Button>
-              <Button
-                onClick={handleDeleteConfirm}
-                className={classes.deleteModalButton}
-                style={{ borderColor: "#F1231C" }}
-              >
-                Yes,
-                <b style={{ color: "#F1231C", padding: "0 0.3em 0 0.3em" }}>
-                  DELETE
-                </b>
-                {teacher.firstName} {teacher.lastName}
-              </Button>
-            </DialogActions>
-          </Dialog>
+                Are you sure you want to remove {' '}
+                <b style={{ textDecoration: "underline", color: "#2196F3" }}>
+                  {teacher.firstName} {teacher.lastName}
+                </b>{" "}
+                from My Teachers?
+              </DialogTitle>
+              <DialogActions className={classes.deleteModalButtonContainer}>
+                <Button
+                  onClick={(): void => setDeleting(false)}
+                  className={classes.deleteModalButton}
+                  autoFocus
+                  style={{ borderColor: "#2196F3" }}
+                >
+                  No,
+                  <b style={{ color: "#2196F3", padding: "0 0.3em 0 0.3em" }}>
+                    KEEP
+                  </b>
+                  {teacher.firstName} {teacher.lastName}
+                </Button>
+                <Button
+                  onClick={(): void => {
+                    handleDeleteConfirm().then(()=> {
+                      setDeleting(false);
+                      handleCloseModal();
+                      closeTeacherDetails();
+                    })
+                  }}
+                  className={classes.deleteModalButton}
+                  style={{ borderColor: "#F1231C" }}
+                >
+                  Yes,
+                  <b style={{ color: "#F1231C", padding: "0 0.3em 0 0.3em" }}>
+                    DELETE
+                  </b>
+                  {teacher.firstName} {teacher.lastName}
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
-      ) : (null)}
-          {/* <Dialog
-            open={isEditing}
-            onClose={this.handleCloseModal}
-            aria-labelledby="edit-teacher-title"
-          >
-            <DialogTitle id="edit-teacher-title">
-              Edit {firstName} {lastName}&apos;s Info
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Make edits to the form below and confirm to update this
-                teacher&apos;s information.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                defaultValue={firstName}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="first-name"
-                name="inputFirstName"
-                label="First Name"
-                type="text"
-                helperText={fnErrorText}
-                error={!!fnErrorText} // false when empty "", true o/w
-                fullWidth
-              />
-              <TextField
-                defaultValue={lastName}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="last-name"
-                name="inputLastName"
-                label="Last Name"
-                type="text"
-                helperText={lnErrorText}
-                error={!!lnErrorText}
-                fullWidth
-              />
-              <TextField
-                defaultValue={school}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="school"
-                name="inputSchool"
-                label="School"
-                type="text"
-                helperText={schoolErrorText}
-                error={!!schoolErrorText}
-                fullWidth
-              />
-              <TextField
-                defaultValue={email}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="email"
-                name="inputEmail"
-                label="Email"
-                type="email"
-                helperText={emailErrorText}
-                error={!!emailErrorText}
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                defaultValue={phone}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="phone"
-                name="inputPhone"
-                label="Phone"
-                type="text"
-                helperText={phoneErrorText}
-                error={!!phoneErrorText} // false when empty "", true o/w
-                fullWidth
-              />
-              <TextField
-                defaultValue={notes}
-                onChange={this.handleEditText}
-                margin="dense"
-                id="notes"
-                name="inputNotes"
-                label="Notes"
-                helperText={notesErrorText}
-                error={!!notesErrorText}
-                multiline
-                rows={10}
-                rowsMax={10}
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={this.handleCloseModal}
-                style={{ color: "#F1231C" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={this.handleEditConfirm}
-                style={{ color: "#2196F3" }}
-              >
-                Confirm Edits
-              </Button>
-            </DialogActions>
-          </Dialog> */}
-          {/* <Dialog
-            open={editAlert}
-            onClose={(): void => this.setState({ editAlert: false, alertText: "" })}
-            aria-labelledby="edit-alert-label"
-            aria-describedby="edit-alert-description"
-          >
-            <DialogTitle id="edit-alert-title">{alertText}</DialogTitle>
-          </Dialog> */}
-        </Paper>
-        </Zoom>
+        ) : (null)}
+      </Paper>
+    </Zoom>
   )
 }

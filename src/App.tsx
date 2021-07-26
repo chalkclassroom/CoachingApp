@@ -45,7 +45,6 @@ import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/Li
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
 import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
-import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import TrainingPage from './views/protected/TrainingPage';
 import * as LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
@@ -441,19 +440,6 @@ class App extends React.Component<Props, State> {
                 history: H.History,
                 type: string
               }) : React.ReactElement=> <TeacherListPage {...props}/>}
-            />
-            <PrivateRoute
-              auth={this.state.auth}
-              path={`/MyTeachers/:teacherid`}
-              render={(props: {
-                history: H.History,
-                location: H.Location,
-                match: {
-                  params: {
-                    teacherid: string
-                  }
-                }
-              }) : React.ReactElement=> <TeacherDetailPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}

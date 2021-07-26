@@ -37,17 +37,9 @@ interface Teacher {
 
 interface Props {
   onChangeText(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void,
-  // searched: Array<Teacher>,
-  // allEvents: Array<Types.CalendarEvent>,
   teacherDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
   selectTeacher(teacherInfo: Teacher): void,
   addingTeacher(): void
-}
-
-const RecentActivityTerms = {
-  'Observation': 'Classroom Observed',
-  'Action Plan': 'Action Plan Saved',
-  'Conference Plan': 'Conference Plan Saved'
 }
 
 const ToolIcons = {
@@ -140,8 +132,6 @@ const useStyles = makeStyles({
     }
   }
 });
-
-type RecentActivityTermsKey = 'Observation' | 'Action Plan' | 'Conference Plan';
 
 export default function MyTeachersTable(props: Props): React.ReactElement {
   const classes = useStyles();

@@ -24,7 +24,7 @@ const styles: object = {
   },
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
     line: {
-      transform: 'rotate(90deg)'
+      transform: 'rotate(0deg)',
     },
     timerContainer: {
       marginTop: 0
