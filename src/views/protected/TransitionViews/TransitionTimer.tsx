@@ -258,6 +258,8 @@ class TransitionTimer extends React.Component<Props, State> {
               }
               onAccept={this.onCancel}
               shouldOpen={this.state.isOn}
+              literacy=''
+              handleLiteracyActivitySetting={null}
             />
           </Grid>
           <Dialog
