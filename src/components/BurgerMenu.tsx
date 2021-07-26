@@ -301,7 +301,7 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem button onClick={this.togglePracticeCollapse}>
         <ListItemIcon>
-          <Practice style={{ fill: Constants.Colors.MI }} />
+          <Practice style={{ fill: Constants.Colors.IN }} />
         </ListItemIcon>
         <ListItemText primary="Practice" />
         {this.state.practiceOpen ? (
