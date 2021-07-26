@@ -6,18 +6,24 @@ const firestore = new Firestore({
 });
 
 const canAccessTeacher = async (teacher, userId) => {
-    const doc = await firestore.collection("users")
-        .doc(userId)
-        .get().catch(error => console.error("Error getting cached document:", error));
-    const role = doc.data().role
+    const docRef = await firestore.collection("users")
+        .doc(userId);
+    const docData = await docRef.get().then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Doc does not exist");
+        }
+      }).catch(error => console.error("Error getting cached document:", error));
+    const role = docData.role;
 
     if (role === 'admin'){
         return true;
     }else if (role === 'coach'){
-        const partnerCollection = doc.collection("partners")
+        const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists
     }else{
-        return doc.data().email === "practice@teacher.edu" //self or practice teacher
+        return docData.email === "practice@teacher.edu" //self or practice teacher
     }
 }
 
@@ -29,19 +35,28 @@ const canAccessTeacher = async (teacher, userId) => {
  * @returns {Promise<boolean|*>}
  */
 const canAccessObservation = async (observation, userId) => {
+    if (!observation || observation === ""){
+        return false;
+    }
     /*
      * TODO Maybe adjust for roles? I.e. coach can only access
      * observations they submitted, but school admin can access
      * any observation for their teachers?
      */
-    const doc = await firestore.collection('observations')
+    const docData = await firestore.collection('observations')
         .doc(observation).get()
+        .then((doc) => {
+            if (doc.exists) {
+              return doc.data();
+            } else {
+              console.log("Doc does not exist");
+            }
+          })
         .catch(err => console.error("Error getting observation doc:", err));
-    const obsDoc = doc.data();
-    const teacher = obsDoc.teacher;
-    const observedBy = obsDoc.observedBy;
+    const teacher = docData.teacher;
+    const observedBy = docData.observedBy;
     return userId === observedBy.substring(observedBy.lastIndexOf("/") + 1)
-        ||await canAccessTeacher(teacher.substring(teacher.lastIndexOf("/") + 1))
+        ||await canAccessTeacher(teacher.substring(teacher.lastIndexOf("/") + 1), userId)
 }
 
 const canAccessActionPlans = async (teacher, userId) => {

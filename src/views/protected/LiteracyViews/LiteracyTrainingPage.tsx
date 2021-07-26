@@ -1,33 +1,39 @@
 import * as React from 'react';
-import AppBar from '../../../components/AppBar';
-import LogoImage from '../../../assets/images/LogoImage.svg';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-import * as Types from '../../../constants/Types';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
+import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg';
+import LiteracyInstructionHelpCard from '../../../components/LiteracyComponents/LiteracyInstructionHelpCard';
+import * as Constants from '../../../constants/Constants';
 
-/**
- * @function LiteracyTrainingPage
- * @return {ReactElement}
- */
-function LiteracyTrainingPage(): React.ReactElement {
-  return (
-    <div style={{width: '100vw', height: '100vh'}}>
-      <FirebaseContext.Consumer>
-        {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
-      </FirebaseContext.Consumer>
-      <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
-        <Grid item>
-          <img src={LogoImage} alt="CHALK" height="100vh" />
-        </Grid>
-        <Grid item style={{paddingTop: '3em'}}>
-          <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-            Literacy Training coming soon!
-          </Typography>
-        </Grid>
-      </Grid>
-    </div>
-  );
+interface Props {
+  literacyType: number,
+  location: {
+    state: {
+      type: Constants.LiteracyTypes
+    }
+  },
 }
 
-export default LiteracyTrainingPage;
+/**
+ * @function LiteracyInstructionTrainingPage
+ * @return {ReactElement}
+ */
+export default function LiteracyTrainingPage(props: Props): React.ReactElement {
+  const { location } = props;
+  return (
+    <TrainingLayout
+      icon={LiteracyIconImage}
+      colorTheme={Constants.LiteracyTheme}
+      literacyType={location.state.type}
+      conceptsUrl={
+        location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
+          'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Literacy-%20Foundational%20Skills%20Concepts%20(CC)-720p-210713.mp4?alt=media&token=26ceaddf-b650-4108-ba36-1dbcd086c901'
+        ) : location.state.type === Constants.LiteracyTypes.WRITING ? (
+          'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Literacy-%20Writing%20Concepts%20(CC)-720p-210713.mp4?alt=media&token=02ed29ba-1795-453c-8a68-b0d3e4f3fbb5'
+        ) : ('')
+      }
+      demonstrationUrl=''
+      definitions={<LiteracyInstructionHelpCard type={location.state.type} />}
+      section='literacy'
+    />
+  );
+}

@@ -26,6 +26,14 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
+export const TransparentTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffffff00'
+    }
+  }
+});
+
 export const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
@@ -232,8 +240,66 @@ export const CentersSecondHalf = [
   "Music and Movement",
   "Library",
   "Small Group"
-]
+];
 
+export enum LiteracyTypes {
+  NONE = '',
+  FOUNDATIONAL = 'Foundational',
+  WRITING = 'Writing',
+  READING = 'Reading',
+  LANGUAGE = 'Language'
+}
+
+const activitySettingsFoundational = [
+  'All',
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Morning Meeting',
+  'Shared Reading',
+  'Shared Writing',
+  'Individual Child Activity',
+  'Center Time Activities'
+];
+
+const activitySettingsWriting = [
+  'All',
+  'Morning Meeting',
+  'Shared Writing',
+  'Individual Child Writing',
+  'Journals',
+  'Writing Center Activities',
+  'Center Time Activities',
+  'Small Group Lesson'
+];
+
+const activitySettingsReading = [
+  'All',
+  'Fiction',
+  'Nonfiction/Informational',
+  'Rhyming',
+  'Predictable',
+  'Poem',
+  'Alphabet/Counting',
+  'Class-Made Book'
+];
+
+const activitySettingsLanguage = [
+  'All',
+  'Morning Meeting',
+  'Whole Group Lesson',
+  'Small Group Lesson',
+  'Center Time Activities',
+  'Mealtime'
+];
+
+export const LiteracyActivitySettings = {
+  'FoundationalChild': activitySettingsFoundational,
+  'FoundationalTeacher': activitySettingsFoundational,
+  'WritingChild': activitySettingsWriting,
+  'WritingTeacher': activitySettingsWriting,
+  'ReadingTeacher': activitySettingsReading,
+  'LanguageTeacher': activitySettingsLanguage
+};
 
 // Team Members
 export const CC = {
@@ -367,6 +433,14 @@ export const Checklist: {
     ChildBehaviors?: Array<JSX.Element>,
     TeacherBehaviors: Array<JSX.Element>
   },
+  LI: {
+    FoundationalChild: Array<JSX.Element>,
+    FoundationalTeacher: Array<JSX.Element>,
+    WritingChild: Array<JSX.Element>,
+    WritingTeacher: Array<JSX.Element>,
+    ReadingTeacher: Array<JSX.Element>,
+    LanguageTeacher: Array<JSX.Element>
+  }
 } = {
   'MI': {
     'ChildInstructions': 'Select the types of math activities children are doing at this center.',
@@ -465,6 +539,188 @@ export const Checklist: {
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
       <div key={5}>Encourages children to <b>talk to peers</b></div>,
+    ]
+  },
+  'LI': {
+    'FoundationalChild': [
+      <div key={0}>
+        Using knowledge of <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Using knowledge of <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Using <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Using knowledge of <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Inventing spellings or generating conventional spellings</b>
+      </div>,
+      <div key={5}>
+        Using knowledge of <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>,
+      <div key={8}>
+        <b>Responding to open-ended questions or prompts</b> about foundational skills
+      </div>
+    ],
+    'FoundationalTeacher': [
+      <div key={0}>
+        Focusing on <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Focusing on <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Focusing on <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Focusing on <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Supporting children&apos;s inventive spelling</b>
+      </div>,
+      <div key={5}>
+        Focusing on <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>,
+      <div key={8}>
+        Asking <b>open-ended questions or prompts</b> about foundational skills
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
+      </div>
+    ],
+    'WritingChild': [
+      <div key={0}>
+        <b>Talks about the content or meaning</b> of the writing/drawing
+      </div>,
+      <div key={1}>
+        <b>Draws to communicate meaning</b>
+      </div>,
+      <div key={2}>
+        <b>Makes writing forms</b> (e.g., scribbles, letter-like forms, random letter strings, letters)
+      </div>,
+      <div key={3}>
+        <b>Says aloud the message to be written</b>
+      </div>,
+      <div key={4}>
+        <b>Writes</b> one or more <b>letters in their name</b>
+      </div>,
+      <div key={5}>
+        Uses knowledge of the <b>alphabet and/or letter-sound correspondence</b>
+      </div>,
+      <div key={6}>
+        <b>Invents spellings</b> or generates conventional spellings
+      </div>,
+      <div key={7}>
+        <b>“Reads”</b> the message
+      </div>
+    ],
+    'WritingTeacher': [
+      <div key={0}>
+        <b>Talks to children about the content or meaning</b> of the writing/drawing
+      </div>,
+      <div key={1}>
+        <b>Invites children to write part of a message</b> (beyond their name)
+      </div>,
+      <div key={2}>
+        <b>Writes a meaningful message</b> in front of children
+      </div>,
+      <div key={3}>
+        <b>Demonstrates and talks about writing processes</b> (e.g., print concepts, handwriting)
+      </div>,
+      <div key={4}>
+        <b>Invites children to write their name</b>
+      </div>,
+      <div key={5}>
+        <b>Responds positively to all writing forms</b> (e.g., child scribbles, letter-like forms, letters)
+      </div>,
+      <div key={6}>
+        Supports children’s <b>inventive and/or conventional spelling</b>
+      </div>,
+      <div key={7}>
+        <b>Invites children to read the message</b> (e.g., “Read what you wrote to me!” or “What does that say?”)
+      </div>
+    ],
+    'ReadingTeacher': [
+      <div key={0}>
+        <b>Defining and/or discussing vocabulary words</b>
+      </div>,
+      <div key={1}>
+        <b>Discussing concepts related to a text </b> before, during,
+        and/or after the book reading
+      </div>,
+      <div key={2}>
+        Encouraging children to <b> retell, reenact, sequence, or summarize a
+        text</b> or part of a text
+      </div>,
+      <div key={3}>
+        <b>Relating the book to children's experiences</b> inside and/or
+        outside the classroom
+      </div>,
+      <div key={4}>
+        Encouraging children to <b>make connections to books that reflect
+        their language and/or cultural backgrounds</b>
+      </div>,
+      <div key={5}>
+        <b>Asking children open-ended questions/prompts </b> (e.g., to
+        make predictions or inferences)
+      </div>,
+      <div key={6}>
+        <b>Responding to children with follow-up questions and/or comments </b> to
+        extend children's thinking
+      </div>,
+      <div key={7}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={8}>
+        Facilitating discussion of <b>social issues around equity/fairness</b>
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> to support comprehension and/or
+        word learning (e.g., props, gestures, sounds, visuals, book illustrations)
+      </div>
+    ],
+    'LanguageTeacher': [
+      <div key={0}>
+        Discussing, defining, and/or promoting use of <b>advanced vocabulary and concepts</b>
+      </div>,
+      <div key={1}>
+        Having a conversation with children about a <b>social-emotional topic</b>
+      </div>,
+      <div key={2}>
+        Encouraging children to tell and/or act out <b>stories from experiences in their lives</b>
+      </div>,
+      <div key={3}>
+        Encouraging children to <b>listen and respond to peer comments/ideas</b>
+      </div>,
+      <div key={4}>
+        <b>Asking open-ended questions</b> or prompts to encourage conversation
+      </div>,
+      <div key={5}>
+        Observing or using questions/prompts in order to <b>enter children's ongoing play or activity</b>
+      </div>,
+      <div key={6}>
+        <b>Repeating or clarifying</b> children's comments
+      </div>,
+      <div key={7}>
+        Responding to children with <b>follow-up questions and/or comments</b> to extend their thinking
+      </div>
     ]
   }
 }
@@ -1670,5 +1926,934 @@ export const CoachingQuestions = {
         ]
       }
     ]
+  },
+  'Literacy': {
+    'Foundational': {
+      'Phonological Awareness (Sounds of Language)': [
+        {
+          'name': 'Panel1A',
+          'title': 'Rhyming',
+          'text': [
+            'What are effective strategies for teaching rhyming concepts to children in your classroom?',
+            'What have you noticed about your students’ development of rhyming skills over time? What supports students in moving from noticing rhyming words to producing rhyming words independently?',
+            'Talk about how you incorporate rhyming into classroom activities such as shared reading, games, center activities, music and movement, or transitions.'
+          ]
+        },
+        {
+          'name': 'Panel1B',
+          'title': 'Alliteration',
+          'text': [
+            'What are effective strategies for teaching children in your classroom to notice and understand alliteration?',
+            'Talk about how you focus on alliteration during classroom activities such as shared reading, games, center activities, music and movement, or transitions.'
+          ]
+        },
+        {
+          'name': 'Panel1C',
+          'title': 'Syllables',
+          'text': [
+            'What are effective strategies for teaching children in your classroom to notice and count syllables?',
+            'Talk about how you use familiar words, games, music, and or movement to teach syllables. What has been effective?'
+          ]
+        },
+        {
+          'name': 'Panel1D',
+          'title': 'Individual Sounds (Phonemes)',
+          'text': [
+            'How do you decide which sound(s) to teach during an activity?',
+            'What strategies and materials support your students’ learning about individual sounds in spoken words (drawing their attention to your mouth as you make sounds, games, picture cards, using classmate names, etc.)?',
+            'Talk about how you support children as they develop more complex phonemic awareness skills (e.g., repeating sounds, segmenting or isolating beginning/ending sounds; substituting sounds, comparing beginning sounds).',
+            'How do you scaffold your students’ ability to answer questions about sounds (e.g., modeling the activity first, elongating initial sounds for children, pointing to your mouth, etc.)?'
+          ]
+        }
+      ],
+      'Alphabetic Principle and Print Concepts': [
+        {
+          'name': 'Panel2A',
+          'title': 'Alphabet Knowledge and Word Identification Skills',
+          'text': [
+            'How do you decide which letter(s) to teach during an activity?',
+            'Talk about how you draw children’s attention to letters through names, visuals, play, games, music and movement, etc.',
+            'What are effective strategies for teaching your students letter formation or letter writing?'
+          ]
+        },
+        {
+          'name': 'Panel2B',
+          'title': 'Letter-sound Correspondence',
+          'text': [
+            'Talk about how you teach or show your students that letters in written words are related to sound in spoken words (e.g., focusing on children’s names, shared reading, shared and interactive writing).',
+            'How do you decide which letters and sounds to teach during an activity?',
+            'What materials, activities, and/or lessons support your students’ learning of letter-sound correspondence?'
+          ]
+        },
+        {
+          'name': 'Panel2C',
+          'title': 'Inventive Spelling',
+          'text': [
+            'Talk about the ways that you encourage children in your class to invent spellings.',
+            'How do you plan for a variety of supports for inventive spelling, such as modeling through shared writing, inviting children to write with you (i.e., interactive writing), and scaffolding individual children as they draw and write? What works for your students?',
+            'What have you noticed about specific activities or purposes for writing that motivate your students to experiment with inventive spelling?',
+            'How do you match your scaffolding to your students’ emergent writing stage of development?'
+          ]
+        },
+        {
+          'name': 'Panel2D',
+          'title': 'Print Concepts',
+          'text': [
+            'How do you decide which print concept(s) to focus on during an activity or lesson?',
+            'Talk about how you use print around the classroom and print materials from your students’ homes and/or community to draw their attention to print concepts.'
+          ]
+        },
+        {
+          'name': 'Panel2E',
+          'title': 'Matching Spoken Words to Print',
+          'text': [
+            'Talk about how you show or model for your students that print represents our spoken words.',
+            'What are effective strategies for encouraging your students to match spoken words to print (e.g., inviting them to “read” the morning message, environmental print, or their own emergent writing)?'
+          ]
+        }
+      ],
+      'Realistic Reading and Writing': [
+        {
+          'name': 'Panel3A',
+          'title': 'Reading',
+          'text': [
+            'What types of realistic, meaningful, or authentic reading activities or tasks do you enjoy doing with your students? Which foundational skills do you teach during these activities?',
+            'How do you invite your students to use their knowledge of foundational skills during realistic reading activities (e.g., discussing print concepts while “reading” the morning message, the daily schedule, a recipe, favorite song lyrics, etc.)?'
+          ]
+        },
+        {
+          'name': 'Panel3B',
+          'title': 'Writing',
+          'text': [
+            'What types of realistic, meaningful, or authentic writing tasks do you enjoy doing with your students?',
+            'Which foundational skills do you teach while writing with or in front of students?',
+            'How do you invite your students to use their knowledge of foundational skills during realistic writing activities (e.g., discussing letter-sound correspondence while co-writing the morning message or a class book)?'
+          ]
+        },
+        {
+          'name': 'Panel3C',
+          'title': 'Reading and Writing for an Audience',
+          'text': [
+            'What opportunities do your students have to read or write for an audience?',
+            'Talk about the different ways your students can read and/or write for an audience (eg., peers, teachers, school personnel, family, via email, online publishing and sharing, etc.).'
+          ]
+        },
+        {
+          'name': 'Panel3D',
+          'title': 'Home and Community Literacy Connections',
+          'text': [
+            'Talk about how you connect reading or writing in the classroom to your students’ personal experiences or interests (e.g., writing captions for family/community photos)?',
+            'How might you build on the reading or writing events valued in your students’ homes or communities? Talk about effective strategies for learning from families.'
+          ]
+        }
+      ],
+      'Assessment and Planning for Instruction': [
+        {
+          'name': 'Panel4A',
+          'title': 'Assessing Foundational Skills',
+          'text': [
+            'What assessments do you find useful for learning about your students’ foundational skills?',
+            'How do you decide when and how frequently during the year to use assessments?',
+            'How does assessment data help you meet individual students where they are in their skill development?'
+          ]
+        },
+        {
+          'name': 'Panel4B',
+          'title': 'Observing Foundational Skills in Action',
+          'text': [
+            'Talk about how you use informal observations of your students’ foundational skills development.',
+            'What questions guide your observations of students? (e.g., What does the student know about print? What evidence is there that letter-sound correspondence is developing?)'
+          ]
+        },
+        {
+          'name': 'Panel4C',
+          'title': 'Unit Planning',
+          'text': [
+            'How do you use assessment or observation data to guide your long-term planning?',
+            'Talk about how you decide what type of activities to do over time. For example, how do you think about when or how often to do different types of activities over the course of a unit (e.g. shared reading or writing; journals, morning message)?',
+            'What are your thoughts on teaching skills in the context of a meaningful or realistic reading/writing activity versus teaching skills outside of that context?'
+          ]
+        },
+        {
+          'name': 'Panel4D',
+          'title': 'Activity and Lesson Planning',
+          'text': [
+            'What is important for you when planning an activity or lesson on foundational skills? Do you start with a learning goal, a group of skills to teach, a specific activity that children enjoy, etc.?',
+            'How do you pace your instruction and students’ participation during a lesson or activity?',
+            'Talk about when and how you group students for small group instruction. What informs your decisions (e.g, assessment data or informal observation)?'
+          ]
+        }
+      ],
+      'Teacher Support for Foundational Skills': [
+        {
+          'name': 'Panel5A',
+          'title': 'Open-ended Questions and Prompts',
+          'text': [
+            'Talk about the balance of open-ended and closed-ended questions you ask about foundational skills during lessons or activities.',
+            'What do you notice happening when you ask children open-ended questions that don’t have one correct answer?'
+          ]
+        },
+        {
+          'name': 'Panel5B',
+          'title': 'Multimodal Instruction',
+          'text': [
+            'What materials, visuals, or objects support your teaching and student engagement?',
+            'Talk about effective strategies you have discovered for using music and/or movement/actions to teach foundational skills and engage students.'
+          ]
+        },
+        {
+          'name': 'Panel5C',
+          'title': 'Modeling and Think Alouds',
+          'text': [
+            'What types of modeling and/or think alouds about foundational skills do you provide for your students during lessons and activities?',
+            'How do you plan for what to model and talk about based on what your students already know and challenge them to move in new directions?'
+          ]
+        },
+        {
+          'name': 'Panel5D',
+          'title': 'Using Scaffolding to Guide Participation',
+          'text': [
+            'Talk about how you support students who are unable to answer questions during a lesson or engage in an activity at first.',
+            'What are effective cues or hints for scaffolding your student’s ability to answer questions or complete a task? Do you use visuals or objects, rephrase the question to make it less difficult to answer, etc.?'
+          ]
+        },
+        {
+          'name': 'Panel5E',
+          'title': 'Dual Language Learners',
+          'text': [
+            'What have you noticed about strategies (e.g., visuals, movement) that support your dual language learner students when teaching foundational skills?',
+            'Talk about how you make connections between English and your students’ home language(s) so that you can leverage each student’s existing knowledge? (For example, if the students’ home language has some of the same sounds as English, teachers may start instruction with those phonemes for rhyme or beginning sound activities because the students are already familiar with those sounds.)'
+          ]
+        },
+        {
+          'name': 'Panel5F',
+          'title': 'Inclusive Teaching Practices',
+          'text': [
+            'What accommodations support all of your students’ participation in foundational skills activities (e.g., a variety of materials to support participation for students with fine motor delays; visuals and games that don’t require verbalizations for students with speech delays)?',
+            'What are some ways in which you scaffold peer interactions (e.g., modeling interactions, engaging children in scripted dramatic play of interactions, using props, creating intentional groupings such as pairing stronger students with those who need more support, varying groupings, etc.)?'
+          ]
+        }
+      ]
+    },
+    'Writing': {
+      'Focus on Meaning': [
+        {
+          'name': 'Panel1A',
+          'title': 'Writing in Front of Children',
+          'text': [
+            'In what activity settings do children observe you writing- large group, small group, learning centers, etc.?',
+            'Talk about what you notice your students learning from observing you write for a meaningful or realistic purpose.'
+          ]
+        },
+        {
+          'name': 'Panel1B',
+          'title': 'Conversations about Content and Meaning',
+          'text': [
+            'How do you create opportunities for children to talk about their ideas for writing or have conversations that may lead to a writing project (e.g., talking about objects or experiences at centers; building from a favorite read aloud)?',
+            'When do you talk with individual or small groups of children about the meaning of their ongoing drawing and/or writing?',
+            'Talk about kinds of questions or comments you use to encourage children to talk about their drawing/writing, continue adding details, and/or expand their ideas.'
+          ]
+        },
+        {
+          'name': 'Panel1C',
+          'title': 'Child Drawing',
+          'text': [
+            'When throughout the day do children draw to communicate a message or convey meaning? What do they like to draw?',
+            'Do you ever include drawings to communicate messages as part of your own writing?',
+            'Talk about effective strategies for encouraging children who are hesitant to draw and/or write.'
+          ]
+        },
+        {
+          'name': 'Panel1D',
+          'title': 'Saying Aloud the Message to be Written',
+          'text': [
+            'Talk about the benefits of asking individual students to say aloud the message that they want to “write,” or to say aloud the message that the teacher and children are writing together during a whole group activity.',
+            'What strategies do you like to use when saying the message out loud with children, like drawing a line for each word in the message?'
+          ]
+        },
+        {
+          'name': 'Panel1E',
+          'title': 'Balancing the Instructional Focus',
+          'text': [
+            'What was the most important focus of this lesson or this kind of activity?',
+            'How do you decide when to focus on meaning and when to focus on print processes during writing events or activities?',
+            'Talk about how you balance the dual aims of talking about ideas/having language-building conversations and focusing on print (e.g., letters, sounds, print concepts) in one lesson.'
+          ]
+        }
+      ],
+      'Focus on Print Processes': [
+        {
+          'name': 'Panel2A',
+          'title': 'Inviting Children to Write Messages',
+          'text': [
+            'How often do you invite children to write each day? Do all children receive these invitations? How do you know?',
+            'What do you do to help children launch or begin their writing after an invitation?',
+            'What kinds of suggestions help children experiment with writing? How does sharing the writing support your students (e.g., “I’ll write the P, then you can write the next letter”)?',
+            'How do you arrange materials in front of children in ways that suggest what they can do with paper and other writing/drawing materials?'
+          ]
+        },
+        {
+          'name': 'Panel2B',
+          'title': 'Emergent Writing Forms',
+          'text': [
+            'What types of writing forms are your students currently making (e.g., scribbles, zig zags, letter-like forms, conventional letters)?',
+            'What do you do to show children that you value all the kinds of writing forms/marks they make?',
+            'How do you respond when children say they can\'t write?'
+          ]
+        },
+        {
+          'name': 'Panel2C',
+          'title': 'Name Writing and Handwriting ',
+          'text': [
+            'Talk about how you create opportunities for name-writing throughout the day.',
+            'What have you noticed about how children use information from writing their name when they write other messages?',
+            'How do you support children’s beginning handwriting skills/letter formation?',
+            'How do you balance your teaching of letter formation and accepting all kinds of writing and letters that your students make?'
+          ]
+        },
+        {
+          'name': 'Panel2D',
+          'title': 'Print Concepts',
+          'text': [
+            'What print concepts do you like to focus on during writing lessons or activities?',
+            'How do you go about choosing specific print concepts based on your students’ various levels of understanding?'
+          ]
+        },
+        {
+          'name': 'Panel2E',
+          'title': 'Inventive Spelling',
+          'text': [
+            'Talk about when you model or show your students how to do inventive spelling.',
+            'What are effective strategies or activities for inviting children to invent spellings with your help (e.g., stretch out words, listen for sounds, choose letters, etc.)? When do you like to do this- whole group interactive writing time, journal or center time, etc.?',
+            'How do you gauge when to start fading some of your support, so that children are trying that part on their own? (e.g., letting the child say the word out loud and identify sounds he hears, instead of doing that for the child)',
+            'How do you decide about the complexity of the spelling you can support? (e.g., How many sounds are in the word? How many words do you focus on in a longer message?)'
+          ]
+        },
+        {
+          'name': 'Panel2F',
+          'title': 'Balancing the Instructional Focus',
+          'text': [
+            'How do you decide when to focus on meaning and when to focus on print processes during writing events or activities?',
+            'Talk about how you balance the dual aims of talking about ideas/having language-building conversations and focusing on print (e.g., letters, sounds, print concepts) in one lesson.'
+          ]
+        }
+      ],
+      'Meaningful Writing Activities': [
+        {
+          'name': 'Panel3A',
+          'title': 'Selecting a Writing Activity and Learning Objectives',
+          'text': [
+            'What type of writing event or activity was happening during this observation? Talk about why you chose this type of activity for your students.',
+            'What learning objectives or goals did you have in mind when planning this lesson or activity?',
+            'How did you pace your instruction and/or student participation throughout the activity?'
+          ]
+        },
+        {
+          'name': 'Panel3B',
+          'title': 'Writing During Play or Center Time',
+          'text': [
+            'How did you arrange your time in learning centers to support writing? Do you circulate about the room to quickly confer with children who are writing or to suggest ways to write?  Do you sit down with children at a center and write with them for some period of time?',
+            'How did you interact with children in ways to support their ongoing writing or to suggest ways they might incorporate writing into their ongoing play activities?',
+            'What have you noticed about your students’ motivation or engagement when their writing is part of play or child-initiated center activities (e.g., taking orders at a restaurant, making signs for a zoo at blocks, writing song lyrics, etc.)?'
+          ]
+        },
+        {
+          'name': 'Panel3C',
+          'title': 'Writing Alongside Children',
+          'text': [
+            'Talk about opportunities you have for writing alongside individual or small groups of children.',
+            'What do you notice happening when you start your own writing project at a center where your students can see you writing and join you? How do your students respond?'
+          ]
+        },
+        {
+          'name': 'Panel3D',
+          'title': 'Dictation',
+          'text': [
+            'When do you choose to write FOR a child by taking dictation? When is it important to take dictation for children?',
+            'When do you encourage children to use their own “kid writing” to compose their message?',
+            'How do you balance dictation and inviting children to do the writing/make writing forms?'
+          ]
+        },
+        {
+          'name': 'Panel3E',
+          'title': 'Purposes for Writing',
+          'text': [
+            'What was the purpose of today’s writing activity? Why did you choose this type of writing for your students?',
+            'Talk about all of the realistic, meaningful, or authentic purposes for writing that your students have experienced in the classroom.',
+            'What have you noticed about the reasons for writing that motivate your students most? What excites or engages them?'
+          ]
+        },
+        {
+          'name': 'Panel3F',
+          'title': 'Writing for an Audience',
+          'text': [
+            'How did you support children to share their writing with peers in the classroom?',
+            'How did you support children in sharing their writing with family members and others outside of the classroom?'
+          ]
+        }
+      ],
+      'Assessment and Planning for Instruction': [
+        {
+          'name': 'Panel4A',
+          'title': 'Observing Children as They Write',
+          'text': [
+            'Talk about what you look for or assess as you observe children’s writing (e.g., knowledge about functions/purposes for writing, formats or genres, ideas and content that are expressed in writing, letters and sounds, punctuation, processes of getting ideas on paper, etc.)',
+            'How do you track your students’ progress over time? What is useful to you about anecdotal notes and/or collecting writing samples?'
+          ]
+        },
+        {
+          'name': 'Panel4B',
+          'title': 'Collecting Writing Samples',
+          'text': [
+            'What types of writing samples do you collect from your students?',
+            'Talk about the types of prompts you use to collect more formal writing samples. For example, teachers can leave the choice up to the student (e.g., “Let’s think and talk about things we like to do.”) or provide a more teacher-directed prompt that incorporates choice and connects to student interest (e.g., “Think about what you have learned about pets during our pet study.”)'
+          ]
+        },
+        {
+          'name': 'Panel4C',
+          'title': 'Unit Planning',
+          'text': [
+            'How do you use assessment or observation data to guide your long-term planning?',
+            'Talk about how you decide what type of activities to do over time to encourage writing. For example, how do you think about when or how often to do different types of writing activities over the course of a unit (e.g. shared writing; journals, interactive morning message)?'
+          ]
+        },
+        {
+          'name': 'Panel4D',
+          'title': 'Activity and Lesson Planning',
+          'text': [
+            'What learning objectives or goals did you have in mind when planning this lesson or activity?',
+            'How do you pace your instruction and students’ participation during a lesson or activity?',
+            'Talk about when and how you group students for small group instruction. What data do you use?'
+          ]
+        },
+        {
+          'name': 'Panel4E',
+          'title': 'Integrating Foundational Skills Instruction in Writing',
+          'text': [
+            'How do you integrate instruction on foundational skills like letter-sounds into writing activities?',
+            'What are your thoughts on teaching foundational skills in the context of a meaningful or realistic writing activity versus teaching skills like letter formation or letter-sound correspondence outside of that context?',
+            'In your experience, what are the advantages and disadvantages of each context (meaningful writing activity vs. teaching skills in isolation)?'
+          ]
+        },
+        {
+          'name': 'Panel4F',
+          'title': 'Home and Community Literacy Connections',
+          'text': [
+            'Talk about how you connect writing in the classroom to your students’ personal experiences or interests (e.g., writing captions for family/community photos)?',
+            'How might you build on the writing events or purposes valued in your students’ homes or communities? Talk about effective strategies for learning from families.'
+          ]
+        }
+      ],
+      'Teacher Support for Writing': [
+        {
+          'name': 'Panel5A',
+          'title': 'Demonstrating and Talking about Writing',
+          'text': [
+            'What aspects of print or writing processes do you explicitly draw your students’ attention to when demonstrating and talking about writing?',
+            'How do you decide what to talk about or think aloud about when you demonstrate or model writing in front of your students? How do your demonstrations connect to what your students already know and challenge them to develop new understandings?'
+          ]
+        },
+        {
+          'name': 'Panel5B',
+          'title': 'Responding to Children’s Drawing/Writing',
+          'text': [
+            'How does responding positively to all writing forms affect your students?',
+            'Talk about effective strategies that encourage your students to think of themselves as writers and keep making progress towards conventional letter formation?',
+            'Talk about kinds of questions or comments you use to encourage children to talk about their drawing/writing, continue adding details, and/or expand their ideas.'
+          ]
+        },
+        {
+          'name': 'Panel5C',
+          'title': 'Scaffolding Inventive Spelling',
+          'text': [
+            'Talk about how you know when specific students are ready to begin to invent spellings? (With the caveat that all children benefit from watching teachers model inventive spelling!)',
+            'How do you choose a word to spell with a student? For example, do you guide them to choose words with identifiable initial consonants? Or select a word that is important to them or their overall message?',
+            'How do you support students in segmenting the sounds in the spoken word?',
+            'How do you respond when your student chooses a letter that could make the sound but it’s not the correct choice (e.g., the child chooses S to spell “city.”)? (This actually shows that they can correctly match the sound to a letter even if it’s not the conventional spelling of the word!)',
+            'How do you support students who choose a letter that seems completely incorrect? For example, give the child two choices, one of which is the correct letter (“Is it T like tiger? or S like snake?”) or link the letter they are looking for to a classmate’s name (Is it M like Milany?)'
+          ]
+        },
+        {
+          'name': 'Panel5D',
+          'title': 'Dual Language Learners',
+          'text': [
+            'How do you adapt your strategies to support dual language learners (e.g., encouraging students to produce a short phrase to write that is as close as possible to their oral English, etc.)?',
+            'Talk about how you encourage your students to write in their home language when it has the same letters and some of the same sounds as English.',
+            'What do you do when a child wants to write a word in a language you do not speak?  What strategies do you personally have? What other resources do you draw on?'
+          ]
+        },
+        {
+          'name': 'Panel5E',
+          'title': 'Inclusive Teaching Practices',
+          'text': [
+            'Talk about how you ensure that all children, regardless of their language or fine-motor/writing skills, can create a story or message to share? What materials (photo/video, digital tools) or strategies (e.g, dictation, peer collaboration) have you found to be effective?',
+            'What accommodations support all of your students’ participation in writing or composing activities (e.g., teacher dictation, a variety of materials to support writing for students with fine motor delays; visuals and assistive technology that support participation of students with speech delays)?'
+          ]
+        }
+      ]
+    },
+    'Reading': {
+      'Vocabulary': [
+        {
+          'name': 'Panel1A',
+          'title': 'Selecting and Defining Vocabulary Words',
+          'text': [
+            'How do you select words to define during book readings? Are they important for understanding concepts, the plot, or character’s feelings, etc.?',
+            'Talk about how you define words in kid-friendly terms.',
+            'How does your teaching of vocabulary words change over repeated readings of the book? (e.g., Do you define the word during the first reading, then ask children to define or discuss it during the second or third readings?)'
+          ]
+        },
+        {
+          'name': 'Panel1B',
+          'title': 'Discussing Vocabulary Words',
+          'text': [
+            'How do you encourage your students to talk about words? Do you ask them to compare words, or come up with their own examples of a word? (Tell us about a time when you felt timid? or What is another word for timid?)',
+            'Talk about how you plan small group or center-time activities after book readings that provide time for discussions about new vocabulary words.'
+          ]
+        },
+        {
+          'name': 'Panel1C',
+          'title': 'Promoting Children’s Use of Vocabulary Words',
+          'text': [
+            'When children first learn a new word, they may not be able to use it yet. Talk about how you support children in using words during book reading and throughout the day.',
+            'How do you arrange learning centers to support students’ use of words? Do you add props or signs depicting vocabulary words to the science center or dramatic play? Do you guide the conversation or children’s play in ways that new vocabulary words will be used or discussed?'
+          ]
+        },
+        {
+          'name': 'Panel1D',
+          'title': 'Multimodal Instruction',
+          'text': [
+            'How do you teach the meaning of words with the help of multimodal strategies, like pointing to pictures in the book, using a gesture or action, sharing objects, showing visuals or short videos, acting words out, etc.?',
+            'Talk about how you involve your students in multimodal instruction. Do you encourage them to act out words, copy your gestures, or use objects that relate to vocabulary words?'
+          ]
+        },
+        {
+          'name': 'Panel1E',
+          'title': 'Dual Language Learners',
+          'text': [
+            'Talk about how you connect vocabulary words with children’s home languages. Are there cognates, or similar words, in English and their home language (e.g., family and familia)?',
+            'How do you use brief peer activities (like turn and talk/act out) to support dual language learners’ word learning during book readings?',
+            'Talk about how you choose words to teach when considering that certain word sets can be confusing to young dual language learners. (For example, words with similar parts like expect/ inspect and antonyms like big/little, hot/cold.)'
+          ]
+        },
+        {
+          'name': 'Panel1F',
+          'title': 'Inclusive Teaching Practices',
+          'text': [
+            'How do you adapt your teaching strategies to support children with language delays or children who use American Sign Language (ASL)?  What strategies do you personally have? What other resources do you draw on?',
+            'How do you select books and vocabulary words that reflect the interests and background knowledge of your students?',
+            'In your experience, what are effective ways to collaborate with other teachers, like inclusion aides, speech therapists, or exceptional education teachers, to ensure they are aligning with your instructional goals and approaches?'
+          ]
+        }
+      ],
+      'Listening Comprehension': [
+        {
+          'name': 'Panel2A',
+          'title': 'Discussing Concepts Related to the Text',
+          'text': [
+            'How do you support your students’ understanding of new or challenging concepts presented in a book? What strategies do you like to use?',
+            'Talk about how you activate and build on your students’ background knowledge to help them comprehend concepts in a book (a new word or idea, the plot, character motivations)?'
+          ]
+        },
+        {
+          'name': 'Panel2B',
+          'title': 'Retelling, Summarizing, and Sequencing',
+          'text': [
+            'How do you support your students in retelling the story in a book or information from a text using their own words? What kinds of props or visual aids do you like to use?',
+            'When or how often during the book reading event do you focus on retelling or understanding the text?',
+            'In your experience, what kinds of activities support children in sequencing events from a book into the correct order?',
+            'When you read a nonfiction or informational text, what kinds of concepts do you like to sequence with your students (e.g., life cycles, science processes)?'
+          ]
+        },
+        {
+          'name': 'Panel2C',
+          'title': 'Reenacting or Dramatizing Stories',
+          'text': [
+            'Talk about when you create opportunities for students to act out stories or book scenes.',
+            'How do you balance reading the book and supporting students in acting out parts of the story?',
+            'What materials make acting out stories or scenes engaging and fun for your students (like music, props, visuals, or puppets)?',
+            'How do you encourage your students to use language from the read aloud as they dramatize it?'
+          ]
+        },
+        {
+          'name': 'Panel2D',
+          'title': 'Dual Language Learners',
+          'text': [
+            'For dual language learners who have emerging English skills, how do you support their listening comprehension? Do you use visuals, objects, multimedia like video clips, etc.?',
+            'How do you use connections to your students’ home languages to support their listening comprehension? How does your access to books that include translations or incorporate non-English words into the text help you make these connections?'
+          ]
+        },
+        {
+          'name': 'Panel1E',
+          'title': 'Inclusive Teaching Practices',
+          'text': [
+            'How do you support all children in retelling or acting out stories? In your experience, what works- peer buddies, pictures to sequence for children with language delays, pre-recorded lines from the book for children to play, one child talks while another acts out a scene?',
+            'Talk about how you choose stories for retelling that reflect children’s home experiences.'
+          ]
+        }
+      ],
+      'Connections to Children\'s Experiences': [
+        {
+          'name': 'Panel3A',
+          'title': 'Selecting Texts',
+          'text': [
+            'How do you learn about your students’ language and cultural backgrounds?  Do you own or have access to books, folktales, song lyrics, poetry, oral stories, etc., that reflect the backgrounds of your students?',
+            'Talk about how you integrate books that reflect your students’ background and life experiences into your units or curricular materials.'
+          ]
+        },
+        {
+          'name': 'Panel3B',
+          'title': 'Connecting to Children\'s Language and Cultural Backgrounds',
+          'text': [
+            'Talk about how you start discussions that link book themes to your students\' language and cultural backgrounds? (What does this make you think about? How does your family…? What’s special about…?)',
+            'How do you gather artifacts, pictures, music, or other related things that enrich book readings that are connected to children’s backgrounds? How do you partner with families or community resources to make this happen?'
+          ]
+        },
+        {
+          'name': 'Panel3C',
+          'title': 'Relating to Children\'s Experiences',
+          'text': [
+            'How do you show your students that you value stories about their home life or community happenings that connect to themes or parts of a book you’re reading?',
+            'How do you support students in making connections between classroom activities and book readings? Talk about how you plan classroom experiences that relate to book readings in your curriculum or unit plans.'
+          ]
+        },
+        {
+          'name': 'Panel3D',
+          'title': 'Discussing Equity and Fairness',
+          'text': [
+            'What are some ways that young children in your classroom can begin to think about equity and fairness? (Identify an unfair situation in a book or ask students to talk about a similar situation from their experience that seems unfair.)',
+            'How do you support conversations and activities around power and fairness that are reflected in your students’ community (around  gender, race, religion, nationality, disability, the environment, or other social-political topics)?',
+            'How do you use books that show examples of activism or advocacy to serve as models for students?',
+            'How might your students do activities around a book that empowers them to take action? (Act out or draw a more fair or equitable ending to a story, or from a different character\'s perspective? Encourage children to ask questions about differences they notice in a book or illustration?)'
+          ]
+        }
+      ],
+      'Speaking and Listening Skills': [
+        {
+          'name': 'Panel4A',
+          'title': 'Asking Open-Ended Questions',
+          'text': [
+            'What types of open-ended questions do you like to ask your students during book readings? Do you ask children to predict what might happen next, or use their imagination to expand on story events?',
+            'When do you ask your students to make inferences, or think about events or character emotions/motivations based on information that is not directly stated in the book?',
+            'Do you think of high-level questions in the moment or do you tend to plan them out ahead of time? How do you remind yourself about the questions you want to ask students during a book reading?'
+          ]
+        },
+        {
+          'name': 'Panel4B',
+          'title': 'Responding to Children',
+          'text': [
+            'Talk about how you respond to students’ comments during book reading to support their thinking. Do you ask a follow-up question, or give them more information on the topic with a comment?',
+            'Given the limited time you can keep children seated for a book reading, how do you manage children’s commentary and their desire for conversation?',
+            'Do you typically read books during whole group? When might you use small group time for discussing books and responding to your students\' comments and interests?'
+          ]
+        },
+        {
+          'name': 'Panel4C',
+          'title': 'Encouraging Peer Talk',
+          'text': [
+            'How do you support children to engage with ideas offered by their peers? (“What do others think about that?” or “Tell us what you are thinking.” or “Do you want to choose a friend to answer your question?”)',
+            'How do you support children’s ability to ask for and respond to each other’s feedback? (e.g., having students practice and use sentence stems like “I like what you said about.... ”Tell me more!” or  “Why do you think that?”)',
+            'Talk about how you pace the book reading and peer talk strategies so that all your students remain engaged and participate.'
+          ]
+        }
+      ],
+      'Assessment and Planning for Instruction': [
+        {
+          'name': 'Panel5A',
+          'title': 'Assessing Vocabulary Knowledge',
+          'text': [
+            'What strategies or tools do you use to track your students’ vocabulary learning? Do you ask them to identify a picture that represents a vocabulary word? Do you ask children to tell you about a word (What is a habitat? Or Tell me about a habitat.)',
+            'How might you keep track of when and how your students are using new vocabulary words during centers or activities throughout the day? What formative assessment tools do you like to use- anecdotal notes, post-it notes in a folder, paper checklist?'
+          ]
+        },
+        {
+          'name': 'Panel5B',
+          'title': 'Assessing Listening Comprehension',
+          'text': [
+            'Talk about how you assess your students’ ability to listen and understand books that they hear? (Do you keep track of how often they answer questions during a book reading?)',
+            'How do you plan for small group or one-on-one conversations with students about books- during center time or small groups? In your experience, what settings are best for observing your students’ listening comprehension?'
+          ]
+        },
+        {
+          'name': 'Panel5C',
+          'title': 'Planning for Book Reading',
+          'text': [
+            'What learning objectives or goals did you have in mind when planning this book reading?',
+            'How long was this book reading session? How does this time compare to your typical book reading?',
+            'How did you pace your instruction and students’ participation during this book reading? Is there anything you would change during the next book reading?'
+          ]
+        },
+        {
+          'name': 'Panel5D',
+          'title': 'Repeated Readings',
+          'text': [
+            'Was this book reading part of repeated book readings- was it the first, second, third, etc.? How is that going?',
+            'How do you decide what to focus on in each repeated book reading? What do you tend to prioritize in your teaching?',
+            'How do you respond or adapt when children get frustrated by repeated readings?'
+          ]
+        },
+        {
+          'name': 'Panel5E',
+          'title': 'Different Genres and Text Types',
+          'text': [
+            'What types of books or texts do you and your students enjoy- fiction, nonfiction/informational, class-made books, web-based texts, etc.?',
+            'How do you balance the types of texts that you read over the course of a unit or school year? What types of books do you think are important to share with your students? Why?'
+          ]
+        },
+        {
+          'name': 'Panel5F',
+          'title': 'Home and Community Literacy Connections',
+          'text': [
+            'Talk about how you create texts that connect to your students’ personal experiences or interests. (Translate a favorite nursery rhyme or song into students’ home language using internet resources or parent translation. Families record a story or song that the teacher transcribes on big paper, reads to children, and has the children illustrate.)',
+            'How do you invite family and community members into the classroom to share their expertise and enjoyment of texts? How do you take advantage of technology to invite families and community members into the classroom?'
+          ]
+        }
+      ]
+    },
+    'Language': {
+      'Discussing Vocabulary and Concepts': [
+        {
+          'name': 'Panel1A',
+          'title': 'Props and Objects',
+          'text': [
+            'How do you use props or objects to start conversations with your students about vocabulary words or concepts?',
+            'How can you use objects or artifacts valued in children’s homes and communities to build on their vocabulary knowledge?',
+            'In what activity settings do you have conversations with children about props or objects that support their word learning- large group, small group, learning centers, etc.?'
+          ]
+        },
+        {
+          'name': 'Panel1B',
+          'title': 'Defining Vocabulary Words',
+          'text': [
+            'How do you decide what words to define for your students during small group or center-time activities? (Do you decide what words to focus on based on students’ play/activity in the moment? Do you plan activities that focus on specific vocabulary words connected to the curriculum, etc.?)',
+            'Talk about how you define words in kid-friendly terms.',
+            'How do you teach the meaning of words with the help of multimodal strategies, like pointing to pictures in a book or magazine, using a gesture or action, sharing objects, showing visuals or short videos, acting words out, etc.?'
+          ]
+        },
+        {
+          'name': 'Panel1C',
+          'title': 'Discussing Vocabulary Words',
+          'text': [
+            'How do you encourage your students to talk about words? Do you ask them to compare words, or come up with their own examples of a word? (Tell us about a time when you felt timid? or What is another word for timid?)',
+            'In your experience, what can teachers do to foster word-consciousness, or awareness of words, in their classrooms? (Does everyone cheer when a classmate uses a new word? Do students ask about the meaning of new or unknown words?)'
+          ]
+        },
+        {
+          'name': 'Panel1D',
+          'title': 'Promoting Children’s Use of Vocabulary Words',
+          'text': [
+            'When children first learn a new word, they may not be able to use it yet. Talk about how you support children in using words throughout the day.',
+            'How do you arrange learning centers to support students’ use of words? Do you add props or signs depicting vocabulary words to the science center or dramatic play? Do you guide the conversation or children’s play in ways that new vocabulary words will be used or discussed?'
+          ]
+        },
+        {
+          'name': 'Panel1E',
+          'title': 'Dual Language Learners',
+          'text': [
+            'Talk about how you connect vocabulary words with children’s home languages. Are there cognates, or similar words, in English and their home language (e.g., family and familia)?',
+            'Talk about how you choose words to teach when considering that certain word sets can be confusing to young dual language learners. (For example, words with similar parts like expect/inspect and antonyms like big/little, hot/cold.)',
+            'How do you show children that you value their ideas and vocabulary development rather than their grammatical correctness?'
+          ]
+        },
+        {
+          'name': 'Panel1F',
+          'title': 'Inclusive Teaching Practices',
+          'text': [
+            'How do you adapt your teaching strategies to support children with language delays or children who use American Sign Language (ASL)?  What strategies do you personally have? What other resources do you draw on?',
+            'How do you select vocabulary words and materials that reflect the interests and background knowledge of your students?',
+            'In your experience, what are effective ways to collaborate with other teachers, like inclusion aides, speech therapists, or exceptional education teachers, to ensure they are aligning with your instructional goals and approaches?'
+          ]
+        }
+      ],
+      'Talking about Social-Emotional Topics': [
+        {
+          'name': 'Panel2A',
+          'title': 'Modeling Talk about Social-Emotional Topics',
+          'text': [
+            'How and when do you model for your students how to talk about emotions or solve problems?',
+            'How do you use supporting materials like puppets, videos, scripted stories, or strategies like role-playing, when you act out how to talk about emotions or solve problems?'
+          ]
+        },
+        {
+          'name': 'Panel2B',
+          'title': 'Facilitating Cooperative Learning Activities',
+          'text': [
+            'What steps do you take to set the stage for cooperative learning activities that require children to communicate about taking turns, how to play, or solving problems?',
+            'In your experience, what toys, games, or materials increase your students’ opportunities for talking to each other?'
+          ]
+        },
+        {
+          'name': 'Panel2C',
+          'title': 'Discussing Feelings and Emotions',
+          'text': [
+            'How do you like to teach vocabulary words that help children describe their feelings? When during the day do you talk about feelings- during planned lessons, spontaneous interactions?',
+            'What multimodal strategies (like music, games, or feelings charts) support your students’ ability to label or describe their emotions and feelings?'
+          ]
+        },
+        {
+          'name': 'Panel2D',
+          'title': 'Problem-Solving Conversations',
+          'text': [
+            'How do you plan activities that will give your students opportunities to talk about and solve problems? (activities that require sharing, taking turns, etc.)',
+            'What materials support your students’ problem-solving conversations, like solution cards or visuals that are individualized for specific students?',
+            'Talk about how you anticipate problems around the classroom and proactively support your students in talking about potential solutions.'
+          ]
+        },
+        {
+          'name': 'Panel1E',
+          'title': 'Inclusive Teacher Practices',
+          'text': [
+            'What types of strategies do you use to support the communication and play skills of children with exceptional needs, like role-play, peer partners, buddy systems or positive reinforcement?',
+            'How do you support all of your students’ ability to a) recognize and b) begin to talk about their feelings and emotions? What materials, visuals, and modeling strategies do you find to be effective?'
+          ]
+        }
+      ],
+      'Encouraging Children to Talk': [
+        {
+          'name': 'Panel3A',
+          'title': 'Encouraging Children to Tell Stories',
+          'text': [
+            'When during the day do you notice students telling or acting out stories about their experiences?',
+            'How do you support children to share more or add more details when they talk about or tell stories about their lives? What kinds of questions are effective, in your experience?',
+            'How do you support your students in retelling favorite stories, books, or fairy tales?'
+          ]
+        },
+        {
+          'name': 'Panel3B',
+          'title': 'Supporting Peer Conversations',
+          'text': [
+            'In your experience, what types of small-group activities lead to more peer conversations? (games, interviews on a fun topic, shared storytelling, guess my object, pretend play, etc.)',
+            'How do you provide opportunities for children to ask each other questions? How can you model children asking each other questions?  (i.e., having students practice and use sentence stems like “I like what you said about....”, ”Tell me more!” or  “Why do you think that?”)'
+          ]
+        },
+        {
+          'name': 'Panel3C',
+          'title': 'Asking Open-Ended Questions',
+          'text': [
+            'What topics do your students enjoy discussing?',
+            'What kinds of open-ended questions spark a conversation between you and your students?',
+            'What do you notice happening when you ask children open-ended questions that don\'t have one-word answers?'
+          ]
+        },
+        {
+          'name': 'Panel3D',
+          'title': 'Getting to Know Your Communication Style',
+          'text': [
+            'Since learning about our own conversation styles can help us better connect with our students, how would you describe your unique style of conversation? In what types of situations do you feel more or less talkative?',
+            'How does your communication style compare to the style of your culturally and linguistically diverse students?',
+            'How is your home language tradition similar to, or different from, the academic talk used most often in schools?'
+          ]
+        },
+        {
+          'name': 'Panel3E',
+          'title': 'Culturally Diverse Communication Styles',
+          'text': [
+            'Given cultural differences in how people have conversations, what strategies do you use to get to know your students’ home language experiences and traditions? (informal conversations at drop-off/pick-up; parent-teacher conferences or home visits; a survey about how students talk at home, etc.?)',
+            'How do you show children that you value their home language or dialect? How do you let them know it is okay to speak one language or dialect at school and another language at home (i.e, code-switching)?'
+          ]
+        },
+        {
+          'name': 'Panel3F',
+          'title': 'Dual Language Learners',
+          'text': [
+            'In your experience, what materials encourage dual language learners to talk and participate during conversations- objects, pictures, gestures, actions?',
+            'How do you create an environment in your classroom that welcomes students’ use of their home languages and encourages all students to be curious about and respect different languages?'
+          ]
+        }
+      ],
+      'Responding to Children': [
+        {
+          'name': 'Panel4A',
+          'title': 'Supporting Teacher Reflection on Language',
+          'text': [
+            'What tools would you find useful for reflecting on your language and conversations with children? (Short audio or video recordings? Coach notes and transcription of your teacher-child conversations during a specific activity?)'
+          ]
+        },
+        {
+          'name': 'Panel4B',
+          'title': 'Repeating and Clarifying Child Comments',
+          'text': [
+            'What have you noticed happening when you repeat what your students say? (A child says, “red,” and the teacher replies, “red...what’s red?”)',
+            'How does clarifying children\'s comments extend the back-and-forth of the conversation? (Coaches may have specific examples of this happening in their notes from the observation to support teacher reflection.)',
+            'Talk about how you respond to children when you need more information to understand what they’re trying to communicate? (A child says, “money,” and the teacher replies, “Should I give you money for the groceries?” Coaches may have specific examples of conversations in their notes from the observation to support teacher reflection.'
+          ]
+        },
+        {
+          'name': 'Panel4C',
+          'title': 'Entering Children’s Ongoing Play',
+          'text': [
+            'Talk about when you plan for time to observe children and follow their lead.',
+            'Talk about how you ask your students questions about what they are playing or doing before you enter their activity so that you can build on their ideas.'
+          ]
+        },
+        {
+          'name': 'Panel4D',
+          'title': 'Actively Listening to Children',
+          'text': [
+            'Talk about how you show children that you are interested in what they say (with facial expressions, smiling, nodding, etc.)',
+            'How do you remember or remind yourself to give students wait time, or time to respond, during conversations?'
+          ]
+        },
+        {
+          'name': 'Panel4E',
+          'title': 'Responding with Follow-up Questions',
+          'text': [
+            'What types of questions do you like to ask your students to keep the conversation going and support their thinking? (Informing questions that begin with who/when/what/where; Analyzing questions that begin with how or why; Brainstorming questions that begin with what if, etc.?)',
+            'How or when do you use informative comments to support your students\' thinking during conversations?'
+          ]
+        }
+      ],
+      'Assessment and Planning for Conversations': [
+        {
+          'name': 'Panel5A',
+          'title': 'Observing Children’s Language Skills',
+          'text': [
+            'How do you keep track of when and how your students are using new vocabulary words during centers or activities throughout the day? What formative assessment tools do you like to use- anecdotal notes, post-it notes in a folder, paper checklist?',
+            'What do you notice about your students\' language use?  For example, what types of activities or content motivates them to talk, and how are those factors different for each student? Talk about how you collect and organize this type of information.'
+          ]
+        },
+        {
+          'name': 'Panel5B',
+          'title': 'Tracking Teacher-Child Conversations',
+          'text': [
+            'What tools are helpful for keeping track of how often you have meaningful conversations with children throughout the week (like checklists, calendars, or notebooks)?',
+            'How do you keep track of which centers you visit and how long you stay at each? What do you notice about centers that lead to the most interesting or sustained conversations with your students?'
+          ]
+        },
+        {
+          'name': 'Panel5C',
+          'title': 'Monitoring Peer Conversation Progress',
+          'text': [
+            'How do you plan to monitor your students’ peer conversations over time? Do you select  a few children to observe each day during child-led activities like centers or small groups that don’t require adult facilitation?',
+            'What do you watch for as you observe how your students work and play with their peers? (Does the student start conversations with other children or a special friend? Does the student attempt to talk to children who are different from them? For how long? About what?)'
+          ]
+        },
+        {
+          'name': 'Panel5D',
+          'title': 'Planning Teacher-Child Conversations',
+          'text': [
+            'What steps do you take to plan for interactions that build on your students’ interests and encourage them to talk and engage with you?',
+            'How do you plan to have one-on-one conversations with each of your students throughout the week?',
+            'What materials help you engage in conversations with your students who are culturally and linguistically diverse or with your students who do not typically start conversations with others?'
+          ]
+        },
+        {
+          'name': 'Panel5E',
+          'title': 'Planning Small-Group Peer Conversations',
+          'text': [
+            'What steps do you take to plan for children to have peer conversations during small group or center time?',
+            'What types of literacy, math, science, or social-emotional development activities do you use to foster small-group conversations? What learning objectives guide your planning of the conversation?',
+            'Talk about how you choose open-ended questions to ask children during small-group activities.'
+          ]
+        },
+        {
+          'name': 'Panel5F',
+          'title': 'Culturally and Linguistically Diverse Students',
+          'text': [
+            'How do you meet the needs of culturally and linguistically diverse students who are quiet during conversations? (Learn a few key words from the child’s home language, teach them to peers, and encourage their use around the classroom? If possible, pair them with another child who speaks their home language to prevent feelings of isolation until their English skills become stronger, then encourage them to pretend play with peers?)'
+          ]
+        }
+      ]
+    }
   }
 }

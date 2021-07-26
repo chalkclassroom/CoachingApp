@@ -17,20 +17,6 @@ import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanList
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
 import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
 import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
-import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
-import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
-import CoachingProfessionalDevelopmentMaterials from './views/protected/CoachingResourcesViews/ProfessionalDevelopmentMaterials'
-import CoachingTransitionTime from './views/protected/CoachingResourcesViews/TransitionTime'
-import CoachingClassroomClimate from './views/protected/CoachingResourcesViews/ClassroomClimate'
-import CoachingMathInstruction from './views/protected/CoachingResourcesViews/MathInstruction'
-import CoachingLevelOfInstruction from './views/protected/CoachingResourcesViews/LevelOfInstruction'
-import CoachingStudentEngagement from './views/protected/CoachingResourcesViews/StudentEngagement'
-import CoachingListeningToChildren from './views/protected/CoachingResourcesViews/ListeningToChildren'
-import CoachingSequentialActivities from './views/protected/CoachingResourcesViews/SequentialActivities'
-// import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
-import CoachingAssociativeAndCooperativeInteractions from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
-import CoachingCoachingBestPractices from './views/protected/CoachingResourcesViews/CoachingBestPractices'
-import CoachingChalkCrosswalks from './views/protected/CoachingResourcesViews/ChalkCrosswalks'
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -57,6 +43,22 @@ import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningT
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
+import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage';
+import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage';
+import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
+import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
+import CoachingProfessionalDevelopmentMaterials from './views/protected/CoachingResourcesViews/ProfessionalDevelopmentMaterials'
+import CoachingTransitionTime from './views/protected/CoachingResourcesViews/TransitionTime'
+import CoachingClassroomClimate from './views/protected/CoachingResourcesViews/ClassroomClimate'
+import CoachingMathInstruction from './views/protected/CoachingResourcesViews/MathInstruction'
+import CoachingLevelOfInstruction from './views/protected/CoachingResourcesViews/LevelOfInstruction'
+import CoachingStudentEngagement from './views/protected/CoachingResourcesViews/StudentEngagement'
+import CoachingListeningToChildren from './views/protected/CoachingResourcesViews/ListeningToChildren'
+import CoachingSequentialActivities from './views/protected/CoachingResourcesViews/SequentialActivities'
+import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
+import CoachingAssociativeAndCooperativeInteractions from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
+import CoachingCoachingBestPractices from './views/protected/CoachingResourcesViews/CoachingBestPractices'
+import CoachingChalkCrosswalks from './views/protected/CoachingResourcesViews/ChalkCrosswalks';
 import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -64,18 +66,19 @@ import TrainingPage from './views/protected/TrainingPage';
 import * as LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import * as ReactGA from 'react-ga';
-import MessagingView from "./views/protected/MessagingViews/MessagingView.tsx";
-import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
-import Grid from '@material-ui/core/Grid';
-import { coachLoaded, getCoach, Role } from './state/actions/coach'
-import { getUnlocked } from './state/actions/unlocked';
-import { getTeacherList } from './state/actions/teacher';
-import { connect } from 'react-redux';
-import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
 import * as Types from './constants/Types';
 import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
 import { UserDocument } from './components/Firebase/Firebase'
+import MessagingView from './views/protected/MessagingViews/MessagingView';
+import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
+import Grid from '@material-ui/core/Grid';
+import { coachLoaded, Role } from './state/actions/coach';
+import { getUnlocked } from './state/actions/unlocked';
+import { getTraining } from './state/actions/training-literacy';
+import { getTeacherList } from './state/actions/teacher'
+import { connect } from 'react-redux';
+import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -152,12 +155,50 @@ interface Props {
     },
     getUserInformation():Promise<UserDocument>
     getCoachFirstName(): Promise<string>,
-    getUserRole(): Promise<Role>,
+    getUserRole(): Promise<string>,
     getUnlockedSections(): Promise<Array<number>>,
     getTeacherList(): Promise<Array<Types.Teacher>>
+    // getting literacy training data from firestore
+    getLiteracyTraining(): Promise<{
+      conceptsFoundational: boolean,
+      conceptsWriting: boolean,
+      conceptsReading: boolean,
+      conceptsLanguage: boolean,
+      definitionsFoundational: boolean,
+      definitionsWriting: boolean,
+      definitionsReading: boolean,
+      definitionsLanguage: boolean,
+      demoFoundational: boolean,
+      demoWriting: boolean,
+      demoReading: boolean,
+      demoLanguage: boolean,
+      knowledgeCheckFoundational: boolean,
+      knowledgeCheckWriting: boolean,
+      knowledgeCheckReading: boolean,
+      knowledgeCheckLanguage: boolean
+    }>
   },
   coachLoaded(name: string, role: Role, userInfo: UserDocument): void,
   getUnlocked(unlocked: Array<number>): void,
+  // adding literacy training data to redux
+  getTraining(result: {
+    conceptsFoundational: boolean,
+    conceptsWriting: boolean,
+    conceptsReading: boolean,
+    conceptsLanguage: boolean,
+    definitionsFoundational: boolean,
+    definitionsWriting: boolean,
+    definitionsReading: boolean,
+    definitionsLanguage: boolean,
+    demoFoundational: boolean,
+    demoWriting: boolean,
+    demoReading: boolean,
+    demoLanguage: boolean,
+    knowledgeCheckFoundational: boolean,
+    knowledgeCheckWriting: boolean,
+    knowledgeCheckReading: boolean,
+    knowledgeCheckLanguage: boolean
+  }): void,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>
 }
 
@@ -203,6 +244,26 @@ class App extends React.Component<Props, State> {
         this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
           this.props.getUnlocked(unlocked);
         })
+        this.props.firebase.getLiteracyTraining().then((result: {
+          conceptsFoundational: boolean,
+          conceptsWriting: boolean,
+          conceptsReading: boolean,
+          conceptsLanguage: boolean,
+          definitionsFoundational: boolean,
+          definitionsWriting: boolean,
+          definitionsReading: boolean,
+          definitionsLanguage: boolean,
+          demoFoundational: boolean,
+          demoWriting: boolean,
+          demoReading: boolean,
+          demoLanguage: boolean,
+          knowledgeCheckFoundational: boolean,
+          knowledgeCheckWriting: boolean,
+          knowledgeCheckReading: boolean,
+          knowledgeCheckLanguage: boolean
+        }) => {
+          this.props.getTraining(result)
+        })
         this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
           const teacherList: Array<Types.Teacher> = [];
           teacherPromiseList.forEach(tpromise => {
@@ -234,7 +295,7 @@ class App extends React.Component<Props, State> {
       getCoachFirstName: PropTypes.func,
       getUnlockedSections: PropTypes.func
     }).isRequired,
-    getCoach: PropTypes.func.isRequired,
+    coachLoaded: PropTypes.func.isRequired,
     getUnlocked: PropTypes.func.isRequired
   }
 
@@ -530,7 +591,23 @@ class App extends React.Component<Props, State> {
               allowedRoles={[]}
               userRole={role}
               path="/LiteracyInstructionTraining"
-              render={() : React.ReactElement=> <LiteracyTrainingPage />}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <LiteracyTrainingPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LiteracyInstruction"
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <LiteracyInstructionPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LiteracyInstructionResults"
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <LiteracyInstructionResultsPage {...props}/>}
             />
             <PrivateRoute
               exact
@@ -722,5 +799,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, getTeacherList})(App));
+export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, getTraining, getTeacherList})(App));
 

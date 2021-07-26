@@ -8,7 +8,9 @@ import TrainingVideo from './TrainingVideo';
 import TrainingQuestionnaire from './TrainingQuestionnaire';
 import TrainingObservationDashboard from './TrainingObservationDashboard';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import * as Types from '../../constants/Types';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   root: {
@@ -118,7 +120,8 @@ interface Props {
   conceptsUrl: string;
   demonstrationUrl: string;
   definitions: React.ReactElement;
-  section: string
+  section: string,
+  literacyType: Constants.LiteracyTypes
 }
 
 interface Style {
@@ -195,7 +198,8 @@ class TrainingLayout extends React.Component<Props, State> {
     conceptsUrl: PropTypes.string.isRequired,
     demonstrationUrl: PropTypes.string.isRequired,
     definitions: PropTypes.element.isRequired,
-    section: PropTypes.string.isRequired
+    section: PropTypes.string.isRequired,
+    literacyType: PropTypes.string.isRequired
   };
 
   /**
@@ -211,14 +215,14 @@ class TrainingLayout extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.main}>
-          <Grid container justify="center" alignItems="center" className={classes.grid}>
+          <Grid container justify="center" alignItems="flex-start" className={classes.grid}>
             <Grid item className={classes.dashboardContainer}>
               <Grid
                 container
                 alignItems='center'
                 justify='center'
                 direction='column'
-                style={{height: '100%'}}
+                style={{height: '85vh'}}
               >
                 <TrainingObservationDashboard
                   ViewEnum={ViewEnum}
@@ -229,23 +233,36 @@ class TrainingLayout extends React.Component<Props, State> {
                   demonstrationClick={this.demonstrationClick}
                   knowledgeCheckClick={this.knowledgeCheckClick}
                   colorTheme={this.props.colorTheme}
+                  literacyType={this.props.literacyType}
                 />
               </Grid>
             </Grid>
             <Grid item className={classes.trainingContentCard}>
-              {view === ViewEnum.CONCEPTS ? (
-                <TrainingVideo videoUrl={this.props.conceptsUrl} />
-              ) : view === ViewEnum.DEFINITIONS ? (
-                <div>
-                  {this.props.definitions}
-                </div>
-              ) : view === ViewEnum.DEMONSTRATION ? (
-                <div>
-                  <TrainingVideo videoUrl={this.props.demonstrationUrl} />
-                </div>
-              ) : view === ViewEnum.KNOWLEDGECHECK ? (
-                <TrainingQuestionnaire section={this.props.section} />
-              ) : null}
+              <Grid
+                container
+                alignItems='center'
+                justify='center'
+                direction='column'
+                style={{minHeight: '85vh'}}
+              >
+                {view === ViewEnum.CONCEPTS ? (
+                  this.props.conceptsUrl ? (
+                    <TrainingVideo videoUrl={this.props.conceptsUrl} />
+                  ) : <Typography variant="h4" style={{fontFamily: 'Arimo'}}>Video coming soon!</Typography>
+                ) : view === ViewEnum.DEFINITIONS ? (
+                  <div>
+                    {this.props.definitions}
+                  </div>
+                ) : view === ViewEnum.DEMONSTRATION ? (
+                  this.props.demonstrationUrl ? (
+                    <div>
+                      <TrainingVideo videoUrl={this.props.demonstrationUrl} />
+                    </div>
+                  ) : <Typography variant="h4" style={{fontFamily: 'Arimo'}}>Video coming soon!</Typography>
+                ) : view === ViewEnum.KNOWLEDGECHECK ? (
+                  <TrainingQuestionnaire section={this.props.section} literacyType={this.props.literacyType} />
+                ) : null}
+              </Grid>
             </Grid>
           </Grid>
         </div>
