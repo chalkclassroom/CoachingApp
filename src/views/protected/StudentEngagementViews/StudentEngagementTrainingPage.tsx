@@ -13,7 +13,7 @@ export default function StudentEngagementTrainingPage(): React.ReactElement {
     <TrainingLayout
       icon={EngagementIconImage}
       colorTheme={Constants.EngagementTheme}
-      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Student%20Engagement%20Concepts.mp4?alt=media&token=201b9f73-32c1-4842-aac5-f70a6eb0e375'
+      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20SE%20(CC).mp4?alt=media&token=370f505c-b8e6-4dbd-9831-1d1b419e2592'
       // replace with engagement demo when ready
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential%20Activities%20Demo.mp4?alt=media&token=d7fedabb-3ef1-430f-978a-4493914b1f65'
       definitions={<StudentEngagementHelpCard />}
