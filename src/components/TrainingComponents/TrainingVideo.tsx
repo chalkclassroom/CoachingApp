@@ -22,7 +22,6 @@ class TrainingVideo extends React.Component<Props, {}> {
   render(): React.ReactNode {
     return (
       <Video
-        autoPlay
         loop
         muted
         controls={["PlayPause", "Seek", "Time", "Volume", "Fullscreen"]}
@@ -39,7 +38,8 @@ class TrainingVideo extends React.Component<Props, {}> {
           src="http://source.vtt"
           default
         />
-      </Video>
+      </Video
+        autoPlay>
     );
   }
 }
