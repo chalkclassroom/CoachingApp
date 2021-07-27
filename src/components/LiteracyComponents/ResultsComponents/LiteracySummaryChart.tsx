@@ -7,7 +7,9 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   literacy: number,
   noLiteracy: number,
-  type: Constants.LiteracyTypes
+  type: string,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,7 +26,9 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     literacy: PropTypes.number.isRequired,
     noLiteracy: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -32,13 +36,27 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
+    let literacyLabel = '';
+    let titleType = '';
+    if (this.props.type === 'FoundationalTeacher' || this.props.type === 'FoundationalChild') {
+      literacyLabel = 'Foundational Skills Instruction'
+      titleType = 'Foundational'
+    } else if (this.props.type === 'WritingTeacher' || this.props.type === 'WritingChild') {
+      literacyLabel = 'Writing Instruction'
+      titleType = 'Writing'
+    } else if (this.props.type === 'ReadingTeacher' || this.props.type === 'ReadingChild') {
+      literacyLabel = 'Book Reading Instruction'
+      titleType = 'Reading'
+    } else {
+      literacyLabel = 'Supporting Language Development'
+      titleType = 'Language'
+    }
     const literacyData = {
       labels: [
-        this.props.type === Constants.LiteracyTypes.FOUNDATIONAL ? "Foundational Skills Instruction" : 
-        this.props.type === Constants.LiteracyTypes.WRITING ? "Writing Instruction" :
-        this.props.type === Constants.LiteracyTypes.READING ? "Book Reading Instruction" :
-        "Supporting Language Development",
-        "No Target Behaviors Observed"],
+        literacyLabel,
+        "No Target Behaviors Observed"
+      ],
       datasets: [
         {
           data: [this.props.literacy, this.props.noLiteracy],
@@ -53,6 +71,11 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
         <Pie
           data={literacyData}
           options={{
+            animation: {
+              onComplete: function(): void {
+                isCompleted ? isCompleted() : null
+              }
+            },
             tooltips: {
               callbacks: {
                 label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -81,9 +104,11 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: false,
-              text: "Literacy Instruction",
+              display: this.props.title,
+              text: "Literacy " + titleType + " Summary",
               fontSize: 20,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
               fontStyle: "bold"
             },
             plugins: {

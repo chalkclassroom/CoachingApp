@@ -14,7 +14,9 @@ interface Props {
   literacy8: number,
   literacy9: number,
   literacy10: number,
-  who: string
+  who: string,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -40,7 +42,9 @@ class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
     literacy8: PropTypes.number.isRequired,
     literacy9: PropTypes.number.isRequired,
     literacy10: PropTypes.number.isRequired,
-    who: PropTypes.string.isRequired
+    who: PropTypes.string.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -48,6 +52,7 @@ class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherData = {  
       labels: [
         ["Defining and/or discussing vocabulary"],
@@ -105,6 +110,11 @@ class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={teacherData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -178,9 +188,11 @@ class LiteracyDetailsReadingChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: false,
-            text: "Literacy Instruction Details",
+            display: this.props.title,
+            text: "Literacy Book Reading Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {
