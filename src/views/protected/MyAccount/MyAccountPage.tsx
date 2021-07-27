@@ -66,7 +66,8 @@ const save = (name: string,
  */
 const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' } }): React.ReactNode => {
     const classes = useStyles()
-    const [name, setName] = useState(`${user.firstName} ${user.lastName}`)
+    const [firstName, setFirstName] = useState(`${user.firstName}`)
+    const [lastName, setLastName] = useState(`${user.lastName}`)
     const [email, setEmail] = useState(user.email)
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -85,11 +86,18 @@ const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' } }): R
                         My Account
                     </Typography>
                 </Grid>
-                <Grid item xs={8} spacing={8} className={classes.container}>
+                <Grid item xs={6} spacing={8} className={classes.container}>
                     <StyledFormControl className={classes.formControl}>
                         <InputLabel id="demo-mutiple-name-label">Name</InputLabel>
-                        <Input onChange={(event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
-                               value={name} />
+                        <Input onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFirstName(event.target.value)}
+                               value={firstName} placeholder={"First name"} />
+                    </StyledFormControl>
+                </Grid>
+                <Grid item xs={6} spacing={8} className={classes.container}>
+                    <StyledFormControl className={classes.formControl}>
+                        <InputLabel id="demo-mutiple-name-label">Name</InputLabel>
+                        <Input onChange={(event: React.ChangeEvent<HTMLInputElement>) => setLastName(event.target.value)}
+                               value={lastName} placeholder={"Last name"}/>
                     </StyledFormControl>
                 </Grid>
                 <Grid item xs={8} spacing={8} className={classes.container}>
