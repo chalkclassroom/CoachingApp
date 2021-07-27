@@ -277,6 +277,7 @@ function ToolIcons(props: Props): React.ReactElement {
         />
       )}
       <ResultsTrainingModal
+        type={selected}
         open={resultsTrainingModal}
         handleClose={(): void => {
           setResultsTrainingModal(false);
