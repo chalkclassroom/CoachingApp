@@ -33,7 +33,10 @@ export default function LiteracyTrainingPage(props: Props): React.ReactElement {
           'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20LI%20Lang%20(CC).mp4?alt=media&token=b9722bf1-9def-4f68-8f34-bc539d090658'
         ) : ('')
       }
-      demonstrationUrl=''
+      demonstrationUrl={
+        location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
+          'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20LI%20FS(CC).mp4?alt=media&token=9786bee0-fe69-471a-bb23-7181d620907d'
+        ) : ('')}
       definitions={<LiteracyInstructionHelpCard type={location.state.type} />}
       section='literacy'
     />

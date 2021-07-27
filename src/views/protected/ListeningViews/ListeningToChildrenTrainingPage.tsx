@@ -14,7 +14,7 @@ export default function ListeningToChildrenTrainingPage(): React.ReactElement {
       icon={ListeningIconImage}
       colorTheme={Constants.ListeningTheme}
       conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20LC%20(CC).mp4?alt=media&token=0cabbd15-3b54-45c0-919d-6e7c98ac4e5f'
-      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Listening%20to%20Children%20Demo.mp4?alt=media&token=4fa8b5c2-cc26-4072-b779-181a74c243a1'
+      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20LC%20(CC).mp4?alt=media&token=4ba283ac-133a-4bd2-a040-639748c3cc3d'
       definitions={<ListeningToChildrenHelpCard />}
       section='listening'
     />
