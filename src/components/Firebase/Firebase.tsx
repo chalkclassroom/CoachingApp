@@ -763,7 +763,7 @@ class Firebase {
       if (this.auth.currentUser) {
         if (checklistType === 'Foundational') {
           return docRef
-            .set({
+            .update({
               conceptsFoundational: true,
               definitionsFoundational: true,
               demoFoundational: true,
@@ -772,7 +772,7 @@ class Firebase {
             .catch((error: Error) => console.error("Error getting cached document:", error));
         } else if (checklistType === 'Writing') {
           return docRef
-            .set({
+            .update({
               conceptsWriting: true,
               definitionsWriting: true,
               demoWriting: true,
@@ -781,7 +781,7 @@ class Firebase {
             .catch((error: Error) => console.error("Error getting cached document:", error));
         } else if (checklistType === 'Reading') {
           return docRef
-            .set({
+            .update({
               conceptsReading: true,
               definitionsReading: true,
               demoReading: true,
@@ -790,7 +790,7 @@ class Firebase {
             .catch((error: Error) => console.error("Error getting cached document:", error));
         } else {
           return docRef
-            .set({
+            .update({
               conceptsLanguage: true,
               definitionsLanguage: true,
               demoLanguage: true,
