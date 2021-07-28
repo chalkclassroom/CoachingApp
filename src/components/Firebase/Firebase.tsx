@@ -2493,10 +2493,11 @@ class Firebase {
    * finds all observations for coach and their selected teacher
    * @param {string} teacherId
    */
-  getAllTeacherObservations = async (teacherId: string): Promise<Array<{
+   getAllTeacherObservations = async (teacherId: string): Promise<Array<{
     id: string,
     date: firebase.firestore.Timestamp,
-    practice: string
+    practice: string,
+    literacyType?: string
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db.collection("observations")
@@ -2509,7 +2510,8 @@ class Firebase {
           const idArr: Array<{
             id: string,
             date: firebase.firestore.Timestamp,
-            practice: string
+            practice: string,
+            literacyType: string
           }> = [];
           querySnapshot.forEach(doc => {
             if (doc.data().end > doc.data().start) { // check that session was completed
@@ -2517,6 +2519,7 @@ class Firebase {
                 id: doc.id,
                 date: doc.data().start,
                 practice: doc.data().type,
+                literacyType: doc.data().type === 'LI' ? doc.data().checklist : ''
               })
             }
           })

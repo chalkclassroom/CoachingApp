@@ -10,6 +10,7 @@ import LevelofInstructionImage from '../../assets/images/LevelofInstructionImage
 import EngagementIconImage from '../../assets/images/EngagementIconImage.png';
 import ListeningtoChildrenImage from '../../assets/images/ListeningtoChildrenImage.png';
 import SequentialActivitiesImage from '../../assets/images/SequentialActivitiesImage.png';
+import LiteracyIconImage from '../../assets/images/LiteracyIconImage.png';
 import AssocCoopInteractionsImage from '../../assets/images/AssocCoopInteractionsImage.png';
 import LogoImage from '../../assets/images/LogoImage.png';
 import * as moment from 'moment';
@@ -92,6 +93,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    console.log('TOOL', this.props.tool)
     return (
       <div style={{width: '100%'}} id='ap'>
         <Grid
@@ -134,6 +136,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                         : this.props.tool === 'Level of Engagement' ? EngagementIconImage
                         : this.props.tool === 'Listening to Children' ? ListeningtoChildrenImage
                         : this.props.tool === 'Sequential Activities' ? SequentialActivitiesImage
+                        : this.props.tool === 'Literacy Instruction' ? LiteracyIconImage
                         : AssocCoopInteractionsImage
                     }
                     alt="Icon"
