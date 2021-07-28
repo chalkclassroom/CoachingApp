@@ -38,8 +38,7 @@ class TrainingVideo extends React.Component<Props, {}> {
           src="http://source.vtt"
           default
         />
-      </Video
-        autoPlay>
+      </Video>
     );
   }
 }
