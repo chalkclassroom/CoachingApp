@@ -290,6 +290,12 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     label: '',
     firstName: ''
   });
+  const [recipientList, setRecipientList] = useState<Array<{
+    value: string,
+    id: string,
+    label: string,
+    firstName: string
+  }>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{
    id: string,
     date: {
@@ -482,6 +488,21 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         .then((lastName: string): void => {
           setUserLastName(lastName)
         })
+    }
+    if (recipientList.length === 0) {
+      const newRecipientList: Array<{value: string, id: string, label: string, firstName: string}> = [];
+      props.teacherList.forEach((teacher) => {
+        const newTeacher = {
+          value: teacher.email,
+          id: teacher.id,
+          label: (teacher.firstName + ' ' + teacher.lastName),
+          firstName: teacher.firstName
+        };
+        if (newTeacher.id !== 'rJxNhJmzjRZP7xg29Ko6') {
+          newRecipientList.push(newTeacher);
+        }
+      })
+      setRecipientList(newRecipientList)
     }
     // sets states for email content and info if opening a draft
     if (props.draft && emailId === '') {
@@ -2109,6 +2130,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
             <Grid item xs={6}>
               <RecipientAddress
                 selectedOption={recipient}
+                recipientList={recipientList}
                 setOption={(newOption: SelectOption): void => recipientSelected(newOption)}
                 readOnly={props.readOnly || (attachments && attachments.length>0)}
               />
