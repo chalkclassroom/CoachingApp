@@ -39,7 +39,9 @@ const RecipientAddress: React.FC<RecipientAddressProps> = (props: RecipientAddre
         label: (teacher.firstName + ' ' + teacher.lastName),
         firstName: teacher.firstName
       };
-      teacherList.push(newTeacher);
+      if (newTeacher.id !== 'rJxNhJmzjRZP7xg29Ko6') {
+        teacherList.push(newTeacher);
+      }
     });
   })
 

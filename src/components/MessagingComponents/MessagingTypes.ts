@@ -122,6 +122,7 @@ export interface Attachment {
   type: string,
   disposition: string,
   id: string,
+  literacyType?: string,
   teacherId: string,
   actionPlan: boolean,
   result: boolean,

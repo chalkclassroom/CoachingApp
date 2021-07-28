@@ -49,7 +49,8 @@ interface AttachmentDialogProps {
     title: string,
     graphType: 'summary' | 'details' | 'trends',
     practice: string,
-    date: Date
+    date: Date,
+    literacyType?: string
   ): void;
   noActionPlansMessage: string;
   noResultsMessage: string;

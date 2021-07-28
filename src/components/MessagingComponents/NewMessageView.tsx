@@ -27,9 +27,11 @@ import InstructionResultsPdf from './ResultsPdfs/InstructionResultsPdf';
 import EngagementResultsPdf from './ResultsPdfs/EngagementResultsPdf';
 import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
+import LiteracyResultsPdf from './ResultsPdfs/LiteracyResultsPdf';
 import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
+import * as Constants from '../../constants/Constants';
 
 interface NewMessageViewProps {
   firebase: any;
@@ -232,6 +234,25 @@ type SequentialData = {
   }> | undefined
 }
 
+type LiteracyData = {
+  summary: {
+    literacy: number,
+    noLiteracy: number
+  },
+  details: {
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9?: number,
+    literacy10?: number,
+  } | undefined
+}
+
 type ACData = {
   childSummary: {
     ac: number,
@@ -332,6 +353,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [renderEngagementPdf, setRenderEngagementPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
+  const [renderLiteracyPdf, setRenderLiteracyPdf] = useState(false);
   const [renderACPdf, setRenderACPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<Array<{
@@ -389,6 +411,12 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     childTrends: SequentialData['childTrends'],
     teacherTrends: SequentialData['teacherTrends']
   }>>();
+  const [literacy, setLiteracy] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: LiteracyData['summary'],
+    details: LiteracyData['details']
+  }>>();
   const [ac, setAC] = useState<Array<{
     sessionId: string,
     date: Date,
@@ -433,7 +461,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         achieveBy: firebase.firestore.Timestamp
       }>) => {
         setActionPlans(actionPlans);
-        console.log('aplans', actionPlans)
         setFetchedActionPlans(true);
         if (actionPlans && actionPlans.length > 0) {
           setNoActionPlansMessage('')
@@ -447,19 +474,18 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
         id: string,
         date: firebase.firestore.Timestamp,
-        practice: string
+        practice: string,
+        literacyType?: string
       }>) => {
         setObservations(observations);
         setFetchedResults(true);
         const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
-        console.log('observations', observations)
         if (observations && observations.length > 0) {
           observations.forEach(result => {
             unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
           })
         }
         setCheckedResults(unchecked);
-        console.log('observations', observations)
         if (observations && observations.length > 0) {
           setNoObservationsMessage('')
         } else {
@@ -579,7 +605,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     title: string,
     graphType: 'summary' | 'details' | 'trends',
     practice: string,
-    date: Date
+    date: Date,
+    literacyType?: string
   ): void => {
     const newAttachments = attachments ? [...attachments] : [];
     const newResultObject = {
@@ -595,7 +622,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       details: graphType === 'details' ? true : false,
       trends: graphType === 'trends' ? true : false,
       practice: practice,
-      date: date
+      date: date,
+      literacyType: literacyType
     };
     const idMatch = (element: {
       content: string,
@@ -610,7 +638,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       details?: boolean,
       trends?: boolean,
       practice?: string,
-      date?: Date
+      date?: Date,
+      literacyType?: string
     }): boolean => element.id === sessionId;
     if (newAttachments.length > 0) {
       const index = newAttachments.findIndex(idMatch);
@@ -713,7 +742,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       summary?: boolean,
       details?: boolean,
       trends?: boolean,
-      practice?: string
+      practice?: string,
+      literacyType?: string
     }> = [];
     const idMatch = (element: {
       content: string,
@@ -727,7 +757,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       summary?: boolean,
       details?: boolean,
       trends?: boolean,
-      practice?: string
+      practice?: string,
+      literacyType?: string
     }): boolean => element.id === id;
     if (attachments) {
       newAttachments = [...attachments];
@@ -772,7 +803,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         heightLeft -= pageHeight;
       }
       // use this for downloading pdf
-      // pdf.save("download.pdf");
+      pdf.save("download.pdf");
       const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
       const reader = new FileReader();
       reader.readAsDataURL(blobPDF);
@@ -900,7 +931,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         total: number,
         sessionTotal: number,
         startDate: {value: string}
-      }>) => {console.log('THI SIS TRANSITION SUMMARY', summary); return summary}) : null,
+      }>) => {return summary}) : null,
       details ? props.firebase.fetchTransitionTypeSummary(sessionId).then((details: Array<{
         line: number,
         traveling: number,
@@ -1165,6 +1196,57 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     ])
   }
 
+  const getLiteracyData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    type: string
+  ): Promise<[
+    LiteracyData['summary'],
+    LiteracyData['details'] | undefined
+  ]> => {
+    let literacyType = '';
+    let who = '';
+    if (type === 'FoundationalTeacher') {
+      literacyType = Constants.LiteracyTypes.FOUNDATIONAL;
+      who = 'Teacher'
+    } else if (type === 'FoundationalChild') {
+      literacyType = Constants.LiteracyTypes.FOUNDATIONAL;
+      who = 'Child'
+    } else if (type === 'WritingTeacher') {
+      literacyType = Constants.LiteracyTypes.WRITING;
+      who = 'Teacher'
+    } else if (type === 'WritingChild') {
+      literacyType = Constants.LiteracyTypes.WRITING;
+      who = 'Child'
+    } else if (type === 'ReadingTeacher') {
+      literacyType = Constants.LiteracyTypes.READING;
+      who = 'Teacher'
+    } else if (type === 'LanguageTeacher') {
+      literacyType = Constants.LiteracyTypes.LANGUAGE;
+      who = 'Teacher'
+    }
+    return Promise.all([
+      summary ? props.firebase.fetchLiteracySummary(sessionId, literacyType, who).then((summary: LiteracyData['summary']) => {
+        return summary}) : null,
+      details ? ((type === 'FoundationalTeacher' || type === 'FoundationalChild') ? (
+        props.firebase.fetchLiteracyDetailsFoundational(sessionId, who)
+        .then((details: LiteracyData['details']) => {return details})
+      ) : (type === 'WritingTeacher' || type === 'WritingChild') ? (
+        props.firebase.fetchLiteracyDetailsWriting(sessionId, who)
+        .then((details: LiteracyData['details']) => {return details})
+      ) : (type === 'ReadingTeacher' || type === 'ReadingChild') ? (
+        props.firebase.fetchLiteracyDetailsReading(sessionId, who)
+        .then((details: LiteracyData['details']) => {return details})
+      ) : (
+        props.firebase.fetchLiteracyDetailsLanguage(sessionId, who)
+        .then((details: LiteracyData['details']) => {return details})
+      )) : (
+        null
+      )
+    ])
+  }
+
   const getACData = (
     sessionId: string,
     summary: boolean | undefined,
@@ -1189,7 +1271,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     return Promise.all([
       props.firebase.fetchChildACSummary(sessionId)
         .then((summary: ACData['childSummary']) => {
-          console.log('hello', summary);
           return summary
         }),
       summary ? props.firebase.fetchTeacherACSummary(sessionId)
@@ -1508,6 +1589,45 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
+  const attachLiteracyResult = async (
+    literacyResults: Array<Attachment>
+  ): Promise<Array<{
+    sessionId: string,
+    summary: LiteracyData['summary'],
+    details: LiteracyData['details'] | undefined,
+    date: Date,
+    type: string
+  }> | void> => {
+    const literacyData: Array<{
+      sessionId: string,
+      summary: LiteracyData['summary'],
+      details: LiteracyData['details'] | undefined,
+      date: Date,
+      type: string
+    }> = [];
+    const getData = function (result: Attachment): Promise<void> {
+      return getLiteracyData(result.id, result.summary, result.details, result.literacyType).then((data) => {
+        literacyData.push({
+          sessionId: result.id,
+          summary: data[0],
+          details: data[1],
+          date: result.date? result.date : new Date(),
+          type: result.literacyType as Constants.LiteracyTypes,
+        })
+      })
+    };
+    if (literacyResults.length > 0) {
+      const getDataForAll = Promise.all(literacyResults.map(getData))
+      getDataForAll.then(() => {
+        setLiteracy(literacyData);
+        setRenderLiteracyPdf(true);
+        return literacyData
+      })
+    } else {
+      return;
+    }
+  }
+
   const attachACResult = async (
     acResults: Array<Attachment>
   ): Promise<Array<{
@@ -1582,6 +1702,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       const sequentialResults = attachedResults.filter(obj => {
         return obj.practice === 'Sequential Activities'
       });
+      const literacyResults = attachedResults.filter(obj => {
+        return obj.practice === 'Literacy Instruction'
+      })
       const acResults = attachedResults.filter(obj => {
         return obj.practice === 'Associative and Cooperative'
       });
@@ -1605,6 +1728,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       }
       if (sequentialResults.length > 0) {
         attachSequentialResult(sequentialResults)
+      }
+      if (literacyResults.length > 0) {
+        attachLiteracyResult(literacyResults)
       }
       if (acResults.length > 0) {
         attachACResult(acResults)
@@ -2065,6 +2191,35 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={sequential[index]}
                 date={result.date}
                 teacher={teacherObject}
+              />
+            </div>
+          )
+        })
+      ) : (null)}
+      {renderLiteracyPdf && literacy ? (
+        literacy.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <LiteracyResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={literacy[index]}
+                date={result.date}
+                teacher={teacherObject}
+                
               />
             </div>
           )

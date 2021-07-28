@@ -17,7 +17,7 @@ import {
   ListItemIcon
 } from '@material-ui/core';
 // import VisibilityIcon from '@material-ui/icons/Visibility';
-import * as moment from 'moment';
+import moment from 'moment';
 import TransitionTimeIconImage from '../../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.svg';
 import MathIconImage from '../../assets/images/MathIconImage.svg';
@@ -25,7 +25,10 @@ import EngagementIconImage from '../../assets/images/EngagementIconImage.svg';
 import InstructionIconImage from '../../assets/images/InstructionIconImage.svg';
 import ListeningIconImage from '../../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../../assets/images/SequentialIconImage.svg';
+import LiteracyIconImage from '../../assets/images/LiteracyIconImage.svg';
 import AssocCoopIconImage from '../../assets/images/AssocCoopIconImage.svg';
+import * as Constants from '../../constants/Constants';
+import coachState from '../../state/reducers/coach-state';
 
 interface Props {
   results?: ResultsInfo[],
@@ -41,7 +44,9 @@ interface Props {
     title: string,
     graphType: 'summary' | 'details' | 'trends',
     practice: string,
-    date: Date
+    date: Date,
+    literacyType?: Constants.LiteracyTypes,
+    who?: string
   ): void
 }
 
@@ -250,7 +255,7 @@ class ResultsList extends React.Component<Props, State>{
    * @param {Date} observationDate
    * @param {string} practice
    */
-  handleCheck = (id: string, resultType: ResultTypeKey, observationDate: Date, practice: string): void => {
+  handleCheck = (id: string, resultType: ResultTypeKey, observationDate: Date, practice: string, literacyType?: string): void => {
     const newChecked = this.state.checked ? {...this.state.checked} : {};
     if (newChecked[id]) {
       if (newChecked[id][resultType]) {
@@ -271,14 +276,27 @@ class ResultsList extends React.Component<Props, State>{
     }
     this.setState({checked: newChecked});
     this.props.handleCheckResult(id, resultType);
-    this.props.addResultsAttachment(
-      id,
-      this.props.teacherId ? this.props.teacherId : '',
-      practice + ' ' + moment(observationDate).format('MM.DD.YYYY') + ' Results.pdf',
-      resultType,
-      practice,
-      observationDate
-    );
+    if (practice === 'Literacy Instruction') {
+      this.props.addResultsAttachment(
+        id,
+        this.props.teacherId ? this.props.teacherId : '',
+        practice + ' ' + moment(observationDate).format('MM.DD.YYYY') + ' Results.pdf',
+        resultType,
+        practice,
+        observationDate,
+        literacyType
+      );
+    } else {
+      this.props.addResultsAttachment(
+        id,
+        this.props.teacherId ? this.props.teacherId : '',
+        practice + ' ' + moment(observationDate).format('MM.DD.YYYY') + ' Results.pdf',
+        resultType,
+        practice,
+        observationDate
+      );
+    }
+    
   }
 
   /**
@@ -325,6 +343,7 @@ class ResultsList extends React.Component<Props, State>{
                 id: string,
                 date: firebase.firestore.Timestamp,
                 practice: string
+                literacyType?: string
               }, index: number) => {
                 const isItemSelected = isSelected(row.id);
                 const observationDate = row.date.toDate();
@@ -336,6 +355,7 @@ class ResultsList extends React.Component<Props, State>{
                   : row.practice === 'engagement' ? 'Student Engagement'
                   : row.practice === 'listening' ? 'Listening to Children'
                   : row.practice === 'sequential' ? 'Sequential Activities'
+                  : row.practice === 'LI' ? 'Literacy Instruction'
                   : 'Associative and Cooperative'
                 ;
                 return (
@@ -392,6 +412,11 @@ class ResultsList extends React.Component<Props, State>{
                                 src={SequentialIconImage}
                                 alt="Magic 8 Icon"
                               />
+                            ) : practice === 'Literacy Instruction' ? (
+                              <img
+                                src={LiteracyIconImage}
+                                alt="Magic 8 Icon"
+                              />
                             ) : practice === 'Associative and Cooperative' ? (
                               <img
                                 src={AssocCoopIconImage}
@@ -403,28 +428,37 @@ class ResultsList extends React.Component<Props, State>{
                       </Typography>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary', observationDate, practice)}} alignItems="center">
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary', observationDate, practice, row.literacyType)}} alignItems="center">
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
-                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
+                            <Checkbox
+                              checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false}
+                              // disabled={row.practice === 'LI'}
+                            />
                           </ListItemIcon>
                         </Grid>
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details', observationDate, practice)}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details', observationDate, practice, row.literacyType)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
-                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
+                            <Checkbox
+                              checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false}
+                              // disabled={row.practice === 'LI'}
+                            />
                           </ListItemIcon>
                         </Grid>
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends', observationDate, practice)}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends', observationDate, practice, row.literacyType)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
-                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />
+                            <Checkbox
+                              checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false}
+                              disabled={row.practice === 'LI'}  
+                            />
                           </ListItemIcon>
                         </Grid>
                       </ListItem>
