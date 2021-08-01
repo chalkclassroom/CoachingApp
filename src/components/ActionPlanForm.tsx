@@ -21,6 +21,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
 import * as Types from '../constants/Types';
+import * as Constants from '../constants/Constants';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
@@ -81,6 +82,7 @@ interface Props {
       timeline: Date | null
     ): Promise<void>,
     createActionStep(actionPlanId: string, index: string): Promise<void>,
+    completeAppointment(teacherId: string, type: string, tool: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
@@ -272,6 +274,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   createNewActionPlan = (): void => {
     this.props.firebase.createActionPlan(this.props.teacher.id, this.props.magic8)
       .then(() => {
+        this.props.firebase.completeAppointment(this.props.teacher.id, 'Action Plan', Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]);
         this.setState({
           editMode: true,
           actionPlanExists: true,
@@ -391,6 +394,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.state.goalTimeline,
       this.state.benefit
     ).then(() => {
+      this.props.firebase.completeAppointment(this.props.teacher.id, 'Action Plan', Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]);
       this.getActionPlan(this.state.actionPlanId);
     })
     .catch(() => {
@@ -478,6 +482,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       saveActionPlan: PropTypes.func,
       saveActionStep: PropTypes.func,
       createActionStep: PropTypes.func,
+      completeAppointment: PropTypes.func,
       getCoachFirstName: PropTypes.func,
       getCoachLastName: PropTypes.func
     }).isRequired,

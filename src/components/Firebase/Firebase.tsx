@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
 import * as Constants from '../../constants/Constants';
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes';
+import * as Types from '../../constants/Types';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -374,80 +375,22 @@ class Firebase {
     }
   };
 
-  // Gets most recent observation of each type for a teacher
-  // @param:string partnerID -> iD of teacher
-  // @return:Promise -> onFulfilled: returns Array of dates of most recent observations
-  //                '-> onRejected: prints error to console
-  // NOTE: Index specified in Firebase console in order to execute Query
   /**
-   * gets most recent observation of each type for a teacher
-   * @param {string} partnerID
+   * Classroom Climate cloud function
+   * get average tone rating for observation session
+   * @param {string} sessionId
    */
-  getRecentObservations = async (partnerID: string): Promise<Array<string> | void> => {
-    if (this.auth.currentUser) {const obsRef = this.db
-      .collection("observations")
-      .where("teacher", "==", `/user/${partnerID}`)
-      .where("observedBy", "==", `/user/${this.auth.currentUser.uid}`);
-    // ONLY 'transition','climate', & 'AC' types specified in dB! The rest are subject to change!
-    return Promise.all([
-      obsRef
-        .where("type", "==", "transition")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "climate")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "listening")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "level")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "math")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "engagement")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "sequential")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get(),
-      obsRef
-        .where("type", "==", "AC")
-        .orderBy("end", "desc")
-        .limit(1)
-        .get()
-    ])
-      .then(snapshots => {
-        const recentObs = new Array(8).fill(null);
-        snapshots.forEach((snapshot, index) =>
-          snapshot.forEach(
-            (doc: firebase.firestore.QueryDocumentSnapshot) =>
-              (recentObs[index] = doc
-                .data()
-                .end.toDate()
-                .toLocaleDateString())
-          )
-        );
-        console.log('recent obs are ', recentObs);
-        return recentObs;
-      })
+   getRecentObservations = async (): Promise<{} | void> => {
+    const getRecentObservations = this.functions.httpsCallable(
+      "funcRecentObservations"
+    );
+    return getRecentObservations()
+      .then((result) => 
+          result.data[0]
+      )
       .catch((error: Error) =>
-        console.error("Error occurred during Promise.all() resolution: ", error)
-      );}
+        console.error("Error occurred getting average tone rating: ", error)
+      );
   };
 
   /* getCoachList = async function() {
@@ -589,6 +532,42 @@ class Firebase {
         console.error("Error occurred updating session ref: ", error)
       );
   };
+
+  completeAppointment = async (teacherId: string, type: string, tool: string): Promise<void> => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("appointments")
+        .where("coach", "==", this.auth.currentUser.uid)
+        .where("teacherID", "==", teacherId)
+        .where("date", ">=", today)
+        .where("date", "<", tomorrow)
+        .where("tool", "==", tool)
+        .where("type", "==", type)
+        .orderBy("date", "asc")
+        .limit(1)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          querySnapshot.forEach(doc => {
+            return this.db
+              .collection("appointments")
+              .doc(doc.id)
+              .update({
+                completed: true
+              })
+              .catch((error: Error) =>
+                console.error("Error occurred unlocking section: ", error)
+              );
+            })
+          return;
+        })
+        .catch((error: Error) => {
+          console.log( 'unable to retrieve action plans', error)
+        })
+    }
+  }
 
   /**
    * submits a single center observation to database
@@ -3147,6 +3126,203 @@ class Firebase {
         console.log('error retrieving action steps');
       })
   }
+
+  /**
+   * finds all action plan events for my teachers calendar
+   */
+  getActionPlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const actionPlanEventsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+              actionPlanEventsArray.push({
+                title: 'Action Plan',
+                start: doc.data().dateModified.toDate(),
+                end: doc.data().dateModified.toDate(),
+                allDay: false,
+                resource: doc.data().teacher,
+                type: doc.data().tool === 'Transition Time' ? 'TT'
+                  : doc.data().tool === 'Classroom Climate' ? 'CC'
+                  : doc.data().tool === 'Math Instruction' ? 'MI'
+                  : doc.data().tool === 'Level of Instruction' ? 'IN'
+                  : doc.data().tool === 'Student Engagement' ? 'SE'
+                  : doc.data().tool === 'Listening to Children' ? 'LC'
+                  : doc.data().tool === 'Sequential Activities' ? 'SA'
+                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
+                  : 'AC',
+                id: doc.id
+              })
+            }
+          })
+          return actionPlanEventsArray;
+        })
+        .catch(() => {
+          console.log('unable to find action plans')
+        })
+    }
+  }
+
+
+  /**
+   * finds all conference plan events for my teachers calendar
+   */
+   getConferencePlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("conferencePlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const conferencePlanEventsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+              conferencePlanEventsArray.push({
+                title: 'Conference Plan',
+                start: doc.data().dateModified.toDate(),
+                end: doc.data().dateModified.toDate(),
+                allDay: false,
+                resource: doc.data().teacher,
+                type: doc.data().tool === 'Transition Time' ? 'TT'
+                  : doc.data().tool === 'Classroom Climate' ? 'CC'
+                  : doc.data().tool === 'Math Instruction' ? 'MI'
+                  : doc.data().tool === 'Level of Instruction' ? 'IN'
+                  : doc.data().tool === 'Student Engagement' ? 'SE'
+                  : doc.data().tool === 'Listening to Children' ? 'LC'
+                  : doc.data().tool === 'Sequential Activities' ? 'SA'
+                  : doc.data().tool === 'Literacy Instruction' ? 'LI'
+                  : 'AC',
+                id: doc.id,
+                conferencePlanSessionId: doc.data().sessionId
+              })
+            }
+          })
+          return conferencePlanEventsArray;
+        })
+        .catch(() => {
+          console.log('unable to find conference plans')
+        })
+    }
+  }
+
+  /**
+   * finds all action plan events for my teachers calendar
+   */
+   getAppointments = async (): Promise<Array<Types.CalendarEvent> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("appointments")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const appointmentsArray: Array<Types.CalendarEvent> = [];
+          querySnapshot.forEach(doc => {
+            if (!doc.data().completed && !doc.data().removed) {
+              appointmentsArray.push({
+                title: doc.data().type,
+                start: doc.data().date.toDate(),
+                end: doc.data().date.toDate(),
+                allDay: false,
+                resource: doc.data().teacherID,
+                type: doc.data().tool,
+                id: doc.id,
+                appointment: true
+              })
+            }
+          })
+          return appointmentsArray;
+        })
+        .catch(() => {
+          console.log('unable to find appointments')
+        })
+    }
+  }
+
+  /**
+   * creates appointment in cloud firestore
+   * @param {string} teacherId
+   * @param {Date} date
+   * @param {string} tool
+   * @param {string} type
+   */
+   createAppointment = async (
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string,
+  ): Promise<string|void> => {
+    const data = Object.assign(
+      {},
+      {
+        coach: this.auth.currentUser ? this.auth.currentUser.uid : 'unknown',
+        teacherID: teacherId,
+        tool: tool,
+        type: type,
+        date: date,
+        completed: false,
+        removed: false
+      }
+    );
+    const appointmentRef = firebase.firestore().collection('appointments').doc();
+    return appointmentRef.set(data).then(() => {
+      return (appointmentRef.id)
+    }).catch(() => {
+      console.log('error creating conference plan');
+    })
+  }
+
+  /**
+   * saves appointment in cloud firestore
+   * @param {string} id
+   * @param {string} teacherId
+   * @param {Date} date
+   * @param {string} tool
+   * @param {string} type
+   */
+  saveAppointment = async (
+    id: string,
+    teacherId: string,
+    date: Date,
+    tool: string,
+    type: string,
+  ): Promise<string|void> => {
+    if (this.auth.currentUser) {
+      return this.db
+      .collection("appointments")
+      .doc(id)
+      .update({
+        teacherID: teacherId,
+        tool: tool,
+        type: type,
+        date: date,
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred saving appointment: ", error)
+      );
+    }
+  };
+
+  /**
+   * marks appointment in cloud firestore as 'removed'
+   * keep record but don't show on user's calendar
+   * @param {string} id
+   */
+   removeAppointment = async (
+    id: string
+  ): Promise<string|void> => {
+    if (this.auth.currentUser) {
+      return this.db
+      .collection("appointments")
+      .doc(id)
+      .update({
+        removed: true,
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred removing appointment: ", error)
+      );
+    }
+  };
 
 }
 

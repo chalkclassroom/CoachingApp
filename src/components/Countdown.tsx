@@ -81,7 +81,7 @@ function Countdown(props: Props): React.ReactElement {
           }
           trailWidth={18}
           style={{
-            transform: horizontal ? 'rotate(0deg)' : 'rotate(270deg)'
+            transform: horizontal ? 'rotate(0deg)' : undefined // timer orientation does not depend on screen orientation
           }}
         />
       </Grid>

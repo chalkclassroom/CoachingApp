@@ -26,7 +26,12 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  location: {
+    state: {
+      sessionId: string
+    }
+  },
 }
 
 interface Style {
@@ -187,7 +192,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.state.sessionDates[0].id },
+              this.setState({ sessionId: (this.props.location.state !== undefined && this.props.location.state.sessionId !== undefined) ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
                 () => {
                   this.getData();
                 }
@@ -350,6 +355,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     if (!conferencePlanId) {
       firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Sequential Activities')
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'SA');
           firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
@@ -409,6 +415,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'SA');
           this.setState({ questionAdded: true }, () => {
             setTimeout(() => {
               this.setState({ questionAdded: false })
@@ -422,6 +429,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'SA');
           firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({

@@ -7,6 +7,11 @@ export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' |
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
 'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
+export type ToolNamesKey = 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC';
+
+export type ToolAbbreviationsKey = 'Transition Time' | 'Classroom Climate' | 'Math Instruction' | 'Level of Engagement' |
+'Level of Instruction' | 'Listening to Children' | 'Sequential Activities' | 'Literacy Instruction' | 'AC';
+
 export type TrainingLiteracy = {
   conceptsFoundational: boolean,
   conceptsWriting: boolean,
@@ -130,7 +135,8 @@ export interface Teacher {
   id: string,
   phone: string,
   role: string,
-  school: string
+  school: string,
+  unlocked: Array<number>
 }
 
 /* export interface History {
@@ -214,4 +220,17 @@ export interface FirebaseAppBar {
   ): Promise<void>,
   firebaseSignOut(): Promise<void>,
   getTeacherList(): Promise<Teacher[]>
+}
+
+export interface CalendarEvent {
+  title: string,
+  start: Date,
+  end: Date,
+  allDay?: boolean
+  resource: string,
+  hexColor?: string,
+  type: ToolNamesKey,
+  id: string,
+  conferencePlanSessionId?: string,
+  appointment?: boolean
 }
