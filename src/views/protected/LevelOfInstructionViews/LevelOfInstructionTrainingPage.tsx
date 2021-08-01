@@ -13,8 +13,8 @@ export default function LevelOfInstructionTrainingPage(): React.ReactElement {
     <TrainingLayout
       icon={InstructionIconImage}
       colorTheme={Constants.InstructionTheme}
-      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level%20of%20Instruction%20Concepts.mp4?alt=media&token=a6757bbf-a815-4949-84bc-4bc602178b17'
-      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level%20of%20Instruction%20Demo.mp4?alt=media&token=95ba2041-d63d-42b4-b37c-b43389700d3c'
+      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20IN%20(CC).mp4?alt=media&token=75323b25-5d66-47f2-ae78-163d913d94af'
+      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20IN%20(CC).mp4?alt=media&token=58b5493d-78be-48ad-8dae-f852207b310f'
       definitions={<LevelOfInstructionHelpCard />}
       section='level'
     />
