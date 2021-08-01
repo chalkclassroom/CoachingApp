@@ -277,7 +277,7 @@ class App extends React.Component<Props, State> {
       getCoachFirstName: PropTypes.func,
       getUnlockedSections: PropTypes.func
     }).isRequired,
-    getCoach: PropTypes.func.isRequired,
+    coachLoaded: PropTypes.func.isRequired,
     getUnlocked: PropTypes.func.isRequired
   }
 
@@ -365,7 +365,7 @@ class App extends React.Component<Props, State> {
               userRole={role}
               render={(props: {
                 history: H.History
-              }) : React.ReactElement=> <TrainingPage {...props}/>}
+              }) : React.ReactElement=> <TrainingPage isTeacher={role === Role.TEACHER }{...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}

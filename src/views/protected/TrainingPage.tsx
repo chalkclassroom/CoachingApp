@@ -167,7 +167,7 @@ class TrainingPage extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, isTeacher } = this.props;
     return(
       <div>
         <FirebaseContext.Consumer>
@@ -179,7 +179,7 @@ class TrainingPage extends React.Component<Props, State> {
           justify="center"
           alignItems="center"
         >
-          <Grid item className={classes.dashboardGrid}>
+          {!isTeacher && <Grid item className={classes.dashboardGrid}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
               {<Grid item>
                 <Typography align="center" variant="h4" className={classes.trainingText}>
@@ -190,7 +190,7 @@ class TrainingPage extends React.Component<Props, State> {
                 <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> }
           <Grid item className={classes.contentGrid}>
             {this.state.view === 'observe' ? (
               <ToolIcons type={'Observe'} training={true} history={this.props.history} />
