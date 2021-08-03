@@ -23,7 +23,6 @@ jobs:
         with:
           ref: master
       - name: NPM Install and Build
-        uses: actions/setup-node@v2
         working-directory: ./
         run: |
           npm install
