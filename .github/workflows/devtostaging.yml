@@ -10,9 +10,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10]
     steps:
       - name: Assign Author
         uses: technote-space/assign-author@v1.2.4
@@ -30,7 +27,7 @@ jobs:
           npm run prod
           npm run copy
         env:
-          -CXXFLAGS: -Wno-error
+          -CI: ""
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
