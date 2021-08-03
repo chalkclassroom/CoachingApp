@@ -22,10 +22,12 @@ jobs:
       - name: NPM Install and Build
         working-directory: ./
         run: |
-          CI="" npm install
+          npm install
           npm run removebuild
           npm run prod
           npm run copy
+        env:
+          CI: ""
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
