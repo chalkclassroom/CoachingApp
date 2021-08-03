@@ -30,7 +30,7 @@ jobs:
           npm run prod
           npm run copy
         env:
-          -CXXFLAGS: -Wno-error
+          -CI: ""
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
