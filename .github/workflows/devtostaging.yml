@@ -1,4 +1,4 @@
-name: Develop to Staging Merge CI
+name: Deploy develop branch
 
 on:
   pull_request:
@@ -15,18 +15,27 @@ jobs:
         uses: technote-space/assign-author@v1.2.4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
           ref: master
-
-      - name: Initialize Pull Request
-        uses: gha-utilities/init-pull-request@v0.0.2
+      - name: NPM Install Packages
+        working-directory: ./
+        run: |
+          npm ci
+        env:
+          CI: true
+      - name: Generate on Prod Server Code
+        working-directory: ./
+        run: |
+          npm run removebuild
+          npm run prod
+          npm run copy
+        env:
+          CI: true
+      - name: Deploy on Prod Server
+        uses: w9jds/firebase-action@master
         with:
-          pull_request_token: ${{ secrets.GITHUB_TOKEN }}
-          head: develop
-          base: staging
-          title: 'Merging Approved Changes from Develop to Staging'
-          body: >
-            Merging Approved Changes from Develop to Staging.
+          args: deploy --only hosting:cqrefpwa
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
