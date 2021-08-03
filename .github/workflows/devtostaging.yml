@@ -8,7 +8,7 @@ on:
       - develop
 
 jobs:
-  pull-request:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Assign Author
@@ -22,9 +22,7 @@ jobs:
       - name: NPM Install Packages
         working-directory: ./
         run: |
-          npm ci
-        env:
-          CI: false
+          npm install
       - name: Generate Prod Server Code
         working-directory: ./
         run: |
