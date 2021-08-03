@@ -29,6 +29,8 @@ jobs:
           npm run removebuild
           npm run prod
           npm run copy
+        env:
+          -CXXFLAGS: -Wno-error
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
