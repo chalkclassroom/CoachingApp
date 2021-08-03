@@ -22,7 +22,7 @@ jobs:
       - name: NPM Install Packages
         working-directory: ./
         run: |
-          npm install
+          npm install --build-from-resource
       - name: Generate Prod Server Code
         working-directory: ./
         run: |
