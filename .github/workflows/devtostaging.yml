@@ -27,8 +27,7 @@ jobs:
           npm run prod
           npm run copy
         env:
-          CC: /usr/bin/clang
-          CXX: /usr/bin/clang++
+          CI: ""
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
