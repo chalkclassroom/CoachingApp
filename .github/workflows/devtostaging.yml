@@ -24,8 +24,8 @@ jobs:
         run: |
           npm ci
         env:
-          CI: true
-      - name: Generate on Prod Server Code
+          CI: false
+      - name: Generate Prod Server Code
         working-directory: ./
         run: |
           npm run removebuild
