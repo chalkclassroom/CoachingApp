@@ -10,6 +10,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10]
     steps:
       - name: Assign Author
         uses: technote-space/assign-author@v1.2.4
@@ -19,18 +22,14 @@ jobs:
         uses: actions/checkout@v2-beta
         with:
           ref: master
-      - name: NPM Install Packages
+      - name: NPM Install and Build
+        uses: actions/setup-node@v2
         working-directory: ./
         run: |
           npm install
-      - name: Generate Prod Server Code
-        working-directory: ./
-        run: |
           npm run removebuild
           npm run prod
           npm run copy
-        env:
-          CI: true
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
