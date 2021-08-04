@@ -22,10 +22,10 @@ jobs:
       - name: NPM Install and Build
         working-directory: ./
         run: |
-          npm install
-          npm run removebuild
-          npm run prod
-          npm run copy
+          yarn install
+          yarn run removebuild
+          yarn run prod
+          yarn run copy
         env:
           CXXFLAGS: -Wno-error
       - name: Deploy on Prod Server

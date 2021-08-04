@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, WithStyles, withStyles } from '@material-ui/core/styles'
 import { Card, CardActionArea } from '@material-ui/core'
 import styled from 'styled-components'
 import LockImage from '../assets/images/LockImage.png'
 import CheckmarkImage from '../assets/images/CheckmarkImage.png'
 
-const styles: object = {
+const styles = createStyles({
     overlayImage: {
         color: 'white',
         fontSize: 100,
@@ -24,7 +24,7 @@ const styles: object = {
         height: '160px',
         width: '160px',
     },
-}
+})
 
 const CardBase = styled.div`
   position: relative;
@@ -34,32 +34,23 @@ const CardBase = styled.div`
 `
 
 const BackgroundImage = styled.div`
-  flex: 1,
-  width: null,
-  height: null`
+  flex: 1;
+  width: 100%;
+  height: 100%;`
 
 const Overlay = styled.div`
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 1000;
-  opacity: 0.8,
+  opacity: 0.8;
 `
 
-interface Style {
-    overlayImage: string,
-    card: string,
-    cardAction: string
-}
-
-interface Props {
-    classes: Style,
+interface Props extends WithStyles<typeof styles>{
     isTeacher: boolean,
-
     onClick(title: string, unlocked: boolean): void,
-
     title: string,
     icon: string,
     training: boolean,
@@ -76,6 +67,11 @@ interface State {
  * @class Magic8Card
  */
 class Magic8Card extends React.Component<Props, State> {
+
+    state:State = {
+        selected: false
+    }
+
     /**
      * @param {Props} props
      */
@@ -98,6 +94,10 @@ class Magic8Card extends React.Component<Props, State> {
         type: PropTypes.string.isRequired,
     }
 
+    /**
+     * Gets the overlay based on the supplied parameters, unlocked, teacher, etc.
+     * @return {React.ReactNode}
+     */
     getOverlay(): React.ReactNode {
         const {
             training,
