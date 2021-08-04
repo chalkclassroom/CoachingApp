@@ -69,7 +69,7 @@
     "react-responsive-carousel": "^3.1.49",
     "react-router-dom": "^5.2.0",
     "react-router-redux": "^4.0.8",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^4.0.3",
     "react-select": "^3.0.8",
     "react-slick": "^0.23.2",
     "react-svg-piechart": "^2.1.1",

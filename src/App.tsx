@@ -20,7 +20,7 @@ import ConferencePlanView from './views/protected/ConferencePlanViews/Conference
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
-  createMuiTheme,
+  createTheme,
   MuiThemeProvider,
   Theme
 } from "@material-ui/core/styles";
@@ -62,15 +62,16 @@ import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
 import * as Types from './constants/Types'
+import Firebase from './components/Firebase'
 
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
-LogRocket.init('akprci/cqref');
-setupLogRocketReact(LogRocket);
+// LogRocket.init('akprci/cqref');
+// setupLogRocketReact(LogRocket);
 
-const styles: Theme = createMuiTheme({
+const styles: Theme = createTheme({
   palette: {
     primary: {
       light: blue[300],
@@ -132,34 +133,7 @@ PrivateRoute.propTypes = {
 }
 
 interface Props {
-  firebase: {
-    auth: {
-      onAuthStateChanged(arg: any): firebase.User | null
-    },
-    getCoachFirstName(): Promise<string>,
-    getUserRole(): Promise<string>,
-    getUnlockedSections(): Promise<Array<number>>,
-    getTeacherList(): Promise<Array<Types.Teacher>>
-    // getting literacy training data from firestore
-    getLiteracyTraining(): Promise<{
-      conceptsFoundational: boolean,
-      conceptsWriting: boolean,
-      conceptsReading: boolean,
-      conceptsLanguage: boolean,
-      definitionsFoundational: boolean,
-      definitionsWriting: boolean,
-      definitionsReading: boolean,
-      definitionsLanguage: boolean,
-      demoFoundational: boolean,
-      demoWriting: boolean,
-      demoReading: boolean,
-      demoLanguage: boolean,
-      knowledgeCheckFoundational: boolean,
-      knowledgeCheckWriting: boolean,
-      knowledgeCheckReading: boolean,
-      knowledgeCheckLanguage: boolean
-    }>
-  },
+  firebase: Firebase,
   coachLoaded(name: string, role: Role): void,
   getUnlocked(unlocked: Array<number>): void,
   // adding literacy training data to redux
@@ -270,13 +244,7 @@ class App extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    firebase: PropTypes.exact({
-      auth: PropTypes.exact({
-        onAuthStateChanged: PropTypes.func
-      }),
-      getCoachFirstName: PropTypes.func,
-      getUnlockedSections: PropTypes.func
-    }).isRequired,
+    firebase: PropTypes.object,
     coachLoaded: PropTypes.func.isRequired,
     getUnlocked: PropTypes.func.isRequired
   }

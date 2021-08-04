@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import LOIHelpCardHighLevel from './LOIHelpCardHighLevel';
 import LOIHelpCardLowLevel from './LOIHelpCardLowLevel';
 import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
 
-const LOITheme = createMuiTheme({
+const LOITheme = createTheme({
   palette: {
     primary: {
       main: "#38761d"

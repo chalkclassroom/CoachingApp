@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
 import {
   lightGreen,
@@ -50,7 +50,7 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
-export const TransparentTheme = createMuiTheme({
+export const TransparentTheme = createTheme({
   palette: {
     primary: {
       main: '#ffffff00'
@@ -58,21 +58,21 @@ export const TransparentTheme = createMuiTheme({
   }
 });
 
-export const TransitionTheme = createMuiTheme({
+export const TransitionTheme = createTheme({
   palette: {
     primary: {
       main: '#e55529'
     }
   }
 });
-export const ClimateTheme = createMuiTheme({
+export const ClimateTheme = createTheme({
   palette: {
     primary: {
       main: '#0988ec'
     }
   }
 });
-export const MathTheme = createMuiTheme({
+export const MathTheme = createTheme({
   palette: {
     primary: {
       main: '#094492'
@@ -82,14 +82,14 @@ export const MathTheme = createMuiTheme({
     }
   }
 });
-export const InstructionTheme = createMuiTheme({
+export const InstructionTheme = createTheme({
   palette: {
     primary: {
       main: '#009365'
     }
   }
 });
-export const EngagementTheme = createMuiTheme({
+export const EngagementTheme = createTheme({
   palette: {
     primary: {
       main: '#e99c2e'
@@ -99,7 +99,7 @@ export const EngagementTheme = createMuiTheme({
     }
   }
 });
-export const ListeningTheme = createMuiTheme({
+export const ListeningTheme = createTheme({
   palette: {
     primary: {
       main: '#4fd9b3'
@@ -109,7 +109,7 @@ export const ListeningTheme = createMuiTheme({
     }
   }
 });
-export const SequentialTheme = createMuiTheme({
+export const SequentialTheme = createTheme({
   palette: {
     primary: {
       main: '#ffd300'
@@ -119,14 +119,14 @@ export const SequentialTheme = createMuiTheme({
     }
   }
 });
-export const LiteracyTheme = createMuiTheme({
+export const LiteracyTheme = createTheme({
   palette: {
     primary: {
       main: '#C4395A'
     }
   }
 });
-export const ACTheme = createMuiTheme({
+export const ACTheme = createTheme({
   palette: {
     primary: {
       main: '#6f39c4'
@@ -155,7 +155,7 @@ export const UnselectedTransitionTypeColors = {
   otherColor: indigo['A100']
 }
 
-export const LineTheme = createMuiTheme({
+export const LineTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.lineColor
@@ -169,7 +169,7 @@ export const LineTheme = createMuiTheme({
   }
 });
 
-export const TravelingTheme = createMuiTheme({
+export const TravelingTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.travelingColor
@@ -183,7 +183,7 @@ export const TravelingTheme = createMuiTheme({
   }
 });
 
-export const WaitingTheme = createMuiTheme({
+export const WaitingTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.waitingColor
@@ -197,7 +197,7 @@ export const WaitingTheme = createMuiTheme({
   }
 });
 
-export const RoutinesTheme = createMuiTheme({
+export const RoutinesTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.routinesColor
@@ -211,7 +211,7 @@ export const RoutinesTheme = createMuiTheme({
   }
 });
 
-export const BehaviorManagementTheme = createMuiTheme({
+export const BehaviorManagementTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.behaviorManagementColor
@@ -225,7 +225,7 @@ export const BehaviorManagementTheme = createMuiTheme({
   }
 });
 
-export const OtherTheme = createMuiTheme({
+export const OtherTheme = createTheme({
   palette: {
     primary: {
       main: TransitionTypeColors.otherColor
@@ -694,7 +694,7 @@ export const Checklist: {
         text</b> or part of a text
       </div>,
       <div key={3}>
-        <b>Relating the book to children's experiences</b> inside and/or
+        <b>Relating the book to children&apos;s experiences</b> inside and/or
         outside the classroom
       </div>,
       <div key={4}>
@@ -707,7 +707,7 @@ export const Checklist: {
       </div>,
       <div key={6}>
         <b>Responding to children with follow-up questions and/or comments </b> to
-        extend children's thinking
+        extend children&apos;s thinking
       </div>,
       <div key={7}>
         Encouraging children to <b>listen and respond to peer comments/ideas</b>
@@ -737,10 +737,10 @@ export const Checklist: {
         <b>Asking open-ended questions</b> or prompts to encourage conversation
       </div>,
       <div key={5}>
-        Observing or using questions/prompts in order to <b>enter children's ongoing play or activity</b>
+        Observing or using questions/prompts in order to <b>enter children&apos;s ongoing play or activity</b>
       </div>,
       <div key={6}>
-        <b>Repeating or clarifying</b> children's comments
+        <b>Repeating or clarifying</b> children&apos;s comments
       </div>,
       <div key={7}>
         Responding to children with <b>follow-up questions and/or comments</b> to extend their thinking
