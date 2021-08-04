@@ -1,5 +1,5 @@
 // build_utils/webpack.production.js
-
+const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
