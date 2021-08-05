@@ -8,7 +8,7 @@ module.exports = () => ({
     devtool: "nosource-source-map",
     output: {
         publicPath: "/",
-        path: path.resolve(__dirname, "build"),
+        path: path.resolve(__dirname, "../build"),
         filename: "production.js"
     },
     optimization: {
