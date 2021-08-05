@@ -69,7 +69,7 @@
     "react-responsive-carousel": "^3.1.49",
     "react-router-dom": "^5.2.0",
     "react-router-redux": "^4.0.8",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^4.0.3",
     "react-select": "^3.0.8",
     "react-slick": "^0.23.2",
     "react-svg-piechart": "^2.1.1",
@@ -90,7 +90,6 @@
     "doc": "rimraf docs && jsdoc -r  . -d docs -c jsdoc.conf README.md",
     "cypress": "npx cypress open",
     "test": "npx cypress run",
-    "copy": "cpr build public -o",
     "removebuild": "rimraf build",
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
@@ -99,9 +98,9 @@
     "prod": "webpack --mode=production",
     "firebase": "firebase emulators:start --export-on-exit ./data --import ./data",
     "deploydocs": "npm run doc && firebase target:apply hosting chalkdocs chalkdocs && firebase deploy --only hosting:chalkdocs",
-    "deploy": "npm run removebuild && firebase target:apply hosting cqrefpwa cqrefpwa && npm run prod && npm run copy && firebase deploy --only hosting:cqrefpwa",
-    "devdeploy": "npm run removebuild && firebase target:apply hosting devcqref devcqref && npm run dev && npm run copy && firebase deploy --only hosting:devcqref",
-    "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && npm run copy && firebase deploy --only hosting:stagingcqref"
+    "deploy": "npm run removebuild && firebase target:apply hosting cqrefpwa cqrefpwa && npm run prod && firebase deploy --only hosting:cqrefpwa",
+    "devdeploy": "npm run removebuild && firebase target:apply hosting devcqref devcqref && npm run dev && firebase deploy --only hosting:devcqref",
+    "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && firebase deploy --only hosting:stagingcqref"
   },
   "eslintConfig": {
     "extends": "react-app"

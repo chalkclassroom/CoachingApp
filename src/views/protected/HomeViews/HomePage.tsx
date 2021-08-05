@@ -160,7 +160,7 @@ class HomePage extends React.Component<Props, State> {
     }).isRequired,
     coachName: PropTypes.string.isRequired,
     getCoach: PropTypes.func.isRequired,
-    userRole: PropTypes.object,
+    userRole: PropTypes.string,
     history: ReactRouterPropTypes.history
   }
 
