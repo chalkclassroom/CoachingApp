@@ -27,7 +27,6 @@ jobs:
           yarn install
           yarn run removebuild
           yarn run prod
-          yarn run copy
         env:
           CXXFLAGS: -Wno-error
       - name: Deploy on Prod Server
