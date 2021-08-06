@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 
 import AppBar from '../../../components/AppBar'
 import { FirebaseContext } from '../../../components/Firebase'
-import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 import {
   ResourceLabel,
@@ -24,7 +24,7 @@ import {
 export default function CoachingResources(): React.ReactElement {
   return <>
     <FirebaseContext.Consumer>
-      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} noBack />}
+      {(firebase: Firebase) => <AppBar firebase={firebase} noBack />}
     </FirebaseContext.Consumer>
     <Box py={6}>
       <Typography variant='h4' component='h1' align='center'>CHALK Coaching Resources</Typography>
@@ -32,11 +32,11 @@ export default function CoachingResources(): React.ReactElement {
     <Container maxWidth='sm'>
       <Grid container spacing={6}>
         {Object.entries(cards).map(
-          ([key, { label, imageImport, linkUrl }]) => (
+          ([key, { label, imageImport, linkUrl, backgroundColor }]) => (
             <Grid item xs={6} key={key}>
               <Card>
                 <CardActionArea component={Link} to={linkUrl}>
-                  <LazyLoadedResourceCardMedia imageImport={imageImport} />
+                  <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor} />
                   <ResourceCardContent>
                     <ResourceLabel>{label}</ResourceLabel>
                   </ResourceCardContent>

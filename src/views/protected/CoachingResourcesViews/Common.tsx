@@ -30,14 +30,20 @@ export const ResourceCardMedia = withStyles({
   root: {
     backgroundSize: 'cover',
     height: 0,
-    paddingTop: '75%' // 4:3 aspect ratio
-  }
+    paddingTop: '100%', // 4:3 aspect ratio
+    paddingLeft: '25%'
+  },
+  media: {
+    height: "125px",
+    width: "190px"
+  },
 })(CardMedia)
 
 export const ResourceCardSkeleton = withStyles({
   root: {
     height: 0,
-    paddingTop: '75%' // 4:3 aspect ratio
+    paddingTop: '100%', // 4:3 aspect ratio
+    paddingLeft: '25%'
   }
 })(Skeleton)
 
@@ -48,51 +54,58 @@ export const StyledLink = withStyles(theme => ({
   }
 }))(Link)
 
+
+
 export const cards = {
   'coaching-cycle': {
     label: 'Coaching Cycle',
     imageImport: () => import('../../../assets/images/CoachingResources/CoachingCycle.png'),
-    linkUrl: '/CoachingResources/CoachingCycle'
+    linkUrl: '/CoachingResources/CoachingCycle',
+    backgroundColor: "#FF7059"
   },
   'professional-development-materials': {
     label: 'Professional Development Materials',
     imageImport: () => import('../../../assets/images/CoachingResources/ProfDev.png'),
-    linkUrl: '/CoachingResources/ProfessionalDevelopmentMaterials'
+    linkUrl: '/CoachingResources/ProfessionalDevelopmentMaterials',
+    backgroundColor: "#733CB7"
   },
   'coaching-best-practices': {
     label: 'Coaching Best Practices',
     imageImport: () => import('../../../assets/images/CoachingResources/CoachingBest.png'),
-    linkUrl: '/CoachingResources/CoachingBestPractices'
+    linkUrl: '/CoachingResources/CoachingBestPractices',
+    backgroundColor: "#1786D5"
   },
   'chalk-crosswalks': {
     label: 'CHALK Crosswalks',
     imageImport: () => import('../../../assets/images/CoachingResources/Crosswalks.png'),
-    linkUrl: '/CoachingResources/ChalkCrosswalks'
+    linkUrl: '/CoachingResources/ChalkCrosswalks',
+    backgroundColor: "#11BF89"
   }
 }
 
+
 interface LazyLoadedResourceCardMediaProps {
   imageImport: () => Promise<typeof import('*.jpg')>,
+  backgroundColor: string
 }
 
 /**
  * @return {ReactElement}
  */
-export function LazyLoadedResourceCardMedia({ imageImport }: LazyLoadedResourceCardMediaProps): React.ReactElement {
+export function LazyLoadedResourceCardMedia({ imageImport, backgroundColor }: LazyLoadedResourceCardMediaProps): React.ReactElement {
   const [imageSource, setImageSource] = useState<string | null>(null)
 
   useEffect(() => {
     imageImport().then(image => {
       setImageSource(image.default)
-    }).catch(() => {
-      console.warn('Could not load resource card image')
+    }).catch((e) => {
+      console.warn('Could not load resource card image', e)
     })
   }, [])
-
   return imageSource ? (
-    <ResourceCardMedia image={imageSource}/>
+    <ResourceCardMedia style={{backgroundColor}} image={imageSource}/>
   ) : (
-    <ResourceCardSkeleton animation="wave" variant="rect" />
+    <ResourceCardSkeleton style={{backgroundColor}} animation="wave" variant="rect" />
   )
 }
 

@@ -22,6 +22,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 import * as firebase from 'firebase/app';
 import * as H from 'history';
+import Firebase from './Firebase'
 
 const styles: object = {
   root: {
@@ -127,26 +128,7 @@ interface Style {
 
 type Props = RouteComponentProps & {
   classes: Style,
-  firebase?: {
-    auth: {
-      currentUser: null | {
-        uid: string
-      },
-      onAuthStateChanged(arg: unknown): firebase.User | null,
-    },
-    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
-    firebaseEmailSignUp(
-      info: {
-        email: string,
-        password: string,
-        firstName: string,
-        lastName: string
-      },
-      role: string
-    ): Promise<void>,
-    firebaseSignOut(): Promise<void>,
-    getTeacherList(): Promise<Types.Teacher[]>
-  } | null,
+  firebase?: Firebase | null,
   history: H.History,
   noBack?: boolean
 }
