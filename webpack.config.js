@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             output: {
                 publicPath: "/",
                 path: path.resolve(__dirname, "build"),
-                filename: "bundled.js"
+                filename: "bundled.[hash].js",
             },
             node: {
               net: 'empty',

@@ -5,11 +5,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = () => ({
-    devtool: "nosource-source-map",
+    devtool: "nosources-source-map",
     output: {
         publicPath: "/",
         path: path.resolve(__dirname, "../build"),
-        filename: "production.js"
+        filename: 'production.[contenthash].js',
     },
     optimization: {
         minimizer: [
