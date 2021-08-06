@@ -13,8 +13,8 @@ export default function MathInstructionTrainingPage(): React.ReactElement {
     <TrainingLayout
       icon={MathIconImage}
       colorTheme={Constants.MathTheme}
-      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Opportunities%20Concepts.mp4?alt=media&token=601148ea-87ec-4c1d-8949-d972be9d4903'
-      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Demo.mp4?alt=media&token=fa1d02bd-e012-498f-9db5-8c85b523990f'
+      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20MI%20(CC).mp4?alt=media&token=d85a00b5-bcdf-4aff-81f0-13e5fef93acf'
+      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20MI%20(CC).mp4?alt=media&token=b2577fc1-6461-4c5a-884b-719f8ee3a0c4'
       definitions={<MathHelpCard />}
       section='math'
     />

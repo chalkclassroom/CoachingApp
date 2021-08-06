@@ -12,7 +12,9 @@ interface Props {
   literacy6: number,
   literacy7: number,
   literacy8: number
-  who: string
+  who: string,
+  completed?(): void
+  title?: boolean
 }
 
 /**
@@ -36,7 +38,9 @@ class LiteracyDetailsWritingChart extends React.Component<Props, {}> {
     literacy6: PropTypes.number.isRequired,
     literacy7: PropTypes.number.isRequired,
     literacy8: PropTypes.number.isRequired,
-    who: PropTypes.string.isRequired
+    who: PropTypes.string.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -44,6 +48,7 @@ class LiteracyDetailsWritingChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherData = {  
       labels: [
         ["Talks to children about the content", "or meaning of the writing/drawing"],
@@ -136,6 +141,11 @@ class LiteracyDetailsWritingChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={this.props.who === 'Teacher' ? teacherData : childData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -203,9 +213,11 @@ class LiteracyDetailsWritingChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: false,
-            text: "Literacy Instruction Details",
+            display: this.props.title,
+            text: "Literacy Writing Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

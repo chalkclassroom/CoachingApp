@@ -59,6 +59,7 @@ interface Props {
         notes: Array<string>,
         date: {seconds: number, nanoseconds: number}}>>,
     saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
+    completeAppointment(teacherId: string, type: string, tool: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
@@ -224,6 +225,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
   handleCreate = (): void => {
     this.props.firebase.createConferencePlan(this.props.teacher.id, this.props.sessionId, this.props.magic8)
       .then(() => {
+        this.props.firebase.completeAppointment(this.props.teacher.id, 'Conference Plan', Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]);
         this.setState({
           editMode: true,
           conferencePlanExists: true,
@@ -277,6 +279,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     if (!this.state.conferencePlanId) {
       this.props.firebase.createConferencePlan(this.props.teacher.id, this.props.sessionId, this.props.magic8, feedback, questions, addedQuestions, notes)
       .then(() => {
+        this.props.firebase.completeAppointment(this.props.teacher.id, 'Conference Plan', Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]);
         this.setState({
           editMode: true,
           conferencePlanExists: true,
@@ -297,6 +300,11 @@ class ConferencePlanForm extends React.Component<Props, State> {
       })
     } else {
       this.props.firebase.saveConferencePlan(this.state.conferencePlanId, this.state.feedback, this.state.questions, this.state.addedQuestions, this.state.notes).then(() => {
+        this.props.firebase.completeAppointment(
+          this.props.teacher.id,
+          'Conference Plan',
+          Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]
+        );
         console.log("conference plan saved");
         this.setState({
           saved: true,
@@ -381,6 +389,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     firebase: PropTypes.exact({
       createConferencePlan: PropTypes.func,
       getConferencePlan: PropTypes.func,
+      completeAppointment: PropTypes.func,
       getCoachFirstName: PropTypes.func,
       getCoachLastName: PropTypes.func
     }).isRequired,

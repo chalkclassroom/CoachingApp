@@ -61,7 +61,6 @@ import CoachingCoachingBestPractices from './views/protected/CoachingResourcesVi
 import CoachingChalkCrosswalks from './views/protected/CoachingResourcesViews/ChalkCrosswalks';
 import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
-import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import TrainingPage from './views/protected/TrainingPage';
 import * as LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
@@ -383,7 +382,7 @@ class App extends React.Component<Props, State> {
               userRole={role}
               render={(props: {
                 history: H.History
-              }) : React.ReactElement=> <TrainingPage {...props}/>}
+              }) : React.ReactElement=> <TrainingPage isTeacher={role === Role.TEACHER }{...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -619,21 +618,6 @@ class App extends React.Component<Props, State> {
                 history: H.History,
                 type: string
               }) : React.ReactElement=> <TeacherListPage {...props}/>}
-            />
-            <PrivateRoute
-              auth={this.state.auth}
-              path={`/MyTeachers/:teacherid`}
-              allowedRoles={[Role.COACH, Role.ADMIN]}
-              userRole={role}
-              render={(props: {
-                history: H.History,
-                location: H.Location,
-                match: {
-                  params: {
-                    teacherid: string
-                  }
-                }
-              }) : React.ReactElement=> <TeacherDetailPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}

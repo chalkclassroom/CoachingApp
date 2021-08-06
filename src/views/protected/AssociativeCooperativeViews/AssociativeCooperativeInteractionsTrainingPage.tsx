@@ -13,8 +13,8 @@ export default function AssociativeCooperativeInteractionsTrainingPage(): React.
     <TrainingLayout
       icon={AssocCoopIconImage}
       colorTheme={Constants.ACTheme}
-      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/AC_Concepts.mp4?alt=media&token=6499ec3f-8f39-4334-aeea-8e34a4e8fb7e'
-      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/A%26C%20Demo.mp4?alt=media&token=8aa8ba49-9dce-4f21-a29e-b5f6382f4698'
+      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20AC%20(CC).mp4?alt=media&token=757a15fc-4e2b-437b-b58d-50755b319a4d'
+      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20AC%20(CC).mp4?alt=media&token=27b52565-60e0-4c31-b419-cbccfed38e45'
       definitions={<AssocCoopHelpCard />}
       section='ac'
     />

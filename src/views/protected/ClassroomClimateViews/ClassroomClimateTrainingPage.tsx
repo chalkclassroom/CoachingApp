@@ -13,8 +13,8 @@ export default function ClassroomClimateTrainingPage(): React.ReactElement {
     <TrainingLayout
       icon={ClassroomClimateIconImage}
       colorTheme={Constants.ClimateTheme}
-      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'
-      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Classroom%20Climate%20Demo.mp4?alt=media&token=cb1a1796-59b2-41f9-a170-43fde82f5be4'
+      conceptsUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20CC%20(CC).mp4?alt=media&token=d7791f18-2ea8-4652-b464-af89a5679ca6'
+      demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20CC%20(CC).mp4?alt=media&token=482a0756-8b7b-470d-9766-ff7559cdf4a5'
       definitions={<ClassroomClimateHelpCard />}
       section='climate'
     />

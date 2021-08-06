@@ -31,12 +31,14 @@ import { connect } from "react-redux";
 import * as Types from '../constants/Types';
 import * as Constants from '../constants/Constants';
 import * as H from 'history';
+import { Role } from '../state/actions/coach'
 
 interface Props {
   type: string,
   training: boolean,
   unlocked?: Array<number>
   history: H.History,
+  isTeacher: boolean,
   trainingLiteracy: Types.TrainingLiteracy
 }
 
@@ -128,6 +130,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(1) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -138,6 +141,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(2) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -148,6 +152,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(3) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -162,6 +167,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(5) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -172,6 +178,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(4) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -182,6 +189,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(6) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -196,6 +204,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(7) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -209,6 +218,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 reading={readingUnlocked}
                 language={languageUnlocked}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -219,6 +229,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(8) : false}
                 training={training}
+                isTeacher={props.isTeacher}
                 type={type}
               />
             </Grid>
@@ -277,6 +288,7 @@ function ToolIcons(props: Props): React.ReactElement {
         />
       )}
       <ResultsTrainingModal
+        type={selected}
         open={resultsTrainingModal}
         handleClose={(): void => {
           setResultsTrainingModal(false);
@@ -300,6 +312,7 @@ function ToolIcons(props: Props): React.ReactElement {
 }
 
 ToolIcons.propTypes = {
+  isTeacher: PropTypes.bool,
   type: PropTypes.string.isRequired,
   training: PropTypes.bool.isRequired,
   unlocked: PropTypes.array,
@@ -309,6 +322,7 @@ ToolIcons.propTypes = {
 
 const mapStateToProps = (state: Types.ReduxState): {
   unlocked: Array<number>,
+  isTeacher: boolean,
   trainingLiteracy: {
     conceptsFoundational: boolean,
     conceptsWriting: boolean,
@@ -329,7 +343,9 @@ const mapStateToProps = (state: Types.ReduxState): {
   }
 } => {
   return {
-    unlocked: state.unlockedState.unlocked,
+    isTeacher: state.coachState.role === Role.TEACHER,
+    unlocked: state.unlockedState.unlocked
+        || state.coachState.role === Role.TEACHER,
     trainingLiteracy: state.trainingLiteracyState
   };
 };

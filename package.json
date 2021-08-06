@@ -50,6 +50,7 @@
     "prop-types": "latest",
     "rc-progress": "^2.2.6",
     "react": "^16.8.3",
+    "react-big-calendar": "^0.33.3",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-chartjs-2": "^2.7.4",
     "react-circle": "^1.1.1",
@@ -85,7 +86,7 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.1.1",
     "victory-pie": "^31.2.0",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "lint": "npx eslint ./src --ext .js,.jsx,.ts,.tsx",
@@ -128,6 +129,7 @@
     "@babel/preset-react": "^7.7.0",
     "@babel/preset-typescript": "^7.7.4",
     "@svgr/webpack": "^4.3.3",
+    "@types/react-big-calendar": "^0.31.1",
     "@types/webpack-env": "^1.14.1",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",

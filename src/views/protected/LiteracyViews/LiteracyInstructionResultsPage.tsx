@@ -15,7 +15,7 @@ import LiteracyTrendsReading from "../../../components/LiteracyComponents/Result
 import LiteracyDetailsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage";
 import LiteracyTrendsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage";
 import TrendsSlider from "../../../components/LiteracyComponents/ResultsComponents/TrendsSlider";
-import LiteracyCoachingQuestionsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestionsReading";
+import LiteracyCoachingQuestions from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import LogoImage from '../../../assets/images/LogoImage.svg';
 import { connect } from 'react-redux';
@@ -43,7 +43,8 @@ interface Props {
   teacherSelected: Types.Teacher,
   location: {
     state: {
-      type: Constants.LiteracyTypes
+      type: Constants.LiteracyTypes,
+      sessionId: string
     }
   },
 }
@@ -227,7 +228,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.state.sessionDates[0].id },
+              this.setState({ sessionId: (this.props.location.state !== undefined && this.props.location.state.sessionId !== undefined) ? this.props.location.state.sessionId : this.state.sessionDates[0].id },
                 () => {
                   this.getData();
                 }
@@ -558,6 +559,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     if (!conferencePlanId) {
       firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Listening to Children')
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'LI');
           firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
@@ -617,6 +619,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'LI');
           this.setState({ questionAdded: true }, () => {
             setTimeout(() => {
               this.setState({ questionAdded: false })
@@ -630,6 +633,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.completeAppointment(this.props.teacherSelected.id, 'Conference Plan', 'LI');
           firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
             if (conferencePlanData[0]) {
               this.setState({
@@ -840,7 +844,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             sessionDates={this.state.sessionDates}
             notes={this.state.notes}
             questions={
-              <LiteracyCoachingQuestionsReading
+              <LiteracyCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}

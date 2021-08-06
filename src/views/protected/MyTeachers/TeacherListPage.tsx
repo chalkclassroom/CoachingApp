@@ -3,41 +3,58 @@ import * as PropTypes from "prop-types";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
-import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
-import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
-import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
-import ListeningIconImage from "../../../assets/images/ListeningIconImage.svg";
-import MathIconImage from "../../../assets/images/MathIconImage.svg";
-import InstructionIconImage from "../../../assets/images/InstructionIconImage.svg";
-import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIconImage.svg";
-import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
-import ConferencePlanImage from "../../../assets/images/ConferencePlanImage.png";
-import ActionPlanImage from "../../../assets/images/ActionPlanImage.png";
-import { withStyles, Theme } from "@material-ui/core/styles";
+import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import Fab from "@material-ui/core/Fab";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import AddIcon from "@material-ui/icons/Add";
+import Grid from "@material-ui/core/Grid";
 import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TextField
-} from "@material-ui/core";
+  Typography,
+  Popover,
+  Modal,
+  IconButton,
+  Tooltip,
+  Paper,
+} from '@material-ui/core';
+import CloseIcon from "@material-ui/icons/Close";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import PeopleIcon from "@material-ui/icons/People";
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import { Calendar, momentLocalizer, SlotInfo } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
+import CalendarEventPopover from '../../../components/MyTeachersComponents/CalendarEventPopover';
+import MyTeachersTable from '../../../components/MyTeachersComponents/MyTeachersTable';
+import EditTeacherDialog from '../../../components/MyTeachersComponents/EditTeacherDialog';
+import TeacherDetails from '../../../components/MyTeachersComponents/TeacherDetails';
+import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { changeTeacher, updateTeacherInfo, addTeacher, removeTeacher } from '../../../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
+import * as Constants from '../../../constants/Constants';
 
-const styles = (theme: Theme): object => ({
+const localizer = momentLocalizer(moment);
+
+/**
+ * specifies styling for modal
+ * @return {CSSProperties}
+ */
+ function getModalStyle(): React.CSSProperties {
+  return {
+    position: "fixed",
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`
+  } as React.CSSProperties;
+}
+
+const styles = (): object => ({
   root: {
-    // border: '1px solid #000000',
     flexGrow: 1,
     width: "100%",
     minHeight: "768px",
@@ -45,15 +62,23 @@ const styles = (theme: Theme): object => ({
     padding: 0
   },
   container: {
-    // border: '1px solid #FFD800',
     display: "flex",
     flexDirection: "column",
-    margin: "2% 5% 2% 5%"
+    paddingLeft: '2em',
+    paddingRight: '2em'
+  },
+  paper: {
+    position: "absolute",
+    backgroundColor: 'white',
+    width: '60%',
+    height: '70%',
+    padding: '2em',
+    borderRadius: 8,
   },
   row: {
     transitionDuration: "0.2s",
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.background.default
+      backgroundColor: 'red'
     },
     "&:hover": {
       backgroundColor: "#555555",
@@ -63,10 +88,10 @@ const styles = (theme: Theme): object => ({
   },
   title: {
     alignSelf: "center",
-    fontSize: "2.2em"
+    fontSize: "2em",
+    fontFamily: 'Arimo'
   },
   tableContainer: {
-    // border: '1px solid #00FFF6',
     maxWidth: "100%",
     width: "100%",
     overflow: "auto",
@@ -90,21 +115,25 @@ const styles = (theme: Theme): object => ({
   },
   nameCellHeader: {
     color: "#000000",
-    fontSize: "0.8em",
+    fontSize: "1em",
     padding: "0.5em",
     maxWidth: "12em",
     position: "sticky",
     top: 0,
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold'
   },
   emailCellHeader: {
     color: "#000000",
-    fontSize: "0.8em",
+    fontSize: "1em",
     padding: "0.5em",
     maxWidth: "12em",
     position: "sticky",
     top: 0,
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold'
   },
   magicEightIcon: {
     height: "55px",
@@ -118,19 +147,20 @@ const styles = (theme: Theme): object => ({
     maxWidth: "1.8em"
   },
   nameField: {
-    // border: '1px solid #4C00FF'
     textAlign: "left",
     padding: "0.5em",
     overflow: "hidden",
     maxWidth: "7em",
-    color: "inherit"
+    color: "inherit",
+    fontFamily: 'Arimo'
   },
   emailField: {
     textAlign: "left",
     padding: "0.5em",
     overflow: "hidden",
     maxWidth: "18em",
-    color: "inherit"
+    color: "inherit",
+    fontFamily: 'Arimo'
   },
   unlockedIcon: {
     height: "40px",
@@ -149,7 +179,6 @@ const styles = (theme: Theme): object => ({
     overflow: "scroll"
   },
   legendItem: {
-    // border: '1px solid #97FF00'
     display: "flex",
     alignItems: "center",
     fontSize: "1.3em"
@@ -214,31 +243,10 @@ const styles = (theme: Theme): object => ({
   }
 });
 
-const sortedSvg = [
-  TransitionTimeIconImage,
-  ClassroomClimateIconImage,
-  ListeningIconImage,
-  InstructionIconImage,
-  MathIconImage,
-  EngagementIconImage,
-  SequentialIconImage,
-  AssocCoopIconImage
-];
-
-const sortedAltText = [
-  "Transition Time",
-  "Classroom Climate",
-  "Listening To Children",
-  "Level Of Instruction",
-  "Math Instruction ",
-  "Student Engagement",
-  "Sequential Activities",
-  "Assoc Coop Interactions"
-];
-
 interface Style {
   root: string,
   container: string,
+  paper: string,
   title: string,
   actionContainer: string,
   search: string,
@@ -260,7 +268,12 @@ interface Style {
 type Props = RouteComponentProps & {
   history: H.History,
   classes: Style,
-  type: string
+  type: string,
+  teacherList: Array<Types.Teacher>,
+  changeTeacher(teacherInfo: Types.Teacher): Types.Teacher,
+  updateTeacherInfo(teacher: Types.Teacher): Array<Types.Teacher>,
+  addTeacher(teacher: Types.Teacher): Array<Types.Teacher>,
+  removeTeacher(teacher: Types.Teacher): void
 }
 
 interface Teacher {
@@ -277,8 +290,11 @@ interface Teacher {
 
 interface State {
   teachers: Array<Teacher>,
+  selectedTeacher: Teacher | undefined,
   searched: Array<Teacher>,
+  teacherDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
   isAdding: boolean,
+  editing: boolean,
   inputFirstName: string,
   inputLastName: string,
   inputSchool: string,
@@ -292,8 +308,19 @@ interface State {
   phoneErrorText: string,
   notesErrorText: string,
   addAlert: boolean,
+  editAlert: boolean,
   alertText: string,
-  // type: string
+  anchorEl: EventTarget & Element | null,
+  clickedEvent: Types.CalendarEvent | null,
+  newEventModal: boolean,
+  newEventDate: Date | null,
+  newEventTeacher: Types.Teacher | null,
+  newEventTool: Types.ToolNamesKey | null,
+  newEventType: string,
+  allEvents: Array<any>,
+  dataLoaded: boolean,
+  view: number,
+  deleteAppointmentDialog: boolean
 }
 
 /**
@@ -307,8 +334,11 @@ class TeacherListPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       teachers: [],
+      selectedTeacher: undefined,
       searched: [],
+      teacherDetails: [],
       isAdding: false,
+      editing: false,
       inputFirstName: "",
       inputLastName: "",
       inputSchool: "",
@@ -322,37 +352,159 @@ class TeacherListPage extends React.Component<Props, State> {
       phoneErrorText: "",
       notesErrorText: "",
       addAlert: false,
+      editAlert: false,
       alertText: "",
-      // type: ''
+      anchorEl: null,
+      clickedEvent: null,
+      newEventModal: false,
+      newEventDate: new Date(),
+      newEventTeacher: null,
+      newEventTool: null,
+      newEventType: '',
+      allEvents: [],
+      dataLoaded: false,
+      view: 0,
+      deleteAppointmentDialog: false
     };
+  }
+
+  addEventsToTeachers = (): Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> => {
+    const teachers = [...this.state.searched];
+    const teachersWithEvents: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> = [];
+    teachers.forEach((teacher) => {
+      const teacherEvents = this.state.allEvents.filter(obj => {
+        return( obj.resource === teacher.id && !obj.appointment )
+      })
+      const mostRecentEvent = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
+        return (new Date(prev.start) > new Date(current.start)) ? prev : current
+      })) : (undefined)
+      teachersWithEvents.push({
+        ...teacher,
+        start: mostRecentEvent ? mostRecentEvent.start : undefined,
+        title: mostRecentEvent ? mostRecentEvent.title : undefined,
+        type: mostRecentEvent ? mostRecentEvent.type : undefined
+      })
+    })
+    return teachersWithEvents
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    firebase
-      .getTeacherList()
-      .then((teachers: Array<Promise<Teacher>>) => {
-        console.log('teachers', teachers);
-        teachers.forEach((teacher: Promise<Teacher>) => {
-          console.log('teacher', teacher);
-          teacher.then((data: Teacher) => {
-            console.log('data', data);
-            this.setState(prevState => {
-              return {
-                teachers: prevState.teachers.concat(data),
-                searched: prevState.teachers.concat(data)
-              };
+    let allEvents: Array<Types.CalendarEvent> = [];
+    this.setState({
+      searched: this.props.teacherList.filter(teacher => {
+        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+      })
+    });
+    firebase.getRecentObservations().then((data: Array<{
+      id: string,
+      sessionStart: {value: Date},
+      sessionEnd: {value: Date},
+      teacher: string,
+      type: Types.ToolNamesKey
+    }>) => {
+      const myArr: Array<Types.CalendarEvent> = [];
+      data.forEach((observation: {
+        id: string,
+        sessionStart: {value: Date},
+        sessionEnd: {value: Date},
+        teacher: string,
+        type: Types.ToolNamesKey
+      }) => {
+        myArr.push({
+          title: 'Observation',
+          start: observation.sessionStart.value,
+          end: observation.sessionEnd.value,
+          allDay: false,
+          resource: observation.teacher.slice(6),
+          type: observation.type,
+          id: observation.id
+        })
+      })
+      allEvents = allEvents.concat(myArr)
+    }).then(() => {
+      firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
+        allEvents = allEvents.concat(actionPlanEvents)
+      }).then(() => {
+        firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
+          allEvents = allEvents.concat(conferencePlanEvents)
+        }).then(() => {
+          firebase.getAppointments().then((appointmentEvents: Array<Types.CalendarEvent>) => {
+            allEvents = allEvents.concat(appointmentEvents)
+          }).then(() => {
+            this.setState({
+              allEvents: allEvents
+            }, () => {
+              const teacherDetails = this.addEventsToTeachers();
+              this.setState({
+                teacherDetails: teacherDetails,
+                dataLoaded: true
+              })
             })
-          }
-          )
-        }
-        )
-          }
-      )
-      .catch((error: Error) =>
-        console.error("Error occurred fetching teacher list: ", error)
-      );
+          })
+        })
+      })
+    })
+    this.setState({
+      teachers: this.props.teacherList.filter(teacher => {
+        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+      })
+    })
+  }
+
+  createAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    firebase.createAppointment(teacherId, date, tool, type).then((id: string) => {
+      const newEvent = {
+        title: type,
+        start: date,
+        end: date,
+        allDay: false,
+        resource: teacherId,
+        type: tool,
+        id: id,
+        appointment: true
+      }
+      const allEventsUpdated = [...this.state.allEvents, newEvent]
+      this.setState({allEvents: allEventsUpdated})
+    })
+  }
+
+  saveAppointment = (id: string, teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    firebase.saveAppointment(id, teacherId, date, tool, type).then((id: string) => {
+      const newEvent = {
+        title: type,
+        start: date,
+        end: date,
+        allDay: false,
+        resource: teacherId,
+        type: tool,
+        id: id,
+        appointment: true
+      }
+      const updatedEvents = [...this.state.allEvents]
+      const index = updatedEvents.findIndex(event => event.id === newEvent.id)
+      updatedEvents.splice(index, 1)
+      updatedEvents.push(newEvent)
+      this.setState({allEvents: updatedEvents})
+    })
+  }
+
+  deleteAppointment = (id: string): void => {
+    const firebase = this.context;
+    firebase.removeAppointment(id).then(() => {
+      const updatedEvents = [...this.state.allEvents]
+      const index = updatedEvents.findIndex(event => event.id === id)
+      updatedEvents.splice(index, 1)
+      this.setState({allEvents: updatedEvents})
+    })
+  }
+
+  getAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
+    const firebase = this.context;
+    firebase.completeAppointment(teacherId, type, tool)
   }
 
   /**
@@ -383,10 +535,10 @@ class TeacherListPage extends React.Component<Props, State> {
    * @param {Teacher} teacherInfo
    */
   selectTeacher = (teacherInfo: Teacher): void => {
-    this.props.history.push({
-      pathname: `/MyTeachers/${teacherInfo.id}`,
-      state: { teacher: teacherInfo, type: this.props.type }
-    });
+    this.setState({
+      view: 3,
+      selectedTeacher: teacherInfo
+    })
   };
 
   /**
@@ -530,12 +682,14 @@ class TeacherListPage extends React.Component<Props, State> {
         .then((id: string) =>
           firebase
             .getTeacherInfo(id)
-            .then((teacherInfo: Teacher) =>
+            .then((teacherInfo: Teacher) => {
+              this.props.addTeacher(teacherInfo);
               this.setState(
                 prevState => {
                   return {
                     teachers: prevState.teachers.concat(teacherInfo),
-                    searched: prevState.teachers.concat(teacherInfo)
+                    searched: prevState.teachers.concat(teacherInfo),
+                    teacherDetails: prevState.teacherDetails.concat({...teacherInfo, type: undefined, title: '', start: undefined })
                   };
                 },
                 () => {
@@ -543,7 +697,7 @@ class TeacherListPage extends React.Component<Props, State> {
                   this.handleAddAlert(true);
                 }
               )
-            )
+            })
             .catch((error: Error) => {
               console.error(
                 "Error occurred fetching new teacher's info: ",
@@ -558,6 +712,116 @@ class TeacherListPage extends React.Component<Props, State> {
           this.handleCloseModal();
           this.handleAddAlert(false);
         });
+    }
+  };
+
+  handleEditConfirm = (): void | null => {
+    const {
+      // teacherUID,
+      selectedTeacher,
+      inputFirstName,
+      inputLastName,
+      inputSchool,
+      inputEmail,
+      inputNotes,
+      inputPhone,
+      fnErrorText,
+      lnErrorText,
+      emailErrorText,
+      schoolErrorText,
+      notesErrorText,
+      phoneErrorText,
+      teacherDetails
+    } = this.state;
+    this.validateInputText("inputFirstName", inputFirstName);
+    this.validateInputText("inputLastName", inputLastName);
+    this.validateInputText("inputEmail", inputEmail);
+    this.validateInputText("inputSchool", inputSchool);
+    if (
+      // any inputs cause an error or required are missing
+      !!fnErrorText ||
+      !!lnErrorText ||
+      !!emailErrorText ||
+      !!schoolErrorText ||
+      !!notesErrorText ||
+      !!phoneErrorText ||
+      !inputFirstName ||
+      !inputLastName ||
+      !inputEmail ||
+      !inputSchool
+    ) {
+      return null;
+    } else if (selectedTeacher) {
+      // fields are validated
+      const firebase = this.context;
+      if (
+        firebase.setTeacherInfo(selectedTeacher.id, {
+          firstName: inputFirstName,
+          lastName: inputLastName,
+          school: inputSchool,
+          email: inputEmail,
+          phone: inputPhone,
+          notes: inputNotes
+        })
+      ) {
+        // Edit successfully written
+        this.setState(
+          {
+            selectedTeacher: {
+              email: inputEmail,
+              firstName: inputFirstName,
+              lastName: inputLastName,
+              notes: inputNotes,
+              id: selectedTeacher.id,
+              phone: inputPhone,
+              role: selectedTeacher.role,
+              school: inputSchool,
+              unlocked: selectedTeacher.unlocked
+            },
+            inputFirstName: inputFirstName,
+            inputLastName: inputLastName,
+            inputSchool: inputSchool,
+            inputEmail: inputEmail,
+            inputPhone: inputPhone,
+            inputNotes: inputNotes,
+            editing: false,
+            fnErrorText: "",
+            lnErrorText: "",
+            schoolErrorText: "",
+            emailErrorText: "",
+            notesErrorText: ""
+          },
+          () => {
+            let updatedTeacherDetails = [...teacherDetails];
+            const index = updatedTeacherDetails.findIndex(x => x.id === selectedTeacher.id);
+            const updatedTeacherWithDetails = {...updatedTeacherDetails[index]}
+            updatedTeacherWithDetails.firstName = inputFirstName;
+            updatedTeacherWithDetails.lastName = inputLastName;
+            updatedTeacherWithDetails.email = inputEmail;
+            updatedTeacherWithDetails.school = inputSchool;
+            updatedTeacherWithDetails.phone = inputPhone;
+            updatedTeacherWithDetails.notes = inputNotes;
+            updatedTeacherDetails[index] = {...updatedTeacherWithDetails};
+            this.setState({
+              teacherDetails: updatedTeacherDetails
+            })
+            const updatedTeacher = {...this.state.selectedTeacher}
+            this.handleEditAlert(true);
+            this.props.updateTeacherInfo(updatedTeacher);
+            const oldTeacherList = [...this.state.searched];
+            const updatedTeacherList = oldTeacherList.filter(teacher => {
+              return teacher.id !== selectedTeacher.id
+            });
+            updatedTeacherList.push(selectedTeacher);
+            this.setState({
+              searched: updatedTeacherList
+            })
+          }
+        );
+      } else {
+        this.handleCloseModal();
+        this.handleEditAlert(false);
+      }
     }
   };
 
@@ -593,6 +857,47 @@ class TeacherListPage extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * @param {boolean} successful
+   */
+   handleEditAlert = (successful: boolean): void => {
+    if (successful) {
+      this.setState(
+        {
+          editAlert: true,
+          alertText: "Edit Successfully Written!"
+        },
+        () => setTimeout(() => this.setState({ editAlert: false }), 1500)
+      );
+    } else {
+      this.setState(
+        {
+          editAlert: true,
+          alertText:
+            "Something went wrong... try refreshing your page or logging out and back in."
+        },
+        () => setTimeout(() => this.setState({ editAlert: false }), 3000)
+      );
+    }
+  };
+
+  closeTeacherDetails = (): void => {
+    this.setState({view: 0, selectedTeacher: undefined})
+  }
+
+  handleEdit = (): void => {
+    this.setState({
+      inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
+      inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
+      inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
+      inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
+      inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
+      inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
+    }, (): void => {
+      this.setState({editing: true})
+    })
+  }
+
   handleCloseModal = (): void => {
     this.setState({
       inputFirstName: "",
@@ -607,8 +912,36 @@ class TeacherListPage extends React.Component<Props, State> {
       emailErrorText: "",
       notesErrorText: "",
       isAdding: false,
+      editing: false,
       alertText: ""
     });
+  };
+
+  handleDeleteConfirm = (): Promise<void> => {
+    const firebase = this.context;
+    return firebase
+      .removePartner(this.state.selectedTeacher.id)
+      .then(() => {
+        this.props.removeTeacher(this.state.selectedTeacher.id);
+        let updatedTeacherDetails = [...this.state.teacherDetails];
+        const index = updatedTeacherDetails.findIndex(x => x.id === this.state.selectedTeacher.id);
+        updatedTeacherDetails.splice(index, 1)
+        this.setState({
+          teacherDetails: updatedTeacherDetails
+        })
+      })
+      .catch(() => {
+        // problem with removing teacher
+        this.setState(
+          {
+            editAlert: true,
+            alertText:
+              "Something went wrong removing this teacher... " +
+              "try refreshing your page or logging out and back in."
+          },
+          () => setTimeout(() => this.setState({ editAlert: false }), 3000)
+        )
+      }); 
   };
 
   static propTypes = {
@@ -633,7 +966,8 @@ class TeacherListPage extends React.Component<Props, State> {
       legendIcon: PropTypes.string
     }).isRequired,
     type: PropTypes.string.isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    history: ReactRouterPropTypes.history.isRequired,
+    changeTeacher: PropTypes.func.isRequired
   }
 
   /**
@@ -644,239 +978,330 @@ class TeacherListPage extends React.Component<Props, State> {
     const { classes } = this.props;
     const {
       isAdding,
+      editing,
       addAlert,
+      editAlert,
       alertText,
       fnErrorText,
       lnErrorText,
       emailErrorText,
       schoolErrorText,
       phoneErrorText,
-      notesErrorText
+      notesErrorText,
+      anchorEl,
+      clickedEvent,
+      newEventModal,
+      newEventDate,
+      newEventTeacher,
+      newEventTool,
+      newEventType,
+      deleteAppointmentDialog
     } = this.state;
+
+    /**
+     * clicking on calendar event
+     * @param {Types.CalendarEvent} event
+     * @param {SyntheticEvent} target
+     */
+    const handleClick = (event: Types.CalendarEvent, target: React.SyntheticEvent): void => {
+      target.persist();
+      this.setState({
+        anchorEl: target.currentTarget,
+        clickedEvent: event
+      });
+      if (event.appointment) {
+        const selectedTeacher = this.props.teacherList.filter(teacher => {
+          return teacher.id === event.resource
+        });
+        this.setState({
+          newEventDate: event.start,
+          newEventTeacher: selectedTeacher[0],
+          newEventTool: event.type,
+          newEventType: event.title
+        })
+      }
+    };
+
+    /**
+     * closes event popover or create event dialog
+     */
+    const handleClose = (): void => {
+      this.setState({
+        anchorEl: null,
+        clickedEvent: null,
+        newEventDate: null,
+        newEventTeacher: null,
+        newEventTool: null,
+        newEventType: ''
+      });
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    /**
+     * returns teacher name from id
+     * @param {string} id
+     * @returns {string}
+     */
+    const getName = (id: string): string => {
+      const teacher = this.props.teacherList.find(obj => obj.id === id);
+      if (teacher) {
+        return (teacher.firstName + ' ' + teacher.lastName)
+      } else {
+        return ''
+      }
+    }
+
+    /**
+     * returns teacher initials, given name
+     * @param {string} name
+     * @returns {string}
+     */
+    const getInitials = (name: string): string => {
+      let i = 0;
+      let initials = name.charAt(0);
+      while (i < name.length) {
+        const space = name.indexOf(' ', i);
+        if (space === -1) {
+          break
+        }
+        initials = initials.concat(name.charAt(space + 1));
+        i = space + 1
+      }
+      return initials
+    };
+
+    // style for calendar event
+    const eventStyleGetter = (event: Types.CalendarEvent, start, end, isSelected) => {
+      const style = {
+        backgroundColor: event.appointment ? 'white' : Constants.Colors[event.type as Types.DashboardType],
+        borderRadius: '0px',
+        opacity: 0.8,
+        color: event.appointment ? 'black' : 'white',
+        display: 'block',
+        border: event.appointment ? '1px solid #ababab' : undefined
+      };
+      return {
+        style: style
+      };
+    };
+
+    /**
+     * content for calendar event button
+     * @param {object} event
+     * @returns {JSX.Element}
+     */
+    const EventComponent = (event: {
+      event: Types.CalendarEvent,
+      continuesAfter: boolean,
+      continuesPrior: boolean,
+      isAllDay: boolean,
+      title: string,
+      slotEnd: Date,
+      slotStart: Date
+    }): JSX.Element => {
+      return (
+        <Grid container direction='row' justify='flex-start' alignItems='center'>
+          <Grid item>
+            <Typography variant="body2" style={{fontFamily: 'Arimo'}}>
+              {getInitials(getName(event.event.resource))}:
+            </Typography>
+          </Grid>
+          <Grid item wrap='nowrap' style={{paddingLeft: '0.2em'}}>
+            <Typography variant="body2" style={{fontFamily: 'Arimo', whiteSpace: "normal",
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {event.event.title}
+            </Typography>
+          </Grid>
+        </Grid>
+      );
+    }
 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <div className={classes.container}>
+        <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
-          <div className={classes.actionContainer}>
-            <TextField
-              id="teacher-search"
-              label="Search"
-              type="search"
-              className={classes.search}
-              variant="outlined"
-              onChange={this.onChangeText}
-            />
-            <Fab
-              aria-label="Add Teacher"
-              onClick={(): void => this.setState({ isAdding: true })}
-              className={classes.actionButton}
-              size="small"
-            >
-              <AddIcon style={{ color: "#FFFFFF" }} />
-            </Fab>
-          </div>
-          <div className={classes.tableContainer}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.nameCellHeader}>
-                    Last
-                    <br />
-                    Name
-                  </TableCell>
-                  <TableCell className={classes.nameCellHeader}>
-                    First
-                    <br />
-                    Name
-                  </TableCell>
-                  <TableCell className={classes.emailCellHeader}>
-                    Email
-                  </TableCell>
-                  {sortedSvg.map((item, index) => (
-                    <TableCell
-                      className={classes.magicEightCell}
-                      style={{
-                        position: "sticky",
-                        top: 0,
-                        backgroundColor: "#FFFFFF"
-                      }}
-                      key={index}
-                    >
-                      <img
-                        src={item}
-                        alt={sortedAltText[index]}
-                        className={classes.magicEightIcon}
-                      />
-                    </TableCell>
-                  ))}
-                  <TableCell className={classes.nameCellHeader}>
-                    Goals
-                    <br />
-                    Met
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.searched.map((teacher, index) => (
-                  <TableRow
-                    className={classes.row}
-                    key={index}
-                    onClick={(): void => this.selectTeacher(teacher)}
-                  >
-                    <TableCell className={classes.nameField}>
-                      {teacher.lastName}
-                    </TableCell>
-                    <TableCell className={classes.nameField}>
-                      {teacher.firstName}
-                    </TableCell>
-                    <TableCell className={classes.emailField}>
-                      {teacher.email}
-                    </TableCell>
-                    {[...Array(8).keys()].map((value, index) => (
-                      <TableCell className={classes.magicEightCell} key={index}>
-                        {teacher.unlocked !== undefined &&
-                          teacher.unlocked.includes(index + 1) && (
-                            <VisibilityOutlinedIcon
-                              className={classes.unlockedIcon}
-                            />
-                          )}
-                      </TableCell>
-                    ))}
-                    <TableCell className={classes.nameField}>
-                      {/* {teacher.goals !== undefined && teacher.goals} */}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          <div className={classes.legendContainer}>
-            <div className={classes.legendItem}>
-              <VisibilityOutlinedIcon className={classes.legendIcon} />=
-              Observed
-            </div>
-            <div className={classes.legendItem}>
-              <img
-                alt="Conference Prep"
-                src={ConferencePlanImage}
-                className={classes.legendIcon}
-              />
-              = Conference Prep
-            </div>
-            <div className={classes.legendItem}>
-              <img
-                alt="Co-created Action Plan"
-                src={ActionPlanImage}
-                className={classes.legendIcon}
-              />
-              = Co-created Action plan
-            </div>
-          </div>
-          <Dialog
-            open={isAdding}
-            onClose={this.handleCloseModal}
-            aria-labelledby="add-teacher-title"
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            style={{padding: '1em'}}
           >
-            <DialogTitle id="add-teacher-title">Add a New Teacher</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Make edits to the form below and confirm to add a teacher to
-                your My Teachers list.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                required
-                onChange={this.handleAddText}
-                margin="dense"
-                id="first-name"
-                name="inputFirstName"
-                label="First Name"
-                helperText={fnErrorText}
-                error={!!fnErrorText}
-                type="text"
-                fullWidth
+            {clickedEvent !== null ? (
+              <CalendarEventPopover
+                push={this.props.history.push}
+                clickedEvent={clickedEvent}
+                teacherList={
+                  this.props.teacherList.filter(teacher => {
+                    return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
+                  })
+                }
+                changeTeacher={this.props.changeTeacher}
+                deleteAppointment={(): void => this.setState({ deleteAppointmentDialog: true })}
+                editEvent={(): void => this.setState({ newEventModal: true })}
+                getName={getName}
               />
-              <TextField
-                required
-                onChange={this.handleAddText}
-                margin="dense"
-                id="last-name"
-                name="inputLastName"
-                label="Last Name"
-                helperText={lnErrorText}
-                error={!!lnErrorText}
-                type="text"
-                fullWidth
-              />
-              <TextField
-                required
-                onChange={this.handleAddText}
-                margin="dense"
-                id="school"
-                name="inputSchool"
-                label="School"
-                helperText={schoolErrorText}
-                error={!!schoolErrorText}
-                type="text"
-                fullWidth
-              />
-              <TextField
-                required
-                onChange={this.handleAddText}
-                margin="dense"
-                id="email"
-                name="inputEmail"
-                label="Email"
-                helperText={emailErrorText}
-                error={!!emailErrorText}
-                type="email"
-                fullWidth
-              />
-              <TextField
-                onChange={this.handleAddText}
-                margin="dense"
-                id="phone"
-                name="inputPhone"
-                label="Phone"
-                placeholder="###-###-####"
-                helperText={phoneErrorText}
-                error={!!phoneErrorText}
-                type="tel"
-                fullWidth
-              />
-              <TextField
-                onChange={this.handleAddText}
-                margin="dense"
-                id="notes"
-                name="inputNotes"
-                label="Notes"
-                helperText={notesErrorText}
-                error={!!notesErrorText}
-                multiline
-                rows={8}
-                rowsMax={8}
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={this.handleCloseModal}
-                style={{ color: "#F1231C" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={this.handleAddConfirm}
-                style={{ color: "#2196F3" }}
-              >
-                Add New Teacher
-              </Button>
-            </DialogActions>
-          </Dialog>
+            ) : (<Typography>no event</Typography>)}
+          </Popover>
+          <Grid item>
+            <Grid container direction='row' justify='center' alignItems='center'>
+              <Grid item xs={12}>
+                <Grid container direction="column" style={{height: this.state.view === 3 ? '75vh' : '60vh'}}>
+                  {this.state.dataLoaded ? (this.state.view === 1 ? (
+                    // calendar
+                    <Grid item style={{height: '100%', width: '100%'}}>
+                      <Calendar
+                        popup
+                        localizer={localizer}
+                        events={this.state.allEvents ? this.state.allEvents : []}
+                        selectable
+                        step={60}
+                        showMultiDayTimes
+                        components={{
+                          event: EventComponent
+                        }}
+                        eventPropGetter={eventStyleGetter}
+                        onSelectEvent={(event: Types.CalendarEvent, target: React.SyntheticEvent): void => {handleClick(event, target)}}
+                        onSelectSlot={(slot: SlotInfo): void => {
+                          this.setState({newEventDate: slot.start}, () => {
+                            this.setState({newEventModal: true})
+                          });
+                        }}
+                        longPressThreshold={20}
+                      />
+                    </Grid>
+                  ) : this.state.view === 0 ? (
+                    // table
+                    <MyTeachersTable
+                      onChangeText={this.onChangeText}
+                      teacherDetails={this.state.teacherDetails}
+                      selectTeacher={this.selectTeacher}
+                      addingTeacher={(): void => this.setState({ isAdding: true })}
+                    />
+                  ) : (
+                    null
+                  )) : (
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={CHALKLogoGIF} alt="Loading" width="80%" />
+                    </Grid>
+                  )}
+                  <TeacherDetails
+                    teacher={this.state.selectedTeacher}
+                    recentEvents={this.state.allEvents}
+                    handleDeleteConfirm={this.handleDeleteConfirm}
+                    handleCloseModal={this.handleCloseModal}
+                    setEditing={(): void => {
+                      this.setState({
+                        inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
+                        inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
+                        inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
+                        inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
+                        inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
+                        inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
+                      }, (): void => {
+                        this.setState({editing: true})
+                      })
+                    }}
+                    closeTeacherDetails={this.closeTeacherDetails}
+                    open={this.state.view===3}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {this.state.view !== 3 ? (
+            <Grid item style={{paddingTop: '2em'}}>
+              <Paper elevation={2}>
+                <BottomNavigation
+                  value={this.state.view}
+                  onChange={(event, newValue) => {
+                    this.setState({view: newValue});
+                  }}
+                  showLabels
+                >
+                  <BottomNavigationAction label="Teachers" icon={<PeopleIcon />} />
+                  <BottomNavigationAction label="Calendar" icon={<DateRangeIcon />} />
+                </BottomNavigation>
+              </Paper>
+            </Grid>
+          ) : (null)}
+          <Modal open={newEventModal}>
+            <div style={getModalStyle()} className={classes.paper}>
+              <Grid container direction="column" style={{height: '100%', overflowY: 'auto'}}>
+                <Grid item style={{height: '20%'}}>
+                  <Grid container direction="row" style={{height: '100%'}}>
+                    <Grid item xs={1} />
+                    <Grid item xs={10}>
+                      <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', padding: '1em'}}>
+                        {clickedEvent ? 'Update Event' : 'Create New Event'}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <IconButton style={{ padding: 10 }}>
+                        <Tooltip title={"Close"} placement={"right"}>
+                          <CloseIcon
+                            onClick={(): void => {this.setState({newEventModal: false})}}
+                          />
+                        </Tooltip>
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item style={{height: '80%'}}>
+                  <NewEventStepper
+                    id={clickedEvent ? clickedEvent.id : undefined}
+                    date={newEventDate}
+                    setDate={(newDate: Date): void => {this.setState({newEventDate: newDate})}}
+                    teacher={newEventTeacher}
+                    setTeacher={(newTeacher: Types.Teacher): void => {this.setState({newEventTeacher: newTeacher})}}
+                    tool={newEventTool}
+                    setTool={(newTool: Types.ToolNamesKey): void => {this.setState({newEventTool: newTool})}}
+                    type={newEventType}
+                    setType={(newType: string): void => {this.setState({newEventType: newType})}}
+                    teacherList={this.state.teachers}
+                    closeModal={(): void => this.setState({newEventModal: false})}
+                    createAppointment={this.createAppointment}
+                    saveAppointment={this.saveAppointment}
+                    closeAppointmentModal={handleClose}
+                  />
+                </Grid>
+              </Grid>
+            </div>
+          </Modal>
+          <EditTeacherDialog
+            adding={isAdding}
+            editing={editing}
+            handleCloseModal={this.handleCloseModal}
+            handleAddText={this.handleAddText}
+            inputFirstName={this.state.inputFirstName}
+            inputLastName={this.state.inputLastName}
+            inputEmail={this.state.inputEmail}
+            inputSchool={this.state.inputSchool}
+            inputPhone={this.state.inputPhone}
+            inputNotes={this.state.inputNotes}
+            fnErrorText={fnErrorText}
+            lnErrorText={lnErrorText}
+            schoolErrorText={schoolErrorText}
+            emailErrorText={emailErrorText}
+            phoneErrorText={phoneErrorText}
+            notesErrorText={notesErrorText}
+            handleComplete={isAdding ? this.handleAddConfirm : this.handleEditConfirm}
+          />
           <Dialog
             open={addAlert}
             onClose={(): void => this.setState({ addAlert: false, alertText: "" })}
@@ -885,11 +1310,63 @@ class TeacherListPage extends React.Component<Props, State> {
           >
             <DialogTitle id="add-alert-title">{alertText}</DialogTitle>
           </Dialog>
-        </div>
+          <Dialog
+            open={editAlert}
+            onClose={(): void => this.setState({ editAlert: false, alertText: "" })}
+            aria-labelledby="edit-alert-label"
+            aria-describedby="edit-alert-description"
+          >
+            <DialogTitle id="edit-alert-title">{alertText}</DialogTitle>
+          </Dialog>
+          <Dialog
+            open={deleteAppointmentDialog}
+          >
+            <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
+              {
+                clickedEvent ? (
+                  "Are you sure you want to delete your appointment with " + getName(clickedEvent.resource) + "?"
+                ) : (
+                  "Are you sure you want to delete your appointment?"
+                )
+              }
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                onClick={(): void => this.setState({deleteAppointmentDialog: false})}
+                style={{ color: "#2196f3" }}
+              >
+                No
+              </Button>
+              <Button
+                onClick={(): void => {
+                  if (clickedEvent) {
+                    this.deleteAppointment(clickedEvent.id)
+                  }
+                  this.setState({deleteAppointmentDialog: false})
+                  handleClose();
+                }}
+                style={{ color: "#F1231C" }}
+              >
+                Yes
+              </Button>
+            </DialogActions>
+            </Dialog>
+        </Grid>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    teacherList: state.teacherListState.teachers
+  };
+};
+
 TeacherListPage.contextType = FirebaseContext;
-export default withStyles(styles)(withRouter(TeacherListPage));
+export default withRouter(connect(
+  mapStateToProps, {changeTeacher, updateTeacherInfo, addTeacher, removeTeacher}
+)(withStyles(styles)(TeacherListPage)));
+// export default withStyles(styles)(withRouter(TeacherListPage));

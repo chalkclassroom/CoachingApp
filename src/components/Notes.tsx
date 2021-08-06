@@ -311,6 +311,7 @@ class Notes extends React.Component<Props, State> {
               >
                 <Grid container item xs={11}>
                   <TextField
+                    autoFocus
                     id="standard-new-note"
                     label="New Note"
                     placeholder="Type new note here..."
@@ -321,6 +322,7 @@ class Notes extends React.Component<Props, State> {
                     style={{ width: "95%" }}
                     onChange={this.handleChange}
                     value={this.state.newNote}
+                    inputRef={input => input && input.focus()}
                     InputProps={{style: {fontFamily: 'Arimo'}}}
                     InputLabelProps={{style: {fontFamily: 'Arimo'}}}
                   />

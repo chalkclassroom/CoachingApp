@@ -32,7 +32,6 @@ const styles: object = {
   notesContainer: {
     overflowY: "scroll",
     maxHeight: "4.5em",
-    borderBottom: "1px solid #C7C7C7"
   }
 };
 
@@ -48,22 +47,30 @@ function LabeledInfo(props: Props): React.ReactElement {
       {label === "Notes" ? (
         <div className={classes.notesContainer}>
           <p className={classes.fieldStyle}>
-            {field.split("\n").map((item, key) => (
+            {field ? (field.split("\n").map((item, key) => (
               <React.Fragment key={key}>
                 {item}
                 <br />
               </React.Fragment>
-            ))}
+            ))) : (
+              <React.Fragment>
+                {''}
+              </React.Fragment>
+            )}
           </p>
         </div>
       ) : (
         <p className={classes.fieldStyle}>
-          {field.split("\n").map((item, key) => (
+          {field ? (field.split("\n").map((item, key) => (
             <React.Fragment key={key}>
               {item}
               <br />
             </React.Fragment>
-          ))}
+          ))) : (
+            <React.Fragment>
+              {''}
+            </React.Fragment>
+          )}
         </p>
       )}
     </div>
