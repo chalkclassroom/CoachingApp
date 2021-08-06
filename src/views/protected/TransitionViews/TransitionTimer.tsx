@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button/Button';
 import Grid from '@material-ui/core/Grid/Grid';
 import ms from 'pretty-ms';
 import YesNoDialog from '../../../components/Shared/YesNoDialog';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { pushOntoTransitionStack, updateTransitionTime, updateSessionTime } from '../../../state/actions/transition-time';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
@@ -16,7 +16,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import * as Types from '../../../constants/Types';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#0988EC"

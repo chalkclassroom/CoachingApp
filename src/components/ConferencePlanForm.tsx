@@ -15,13 +15,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import * as  moment from 'moment';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
-const BlankTheme = createMuiTheme({
+const BlankTheme = createTheme({
   palette: {
     primary: {
       main: '#a3a3a3'

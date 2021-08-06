@@ -15,7 +15,7 @@ import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
 import BackIcon from '@material-ui/icons/ArrowBackIosSharp'
 import BurgerMenu from "./BurgerMenu";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -101,7 +101,7 @@ const styles: object = {
   }
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#459aeb'
@@ -229,18 +229,7 @@ class AppBar extends React.Component<Props, State> {
       coachingText: PropTypes.string,
       backIcon: PropTypes.string
     }).isRequired,
-    firebase: PropTypes.exact({
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
-          uid: PropTypes.string
-        }),
-        onAuthStateChanged: PropTypes.func
-      }).isRequired,
-      firebaseEmailSignIn: PropTypes.func,
-      firebaseEmailSignUp: PropTypes.func,
-      firebaseSignOut: PropTypes.func,
-      getTeacherList: PropTypes.func
-    }),
+    firebase: PropTypes.object,
     history: ReactRouterPropTypes.history,
     noBack: PropTypes.bool
   }

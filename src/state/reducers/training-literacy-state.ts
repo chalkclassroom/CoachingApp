@@ -45,23 +45,41 @@ const initialState: TrainingLiteracyState = {
 export default (state = initialState, action: TrainingLiteracyTypes): TrainingLiteracyState => {
   switch (action.type) {
     case GET_TRAINING:
+      const {
+        conceptsFoundational = false,
+        conceptsWriting = false,
+        conceptsReading = false,
+        conceptsLanguage = false,
+        definitionsFoundational = false,
+        definitionsWriting = false,
+        definitionsReading = false,
+        definitionsLanguage = false,
+        demoFoundational = false,
+        demoWriting = false,
+        demoReading = false,
+        demoLanguage = false,
+        knowledgeCheckFoundational = false,
+        knowledgeCheckWriting = false,
+        knowledgeCheckReading = false,
+        knowledgeCheckLanguage = false
+      } = action
       return {
-        conceptsFoundational: action.literacyTraining?.conceptsFoundational,
-        conceptsWriting: action.literacyTraining?.conceptsWriting,
-        conceptsReading: action.literacyTraining?.conceptsReading,
-        conceptsLanguage: action.literacyTraining?.conceptsLanguage,
-        definitionsFoundational: action.literacyTraining?.definitionsFoundational,
-        definitionsWriting: action.literacyTraining?.definitionsWriting,
-        definitionsReading: action.literacyTraining?.definitionsReading,
-        definitionsLanguage: action.literacyTraining?.definitionsLanguage,
-        demoFoundational: action.literacyTraining?.demoFoundational,
-        demoWriting: action.literacyTraining?.demoWriting,
-        demoReading: action.literacyTraining?.demoReading,
-        demoLanguage: action.literacyTraining?.demoLanguage,
-        knowledgeCheckFoundational: action.literacyTraining?.knowledgeCheckFoundational,
-        knowledgeCheckWriting: action.literacyTraining?.knowledgeCheckWriting,
-        knowledgeCheckReading: action.literacyTraining?.knowledgeCheckReading,
-        knowledgeCheckLanguage: action.literacyTraining?.knowledgeCheckLanguage
+        conceptsFoundational,
+        conceptsWriting,
+        conceptsReading,
+        conceptsLanguage,
+        definitionsFoundational,
+        definitionsWriting,
+        definitionsReading,
+        definitionsLanguage,
+        demoFoundational,
+        demoWriting,
+        demoReading,
+        demoLanguage,
+        knowledgeCheckFoundational,
+        knowledgeCheckWriting,
+        knowledgeCheckReading,
+        knowledgeCheckLanguage
       };
     case UNLOCK_LITERACY_KNOWLEDGE_CHECK: 
       if (action.checklistType === 'Foundational') {

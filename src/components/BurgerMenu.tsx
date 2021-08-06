@@ -63,10 +63,7 @@ type Props = RouteComponentProps & {
   classes: Style,
   handleClose(event: React.MouseEvent<HTMLElement, MouseEvent>): void,
   history: H.History,
-  firebase: {
-    firebaseSignOut(): Promise<void>,
-    getTeacherList(): Promise<Types.Teacher[]>
-  },
+  firebase: Firebase,
   clearCoach(): void
 }
 
@@ -137,15 +134,14 @@ class BurgerMenu extends React.Component<Props, State>{
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
-    firebase: PropTypes.exact({
-      getTeacherList: PropTypes.func,
-      firebaseSignOut: PropTypes.func
-    }).isRequired,
+    firebase: PropTypes.object, // this is enforced by the TS compiler
     clearCoach: PropTypes.func.isRequired
   }
 
   /**
    * returns the navigation menu for a coach user
+   * @param {classes}
+   * @return {React.ReactNode}
    */
   coachNavigationMenu(classes): React.ReactNode{
     return <React.Fragment>
@@ -281,6 +277,7 @@ class BurgerMenu extends React.Component<Props, State>{
 
   /**
    * returns the navigation menu for a teacher user
+   *
    */
   teacherNavigationMenu(classes): React.ReactNode{
     return <React.Fragment>

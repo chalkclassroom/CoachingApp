@@ -331,10 +331,7 @@ class LandingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    firebase: PropTypes.exact({
-      emailListSignUp: PropTypes.func,
-      firebasePilotSignUp: PropTypes.func
-    }).isRequired
+    firebase: PropTypes.object
   }
 
   /**
