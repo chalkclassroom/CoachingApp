@@ -51,22 +51,22 @@ export const StyledLink = withStyles(theme => ({
 export const cards = {
   'coaching-cycle': {
     label: 'Coaching Cycle',
-    imageImport: () => import('../../../assets/images/CoachingResources/coaching-cycle.jpg'),
+    imageImport: () => import('../../../assets/images/CoachingResources/CoachingCycle.png'),
     linkUrl: '/CoachingResources/CoachingCycle'
   },
   'professional-development-materials': {
     label: 'Professional Development Materials',
-    imageImport: () => import('../../../assets/images/CoachingResources/professional-development-materials.jpg'),
+    imageImport: () => import('../../../assets/images/CoachingResources/ProfDev.png'),
     linkUrl: '/CoachingResources/ProfessionalDevelopmentMaterials'
   },
   'coaching-best-practices': {
     label: 'Coaching Best Practices',
-    imageImport: () => import('../../../assets/images/CoachingResources/coaching-best-practices.jpg'),
+    imageImport: () => import('../../../assets/images/CoachingResources/CoachingBest.png'),
     linkUrl: '/CoachingResources/CoachingBestPractices'
   },
   'chalk-crosswalks': {
     label: 'CHALK Crosswalks',
-    imageImport: () => import('../../../assets/images/CoachingResources/chalk-crosswalks.jpg'),
+    imageImport: () => import('../../../assets/images/CoachingResources/Crosswalks.png'),
     linkUrl: '/CoachingResources/ChalkCrosswalks'
   }
 }
