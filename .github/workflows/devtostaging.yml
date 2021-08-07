@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
-          ref: master
+          ref: develop
       - name: Use Node.js
         uses: actions/setup-node@v1
       - name: NPM Install and Build
