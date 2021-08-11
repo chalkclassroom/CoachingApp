@@ -8,7 +8,32 @@ on:
       - develop
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-functions:
+    name: Build and Deploy Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: develop
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: NPM Install and Build Frontend
+        working-directory: ./functions
+        run: |
+          npm install
+          firebase deploy --only functions:cqrefpwa
+        env:
+          CXXFLAGS: -Wno-error
+      - name: Deploy on Prod Server
+        uses: w9jds/firebase-action@master
+        with:
+          args: "deploy --only functions:cqrefpwa"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+          PROJECT_PATH: ./functions
+  build-and-deploy-fe:
+    name: Build and Deploy Frontend
     runs-on: ubuntu-latest
     steps:
       - name: Assign Author
@@ -21,7 +46,7 @@ jobs:
           ref: develop
       - name: Use Node.js
         uses: actions/setup-node@v1
-      - name: NPM Install and Build
+      - name: NPM Install and Build Frontend
         working-directory: ./
         run: |
           yarn install
@@ -32,6 +57,6 @@ jobs:
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
-          args: "deploy --only hosting:cqrefpwa,functions:cqrefpwa"
+          args: "deploy --only hosting:cqrefpwa"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
