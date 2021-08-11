@@ -32,6 +32,6 @@ jobs:
       - name: Deploy on Prod Server
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting:cqrefpwa
+          args: "deploy --only hosting:cqrefpwa,functions:cqrefpwa"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
