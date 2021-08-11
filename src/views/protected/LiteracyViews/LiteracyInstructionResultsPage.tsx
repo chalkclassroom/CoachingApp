@@ -1,27 +1,30 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import ResultsLayout from '../../../components/ResultsLayout';
-import LiteracySummaryChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart";
-import LiteracyDetailsFoundational from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundational";
-import LiteracyDetailsWriting from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsWriting";
-import LiteracyDetailsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsReading";
-import LiteracyTrendsReading from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsReading";
-import LiteracyDetailsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage";
-import LiteracyTrendsLanguage from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage";
-import TrendsSlider from "../../../components/LiteracyComponents/ResultsComponents/TrendsSlider";
-import LiteracyCoachingQuestions from "../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestions";
-import FadeAwayModal from '../../../components/FadeAwayModal';
-import LogoImage from '../../../assets/images/LogoImage.svg';
-import { connect } from 'react-redux';
-import * as Constants from '../../../constants/Constants';
-import * as Types from '../../../constants/Types';
-import TeacherModal from '../HomeViews/TeacherModal';
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar'
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import FirebaseContext from '../../../components/Firebase/FirebaseContext'
+import ResultsLayout from '../../../components/ResultsLayout'
+import LiteracySummaryChart from '../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart'
+import LiteracyDetailsFoundational
+  from '../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundational'
+import LiteracyDetailsWriting from '../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsWriting'
+import LiteracyDetailsReading from '../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsReading'
+import LiteracyTrendsReading from '../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsReading'
+import LiteracyDetailsLanguage from '../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage'
+import LiteracyTrendsLanguage from '../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage'
+import TrendsSlider from '../../../components/LiteracyComponents/ResultsComponents/TrendsSlider'
+import LiteracyCoachingQuestions
+  from '../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestions'
+import FadeAwayModal from '../../../components/FadeAwayModal'
+import { connect } from 'react-redux'
+import * as Constants from '../../../constants/Constants'
+import { LiteracyTypes } from '../../../constants/Constants'
+import * as Types from '../../../constants/Types'
+import TeacherModal from '../HomeViews/TeacherModal'
+import Firebase from '../../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -704,6 +707,22 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   *
+   * @param type
+   * @return string
+   */
+  getTitle(type: LiteracyTypes):string {
+    switch(type){
+      case LiteracyTypes.READING:
+        return 'Compare how often the teacher engaged in:';
+      case LiteracyTypes.WRITING:
+        return 'Compare how often the children engaged in:';
+      default:
+        return 'Compare how often the teacher was:';
+    }
+  }
+
+  /**
    * render function
    * @return {ReactNode}
    */
@@ -730,7 +749,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                  {this.props.location.state.type === Constants.LiteracyTypes.READING ? 'Compare how often the teacher engaged in:' : 'Compare how often the teacher was:'} 
+                  {this.getTitle(this.props.location.state.type)}
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
@@ -865,9 +884,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: {
-            getTeacherList(): Promise<Types.Teacher[]>
-          }): React.ReactElement => (
+          {(firebase: Firebase ): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}

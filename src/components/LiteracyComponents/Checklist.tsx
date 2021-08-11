@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { updateLiteracyCount } from "../../state/actions/literacy-instruction";
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import Firebase from '../Firebase'
 
 type ChecklistType = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild' | 'ReadingTeacher' | 'LanguageTeacher';
 
@@ -89,15 +90,7 @@ interface Props {
     contentGrid: string
   },
   type: Types.DashboardType,
-  firebase: {
-    auth: {
-      currentUser: {
-        uid: string
-      }
-    },
-    handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-    handlePushLiteracy(mEntry: {checked: Array<number>}): Promise<void>
-  },
+  firebase: Firebase,
   teacherSelected: Types.Teacher,
   updateLiteracyCount(behavior: boolean): void,
   checklist: string
@@ -243,15 +236,7 @@ class Checklist extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    firebase: PropTypes.exact({
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
-          uid: PropTypes.string
-        })
-      }),
-      handleSession: PropTypes.func,
-      handlePushLiteracy: PropTypes.func
-    }).isRequired,
+    firebase: PropTypes.object,
     classes: PropTypes.object.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     teacherSelected: PropTypes.exact({
