@@ -458,7 +458,7 @@ exports.observationsToBQ = functions.firestore
                       console.log(rows);
 
                       return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
-                          console.error(`table.insert: ${JSON.stringify(err)}`);
+                          console.error(`foundational teacher literacy insert failed: ${JSON.stringify(err)}`);
                       });
                   })
                   .catch(err => {
@@ -470,7 +470,7 @@ exports.observationsToBQ = functions.firestore
               return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                   .then(entries => {
                       entries.forEach(entry => {
-                          console.log(entry.id, "=>", entry.data());
+                          console.log(`Entry is ${JSON.stringify(entry.data())}`);
                           let entryData = entry.data();
                           if (entryData.Type === "UNDO") {
                               rows.pop();
@@ -503,10 +503,10 @@ exports.observationsToBQ = functions.firestore
                               rows.push(row);
                           }
                       });
-                      console.log(rows);
+                      console.log(`Inserting ${rows.length} rows`);
 
                       return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
-                          console.error(`table.insert: ${JSON.stringify(err)}`);
+                          console.error(`foundational child insert failed: ${JSON.stringify(err)}`);
                       });
                   })
                   .catch(err => {

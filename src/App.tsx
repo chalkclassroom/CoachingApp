@@ -56,7 +56,7 @@ import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { coachLoaded, Role } from './state/actions/coach';
 import { getUnlocked } from './state/actions/unlocked';
-import { getTraining } from './state/actions/training-literacy';
+import { setLiteracyTraining, LiteracyTrainingFlags } from './state/actions/training-literacy';
 import { getTeacherList } from './state/actions/teacher'
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
@@ -137,24 +137,7 @@ interface Props {
   coachLoaded(name: string, role: Role): void,
   getUnlocked(unlocked: Array<number>): void,
   // adding literacy training data to redux
-  getTraining(result: {
-    conceptsFoundational: boolean,
-    conceptsWriting: boolean,
-    conceptsReading: boolean,
-    conceptsLanguage: boolean,
-    definitionsFoundational: boolean,
-    definitionsWriting: boolean,
-    definitionsReading: boolean,
-    definitionsLanguage: boolean,
-    demoFoundational: boolean,
-    demoWriting: boolean,
-    demoReading: boolean,
-    demoLanguage: boolean,
-    knowledgeCheckFoundational: boolean,
-    knowledgeCheckWriting: boolean,
-    knowledgeCheckReading: boolean,
-    knowledgeCheckLanguage: boolean
-  }): void,
+  setLiteracyTraining(result: LiteracyTrainingFlags): void,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>
 }
 
@@ -200,25 +183,8 @@ class App extends React.Component<Props, State> {
         this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
           this.props.getUnlocked(unlocked);
         })
-        this.props.firebase.getLiteracyTraining().then((result: {
-          conceptsFoundational: boolean,
-          conceptsWriting: boolean,
-          conceptsReading: boolean,
-          conceptsLanguage: boolean,
-          definitionsFoundational: boolean,
-          definitionsWriting: boolean,
-          definitionsReading: boolean,
-          definitionsLanguage: boolean,
-          demoFoundational: boolean,
-          demoWriting: boolean,
-          demoReading: boolean,
-          demoLanguage: boolean,
-          knowledgeCheckFoundational: boolean,
-          knowledgeCheckWriting: boolean,
-          knowledgeCheckReading: boolean,
-          knowledgeCheckLanguage: boolean
-        }) => {
-          this.props.getTraining(result)
+        this.props.firebase.getLiteracyTraining().then((result: LiteracyTrainingFlags ) => {
+          this.props.setLiteracyTraining(result)
         })
         this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
           const teacherList: Array<Types.Teacher> = [];
@@ -652,5 +618,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, getTraining, getTeacherList})(App));
+export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, setLiteracyTraining, getTeacherList})(App));
 

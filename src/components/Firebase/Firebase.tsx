@@ -745,45 +745,49 @@ class Firebase {
      */
     unlockLiteracyKnowledgeCheck = async (checklistType: Constants.LiteracyTypes): Promise<void> => {
         if (this.auth.currentUser) {
-            const docRef = this.db.collection('users').doc(this.auth.currentUser.uid).collection('training').doc('LI')
-            if (this.auth.currentUser) {
-                if (checklistType === 'Foundational') {
-                    return docRef
-                        .update({
-                            conceptsFoundational: true,
-                            definitionsFoundational: true,
-                            demoFoundational: true,
-                            knowledgeCheckFoundational: true,
-                        })
-                        .catch((error: Error) => console.error('Error getting cached document:', error))
-                } else if (checklistType === 'Writing') {
-                    return docRef
-                        .update({
-                            conceptsWriting: true,
-                            definitionsWriting: true,
-                            demoWriting: true,
-                            knowledgeCheckWriting: true,
-                        })
-                        .catch((error: Error) => console.error('Error getting cached document:', error))
-                } else if (checklistType === 'Reading') {
-                    return docRef
-                        .update({
-                            conceptsReading: true,
-                            definitionsReading: true,
-                            demoReading: true,
-                            knowledgeCheckReading: true,
-                        })
-                        .catch((error: Error) => console.error('Error getting cached document:', error))
-                } else {
-                    return docRef
-                        .update({
-                            conceptsLanguage: true,
-                            definitionsLanguage: true,
-                            demoLanguage: true,
-                            knowledgeCheckLanguage: true,
-                        })
-                        .catch((error: Error) => console.error('Error getting cached document:', error))
-                }
+            const literacyTrainingDoc = this.db.collection('users')
+                .doc(this.auth.currentUser.uid)
+                .collection('training').doc('LI')
+            const doc = await literacyTrainingDoc.get()
+            if (!doc.exists) {
+                await literacyTrainingDoc.set({})
+            }
+            if (checklistType === 'Foundational') {
+                return literacyTrainingDoc
+                    .update({
+                        conceptsFoundational: true,
+                        definitionsFoundational: true,
+                        demoFoundational: true,
+                        knowledgeCheckFoundational: true,
+                    })
+                    .catch((error: Error) => console.error('Error getting cached document:', error))
+            } else if (checklistType === 'Writing') {
+                return literacyTrainingDoc
+                    .update({
+                        conceptsWriting: true,
+                        definitionsWriting: true,
+                        demoWriting: true,
+                        knowledgeCheckWriting: true,
+                    })
+                    .catch((error: Error) => console.error('Error getting cached document:', error))
+            } else if (checklistType === 'Reading') {
+                return literacyTrainingDoc
+                    .update({
+                        conceptsReading: true,
+                        definitionsReading: true,
+                        demoReading: true,
+                        knowledgeCheckReading: true,
+                    })
+                    .catch((error: Error) => console.error('Error getting cached document:', error))
+            } else {
+                return literacyTrainingDoc
+                    .update({
+                        conceptsLanguage: true,
+                        definitionsLanguage: true,
+                        demoLanguage: true,
+                        knowledgeCheckLanguage: true,
+                    })
+                    .catch((error: Error) => console.error('Error getting cached document:', error))
             }
         }
     }

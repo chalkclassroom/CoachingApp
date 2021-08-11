@@ -18,13 +18,13 @@ jobs:
           ref: develop
       - name: Use Node.js
         uses: actions/setup-node@v1
-      - name: NPM Install and Build Frontend
+      - name: NPM Install Functions
         working-directory: ./functions
         run: |
           npm install
         env:
           CXXFLAGS: -Wno-error
-      - name: Deploy on Prod Server
+      - name: Deploy Functions on Prod Server
         uses: w9jds/firebase-action@master
         with:
           args: "deploy --only functions"
