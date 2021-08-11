@@ -1,5 +1,5 @@
 import {
-  GET_TRAINING,
+  SET_TRAINING,
   UNLOCK_LITERACY_KNOWLEDGE_CHECK,
   TrainingLiteracyTypes
 } from "../actions/training-literacy";
@@ -44,7 +44,7 @@ const initialState: TrainingLiteracyState = {
 
 export default (state = initialState, action: TrainingLiteracyTypes): TrainingLiteracyState => {
   switch (action.type) {
-    case GET_TRAINING:
+    case SET_TRAINING:
       const {
         conceptsFoundational = false,
         conceptsWriting = false,
@@ -62,8 +62,9 @@ export default (state = initialState, action: TrainingLiteracyTypes): TrainingLi
         knowledgeCheckWriting = false,
         knowledgeCheckReading = false,
         knowledgeCheckLanguage = false
-      } = action
+      } = action.literacyTraining
       return {
+        ...state,
         conceptsFoundational,
         conceptsWriting,
         conceptsReading,
@@ -79,7 +80,7 @@ export default (state = initialState, action: TrainingLiteracyTypes): TrainingLi
         knowledgeCheckFoundational,
         knowledgeCheckWriting,
         knowledgeCheckReading,
-        knowledgeCheckLanguage
+        knowledgeCheckLanguage,
       };
     case UNLOCK_LITERACY_KNOWLEDGE_CHECK: 
       if (action.checklistType === 'Foundational') {

@@ -1,7 +1,17 @@
-export const GET_TRAINING = "get_training";
+export const SET_TRAINING = "set_training_state";
 export const UNLOCK_LITERACY_KNOWLEDGE_CHECK = "unlock_foundational";
 
-export const getTraining = (literacyTraining: {
+export const setLiteracyTraining = (literacyTraining: LiteracyTrainingFlags): GetTraining => ({
+  type: SET_TRAINING,
+  literacyTraining
+});
+
+export const unlockLiteracyKnowledgeCheck = (checklistType: string): UnlockLiteracyKnowledgeCheck => ({
+  type: UNLOCK_LITERACY_KNOWLEDGE_CHECK,
+  checklistType
+});
+
+export interface LiteracyTrainingFlags {
   conceptsFoundational: boolean,
   conceptsWriting: boolean,
   conceptsReading: boolean,
@@ -18,35 +28,11 @@ export const getTraining = (literacyTraining: {
   knowledgeCheckWriting: boolean,
   knowledgeCheckReading: boolean,
   knowledgeCheckLanguage: boolean
-}): GetTraining => ({
-  type: GET_TRAINING,
-  literacyTraining
-});
-
-export const unlockLiteracyKnowledgeCheck = (checklistType: string): UnlockLiteracyKnowledgeCheck => ({
-  type: UNLOCK_LITERACY_KNOWLEDGE_CHECK,
-  checklistType
-});
+}
 
 interface GetTraining {
-  type: typeof GET_TRAINING,
-  literacyTraining: {  conceptsFoundational: boolean,
-  conceptsWriting: boolean,
-  conceptsReading: boolean,
-  conceptsLanguage: boolean,
-  definitionsFoundational: boolean,
-  definitionsWriting: boolean,
-  definitionsReading: boolean,
-  definitionsLanguage: boolean,
-  demoFoundational: boolean,
-  demoWriting: boolean,
-  demoReading: boolean,
-  demoLanguage: boolean,
-  knowledgeCheckFoundational: boolean,
-  knowledgeCheckWriting: boolean,
-  knowledgeCheckReading: boolean,
-  knowledgeCheckLanguage: boolean
-  }
+  type: typeof SET_TRAINING,
+  literacyTraining: LiteracyTrainingFlags
 }
 
 interface UnlockLiteracyKnowledgeCheck {
