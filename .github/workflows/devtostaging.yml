@@ -22,7 +22,6 @@ jobs:
         working-directory: ./functions
         run: |
           npm install
-          firebase deploy --only functions:cqrefpwa
         env:
           CXXFLAGS: -Wno-error
       - name: Deploy on Prod Server
