@@ -21,7 +21,7 @@ exports.observationsToBQ = functions.firestore
         // access a particular field as you would any JS property
         if (newValue.end !== previousValue.end) {
             console.log("Session Finished");
-            console.log(newValue);
+            console.log(`Newv value is ${JSON.stringify(newValue)}`);
 
             // perform desired operations ...
             let datasetName = "observations";
@@ -52,8 +52,7 @@ exports.observationsToBQ = functions.firestore
 
             const SESSION_ID = context.params.observationID;
             let session = newValue;
-            console.log(session);
-
+            console.log(`Storing observation ${SESSION_ID} in BQ`);
             if (session.type.toLowerCase() === "climate") {
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
@@ -417,9 +416,11 @@ exports.observationsToBQ = functions.firestore
                         return err;
                     });
             } else if (session.type === "LI" && session.checklist === "FoundationalTeacher") {
-              let rows=[]
+              let rows=[];
+              console.log(`Processing a foundational teacher literacy instruction observation`);
               return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                   .then(entries => {
+                      console.log(`Found ${entries.length} observations to process`);
                       entries.forEach(entry => {
                           console.log(entry.id, "=>", entry.data());
                           let entryData = entry.data();
@@ -499,7 +500,7 @@ exports.observationsToBQ = functions.firestore
                                       time: Math.floor(entryData.Timestamp.toDate() / 1000),
                                   }
                               };
-                              console.log(row);
+                              console.log(`Adding row ${JSON.stringify(row)}`);
                               rows.push(row);
                           }
                       });
