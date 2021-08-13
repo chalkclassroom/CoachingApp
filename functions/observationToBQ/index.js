@@ -420,7 +420,7 @@ exports.observationsToBQ = functions.firestore
               console.log(`Processing a foundational teacher literacy instruction observation`);
               return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                   .then(entries => {
-                      console.log(`Found ${entries.length} observations to process`);
+                      console.log(`Found ${JSON.stringify(entries)} observations to process`);
                       entries.forEach(entry => {
                           console.log(entry.id, "=>", entry.data());
                           let entryData = entry.data();
