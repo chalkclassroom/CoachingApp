@@ -46,7 +46,7 @@ export default function LiteracyDetailsFoundational(props: Props) {
         <Grid container justify={"center"} direction={"column"}>
           <Grid item>
             <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingLeft: '1em'}}>
-              What writing activities did children do during the observation?
+              What strategies did the teacher use during the observation?
             </Typography>
           </Grid>
           <Grid item>

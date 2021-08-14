@@ -716,9 +716,50 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       case LiteracyTypes.READING:
         return 'Compare how often the teacher engaged in:';
       case LiteracyTypes.WRITING:
-        return 'Compare how often the children engaged in:';
+        return 'Compare how often the teacher:';
       default:
         return 'Compare how often the teacher was:';
+    }
+  }
+
+  /**
+   *
+   * @param type
+   * @return string
+   */
+  getOtherBehaviorLabel(type:LiteracyTypes):string{
+    switch(type){
+      case LiteracyTypes.READING:{
+        return "Other behaviors";
+      }
+      case LiteracyTypes.WRITING:{
+        return "Engaged in other behaviors";
+      }
+      default:{
+        return "Not doing any target behaviors"
+      }
+    }
+  }
+
+  /**
+   *
+   * @param type
+   * @return string
+   */
+  getPrimaryBehaviorLabel(type:LiteracyTypes):string {
+    switch(type){
+      case LiteracyTypes.FOUNDATIONAL:{
+        return "Supporting children’s foundational skills development";
+      }
+      case LiteracyTypes.WRITING:{
+        return "Supported children's writing";
+      }
+      case LiteracyTypes.READING:{
+        return "Book reading instruction: supported children's vocabulary, comprehension, and speaking/listening skills";
+      }
+      default:{
+        return "Supporting children's language development"
+      }
     }
   }
 
@@ -759,18 +800,14 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.LI, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
                         <ListItemText
-                          primary={this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? "Supporting children’s foundational skills development"
-                            : this.props.location.state.type === Constants.LiteracyTypes.WRITING ? "Supporting children's writing"
-                            : this.props.location.state.type === Constants.LiteracyTypes.READING ? "Book reading instruction: supported children's vocabulary, comprehension, and speaking/listening skills"
-                            : "Supporting children's language development"
-                          }
+                          primary={this.getPrimaryBehaviorLabel(this.props.location.state.type)}
                         />
                       </ListItem>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.NotPresent, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary={this.props.location.state.type === Constants.LiteracyTypes.READING ? "Other behaviors" : "Not doing any target behaviors"} />
+                        <ListItemText primary={this.getOtherBehaviorLabel(this.props.location.state.type)} />
                       </ListItem>
                     </List>
                   </Grid>
