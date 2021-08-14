@@ -14,6 +14,7 @@ import ConferencePlanForm from './ConferencePlanForm';
 import LogoImage from '../assets/images/LogoImage.svg';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as Types from '../constants/Types';
+import Firebase from './Firebase'
 
 const styles: object = {
   main: {
@@ -250,7 +251,7 @@ class ResultsLayout extends React.Component<Props, State> {
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.main}>
           <Grid

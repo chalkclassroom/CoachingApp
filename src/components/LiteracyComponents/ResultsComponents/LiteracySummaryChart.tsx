@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
 import * as Constants from '../../../constants/Constants';
+import { LiteracyTypes } from '../../../constants/Constants'
 
 interface Props {
   literacy: number,
@@ -39,18 +40,26 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
     const isCompleted = this.props.completed;
     let literacyLabel = '';
     let titleType = '';
-    if (this.props.type === 'FoundationalTeacher' || this.props.type === 'FoundationalChild') {
-      literacyLabel = 'Foundational Skills Instruction'
-      titleType = 'Foundational'
-    } else if (this.props.type === 'WritingTeacher' || this.props.type === 'WritingChild') {
-      literacyLabel = 'Writing Instruction'
-      titleType = 'Writing'
-    } else if (this.props.type === 'ReadingTeacher' || this.props.type === 'ReadingChild') {
-      literacyLabel = 'Book Reading Instruction'
-      titleType = 'Reading'
-    } else {
-      literacyLabel = 'Supporting Language Development'
-      titleType = 'Language'
+    switch (this.props.type){
+      case LiteracyTypes.FOUNDATIONAL:{
+        literacyLabel = 'Foundational Skills Instruction';
+        titleType = 'Foundational';
+        break;
+      }
+      case LiteracyTypes.WRITING: {
+        literacyLabel = 'Writing Instruction';
+        titleType = 'Writing';
+        break;
+      }
+      case LiteracyTypes.READING: {
+        literacyLabel = 'Book Reading Instruction';
+        titleType = 'Reading';
+        break;
+      }
+      default:{
+        literacyLabel = 'Supporting Language Development'
+        titleType = 'Language'
+      }
     }
     const literacyData = {
       labels: [
