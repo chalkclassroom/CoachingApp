@@ -26,6 +26,14 @@ interface TeacherInfo {
     notes: string
 }
 
+export interface UserDocument {
+    firstName: string,
+    lastName: string,
+    role: string,
+    id: string,
+    email: string
+}
+
 interface Note {
     id: string,
     content: string,
@@ -191,6 +199,14 @@ class Firebase {
         return this.auth
             .signInWithEmailAndPassword(userData.email, userData.password)
             .catch((error: Error) => console.error('Error signing in: ', error))
+    }
+
+    reauthenticate = async (userData: {
+        email: string,
+        password: string
+    }): Promise<firebase.auth.UserMetadata | void> => {
+        await this.firebaseEmailSignIn(userData);
+        return firebase.auth().currentUser
     }
 
     /**
@@ -406,8 +422,18 @@ class Firebase {
       })
       .catch(error => console.error("Error getting documents: ", error));
   }; */
-    // TODO: I don't love this, is there a reason we don't just load the user
-    //       once and store the whole doc in redux?
+    getUserInformation = async (): Promise<UserDocument | void> => {
+        if (this.auth.currentUser) {
+            return await this.db
+                .collection('users')
+                .doc(this.auth.currentUser.uid)
+                .get()
+                .then((doc: firebase.firestore.DocumentData) => doc.data())
+                .catch((error: Error) => console.error('Error getting cached document:', error))
+        }
+    }
+// TODO: I don't love this, is there a reason we don't just load the user
+//       once and store the whole doc in redux?
     /**
      * gets first name of current user
      */
@@ -958,18 +984,18 @@ class Firebase {
             )
     }
 
-    // fetchClimateSessionDates = async teacherId => {
-    //     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
-    //
-    //     return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
-    //         // Read result of the Cloud Function.
-    //         var sanitizedMessage = result.data[0];
-    //         console.log(sanitizedMessage);
-    //         return sanitizedMessage;
-    //
-    //     });
-    //
-    // };
+// fetchClimateSessionDates = async teacherId => {
+//     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+//
+//     return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
+//         // Read result of the Cloud Function.
+//         var sanitizedMessage = result.data[0];
+//         console.log(sanitizedMessage);
+//         return sanitizedMessage;
+//
+//     });
+//
+// };
 
     /**
      * Classroom Climate cloud function

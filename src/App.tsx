@@ -1,67 +1,83 @@
-import { hot } from 'react-hot-loader/root';
-import * as React from "react";
-import * as PropTypes from 'prop-types';
-import "./App.css";
-import WelcomePage from "./views/WelcomeViews/WelcomePage";
-import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
-import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
-import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage";
-import Magic8MenuPage from "./views/protected/Magic8MenuPage";
-import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
-import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
-import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
-import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
-import HomePage from "./views/protected/HomeViews/HomePage";
-import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
-import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
-import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
-import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
-import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
-import blue from "@material-ui/core/colors/blue";
-import amber from "@material-ui/core/colors/amber";
-import {
-  createTheme,
-  MuiThemeProvider,
-  Theme
-} from "@material-ui/core/styles";
-import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage";
-import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage";
-import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
-import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
-import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
-import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage";
-import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
-import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
-import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
-import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
-import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage";
-import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage";
-import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
-import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
-import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
-import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
-import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
-import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
-import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage';
-import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage';
-import AdminPage from './views/protected/AdminViews/AdminPage';
-import TeamPage from "./views/WelcomeViews/TeamPage";
-import TrainingPage from './views/protected/TrainingPage';
-import * as LogRocket from 'logrocket';
-import setupLogRocketReact from 'logrocket-react';
-import * as ReactGA from 'react-ga';
-import MessagingView from './views/protected/MessagingViews/MessagingView';
-import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
-import Grid from '@material-ui/core/Grid';
-import { coachLoaded, Role } from './state/actions/coach';
-import { getUnlocked } from './state/actions/unlocked';
-import { setLiteracyTraining, LiteracyTrainingFlags } from './state/actions/training-literacy';
+import { hot } from 'react-hot-loader/root'
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import './App.css'
+import WelcomePage from './views/WelcomeViews/WelcomePage'
+import ClassroomClimatePage from './views/protected/ClassroomClimateViews/ClassroomClimatePage'
+import ClassroomClimateResultsPage from './views/protected/ClassroomClimateViews/ClassroomClimateResultsPage'
+import LevelOfInstructionResultsPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage'
+import Magic8MenuPage from './views/protected/Magic8MenuPage'
+import TransitionResultsPage from './views/protected/TransitionViews/TransitionResultsPage'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+import TransitionTimePage from './views/protected/TransitionViews/TransitionTimePage'
+import ForgotPasswordPage from './views/ForgotPasswordViews/ForgotPasswordPage'
+import HomePage from './views/protected/HomeViews/HomePage'
+import TeacherListPage from './views/protected/MyTeachers/TeacherListPage'
+import ActionPlanListPage from './views/protected/ActionPlanViews/ActionPlanListPage'
+import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView'
+import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage'
+import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView'
+import blue from '@material-ui/core/colors/blue'
+import amber from '@material-ui/core/colors/amber'
+import { createTheme, MuiThemeProvider, Theme } from '@material-ui/core/styles'
+import LevelOfInstructionTrainingPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage'
+import LevelOfInstructionPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionPage'
+import MathInstructionTrainingPage from './views/protected/MathInstructionViews/MathInstructionTrainingPage'
+import AssociativeCooperativeInteractionsPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage'
+import AssociativeCooperativeInteractionsResultsPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage'
+import SequentialActivitiesPage from './views/protected/SequentialActivitiesViews/SequentialActivitiesPage'
+import SequentialActivitiesResultsPage
+  from './views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage'
+import AssociativeCooperativeInteractionsTrainingPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage'
+import ClassroomClimateTrainingPage from './views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage'
+import SequentialActivitiesTrainingPage
+  from './views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage'
+import StudentEngagementPage from './views/protected/StudentEngagementViews/StudentEngagementPage'
+import StudentEngagementResultsPage from './views/protected/StudentEngagementViews/StudentEngagementResultsPage'
+import TransitionTimeTrainingPage from './views/protected/TransitionViews/TransitionTimeTrainingPage'
+import MathInstructionPage from './views/protected/MathInstructionViews/MathInstructionPage'
+import MathInstructionResultsPage from './views/protected/MathInstructionViews/MathInstructionResultsPage'
+import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage'
+import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage'
+import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage'
+import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage'
+import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage'
+import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage'
+import AdminPage from './views/protected/AdminViews/AdminPage'
+import TeamPage from './views/WelcomeViews/TeamPage'
+import TrainingPage from './views/protected/TrainingPage'
+import * as ReactGA from 'react-ga'
+import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
+import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
+import CoachingProfessionalDevelopmentMaterials
+  from './views/protected/CoachingResourcesViews/ProfessionalDevelopmentMaterials'
+import CoachingTransitionTime from './views/protected/CoachingResourcesViews/TransitionTime'
+import CoachingClassroomClimate from './views/protected/CoachingResourcesViews/ClassroomClimate'
+import CoachingMathInstruction from './views/protected/CoachingResourcesViews/MathInstruction'
+import CoachingLevelOfInstruction from './views/protected/CoachingResourcesViews/LevelOfInstruction'
+import CoachingStudentEngagement from './views/protected/CoachingResourcesViews/StudentEngagement'
+import CoachingListeningToChildren from './views/protected/CoachingResourcesViews/ListeningToChildren'
+import CoachingSequentialActivities from './views/protected/CoachingResourcesViews/SequentialActivities'
+import CoachingAssociativeAndCooperativeInteractions
+  from './views/protected/CoachingResourcesViews/AssociativeAndCooperativeInteractions'
+import CoachingCoachingBestPractices from './views/protected/CoachingResourcesViews/CoachingBestPractices'
+import CoachingChalkCrosswalks from './views/protected/CoachingResourcesViews/ChalkCrosswalks'
+import MessagingView from './views/protected/MessagingViews/MessagingView'
+import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif'
+import Grid from '@material-ui/core/Grid'
+import { coachLoaded, Role } from './state/actions/coach'
+import { getUnlocked } from './state/actions/unlocked'
+import { LiteracyTrainingFlags, setLiteracyTraining } from './state/actions/training-literacy'
 import { getTeacherList } from './state/actions/teacher'
-import { connect } from 'react-redux';
-import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
-import * as H from 'history';
+import { connect } from 'react-redux'
+import StudentEngagementTrainingPage from './views/protected/StudentEngagementViews/StudentEngagementTrainingPage'
+import * as H from 'history'
 import * as Types from './constants/Types'
+import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
+import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 
 
@@ -169,9 +185,9 @@ class App extends React.Component<Props, State> {
   componentDidMount(): void {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
-        this.props.firebase.getCoachFirstName().then((name: string) => {
+        this.props.firebase.getUserInformation().then((user: UserDocument) => {
           this.props.firebase.getUserRole().then((role: Role) => {
-            this.props.coachLoaded(name, role);
+            this.props.coachLoaded(user.firstName, role, user);
             this.setState({
               auth: true,
               loading: false,
@@ -610,6 +626,88 @@ class App extends React.Component<Props, State> {
                 component={AdminPage}
             />
 
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/MyAccount"
+                component={MyAccountPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources"
+              exact={true}
+              component={CoachingResources}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/CoachingCycle"
+              exact={true}
+              component={CoachingCoachingCycle}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials"
+              exact={true}
+              component={CoachingProfessionalDevelopmentMaterials}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/TransitionTime"
+              component={CoachingTransitionTime}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/ClassroomClimate"
+              component={CoachingClassroomClimate}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/MathInstruction"
+              component={CoachingMathInstruction}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/LevelOfInstruction"
+              component={CoachingLevelOfInstruction}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/StudentEngagement"
+              component={CoachingStudentEngagement}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/ListeningToChildren"
+              component={CoachingListeningToChildren}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/SequentialActivities"
+              component={CoachingSequentialActivities}
+            />
+            {/*
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/LiteracyInstruction"
+              component={CoachingLiteracyInstruction}
+            />
+            */}
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ProfessionalDevelopmentMaterials/AssociativeAndCooperativeInteractions"
+              component={CoachingAssociativeAndCooperativeInteractions}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/CoachingBestPractices"
+              exact={true}
+              component={CoachingCoachingBestPractices}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CoachingResources/ChalkCrosswalks"
+              exact={true}
+              component={CoachingChalkCrosswalks}
+            />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>

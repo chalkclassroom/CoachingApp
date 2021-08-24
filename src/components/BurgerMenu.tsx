@@ -257,22 +257,21 @@ class BurgerMenu extends React.Component<Props, State>{
             onClick={(): void => this.props.history.push("/Messaging")}
         />
       </ListItem>
-      <ListItem
-          button
-          disabled
-          onClick={(): void => {
-            this.setState({ menu: 8, chalkOpen: false });
-            this.props.history.push("/Messages")
-          }}
-          className={classes.regular}
-      >
-        <ListItemIcon>
-          <Magic8Icon style={{ fill: Constants.Colors.AC }} />
-        </ListItemIcon>
-        <ListItemText
-            primary="Coaching Resources"
-        />
-      </ListItem>
+        <ListItem
+            button
+            onClick={(): void => {
+                this.setState({ menu: 8, chalkOpen: false });
+                this.props.history.push("/CoachingResources")
+            }}
+            className={classes.regular}
+        >
+            <ListItemIcon>
+                <Magic8Icon style={{ fill: Constants.Colors.AC }} />
+            </ListItemIcon>
+            <ListItemText
+                primary="Coaching Resources"
+            />
+        </ListItem>
     </React.Fragment>
   }
 
@@ -442,13 +441,12 @@ class BurgerMenu extends React.Component<Props, State>{
               </ListItem>
             </Collapse>
             <ListItem
-                button
-                onClick={(): void => {
-                  this.setState({ menu: 12, chalkOpen: false });
-                  this.props.history.push("/Account");
-                }}
-                disabled
-                className={classes.regular}
+              button
+              onClick={(): void => {
+                this.setState({ menu: 12, chalkOpen: false });
+                this.props.history.push("/MyAccount");
+              }}
+              className={classes.regular}
             >
               <ListItemIcon>
                 <PersonIcon style={{ fill: Constants.Colors.LI }} />
@@ -493,9 +491,7 @@ class BurgerMenu extends React.Component<Props, State>{
         </Drawer>
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
-            {(firebase: {
-              getTeacherList(): Promise<Types.Teacher[]>
-            }): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <TeacherModal
                 handleClose={this.handleTeacherModalClose}
                 firebase={firebase}

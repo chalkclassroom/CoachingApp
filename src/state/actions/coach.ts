@@ -1,3 +1,5 @@
+import { UserDocument } from '../../components/Firebase/Firebase'
+
 export const COACH_LOADED = "coach_loaded";
 export const CLEAR_COACH = "clear_coach";
 
@@ -9,10 +11,11 @@ export enum Role {
 }
 
 
-export const coachLoaded = (coachName: string, role: Role = Role.TEACHER): CoachLoadedAction => ({
+export const coachLoaded = (coachName: string, role: Role = Role.TEACHER, userInfo: UserDocument): CoachLoadedAction => ({
   type: COACH_LOADED,
   coachName,
-  role
+  role,
+  userDoc: userInfo
 });
 
 export const clearCoach = (): ClearCoachAction => ({
@@ -22,7 +25,8 @@ export const clearCoach = (): ClearCoachAction => ({
 interface CoachLoadedAction {
   type: typeof COACH_LOADED,
   coachName: string,
-  role: string
+  role: string,
+  userDoc: UserDocument
 }
 
 interface ClearCoachAction {

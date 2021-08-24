@@ -13,7 +13,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
-import BackIcon from '@material-ui/icons/ArrowBackIos';
+import BackIcon from '@material-ui/icons/ArrowBackIosSharp'
 import BurgerMenu from "./BurgerMenu";
 import { createTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -22,6 +22,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 import * as firebase from 'firebase/app';
 import * as H from 'history';
+import Firebase from './Firebase'
 
 const styles: object = {
   root: {
@@ -127,26 +128,7 @@ interface Style {
 
 type Props = RouteComponentProps & {
   classes: Style,
-  firebase?: {
-    auth: {
-      currentUser: null | {
-        uid: string
-      },
-      onAuthStateChanged(arg: unknown): firebase.User | null,
-    },
-    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
-    firebaseEmailSignUp(
-      info: {
-        email: string,
-        password: string,
-        firstName: string,
-        lastName: string
-      },
-      role: string
-    ): Promise<void>,
-    firebaseSignOut(): Promise<void>,
-    getTeacherList(): Promise<Types.Teacher[]>
-  } | null,
+  firebase?: Firebase | null,
   history: H.History,
   noBack?: boolean
 }
@@ -171,8 +153,8 @@ class AppBar extends React.Component<Props, State> {
     super(props);
     this.state = {
       auth: !(
-        this.props.firebase.auth.currentUser === undefined ||
-        this.props.firebase.auth.currentUser === null
+        this.props.firebase?.auth.currentUser === undefined ||
+        this.props.firebase?.auth.currentUser === null
       ),
       loginModal: false,
       signupModal: false,
@@ -211,7 +193,7 @@ class AppBar extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.auth.onAuthStateChanged((authUser: firebase.User | null) => {
+    this.props.firebase?.auth.onAuthStateChanged((authUser: firebase.User | null) => {
       authUser ? this.setState({ auth: true }) : this.setState({ auth: false });
     });
   }
@@ -262,33 +244,29 @@ class AppBar extends React.Component<Props, State> {
                           </IconButton>
                         </Grid>
                       </Grid>
-                      <Grid item xs={1}>
+                      <IconButton
+                        color="inherit"
+                        aria-label="menu"
+                        className={classes.menuButton}
+                        onClick={(): void => this.handleMenu()}
+                      >
+                        <MenuIcon
+                          color="secondary"
+                          fontSize='large'
+                        />
+                      </IconButton>
+                      {this.props.noBack ? (<div />) : (
                         <IconButton
                           color="inherit"
                           aria-label="menu"
                           className={classes.menuButton}
-                          onClick={(): void => this.handleMenu()}
+                          onClick={(): void => this.props.history.goBack()}
                         >
-                          <MenuIcon
+                          <BackIcon
                             color="secondary"
                             fontSize='large'
                           />
                         </IconButton>
-                      </Grid>
-                      {this.props.noBack ? (<div />) : (
-                        <Grid item xs={1} className={classes.backIcon}>
-                          <IconButton
-                            color="inherit"
-                            aria-label="menu"
-                            className={classes.menuButton}
-                            onClick={(): void => this.props.history.goBack()}
-                          >
-                            <BackIcon
-                              color="secondary"
-                              fontSize='large'
-                            />
-                          </IconButton>
-                        </Grid>
                       )}
                     </Grid>
                   </Grid>
