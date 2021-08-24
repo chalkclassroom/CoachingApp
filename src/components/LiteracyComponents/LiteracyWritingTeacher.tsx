@@ -40,7 +40,7 @@ export default function LiteracyWritingTeacher(): React.ReactElement {
       <TableBody>
         <TableRow>
           <TableCell align="center" className={classes.header} style={{borderRight: '1px solid white'}}>
-            Child Behaviors
+            Teacher Behaviors
           </TableCell>
           <TableCell align="center" className={classes.header}>
             Definitions and Examples
