@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core'
 import * as xlsx from 'xlsx'
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif'
-import { FirebaseContext } from '../../../components/Firebase'
+import Firebase, { FirebaseContext } from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
 import AppBar from '../../../components/AppBar'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
@@ -125,7 +125,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
     if (!isAdmin){
         return <div className={classes.root}>
             <FirebaseContext.Consumer>
-                {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+                {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
             </FirebaseContext.Consumer>
             <Grid container spacing={2} className={classes.container}>
                 <Grid item xs={12}>

@@ -143,49 +143,43 @@ class Firebase {
             password: string,
             firstName: string,
             lastName: string,
-            user: {
-                uid: string
-            }
         },
         role: string,
     ): Promise<void> => {
-        return this.auth
+        const secondFirebase = firebase.initializeApp(config, 'secondary')
+        const userInfo = await secondFirebase.auth()
             .createUserWithEmailAndPassword(userData.email, userData.password)
-            .then((userInfo: firebase.auth.UserCredential) => {
-                if (userInfo.user) {
-                    console.log('Create user and sign in Success', userInfo)
-                    const data = {
-                        email: userData.email,
-                        firstName: userData.firstName,
-                        lastName: userData.lastName,
-                        role: role,
-                        id: userInfo.user ? userInfo.user.uid : '',
-                    }
-                    const docRef = firebase
-                        .firestore()
-                        .collection('users')
-                        .doc(userInfo.user.uid)
-                    docRef
-                        .set(data)
-                        .then(() => {
-                            if (role === 'coach') {
-                                docRef
-                                    .collection('partners')
-                                    .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
-                                    .set({})
-                                    .then(() => console.log('Practice Teacher added to coach!'))
-                                    .catch((error: Error) =>
-                                        console.error(
-                                            'Error occurred while assigning practice teacher to coach: ',
-                                            error,
-                                        ),
-                                    )
-                            } else console.log('User properly added to Firebase!')
-                        })
-                        .catch((error: Error) => console.error('Error adding coach: ', error))
-                }
-            })
-            .catch((error: Error) => console.error('Error creating user signup: ', error))
+        if (userInfo.user) {
+            console.log('Create user and sign in Success', userInfo)
+            const data = {
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                role: role,
+                id: userInfo.user ? userInfo.user.uid : '',
+            }
+            const docRef = firebase
+                .firestore()
+                .collection('users')
+                .doc(userInfo.user.uid)
+            docRef
+                .set(data)
+                .then(() => {
+                    if (role === 'coach') {
+                        docRef
+                            .collection('partners')
+                            .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
+                            .set({})
+                            .then(() => console.log('Practice Teacher added to coach!'))
+                            .catch((error: Error) =>
+                                console.error(
+                                    'Error occurred while assigning practice teacher to coach: ',
+                                    error,
+                                ),
+                            )
+                    } else console.log('User properly added to Firebase!')
+                })
+        }
     }
 
     /**
@@ -205,7 +199,7 @@ class Firebase {
         email: string,
         password: string
     }): Promise<firebase.auth.UserMetadata | void> => {
-        await this.firebaseEmailSignIn(userData);
+        await this.firebaseEmailSignIn(userData)
         return firebase.auth().currentUser
     }
 

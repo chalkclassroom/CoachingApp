@@ -470,6 +470,22 @@ class BurgerMenu extends React.Component<Props, State>{
                   primary="Help"
               />
             </ListItem>
+              {role == Role.ADMIN && <>
+                  <ListItem
+                      button
+                      onClick={(): void => {
+                          this.setState({ menu: 13, chalkOpen: false });
+                          this.props.history.push("/NewUser");
+                      }}
+                  >
+                      <ListItemIcon>
+                          <HelpIcon style={{ fill: Constants.Colors.TT }} />
+                      </ListItemIcon>
+                      <ListItemText
+                          primary="New User"
+                      />
+                  </ListItem>
+              </>}
             <ListItem
                 button
                 onClick={(): void => {
