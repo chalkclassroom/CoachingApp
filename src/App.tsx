@@ -79,6 +79,7 @@ import * as Types from './constants/Types'
 import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
 import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
+import NewUserPage from './views/protected/AdminViews/NewUserPage'
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -624,6 +625,13 @@ class App extends React.Component<Props, State> {
                 userRole={role}
                 path="/Admin"
                 component={AdminPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN]}
+                userRole={role}
+                path="/NewUser"
+                component={NewUserPage}
             />
 
             <PrivateRoute
