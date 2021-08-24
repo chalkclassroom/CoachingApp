@@ -201,6 +201,14 @@ class Firebase {
             .catch((error: Error) => console.error('Error signing in: ', error))
     }
 
+    reauthenticate = async (userData: {
+        email: string,
+        password: string
+    }): Promise<firebase.auth.UserMetadata | void> => {
+        await this.firebaseEmailSignIn(userData);
+        return firebase.auth().currentUser
+    }
+
     /**
      * signs user out
      */
@@ -424,8 +432,8 @@ class Firebase {
                 .catch((error: Error) => console.error('Error getting cached document:', error))
         }
     }
-    // TODO: I don't love this, is there a reason we don't just load the user
-    //       once and store the whole doc in redux?
+// TODO: I don't love this, is there a reason we don't just load the user
+//       once and store the whole doc in redux?
     /**
      * gets first name of current user
      */
@@ -972,18 +980,18 @@ class Firebase {
             )
     }
 
-    // fetchClimateSessionDates = async teacherId => {
-    //     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
-    //
-    //     return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
-    //         // Read result of the Cloud Function.
-    //         var sanitizedMessage = result.data[0];
-    //         console.log(sanitizedMessage);
-    //         return sanitizedMessage;
-    //
-    //     });
-    //
-    // };
+// fetchClimateSessionDates = async teacherId => {
+//     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+//
+//     return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
+//         // Read result of the Cloud Function.
+//         var sanitizedMessage = result.data[0];
+//         console.log(sanitizedMessage);
+//         return sanitizedMessage;
+//
+//     });
+//
+// };
 
     /**
      * Classroom Climate cloud function

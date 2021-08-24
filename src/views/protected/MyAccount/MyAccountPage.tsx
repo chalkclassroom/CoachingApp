@@ -10,12 +10,9 @@ import {
     Typography,
     withStyles,
 } from '@material-ui/core'
-import * as Types from '../../../constants/Types'
 import AppBar from '../../../components/AppBar'
 import Firebase, { FirebaseContext } from '../../../components/Firebase'
-import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif'
 import { connect } from 'react-redux'
-import { Help } from '@material-ui/icons'
 
 
 const useStyles = makeStyles(_ => ({
@@ -53,22 +50,35 @@ const StyledFormControl = withStyles(() => ({
 
 const save = (name: string,
               email: string,
+              currentPassword: string,
               password: string,
               confirmPassword: string, firebase: Firebase) => {
     if (password !== confirmPassword) {
         alert('Passwords do not match')
-        return
+        return;
     }
+
+    return firebase.reauthenticate({email, password: currentPassword})
+        .then(user => {
+            user.updatePassword(password);
+            alert("Your password has been changed!")
+        })
+        .catch(e => {
+            console.log(e);
+            alert("Unable to authenticate you. Please confirm your current password")
+        });
+
 
 }
 /**
  * @return {ReactNode}
  */
-const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' } }): React.ReactNode => {
+const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' }, history }): React.ReactNode => {
     const classes = useStyles()
     const [firstName, setFirstName] = useState(`${user.firstName}`)
     const [lastName, setLastName] = useState(`${user.lastName}`)
     const [email, setEmail] = useState(user.email)
+    const [currentPassword, setCurrentPassword] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     return <div className={classes.root}>
@@ -107,9 +117,19 @@ const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' } }): R
                                value={email} />
                     </StyledFormControl>
                 </Grid>
+                <Grid item xs={8} spacing={8} className={classes.container}>
+                    <StyledFormControl className={classes.formControl}>
+                        <InputLabel id="demo-mutiple-name-label">Current Password</InputLabel>
+                        <Input type="password"
+                               onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(event.target.value)}
+                               value={currentPassword} />
+                    </StyledFormControl>
+                </Grid>
+                <Grid item xs={8} spacing={2} className={classes.container}>
+                    <FormHelperText>Enter a new password twice to change your password</FormHelperText>
+                </Grid>
                 <Grid item xs={8} spacing={2} className={classes.container}>
                     <StyledFormControl className={classes.formControl}>
-                        <FormHelperText>Enter a new password twice to change your password</FormHelperText>
                         <InputLabel id="demo-mutiple-name-label">Password</InputLabel>
                         <Input type="password" placeholder="Password"
                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
@@ -124,7 +144,8 @@ const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' } }): R
                         {(firebase:Firebase) => (
                             <Button variant="contained" color="primary"
                                     onClick={(_) =>
-                                        save(name, email, password, confirmPassword, firebase)}>Save</Button>)}
+                                        save(name, email, currentPassword, password, confirmPassword, firebase)
+                                            .then(() => history.push("/Home"))}>Save</Button>)}
                     </FirebaseContext.Consumer>
                 </Grid>
             </Grid>
