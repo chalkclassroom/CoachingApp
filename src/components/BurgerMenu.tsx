@@ -479,7 +479,7 @@ class BurgerMenu extends React.Component<Props, State>{
                       }}
                   >
                       <ListItemIcon>
-                          <HelpIcon style={{ fill: Constants.Colors.TT }} />
+                          <PeopleIcon style={{ fill: Constants.Colors.IN }} />
                       </ListItemIcon>
                       <ListItemText
                           primary="New User"
