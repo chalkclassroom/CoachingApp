@@ -165,19 +165,17 @@ class Firebase {
             docRef
                 .set(data)
                 .then(() => {
-                    if (role === 'coach') {
-                        docRef
-                            .collection('partners')
-                            .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
-                            .set({})
-                            .then(() => console.log('Practice Teacher added to coach!'))
-                            .catch((error: Error) =>
-                                console.error(
-                                    'Error occurred while assigning practice teacher to coach: ',
-                                    error,
-                                ),
-                            )
-                    } else console.log('User properly added to Firebase!')
+                    docRef
+                        .collection('partners')
+                        .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
+                        .set({})
+                        .then(() => console.log('Practice Teacher added to new user'))
+                        .catch((error: Error) =>
+                            console.error(
+                                'Error occurred while assigning practice teacher to coach: ',
+                                error,
+                            ),
+                        )
                 })
         }
     }
