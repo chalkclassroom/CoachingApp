@@ -170,6 +170,7 @@ type Props = RouteComponentProps & {
   completeObservation: boolean,
   updateSessionTime(time: number): void,
   stopTimer?(): void,
+  startTimer?(): void,
   checklistType?: string
 }
 
@@ -286,10 +287,12 @@ class Dashboard extends React.Component<Props, State> {
 
   handleHelpModal = (): void => {
     this.setState({ help: true });
+    this.props.stopTimer()
   };
 
   handleClickAwayHelp = (): void => {
     this.setState({ help: false });
+    this.props.startTimer()
   };
 
   /**
@@ -298,8 +301,10 @@ class Dashboard extends React.Component<Props, State> {
   handleNotes = (open?: boolean): void => {
     if (open) {
       this.setState({ notes: true });
+      this.props.stopTimer()
     } else {
       this.setState({ notes: false });
+      this.props.startTimer()
     }
   };
 
