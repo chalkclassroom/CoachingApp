@@ -64,7 +64,7 @@ interface Props {
   writing: boolean,
   reading: boolean,
   language: boolean,
-  // unlocked: boolean,
+  unlocked: boolean,
   type: string
 }
 
@@ -94,11 +94,11 @@ class LiteracyIconCard extends React.Component<Props, State> {
     title: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
     training: PropTypes.bool.isRequired,
+    unlocked: PropTypes.bool.isRequired,
     foundational: PropTypes.bool.isRequired,
     writing: PropTypes.bool.isRequired,
     reading: PropTypes.bool.isRequired,
     language: PropTypes.bool.isRequired,
-    // unlocked: PropTypes.bool.isRequired,
     type: PropTypes.string.isRequired
   }
 
@@ -108,7 +108,7 @@ class LiteracyIconCard extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-    const anyUnlocked = this.props.foundational || this.props.writing || this.props.reading || this.props.language;
+    const anyUnlocked = this.props.foundational || this.props.writing || this.props.reading || this.props.language || this.props.unlocked;
     const allUnlocked = this.props.foundational && this.props.writing && this.props.reading && this.props.language;
     return (
       <CardBase>
