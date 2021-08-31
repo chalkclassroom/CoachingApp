@@ -300,9 +300,12 @@ class Dashboard extends React.Component<Props, State> {
    */
   handleNotes = (open?: boolean): void => {
     if (open) {
+    console.log('open')
       this.setState({ notes: true });
       this.props.stopTimer()
     } else {
+    console.log('close')
+
       this.setState({ notes: false });
       this.props.startTimer()
     }
