@@ -174,9 +174,18 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       timeUpOpen: false,
       peopleWarning: false,
       confirmReturn: false,
-      final: false
+      final: false,
+      isStopped: false
     }
   }
+
+  stopTimer = (): void => {
+    this.setState({ isStopped: true });
+  };
+
+  startTimer = (): void => {
+    this.setState({ isStopped: false });
+  };
 
   /**
    * @return {void}
@@ -193,7 +202,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
       } else {
-        this.setState({ time: this.state.time - 1000 });
+        this.setState({ time: this.state.time - (this.state.isStopped ? 0 : 1000) });
       }
     }
   };
@@ -654,9 +663,17 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 <Grid item>
                   <Dashboard
                     type={this.props.type}
-                    infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
+                    infoDisplay={
+                      <Countdown
+                        type={this.props.type} 
+                        time={this.state.time} 
+                        timerTime={60000}  
+                        
+                      />}
                     infoPlacement="center"
                     completeObservation={false}
+                    startTimer={this.startTimer}
+                    stopTimer={this.stopTimer}
                   />
                 </Grid>
               </Grid>

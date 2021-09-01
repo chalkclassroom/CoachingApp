@@ -134,7 +134,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       time: RATING_INTERVAL,
       timeUpOpen: false,
       final: false,
-      in: true
+      in: true,
+      isStopped: false
     }
   }
 
@@ -158,7 +159,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
       } else {
-        this.setState({ time: this.state.time - 1000 });
+        this.setState({ time: this.state.time - (this.state.isStopped ? 0 : 1000) });
       }
     }
   };
@@ -178,8 +179,13 @@ class TeacherChecklist extends React.Component<Props, State> {
   };
 
   stopTimer = (): void => {
-    clearInterval(this.timer);
+    this.setState({ isStopped: true });
+    // clearInterval(this.timer);
   }
+
+  startTimer = (): void => {
+    this.setState({ isStopped: false });
+  };
 
   handleFinish = (): void => {
     this.setState({
@@ -333,6 +339,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                     infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                     infoPlacement="center"
                     completeObservation={true}
+                    startTimer={this.startTimer}
                     stopTimer={this.stopTimer}
                   />
                 </Grid>
