@@ -56,6 +56,7 @@ interface Style {
 
 interface Props {
   classes: Style,
+  isTeacher: boolean,
   onClick(title: string, unlocked: boolean): void,
   title: string,
   icon: string,
@@ -89,6 +90,7 @@ class LiteracyIconCard extends React.Component<Props, State> {
   }
 
   static propTypes = {
+    isTeacher: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
@@ -107,7 +109,7 @@ class LiteracyIconCard extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, isTeacher } = this.props;
     const anyUnlocked = this.props.foundational || this.props.writing || this.props.reading || this.props.language || this.props.unlocked;
     const allUnlocked = this.props.foundational && this.props.writing && this.props.reading && this.props.language;
     return (
@@ -120,7 +122,7 @@ class LiteracyIconCard extends React.Component<Props, State> {
             <BackgroundImage>
               <img src={this.props.icon} style={{ display: "block" }} />
             </BackgroundImage>
-            {this.props.training ? (
+            {(this.props.training && !isTeacher) ? (
               this.props.type === "Observe" && allUnlocked ? (
                 <Overlay>
                   <img

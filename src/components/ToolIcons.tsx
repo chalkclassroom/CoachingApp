@@ -128,7 +128,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="TransitionTime"
                 icon={TransitionTimeIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(1) : false)}
+                unlocked={unlocked ? unlocked.includes(1) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -139,7 +139,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="ClassroomClimate"
                 icon={ClassroomClimateIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(2) : false)}
+                unlocked={unlocked ? unlocked.includes(2) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -150,7 +150,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="MathInstruction"
                 icon={MathIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(3) : false)}
+                unlocked={unlocked ? unlocked.includes(3) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -165,7 +165,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="LevelOfInstruction"
                 icon={InstructionIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(5) : false)}
+                unlocked={unlocked ? unlocked.includes(5) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -176,7 +176,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="StudentEngagement"
                 icon={EngagementIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(4) : false)}
+                unlocked={unlocked ? unlocked.includes(4) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -187,7 +187,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="ListeningToChildren"
                 icon={ListeningIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(6) : false)}
+                unlocked={unlocked ? unlocked.includes(6) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -202,7 +202,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="SequentialActivities"
                 icon={SequentialIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(7) : false)}
+                unlocked={unlocked ? unlocked.includes(7) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -217,7 +217,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 writing={writingUnlocked}
                 reading={readingUnlocked}
                 language={languageUnlocked}
-                unlocked={!training || (unlocked ? unlocked.includes(8) : false)}
+                unlocked={unlocked ? unlocked.includes(8) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
@@ -228,7 +228,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 title="AssociativeCooperativeInteractions"
                 icon={AssocCoopIconImage}
                 onClick={handleClick}
-                unlocked={!training || (unlocked ? unlocked.includes(8) : false)}
+                unlocked={unlocked ? unlocked.includes(8) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
