@@ -82,7 +82,7 @@ class TrainingQuestion extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const { classes, question, options, selected, feedback } = this.props;
-    console.log(question, feedback);
+    const answersLetters = ['A','B','C','D']
     return (
       <div>
         <FormControl className={classes.formControl}>
@@ -95,7 +95,7 @@ class TrainingQuestion extends React.Component<Props, {}> {
           >
             {Array.from(options.keys()).map( (option, index) =>
               <FormControlLabel checked={selected === index} value={"" + index}
-                label={option} key={index} control={<Radio />}
+                label={`${answersLetters[index]})  ${option}`} key={index} control={<Radio />}
                 disabled={feedback !== ""}
                 style={{fontFamily: 'Arimo'}}
               />
