@@ -59,11 +59,11 @@ const useStyles = makeStyles(theme => ({
  */
 function ProfessionalDevelopmentMaterialsAsideContent(): React.ReactElement {
   const styles = useStyles()
-  const { imageImport, label } = resourceCard
+  const { imageImport, label, backgroundColor } = resourceCard
 
   return <>
     <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} />
+      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor} />
       <ResourceCardContent>
         <ResourceLabel>{label}</ResourceLabel>
       </ResourceCardContent>
