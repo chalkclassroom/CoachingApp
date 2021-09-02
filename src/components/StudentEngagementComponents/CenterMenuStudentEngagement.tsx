@@ -26,6 +26,7 @@ import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
+import { addStudent } from '../../state/actions/students'
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -544,6 +545,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 const nameString = this.state.studentTextFieldValue.toString();
                 // capitalizes first char of name, sets count to 0
                 const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
+                this.props.addStudent(nameString)
                 this.setState({ students: newList, studentTextFieldValue: '', setOpen: false });
               }}
               color="secondary"
@@ -717,4 +719,4 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { updateEngagementCount })(withStyles(styles)(CenterMenuStudentEngagement));
+export default connect(null, { updateEngagementCount, addStudent })(withStyles(styles)(CenterMenuStudentEngagement));
