@@ -217,6 +217,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 writing={writingUnlocked}
                 reading={readingUnlocked}
                 language={languageUnlocked}
+                unlocked={unlocked ? unlocked.includes(8) : false}
                 training={training}
                 isTeacher={props.isTeacher}
                 type={type}
