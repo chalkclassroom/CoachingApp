@@ -13,5 +13,10 @@ export const editStudent = (name: string, id: string): editStudent => ({
   id
 });
 
+export const removeStudent = (id: string): removeStudent => ({
+  type: STUDENTS_REMOVE,
+  id
+});
+
 export type addStudentTypes =
-  addStudent | editStudent
+  addStudent | editStudent | removeStudent

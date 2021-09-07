@@ -31,6 +31,15 @@ export default (state = initialState, action: StudentsTypes): StudentsState => {
         })
 
         return {
+          ...state,
+          students: updatedStudents
+        };
+      }
+
+      case STUDENTS_REMOVE:
+      {
+        const updatedStudents = state.students.filter(student => student.id !== action.id)
+        return {
         ...state,
         students: updatedStudents
       };

@@ -27,7 +27,7 @@ import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
-import { addStudent, editStudent } from '../../state/actions/students'
+import { addStudent, editStudent, removeStudent } from '../../state/actions/students'
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -202,7 +202,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     modal: false as boolean,
   };
 
-  handleClickOpen = (editMode: boolean, id: string): void => {6
+  handleClickOpen = (editMode: boolean, id: string): void => {
     if(editMode) {
       const editStudentName = this.props.students.find(student => student.id === id)?.name
       this.setState({ studentTextFieldValue: editStudentName });
@@ -211,6 +211,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
     this.setState({ setOpen: true });
   };
+
+  removeStudent = (id: string): void => {
+    this.props.removeStudent(id)
+  }
 
   handleClose = (editMode: boolean): void => {
     this.setState({ studentTextFieldValue: '' });
@@ -655,7 +659,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 <GridList
                   cellHeight={60}
                   className={classes.gridList}
-                  cols={4}
+                  cols={3}
                 >
                   {this.props.students.map(
                     (student: {name: string, count: number, id: string}, i: number) => {
@@ -683,12 +687,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 style={{padding: 8}}
                               >
                                 <Grid container direction="row" justify="space-between">
-                                  <Grid item xs={7}>
+                                  <Grid item xs={6}>
                                     <Typography noWrap variant="subtitle2">
                                       {student.name}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={2}>
+                                  <Grid item xs={1}>
                                     <Typography variant="subtitle2">
                                       {student.count}
                                     </Typography>
@@ -700,6 +704,16 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                         onClick={(): void => this.handleClickOpen(true, student.id)}
                                       >
                                         <EditIcon />
+                                      </IconButton>
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <Typography variant="subtitle2">
+                                      <IconButton 
+                                        style={{padding: "0"}}
+                                        onClick={(): void => this.removeStudent(student.id)}
+                                      >
+                                        <CloseIcon />
                                       </IconButton>
                                     </Typography>
                                   </Grid>
@@ -755,4 +769,4 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent })(withStyles(styles)(CenterMenuStudentEngagement));
+export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent, removeStudent })(withStyles(styles)(CenterMenuStudentEngagement));
