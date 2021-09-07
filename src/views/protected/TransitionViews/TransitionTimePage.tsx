@@ -127,7 +127,8 @@ class TransitionTimePage extends React.Component<Props, State> {
       transitionType: '',
       open: false,
       transitionEnded: true,
-      teacherModal: false
+      teacherModal: false,
+      isStopped: false
     };
   }
 
@@ -158,6 +159,14 @@ class TransitionTimePage extends React.Component<Props, State> {
     } else {
       this.setState({ notes: false });
     }
+  };
+
+  stopTimer = (): void => {
+    this.setState({ isStopped: true });
+  };
+
+  startTimer = (): void => {
+    this.setState({ isStopped: false });
   };
 
   handleCloseTeacherModal = (): void => {
@@ -235,6 +244,8 @@ class TransitionTimePage extends React.Component<Props, State> {
                       infoDisplay={<TransitionLog />}
                       infoPlacement="center"
                       completeObservation={this.state.transitionEnded}
+                      startTimer={this.startTimer}
+                      stopTimer={this.stopTimer}
                     />
                   </Grid>
                 </Grid>
@@ -283,6 +294,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                             }
                             handleStartTransition={this.handleStartTransition}
                             handleEndTransition={this.handleEndTransition}
+                            isStopped={this.state.isStopped}
                           />
                         )}
                       </FirebaseContext.Consumer>

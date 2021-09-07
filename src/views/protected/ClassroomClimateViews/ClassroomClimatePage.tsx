@@ -103,7 +103,6 @@ interface Props {
     grid: string
   },
   appendClimateRating(rating: number): void,
-  teacherSelected: Types.Teacher
 };
 
 interface State {
@@ -190,6 +189,10 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     clearInterval(this.timer);
   }
 
+  startTimer = (): void => {
+    this.timer = global.setInterval(this.tick, this.timer)
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     if (!this.props.teacherSelected) {
@@ -271,6 +274,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                         }
                         infoPlacement="center"
                         completeObservation={true}
+                        startTimer={this.startTimer}
                         stopTimer={this.stopTimer}
                       />
                     </Grid>

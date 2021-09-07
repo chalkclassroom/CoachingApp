@@ -177,6 +177,10 @@ class Checklist extends React.Component<Props, State> {
     clearInterval(this.timer);
   }
 
+  startTimer = (): void => {
+    this.timer = global.setInterval(this.tick, this.timer)
+  }
+
   handleFinish = (): void => {
     this.setState({
       timeUpOpen: false,
@@ -330,8 +334,9 @@ class Checklist extends React.Component<Props, State> {
                     infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                     infoPlacement="center"
                     completeObservation={true}
-                    stopTimer={this.stopTimer}
                     checklistType={this.props.checklist}
+                    stopTimer={this.stopTimer}
+                    startTimer={this.startTimer}
                   />
                 </Grid>
               </Grid>
