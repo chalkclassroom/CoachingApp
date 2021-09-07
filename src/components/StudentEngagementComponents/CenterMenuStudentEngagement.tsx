@@ -21,12 +21,13 @@ import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
 import Modal from "@material-ui/core/Modal"
 import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
-import { addStudent } from '../../state/actions/students'
+import { addStudent, editStudent } from '../../state/actions/students'
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -100,6 +101,7 @@ interface State {
   }>,
   open: boolean,
   setOpen: boolean,
+  editStudent: boolean
   studentTextFieldValue: string
   status: Status,
   currentStudent: number,
@@ -186,9 +188,11 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   state = {
-    students: [] as {name: string, count: number}[],
-    open: false,
-    setOpen: false,
+    students: [] as {name: string, count: number, id: string}[],
+    open: false  as boolean,
+    setOpen: false  as boolean,
+    editStudent: false  as boolean,
+    editStudentId: '' as string,
     studentTextFieldValue: '' as string,
     status: NAME_LIST as Status,
     currentStudent: -1 as number,
@@ -198,12 +202,21 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     modal: false as boolean,
   };
 
-  handleClickOpen = (): void => {
+  handleClickOpen = (editMode: boolean, id: string): void => {6
+    if(editMode) {
+      const editStudentName = this.props.students.find(student => student.id === id)?.name
+      this.setState({ studentTextFieldValue: editStudentName });
+      this.setState({ editStudent: true });
+      this.setState({ editStudentId: id });
+    }
     this.setState({ setOpen: true });
   };
 
-  handleClose = (): void => {
+  handleClose = (editMode: boolean): void => {
+    this.setState({ studentTextFieldValue: '' });
+    this.setState({ editStudent: false });
     this.setState({ setOpen: false });
+    this.setState({ editStudentId: '' });
   };
 
   /**
@@ -540,7 +553,19 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             >
               Cancel
             </Button>
-            <Button
+            {this.state.editStudent ? <Button
+              onClick={(): void => {
+                const nameString = this.state.studentTextFieldValue.toString();
+                // capitalizes first char of name, sets count to 0
+                const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
+                this.setState({ students: newList, studentTextFieldValue: '', setOpen: false, editStudent: false });
+                this.props.editStudent(nameString, this.state.editStudentId)
+              }}
+              color="secondary"
+              autoFocus
+            >
+              Edit
+            </Button> :  <Button
               onClick={(): void => {
                 const nameString = this.state.studentTextFieldValue.toString();
                 // capitalizes first char of name, sets count to 0
@@ -552,7 +577,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               autoFocus
             >
               Add
-            </Button>
+            </Button>}
+           
           </DialogActions>
         </Dialog>
         {this.state.status === 0 ? (
@@ -631,8 +657,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                   className={classes.gridList}
                   cols={4}
                 >
-                  {this.state.students.map(
-                    (student: {name: string, count: number}, i: number) => {
+                  {this.props.students.map(
+                    (student: {name: string, count: number, id: string}, i: number) => {
                       return (
                         <GridListTile
                           key={i + 'grid'}
@@ -657,7 +683,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 style={{padding: 8}}
                               >
                                 <Grid container direction="row" justify="space-between">
-                                  <Grid item xs={9}>
+                                  <Grid item xs={7}>
                                     <Typography noWrap variant="subtitle2">
                                       {student.name}
                                     </Typography>
@@ -665,6 +691,16 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                   <Grid item xs={2}>
                                     <Typography variant="subtitle2">
                                       {student.count}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <Typography variant="subtitle2">
+                                      <IconButton 
+                                        style={{padding: "0"}}
+                                        onClick={(): void => this.handleClickOpen(true, student.id)}
+                                      >
+                                        <EditIcon />
+                                      </IconButton>
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -719,4 +755,4 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { updateEngagementCount, addStudent })(withStyles(styles)(CenterMenuStudentEngagement));
+export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent })(withStyles(styles)(CenterMenuStudentEngagement));

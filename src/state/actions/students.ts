@@ -7,5 +7,11 @@ export const addStudent = (name: string): addStudent => ({
   name
 });
 
+export const editStudent = (name: string, id: string): editStudent => ({
+  type: STUDENTS_EDIT,
+  name,
+  id
+});
+
 export type addStudentTypes =
-  addStudent
+  addStudent | editStudent

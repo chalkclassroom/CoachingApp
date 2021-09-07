@@ -9,7 +9,8 @@ import {
 interface StudentsState {
   students: Array<{
     name: string,
-    id: number
+    id: number,
+    count: number
   }>
 }
 
@@ -20,8 +21,20 @@ export default (state = initialState, action: StudentsTypes): StudentsState => {
     case STUDENTS_ADD:
       return {
         ...state,
-        students: [...state.students, {name: action.name, id: nanoid()}]
+        students: [...state.students, {name: action.name, id: nanoid(), count: 0}]
       };
+
+    case STUDENTS_EDIT:
+      {
+        const updatedStudents = state.students.map(student => {
+          return student.id === action.id ? {...student, name: action.name} : student
+        })
+
+        return {
+        ...state,
+        students: updatedStudents
+      };
+      }
     
     default:
       return state;
