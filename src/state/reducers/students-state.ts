@@ -3,7 +3,8 @@ import { nanoid } from 'nanoid'
 import {
   STUDENTS_ADD,
   STUDENTS_EDIT,
-  STUDENTS_REMOVE
+  STUDENTS_REMOVE,
+  RESET_STUDENTS
 } from "../actions/students";
 
 interface StudentsState {
@@ -42,6 +43,13 @@ export default (state = initialState, action: StudentsTypes): StudentsState => {
         return {
         ...state,
         students: updatedStudents
+      };
+      }
+      case RESET_STUDENTS:
+      {
+        return {
+        ...state,
+        students: []
       };
       }
     

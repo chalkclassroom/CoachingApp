@@ -27,7 +27,7 @@ import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
-import { addStudent, editStudent, removeStudent } from '../../state/actions/students'
+import { addStudent, editStudent, removeStudent, resetStudents } from '../../state/actions/students'
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -39,6 +39,10 @@ const styles: object = (theme: Theme) => ({
     margin: theme.spacing(1),
     background: '#ede7f6',
     backgroundColor: '#e99b2e',
+  },
+  resetButton: {
+    margin: theme.spacing(1),
+    marginTop: '2vh',
   },
   gridList: {
     width: 700,
@@ -211,6 +215,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
     this.setState({ setOpen: true });
   };
+
+  resetAllStudents = (): void => {
+    this.props.resetStudents()
+  }
 
   removeStudent = (id: string): void => {
     this.props.removeStudent(id)
@@ -758,9 +766,18 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               variant="contained"
               className={classes.button}
               onClick={(): void => this.switchToObservationPage()}
-              disabled={this.state.students.length === 0}
+              disabled={this.props.students.length === 0}
             >
               Begin Observation
+            </Button>
+             <Button
+              key={'Begin'}
+              variant="outlined"
+              color="secondary"
+              className={classes.resetButton}
+              onClick={(): void => this.resetAllStudents()}
+            >
+              Reset all students
             </Button>
           </Grid>
         ) : (null)}
@@ -769,4 +786,4 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent, removeStudent })(withStyles(styles)(CenterMenuStudentEngagement));
+export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent, removeStudent, resetStudents })(withStyles(styles)(CenterMenuStudentEngagement));

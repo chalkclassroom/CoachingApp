@@ -1,6 +1,7 @@
 export const STUDENTS_ADD = "add_student";
 export const STUDENTS_EDIT = "edit_student";
 export const STUDENTS_REMOVE = "remove_student";
+export const RESET_STUDENTS = "reset_students"
 
 export const addStudent = (name: string): addStudent => ({
   type: STUDENTS_ADD,
@@ -18,5 +19,9 @@ export const removeStudent = (id: string): removeStudent => ({
   id
 });
 
+export const resetStudents = (): removeStudent => ({
+  type: RESET_STUDENTS,
+});
+
 export type addStudentTypes =
-  addStudent | editStudent | removeStudent
+  addStudent | editStudent | removeStudent | resetStudents
