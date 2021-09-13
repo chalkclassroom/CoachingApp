@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import LiteracyInstructionIcon from '../../../assets/images/LiteracyIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Example.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Examples.pdf'
+// import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
