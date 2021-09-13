@@ -43,10 +43,11 @@ function LiteracyInstructionMainContent(): React.ReactElement {
       <Typography variant='h5' component='h1' align='center'>Professional Development Materials</Typography>
     </Grid>
     <Grid item xs={12}>
-      <Box pt={2} display="flex" alignItems="center" justifyContent="space-around">
-        <LazyLoadedPreviewImage imageImport={handoutPreviewImport} docUrl={HandoutDocumentUrl} />
+      <Box pt={12} display="flex" alignItems="center" justifyContent="space-around">
+        <Typography variant='h4' component='h2' align='center' style={{ fontWeight: 600 }}>Coming soon</Typography>
+        {/*<LazyLoadedPreviewImage imageImport={handoutPreviewImport} docUrl={HandoutDocumentUrl} />
         <Box minWidth="2rem" />
-        {/* <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />*/}
+         <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />*/}
       </Box>
     </Grid>
   </Grid>
