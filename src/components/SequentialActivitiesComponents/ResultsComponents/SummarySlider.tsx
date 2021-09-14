@@ -86,7 +86,7 @@ class SummarySlider extends React.Component<Props, {}> {
                 Teacher Behaviors
               </Typography>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often the teacher:
+                Compare how often the children were:
               </Typography>
               <Grid container direction="column" alignItems="center">
                 <Grid item style={{width: '100%'}}>

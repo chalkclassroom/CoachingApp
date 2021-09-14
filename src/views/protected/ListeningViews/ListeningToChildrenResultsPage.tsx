@@ -501,7 +501,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                  Compare how often the teacher was: 
+                  Compare how often children were:
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
