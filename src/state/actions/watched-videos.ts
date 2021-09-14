@@ -1,15 +1,11 @@
 export const ADD_WATCHED_VIDEOS = 'add_watched_videos'
 
-export const addWatchedVideos = (url: string): GetUnlocked => {
+export type WatchedVideosAction =
+    | { type: typeof ADD_WATCHED_VIDEOS, url: string }
+
+export const addWatchedVideos = (url: string): WatchedVideosAction => {
     return {
         type: ADD_WATCHED_VIDEOS,
         url,
     }
 }
-
-interface addWatchedVideos {
-    type: typeof ADD_WATCHED_VIDEOS
-    url: string
-}
-
-export type WatchedTypes = addWatchedVideos

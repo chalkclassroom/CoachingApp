@@ -8,10 +8,11 @@ import { connect } from 'react-redux'
 interface Props {
     videoUrl: string
     watchedVideos: Array<string>
+    addWatchedVideos: (videoUrl: string) => void
 }
 
 interface State {
-    watchedVideos: Array
+     autoPlay: boolean
 }
 
 /**
@@ -23,23 +24,14 @@ class TrainingVideo extends React.Component<Props, State> {
      * @param {Props} props
      */
     constructor(props: Props) {
-        // section -> one of ('transition','climate','ac',etc...)
         super(props)
         this.state = {
-            videoUrl: [],
-            autoPlay: false,
+            autoPlay: !props.watchedVideos.includes(props.videoUrl),
         }
     }
 
-    static propTypes = {
-        videoUrl: PropTypes.string.isRequired,
-    }
-
     componentDidMount() {
-        if (this.props.watchedVideos.includes(this.props.videoUrl)) {
-            this.state.autoPlay = false
-        } else {
-            this.state.autoPlay = true
+        if (!this.state.autoPlay) {
             this.props.addWatchedVideos(this.props.videoUrl)
         }
     }
