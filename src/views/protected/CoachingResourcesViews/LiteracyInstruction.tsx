@@ -32,7 +32,6 @@ function LiteracyInstructionAsideContent(): React.ReactElement {
 }
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Definitions and Examples.preview.png')
-// const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}
@@ -45,9 +44,6 @@ function LiteracyInstructionMainContent(): React.ReactElement {
     <Grid item xs={12}>
       <Box pt={12} display="flex" alignItems="center" justifyContent="space-around">
         <Typography variant='h4' component='h2' align='center' style={{ fontWeight: 600 }}>Coming soon</Typography>
-        {/*<LazyLoadedPreviewImage imageImport={handoutPreviewImport} docUrl={HandoutDocumentUrl} />
-        <Box minWidth="2rem" />
-         <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />*/}
       </Box>
     </Grid>
   </Grid>
