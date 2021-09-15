@@ -99,13 +99,11 @@ interface Props {
 }
 
 interface State {
-  students: Array<{
-    name: string,
-    count: number
-  }>,
+  students: Array<Student>,
   open: boolean,
   setOpen: boolean,
   editStudent: boolean
+  editStudentId: string,
   studentTextFieldValue: string
   status: Status,
   currentStudent: number,
@@ -192,7 +190,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   state = {
-    students: [] as {name: string, count: number, id: string}[],
+    students: [] as students[],
     open: false  as boolean,
     setOpen: false  as boolean,
     editStudent: false  as boolean,
