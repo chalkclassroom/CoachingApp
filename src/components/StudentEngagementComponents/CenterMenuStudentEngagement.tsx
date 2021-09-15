@@ -226,7 +226,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     this.props.removeStudent(id)
   }
 
-  handleClose = (editMode: boolean): void => {
+  handleClose = (): void => {
     this.setState({ 
       studentTextFieldValue: '',
       editStudent: false,
@@ -569,32 +569,30 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             >
               Cancel
             </Button>
-            {this.state.editStudent ? <Button
+            <Button
               onClick={(): void => {
                 const nameString = this.state.studentTextFieldValue.toString();
-                // capitalizes first char of name, sets count to 0
-                const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
-                this.setState({ students: newList, studentTextFieldValue: '', setOpen: false, editStudent: false });
-                this.props.editStudent(nameString, this.state.editStudentId)
+                const newList = this.state.students.concat({
+                  name: nameString.charAt(0).toUpperCase() + nameString.substring(1),
+                  count: 0,
+                });
+                this.setState({
+                  students: newList,
+                  studentTextFieldValue: '',
+                  setOpen: false,
+                  editStudent: !this.state.editStudent,
+                });
+                if (this.state.editStudent) {
+                  this.props.editStudent(nameString, this.state.editStudentId)
+                } else {
+                  this.props.addStudent(nameString)
+                }
               }}
               color="secondary"
               autoFocus
             >
-              Edit
-            </Button> :  <Button
-              onClick={(): void => {
-                const nameString = this.state.studentTextFieldValue.toString();
-                // capitalizes first char of name, sets count to 0
-                const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
-                this.props.addStudent(nameString)
-                this.setState({ students: newList, studentTextFieldValue: '', setOpen: false });
-              }}
-              color="secondary"
-              autoFocus
-            >
-              Add
-            </Button>}
-           
+              {this.state.editStudent ? 'Edit' : 'Add'}
+            </Button>
           </DialogActions>
         </Dialog>
         {this.state.status === 0 ? (
