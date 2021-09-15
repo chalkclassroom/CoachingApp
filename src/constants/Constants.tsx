@@ -353,7 +353,7 @@ export const DM = {
 export const KN = {
   'name': 'Katherine Newman, Ph.D.',
   'initials': 'KN',
-  'role': 'Research Coordinator',
+  'role': 'Research Associate',
   'description': 'Dr. Newman is the Research Coordinator on this project.  She comes to us with both a ' +
   'researcher and a coaching lens as she received her doctorate in Teaching and Learning from Vanderbilt ' +
   'University and has worked as an instructional coach for Metro Nashville Public Schools.  She was previously ' +
@@ -384,7 +384,7 @@ export const DF = {
 export const MF = {
   'name': 'Mary Fuhs, Ph.D.',
   'role': 'Director of Pilot Study',
-  'job': 'Assistant Professor of Psychology',
+  'job': 'Associate Professor of Psychology',
   'affiliation': 'University of Dayton'
 };
 export const PM = {

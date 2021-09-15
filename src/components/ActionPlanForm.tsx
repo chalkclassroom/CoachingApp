@@ -653,7 +653,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                           <Grid item xs={11}>
                             <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.3em', marginTop: '0.3em', fontWeight: 'bold'}}>
-                              Teacher Goal
+                              Goal
                             </Typography>
                           </Grid>
                           <Grid item xs={1}>

@@ -69,7 +69,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
                     <ListItemIcon style={{margin: 0}}>
                       <SignalWifi4BarIcon style={{fill: Constants.ClimateTypeColors.negativeBar, transform: 'rotate(-45deg)'}} />
                     </ListItemIcon>
-                    <ListItemText primary="Disapproved of children&apos;s behavior." />
+                    <ListItemText primary="Disapproved of or redirected children&apos;s behavior." />
                   </ListItem>
                 </List>
               </Grid>

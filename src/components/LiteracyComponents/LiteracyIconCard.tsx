@@ -56,6 +56,7 @@ interface Style {
 
 interface Props {
   classes: Style,
+  isTeacher: boolean,
   onClick(title: string, unlocked: boolean): void,
   title: string,
   icon: string,
@@ -64,7 +65,7 @@ interface Props {
   writing: boolean,
   reading: boolean,
   language: boolean,
-  // unlocked: boolean,
+  unlocked: boolean,
   type: string
 }
 
@@ -89,16 +90,17 @@ class LiteracyIconCard extends React.Component<Props, State> {
   }
 
   static propTypes = {
+    isTeacher: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
     training: PropTypes.bool.isRequired,
+    unlocked: PropTypes.bool.isRequired,
     foundational: PropTypes.bool.isRequired,
     writing: PropTypes.bool.isRequired,
     reading: PropTypes.bool.isRequired,
     language: PropTypes.bool.isRequired,
-    // unlocked: PropTypes.bool.isRequired,
     type: PropTypes.string.isRequired
   }
 
@@ -107,8 +109,8 @@ class LiteracyIconCard extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
-    const anyUnlocked = this.props.foundational || this.props.writing || this.props.reading || this.props.language;
+    const { classes, isTeacher } = this.props;
+    const anyUnlocked = this.props.foundational || this.props.writing || this.props.reading || this.props.language || this.props.unlocked;
     const allUnlocked = this.props.foundational && this.props.writing && this.props.reading && this.props.language;
     return (
       <CardBase>
@@ -120,7 +122,7 @@ class LiteracyIconCard extends React.Component<Props, State> {
             <BackgroundImage>
               <img src={this.props.icon} style={{ display: "block" }} />
             </BackgroundImage>
-            {this.props.training ? (
+            {(this.props.training && !isTeacher) ? (
               this.props.type === "Observe" && allUnlocked ? (
                 <Overlay>
                   <img

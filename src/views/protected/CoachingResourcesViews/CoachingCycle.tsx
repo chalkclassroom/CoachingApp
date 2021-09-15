@@ -29,11 +29,12 @@ const useStyles = makeStyles({
  * @return {ReactElement}
  */
 function CoachingCycleAsideContent(): React.ReactElement {
-  const { imageImport, label } = resourceCard
+  const { imageImport, label, backgroundColor } = resourceCard
+  console.log(imageImport())
 
   return <>
     <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} />
+      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor}/>
       <ResourceCardContent>
         <ResourceLabel>{label}</ResourceLabel>
       </ResourceCardContent>

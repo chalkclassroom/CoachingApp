@@ -30,6 +30,7 @@ const theme = createTheme({
 interface Props {
   updateSessionTime(time: number): void,
   teacherSelected: Types.Teacher,
+  isStopped: boolean,
   firebase: {
     auth: {
       currentUser: {
@@ -124,7 +125,9 @@ class TransitionTimer extends React.Component<Props, State> {
         const startTime = Date.now();
         this.setState({ start: new Date(startTime), startMilliseconds: startTime });
         this.timer = setInterval(() => {
-          this.setState({ time: Math.round(Date.now() - startTime) });
+          if(!this.props.isStopped) {
+          this.setState({ time: this.state.time + 1000 });  
+          }
         }, 1000);
       }
       return { isOn: !state.isOn };
