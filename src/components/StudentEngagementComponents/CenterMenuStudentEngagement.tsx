@@ -209,9 +209,13 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   handleClickOpen = (editMode: boolean, id: string): void => {
     if(editMode) {
       const editStudentName = this.props.students.find(student => student.id === id)?.name
-      this.setState({ studentTextFieldValue: editStudentName });
-      this.setState({ editStudent: true });
-      this.setState({ editStudentId: id });
+      if (editStudentName) {
+        this.setState({ 
+          studentTextFieldValue: editStudentName,
+          editStudent: true,
+          editStudentId: id
+        });
+      }
     }
     this.setState({ setOpen: true });
   };
@@ -225,10 +229,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   handleClose = (editMode: boolean): void => {
-    this.setState({ studentTextFieldValue: '' });
-    this.setState({ editStudent: false });
-    this.setState({ setOpen: false });
-    this.setState({ editStudentId: '' });
+    this.setState({ 
+      studentTextFieldValue: '',
+      editStudent: false,
+      setOpen: false,
+      editStudentId: ''
+    });
   };
 
   /**
