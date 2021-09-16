@@ -5,10 +5,10 @@ import App from './App'
 import Firebase, { FirebaseContext } from './components/Firebase'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
-import state from './state/store'
+import initializeStore from './state/store'
 import { AppContainer } from 'react-hot-loader'
 
-const {store, persistor} = state()
+const { store, persistor } = initializeStore()
 
 const render = Component => {
     ReactDOM.render(
