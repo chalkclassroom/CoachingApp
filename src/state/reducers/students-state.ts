@@ -4,20 +4,21 @@ import {
   STUDENTS_ADD,
   STUDENTS_EDIT,
   STUDENTS_REMOVE,
-  RESET_STUDENTS
+  RESET_STUDENTS,
+  StudentsActionType
 } from "../actions/students";
 
 interface StudentsState {
   students: Array<{
     name: string,
-    id: number,
+    id: string,
     count: number
   }>
 }
 
 const initialState: StudentsState = { students: [] };
 
-export default (state = initialState, action: StudentsTypes): StudentsState => {
+export default (state = initialState, action: StudentsActionType): StudentsState => {
   switch (action.type) {
     case STUDENTS_ADD:
       return {
