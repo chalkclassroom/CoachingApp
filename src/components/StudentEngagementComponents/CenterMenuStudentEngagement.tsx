@@ -575,6 +575,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 const newList = this.state.students.concat({
                   name: nameString.charAt(0).toUpperCase() + nameString.substring(1),
                   count: 0,
+                  id: this.state.editStudentId
                 });
                 this.setState({
                   students: newList,
@@ -751,7 +752,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                       </Grid>
                     </GridListTile>
                   ) : (null)}
-                </GridList>
+                  </GridList>
               </Grid>
             </Grid>
           </Grid>
@@ -768,7 +769,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               variant="contained"
               className={classes.button}
               onClick={(): void => this.switchToObservationPage()}
-              disabled={this.props.students.length === 0}
+              disabled={this.state.students.length === 0}
             >
               Begin Observation
             </Button>
@@ -777,7 +778,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               variant="outlined"
               color="secondary"
               className={classes.resetButton}
-              onClick={(): void => this.resetAllStudents()}
+              onClick={this.resetAllStudents}
             >
               Reset all students
             </Button>
