@@ -10,8 +10,8 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import LiteracyInstructionIcon from '../../../assets/images/LiteracyIconImage.svg'
-import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Example.pdf'
-import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
+import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Examples.pdf'
+// import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
 
 const useStyles = makeStyles({
   asideIcon: {
@@ -32,7 +32,6 @@ function LiteracyInstructionAsideContent(): React.ReactElement {
 }
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Definitions and Examples.preview.png')
-// const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Instruction CHALK Presentation.preview.jpg')
 
 /**
  * @return {ReactElement}
@@ -43,10 +42,8 @@ function LiteracyInstructionMainContent(): React.ReactElement {
       <Typography variant='h5' component='h1' align='center'>Professional Development Materials</Typography>
     </Grid>
     <Grid item xs={12}>
-      <Box pt={2} display="flex" alignItems="center" justifyContent="space-around">
-        <LazyLoadedPreviewImage imageImport={handoutPreviewImport} docUrl={HandoutDocumentUrl} />
-        <Box minWidth="2rem" />
-        {/* <LazyLoadedPreviewImage imageImport={presentationPreviewImport} docUrl={PresentationUrl} />*/}
+      <Box pt={12} display="flex" alignItems="center" justifyContent="space-around">
+        <Typography variant='h4' component='h2' align='center' style={{ fontWeight: 600 }}>Coming soon</Typography>
       </Box>
     </Grid>
   </Grid>
