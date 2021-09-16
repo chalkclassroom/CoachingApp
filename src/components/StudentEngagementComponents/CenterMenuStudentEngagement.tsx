@@ -581,7 +581,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                   students: newList,
                   studentTextFieldValue: '',
                   setOpen: false,
-                  editStudent: !this.state.editStudent,
+                  editStudent: editStudent ? false : true,
                 });
                 if (this.state.editStudent) {
                   this.props.editStudent(nameString, this.state.editStudentId)
@@ -765,7 +765,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             justify="flex-start"
           >
             <Button
-              key={'Begin'}
               variant="contained"
               className={classes.button}
               onClick={(): void => this.switchToObservationPage()}
@@ -774,7 +773,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               Begin Observation
             </Button>
              <Button
-              key={'Begin'}
               variant="outlined"
               color="secondary"
               className={classes.resetButton}
