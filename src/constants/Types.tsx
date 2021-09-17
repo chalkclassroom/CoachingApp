@@ -125,6 +125,7 @@ export interface ReduxState {
   unlockedState: {
     unlocked: Array<number>
   }
+  watchedVideos: Array<string>
 }
 
 export interface Teacher {

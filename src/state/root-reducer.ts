@@ -21,6 +21,7 @@ import trainingLiteracyState from './reducers/training-literacy-state';
 import coachState from './reducers/coach-state';
 import unlockedState from './reducers/unlocked-state';
 import studentsState from './reducers/students-state'
+import watchedVideosState from './reducers/watched-videos-state';
 
 export default combineReducers({
   associativeCenterState,
@@ -44,5 +45,6 @@ export default combineReducers({
   trainingLiteracyState,
   coachState,
   unlockedState,
-  studentsState
+  studentsState,
+  watchedVideosState
 });
