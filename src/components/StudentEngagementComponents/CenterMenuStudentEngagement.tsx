@@ -21,11 +21,13 @@ import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
 import Modal from "@material-ui/core/Modal"
 import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
+import { addStudent, editStudent, removeStudent, resetStudents } from '../../state/actions/students'
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -37,6 +39,10 @@ const styles: object = (theme: Theme) => ({
     margin: theme.spacing(1),
     background: '#ede7f6',
     backgroundColor: '#e99b2e',
+  },
+  resetButton: {
+    margin: theme.spacing(1),
+    marginTop: '2vh',
   },
   gridList: {
     width: 700,
@@ -93,12 +99,11 @@ interface Props {
 }
 
 interface State {
-  students: Array<{
-    name: string,
-    count: number
-  }>,
+  students: Array<Student>,
   open: boolean,
   setOpen: boolean,
+  editStudent: boolean
+  editStudentId: string,
   studentTextFieldValue: string
   status: Status,
   currentStudent: number,
@@ -185,9 +190,11 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   state = {
-    students: [] as {name: string, count: number}[],
-    open: false,
-    setOpen: false,
+    students: [] as students[],
+    open: false  as boolean,
+    setOpen: false  as boolean,
+    editStudent: false  as boolean,
+    editStudentId: '' as string,
     studentTextFieldValue: '' as string,
     status: NAME_LIST as Status,
     currentStudent: -1 as number,
@@ -197,12 +204,35 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     modal: false as boolean,
   };
 
-  handleClickOpen = (): void => {
+  handleClickOpen = (editMode: boolean, id: string): void => {
+    if(editMode) {
+      const editStudentName = this.props.students.find(student => student.id === id)?.name
+      if (editStudentName) {
+        this.setState({ 
+          studentTextFieldValue: editStudentName,
+          editStudent: true,
+          editStudentId: id
+        });
+      }
+    }
     this.setState({ setOpen: true });
   };
 
+  resetAllStudents = (): void => {
+    this.props.resetStudents()
+  }
+
+  removeStudent = (id: string): void => {
+    this.props.removeStudent(id)
+  }
+
   handleClose = (): void => {
-    this.setState({ setOpen: false });
+    this.setState({ 
+      studentTextFieldValue: '',
+      editStudent: false,
+      setOpen: false,
+      editStudentId: ''
+    });
   };
 
   /**
@@ -542,14 +572,27 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             <Button
               onClick={(): void => {
                 const nameString = this.state.studentTextFieldValue.toString();
-                // capitalizes first char of name, sets count to 0
-                const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
-                this.setState({ students: newList, studentTextFieldValue: '', setOpen: false });
+                const newList = this.state.students.concat({
+                  name: nameString.charAt(0).toUpperCase() + nameString.substring(1),
+                  count: 0,
+                  id: this.state.editStudentId
+                });
+                this.setState({
+                  students: newList,
+                  studentTextFieldValue: '',
+                  setOpen: false,
+                  editStudent: editStudent ? false : true,
+                });
+                if (this.state.editStudent) {
+                  this.props.editStudent(nameString, this.state.editStudentId)
+                } else {
+                  this.props.addStudent(nameString)
+                }
               }}
               color="secondary"
               autoFocus
             >
-              Add
+              {this.state.editStudent ? 'Edit' : 'Add'}
             </Button>
           </DialogActions>
         </Dialog>
@@ -627,10 +670,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 <GridList
                   cellHeight={60}
                   className={classes.gridList}
-                  cols={4}
+                  cols={3}
                 >
-                  {this.state.students.map(
-                    (student: {name: string, count: number}, i: number) => {
+                  {this.props.students.map(
+                    (student: {name: string, count: number, id: string}, i: number) => {
                       return (
                         <GridListTile
                           key={i + 'grid'}
@@ -655,14 +698,34 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 style={{padding: 8}}
                               >
                                 <Grid container direction="row" justify="space-between">
-                                  <Grid item xs={9}>
+                                  <Grid item xs={6}>
                                     <Typography noWrap variant="subtitle2">
                                       {student.name}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={2}>
+                                  <Grid item xs={1}>
                                     <Typography variant="subtitle2">
                                       {student.count}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <Typography variant="subtitle2">
+                                      <IconButton 
+                                        style={{padding: "0"}}
+                                        onClick={(): void => this.handleClickOpen(true, student.id)}
+                                      >
+                                        <EditIcon />
+                                      </IconButton>
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <Typography variant="subtitle2">
+                                      <IconButton 
+                                        style={{padding: "0"}}
+                                        onClick={(): void => this.removeStudent(student.id)}
+                                      >
+                                        <CloseIcon />
+                                      </IconButton>
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -689,7 +752,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                       </Grid>
                     </GridListTile>
                   ) : (null)}
-                </GridList>
+                  </GridList>
               </Grid>
             </Grid>
           </Grid>
@@ -702,13 +765,20 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             justify="flex-start"
           >
             <Button
-              key={'Begin'}
               variant="contained"
               className={classes.button}
               onClick={(): void => this.switchToObservationPage()}
               disabled={this.state.students.length === 0}
             >
               Begin Observation
+            </Button>
+             <Button
+              variant="outlined"
+              color="secondary"
+              className={classes.resetButton}
+              onClick={this.resetAllStudents}
+            >
+              Reset all students
             </Button>
           </Grid>
         ) : (null)}
@@ -717,4 +787,4 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { updateEngagementCount })(withStyles(styles)(CenterMenuStudentEngagement));
+export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent, removeStudent, resetStudents })(withStyles(styles)(CenterMenuStudentEngagement));
