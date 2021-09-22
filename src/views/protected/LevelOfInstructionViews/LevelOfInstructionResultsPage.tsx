@@ -516,7 +516,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                     </Typography>
                   </Grid>
                   <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Compare how often the teacher provided: 
+                    Compare how often children provided: 
                   </Typography>
                   <Grid container direction="column" alignItems="center">
                     <Grid item style={{width: '100%'}}>

@@ -100,7 +100,7 @@ function ActivitySettingModal(props: Props): React.ReactElement {
             </Grid>
             <Grid item style={{width: '100%', paddingTop: '0.5em'}}>
               <Typography style={{fontFamily: 'Arimo'}}>
-                Select {checklistType === 'ReadingTeacher' ? 'or create ' : ''}a label describing the type of {checklistType === 'ReadingTeacher' ? 'text read during this observation' : 'activity that was happening for most of this observation'}:
+                Select {checklistType === 'ReadingTeacher' ? 'or create ' : ' '}a label describing the type of activity that was happening for most of {checklistType === 'ReadingTeacher' ? 'text read during this observation' : 'this observation'}:
               </Typography>
             </Grid>
             <Grid item>

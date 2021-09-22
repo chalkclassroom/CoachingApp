@@ -714,11 +714,11 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
   getTitle(type: LiteracyTypes):string {
     switch(type){
       case LiteracyTypes.READING:
-        return 'Compare how often the teacher engaged in:';
+        return 'Compare how often the children engaged in:';
       case LiteracyTypes.WRITING:
-        return 'Compare how often the teacher:';
+        return 'Compare how often the children were:';
       default:
-        return 'Compare how often the teacher was:';
+        return 'Compare how often the children were:';
     }
   }
 
