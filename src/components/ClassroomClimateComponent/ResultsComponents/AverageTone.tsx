@@ -12,7 +12,7 @@ interface Props {
 const useStyles = makeStyles({
   slider: {
     "& .MuiSlider-markLabel": {
-      fontSize: '1.5em',
+      fontSize: '3em',
       color: 'black',
       fontFamily: 'Arimo'
     },

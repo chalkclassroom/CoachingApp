@@ -178,7 +178,7 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                 shrink: true,
               }}
               inputProps={{
-                step: 300, // 5 min
+                step: 900, // 15 min
               }}
               value={moment(date).format('HH:mm')}
               onChange={(time): void => {
@@ -186,6 +186,7 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                 const splitTime = time.target.value.split(':');
                 setHours(splitTime[0]);
                 setMinutes(splitTime[1]);
+                setDate(moment(date).set({h: splitTime[0], m: splitTime[1]}).toDate())
               }}
             />
           </Grid>

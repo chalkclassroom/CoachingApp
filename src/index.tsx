@@ -3,17 +3,22 @@ import * as ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import Firebase, { FirebaseContext } from './components/Firebase'
+import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
-import { store } from './state/store'
+import initializeStore from './state/store'
 import { AppContainer } from 'react-hot-loader'
+
+const { store, persistor } = initializeStore()
 
 const render = Component => {
     ReactDOM.render(
         <AppContainer>
             <Provider store={store}>
-                <FirebaseContext.Consumer>
-                    {(firebase:Firebase) => <App firebase={firebase} />}
-                </FirebaseContext.Consumer>
+                <PersistGate loading={null} persistor={persistor}>
+                    <FirebaseContext.Consumer>
+                        {(firebase:Firebase) => <App firebase={firebase} />}
+                     </FirebaseContext.Consumer>
+                 </PersistGate>
             </Provider>
         </AppContainer>,
         document.getElementById('root'),

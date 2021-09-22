@@ -44,6 +44,7 @@ import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningT
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage'
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage'
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage'
+import CoachingLiteracyInstruction from './views/protected/CoachingResourcesViews/LiteracyInstruction'
 import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage'
 import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage'
 import AdminPage from './views/protected/AdminViews/AdminPage'
@@ -692,13 +693,11 @@ class App extends React.Component<Props, State> {
               path="/CoachingResources/ProfessionalDevelopmentMaterials/SequentialActivities"
               component={CoachingSequentialActivities}
             />
-            {/*
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/LiteracyInstruction"
               component={CoachingLiteracyInstruction}
             />
-            */}
             <PrivateRoute
               auth={this.state.auth}
               path="/CoachingResources/ProfessionalDevelopmentMaterials/AssociativeAndCooperativeInteractions"
