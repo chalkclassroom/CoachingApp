@@ -30,3 +30,7 @@
     transform: rotate(360deg);
   }
 }
+
+.slick-dots li button:before {
+  font-size: 12px!important;
+}
