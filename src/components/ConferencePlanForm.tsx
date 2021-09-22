@@ -272,12 +272,12 @@ class ConferencePlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleSave = (): void => {
-    const feedback = this.state.feedback;
-    const questions = this.state.questions;
-    const addedQuestions = this.state.addedQuestions;
-    const notes = this.state.notes;
+    const feedbacks = this.state.feedback.filter(feedback => feedback !== '');
+    const questions = this.state.questions.filter(question => question !== '');
+    const addedQuestions = this.state.addedQuestions.filter(question => question !== '');;
+    const notes = this.state.notes.filter(note => note !== '');
     if (!this.state.conferencePlanId) {
-      this.props.firebase.createConferencePlan(this.props.teacher.id, this.props.sessionId, this.props.magic8, feedback, questions, addedQuestions, notes)
+      this.props.firebase.createConferencePlan(this.props.teacher.id, this.props.sessionId, this.props.magic8, feedbacks, questions, addedQuestions, notes)
       .then(() => {
         this.props.firebase.completeAppointment(this.props.teacher.id, 'Conference Plan', Constants.ToolAbbreviations[this.props.magic8 as Types.ToolAbbreviationsKey]);
         this.setState({
@@ -299,7 +299,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
         console.log('error creating action plan')
       })
     } else {
-      this.props.firebase.saveConferencePlan(this.state.conferencePlanId, this.state.feedback, this.state.questions, this.state.addedQuestions, this.state.notes).then(() => {
+      this.props.firebase.saveConferencePlan(this.state.conferencePlanId, feedbacks, questions, addedQuestions, notes).then(() => {
         this.props.firebase.completeAppointment(
           this.props.teacher.id,
           'Conference Plan',
@@ -308,7 +308,11 @@ class ConferencePlanForm extends React.Component<Props, State> {
         console.log("conference plan saved");
         this.setState({
           saved: true,
-          dialog: false
+          dialog: false,
+          feedback: feedbacks,
+          questions,
+          addedQuestions,
+          notes,
         }, () => {
           this.setState({ savedAlert: true }, () => {
             setTimeout(() => {
