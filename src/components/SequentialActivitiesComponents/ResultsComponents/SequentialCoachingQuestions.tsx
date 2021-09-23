@@ -79,7 +79,8 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
     const categories = [
       {clickFunction: this.drawingWritingClick, categoryView: 'drawingAndWriting', title: 'Drawing and Writing', questions: Constants.CoachingQuestions.Sequential.DrawingAndWriting},
       {clickFunction: this.gamesClick, categoryView: 'games', title: 'Games and Pretend Play', questions: Constants.CoachingQuestions.Sequential.GamesAndPretendPlay},
-      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Sequential Activities', questions: Constants.CoachingQuestions.Sequential.TeacherSupport}
+      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Sequential Activities', questions: Constants.CoachingQuestions.Sequential.TeacherSupport},
+      {clickFunction: this.teacherSupportClick, categoryView: 'FAQ', title: 'FAQ', questions: Constants.CoachingQuestions.Sequential.TeacherSupport}
     ];
     return(
       <Grid container direction="column">

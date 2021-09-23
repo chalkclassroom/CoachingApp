@@ -7,9 +7,12 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import AddIcon from "@material-ui/icons/Add";
+import Star from '@material-ui/icons/Star'
+import StarBorder from '@material-ui/icons/StarBorder'
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import { FirebaseContext } from '../Firebase'
 
 const styles: object = {
   expansionPanel: {
@@ -42,17 +45,28 @@ interface Props {
   color: string
 }
 
+interface State {
+  firebase: object,
+  favouriteQuestions: array
+}
+
 /**
  * formatting for expansion panel of data-driven coaching questions
  * @class DataQuestions
  */
-class DataQuestions extends React.Component<Props, {}> {
+class DataQuestions extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
   constructor(props: Props) {
     super(props);
+    this.state = {
+      firebase: {},
+      user: {}
+    }
   }
+
+  static contextType = FirebaseContext
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -69,6 +83,18 @@ class DataQuestions extends React.Component<Props, {}> {
     magic8: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired
   };
+
+/** lifecycle method invoked after component mounts */
+    async componentDidMount(): void {
+      this.setState({
+        user: await this.context.getUserInformation(),
+      })
+    }
+
+    async toggleQuestion (id) {
+      await this.context.updateFavouriteQuestions(id)
+      this.setState({user: await this.context.getUserInformation() })
+    }
 
   /**
    * render function
@@ -111,7 +137,16 @@ class DataQuestions extends React.Component<Props, {}> {
                       <Button
                         onClick={this.props.handleAddToPlan.bind(this, item.name, id, label, this.props.sessionId, this.props.teacherId, this.props.magic8)}
                       >
-                        <AddCircleIcon style={{fill: this.props.color}} />
+                        <AddIcon style={{fill: this.props.color}} />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <Button
+                        onClick={(): void => {this.toggleQuestion(id)}}
+                      >
+                       {this.state.user?.favouriteQuestions?.includes(id) ?
+                        <Star style={{fill: this.props.color}}/>:
+                        <StarBorder style={{fill: this.props.color}}/> }
                       </Button>
                     </Grid>
                   </Grid>
@@ -124,7 +159,7 @@ class DataQuestions extends React.Component<Props, {}> {
         <Grid item style={{paddingTop: '1em'}}>
           <Grid container direction="row" justify="center" alignItems="center">
             <Grid item style={{paddingRight: '0.5em'}}>
-              <AddCircleIcon style={{fill: this.props.color}} />
+              <AddIcon style={{fill: this.props.color}} />
             </Grid>
             <Grid item style={{paddingLeft: '0.5em'}}>
               <Typography style={{fontFamily: 'Arimo'}}>
