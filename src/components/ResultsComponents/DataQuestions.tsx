@@ -117,7 +117,7 @@ class DataQuestions extends React.Component<Props, State> {
                 justify="flex-start"
                 alignItems="center"
             >
-                <Grid item>
+                <Grid item style={{minWidth:'100%'}}>
                     {this.props.questions.map((item, index) => (
                         <ExpansionPanel
                             key={index}
