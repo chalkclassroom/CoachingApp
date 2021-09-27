@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
+import { FirebaseContext } from '../../Firebase'
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
@@ -16,6 +17,7 @@ interface Props {
 interface State {
   categoryView: string,
   openPanel: string,
+  faq: array
 }
 
 /**
@@ -32,6 +34,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     this.state = {
       categoryView: '',
       openPanel: '',
+      faq: [],
     }
   }
 
@@ -82,11 +85,68 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     }
   };
 
+  faqSupportClick = (): void => {
+        if (this.state.categoryView !== 'FAQ') {
+            this.setState({
+                categoryView: 'FAQ',
+                openPanel: '',
+            })
+        }
+    }
+
+
+    // eslint-disable-next-line require-jsdoc
+    async faqQuestions(): void {
+        const sequentialQuestions = [
+            ...Constants.CoachingQuestions.AC.Associative,
+...Constants.CoachingQuestions.AC.Cooperative,
+...Constants.CoachingQuestions.AC.TeacherParticipation,
+...Constants.CoachingQuestions.AC.TeacherSupport
+        ]
+        const questions = [].concat(
+            ...sequentialQuestions.map(
+                sequentialQuestion => sequentialQuestion.text
+            )
+        )
+
+        const user = await this.context.getUserInformation()
+
+        const faq = [
+            {
+                name: 'FAQ',
+                title: 'FAQ',
+                text: questions.filter(question =>
+                    user.favouriteQuestions.includes(question.id)
+                ),
+            },
+        ]
+
+        this.setState({ faq })
+    }
+
+    /** lifecycle method invoked after component mounts */
+    async componentDidMount(): void {
+        this.faqQuestions()
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    componentDidUpdate(_, prevState) {
+        if (
+            prevState.categoryView !== 'FAQ' &&
+            'FAQ' === this.state.categoryView
+        ) {
+            this.faqQuestions()
+        }
+    }
+
+
   static propTypes = {
     handleAddToPlan: PropTypes.func.isRequired,
     sessionId: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired
   }
+
+  static contextType = FirebaseContext
 
   /**
    * @return {ReactNode}
@@ -96,7 +156,13 @@ class ACCoachingQuestions extends React.Component<Props, State> {
       {clickFunction: this.associativeClick, categoryView: 'associative', title: 'Associative Interactions', questions: Constants.CoachingQuestions.AC.Associative},
       {clickFunction: this.cooperativeClick, categoryView: 'cooperative', title: 'Cooperative Interactions', questions: Constants.CoachingQuestions.AC.Cooperative},
       {clickFunction: this.teacherParticipationClick, categoryView: 'teacherParticipation', title: 'Teacher Participation in Activities', questions: Constants.CoachingQuestions.AC.TeacherParticipation},
-      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Child Interactions', questions: Constants.CoachingQuestions.AC.TeacherSupport}
+      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Child Interactions', questions: Constants.CoachingQuestions.AC.TeacherSupport},
+      {
+                clickFunction: this.faqSupportClick,
+                categoryView: 'FAQ',
+                title: 'FAQ',
+                questions: this.state.faq,
+            },
     ];
     return(
       <Grid container direction="column">

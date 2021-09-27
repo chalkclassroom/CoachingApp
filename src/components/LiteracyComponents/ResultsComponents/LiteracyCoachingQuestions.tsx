@@ -120,7 +120,7 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <div>
-        {this.props.literacyType !== '' ? (
+        {this.props.literacyType === '' ? (
           <Grid container direction="column">
             <Grid item>
               <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
