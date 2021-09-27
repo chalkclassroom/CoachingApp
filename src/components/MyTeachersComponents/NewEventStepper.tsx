@@ -179,8 +179,8 @@ export default function NewEventStepper(props: Props): React.ReactElement {
               />
               <TimePicker
                 variant="inline"
-                label="Minutes and seconds"
-                value={roundCurrentTime()}
+                label="Time"
+                value={date}
                 minutesStep={15}
                 onChange={(time): void => {
                   const splitTime = moment(time).format('HH:mm')
@@ -189,7 +189,6 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                   setHours(hours);
                   setMinutes(minutes);
                   setDate(moment(date).set({h: hours, m: minutes}).toDate())
-                  roundCurrentTime(date)
                 }}
               />
             </MuiPickersUtilsProvider>
