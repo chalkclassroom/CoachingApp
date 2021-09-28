@@ -1831,6 +1831,30 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     + 'Best, \n'
     + 'Clare';
 
+  const chalkPracticeSelection = `Hi ${recipient.firstName},
+
+Please fill out this quick survey and let me know your thoughts on CHALK coaching.
+
+Which CHALK practices would you like to focus on or learn about next? (Bold or type your top 3.)
+
+ - Reducing Transition Time
+ - Classroom Climate
+ - Math Instruction
+ - Level of Instruction
+ - Student Engagement
+ - Listening to Children
+ - Sequential Activities
+ - Literacy Instruction
+ - Associative and Cooperative Interactions
+
+Please share any additional comments about why you chose these practices or questions you have about CHALK coaching in general.
+
+Thank you!
+Katherine
+
+Visit https://chalkcoaching.com/Training for more information about each practice!
+`
+
   const removeResult = (id: string, type: ResultTypeKey): void => {
     const newCheckedResults = {...checkedResults};
     if (newCheckedResults) {
@@ -1923,7 +1947,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       setEmail(feedback)
     } else if (chosenTheme.value === 'Thank You') {
       setEmail(thankYou)
-    } else {
+    } else if (chosenTheme.value === 'CHALK Practice Selection') {
+      setEmail(chalkPracticeSelection)
+    }else {
       setEmail('')
     }
     setTemplateDialog(false)

@@ -49,6 +49,7 @@ export enum ThemeOptions {
   ACTION_PLAN = 'Action Plan',
   FEEDBACK = 'Feedback',
   THANK_YOU = 'Thank You',
+  PRACTICE = 'CHALK Practice Selection',
   CUSTOM = 'Blank',
 };
 

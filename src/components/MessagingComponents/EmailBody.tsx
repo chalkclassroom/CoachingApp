@@ -101,7 +101,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
           padding: '1em',
         }}
       >
-        <Grid item style={{width: '100%', height: '70%'}}>
+        <Grid item style={{width: '100%', height: '100%'}}>
           <textarea
             value={props.email}
             onChange={handleEmailChange}
