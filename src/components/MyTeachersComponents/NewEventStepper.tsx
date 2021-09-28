@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
+import { TimePicker } from "@material-ui/pickers";
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -131,6 +132,13 @@ export default function NewEventStepper(props: Props): React.ReactElement {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const roundCurrentTime = (): void => {
+    const pirckedTime = moment(date).isAfter(moment()) ? moment(date) : moment()
+    const quarterHour = 15
+    const remainder = quarterHour - (pirckedTime.minute() % quarterHour);
+    return moment(pirckedTime).add(remainder === quarterHour ? 0 : remainder, "minutes");
+  };
+
   /* const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
@@ -169,26 +177,21 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                   setDate(date);
                 }}
               />
+              <TimePicker
+                variant="inline"
+                label="Time"
+                value={date}
+                minutesStep={15}
+                onChange={(time): void => {
+                  const splitTime = moment(time).format('HH:mm')
+                  const hours = moment(time).hour()
+                  const minutes = moment(time).minutes()
+                  setHours(hours);
+                  setMinutes(minutes);
+                  setDate(moment(date).set({h: hours, m: minutes}).toDate())
+                }}
+              />
             </MuiPickersUtilsProvider>
-            <TextField
-              id="time"
-              label="Time"
-              type="time"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{
-                step: 900, // 15 min
-              }}
-              value={moment(date).format('HH:mm')}
-              onChange={(time): void => {
-                time.persist();
-                const splitTime = time.target.value.split(':');
-                setHours(splitTime[0]);
-                setMinutes(splitTime[1]);
-                setDate(moment(date).set({h: splitTime[0], m: splitTime[1]}).toDate())
-              }}
-            />
           </Grid>
         );
       case 1:
