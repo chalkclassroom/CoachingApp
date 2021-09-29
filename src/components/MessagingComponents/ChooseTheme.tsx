@@ -30,6 +30,7 @@ const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
     {value: 'Action Plan', id: '1', label: 'Action Plan'},
     {value: 'Feedback', id: '2', label: 'Feedback'},
     {value: 'Thank You', id: '3', label: 'Thank You'},
+    {value: 'CHALK Practice Selection', id: '4', label: 'CHALK Practice Selection'},
   ];
 
   return (

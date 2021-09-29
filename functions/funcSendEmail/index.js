@@ -15,6 +15,8 @@ exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log('message obj', messageObj);
     const message = {
       to: messageObj.to,
+      replyTo: messageObj.from,
+      cc: messageObj.from,
       from: messageObj.from,
       subject: messageObj.subject,
       text: messageObj.content,

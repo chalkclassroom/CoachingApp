@@ -393,9 +393,7 @@ class TeacherListPage extends React.Component<Props, State> {
     const firebase = this.context;
     let allEvents: Array<Types.CalendarEvent> = [];
     this.setState({
-      searched: this.props.teacherList.filter(teacher => {
-        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
-      })
+      searched: this.props.teacherList
     });
     firebase.getRecentObservations().then((data: Array<{
       id: string,

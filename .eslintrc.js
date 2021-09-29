@@ -4,13 +4,14 @@ module.exports = {
     'es6': true,
   },
   'extends': [
-    'plugin:react/recommended',
     'google',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
     'prettier',
     'prettier/@typescript-eslint',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
   ],
   'globals': {
     'Atomics': 'readonly',
@@ -26,8 +27,6 @@ module.exports = {
     'sourceType': 'module',
   },
   'plugins': [
-    'react',
-    '@typescript-eslint',
     'prettier'
   ],
   'settings': {
