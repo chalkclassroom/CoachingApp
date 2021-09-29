@@ -31,7 +31,7 @@ class TrainingVideo extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        if (!this.state.autoPlay) {
+        if (this.state.autoPlay) {
             this.props.addWatchedVideos(this.props.videoUrl)
         }
     }
