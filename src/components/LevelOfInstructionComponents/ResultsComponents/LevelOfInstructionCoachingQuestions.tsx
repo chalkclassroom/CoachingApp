@@ -86,14 +86,6 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
     /**
      * @param {string} panel
      */
-    handlePanelChange = (panel: string): void => {
-        if (this.state.openPanel === panel) {
-            this.setState({ openPanel: '' })
-        } else {
-            this.setState({ openPanel: panel })
-        }
-    }
-
     static propTypes = {
         handleAddToPlan: PropTypes.func.isRequired,
         sessionId: PropTypes.string.isRequired,

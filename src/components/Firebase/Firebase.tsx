@@ -268,10 +268,10 @@ class Firebase {
                 .doc(this.auth.currentUser.uid)
                 .get()
                 .then(user => {
-                    const FavouriteQuestions = user.data().favouriteQuestions || []
-                    const newFavouriteQuestions = FavouriteQuestions.includes(questionId) ?
-                        FavouriteQuestions.filter(FavouriteQuestion => FavouriteQuestion !== questionId) :
-                        [questionId, ...FavouriteQuestions]
+                    const favouriteQuestions = user.data().favouriteQuestions || []
+                    const newFavouriteQuestions = favouriteQuestions.includes(questionId) ?
+                        favouriteQuestions.filter(favouriteQuestions => favouriteQuestions !== questionId) :
+                        [questionId, ...favouriteQuestions]
                     return this.db
                         .collection('users')
                         .doc(this.auth.currentUser.uid)
