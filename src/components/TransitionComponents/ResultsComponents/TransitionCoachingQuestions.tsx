@@ -12,6 +12,7 @@ import ClassroomRoutinesImage from '../../../assets/images/ClassroomRoutinesImag
 import BMDImage from '../../../assets/images/BMDImage.svg'
 import faqImage from '../../../assets/images/faqImage.svg'
 import { FirebaseContext } from '../../Firebase'
+import getFaqSection from '../../faqSection.ts'
 
 const styles: object = {
     transitionTypeButton: {
@@ -139,32 +140,19 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
 
     // eslint-disable-next-line require-jsdoc
     async faqQuestions(): void {
-        const sequentialQuestions = [
-            ...Constants.CoachingQuestions.Transition.LineQuestions,
-            ...Constants.CoachingQuestions.Transition.TravelingQuestions,
-            ...Constants.CoachingQuestions.Transition.WaitingQuestions,
-            ...Constants.CoachingQuestions.Transition.RoutinesQuestions,
-            ...Constants.CoachingQuestions.Transition.BehaviorQuestions,
-        ]
-        const questions = [].concat(
-            ...sequentialQuestions.map(
-                sequentialQuestion => sequentialQuestion.text
-            )
-        )
-
-        const user = await this.context.getUserInformation()
-
-        const faq = [
-            {
-                name: 'FAQ',
-                title: 'FAQ',
-                text: questions.filter(question =>
-                    user.favouriteQuestions.includes(question.id)
-                ),
-            },
-        ]
-
-        this.setState({ faq })
+        this.setState({
+            faq: getFaqSection({
+                questions: [
+                    ...Constants.CoachingQuestions.Transition.LineQuestions,
+                    ...Constants.CoachingQuestions.Transition
+                        .TravelingQuestions,
+                    ...Constants.CoachingQuestions.Transition.WaitingQuestions,
+                    ...Constants.CoachingQuestions.Transition.RoutinesQuestions,
+                    ...Constants.CoachingQuestions.Transition.BehaviorQuestions,
+                ],
+                user: await this.context.getUserInformation(),
+            }),
+        })
     }
 
     /** lifecycle method invoked after component mounts */
@@ -176,7 +164,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     componentDidUpdate(_, prevState) {
         if (
             prevState.categoryView !== 'FAQ' &&
-            'FAQ' === this.state.categoryView
+            this.state.categoryView === 'FAQ'
         ) {
             this.faqQuestions()
         }

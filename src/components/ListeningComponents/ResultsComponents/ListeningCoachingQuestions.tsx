@@ -6,6 +6,7 @@ import DataQuestions from '../../ResultsComponents/DataQuestions'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import * as Constants from '../../../constants/Constants'
 import { FirebaseContext } from '../../Firebase'
+import getFaqSection from '../../faqSection.ts'
 
 interface Props {
     handleAddToPlan(
@@ -83,30 +84,16 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
 
     // eslint-disable-next-line require-jsdoc
     async faqQuestions(): void {
-        const sequentialQuestions = [
-            ...Constants.CoachingQuestions.Listening.Listening,
-            ...Constants.CoachingQuestions.Listening.Supporting,
-            ...Constants.CoachingQuestions.Listening.Encouraging,
-        ]
-        const questions = [].concat(
-            ...sequentialQuestions.map(
-                sequentialQuestion => sequentialQuestion.text
-            )
-        )
-
-        const user = await this.context.getUserInformation()
-
-        const faq = [
-            {
-                name: 'FAQ',
-                title: 'FAQ',
-                text: questions.filter(question =>
-                    user.favouriteQuestions.includes(question.id)
-                ),
-            },
-        ]
-
-        this.setState({ faq })
+        this.setState({
+            faq: getFaqSection({
+                questions: [
+                    ...Constants.CoachingQuestions.Listening.Listening,
+                    ...Constants.CoachingQuestions.Listening.Supporting,
+                    ...Constants.CoachingQuestions.Listening.Encouraging,
+                ],
+                user: await this.context.getUserInformation(),
+            }),
+        })
     }
 
     /** lifecycle method invoked after component mounts */
@@ -118,7 +105,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
     componentDidUpdate(_, prevState) {
         if (
             prevState.categoryView !== 'FAQ' &&
-            'FAQ' === this.state.categoryView
+            this.state.categoryView === 'FAQ'
         ) {
             this.faqQuestions()
         }

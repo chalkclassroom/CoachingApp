@@ -7,6 +7,7 @@ import DataQuestions from '../../ResultsComponents/DataQuestions'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import * as Constants from '../../../constants/Constants'
 import { FirebaseContext } from '../../Firebase'
+import getFaqSection from '../../faqSection.ts'
 
 interface Props {
     handleAddToPlan(
@@ -83,6 +84,21 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
         }
     }
 
+    // eslint-disable-next-line require-jsdoc
+    async faqQuestions(): void {
+        this.setState({
+            faq: getFaqSection({
+                questions: [
+                    ...Constants.CoachingQuestions.AC.Associative,
+                    ...Constants.CoachingQuestions.AC.Cooperative,
+                    ...Constants.CoachingQuestions.AC.TeacherParticipation,
+                    ...Constants.CoachingQuestions.AC.TeacherSupport,
+                ],
+                user: await this.context.getUserInformation(),
+            }),
+        })
+    }
+
     /**
      * @param {string} panel
      */
@@ -97,40 +113,13 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
     /**
      * @param {string} panel
      */
+
     handlePanelChange = (panel: string): void => {
         if (this.state.openPanel === panel) {
             this.setState({ openPanel: '' })
         } else {
             this.setState({ openPanel: panel })
         }
-    }
-
-    // eslint-disable-next-line require-jsdoc
-    async faqQuestions(): void {
-        const sequentialQuestions = [
-            ...Constants.CoachingQuestions.Instruction.highLevelQuestions,
-            ...Constants.CoachingQuestions.Instruction.lowLevel,
-            ...Constants.CoachingQuestions.Instruction.highLevelInstruction,
-        ]
-        const questions = [].concat(
-            ...sequentialQuestions.map(
-                sequentialQuestion => sequentialQuestion.text
-            )
-        )
-
-        const user = await this.context.getUserInformation()
-
-        const faq = [
-            {
-                name: 'FAQ',
-                title: 'FAQ',
-                text: questions.filter(question =>
-                    user.favouriteQuestions.includes(question.id)
-                ),
-            },
-        ]
-
-        this.setState({ faq })
     }
 
     /** lifecycle method invoked after component mounts */
@@ -142,7 +131,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
     componentDidUpdate(_, prevState) {
         if (
             prevState.categoryView !== 'FAQ' &&
-            'FAQ' === this.state.categoryView
+            this.state.categoryView === 'FAQ'
         ) {
             this.faqQuestions()
         }
