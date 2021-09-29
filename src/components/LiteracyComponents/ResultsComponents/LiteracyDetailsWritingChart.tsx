@@ -52,9 +52,9 @@ class LiteracyDetailsWritingChart extends React.Component<Props, {}> {
     const teacherData = {  
       labels: [
         ["Talks to children about the content", "or meaning of the writing/drawing"],
+        ["Invites children to write", "part of a message"],
         ["Writes a meaningful message", "in front of children"],
         ["Demonstrates and talks about", "print processes"],
-        ["Invites children to write", "part of a message"],
         ["Invites children to write", "their name"],
         ["Responds positively to all", "writing forms"],
         ["Supports children's", "inventive spelling"],
