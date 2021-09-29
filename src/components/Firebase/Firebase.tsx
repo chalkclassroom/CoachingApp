@@ -261,6 +261,29 @@ class Firebase {
         }
     }
 
+    updateFavouriteQuestions = async (questionId: string[]): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+        if (this.auth.currentUser) {
+            return this.db
+                .collection('users')
+                .doc(this.auth.currentUser.uid)
+                .get()
+                .then(user => {
+                    const favouriteQuestions = user.data().favouriteQuestions || []
+                    const newFavouriteQuestions = favouriteQuestions.includes(questionId) ?
+                        favouriteQuestions.filter(favouriteQuestions => favouriteQuestions !== questionId) :
+                        [questionId, ...favouriteQuestions]
+                    return this.db
+                        .collection('users')
+                        .doc(this.auth.currentUser.uid)
+                        .update({
+                            favouriteQuestions: newFavouriteQuestions
+                        })
+                        .catch((error: Error) => console.error('Error updating favourites questions list: ', error))
+                        })
+                .catch((error: Error) => console.error('Error getting favourites questions list: ', error))
+        }
+    }
+
     /**
      * retrieves a teacher's user data
      * @param {string} partnerID
