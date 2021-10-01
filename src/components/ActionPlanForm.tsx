@@ -533,7 +533,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  Would you like to create a new Action Plan?
+                  Would you like to create a new Action Plan? You will not be able to edit the current one from this page.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
