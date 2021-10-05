@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogActions from '@material-ui/core/DialogActions';
@@ -30,6 +31,7 @@ import Gray3 from '../../assets/images/Gray3.svg';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import Zoom from '@material-ui/core/Zoom';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const styles: object = {
   root: {
@@ -555,7 +557,15 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           open={this.state.peopleWarning}
           aria-labelledby="simple-dialog-title"
         >
+        <ClickAwayListener onClickAway={(): void => this.handlePeopleWarningClose()}>
           <DialogContent>
+          <DialogTitle style={{padding: 0}}>
+            <Grid container justify="flex-end">
+                <IconButton onClick={():void => this.handlePeopleWarningClose()} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                  <CloseIcon/>
+                </IconButton>
+            </Grid>
+          </DialogTitle>
             <DialogContentText id="alert-dialog-description">
               <Typography align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em', color: 'black'}}>
                 Please select the number of children and teachers at the center.
@@ -643,6 +653,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </DialogContent>
+        </ClickAwayListener>
         </Dialog>
         <main className={classes.main}>
           <Grid
