@@ -9,6 +9,11 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import InfoIcon from '@material-ui/icons/Info'
 import SaveImage from '../assets/images/SaveImage.svg'
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg'
+import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
 import FadeAwayModal from './FadeAwayModal'
 import {
     MuiPickersUtilsProvider,
@@ -768,20 +773,6 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Dialog open={this.state.dialog}>
-                                <DialogTitle>
-                                    You must save or undo your changes before
-                                    navigating away from the page.
-                                </DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={this.handleUndoChanges}>
-                                        Undo Changes
-                                    </Button>
-                                    <Button onClick={this.handleSave}>
-                                        Save
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
                             <Grid
                                 item
                                 xs={12}
