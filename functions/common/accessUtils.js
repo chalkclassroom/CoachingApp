@@ -5,18 +5,27 @@ const firestore = new Firestore({
     projectId: PROJECTID
 });
 
-const canAccessTeacher = async (teacher, userId) => {
+/**
+ * Gets the user doc or throws an error if not found
+ * @param userId
+ * @return {Promise<*>}
+ */
+const getUser = async userId => {
     const docRef = await firestore.collection("users")
         .doc(userId);
-    const docData = await docRef.get().then((doc) => {
+    return await docRef.get().then((doc) => {
         if (doc.exists) {
-          return doc.data();
+            return doc.data();
         } else {
-          console.log("Doc does not exist");
+            throw new Error("User does not exist");
         }
-      }).catch(error => console.error("Error getting cached document:", error));
-    const role = docData.role;
+    });
+}
 
+const canAccessTeacher = async (teacher, userId) => {
+
+    const docData = await getUser(userId);
+    const role = docData.role;
     if (role === 'admin'){
         return true;
     }else if (role === 'coach'){
