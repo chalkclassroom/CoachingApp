@@ -1,12 +1,15 @@
 const sgMail = require("@sendgrid/mail");
 const functions = require("firebase-functions");
 const CryptoJS = require("crypto-js");
+const {getUser} = require("../common/accessUtils")
 
 sgMail.setApiKey(functions.config().sendgrid ? functions.config().sendgrid.key : "");
 
 exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log(context.auth.uid);
     let bytes  = CryptoJS.AES.decrypt(data, context.auth.uid);
+    const userData = await getUser(context.auth.uid)
+    const email = docData.email;
     // console.log('bytes', bytes);
     let decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
     // console.log('decrypted data', decryptedData)
@@ -15,8 +18,8 @@ exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log('message obj', messageObj);
     const message = {
       to: messageObj.to,
-      replyTo: messageObj.from,
-      cc: messageObj.from,
+      replyTo: email,
+      cc: email,
       from: messageObj.from,
       subject: messageObj.subject,
       text: messageObj.content,
