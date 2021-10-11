@@ -3242,7 +3242,7 @@ class Firebase {
                 .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
                     const actionPlanEventsArray: Array<Types.CalendarEvent> = []
                     querySnapshot.forEach(doc => {
-                        if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+                        // if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
                             actionPlanEventsArray.push({
                                 title: 'Action Plan',
                                 start: doc.data().dateModified.toDate(),
@@ -3260,7 +3260,7 @@ class Firebase {
                                                                 : 'AC',
                                 id: doc.id,
                             })
-                        }
+                        // }
                     })
                     return actionPlanEventsArray
                 })
@@ -3282,7 +3282,7 @@ class Firebase {
                 .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
                     const conferencePlanEventsArray: Array<Types.CalendarEvent> = []
                     querySnapshot.forEach(doc => {
-                        if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
+                        // if (doc.data().teacher !== 'rJxNhJmzjRZP7xg29Ko6') {
                             conferencePlanEventsArray.push({
                                 title: 'Conference Plan',
                                 start: doc.data().dateModified.toDate(),
@@ -3301,7 +3301,7 @@ class Firebase {
                                 id: doc.id,
                                 conferencePlanSessionId: doc.data().sessionId,
                             })
-                        }
+                        // }
                     })
                     return conferencePlanEventsArray
                 })
