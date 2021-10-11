@@ -5,14 +5,17 @@ const firestore = new Firestore({
     projectId: PROJECTID
 });
 
+const getUserDoc = async userId => {
+    return firestore.collection("users").doc(userId)
+}
+
 /**
  * Gets the user doc or throws an error if not found
  * @param userId
  * @return {Promise<*>}
  */
 const getUser = async userId => {
-    const docRef = await firestore.collection("users")
-        .doc(userId);
+    const docRef = await getUserDoc(userId);
     return await docRef.get().then((doc) => {
         if (doc.exists) {
             return doc.data();
@@ -29,7 +32,7 @@ const canAccessTeacher = async (teacher, userId) => {
     if (role === 'admin'){
         return true;
     }else if (role === 'coach'){
-        const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
+        const partnerCollection = await getUserDoc(userId).listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists
     }else{
         return docData.email === "practice@teacher.edu" //self or practice teacher
