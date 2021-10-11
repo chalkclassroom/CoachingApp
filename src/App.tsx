@@ -322,14 +322,14 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Messaging"
-              allowedRoles={[Role.COACH]}
+              allowedRoles={[Role.COACH,Role.ADMIN]}
               userRole={role}
               component={MessagingView}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              allowedRoles={[Role.COACH]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN]}
               userRole={role}
               render={(props: {
                 history: H.History
@@ -338,7 +338,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={auth}
               path="/ActionPlan"
-              allowedRoles={[Role.COACH]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN]}
               userRole={role}
               render={(props: {
                 history: H.History,
