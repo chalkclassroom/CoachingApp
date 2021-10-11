@@ -32,11 +32,13 @@ import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
 import * as Constants from '../../constants/Constants';
+import { UserDocument } from '../Firebase/Firebase'
 
 interface NewMessageViewProps {
   firebase: any;
   draft?: Email;
-  attachments?: Array<Attachment>,
+  email: string;
+  attachments?: Array<Attachment>;
   updateDrafts?(email: Email): void;
   readOnly?: boolean;
   moveDraftToSent?(email: Email): void;
@@ -526,6 +528,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         };
         if (newTeacher.id !== 'rJxNhJmzjRZP7xg29Ko6') {
           newRecipientList.push(newTeacher);
+        }else{
+          newRecipientList.push({ ...newTeacher, value: props.email });
         }
       })
       setRecipientList(newRecipientList)
@@ -2430,10 +2434,12 @@ NewMessageView.propTypes = {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  teacherList: Array<Types.Teacher>
+  teacherList: Array<Types.Teacher>,
+  email: string
 } => {
   return {
-    teacherList: state.teacherListState.teachers
+    teacherList: state.teacherListState.teachers,
+    email: state.coachState.user.email
   };
 };
 
