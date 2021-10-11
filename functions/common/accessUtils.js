@@ -32,7 +32,8 @@ const canAccessTeacher = async (teacher, userId) => {
     if (role === 'admin'){
         return true;
     }else if (role === 'coach'){
-        const partnerCollection = await getUserDoc(userId).listCollections().then(collections => collections.find(c => c.id === "partners"))
+        const docRef = await getUserDoc(userId);
+        const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists
     }else{
         return docData.email === "practice@teacher.edu" //self or practice teacher
