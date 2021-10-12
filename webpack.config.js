@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
         {
             mode: argv.mode,
             entry: "./src/index.tsx",
-            devtool: "cheap-module-source-map",
+            devtool: "source-map",
             output: {
                 publicPath: "/",
                 path: path.resolve(__dirname, "build"),
