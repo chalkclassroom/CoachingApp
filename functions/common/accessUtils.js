@@ -78,6 +78,7 @@ const canAccessActionPlans = async (teacher, userId) => {
 module.exports = {
     canAccessObservation,
     canAccessTeacher,
-    canAccessActionPlans
+    canAccessActionPlans,
+    getUser
 };
 
