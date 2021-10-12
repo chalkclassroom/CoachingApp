@@ -9,7 +9,7 @@ exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log(context.auth.uid);
     let bytes  = CryptoJS.AES.decrypt(data, context.auth.uid);
     const userData = await getUser(context.auth.uid)
-    const email = docData.email;
+    const email = userData.email;
     // console.log('bytes', bytes);
     let decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
     // console.log('decrypted data', decryptedData)
