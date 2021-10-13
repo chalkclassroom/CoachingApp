@@ -63,7 +63,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
         "Focusing on print concepts",
         "Matching spoken words to print",
         ["Using foundational skills for a realistic reading", "and/or writing purpose"],
-        ["Using foundational skills", "for a realistic reading", "and/or writing purpose"],
+        ["Asking open-ended questions", "or prompts"],
         "Using multimodal instruction"
       ],
       datasets: [{
