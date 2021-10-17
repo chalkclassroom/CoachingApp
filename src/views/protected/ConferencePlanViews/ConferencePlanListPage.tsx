@@ -1,399 +1,583 @@
-import * as React from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
-import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-import AppBar from '../../../components/AppBar';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import * as React from 'react'
+import ReactRouterPropTypes from 'react-router-prop-types'
+import FirebaseContext from '../../../components/Firebase/FirebaseContext'
+import AppBar from '../../../components/AppBar'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import {
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-  TableSortLabel
-} from '@material-ui/core';
-import * as moment from 'moment';
-import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg';
-import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
-import MathIconImage from '../../../assets/images/MathIconImage.svg';
-import EngagementIconImage from '../../../assets/images/EngagementIconImage.svg';
-import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
-import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
-import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
-import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg';
-import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
-import * as H from 'history';
-import * as Types from '../../../constants/Types';
+    Table,
+    TableRow,
+    TableCell,
+    TableHead,
+    TableBody,
+    TableSortLabel,
+} from '@material-ui/core'
+import * as moment from 'moment'
+import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg'
+import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg'
+import MathIconImage from '../../../assets/images/MathIconImage.svg'
+import EngagementIconImage from '../../../assets/images/EngagementIconImage.svg'
+import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg'
+import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg'
+import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg'
+import LiteracyIconImage from '../../../assets/images/LiteracyIconImage.svg'
+import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg'
+import * as H from 'history'
+import * as Types from '../../../constants/Types'
+import Firebase from '../../../components/Firebase'
 
 interface Props {
-  history: H.History
+    history: H.History
 }
 
 interface State {
-  result: Array<TeacherListInfo>,
-  order: 'desc' | 'asc',
-  orderBy: TeacherListInfoKey,
-  // rows: number,
-  rowsPerPage: number,
-  page: number,
-  selected: Array<string>
+    result: Array<TeacherListInfo>
+    order: 'desc' | 'asc'
+    orderBy: TeacherListInfoKey
+    // rows: number,
+    rowsPerPage: number
+    page: number
+    selected: Array<string>
 }
 
 interface TeacherListInfo {
-  name: string,
-  teacherId: string,
-  teacherFirstName: string,
-  teacherLastName: string,
-  practice: string,
-  id: string,
-  date: {
-    seconds: number,
-    nanoseconds: number
-  },
-  modified: Date,
-  sessionId: string,
-  observationDate: {
-    seconds: number,
-    nanoseconds: number
-  }
+    name: string
+    teacherId: string
+    teacherFirstName: string
+    teacherLastName: string
+    practice: string
+    id: string
+    date: {
+        seconds: number
+        nanoseconds: number
+    }
+    modified: Date
+    sessionId: string
+    observationDate: {
+        seconds: number
+        nanoseconds: number
+    }
 }
 
-type TeacherListInfoKey = keyof TeacherListInfo;
+type TeacherListInfoKey = keyof TeacherListInfo
 
 const headCells = [
-  { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
-  { id: 'teacherLastName', numeric: false, disablePadding: false, label: 'Teacher' },
-  { id: 'practice', numeric: false, disablePadding: false, label: 'CHALK Practice' },
-  { id: 'observationDate', numeric: false, disablePadding: false, label: 'Observation Date:' },
-];
+    {
+        id: 'modified',
+        numeric: false,
+        disablePadding: false,
+        label: 'Last Modified',
+    },
+    {
+        id: 'teacherLastName',
+        numeric: false,
+        disablePadding: false,
+        label: 'Teacher',
+    },
+    {
+        id: 'practice',
+        numeric: false,
+        disablePadding: false,
+        label: 'CHALK Practice',
+    },
+    {
+        id: 'observationDate',
+        numeric: false,
+        disablePadding: false,
+        label: 'Observation Date:',
+    },
+]
 
 /**
- * 
- * @param {TeacherListInfo} a 
- * @param {TeacherListInfo} b 
- * @param {TeacherListInfoKey} orderBy 
+ *
+ * @param {TeacherListInfo} a
+ * @param {TeacherListInfo} b
+ * @param {TeacherListInfoKey} orderBy
  * @return {number}
  */
-function descendingComparator(a: TeacherListInfo, b: TeacherListInfo, orderBy: TeacherListInfoKey): number {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
+function descendingComparator(
+    a: TeacherListInfo,
+    b: TeacherListInfo,
+    orderBy: TeacherListInfoKey
+): number {
+    if (b[orderBy] < a[orderBy]) {
+        return -1
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1
+    }
+    return 0
 }
 
 /**
- * @param {'desc' | 'asc' | TeacherListInfo} order 
+ * @param {'desc' | 'asc' | TeacherListInfo} order
  * @param {TeacherListInfoKey} orderBy
- * @return {any} 
- */
-function getComparator(order: 'desc' | 'asc' | TeacherListInfo, orderBy: TeacherListInfoKey): any {
-  return order === 'desc'
-    ? (a: TeacherListInfo, b: TeacherListInfo): number => descendingComparator(a, b, orderBy)
-    : (a: TeacherListInfo, b: TeacherListInfo): number => -descendingComparator(a, b, orderBy);
-}
-
-/**
- * 
- * @param {Array<TeacherListInfo>} array 
- * @param {any} comparator 
  * @return {any}
  */
-function stableSort(array: Array<TeacherListInfo>, comparator: typeof getComparator): any {
-  const stabilizedThis: Array<Array<TeacherListInfo, number>> = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
+function getComparator(
+    order: 'desc' | 'asc' | TeacherListInfo,
+    orderBy: TeacherListInfoKey
+): any {
+    return order === 'desc'
+        ? (a: TeacherListInfo, b: TeacherListInfo): number =>
+              descendingComparator(a, b, orderBy)
+        : (a: TeacherListInfo, b: TeacherListInfo): number =>
+              -descendingComparator(a, b, orderBy)
+}
+
+/**
+ *
+ * @param {Array<TeacherListInfo>} array
+ * @param {any} comparator
+ * @return {any}
+ */
+function stableSort(
+    array: Array<TeacherListInfo>,
+    comparator: typeof getComparator
+): any {
+    const stabilizedThis: Array<Array<
+        TeacherListInfo,
+        number
+    >> = array.map((el, index) => [el, index])
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0])
+        if (order !== 0) return order
+        return a[1] - b[1]
+    })
+    return stabilizedThis.map(el => el[0])
+}
+
+interface ConferencePlanRow {
+    id: string
+    date: {
+        seconds: number
+        nanoseconds: number
+    }
+    observationDate: {
+        seconds: number
+        nanoseconds: number
+    }
+    teacherId: string
+    sessionId: string
+    practice: string
+    teacherFirstName: string
+    teacherLastName: string
+    modified: Date
+    observed: Date
+    name: string
 }
 
 interface TableHeadProps {
-  order: 'desc' | 'asc',
-  orderBy: string,
-  onRequestSort(event: React.SyntheticEvent, property: string): void
+    order: 'desc' | 'asc'
+    orderBy: string
+
+    onRequestSort(event: React.SyntheticEvent, property: string): void
 }
 
 /**
- * 
+ *
  * @param {TableHeadProps} props
  * @return {ReactElement}
  */
 function TableHeadSort(props: TableHeadProps): React.ReactElement {
-  const { order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property: string) => (event: React.SyntheticEvent): void => {
-    onRequestSort(event, property);
-  };
+    const { order, orderBy, onRequestSort } = props
+    const createSortHandler = (property: string) => (
+        event: React.SyntheticEvent
+    ): void => {
+        onRequestSort(event, property)
+    }
 
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : '0.5em'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            style={{backgroundColor: '#d8ecff'}}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span 
-                  style={{
-                    border: 0,
-                    clip: 'rect(0 0 0 0)',
-                    height: 1,
-                    margin: -1,
-                    overflow: 'hidden',
-                    padding: 0,
-                    position: 'absolute',
-                    top: 20,
-                    width: 1
-                  }}
-                >
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-              </Typography>
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
+    return (
+        <TableHead>
+            <TableRow>
+                {headCells.map(headCell => (
+                    <TableCell
+                        key={headCell.id}
+                        align={headCell.numeric ? 'right' : 'left'}
+                        padding={headCell.disablePadding ? 'none' : '0.5em'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                        style={{ backgroundColor: '#d8ecff' }}
+                    >
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            <Typography
+                                variant="h5"
+                                style={{ fontFamily: 'Arimo' }}
+                            >
+                                {headCell.label}
+                                {orderBy === headCell.id ? (
+                                    <span
+                                        style={{
+                                            border: 0,
+                                            clip: 'rect(0 0 0 0)',
+                                            height: 1,
+                                            margin: -1,
+                                            overflow: 'hidden',
+                                            padding: 0,
+                                            position: 'absolute',
+                                            top: 20,
+                                            width: 1,
+                                        }}
+                                    >
+                                        {order === 'desc'
+                                            ? 'sorted descending'
+                                            : 'sorted ascending'}
+                                    </span>
+                                ) : null}
+                            </Typography>
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+            </TableRow>
+        </TableHead>
+    )
 }
 
 /**
  * @class ConferencePlanListPage
  */
-class ConferencePlanListPage extends React.Component<Props, State>{
-  /**
-   * @param {Props} props
-   */
-  constructor(props: Props) {
-    super(props);
-    
-    this.state={
-      result: [],
-      order: 'desc',
-      orderBy: 'modified',
-      rowsPerPage: 5,
-      page: 0,
-      selected: []
+class ConferencePlanListPage extends React.Component<Props, State> {
+    /**
+     * @param {Props} props
+     */
+    constructor(props: Props) {
+        super(props)
+
+        this.state = {
+            result: [],
+            order: 'desc',
+            orderBy: 'modified',
+            rowsPerPage: 5,
+            page: 0,
+            selected: [],
+        }
     }
-  }
 
-  /**
-   * @param {SyntheticEvent} event
-   * @param {TeacherListInfoKey} property
-   */
-  handleRequestSort = (event: React.SyntheticEvent, property: TeacherListInfoKey): void => {
-    const isAsc = this.state.orderBy === property && this.state.order === 'asc';
-    isAsc ? this.setState({ order: 'desc' }) : this.setState({ order: 'asc' });
-    this.setState({ orderBy: property });
-  };
+    /**
+     * @param {SyntheticEvent} event
+     * @param {TeacherListInfoKey} property
+     */
+    handleRequestSort = (
+        event: React.SyntheticEvent,
+        property: TeacherListInfoKey
+    ): void => {
+        const isAsc =
+            this.state.orderBy === property && this.state.order === 'asc'
+        isAsc
+            ? this.setState({ order: 'desc' })
+            : this.setState({ order: 'asc' })
+        this.setState({ orderBy: property })
+    }
 
-  /**
-   * 
-   */
-  componentDidMount(): void {
-    const firebase = this.context;
-    firebase.getCoachConferencePlans().then(
-      (answer: Array<TeacherListInfo>) => {
-      answer.forEach((
-        conferencePlan: TeacherListInfo
-      ) => 
-        firebase.getTeacherFirstName(conferencePlan.teacherId).then((firstName: string) => {
-          conferencePlan.teacherFirstName = firstName;
-        }).then(() => {
-          firebase.getTeacherLastName(conferencePlan.teacherId).then((lastName: string) => {
-            conferencePlan.teacherLastName = lastName;
-          }).then(() => {
-            firebase.getObservationDate(conferencePlan.sessionId).then((date: {seconds: number, nanoseconds: number}) => {
-              conferencePlan.observationDate = date;
-            }).then(() => {
-              this.setState({
-                result: answer
-              })
+    /**
+     *
+     */
+    componentDidMount(): void {
+        const firebase = this.context
+        firebase
+            .getCoachConferencePlans()
+            .then((answer: Array<TeacherListInfo>) => {
+                answer.forEach((conferencePlan: TeacherListInfo) =>
+                    firebase
+                        .getTeacherFirstName(conferencePlan.teacherId)
+                        .then((firstName: string) => {
+                            conferencePlan.teacherFirstName = firstName
+                        })
+                        .then(() => {
+                            firebase
+                                .getTeacherLastName(conferencePlan.teacherId)
+                                .then((lastName: string) => {
+                                    conferencePlan.teacherLastName = lastName
+                                })
+                                .then(() => {
+                                    firebase
+                                        .getObservationDate(
+                                            conferencePlan.sessionId
+                                        )
+                                        .then(
+                                            (date: {
+                                                seconds: number
+                                                nanoseconds: number
+                                            }) => {
+                                                conferencePlan.observationDate = date
+                                            }
+                                        )
+                                        .then(() => {
+                                            this.setState({
+                                                result: answer,
+                                            })
+                                        })
+                                })
+                        })
+                )
             })
-          })
-        })
-      )
-    });
-  }
+    }
 
-  static propTypes = {
-    history: ReactRouterPropTypes.history.isRequired
-  }
+    static propTypes = {
+        history: ReactRouterPropTypes.history.isRequired,
+    }
 
-  /**
-   * @return {ReactNode}
-   */
-  render(): React.ReactNode {
-    const isSelected = (id: string): boolean => this.state.selected.includes(id);
-    return (
-      <div>
-        <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <Grid direction="column" justify="center" alignItems="center">
-          <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Typography variant="h3" align="center" style={{fontFamily: 'Arimo'}}>
-              Conference Plans
-            </Typography>
-          </Grid>
-          <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Grid container justify="center" alignItems="center" style={{maxHeight: '60vh', overflow: 'auto'}}>
-              <Table style={{width: '85%', border: '1px solid #a9a9a9', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-                <TableHeadSort
-                  order={this.state.order}
-                  orderBy={this.state.orderBy}
-                  onRequestSort={this.handleRequestSort}
-                />
-                <TableBody>
-                  {this.state.result ? (stableSort(this.state.result, getComparator(this.state.order, this.state.orderBy))
-                    // to limit number on each page
-                    // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                    .map((row: {
-                      id: string,
-                      date: {
-                        seconds: number,
-                        nanoseconds: number
-                      },
-                      observationDate: {
-                        seconds: number,
-                        nanoseconds: number
-                      },
-                      teacherId: string,
-                      sessionId: string,
-                      practice: string,
-                      teacherFirstName: string,
-                      teacherLastName: string,
-                      modified: Date,
-                      observed: Date,
-                      name: string
-                    }, index: number) => {
-                      const isItemSelected = isSelected(row.id);
-                      const modifiedDate = new Date(0);
-                      const observationDate = new Date(0);
-                      modifiedDate.setUTCSeconds(row.date.seconds);
-                      row.modified = modifiedDate;
-                      if (row.observationDate) {
-                        observationDate.setUTCSeconds(row.observationDate.seconds);
-                        row.observed = observationDate;
-                      }
-                      row.name = row.teacherLastName + ', ' + row.teacherFirstName;
-                      return (
-                        <TableRow
-                          key={index}
-                          selected={isItemSelected}
-                          onClick={(): void => {
-                            this.props.history.push({
-                              pathname: "/ConferencePlan",
-                              state: {
-                                conferencePlanId: row.id,
-                                teacherId: row.teacherId,
-                                sessionId: row.sessionId
-                              }
-                            });
-                          }}
+    // eslint-disable-next-line require-jsdoc
+    getIcon(row: ConferencePlanRow): React.ReactNode {
+        switch (row.practice?.toLowerCase()) {
+            case 'Transition Time'.toLowerCase():
+                return <img src={TransitionTimeIconImage} alt="Magic 8 Icon" />
+            case 'Classroom Climate'.toLowerCase():
+                return (
+                    <img src={ClassroomClimateIconImage} alt="Magic 8 Icon" />
+                )
+            case 'Math Instruction'.toLowerCase():
+                return <img src={MathIconImage} alt="Magic 8 Icon" />
+            case 'Student Engagement'.toLowerCase():
+            case 'Level of Engagement'.toLowerCase():
+                return <img src={EngagementIconImage} alt="Magic 8 Icon" />
+            case 'Level of Instruction'.toLowerCase():
+                return <img src={InstructionIconImage} alt="Magic 8 Icon" />
+            case 'Listening to Children'.toLowerCase():
+                return <img src={ListeningIconImage} alt="Magic 8 Icon" />
+            case 'Sequential Activities'.toLowerCase():
+                return <img src={SequentialIconImage} alt="Magic 8 Icon" />
+            case 'Literacy Instruction'.toLowerCase():
+                return <img src={LiteracyIconImage} alt="Magic 8 Icon" />
+            case 'AC'.toLowerCase():
+                return <img src={AssocCoopIconImage} alt="Magic 8 Icon" />
+            default:
+                return <div />
+        }
+    }
+
+    /**
+     * @return {ReactNode}
+     */
+    render(): React.ReactNode {
+        const isSelected = (id: string): boolean =>
+            this.state.selected.includes(id)
+        return (
+            <div>
+                <FirebaseContext.Consumer>
+                    {(firebase: Firebase): React.ReactNode => (
+                        <AppBar firebase={firebase} />
+                    )}
+                </FirebaseContext.Consumer>
+                <Grid direction="column" justify="center" alignItems="center">
+                    <Grid item style={{ width: '100%', paddingTop: '2em' }}>
+                        <Typography
+                            variant="h3"
+                            align="center"
+                            style={{ fontFamily: 'Arimo' }}
                         >
-                          <TableCell style={{padding: '0.5em'}}>
-                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                              {moment(row.modified).format('MM/DD/YYYY')}
-                            </Typography>
-                          </TableCell>
-                          <TableCell style={{padding: '0.5em'}}>
-                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                              {row.name}
-                            </Typography>
-                          </TableCell>
-                          <TableCell style={{padding: '0.5em'}}>
-                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                              <Grid container direction="row" justify="flex-start" alignItems="center">
-                                <Grid item xs={9}>
-                                  <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
-                                    {row.practice}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={2}>
-                                  {row.practice === 'Transition Time' ? (
-                                    <img
-                                      src={TransitionTimeIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Classroom Climate' ? (
-                                    <img
-                                      src={ClassroomClimateIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Math Instruction' ? (
-                                    <img
-                                      src={MathIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Student Engagement' ? (
-                                    <img
-                                      src={EngagementIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Level of Instruction' ? (
-                                    <img
-                                      src={InstructionIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Listening to Children' ? (
-                                    <img
-                                      src={ListeningIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Sequential Activities' ? (
-                                    <img
-                                      src={SequentialIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'Literacy Instruction' ? (
-                                    <img
-                                      src={LiteracyIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : row.practice === 'AC' ? (
-                                    <img
-                                      src={AssocCoopIconImage}
-                                      alt="Magic 8 Icon"
-                                    />
-                                  ) : <div />}
-                                </Grid>
-                              </Grid>
-                            </Typography>
-                          </TableCell>
-                          <TableCell style={{padding: '0.5em'}}>
-                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                              {moment(row.observed).format('MM/DD/YYYY')}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })
-                  ) : (null)}
-                </TableBody>
-              </Table>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
-    );
-  }
+                            Conference Plans
+                        </Typography>
+                    </Grid>
+                    <Grid item style={{ width: '100%', paddingTop: '2em' }}>
+                        <Grid
+                            container
+                            justify="center"
+                            alignItems="center"
+                            style={{ maxHeight: '60vh', overflow: 'auto' }}
+                        >
+                            <Table
+                                style={{
+                                    width: '85%',
+                                    border: '1px solid #a9a9a9',
+                                    boxShadow:
+                                        '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                }}
+                            >
+                                <TableHeadSort
+                                    order={this.state.order}
+                                    orderBy={this.state.orderBy}
+                                    onRequestSort={this.handleRequestSort}
+                                />
+                                <TableBody>
+                                    {this.state.result
+                                        ? stableSort(
+                                              this.state.result,
+                                              getComparator(
+                                                  this.state.order,
+                                                  this.state.orderBy
+                                              )
+                                          )
+                                              // to limit number on each page
+                                              // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                              .map(
+                                                  (
+                                                      row: ConferencePlanRow,
+                                                      index: number
+                                                  ) => {
+                                                      const isItemSelected = isSelected(
+                                                          row.id
+                                                      )
+                                                      const modifiedDate = new Date(
+                                                          0
+                                                      )
+                                                      const observationDate = new Date(
+                                                          0
+                                                      )
+                                                      modifiedDate.setUTCSeconds(
+                                                          row.date.seconds
+                                                      )
+                                                      row.modified = modifiedDate
+                                                      if (row.observationDate) {
+                                                          observationDate.setUTCSeconds(
+                                                              row
+                                                                  .observationDate
+                                                                  .seconds
+                                                          )
+                                                          row.observed = observationDate
+                                                      }
+                                                      row.name =
+                                                          row.teacherLastName +
+                                                          ', ' +
+                                                          row.teacherFirstName
+                                                      return (
+                                                          <TableRow
+                                                              key={index}
+                                                              selected={
+                                                                  isItemSelected
+                                                              }
+                                                              onClick={(): void => {
+                                                                  this.props.history.push(
+                                                                      {
+                                                                          pathname:
+                                                                              '/ConferencePlan',
+                                                                          state: {
+                                                                              conferencePlanId:
+                                                                                  row.id,
+                                                                              teacherId:
+                                                                                  row.teacherId,
+                                                                              sessionId:
+                                                                                  row.sessionId,
+                                                                          },
+                                                                      }
+                                                                  )
+                                                              }}
+                                                          >
+                                                              <TableCell
+                                                                  style={{
+                                                                      padding:
+                                                                          '0.5em',
+                                                                  }}
+                                                              >
+                                                                  <Typography
+                                                                      variant="h6"
+                                                                      style={{
+                                                                          fontFamily:
+                                                                              'Arimo',
+                                                                      }}
+                                                                  >
+                                                                      {moment(
+                                                                          row.modified
+                                                                      ).format(
+                                                                          'MM/DD/YYYY'
+                                                                      )}
+                                                                  </Typography>
+                                                              </TableCell>
+                                                              <TableCell
+                                                                  style={{
+                                                                      padding:
+                                                                          '0.5em',
+                                                                  }}
+                                                              >
+                                                                  <Typography
+                                                                      variant="h6"
+                                                                      style={{
+                                                                          fontFamily:
+                                                                              'Arimo',
+                                                                      }}
+                                                                  >
+                                                                      {row.name}
+                                                                  </Typography>
+                                                              </TableCell>
+                                                              <TableCell
+                                                                  style={{
+                                                                      padding:
+                                                                          '0.5em',
+                                                                  }}
+                                                              >
+                                                                  <Typography
+                                                                      variant="h6"
+                                                                      style={{
+                                                                          fontFamily:
+                                                                              'Arimo',
+                                                                      }}
+                                                                  >
+                                                                      <Grid
+                                                                          container
+                                                                          direction="row"
+                                                                          justify="flex-start"
+                                                                          alignItems="center"
+                                                                      >
+                                                                          <Grid
+                                                                              item
+                                                                              xs={
+                                                                                  9
+                                                                              }
+                                                                          >
+                                                                              <Typography
+                                                                                  variant="h6"
+                                                                                  style={{
+                                                                                      fontFamily:
+                                                                                          'Arimo',
+                                                                                      paddingRight:
+                                                                                          '0.2em',
+                                                                                  }}
+                                                                              >
+                                                                                  {
+                                                                                      row.practice
+                                                                                  }
+                                                                              </Typography>
+                                                                          </Grid>
+                                                                          <Grid
+                                                                              item
+                                                                              xs={
+                                                                                  2
+                                                                              }
+                                                                          >
+                                                                              {this.getIcon(
+                                                                                  row
+                                                                              )}
+                                                                          </Grid>
+                                                                      </Grid>
+                                                                  </Typography>
+                                                              </TableCell>
+                                                              <TableCell
+                                                                  style={{
+                                                                      padding:
+                                                                          '0.5em',
+                                                                  }}
+                                                              >
+                                                                  <Typography
+                                                                      variant="h6"
+                                                                      style={{
+                                                                          fontFamily:
+                                                                              'Arimo',
+                                                                      }}
+                                                                  >
+                                                                      {moment(
+                                                                          row.observed
+                                                                      ).format(
+                                                                          'MM/DD/YYYY'
+                                                                      )}
+                                                                  </Typography>
+                                                              </TableCell>
+                                                          </TableRow>
+                                                      )
+                                                  }
+                                              )
+                                        : null}
+                                </TableBody>
+                            </Table>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </div>
+        )
+    }
 }
 
-ConferencePlanListPage.contextType = FirebaseContext;
-export default ConferencePlanListPage;
+ConferencePlanListPage.contextType = FirebaseContext
+export default ConferencePlanListPage
