@@ -320,6 +320,19 @@ class ConferencePlanListPage extends React.Component<Props, State> {
         history: ReactRouterPropTypes.history.isRequired,
     }
 
+    /**
+     *
+     * @param practice
+     */
+    getPracticeName(practice: string): string {
+        if (practice === 'AC'){
+            return 'Associative and Cooperative';
+        }else{
+            return practice;
+        }
+
+    }
+
     // eslint-disable-next-line require-jsdoc
     getIcon(row: ConferencePlanRow): React.ReactNode {
         switch (row.practice?.toLowerCase()) {
@@ -528,7 +541,7 @@ class ConferencePlanListPage extends React.Component<Props, State> {
                                                                                   }}
                                                                               >
                                                                                   {
-                                                                                      row.practice
+                                                                                      this.getPracticeName(row.practice)
                                                                                   }
                                                                               </Typography>
                                                                           </Grid>
