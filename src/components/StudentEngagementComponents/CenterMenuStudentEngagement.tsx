@@ -1,35 +1,40 @@
-import * as React from "react";
-import * as PropTypes from 'prop-types';
-import { withStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-import { TextField } from '@material-ui/core';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import Card from '@material-ui/core/Card';
-import CardContent  from '@material-ui/core/CardContent';
-import Paper  from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import EditIcon from '@material-ui/icons/Edit';
-import Modal from "@material-ui/core/Modal"
-import Countdown from "../Countdown";
-import { updateEngagementCount } from '../../state/actions/student-engagement';
-import { connect } from 'react-redux';
-import * as Constants from '../../constants/Constants';
-import { addStudent, editStudent, removeStudent, resetStudents } from '../../state/actions/students'
+import React from 'react'
+import { Theme } from '@material-ui/core/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import type { StyleRulesCallback } from '@material-ui/core/styles/withStyles'
+import AddIcon from '@material-ui/icons/Add'
+import Fab from '@material-ui/core/Fab'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import CardContent from '@material-ui/core/CardContent'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import EditIcon from '@material-ui/icons/Edit'
+import { connect, ConnectedProps } from 'react-redux'
 
-const styles: object = (theme: Theme) => ({
+import ActivitySettingButtons from './ActivitySettingButtons'
+import SelectActivityModal from './SelectActivityModal'
+import StudentRatingModal from './StudentRatingModal'
+import { updateEngagementCount } from '../../state/actions/student-engagement'
+import {
+  addStudent,
+  editStudent,
+  removeStudent,
+  resetStudents,
+} from '../../state/actions/students'
+import type { Student } from '../../state/reducers/students-state'
+import type { RootState } from '../../state/store'
+
+const styles: StyleRulesCallback<Theme, {}> = (theme) => ({
   root: {
     width: '100%',
     maxWidth: 360,
@@ -44,83 +49,60 @@ const styles: object = (theme: Theme) => ({
     margin: theme.spacing(1),
     marginTop: '2vh',
   },
-  gridList: {
-    width: 700,
-    height: 360,
+  studentCards: {
+    display: 'grid',
+    gridGap: theme.spacing(2),
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    padding: theme.spacing(4, 2),
   },
-  paper: {
-    position: "absolute",
-    width: "67%",
-    backgroundColor: 'white',
-    padding: '2em',
-    borderRadius: 8
-  }
-});
+  cardRow: {
+    alignItems: 'center',
+    display: 'grid',
+    gridAutoColumns: '1fr auto auto auto',
+    gridAutoFlow: 'column',
+    gridColumnGap: theme.spacing(1),
+  },
+})
 
-/**
- * specifies styling for modal
- * @return {CSSProperties}
- */
-function getModalStyle(): React.CSSProperties {
-  return {
-    position: "fixed",
-    top: `50%`,
-    left: `50%`,
-    transform: `translate(-50%, -50%)`
-  } as React.CSSProperties;
-}
+type Style = Record<keyof ReturnType<typeof styles>, string>
 
-interface Style {
-  paper: string,
-  button: string,
-  gridList: string,
-  root: string
-}
-
-interface Props {
-  classes: Style,
-  teacherId: string,
-  time: number,
-  handleTimerReset(): void,
-  handleTimerStart(): void,
+interface Props extends PropsFromRedux {
+  background: boolean
+  classes: Style
   firebase: {
     auth: {
       currentUser: {
         uid: string
       }
-    },
-    handleSession(entry: object): void,
+    }
+    handleSession(entry: object): void
     handlePushSEEachEntry(mEntry: object): void
-  },
-  onStatusChange(enable: boolean): void,
-  updateEngagementCount(engaged: boolean): void,
-  incrementVisitCount(): void,
-  background: boolean
+  }
+  handleTimerReset(): void
+  handleTimerStart(): void
+  incrementVisitCount(): void
+  observationStarted: boolean
+  onStatusChange(enable: boolean): void
+  teacherId: string
+  time: number
 }
 
 interface State {
-  students: Array<Student>,
-  open: boolean,
-  setOpen: boolean,
-  editStudent: boolean
-  editStudentId: string,
-  studentTextFieldValue: string
-  status: Status,
-  currentStudent: number,
-  entryType: number,
-  entries: number,
-  selectedPoint: number,
+  currentStudent?: Student
+  editedStudent?: Student
+  entries: number
+  entryType: number
   modal: boolean
+  open: boolean
+  selectedPoint: number
+  setOpen: boolean
+  status: Status
+  studentTextFieldValue: string
 }
 
-const NAME_LIST = 0;
-const OBSERVATION = 1;
-
-type Status = typeof NAME_LIST | typeof OBSERVATION;
-
-interface ActivitySettingButtonsProps {
-  activitySetting: number,
-  changeActivitySetting(activitySetting: number): void
+enum Status {
+  NAME_LIST = 0,
+  OBSERVATION = 1,
 }
 
 /**
@@ -128,46 +110,14 @@ interface ActivitySettingButtonsProps {
  * @param {ActivitySettingButtonsProps} props
  * @return {ReactElement}
  */
-const ActivitySettingButtons = (props: ActivitySettingButtonsProps): React.ReactElement => {
-  return (
-    <Grid container direction="row" justify="space-around" alignItems="center">
-      <MuiThemeProvider theme={Constants.EngagementTheme}>
-        <Button
-          variant="contained"
-          color={(props.activitySetting === 0 || props.activitySetting === -1) ? "primary" : "secondary"}
-          onClick={(): void => {props.changeActivitySetting(0)}}
-        >
-          Small Group
-        </Button>
-        <Button
-          variant="contained"
-          color={(props.activitySetting === 1 || props.activitySetting === -1) ? "primary" : "secondary"}
-          onClick={(): void => {props.changeActivitySetting(1)}}
-        >
-          Whole Group
-        </Button>
-        <Button
-          variant="contained"
-          color={(props.activitySetting === 3 || props.activitySetting === -1) ? "primary" : "secondary"}
-          onClick={(): void => {props.changeActivitySetting(3)}}
-        >
-          Centers
-        </Button>
-        <Button
-          variant="contained"
-          color={(props.activitySetting === 2 || props.activitySetting === -1) ? "primary" : "secondary"}
-          onClick={(): void => {props.changeActivitySetting(2)}}
-        >
-          Transition
-        </Button>
-      </MuiThemeProvider>
-    </Grid>
-  )
-}
 
-ActivitySettingButtons.propTypes = {
-  activitySetting: PropTypes.number.isRequired,
-  changeActivitySetting: PropTypes.func.isRequired
+const entryTypes: {
+  [key: number]: string
+} = {
+  0: 'small',
+  1: 'whole',
+  2: 'transition',
+  3: 'centers',
 }
 
 /**
@@ -175,114 +125,99 @@ ActivitySettingButtons.propTypes = {
  * @class CenterMenuStudentEngagement
  */
 class CenterMenuStudentEngagement extends React.Component<Props, State> {
-  // timer: NodeJS.Timeout;
   /**
    * @param {Props} props
    */
   constructor(props: Props) {
-    super(props);
+    super(props)
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "engagement",
-    };
-    this.props.firebase.handleSession(mEntry);
+      type: 'engagement',
+    }
+    this.props.firebase.handleSession(mEntry)
   }
 
-  state = {
-    students: [] as students[],
-    open: false  as boolean,
-    setOpen: false  as boolean,
-    editStudent: false  as boolean,
-    editStudentId: '' as string,
-    studentTextFieldValue: '' as string,
-    status: NAME_LIST as Status,
-    currentStudent: -1 as number,
-    selectedPoint: -1 as number,
-    entryType: -1 as number,
-    entries: 0 as number,
-    modal: false as boolean,
-  };
-
-  handleClickOpen = (editMode: boolean, id: string): void => {
-    if(editMode) {
-      const editStudentName = this.props.students.find(student => student.id === id)?.name
-      if (editStudentName) {
-        this.setState({ 
-          studentTextFieldValue: editStudentName,
-          editStudent: true,
-          editStudentId: id
-        });
-      }
-    }
-    this.setState({ setOpen: true });
-  };
+  state: Readonly<State> = {
+    open: false,
+    setOpen: false,
+    studentTextFieldValue: '',
+    status: Status.NAME_LIST,
+    selectedPoint: -1,
+    entryType: -1,
+    entries: 0,
+    modal: false,
+  }
 
   resetAllStudents = (): void => {
     this.props.resetStudents()
   }
 
-  removeStudent = (id: string): void => {
-    this.props.removeStudent(id)
+  removeStudent = (student: Student): void => {
+    this.props.removeStudent(student)
   }
 
   handleClose = (): void => {
-    this.setState({ 
-      studentTextFieldValue: '',
-      editStudent: false,
-      setOpen: false,
-      editStudentId: ''
-    });
-  };
-
-  /**
-   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e
-   */
-  handleStudentTextFieldChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>{
     this.setState({
-      studentTextFieldValue: e.target.value
-    });
+      editedStudent: undefined,
+      studentTextFieldValue: '',
+      setOpen: false,
+    })
+  }
+
+  handleStudentTextFieldChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ): void => {
+    this.setState({
+      studentTextFieldValue: event.target.value,
+    })
   }
 
   switchToObservationPage = (): void => {
-    this.setState({ status: OBSERVATION });
-    this.props.onStatusChange(true);
+    this.setState({ status: Status.OBSERVATION })
+    this.props.onStatusChange(true)
   }
 
   handleConfirmRating = (): void => {
-    if(this.state.selectedPoint !== -1){
-      let entryType: string;
-      switch(this.state.entryType){
-        case 0: entryType = 'small';
-          break;
-        case 1: entryType = 'whole';
-          break;
-        case 2: entryType = 'transition';
-          break;
-        case 3: entryType = 'centers';
-          break;
-        default:
-          entryType = 'none';
+    const {
+      selectedPoint,
+      currentStudent,
+      entryType: entryTypeIndex,
+    } = this.state
+
+    if (selectedPoint !== -1 && currentStudent) {
+      const entryType = entryTypes[entryTypeIndex] || 'none'
+
+      const mEntry = {
+        id: this.generateHashCodeOfStudent(),
+        point: selectedPoint,
+        entryType,
       }
-      const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
-      this.props.firebase.handlePushSEEachEntry(mEntry);
-      const studentsStateCopy = [...this.state.students];
-      const currentStudentIndex = this.state.currentStudent;
-      const currentCount = studentsStateCopy[currentStudentIndex].count;
-      const studentName = studentsStateCopy[currentStudentIndex].name;
-      studentsStateCopy[currentStudentIndex] = {name: studentName, count: currentCount+1};
-      this.setState({ students: studentsStateCopy });
-      this.props.handleTimerReset();
-      this.handleSelectedValue(-1);
-      this.setState({
-        entries: this.state.entries+1,
-        modal: false
-      });
+
+      this.props.firebase.handlePushSEEachEntry(mEntry)
+      this.props.handleTimerReset()
+      this.handleSelectedValue(-1)
+
+      this.props.editStudent({
+        id: currentStudent.id,
+        count: currentStudent.count + 1,
+      })
+
+      this.setState((previousState) => ({
+        entries: previousState.entries + 1,
+        modal: false,
+      }))
     }
   }
 
   generateHashCodeOfStudent = (): number => {
-    return this.hashCode(this.state.students[this.state.currentStudent].name.concat(this.state.currentStudent.toString()))
+    const { currentStudent } = this.state
+
+    return currentStudent
+      ? this.hashCode(currentStudent.name.concat(currentStudent.id))
+      : 0
   }
 
   /**
@@ -299,243 +234,91 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    * @param {string} s a string
    * @return {number} a hash code value for the given string.
    */
-  hashCode = function(s: string): number {
-    let h = 0; const l = s.length; let i = 0;
-    if ( l > 0 )
-      while (i < l)
-        h = (h << 5) - h + s.charCodeAt(i++) | 0;
-    return h;
-  };
+  hashCode = function (s: string): number {
+    let h = 0
+    const l = s.length
+    let i = 0
+    if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0
+    return h
+  }
 
   /**
    * @param {number} point
    */
-  handleSelectedValue=(point: number): void =>{
-    this.setState({ selectedPoint: point });
+  handleSelectedValue = (point: number): void => {
+    this.setState({ selectedPoint: point })
   }
 
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    onStatusChange: PropTypes.func.isRequired,
-    teacherId: PropTypes.string,
-    firebase: PropTypes.exact({
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
-          uid: PropTypes.string
-        })
-      }).isRequired,
-      handleSession: PropTypes.func.isRequired,
-      handlePushSEEachEntry: PropTypes.func.isRequired
-    }).isRequired,
-    time: PropTypes.number.isRequired,
-    handleTimerReset: PropTypes.func.isRequired,
-    handleTimerStart: PropTypes.func.isRequired,
-    updateEngagementCount: PropTypes.func.isRequired,
-    incrementVisitCount: PropTypes.func.isRequired,
-    background: PropTypes.bool.isRequired
-  }
+  onStudentModalOpen = (student?: Student): void => {
+    const { status } = this.state
 
+    if (status === Status.NAME_LIST) {
+      this.setState({
+        setOpen: true,
+        studentTextFieldValue: student?.name ?? '',
+        editedStudent: student,
+      })
+    }
+
+    if (status === Status.OBSERVATION && student) {
+      this.setState(
+        {
+          currentStudent: student,
+          modal: true,
+        },
+        () => {
+          this.props.handleTimerStart()
+        }
+      )
+    }
+  }
 
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
-    const ratingOptions = [
-      {
-        value: 0,
-        label: '0',
-        text: 'Off Task'
-      },
-      {
-        value: 1,
-        label: '1',
-        text: 'Mildly Engaged'
-      },
-      {
-        value: 2,
-        label: '2',
-        text: 'Engaged'
-      },
-      {
-        value: 3,
-        label: '3',
-        text: 'Highly Engaged'
-      },
-    ];
+    const { classes } = this.props
+
     return (
       <Grid
         container
-        alignItems={'center'}
-        justify={'center'}
-        direction={'column'}
-        style={{height: '100%'}}
+        alignItems="stretch"
+        justify="center"
+        direction="column"
       >
-        <Modal open={this.state.entryType === -1 && this.state.status === 1}>
-          <div style={getModalStyle()} className={classes.paper}>
-            <Grid
-              container
-              alignItems="center"
-              direction="column"
-              justify='center'
-              style={{width: '100%'}}
-            >
-              <Grid item>
-                <Typography align="center" variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
-                  Please select the current activity setting in the classroom:
-                </Typography>
-              </Grid>
-              <Grid item style={{width: '100%'}}>
-                <ActivitySettingButtons
-                  activitySetting={this.state.entryType}
-                  changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting})}}
-                />
-              </Grid>
-              <Grid item>
-                <Typography align="center" variant="h6" style={{fontFamily: 'Arimo', paddingBottom: '1em', paddingTop: '1em'}}>
-                  You may change your selection later if the activity setting changes during your observation.
-                </Typography>
-              </Grid>
-            </Grid>
-          </div>
-        </Modal>
-        <Modal open={this.state.modal && this.state.status === 1}>
-          <div style={getModalStyle()} className={classes.paper}>
-            <Grid
-              container
-              alignItems="center"
-              direction="column"
-              justify={'center'}
-              style={{width: '100%'}}
-            >
-              {/* Fade component flashes an orange background as visual cue that timer has ended */}
-              <Fade in={this.props.background} timeout={{enter: 300, exit: 600}} style={{height: '100%'}}>
-                <Grid item style={{
-                  width: '100%',
-                  height: '100%',
-                  position: 'absolute',
-                  backgroundColor: '#EDAF57' // lighter shade of SE color
-                }} />
-              </Fade>
-              <Grid item style={{width: '100%'}}>
-                <Grid container direction="row" justify="flex-end" style={{width: '100%'}}>
-                  <Grid item>
-                    <IconButton 
-                      onClick={(): void => {
-                        this.setState({modal: false});
-                        this.props.handleTimerReset();
-                      }}
-                      style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                  {this.props.time != 0?"Please observe ":"Now rate "}this student&apos;s level of engagement.
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                  {this.state.students[this.state.currentStudent] ? (this.state.students[this.state.currentStudent].name) : (null)}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Countdown type="SE" timerTime={5000} time={this.props.time} horizontal={true} />
-              </Grid>
-              <Grid item style={{marginTop: '3em', marginBottom: '3em', width: '100%'}}>
-                <Grid
-                  alignItems="stretch"
-                  direction="row"
-                  justify="space-around"
-                  container
-                  style={{width: '100%'}}
-                >
-                  {ratingOptions.map((item, index) => {
-                    return (
-                      <MuiThemeProvider key={index} theme={Constants.EngagementTheme}>
-                        <Button
-                          variant="contained"
-                          disabled={this.props.time!=0?true:false}
-                          color={(this.state.selectedPoint === item.value || this.state.selectedPoint === -1) ? "primary" : "secondary"}
-                          style={{
-                            width: '18vh',
-                            height: '18vh',
-                            maxWidth: 130,
-                            maxHeight: 130,
-                            fontFamily: "Arimo",
-                            fontSize: 14,
-                            paddingTop: 0,
-                            paddingBottom: 0,
-                            margin: 0
-                          }}
-                          onClick={(): void => this.handleSelectedValue(item.value)}
-                        >
-                          <Grid
-                            container
-                            alignItems="stretch"
-                            direction="column"
-                            justify="flex-start"
-                            style={{
-                              width: '18vh',
-                              height: '18vh',
-                              maxWidth: 130,
-                              maxHeight: 130,
-                              paddingTop: '1em'
-                            }}
-                          >
-                            <Grid item style={{height: '50%'}}>
-                            <Typography variant="h4" style={{fontFamily: "Arimo", paddingTop: '0.6em'}}>
-                              <b>{item.label}</b>
-                            </Typography>
-                            </Grid>
-                            <Grid>
-                            <Typography variant="subtitle1" style={{fontWeight: 'bold'}}>
-                              {item.text}
-                            </Typography>
-                            </Grid>
-                          </Grid>
-                        </Button>
-                      </MuiThemeProvider>
-                    )
-                  })}
-                </Grid>
-              </Grid>
-              <Grid
-                alignItems="center"
-                direction="row"
-                justify="center"
-                container
-              >
-                <Grid item>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    className={classes.button}
-                    style={{fontFamily: "Arimo"}}
-                    disabled={this.state.selectedPoint === -1}
-                    onClick={(): void => {
-                      this.handleConfirmRating();
-                      this.props.incrementVisitCount();
-                      this.props.handleTimerReset();
-                      this.setState({modal: false});
-                      if(this.state.selectedPoint > 0) {
-                        this.props.updateEngagementCount(true)
-                      } else {
-                        this.props.updateEngagementCount(false)
-                      }
-                    }}
-                  >
-                    CONFIRM RATING
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        </Modal>
+        <SelectActivityModal
+          entryType={this.state.entryType}
+          onActivitySettingChange={(activitySetting: number): void => {
+            this.setState({ entryType: activitySetting })
+          }}
+          open={this.state.entryType === -1 && this.state.status === Status.OBSERVATION}
+        />
+        <StudentRatingModal
+          confirmRatingDisabled={this.state.selectedPoint === -1}
+          countdownTime={this.props.time}
+          displayedStudentName={this.state.currentStudent?.name ?? null}
+          fadeInActive={this.props.background}
+          observeLabelPrefix={this.props.time !== 0 ? 'Please observe ' : 'Now rate '}
+          onCloseClick={(): void => {
+            this.setState({ modal: false })
+            this.props.handleTimerReset()
+          }}
+          onConfirmRating={(): void => {
+            this.handleConfirmRating()
+            this.props.incrementVisitCount()
+            this.props.handleTimerReset()
+            this.setState({ modal: false })
+            if (this.state.selectedPoint > 0) {
+              this.props.updateEngagementCount(true)
+            } else {
+              this.props.updateEngagementCount(false)
+            }
+          }}
+          onSelectRating={this.handleSelectedValue}
+          open={this.state.modal && this.state.status === Status.OBSERVATION}
+          selectedRating={this.state.selectedPoint} 
+        />
         <Dialog
           open={this.state.setOpen}
           onClose={(): void => this.handleClose()}
@@ -547,8 +330,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You can add a description of the student for
-              your reference.
+              You can add a description of the student for your reference.
               <form>
                 <TextField
                   id="name-filled"
@@ -563,40 +345,30 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button
-              onClick={(): void => this.handleClose()}
-              color="secondary"
-            >
+            <Button onClick={(): void => this.handleClose()} color="secondary">
               Cancel
             </Button>
             <Button
               onClick={(): void => {
-                const nameString = this.state.studentTextFieldValue.toString();
-                const newList = this.state.students.concat({
-                  name: nameString.charAt(0).toUpperCase() + nameString.substring(1),
-                  count: 0,
-                  id: this.state.editStudentId
-                });
-                this.setState({
-                  students: newList,
-                  studentTextFieldValue: '',
-                  setOpen: false,
-                  editStudent: editStudent ? false : true,
-                });
-                if (this.state.editStudent) {
-                  this.props.editStudent(nameString, this.state.editStudentId)
+                const { editedStudent, studentTextFieldValue } = this.state
+                const name = studentTextFieldValue.toString()
+
+                if (editedStudent) {
+                  this.props.editStudent({ id: editedStudent.id, name })
                 } else {
-                  this.props.addStudent(nameString)
+                  this.props.addStudent({ name, count: 0 })
                 }
+
+                this.handleClose()
               }}
               color="secondary"
               autoFocus
             >
-              {this.state.editStudent ? 'Edit' : 'Add'}
+              {this.state.editedStudent ? 'Edit' : 'Add'}
             </Button>
           </DialogActions>
         </Dialog>
-        {this.state.status === 0 ? (
+        {this.state.status === Status.NAME_LIST ? (
           <Grid
             container
             alignItems="center"
@@ -626,7 +398,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               <Fab
                 className={classes.button}
                 aria-label="add"
-                onClick={(): void => this.handleClickOpen()}
+                onClick={(): void => this.onStudentModalOpen()}
               >
                 <AddIcon />
               </Fab>
@@ -634,10 +406,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           </Grid>
         ) : (
           <Grid container direction="column">
-            <Grid item style={{paddingBottom: '2em'}}>
+            <Grid item style={{ paddingBottom: '2em' }}>
               <ActivitySettingButtons
                 activitySetting={this.state.entryType}
-                changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting})}}
+                changeActivitySetting={(activitySetting: number): void => {
+                  this.setState({ entryType: activitySetting })
+                }}
               />
             </Grid>
             <Grid item>
@@ -652,112 +426,82 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             </Grid>
           </Grid>
         )}
-        <Grid
-          container
-          alignItems="center"
-          direction="row"
-          justify="center"
-          style={{paddingTop: '1em', paddingBottom: '1em'}}
-        >
-          <Grid item xs={12}>
-            <Grid
-              alignItems="center"
-              direction="row"
-              justify="center"
-              container
+        <div className={classes.studentCards}>
+          {this.props.students.map((student: Student) => (
+            <Card
+              key={student.id}
+              elevation={4}
+              onClick={(): void => {
+                this.onStudentModalOpen(student)
+              }}
             >
-              <Grid item>
-                <GridList
-                  cellHeight={60}
-                  className={classes.gridList}
-                  cols={3}
-                >
-                  {this.props.students.map(
-                    (student: {name: string, count: number, id: string}, i: number) => {
-                      return (
-                        <GridListTile
-                          key={i + 'grid'}
-                          cols={1}
-                        >
-                          <Card
+              <CardActionArea>
+                <CardContent>
+                  <div
+                    className={classes.cardRow}
+                  >
+                    <div>
+                      <Typography noWrap variant="subtitle2">
+                        {student.name}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography variant="subtitle2">
+                        {student.count}
+                      </Typography>
+                    </div>
+                    {!this.props.observationStarted && (
+                      <div>
+                        <Typography variant="subtitle2">
+                          <IconButton
+                            style={{ padding: '0' }}
                             onClick={(): void => {
-                              this.state.status === 1 ? (
-                                this.setState({
-                                  currentStudent: i,
-                                  modal: true
-                                }, () => {
-                                  this.props.handleTimerStart();
-                                })
-                              ) : null
+                              this.onStudentModalOpen(student)
                             }}
                           >
-                            <CardContent>
-                              <Paper
-                                className={classes.root}
-                                elevation={1}
-                                style={{padding: 8}}
-                              >
-                                <Grid container direction="row" justify="space-between">
-                                  <Grid item xs={6}>
-                                    <Typography noWrap variant="subtitle2">
-                                      {student.name}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={1}>
-                                    <Typography variant="subtitle2">
-                                      {student.count}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={2}>
-                                    <Typography variant="subtitle2">
-                                      <IconButton 
-                                        style={{padding: "0"}}
-                                        onClick={(): void => this.handleClickOpen(true, student.id)}
-                                      >
-                                        <EditIcon />
-                                      </IconButton>
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={2}>
-                                    <Typography variant="subtitle2">
-                                      <IconButton 
-                                        style={{padding: "0"}}
-                                        onClick={(): void => this.removeStudent(student.id)}
-                                      >
-                                        <CloseIcon />
-                                      </IconButton>
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Paper>
-                            </CardContent>
-                          </Card>
-                        </GridListTile>
-                      )
-                    }
-                  )}
-                  {this.state.status === 1 ? (
-                    <GridListTile
-                      cols={1}
-                    >
-                      <Grid container direction="row" justify="center" alignItems="center">
-                        <Fab
-                          size='small'
-                          className={classes.button}
-                          aria-label="add"
-                          onClick={(): void => this.handleClickOpen()}
-                        >
-                          <AddIcon />
-                        </Fab>
-                      </Grid>
-                    </GridListTile>
-                  ) : (null)}
-                  </GridList>
-              </Grid>
+                            <EditIcon />
+                          </IconButton>
+                        </Typography>
+                      </div>
+                    )}
+                    {!this.props.observationStarted && (
+                      <div>
+                        <Typography variant="subtitle2">
+                          <IconButton
+                            style={{ padding: '0' }}
+                            onClick={(): void => {
+                              this.removeStudent(student)
+                            }}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          ))}
+          {this.state.status === Status.OBSERVATION && (
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Fab
+                size="small"
+                className={classes.button}
+                aria-label="add"
+                onClick={(): void => this.onStudentModalOpen()}
+              >
+                <AddIcon />
+              </Fab>
             </Grid>
-          </Grid>
-        </Grid>
-        {this.state.status === 0 ? (
+          )}
+        </div>
+        {this.state.status === Status.NAME_LIST ? (
           <Grid
             container
             alignItems="center"
@@ -768,11 +512,11 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               variant="contained"
               className={classes.button}
               onClick={(): void => this.switchToObservationPage()}
-              disabled={this.state.students.length === 0}
+              disabled={this.props.students.length === 0}
             >
               Begin Observation
             </Button>
-             <Button
+            <Button
               variant="outlined"
               color="secondary"
               className={classes.resetButton}
@@ -781,10 +525,25 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               Reset all students
             </Button>
           </Grid>
-        ) : (null)}
+        ) : null}
       </Grid>
     )
   }
 }
 
-export default connect((state) => ({students: state.studentsState.students}), { updateEngagementCount, addStudent, editStudent, removeStudent, resetStudents })(withStyles(styles)(CenterMenuStudentEngagement));
+const mapState = (state: RootState) => ({
+  students: state.studentsState.students,
+})
+const mapDispatch = {
+  updateEngagementCount,
+  addStudent,
+  editStudent,
+  removeStudent,
+  resetStudents,
+}
+
+const connector = connect(mapState, mapDispatch)
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+export default connector(withStyles(styles)(CenterMenuStudentEngagement))
