@@ -82,159 +82,156 @@ const StudentRatingModal: React.FC<StudentRatingModalProps> = ({
   const classes = useStyles()
 
   return (
-    <Dialog open={open}>
-      <div className={classes.paper}>
-        <Grid
-          container
-          alignItems="center"
-          direction="column"
-          justify={'center'}
-          style={{ width: '100%' }}
+    <Dialog open={open} fullWidth maxWidth="md">
+      <Grid
+        container
+        alignItems="center"
+        direction="column"
+        justify={'center'}
+        style={{ width: '100%' }}
+      >
+        {/* Fade component flashes an orange background as visual cue that timer has ended */}
+        <Fade
+          in={fadeInActive}
+          timeout={{ enter: 300, exit: 600 }}
+          style={{ height: '100%' }}
         >
-          {/* Fade component flashes an orange background as visual cue that timer has ended */}
-          <Fade
-            in={fadeInActive}
-            timeout={{ enter: 300, exit: 600 }}
-            style={{ height: '100%' }}
-          >
-            <Grid
-              item
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                backgroundColor: '#EDAF57', // lighter shade of SE color
-              }}
-            />
-          </Fade>
-          <Grid item style={{ width: '100%' }}>
-            <Grid
-              container
-              direction="row"
-              justify="flex-end"
-              style={{ width: '100%' }}
-            >
-              <Grid item>
-                <IconButton
-                  onClick={onCloseClick}
-                  style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography
-              variant="h6"
-              gutterBottom
-              style={{ fontFamily: 'Arimo' }}
-            >
-              {observeLabelPrefix}this student&apos;s level of engagement.
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h4" style={{ fontFamily: 'Arimo' }}>
-              {displayedStudentName}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Countdown
-              type="SE"
-              timerTime={5000}
-              time={countdownTime}
-              horizontal={true}
-            />
-          </Grid>
           <Grid
             item
-            style={{ marginTop: '3em', marginBottom: '3em', width: '100%' }}
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              backgroundColor: '#EDAF57', // lighter shade of SE color
+            }}
+          />
+        </Fade>
+        <Grid item style={{ width: '100%' }}>
+          <Grid
+            container
+            direction="row"
+            justify="flex-end"
+            style={{ width: '100%' }}
           >
-            <Grid
-              alignItems="stretch"
-              direction="row"
-              justify="space-around"
-              container
-              style={{ width: '100%' }}
-            >
-              <MuiThemeProvider theme={Constants.EngagementTheme}>
-                {ratingOptions.map((item, index) => (
-                  <Button
-                    key={index}
-                    variant="contained"
-                    disabled={countdownTime !== 0}
-                    color={
-                      selectedRating === item.value || selectedRating === -1
-                        ? 'primary'
-                        : 'secondary'
-                    }
+            <Grid item>
+              <IconButton
+                onClick={onCloseClick}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h6"
+            gutterBottom
+            style={{ fontFamily: 'Arimo' }}
+          >
+            {observeLabelPrefix}this student&apos;s level of engagement.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" style={{ fontFamily: 'Arimo' }}>
+            {displayedStudentName}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Countdown
+            type="SE"
+            timerTime={5000}
+            time={countdownTime}
+            horizontal={true}
+          />
+        </Grid>
+        <Grid
+          item
+          style={{ marginTop: '3em', marginBottom: '3em', width: '100%' }}
+        >
+          <Grid
+            alignItems="stretch"
+            direction="row"
+            justify="space-around"
+            container
+            style={{ width: '100%' }}
+          >
+            <MuiThemeProvider theme={Constants.EngagementTheme}>
+              {ratingOptions.map((item, index) => (
+                <Button
+                  key={index}
+                  variant="contained"
+                  disabled={countdownTime !== 0}
+                  color={
+                    selectedRating === item.value || selectedRating === -1
+                      ? 'primary'
+                      : 'secondary'
+                  }
+                  style={{
+                    width: '18vh',
+                    height: '18vh',
+                    maxWidth: 130,
+                    maxHeight: 130,
+                    fontFamily: 'Arimo',
+                    fontSize: 14,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    margin: 0,
+                  }}
+                  onClick={(): void => onSelectRating(item.value)}
+                >
+                  <Grid
+                    container
+                    alignItems="stretch"
+                    direction="column"
+                    justify="flex-start"
                     style={{
                       width: '18vh',
                       height: '18vh',
                       maxWidth: 130,
                       maxHeight: 130,
-                      fontFamily: 'Arimo',
-                      fontSize: 14,
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      margin: 0,
+                      paddingTop: '1em',
                     }}
-                    onClick={(): void => onSelectRating(item.value)}
                   >
-                    <Grid
-                      container
-                      alignItems="stretch"
-                      direction="column"
-                      justify="flex-start"
-                      style={{
-                        width: '18vh',
-                        height: '18vh',
-                        maxWidth: 130,
-                        maxHeight: 130,
-                        paddingTop: '1em',
-                      }}
-                    >
-                      <Grid item style={{ height: '50%' }}>
-                        <Typography
-                          variant="h4"
-                          style={{
-                            fontFamily: 'Arimo',
-                            paddingTop: '0.6em',
-                          }}
-                        >
-                          <b>{item.label}</b>
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography
-                          variant="subtitle1"
-                          style={{ fontWeight: 'bold' }}
-                        >
-                          {item.text}
-                        </Typography>
-                      </Grid>
+                    <Grid item style={{ height: '50%' }}>
+                      <Typography
+                        variant="h4"
+                        style={{
+                          fontFamily: 'Arimo',
+                          paddingTop: '0.6em',
+                        }}
+                      >
+                        <b>{item.label}</b>
+                      </Typography>
                     </Grid>
-                  </Button>
-                ))}
-              </MuiThemeProvider>
-            </Grid>
-          </Grid>
-          <Grid alignItems="center" direction="row" justify="center" container>
-            <Grid item>
-              <Button
-                color="primary"
-                variant="contained"
-                className={classes.button}
-                style={{ fontFamily: 'Arimo' }}
-                disabled={confirmRatingDisabled}
-                onClick={onConfirmRating}
-              >
-                CONFIRM RATING
-              </Button>
-            </Grid>
+                    <Grid>
+                      <Typography
+                        variant="subtitle1"
+                        style={{ fontWeight: 'bold' }}
+                      >
+                        {item.text}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Button>
+              ))}
+            </MuiThemeProvider>
           </Grid>
         </Grid>
-      </div>
+        <Grid alignItems="center" direction="row" justify="center" container>
+          <Grid item>
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.button}
+              style={{ fontFamily: 'Arimo' }}
+              disabled={confirmRatingDisabled}
+              onClick={onConfirmRating}
+            >
+              CONFIRM RATING
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
     </Dialog>
   )
 }
