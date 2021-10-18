@@ -54,7 +54,14 @@ const styles: StyleRulesCallback<Theme, {}> = (theme) => ({
     gridGap: theme.spacing(2),
     gridTemplateColumns: 'repeat(3, 1fr)',
     padding: theme.spacing(4, 2),
-  }
+  },
+  cardRow: {
+    alignItems: 'center',
+    display: 'grid',
+    gridAutoColumns: '1fr auto auto auto',
+    gridAutoFlow: 'column',
+    gridColumnGap: theme.spacing(1),
+  },
 })
 
 type Style = Record<keyof ReturnType<typeof styles>, string>
@@ -430,23 +437,21 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             >
               <CardActionArea>
                 <CardContent>
-                  <Grid
-                    container
-                    direction="row"
-                    justify="space-between"
+                  <div
+                    className={classes.cardRow}
                   >
-                    <Grid item xs>
+                    <div>
                       <Typography noWrap variant="subtitle2">
                         {student.name}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={1}>
+                    </div>
+                    <div>
                       <Typography variant="subtitle2">
                         {student.count}
                       </Typography>
-                    </Grid>
+                    </div>
                     {!this.props.observationStarted && (
-                      <Grid item xs={2}>
+                      <div>
                         <Typography variant="subtitle2">
                           <IconButton
                             style={{ padding: '0' }}
@@ -457,10 +462,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             <EditIcon />
                           </IconButton>
                         </Typography>
-                      </Grid>
+                      </div>
                     )}
                     {!this.props.observationStarted && (
-                      <Grid item xs={2}>
+                      <div>
                         <Typography variant="subtitle2">
                           <IconButton
                             style={{ padding: '0' }}
@@ -471,9 +476,9 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             <CloseIcon />
                           </IconButton>
                         </Typography>
-                      </Grid>
+                      </div>
                     )}
-                  </Grid>
+                  </div>
                 </CardContent>
               </CardActionArea>
             </Card>
