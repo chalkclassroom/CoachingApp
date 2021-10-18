@@ -343,6 +343,7 @@ class ConferencePlanListPage extends React.Component<Props, State> {
             case 'Literacy Instruction'.toLowerCase():
                 return <img src={LiteracyIconImage} alt="Magic 8 Icon" />
             case 'AC'.toLowerCase():
+            case 'Associative and Cooperative'.toLowerCase():
                 return <img src={AssocCoopIconImage} alt="Magic 8 Icon" />
             default:
                 return <div />
