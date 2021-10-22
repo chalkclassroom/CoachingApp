@@ -51,7 +51,7 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (
     props: AttachmentBarProps
 ) => {
     return (
-        <Card style={{ marginTop: '0.5em' }}>
+        <Card style={{ margin: '0.5em 0 0 1em' }}>
             <Grid
                 container
                 direction="col"
@@ -60,7 +60,10 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (
                 style={{ padding: '0.2em 0.5em' }}
             >
                 <Grid item>
-                    <Typography variant="body1" style={{ fontFamily: 'Arimo' }}>
+                    <Typography
+                        variant="body1"
+                        style={{ fontFamily: 'Arimo', fontSize: '.8rem' }}
+                    >
                         {props.title}
                     </Typography>
                 </Grid>
@@ -123,11 +126,9 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
             }}
         >
             <Grid
-                item
+                container
                 style={{
                     width: '100%',
-                    maxHeight: '20%',
-                    overflowY: 'auto',
                 }}
             >
                 {props.attachments
