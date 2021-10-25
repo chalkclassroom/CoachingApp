@@ -89,10 +89,9 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
         this.setState({
             faq: getFaqSection({
                 questions: [
-                    ...Constants.CoachingQuestions.AC.Associative,
-                    ...Constants.CoachingQuestions.AC.Cooperative,
-                    ...Constants.CoachingQuestions.AC.TeacherParticipation,
-                    ...Constants.CoachingQuestions.AC.TeacherSupport,
+                    ...Constants.CoachingQuestions.Instruction.highLevelQuestions,
+                    ...Constants.CoachingQuestions.Instruction.lowLevel,
+                    ...Constants.CoachingQuestions.Instruction.highLevelInstruction,
                 ],
                 user: await this.context.getUserInformation(),
             }),
