@@ -211,7 +211,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
                                                     : 'default'
                                             }
                                             style={{
-                                                width: '9em',
+                                                width: '11vw',
                                                 height: '9em',
                                                 textTransform: 'none',
                                             }}
