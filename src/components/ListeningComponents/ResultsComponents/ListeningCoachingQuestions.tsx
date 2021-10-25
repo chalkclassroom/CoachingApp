@@ -148,7 +148,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
             {
                 clickFunction: this.faqSupportClick,
                 categoryView: 'FAQ',
-                title: 'FAQ',
+                title: 'Favorite Questions',
                 questions: this.state.faq,
             },
         ]

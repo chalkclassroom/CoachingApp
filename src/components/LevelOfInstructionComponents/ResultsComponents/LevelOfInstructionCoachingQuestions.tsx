@@ -166,7 +166,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<
             {
                 clickFunction: this.faqSupportClick,
                 categoryView: 'FAQ',
-                title: 'FAQ',
+                title: 'Favorite Questions',
                 questions: this.state.faq,
             },
         ]
