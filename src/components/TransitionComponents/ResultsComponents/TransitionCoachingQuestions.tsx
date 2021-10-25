@@ -236,7 +236,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
                 categoryView: 'FAQ',
                 theme: Constants.OtherTheme,
                 src: faqImage,
-                title: 'FAQ',
+                title: 'Favorite Questions',
                 questions: this.state.faq,
             },
         ]
