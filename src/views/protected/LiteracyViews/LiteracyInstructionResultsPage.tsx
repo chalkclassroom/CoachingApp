@@ -708,18 +708,32 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
 
   /**
    *
-   * @param type
    * @return string
    */
-  getTitle(type: LiteracyTypes):string {
-    switch(type){
-      case LiteracyTypes.READING:
-        return 'Compare how often the children engaged in:';
-      case LiteracyTypes.WRITING:
-        return 'Compare how often the children were:';
-      default:
-        return 'Compare how often the children were:';
+  getTitle(): string {
+    const type: LiteracyTypes = this.props.location.state.type
+    const currentSession = this.state.sessionDates.find(({ id }) => id === this.state.sessionId);
+
+    const who: 'Child' | 'Teacher' = currentSession?.who === 'Teacher' || currentSession?.who === 'Child'
+      ? currentSession?.who
+      : 'Child'
+
+    const titleMap = {
+      [LiteracyTypes.READING]: {
+        Child: 'Compare how often the children engaged in:',
+        Teacher: 'Compare how often the teacher engaged in:'
+      },
+      [LiteracyTypes.WRITING]: {
+        Child: 'Compare how often the children were:',
+        Teacher: 'Compare how often the teacher:'
+      },
+      default: {
+        Child: 'Compare how often the children were:',
+        Teacher: 'Compare how often the teacher was:'
+      }
     }
+
+    return titleMap[type as keyof typeof titleMap]?.[who] ?? titleMap.default[who]
   }
 
   /**
@@ -728,12 +742,17 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
    * @return string
    */
   getOtherBehaviorLabel(type:LiteracyTypes):string{
+    const currentSession = this.state.sessionDates.find(({ id }) => id === this.state.sessionId);
+    const who: 'Child' | 'Teacher' = currentSession?.who === 'Teacher' || currentSession?.who === 'Child'
+      ? currentSession?.who
+      : 'Child'
+
     switch(type){
       case LiteracyTypes.READING:{
         return "Other behaviors";
       }
       case LiteracyTypes.WRITING:{
-        return "Engaged in other activities";
+        return who === 'Child' ? "Engaged in other activities" : "Engaged in other behaviors";
       }
       default:{
         return "Not doing any target behaviors"
@@ -747,12 +766,17 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
    * @return string
    */
   getPrimaryBehaviorLabel(type:LiteracyTypes):string {
+    const currentSession = this.state.sessionDates.find(({ id }) => id === this.state.sessionId);
+    const who: 'Child' | 'Teacher' = currentSession?.who === 'Teacher' || currentSession?.who === 'Child'
+      ? currentSession?.who
+      : 'Child'
+
     switch(type){
       case LiteracyTypes.FOUNDATIONAL:{
         return "Supporting children’s foundational skills development";
       }
       case LiteracyTypes.WRITING:{
-        return "Engaged in writing activities";
+        return who === 'Child' ? "Engaged in writing activities" : "Supported children's writing";
       }
       case LiteracyTypes.READING:{
         return "Book reading instruction: supported children's vocabulary, comprehension, and speaking/listening skills";
@@ -790,7 +814,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                  {this.getTitle(this.props.location.state.type)}
+                  {this.getTitle()}
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
