@@ -127,32 +127,6 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
         >
             <Grid
                 container
-                style={{
-                    width: '100%',
-                }}
-            >
-                {props.attachments
-                    ? props.attachments.map((attachment, index) => {
-                          return (
-                              <AttachmentBar
-                                  key={index}
-                                  content={attachment.content}
-                                  title={attachment.filename}
-                                  handleDelete={(): void =>
-                                      props.handleDelete(
-                                          index,
-                                          props.emailId,
-                                          attachment.id
-                                      )
-                                  }
-                                  readOnly={props.readOnly}
-                              />
-                          )
-                      })
-                    : null}
-            </Grid>
-            <Grid
-                container
                 direction="column"
                 justify="space-between"
                 alignItems="flex-start"
@@ -182,6 +156,32 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
                     />
                 </Grid>
             </Grid>
+          <Grid
+            container
+            style={{
+              width: '100%',
+            }}
+          >
+            {props.attachments
+              ? props.attachments.map((attachment, index) => {
+                return (
+                  <AttachmentBar
+                    key={index}
+                    content={attachment.content}
+                    title={attachment.filename}
+                    handleDelete={(): void =>
+                      props.handleDelete(
+                        index,
+                        props.emailId,
+                        attachment.id
+                      )
+                    }
+                    readOnly={props.readOnly}
+                  />
+                )
+              })
+              : null}
+          </Grid>
         </Paper>
     )
 }
