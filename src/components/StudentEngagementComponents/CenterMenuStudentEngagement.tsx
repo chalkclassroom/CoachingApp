@@ -149,6 +149,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     modal: false,
   }
 
+  studentNameInputFieldRef = React.createRef<HTMLInputElement>()
+
   resetAllStudents = (): void => {
     this.props.resetStudents()
   }
@@ -274,6 +276,20 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   /**
+    * internal update callback function
+    * @param {Props} _previousProps
+    * @param {State} previousState
+    * @return {undefined}
+    */
+  componentDidUpdate(_previousProps: Readonly<Props>, previousState: Readonly<State>): void {
+    if (!previousState.setOpen && this.state.setOpen) {
+      requestAnimationFrame(() => {
+        this.studentNameInputFieldRef.current?.focus()
+      })
+    }
+  }
+
+  /**
    * render function
    * @return {ReactNode}
    */
@@ -331,18 +347,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               You can add a description of the student for your reference.
-              <form>
-                <TextField
-                  id="name-filled"
-                  label="Student Name"
-                  variant="outlined"
-                  color="secondary"
-                  fullWidth
-                  value={this.state.studentTextFieldValue}
-                  onChange={this.handleStudentTextFieldChange}
-                />
-              </form>
             </DialogContentText>
+            <TextField
+              inputRef={this.studentNameInputFieldRef}
+              id="name-filled"
+              label="Student Name"
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              value={this.state.studentTextFieldValue}
+              onChange={this.handleStudentTextFieldChange}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={(): void => this.handleClose()} color="secondary">
