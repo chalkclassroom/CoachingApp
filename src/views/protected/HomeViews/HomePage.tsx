@@ -531,7 +531,9 @@ class HomePage extends React.Component<Props, State> {
                 <Grid container direction="row" justify="space-between" alignItems="center">
                   <Grid item xs={5}>
                     <Grid container direction="row" justify="flex-end" alignItems="center">
-                      <Button color="primary" className={classes.helpButtons} style={{paddingRight: '2em'}}>
+                      <Button color="primary" className={classes.helpButtons} style={{paddingRight: '2em'}}
+                        onClick={(): void => this.props.history.push("/MyAccount")}
+                      >
                         MY ACCOUNT
                       </Button>
                     </Grid>

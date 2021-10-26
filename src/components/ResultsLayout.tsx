@@ -15,6 +15,12 @@ import LogoImage from '../assets/images/LogoImage.svg'
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif'
 import * as Types from '../constants/Types'
 import Firebase from './Firebase'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
 
 const styles: object = {
     main: {
@@ -149,6 +155,9 @@ interface State {
     conferencePlanEditMode: boolean
     count: number
     notesModal: boolean
+    actionPlanFormSaved: boolean
+    actionPlanModalOpen: boolean
+    nextView: string | null
 }
 
 /**
@@ -164,11 +173,14 @@ class ResultsLayout extends React.Component<Props, State> {
 
         this.state = {
             view: 'data',
+            nextView: null,
             tabValue: 0,
             actionPlanEditMode: false,
             conferencePlanEditMode: false,
             count: 0,
             notesModal: false,
+            actionPlanFormSaved: true,
+            actionPlanModalOpen: false,
         }
     }
 
@@ -176,9 +188,22 @@ class ResultsLayout extends React.Component<Props, State> {
      * @param {string} name
      */
     viewClick = (name: string): void => {
-        if (this.state.view !== name) {
+        if (this.state.view === 'actionPlan' &&
+            name !== 'actionPlan' &&
+            !this.state.actionPlanFormSaved) {
+            this.setState({
+                nextView: name,
+                actionPlanModalOpen: true,
+            })
+        } else if (this.state.view !== name) {
             this.setState({ view: name })
         }
+    }
+
+    onActionPlanFormChange = (saved: boolean): void => {
+        this.setState({
+            actionPlanFormSaved: saved
+        })
     }
 
     handleSummary = (): void => {
@@ -213,19 +238,34 @@ class ResultsLayout extends React.Component<Props, State> {
         this.setState({ notesModal: false })
     }
 
+    onActionPlanModalDiscard = (): void => {
+        this.setState({
+            actionPlanModalOpen: false,
+            view: this.state.nextView,
+            actionPlanFormSaved: true,
+        })
+    }
+
+    onActionPlanModalClose = (): void => {
+        this.setState({
+            actionPlanModalOpen: false,
+        })
+    }
+
     // eslint-disable-next-line require-jsdoc
     componentDidMount(): void {
-        Chart.Legend.prototype.afterFit = function() {
+        Chart.Legend.prototype.afterFit = function () {
             this.height = this.height + 20;
         }
     }
 
     // eslint-disable-next-line require-jsdoc
     componentDidUnmount(): void {
-        Chart.Legend.prototype.afterFit = function() {
+        Chart.Legend.prototype.afterFit = function () {
             this.height = this.height - 20;
         }
     }
+
 
     static propTypes = {
         teacher: PropTypes.exact({
@@ -269,6 +309,20 @@ class ResultsLayout extends React.Component<Props, State> {
                         <AppBar firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>
+                <Dialog open={this.state.actionPlanModalOpen}>
+                    <DialogTitle style={{ fontFamily: 'Arimo' }}>
+                        You have unsaved changes in your action plan.
+                        Are you sure you want to discard them?
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={this.onActionPlanModalClose}>
+                            No, keep editing
+                        </Button>
+                        <Button onClick={this.onActionPlanModalDiscard}>
+                            Yes, discard changes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <div className={classes.main}>
                     <Grid
                         container
@@ -457,7 +511,7 @@ class ResultsLayout extends React.Component<Props, State> {
                                                         )}
                                                     </div>
                                                 ) : this.state.tabValue ===
-                                                  1 ? (
+                                                    1 ? (
                                                     <div>
                                                         <Grid
                                                             style={{
@@ -719,6 +773,7 @@ class ResultsLayout extends React.Component<Props, State> {
                                                             >
                                                         }): React.ReactNode => (
                                                             <ActionPlanForm
+                                                                onFormChange={this.onActionPlanFormChange}
                                                                 firebase={
                                                                     firebase
                                                                 }

@@ -8,14 +8,18 @@ import {
     Select,
     makeStyles,
     Grid,
-    withStyles, Typography,
+    withStyles,
+    Typography,
 } from '@material-ui/core'
 import * as xlsx from 'xlsx'
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif'
 import Firebase, { FirebaseContext } from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
 import AppBar from '../../../components/AppBar'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import {
+    KeyboardDatePicker,
+    MuiPickersUtilsProvider,
+} from '@material-ui/pickers'
 import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns'
 import { connect } from 'react-redux'
@@ -26,7 +30,7 @@ interface Props {
 }
 
 interface State {
-    loading: boolean,
+    loading: boolean
     selectedTables: Array<string>
 }
 
@@ -61,17 +65,19 @@ const useStyles = makeStyles(_ => ({
         marginLeft: '1em',
     },
     select: {
-        width: '15em'
-    }
+        width: '15em',
+    },
 }))
-
 
 /**
  *
  * @param event
  * @param setSelectedTables
  */
-const handleChange = (event: React.ChangeEvent<{ value: unknown }>, setSelectedTables: Function) => {
+const handleChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+    setSelectedTables: Function
+) => {
     const { value } = event.target
     setSelectedTables(value as string[])
 }
@@ -84,18 +90,22 @@ const handleChange = (event: React.ChangeEvent<{ value: unknown }>, setSelectedT
  * @param setLoading
  * @param firebase
  */
-const generateExcel = async (selectedTables: Array<string>,
-                             from: string,
-                             to: string,
-                             setLoading: Function,
-                             firebase: object) => {
+const generateExcel = async (
+    selectedTables: Array<string>,
+    from: string,
+    to: string,
+    setLoading: Function,
+    firebase: object
+) => {
     setLoading(true)
-    const results = await Promise.all(selectedTables.map(async t => {
-        return {
-            table: t,
-            data: await firebase.fetchExport(t, from, to),
-        }
-    }))
+    const results = await Promise.all(
+        selectedTables.map(async t => {
+            return {
+                table: t,
+                data: await firebase.fetchExport(t, from, to),
+            }
+        })
+    )
 
     const wb = xlsx.utils.book_new()
     results.forEach(r => {
@@ -120,129 +130,173 @@ const StyledFormControl = withStyles(() => ({
 /**
  * @return {ReactNode}
  */
-const AdminPage = ({isAdmin = false}): React.ReactNode => {
+const AdminPage = ({ isAdmin = false }): React.ReactNode => {
     const classes = useStyles()
-    if (!isAdmin){
-        return <div className={classes.root}>
-            <FirebaseContext.Consumer>
-                {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
-            </FirebaseContext.Consumer>
-            <Grid container spacing={2} className={classes.container}>
-                <Grid item xs={12}>
-                    <Typography>You must be an admin to access this page.</Typography>
+    if (!isAdmin) {
+        return (
+            <div className={classes.root}>
+                <FirebaseContext.Consumer>
+                    {(firebase: Firebase): React.ReactNode => (
+                        <AppBar firebase={firebase} />
+                    )}
+                </FirebaseContext.Consumer>
+                <Grid container spacing={2} className={classes.container}>
+                    <Grid item xs={12}>
+                        <Typography>
+                            You must be an admin to access this page.
+                        </Typography>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
+            </div>
+        )
     }
 
     const [loading, setLoading] = React.useState(false)
     const [selectedTables, setSelectedTables] = React.useState([])
     const [from, setFrom] = React.useState(moment().add(-7, 'days'))
     const [to, setTo] = React.useState(moment())
-    return <div className={classes.root}>
-        <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        {loading ? <img src={CHALKLogoGIF} alt="Loading" width="80%" /> :
-            <Grid container spacing={2} className={classes.container}>
-                <Grid item xs={12}>
-                    <Typography>Configure your export by selecting the tables to export along with the date range to
-                        include.</Typography>
-                </Grid>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    return (
+        <div className={classes.root}>
+            <FirebaseContext.Consumer>
+                {(firebase: Types.FirebaseAppBar | null): React.ReactNode => (
+                    <AppBar firebase={firebase} />
+                )}
+            </FirebaseContext.Consumer>
+            {loading ? (
+                <img src={CHALKLogoGIF} alt="Loading" width="80%" />
+            ) : (
+                <Grid container spacing={2} className={classes.container}>
                     <Grid item xs={12}>
-                        <StyledFormControl className={classes.formControl}>
-                            <InputLabel id="demo-mutiple-name-label">Tables</InputLabel>
-                            <Select
-                                labelId="demo-mutiple-name-label"
-                                id="demo-mutiple-name"
-                                multiple
-                                className={classes.select}
-                                autoWidth={true}
-                                value={selectedTables}
-                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => handleChange(event, setSelectedTables)}
-                                input={<Input />}
-                                MenuProps={MenuProps}
-                            >
-                                <MenuItem value="ac">
-                                    Associative Cooperative
-                                </MenuItem>
-                                <MenuItem value="climate">
-                                    Classroom Climate
-                                </MenuItem>
-                                <MenuItem value="engagement">
-                                    Engagement
-                                </MenuItem>
-                                <MenuItem value="level">
-                                    Level
-                                </MenuItem>
-                                <MenuItem value="listening">
-                                    Listening
-                                </MenuItem>
-                                <MenuItem value="math">
-                                    Math
-                                </MenuItem>
-                                <MenuItem value="sequential">
-                                    Sequential
-                                </MenuItem>
-                                <MenuItem value="transition">
-                                    Transition
-                                </MenuItem>
-                            </Select>
-                        </StyledFormControl>
+                        <Typography>
+                            Configure your export by selecting the tables to
+                            export along with the date range to include.
+                        </Typography>
                     </Grid>
-                    <Grid item xs={3}>
-                        <StyledFormControl>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="MM/dd/yyyy"
-                                label="Start"
-                                margin="normal"
-                                id="date-picker-inline"
-                                autoOk={true} // closes date picker on selection
-                                value={from.toDate()}
-                                onChange={(date: Date | null): void => {
-                                    setFrom(moment(date))
-                                }}
-                            />
-                        </StyledFormControl>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <StyledFormControl>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                label="End"
-                                variant="inline"
-                                format="MM/dd/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                autoOk={true} // closes date picker on selection
-                                value={to.toDate()}
-                                onChange={(date: Date | null): void => {
-                                    setTo(moment(date))
-                                }}
-                            />
-                        </StyledFormControl>
-                    </Grid>
-                    <Grid item xs={6} />
-                    <Grid item xs={2}>
-                        <FirebaseContext.Consumer>
-                            {firebase => (
-                                <Button variant="contained" color="primary"
-                                        onClick={(_) =>
-                                            generateExcel(selectedTables,
-                                                from.format("yyyy-MM-DD"),
-                                                to.format("yyyy-MM-DD"),
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid item xs={12}>
+                            <StyledFormControl className={classes.formControl}>
+                                <InputLabel id="demo-mutiple-name-label">
+                                    Tables
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-mutiple-name-label"
+                                    id="demo-mutiple-name"
+                                    multiple
+                                    className={classes.select}
+                                    autoWidth={true}
+                                    value={selectedTables}
+                                    onChange={(
+                                        event: React.ChangeEvent<
+                                            HTMLSelectElement
+                                        >
+                                    ) => handleChange(event, setSelectedTables)}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    <MenuItem value="ac">
+                                        Associative Cooperative
+                                    </MenuItem>
+                                    <MenuItem value="climate">
+                                        Classroom Climate
+                                    </MenuItem>
+                                    <MenuItem value="engagement">
+                                        Engagement
+                                    </MenuItem>
+                                    <MenuItem value="level">Level</MenuItem>
+                                    <MenuItem value="listening">
+                                        Listening
+                                    </MenuItem>
+                                    <MenuItem value="math">Math</MenuItem>
+                                    <MenuItem value="sequential">
+                                        Sequential
+                                    </MenuItem>
+                                    <MenuItem value="transition">
+                                        Transition
+                                    </MenuItem>
+                                    <MenuItem value="literacyFoundationalChild">
+                                        Literacy - Foundational Child
+                                    </MenuItem>
+                                    <MenuItem value="literacyWritingChild">
+                                        Literacy - Writing Child
+                                    </MenuItem>
+                                    <MenuItem value="literacyFoundationalTeacher">
+                                        Literacy - Foundational Teacher
+                                    </MenuItem>
+                                    <MenuItem value="literacyLanguageTeacher">
+                                        Literacy - Language Teacher
+                                    </MenuItem>
+                                    <MenuItem value="literacyReadingTeacher">
+                                        Literacy - Reading Teacher
+                                    </MenuItem>
+                                    <MenuItem value="literacyWritingTeacher">
+                                        Literacy - Writing Teacher
+                                    </MenuItem>
+                                </Select>
+                            </StyledFormControl>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <StyledFormControl>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    label="Start"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    autoOk={true} // closes date picker on selection
+                                    value={from.toDate()}
+                                    onChange={(date: Date | null): void => {
+                                        setFrom(moment(date))
+                                    }}
+                                />
+                            </StyledFormControl>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <StyledFormControl>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    label="End"
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    autoOk={true} // closes date picker on selection
+                                    value={to.toDate()}
+                                    onChange={(date: Date | null): void => {
+                                        setTo(moment(date))
+                                    }}
+                                />
+                            </StyledFormControl>
+                        </Grid>
+                        <Grid item xs={6} />
+                        <Grid item xs={2}>
+                            <FirebaseContext.Consumer>
+                                {firebase => (
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={_ =>
+                                            generateExcel(
+                                                selectedTables,
+                                                from.format('yyyy-MM-DD'),
+                                                to.format('yyyy-MM-DD'),
                                                 setLoading,
-                                                firebase)}>Export</Button>)}
-                        </FirebaseContext.Consumer>
-                    </Grid>
-                </MuiPickersUtilsProvider>
-            </Grid>
-        }
-    </div>
+                                                firebase
+                                            )
+                                        }
+                                    >
+                                        Export
+                                    </Button>
+                                )}
+                            </FirebaseContext.Consumer>
+                        </Grid>
+                    </MuiPickersUtilsProvider>
+                </Grid>
+            )}
+        </div>
+    )
 }
 
-
-export default connect(state => ({isAdmin: state.coachState.role === Role.ADMIN}))(AdminPage)
+export default connect(state => ({
+    isAdmin: state.coachState.role === Role.ADMIN,
+}))(AdminPage)
