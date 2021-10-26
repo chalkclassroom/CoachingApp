@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Theme } from '@material-ui/core/styles'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Button from '@material-ui/core/Button'
@@ -469,7 +469,9 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                         <Typography variant="subtitle2">
                           <IconButton
                             style={{ padding: '0' }}
-                            onClick={(): void => {
+                            onClick={(event: SyntheticEvent): void => {
+                              event.preventDefault()
+                              event.stopPropagation()
                               this.removeStudent(student)
                             }}
                           >
