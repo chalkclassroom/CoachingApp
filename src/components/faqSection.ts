@@ -1,3 +1,5 @@
+import { UserDocument } from './Firebase/Firebase'
+
 export default function getFaqSection({
     questions,
     user,
@@ -12,7 +14,7 @@ export default function getFaqSection({
             text: questions
                 .flatMap(({ text }) => text)
                 .filter(question =>
-                    user.favouriteQuestions.includes(question.id)
+                    user.favouriteQuestions?.includes(question.id)
                 ),
         },
     ]

@@ -14,7 +14,7 @@ import {
 import ResourcePageLayout from './ResourcePageLayout'
 
 import HandbookCoverImage from '../../../assets/images/CoachingResources/Coach Handbook Cover Image.svg'
-import HandbookDocument from '../../../assets/coaching-docs/Coaching Best Practices.pdf'
+import HandbookDocument from '../../../assets/coaching-docs/Coach Handbook_9.1.21.pdf'
 
 const resourceCard = cards['coaching-cycle']
 

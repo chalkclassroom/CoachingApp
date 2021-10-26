@@ -733,7 +733,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         return "Other behaviors";
       }
       case LiteracyTypes.WRITING:{
-        return "Engaged in other behaviors";
+        return "Engaged in other activities";
       }
       default:{
         return "Not doing any target behaviors"
@@ -752,7 +752,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         return "Supporting children’s foundational skills development";
       }
       case LiteracyTypes.WRITING:{
-        return "Supported children's writing";
+        return "Engaged in writing activities";
       }
       case LiteracyTypes.READING:{
         return "Book reading instruction: supported children's vocabulary, comprehension, and speaking/listening skills";

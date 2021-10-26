@@ -3,26 +3,32 @@ export const STUDENTS_EDIT = "edit_student";
 export const STUDENTS_REMOVE = "remove_student";
 export const RESET_STUDENTS = "reset_students"
 
+import { nanoid } from 'nanoid'
+
+import type { EditedStudent, NewStudent, Student } from '../reducers/students-state'
+
 export type StudentsActionType =
-  | { type: typeof STUDENTS_ADD, name: string }
-  | { type: typeof STUDENTS_EDIT, name: string, id: string }
-  | { type: typeof STUDENTS_REMOVE, id: string }
+  | { type: typeof STUDENTS_ADD, student: Student }
+  | { type: typeof STUDENTS_EDIT, student: EditedStudent }
+  | { type: typeof STUDENTS_REMOVE, student: Student }
   | { type: typeof RESET_STUDENTS }
 
-export const addStudent = (name: string): StudentsActionType => ({
+export const addStudent = (student: NewStudent): StudentsActionType => ({
   type: STUDENTS_ADD,
-  name
+  student: {
+    ...student,
+    id: nanoid()
+  }
 });
 
-export const editStudent = (name: string, id: string): StudentsActionType => ({
+export const editStudent = (student: EditedStudent): StudentsActionType => ({
   type: STUDENTS_EDIT,
-  name,
-  id
+  student
 });
 
-export const removeStudent = (id: string): StudentsActionType => ({
+export const removeStudent = (student: Student): StudentsActionType => ({
   type: STUDENTS_REMOVE,
-  id
+  student
 });
 
 export const resetStudents = (): StudentsActionType => ({
