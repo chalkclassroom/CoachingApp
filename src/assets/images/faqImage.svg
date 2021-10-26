@@ -4,7 +4,7 @@
 	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
-	.st1{font-family:'MyriadPro-Regular';}
+	.st1{font-family:'Arimo';}
 	.st2{font-size:17.9172px;}
 </style>
 <path class="st0" d="M22,0c-2.2,0-4,1.8-4,4v16c0,2.2,1.8,4,4,4h15.6l7.7,6.8c0.3,0.3,0.7,0.3,1.1,0.2c0.4-0.2,0.6-0.5,0.6-0.9v-6.2
@@ -13,5 +13,5 @@
 	c0,0.4,0.2,0.7,0.6,0.9c0.4,0.2,0.8,0.1,1.1-0.2l7.7-6.8H28c2.2,0,4-1.8,4-4V25h-2v14c0,1.2-0.8,2-2,2H12c-0.2,0-0.5,0.1-0.7,0.2
 	L5,46.8V42c0-0.6-0.4-1-1-1c-1.2,0-2-0.8-2-2V23c0-1.2,0.8-2,2-2h13v-2H4z"/>
 <text transform="matrix(1 0 0 1 30.1582 17.703)" class="st0 st1 st2">?</text>
-<text transform="matrix(-1 0 0 1 20 37.1381)" class="st0 st1 st2">?</text>
+<text transform="matrix(1 0 0 1 12.6543 37.575)" class="st0 st1 st2">?</text>
 </svg>
