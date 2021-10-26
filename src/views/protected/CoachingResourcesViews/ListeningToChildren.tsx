@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import ListeningToChildrenIcon from '../../../assets/images/ListeningIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Listening to Children CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Listening to Children CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function ListeningToChildrenAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={ListeningToChildrenIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Listening to Children CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Listening to Children CHALK Presentation.preview.jpg')
@@ -57,7 +40,7 @@ function ListeningToChildrenMainContent(): React.ReactElement {
  */
 export default function ListeningToChildren(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<ListeningToChildrenAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={ListeningToChildrenIcon} />}
     mainContent={<ListeningToChildrenMainContent />}
   />
 }

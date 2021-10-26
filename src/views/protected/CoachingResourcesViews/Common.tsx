@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import withStyles from '@material-ui/core/styles/withStyles'
 import React, { useEffect, useState } from 'react'
+import Card from '@material-ui/core/Card'
+import ClassroomClimateIcon from '../../../assets/images/ClassroomClimateIconImage.svg'
 
 export const ResourceLabel = withStyles({
     root: {
@@ -114,7 +116,7 @@ export function LazyLoadedResourceCardMedia({
     }, [])
     return imageSource ? (
         <ResourceCardMedia
-            style={{ backgroundColor, backgroundSize }}
+            style={{ backgroundColor, backgroundSize}}
             image={imageSource}
         />
     ) : (
@@ -124,6 +126,48 @@ export function LazyLoadedResourceCardMedia({
             variant="rect"
         />
     )
+}
+
+interface AsideContentProps {
+  imageImport: () => Promise<typeof import('*.jpg')>,
+  label: string,
+  backgroundColor: string
+}
+
+const asideStyles = makeStyles({
+  asideIcon: {
+    objectFit: 'contain',
+    width: '60%',
+    marginLeft: '20%'
+  },
+})
+interface IconOnlyAsideContent {
+  icon:string
+}
+/**
+ * @return {ReactElement}
+ */
+export function IconOnlyAsideContent({icon}:IconOnlyAsideContent): React.ReactElement {
+  const styles = asideStyles()
+  return <>
+    <img src={icon} className={styles.asideIcon} />
+  </>
+}
+
+/**
+ * @return {ReactElement}
+ */
+export function ResourcesLandingAsideContent({ imageImport, label, backgroundColor }: AsideContentProps): React.ReactElement {
+  return <>
+    <Card style={{maxWidth: "70%", marginLeft:"15%"}}>
+      <LazyLoadedResourceCardMedia imageImport={imageImport}
+                                   backgroundColor={backgroundColor}
+                                   backgroundSize={"190px"} />
+      <ResourceCardContent>
+        <ResourceLabel>{label}</ResourceLabel>
+      </ResourceCardContent>
+    </Card>
+  </>
 }
 
 interface LazyLoadedPreviewImageProps {

@@ -14,7 +14,7 @@ import {
   LazyLoadedResourceCardMedia,
   ResourceCardContent,
   ResourceLabel,
-  cards,
+  cards, ResourcesLandingAsideContent,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
@@ -50,22 +50,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const resourceCard = cards['chalk-crosswalks']
-
-/**
- * @return {ReactElement}
- */
-function ChalkCrosswalksAsideContent(): React.ReactElement {
-  const { imageImport, label, backgroundColor } = resourceCard
-
-  return <>
-    <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor}/>
-      <ResourceCardContent>
-        <ResourceLabel>{label}</ResourceLabel>
-      </ResourceCardContent>
-    </Card>
-  </>
-}
 
 const tilesRowInfo = [
   {
@@ -129,7 +113,7 @@ function ChalkCrosswalksMainContent(): React.ReactElement {
  */
 export default function ChalkCrosswalks(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<ChalkCrosswalksAsideContent />}
+    asideContent={<ResourcesLandingAsideContent {...resourceCard} />}
     mainContent={<ChalkCrosswalksMainContent />}
   />
 }

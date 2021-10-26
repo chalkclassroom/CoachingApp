@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import LevelOfInstructionIcon from '../../../assets/images/InstructionIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Level of Instruction CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Level of Instruction CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function LevelOfInstructionAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={LevelOfInstructionIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Level of Instruction CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Level of Instruction CHALK Presentation.preview.jpg')
@@ -57,7 +40,7 @@ function LevelOfInstructionMainContent(): React.ReactElement {
  */
 export default function LevelOfInstruction(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<LevelOfInstructionAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={LevelOfInstructionIcon} />}
     mainContent={<LevelOfInstructionMainContent />}
   />
 }

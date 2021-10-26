@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import MathInstructionIcon from '../../../assets/images/MathIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Early Math CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Early Math CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function MathInstructionAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={MathInstructionIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Early Math CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Early Math CHALK Presentation.preview.jpg')
@@ -57,7 +40,7 @@ function MathInstructionMainContent(): React.ReactElement {
  */
 export default function MathInstruction(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<MathInstructionAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={MathInstructionIcon} />}
     mainContent={<MathInstructionMainContent />}
   />
 }

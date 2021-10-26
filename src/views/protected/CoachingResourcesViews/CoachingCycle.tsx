@@ -9,7 +9,7 @@ import {
   ResourceCardContent,
   ResourceLabel,
   StyledLink,
-  cards 
+  cards, ResourcesLandingAsideContent,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
@@ -25,22 +25,6 @@ const useStyles = makeStyles({
   }
 })
 
-/**
- * @return {ReactElement}
- */
-function CoachingCycleAsideContent(): React.ReactElement {
-  const { imageImport, label, backgroundColor } = resourceCard
-  console.log(imageImport())
-
-  return <>
-    <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor}/>
-      <ResourceCardContent>
-        <ResourceLabel>{label}</ResourceLabel>
-      </ResourceCardContent>
-    </Card>
-  </>
-}
 
 /**
  * @return {ReactElement}
@@ -71,7 +55,7 @@ function CoachingCycleMainContent(): React.ReactElement {
  */
 export default function CoachingCycle(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<CoachingCycleAsideContent />}
+    asideContent={<ResourcesLandingAsideContent {...resourceCard} />}
     mainContent={<CoachingCycleMainContent />}
   />
 }

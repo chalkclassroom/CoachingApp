@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import AssociativeAndCooperativeInteractionsIcon from '../../../assets/images/AssocCoopIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Associative and Cooperative Interactions CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Associative and Cooperative CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function AssociativeAndCooperativeInteractionsAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={AssociativeAndCooperativeInteractionsIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Associative and Cooperative Interactions CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Associative and Cooperative CHALK Presentation.preview.jpg')
@@ -57,7 +40,7 @@ function AssociativeAndCooperativeInteractionsMainContent(): React.ReactElement 
  */
 export default function AssociativeAndCooperativeInteractions(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<AssociativeAndCooperativeInteractionsAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={AssociativeAndCooperativeInteractionsIcon} />}
     mainContent={<AssociativeAndCooperativeInteractionsMainContent />}
   />
 }

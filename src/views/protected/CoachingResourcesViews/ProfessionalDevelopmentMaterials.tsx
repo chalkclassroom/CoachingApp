@@ -1,8 +1,8 @@
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import Box from '@material-ui/core/Box'
+import Card from '@material-ui/core/Card'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import makeStyles from '@material-ui/core/styles/makeStyles'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -10,7 +10,7 @@ import {
   LazyLoadedResourceCardMedia,
   ResourceCardContent,
   ResourceLabel,
-  cards 
+  cards, ResourcesLandingAsideContent,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
@@ -34,7 +34,7 @@ const resourceCard = cards['professional-development-materials']
 const useStyles = makeStyles(theme => ({
   asideIcon: {
     objectFit: 'contain',
-    width: '100%'
+    width: '100%',
   },
   tileRow: {
     alignItems: 'center',
@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   tileImage: {
     height: '100%',
     objectFit: 'contain',
-  }
+  },
 }))
 
 /**
@@ -62,15 +62,12 @@ function ProfessionalDevelopmentMaterialsAsideContent(): React.ReactElement {
   const { imageImport, label, backgroundColor } = resourceCard
 
   return <>
-    <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor} />
-      <ResourceCardContent>
-        <ResourceLabel>{label}</ResourceLabel>
-      </ResourceCardContent>
-    </Card>
+    <ResourcesLandingAsideContent {...resourceCard} />
     <Box pt={4}>
-      <Typography variant='body1'>
-        Welcome to the CHALK Professional Development Series - a collection of  materials developed by early childhood researchers at Vanderbilt University’s Peabody College and Pre-K teachers in the Metropolitan Nashville Public School System.
+      <Typography variant="body1">
+        Welcome to the CHALK Professional Development Series - a collection of materials developed by early childhood
+        researchers at Vanderbilt University’s Peabody College and Pre-K teachers in the Metropolitan Nashville Public
+        School System.
       </Typography>
     </Box>
     <Box pt={4}>
@@ -137,7 +134,7 @@ const tilesRowsInfo = [
       icon: AssociativeAndCooperativeInteractionsIcon,
       materialLinkSuffix: 'AssociativeAndCooperativeInteractions',
     },
-  ]
+  ],
 ]
 
 /**
@@ -148,7 +145,7 @@ function ProfessionalDevelopmentMaterialsMainContent(): React.ReactElement {
 
   return <Grid container spacing={4}>
     <Grid item xs={12}>
-      <Typography variant='h5' component='h1' align='center'>Professional Development Materials</Typography>
+      <Typography variant="h5" component="h1" align="center">Professional Development Materials</Typography>
     </Grid>
     <Grid item xs={12} container justify="center">
       {tilesRowsInfo.map(
@@ -156,22 +153,23 @@ function ProfessionalDevelopmentMaterialsMainContent(): React.ReactElement {
           <Box key={tilesRowIndex} className={styles.tileRow}>
             {tilesRow.map(
               ({ key, icon, materialLinkSuffix }) => (
-                <Link 
+                <Link
                   key={key}
                   to={`/CoachingResources/ProfessionalDevelopmentMaterials/${materialLinkSuffix}`}
                   className={styles.tileLink}
                 >
                   <img src={icon} className={styles.tileImage} />
                 </Link>
-              )
+              ),
             )}
           </Box>
-        )
+        ),
       )}
     </Grid>
     <Grid item xs={12}>
-      <Typography variant='body1'>
-        Select a practice to access powerpoint presentations and handouts to support early childhood teachers use of research-based instruction.
+      <Typography variant="body1">
+        Select a practice to access powerpoint presentations and handouts to support early childhood teachers use of
+        research-based instruction.
       </Typography>
     </Grid>
   </Grid>

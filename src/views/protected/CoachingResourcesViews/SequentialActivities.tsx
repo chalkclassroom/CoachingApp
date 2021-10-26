@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import SequentialActivitiesIcon from '../../../assets/images/SequentialIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Sequential Activities CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Sequential Activities CHALK presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function SequentialActivitiesAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={SequentialActivitiesIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Sequential Activities CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Sequential Activities CHALK presentation.preview.jpg')
@@ -57,7 +40,7 @@ function SequentialActivitiesMainContent(): React.ReactElement {
  */
 export default function SequentialActivities(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<SequentialActivitiesAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={SequentialActivitiesIcon} />}
     mainContent={<SequentialActivitiesMainContent />}
   />
 }

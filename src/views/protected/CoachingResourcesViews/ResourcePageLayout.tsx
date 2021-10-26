@@ -3,8 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import React from 'react'
 
 import AppBar from '../../../components/AppBar'
-import { FirebaseContext } from '../../../components/Firebase'
-import * as Types from '../../../constants/Types';
+import Firebase, { FirebaseContext } from '../../../components/Firebase'
 
 interface ResourcePageLayoutProps {
   asideContent: React.ReactNode;
@@ -17,7 +16,7 @@ interface ResourcePageLayoutProps {
 export default function ResourcePageLayout({ asideContent, mainContent }: ResourcePageLayoutProps): React.ReactElement {
   return <>
     <FirebaseContext.Consumer>
-      {(firebase: Types.FirebaseAppBar) => <AppBar firebase={firebase} noBack={false}/>}
+      {(firebase: Firebase) => <AppBar firebase={firebase} noBack={false}/>}
     </FirebaseContext.Consumer>
     <Box p={4}>
       <Grid container spacing={4}>
