@@ -445,9 +445,7 @@ class TeacherListPage extends React.Component<Props, State> {
       })
     })
     this.setState({
-      teachers: this.props.teacherList.filter(teacher => {
-        return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
-      })
+      teachers: this.props.teacherList
     })
   }
 
@@ -790,7 +788,7 @@ class TeacherListPage extends React.Component<Props, State> {
             notesErrorText: ""
           },
           () => {
-            let updatedTeacherDetails = [...teacherDetails];
+            const updatedTeacherDetails = [...teacherDetails];
             const index = updatedTeacherDetails.findIndex(x => x.id === selectedTeacher.id);
             const updatedTeacherWithDetails = {...updatedTeacherDetails[index]}
             updatedTeacherWithDetails.firstName = inputFirstName;
@@ -921,7 +919,7 @@ class TeacherListPage extends React.Component<Props, State> {
       .removePartner(this.state.selectedTeacher.id)
       .then(() => {
         this.props.removeTeacher(this.state.selectedTeacher.id);
-        let updatedTeacherDetails = [...this.state.teacherDetails];
+        const updatedTeacherDetails = [...this.state.teacherDetails];
         const index = updatedTeacherDetails.findIndex(x => x.id === this.state.selectedTeacher.id);
         updatedTeacherDetails.splice(index, 1)
         this.setState({
@@ -1040,7 +1038,7 @@ class TeacherListPage extends React.Component<Props, State> {
     /**
      * returns teacher name from id
      * @param {string} id
-     * @returns {string}
+     * @return {string}
      */
     const getName = (id: string): string => {
       const teacher = this.props.teacherList.find(obj => obj.id === id);
@@ -1054,7 +1052,7 @@ class TeacherListPage extends React.Component<Props, State> {
     /**
      * returns teacher initials, given name
      * @param {string} name
-     * @returns {string}
+     * @return {string}
      */
     const getInitials = (name: string): string => {
       let i = 0;
@@ -1088,7 +1086,7 @@ class TeacherListPage extends React.Component<Props, State> {
     /**
      * content for calendar event button
      * @param {object} event
-     * @returns {JSX.Element}
+     * @return {JSX.Element}
      */
     const EventComponent = (event: {
       event: Types.CalendarEvent,
@@ -1144,11 +1142,7 @@ class TeacherListPage extends React.Component<Props, State> {
               <CalendarEventPopover
                 push={this.props.history.push}
                 clickedEvent={clickedEvent}
-                teacherList={
-                  this.props.teacherList.filter(teacher => {
-                    return teacher.id !== "rJxNhJmzjRZP7xg29Ko6"
-                  })
-                }
+                teacherList={this.props.teacherList}
                 changeTeacher={this.props.changeTeacher}
                 deleteAppointment={(): void => this.setState({ deleteAppointmentDialog: true })}
                 editEvent={(): void => this.setState({ newEventModal: true })}
