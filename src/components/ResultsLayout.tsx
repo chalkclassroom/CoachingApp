@@ -192,7 +192,7 @@ class ResultsLayout extends React.Component<Props, State> {
             name !== 'actionPlan' &&
             !this.state.actionPlanFormSaved) {
             this.setState({
-                nextView: name, 
+                nextView: name,
                 actionPlanModalOpen: true,
             })
         } else if (this.state.view !== name) {
@@ -200,7 +200,7 @@ class ResultsLayout extends React.Component<Props, State> {
         }
     }
 
-    onActionPlanFormChange = (saved:boolean): void => {
+    onActionPlanFormChange = (saved: boolean): void => {
         this.setState({
             actionPlanFormSaved: saved
         })
@@ -239,17 +239,31 @@ class ResultsLayout extends React.Component<Props, State> {
     }
 
     onActionPlanModalDiscard = (): void => {
-        this.setState({ 
+        this.setState({
             actionPlanModalOpen: false,
             view: this.state.nextView,
             actionPlanFormSaved: true,
-         })
+        })
     }
 
     onActionPlanModalClose = (): void => {
-        this.setState({ 
+        this.setState({
             actionPlanModalOpen: false,
-         })
+        })
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    componentDidMount(): void {
+        Chart.Legend.prototype.afterFit = function () {
+            this.height = this.height + 20;
+        }
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    componentDidUnmount(): void {
+        Chart.Legend.prototype.afterFit = function () {
+            this.height = this.height - 20;
+        }
     }
 
 
@@ -497,7 +511,7 @@ class ResultsLayout extends React.Component<Props, State> {
                                                         )}
                                                     </div>
                                                 ) : this.state.tabValue ===
-                                                  1 ? (
+                                                    1 ? (
                                                     <div>
                                                         <Grid
                                                             style={{
