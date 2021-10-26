@@ -510,13 +510,13 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.LC, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Listening to children/encouraging child talk" />
+                        <ListItemText primary="Engaged in foundational skills activities" />
                       </ListItem>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Not doing any target behaviors" />
+                        <ListItemText primary="Engaged in other behaviors" />
                       </ListItem>
                     </List>
                   </Grid>
