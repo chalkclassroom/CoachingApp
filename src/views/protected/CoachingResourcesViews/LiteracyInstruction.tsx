@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import LiteracyInstructionIcon from '../../../assets/images/LiteracyIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Literacy Definitions and Examples.pdf'
 // import PresentationUrl from '../../../assets/coaching-docs/Literacy Instruction CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function LiteracyInstructionAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={LiteracyInstructionIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Literacy Definitions and Examples.preview.png')
 
@@ -54,7 +37,7 @@ function LiteracyInstructionMainContent(): React.ReactElement {
  */
 export default function LiteracyInstruction(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<LiteracyInstructionAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={LiteracyInstructionIcon} />}
     mainContent={<LiteracyInstructionMainContent />}
   />
 }

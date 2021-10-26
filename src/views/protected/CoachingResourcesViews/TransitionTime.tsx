@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react'
 
 import {
+  IconOnlyAsideContent,
   LazyLoadedPreviewImage,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
@@ -12,24 +13,6 @@ import ResourcePageLayout from './ResourcePageLayout'
 import TransitionTimeIcon from '../../../assets/images/TransitionTimeIconImage.svg'
 import HandoutDocumentUrl from '../../../assets/coaching-docs/Transition Time CHALK Handout.pdf'
 import PresentationUrl from '../../../assets/coaching-docs/Transition Time CHALK Presentation.pptx'
-
-const useStyles = makeStyles({
-  asideIcon: {
-    objectFit: 'contain',
-    width: '100%',
-  },
-})
-
-/**
- * @return {ReactElement}
- */
-function TransitionTimeAsideContent(): React.ReactElement {
-  const styles = useStyles()
-
-  return <>
-    <img src={TransitionTimeIcon} className={styles.asideIcon} />
-  </>
-}
 
 const handoutPreviewImport = () => import('../../../assets/coaching-docs/previews/Transition Time CHALK Handout.preview.jpg')
 const presentationPreviewImport = () => import('../../../assets/coaching-docs/previews/Transition Time CHALK Presentation.preview.jpg')
@@ -57,7 +40,7 @@ function TransitionTimeMainContent(): React.ReactElement {
  */
 export default function TransitionTime(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<TransitionTimeAsideContent />}
+    asideContent={<IconOnlyAsideContent icon={TransitionTimeIcon} />}
     mainContent={<TransitionTimeMainContent />}
   />
 }

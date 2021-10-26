@@ -10,7 +10,7 @@ import {
   LazyLoadedResourceCardMedia,
   ResourceCardContent,
   ResourceLabel,
-  cards 
+  cards, ResourcesLandingAsideContent,
 } from './Common'
 import ResourcePageLayout from './ResourcePageLayout'
 
@@ -59,21 +59,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-/**
- * @return {ReactElement}
- */
-function CoachingBestPracticesAsideContent(): React.ReactElement {
-  const { imageImport, label, backgroundColor } = resourceCard
-
-  return <>
-    <Card>
-      <LazyLoadedResourceCardMedia imageImport={imageImport} backgroundColor={backgroundColor}/>
-      <ResourceCardContent>
-        <ResourceLabel>{label}</ResourceLabel>
-      </ResourceCardContent>
-    </Card>
-  </>
-}
 
 const tilesRowsInfo = [
   [
@@ -157,7 +142,7 @@ function CoachingBestPracticesMainContent(): React.ReactElement {
  */
 export default function CoachingBestPractices(): React.ReactElement {
   return <ResourcePageLayout
-    asideContent={<CoachingBestPracticesAsideContent />}
+    asideContent={<ResourcesLandingAsideContent {...resourceCard} />}
     mainContent={<CoachingBestPracticesMainContent />}
   />
 }
