@@ -124,7 +124,7 @@ class DataQuestions extends React.Component<Props, State> {
                             className={classes.expansionPanel}
                             expanded={
                                 this.props.openPanel === item.name ||
-                                item.name === 'FAQ'
+                                item.name === 'Favorite Questions'
                             }
                             onChange={this.props.handlePanelChange.bind(
                                 this,
