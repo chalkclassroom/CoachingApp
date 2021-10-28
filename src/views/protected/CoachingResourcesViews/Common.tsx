@@ -138,7 +138,7 @@ const asideStyles = makeStyles({
   asideIcon: {
     objectFit: 'contain',
     width: '60%',
-    marginLeft: '20%'
+    marginLeft: '20%',
   },
 })
 interface IconOnlyAsideContent {
@@ -162,7 +162,7 @@ export function ResourcesLandingAsideContent({ imageImport, label, backgroundCol
     <Card style={{maxWidth: "70%", marginLeft:"15%"}}>
       <LazyLoadedResourceCardMedia imageImport={imageImport}
                                    backgroundColor={backgroundColor}
-                                   backgroundSize={"190px"} />
+                                   backgroundSize={"165px"} />
       <ResourceCardContent>
         <ResourceLabel>{label}</ResourceLabel>
       </ResourceCardContent>
