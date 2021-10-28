@@ -32,6 +32,7 @@ export interface UserDocument {
   id: string
   email: string
   favouriteQuestions: Array<string>
+  playedVideos: Array<string>
 }
 
 interface Note {
