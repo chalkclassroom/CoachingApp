@@ -3168,7 +3168,7 @@ class Firebase {
                 goal: goal,
                 goalTimeline: goalTimeline
                     ? firebase.firestore.Timestamp.fromDate(goalTimeline)
-                    : firebase.firestore.Timestamp.fromDate(new Date()),
+                    : null,
                 benefit: benefit,
                 dateModified: firebase.firestore.Timestamp.now(),
             })
@@ -3206,7 +3206,7 @@ class Firebase {
                 person: person,
                 timeline: timeline
                     ? firebase.firestore.Timestamp.fromDate(timeline)
-                    : firebase.firestore.Timestamp.fromDate(new Date()),
+                    : null,
             })
             .then(() => {
                 console.log('Action step updated successfully!')
