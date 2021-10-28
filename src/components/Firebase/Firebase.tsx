@@ -3817,6 +3817,41 @@ class Firebase {
         )
     }
   }
+
+
+  /**
+    * Updates played training videos URL list
+    */
+  updatePlayedVideos = async (videoUrl: string): Promise<void> => {
+    if (this.auth.currentUser) {
+      const userDocument = await this.db
+        .collection('users')
+        .doc(this.auth.currentUser.uid)
+        .get()
+        .catch((error: Error) =>
+          console.error('Error getting user document', error)
+        )
+
+      if (!userDocument) {
+        return
+      }
+
+      const playedVideos: Array<string> =
+        userDocument.data()?.playedVideos ?? []
+
+      const newPlayedVideos = [...new Set([...playedVideos, videoUrl.trim()])]
+
+      return this.db
+        .collection('users')
+        .doc(this.auth.currentUser.uid)
+        .update({
+          playedVideos: newPlayedVideos,
+        })
+        .catch((error: Error) =>
+          console.error('Error updating played videos list', error)
+        )
+    }
+  }
 }
 
 export default Firebase
