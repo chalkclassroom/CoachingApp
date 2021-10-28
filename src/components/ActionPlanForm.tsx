@@ -9,9 +9,9 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import InfoIcon from '@material-ui/icons/Info'
 import SaveImage from '../assets/images/SaveImage.svg'
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg'
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogTitle from "@material-ui/core/DialogTitle"
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import FadeAwayModal from './FadeAwayModal'
@@ -26,6 +26,7 @@ import * as Types from '../constants/Types'
 import * as Constants from '../constants/Constants'
 import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import Firebase from './Firebase'
 
 const styles: object = {
   textField: {
@@ -47,62 +48,7 @@ interface Props {
   actionPlanId?: string
   teacher: Types.Teacher
   magic8?: string
-  firebase: {
-    createActionPlan(teacherId: string, magic8: string): Promise<void>
-    getAPInfo(
-      actionPlanId: string
-    ): Promise<{
-      sessionId: string
-      goal: string
-      goalTimeline: firebase.firestore.Timestamp
-      benefit: string
-      dateModified: { seconds: number; nanoseconds: number }
-      dateCreated: { seconds: number; nanoseconds: number }
-      coach: string
-      teacher: string
-      tool: string
-    }>
-    getTeacherActionPlans(
-      practice: string,
-      teacherId: string
-    ): Promise<
-      Array<{
-        id: string
-        date: { seconds: number; nanoseconds: number }
-        newDate: Date
-      }>
-    >
-    getActionSteps(
-      actionPlanId: string
-    ): Promise<
-      Array<{
-        step: string
-        person: string
-        timeline: firebase.firestore.Timestamp
-      }>
-    >
-    saveActionPlan(
-      actionPlanId: string,
-      goal: string,
-      goalTimeline: Date | null,
-      benefit: string
-    ): Promise<void>
-    saveActionStep(
-      actionPlanId: string,
-      index: string,
-      step: string,
-      person: string,
-      timeline: Date | null
-    ): Promise<void>
-    createActionStep(actionPlanId: string, index: string): Promise<void>
-    completeAppointment(
-      teacherId: string,
-      type: string,
-      tool: string
-    ): Promise<void>
-    getCoachFirstName(): Promise<string>
-    getCoachLastName(): Promise<string>
-  }
+  firebase: Firebase,
   sessionId?: string
   readOnly: boolean
   actionPlanExists: boolean
@@ -130,7 +76,7 @@ interface State {
   createMode: boolean
   saved: boolean
   saveModal: boolean
-  anchorEl: HTMLElement
+  anchorEl: HTMLElement | null
   popover: string
   createDialog: boolean
   dialog: boolean
@@ -155,7 +101,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
     this.state = {
       goal: '',
-      goalTimeline: new Date(),
+      goalTimeline: null,
       benefit: '',
       date: new Date(),
       actionSteps: '',
@@ -190,16 +136,16 @@ class ActionPlanForm extends React.Component<Props, State> {
           {
             step: '',
             person: '',
-            timeline: new Date(),
+            timeline: null,
           },
         ],
       },
       () => {
         this.props.firebase.createActionStep(
           this.state.actionPlanId,
-          (this.state.actionStepsArray.length - 1).toString()
+          (this.state.actionStepsArray.length - 1).toString(),
         )
-      }
+      },
     )
   }
 
@@ -208,10 +154,8 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {string} popover
    */
   handlePopoverOpen = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-    popover: string
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    popover: string,
   ): void => {
     this.setState({
       anchorEl: event.currentTarget,
@@ -233,7 +177,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleChange = (name: string) => (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'goal') {
       this.setState({
@@ -253,7 +197,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleChangeActionStep = (number: number) => (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const newArray = [...this.state.actionStepsArray]
     newArray[number].step = event.target.value
@@ -268,7 +212,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleChangePerson = (number: number) => (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const newArray = [...this.state.actionStepsArray]
     newArray[number].person = event.target.value
@@ -318,8 +262,8 @@ class ActionPlanForm extends React.Component<Props, State> {
           this.props.teacher.id,
           'Action Plan',
           Constants.ToolAbbreviations[
-          this.props.magic8 as Types.ToolAbbreviationsKey
-          ]
+            this.props.magic8 as Types.ToolAbbreviationsKey
+            ],
         )
         this.setState({
           editMode: true,
@@ -344,7 +288,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         (actionPlanData: {
           sessionId: string
           goal: string
-          goalTimeline: firebase.firestore.Timestamp
+          goalTimeline: firebase.firestore.Timestamp | null
           benefit: string
           dateModified: { seconds: number; nanoseconds: number }
           dateCreated: { seconds: number; nanoseconds: number }
@@ -353,16 +297,15 @@ class ActionPlanForm extends React.Component<Props, State> {
           tool: string
         }) => {
           const newDate = this.changeDateType(
-            actionPlanData.dateModified
+            actionPlanData.dateModified,
           )
           this.setState({
             actionPlanExists: true,
             goal: actionPlanData.goal,
             goalTimeline:
-              actionPlanData.goalTimeline &&
-                typeof actionPlanData.goalTimeline !== 'string'
+              actionPlanData.goalTimeline
                 ? actionPlanData.goalTimeline.toDate()
-                : new Date(),
+                : null,
             benefit: actionPlanData.benefit,
             date: newDate,
           })
@@ -378,21 +321,18 @@ class ActionPlanForm extends React.Component<Props, State> {
                 actionStepsData: Array<{
                   step: string
                   person: string
-                  timeline: firebase.firestore.Timestamp
-                }>
+                  timeline: firebase.firestore.Timestamp | null
+                }>,
               ) => {
                 actionStepsData.forEach((value, index) => {
                   newActionStepsArray[index] = {
                     step: value.step,
                     person: value.person,
                     timeline:
-                      value.timeline &&
-                        typeof value.timeline !== 'string'
-                        ? value.timeline.toDate()
-                        : new Date(),
+                      value.timeline ? value.timeline.toDate() : null,
                   }
                 })
-              }
+              },
             )
             .then(() => {
               this.setState({
@@ -402,7 +342,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             .catch(() => {
               console.log('error retrieving action steps')
             })
-        }
+        },
       )
       .catch(error => console.log('getActionPlan', error))
   }
@@ -411,10 +351,15 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {Object} date
    * @return {Date}
    */
-  changeDateType = (date: { seconds: number; nanoseconds: number }): Date => {
-    const newDate = new Date(0)
-    newDate.setUTCSeconds(date.seconds)
-    return newDate
+  changeDateType = (date: { seconds: number; nanoseconds: number }): Date | null => {
+    if (date){
+      const newDate = new Date(0)
+      newDate.setUTCSeconds(date.seconds)
+      return newDate
+    }else{
+      return null
+    }
+
   }
 
   getAllActionPlans = (): void => {
@@ -426,7 +371,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             id: string
             date: { seconds: number; nanoseconds: number }
             newDate: Date
-          }>
+          }>,
         ) => {
           const newArr: Array<{
             id: string
@@ -443,7 +388,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             return { newArr }
           })
           return newArr
-        }
+        },
       )
       .then(newArr => {
         newArr.sort((a, b) => b.seconds - a.seconds)
@@ -470,15 +415,15 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.state.actionPlanId,
         this.state.goal,
         this.state.goalTimeline,
-        this.state.benefit
+        this.state.benefit,
       )
       .then(() => {
         this.props.firebase.completeAppointment(
           this.props.teacher.id,
           'Action Plan',
           Constants.ToolAbbreviations[
-          this.props.magic8 as Types.ToolAbbreviationsKey
-          ]
+            this.props.magic8 as Types.ToolAbbreviationsKey
+            ],
         )
         this.getActionPlan(this.state.actionPlanId)
       })
@@ -492,7 +437,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           index.toString(),
           value.step,
           value.person,
-          value.timeline
+          value.timeline,
         )
         .then(() => {
           this.setState(
@@ -506,7 +451,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   this.setState({ savedAlert: false })
                 }, 1500)
               })
-            }
+            },
           )
           this.getActionPlan(this.state.actionPlanId)
         })
@@ -555,18 +500,6 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    firebase: PropTypes.exact({
-      createActionPlan: PropTypes.func,
-      getAPInfo: PropTypes.func,
-      getTeacherActionPlans: PropTypes.func,
-      getActionSteps: PropTypes.func,
-      saveActionPlan: PropTypes.func,
-      saveActionStep: PropTypes.func,
-      createActionStep: PropTypes.func,
-      completeAppointment: PropTypes.func,
-      getCoachFirstName: PropTypes.func,
-      getCoachLastName: PropTypes.func,
-    }).isRequired,
     teacher: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -591,11 +524,11 @@ class ActionPlanForm extends React.Component<Props, State> {
     const { classes } = this.props
     const goalOpen = Boolean(this.state.popover === 'goal-popover')
     const goalTimelineOpen = Boolean(
-      this.state.popover === 'goal-timeline-popover'
+      this.state.popover === 'goal-timeline-popover',
     )
     const benefitOpen = Boolean(this.state.popover === 'benefit-popover')
     const actionStepOpen = Boolean(
-      this.state.popover === 'action-step-popover'
+      this.state.popover === 'action-step-popover',
     )
     const personOpen = Boolean(this.state.popover === 'person-popover')
     const timelineOpen = Boolean(this.state.popover === 'timeline-popover')
@@ -746,8 +679,8 @@ class ActionPlanForm extends React.Component<Props, State> {
               >
                 <Grid item xs={4}>
                   {this.props.teacher.firstName +
-                    ' ' +
-                    this.props.teacher.lastName}
+                  ' ' +
+                  this.props.teacher.lastName}
                 </Grid>
                 <Grid item xs={4}>
                   <Grid
@@ -756,8 +689,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                     justify="center"
                   >
                     {this.state.coachFirstName +
-                      ' ' +
-                      this.state.coachLastName}
+                    ' ' +
+                    this.state.coachLastName}
                   </Grid>
                 </Grid>
                 <Grid item xs={4}>
@@ -767,7 +700,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                     justify="flex-end"
                   >
                     {moment(this.state.date).format(
-                      'MM/DD/YYYY'
+                      'MM/DD/YYYY',
                     )}
                   </Grid>
                 </Grid>
@@ -845,15 +778,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     '0.3em',
                                 }}
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'goal-popover'
+                                    'goal-popover',
                                   )
                                 }
                               />
@@ -972,7 +903,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         type="text"
                         value={this.state.goal}
                         onChange={this.handleChange(
-                          'goal'
+                          'goal',
                         )}
                         margin="normal"
                         variant="standard"
@@ -1050,15 +981,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                             <Grid item>
                               <InfoIcon
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'goal-timeline-popover'
+                                    'goal-timeline-popover',
                                   )
                                 }
                                 style={{
@@ -1170,7 +1099,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                               .goalTimeline
                           }
                           onChange={(
-                            date: Date | null
+                            date: Date | null,
                           ): void => {
                             this.setState({
                               goalTimeline: date,
@@ -1255,15 +1184,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     '0.3em',
                                 }}
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'benefit-popover'
+                                    'benefit-popover',
                                   )
                                 }
                               />
@@ -1374,7 +1301,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         type="text"
                         value={this.state.benefit}
                         onChange={this.handleChange(
-                          'benefit'
+                          'benefit',
                         )}
                         margin="normal"
                         variant="standard"
@@ -1476,15 +1403,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     '0.3em',
                                 }}
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'action-step-popover'
+                                    'action-step-popover',
                                   )
                                 }
                               />
@@ -1644,7 +1569,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   value.step
                                 }
                                 onChange={this.handleChangeActionStep(
-                                  index
+                                  index,
                                 )}
                                 margin="normal"
                                 variant="standard"
@@ -1681,7 +1606,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                               />
                             </li>
                           )
-                        }
+                        },
                       )}
                     </ol>
                     <Grid item>
@@ -1785,15 +1710,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     '0.3em',
                                 }}
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'person-popover'
+                                    'person-popover',
                                   )
                                 }
                               />
@@ -1920,7 +1843,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     value.person
                                   }
                                   onChange={this.handleChangePerson(
-                                    index
+                                    index,
                                   )}
                                   margin="normal"
                                   variant="standard"
@@ -1959,7 +1882,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                 />
                               </li>
                             )
-                          }
+                          },
                         )}
                       </ol>
                     </Grid>
@@ -2023,15 +1946,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     '0.3em',
                                 }}
                                 onClick={(
-                                  e: React.ChangeEvent<
-                                    | HTMLInputElement
+                                  e: React.ChangeEvent<| HTMLInputElement
                                     | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >
+                                    | HTMLSelectElement>,
                                 ): void =>
                                   this.handlePopoverOpen(
                                     e,
-                                    'timeline-popover'
+                                    'timeline-popover',
                                   )
                                 }
                               />
@@ -2185,18 +2106,18 @@ class ActionPlanForm extends React.Component<Props, State> {
                                       value.timeline
                                     }
                                     onChange={(
-                                      date: Date | null
+                                      date: Date | null,
                                     ): void => {
                                       this.handleChangeTimeline(
                                         index,
-                                        date
+                                        date,
                                       )
                                     }}
                                   />
                                 </MuiPickersUtilsProvider>
                               </li>
                             )
-                          }
+                          },
                         )}
                       </ol>
                     </Grid>

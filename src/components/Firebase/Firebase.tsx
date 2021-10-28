@@ -51,8 +51,8 @@ class Firebase {
   auth: firebase.auth.Auth
   db: firebase.firestore.Firestore
   functions: FirebaseFunctions
-  sessionRef: firebase.firestore.DocumentReference
-  query: firebase.firestore.Query
+  sessionRef: firebase.firestore.DocumentReference | null
+  query: firebase.firestore.Query | null
   app: firebase.app.App | null = null
 
   /**
@@ -62,6 +62,8 @@ class Firebase {
     firebase.initializeApp(config)
     this.auth = firebase.auth()
     this.db = firebase.firestore()
+    this.sessionRef = null
+    this.query = null
     if (process.env.USE_LOCAL_FIRESTORE) {
       this.db.settings({
         host: 'localhost:8080',
@@ -69,8 +71,7 @@ class Firebase {
       })
     }
     this.db
-      .enablePersistence({ experimentalTabSynchronization: true })
-      .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
+      .enablePersistence({ synchronizeTabs: true })
       .catch((error: Error) => console.error('Offline Not Working: ', error))
     this.functions = firebase.functions()
     if (process.env.USE_LOCAL_FUNCTIONS) {
@@ -88,15 +89,12 @@ class Firebase {
     lastName: string
     program: string
   }): Promise<void> {
-    const data = Object.assign(
-      {},
-      {
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        program: userData.program,
-      }
-    )
+    const data = {
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      program: userData.program,
+    }
     const docRef = firebase
       .firestore()
       .collection('pilotForm')
@@ -185,7 +183,7 @@ class Firebase {
   reauthenticate = async (userData: {
     email: string
     password: string
-  }): Promise<firebase.auth.UserMetadata | void> => {
+  }): Promise<firebase.User | null> => {
     await this.firebaseEmailSignIn(userData)
     return firebase.auth().currentUser
   }
@@ -3007,7 +3005,7 @@ class Firebase {
         goal: goal,
         goalTimeline: goalTimeline
           ? firebase.firestore.Timestamp.fromDate(goalTimeline)
-          : firebase.firestore.Timestamp.fromDate(new Date()),
+          : null,
         benefit: benefit,
         dateModified: firebase.firestore.Timestamp.now(),
       })
@@ -3045,7 +3043,7 @@ class Firebase {
         person: person,
         timeline: timeline
           ? firebase.firestore.Timestamp.fromDate(timeline)
-          : firebase.firestore.Timestamp.fromDate(new Date()),
+          : null,
       })
       .then(() => {
         console.log('Action step updated successfully!')

@@ -260,7 +260,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
 
     // eslint-disable-next-line require-jsdoc
-    componentDidUnmount(): void {
+    componentWillUnmount(): void {
         Chart.Legend.prototype.afterFit = function () {
             this.height = this.height - 20;
         }
