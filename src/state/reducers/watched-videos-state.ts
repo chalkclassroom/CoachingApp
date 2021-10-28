@@ -1,4 +1,4 @@
-import { ADD_WATCHED_VIDEOS, WatchedTypes } from '../actions/watched-videos.ts'
+import { ADD_WATCHED_VIDEOS, WatchedVideosAction } from '../actions/watched-videos'
 
 interface WatchedVideosState {
     watchedVideos: Array<string>
@@ -8,7 +8,7 @@ const initialState: WatchedVideosState = { watchedVideos: [] }
 
 export default (
     state = initialState,
-    action: WatchedTypes
+    action: WatchedVideosAction
 ): WatchedVideosState => {
     switch (action.type) {
         case ADD_WATCHED_VIDEOS:

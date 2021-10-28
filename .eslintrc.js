@@ -53,6 +53,6 @@ module.exports = {
     'no-invalid-this': 0,
     '@typescript-eslint/require-await': 'off',
     '@typescript-eslint/no-explicit-any': 'error',
+    'require-jsdoc': 'off',
   },
-
 }
