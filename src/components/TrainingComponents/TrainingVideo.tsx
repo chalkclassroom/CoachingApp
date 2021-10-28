@@ -1,80 +1,65 @@
+import 'react-html5video/dist/styles.css'
+
 import * as React from 'react'
 import { DefaultPlayer as Video } from 'react-html5video/dist'
-import 'react-html5video/dist/styles.css'
-import * as PropTypes from 'prop-types'
-import { addWatchedVideos } from '../../state/actions/watched-videos'
-import { connect } from 'react-redux'
+
+import { FirebaseContext } from '../Firebase'
 
 interface Props {
-    videoUrl: string
-    watchedVideos: Array<string>
-    addWatchedVideos: (videoUrl: string) => void
+  videoUrl: string
 }
 
-interface State {
-     autoPlay: boolean
+export default function TrainingVideo({ videoUrl }: Props): React.ReactNode {
+  const [playedVideos, setPlayedVideos] = React.useState<Array<string>>([])
+  const [autoPlay, setAutoPlay] = React.useState<boolean>(false)
+  const [ready, setReady] = React.useState<boolean>(false)
+
+  const firebaseContext = React.useContext(FirebaseContext)
+
+  React.useEffect(() => {
+    setReady(false)
+
+    firebaseContext.getUserInformation().then(userDocument => {
+      let newPlayedVideos: Array<string>
+
+      if (userDocument) {
+        newPlayedVideos = userDocument?.playedVideos ?? []
+      } else {
+        newPlayedVideos = []
+      }
+
+      if (newPlayedVideos.includes(videoUrl)) {
+        setPlayedVideos(playedVideos)
+        setAutoPlay(false)
+      } else {
+        firebaseContext.updatePlayedVideos(videoUrl)
+        setPlayedVideos([...playedVideos, videoUrl])
+        setAutoPlay(true)
+      }
+
+      setReady(true)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firebaseContext, videoUrl])
+
+  return (
+    ready && (
+      <Video
+        loop
+        muted
+        autoPlay={autoPlay}
+        controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
+        poster="http://sourceposter.jpg"
+      >
+        <source src={videoUrl} type="video/mp4" />
+        <track
+          label="English"
+          kind="subtitles"
+          srcLang="en"
+          src="http://source.vtt"
+          default
+        />
+      </Video>
+    )
+  )
 }
-
-/**
- * specifies controls and default settings for demo video on landing page
- * @class DemoVideo
- */
-class TrainingVideo extends React.Component<Props, State> {
-    /**
-     * @param {Props} props
-     */
-    constructor(props: Props) {
-        super(props)
-        this.state = {
-            autoPlay: !props.watchedVideos.includes(props.videoUrl),
-        }
-    }
-
-    componentDidMount() {
-        if (this.state.autoPlay) {
-            this.props.addWatchedVideos(this.props.videoUrl)
-        }
-    }
-
-    // const videoWatched =
-
-    /**
-     * render function
-     * @return {ReactNode}
-     */
-    render(): React.ReactNode {
-        return (
-            <Video
-                loop
-                muted
-                autoPlay={this.state.autoPlay}
-                controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
-                poster="http://sourceposter.jpg"
-                onCanPlayThrough={(): void => {
-                    // Do stuff
-                }}
-            >
-                <source src={this.props.videoUrl} type="video/mp4" />
-                <track
-                    label="English"
-                    kind="subtitles"
-                    srcLang="en"
-                    src="http://source.vtt"
-                    default
-                />
-            </Video>
-        )
-    }
-}
-
-const mapStateToProps = (
-    state: Types.ReduxState
-): {
-    watchedVideos: Array<Types.Teacher>
-} => {
-    return {
-        watchedVideos: state.watchedVideosState.watchedVideos,
-    }
-}
-
-export default connect(mapStateToProps, { addWatchedVideos })(TrainingVideo)
