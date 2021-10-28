@@ -1,80 +1,70 @@
-import * as React from 'react'
-import { DefaultPlayer as Video } from 'react-html5video/dist'
 import 'react-html5video/dist/styles.css'
-import * as PropTypes from 'prop-types'
-import { addWatchedVideos } from '../../state/actions/watched-videos'
-import { connect } from 'react-redux'
 
-interface Props {
-    videoUrl: string
-    watchedVideos: Array<string>
-    addWatchedVideos: (videoUrl: string) => void
+import * as React from 'react'
+import { connect, ConnectedProps } from 'react-redux'
+import { DefaultPlayer as Video } from 'react-html5video/dist'
+
+import { addWatchedVideos } from '../../state/actions/watched-videos'
+import { RootState } from '../../state/store'
+
+interface Props extends PropsFromRedux {
+  videoUrl: string
 }
 
 interface State {
-     autoPlay: boolean
+  autoPlay: boolean
 }
 
 /**
  * specifies controls and default settings for demo video on landing page
- * @class DemoVideo
  */
 class TrainingVideo extends React.Component<Props, State> {
-    /**
-     * @param {Props} props
-     */
-    constructor(props: Props) {
-        super(props)
-        this.state = {
-            autoPlay: !props.watchedVideos.includes(props.videoUrl),
-        }
-    }
+  constructor(props: Props) {
+    super(props)
 
-    componentDidMount() {
-        if (this.state.autoPlay) {
-            this.props.addWatchedVideos(this.props.videoUrl)
-        }
+    this.state = {
+      autoPlay: !props.watchedVideos.includes(props.videoUrl),
     }
+  }
 
-    // const videoWatched =
-
-    /**
-     * render function
-     * @return {ReactNode}
-     */
-    render(): React.ReactNode {
-        return (
-            <Video
-                loop
-                muted
-                autoPlay={this.state.autoPlay}
-                controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
-                poster="http://sourceposter.jpg"
-                onCanPlayThrough={(): void => {
-                    // Do stuff
-                }}
-            >
-                <source src={this.props.videoUrl} type="video/mp4" />
-                <track
-                    label="English"
-                    kind="subtitles"
-                    srcLang="en"
-                    src="http://source.vtt"
-                    default
-                />
-            </Video>
-        )
+  componentDidMount(): void {
+    if (this.state.autoPlay) {
+      this.props.addWatchedVideos(this.props.videoUrl)
     }
+  }
+
+  render(): React.ReactNode {
+    return (
+      <Video
+        loop
+        muted
+        autoPlay={this.state.autoPlay}
+        controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
+        poster="http://sourceposter.jpg"
+      >
+        <source src={this.props.videoUrl} type="video/mp4" />
+        <track
+          label="English"
+          kind="subtitles"
+          srcLang="en"
+          src="http://source.vtt"
+          default
+        />
+      </Video>
+    )
+  }
 }
 
 const mapStateToProps = (
-    state: Types.ReduxState
+  state: RootState
 ): {
-    watchedVideos: Array<Types.Teacher>
-} => {
-    return {
-        watchedVideos: state.watchedVideosState.watchedVideos,
-    }
-}
+  watchedVideos: Array<string>
+} => ({
+  watchedVideos: state.watchedVideosState.watchedVideos,
+})
 
-export default connect(mapStateToProps, { addWatchedVideos })(TrainingVideo)
+const connector = connect(mapStateToProps, { addWatchedVideos })
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+export default connector(TrainingVideo)
