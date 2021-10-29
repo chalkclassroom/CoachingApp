@@ -79,7 +79,7 @@ interface Props extends PropsFromRedux {
     handleSession(entry: object): void
     handlePushSEEachEntry(mEntry: object): void
   }
-  handleTimerReset(): voidF
+  handleTimerReset(): void
   handleTimerStart(): void
   incrementVisitCount(): void
   observationStarted: boolean
