@@ -275,6 +275,16 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
   }
 
+  // eslint-disable-next-line require-jsdoc
+  componentDidMount() {
+    this.props.students.forEach(({id}) => {
+      this.props.editStudent({
+        id,
+        count: 0,
+      })
+    })
+  }
+
   /**
     * internal update callback function
     * @param {Props} _previousProps
