@@ -254,7 +254,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   onStudentModalOpen = (student?: Student): void => {
     const { status } = this.state
 
-    if (status === Status.NAME_LIST) {
+    if (status === Status.NAME_LIST || !student) {
       this.setState({
         setOpen: true,
         studentTextFieldValue: student?.name ?? '',
