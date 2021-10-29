@@ -23,6 +23,7 @@ import { connect, ConnectedProps } from 'react-redux'
 
 import ActivitySettingButtons from './ActivitySettingButtons'
 import SelectActivityModal from './SelectActivityModal'
+import RemoveStudent from './RemoveStudent.tsx'
 import StudentRatingModal from './StudentRatingModal'
 import { updateEngagementCount } from '../../state/actions/student-engagement'
 import {
@@ -98,6 +99,8 @@ interface State {
   setOpen: boolean
   status: Status
   studentTextFieldValue: string
+  showRemoveStudenModal: boolean
+  removeStudent: object
 }
 
 enum Status {
@@ -147,6 +150,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     entryType: -1,
     entries: 0,
     modal: false,
+    showRemoveStudenModal: false,
+    removeStudent: {},
   }
 
   studentNameInputFieldRef = React.createRef<HTMLInputElement>()
@@ -180,6 +185,20 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   switchToObservationPage = (): void => {
     this.setState({ status: Status.OBSERVATION })
     this.props.onStatusChange(true)
+  }
+
+  closeRemoveStudentModal = ():void => {
+    this.setState({ 
+      showRemoveStudenModal: false,
+      removeStudent: {},
+      })
+  }
+
+  openRemoveStudentModal = (removeStudent: object):void => {
+    this.setState({ 
+      removeStudent,
+      showRemoveStudenModal: true,
+       })
   }
 
   handleConfirmRating = (): void => {
@@ -495,9 +514,9 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                           <IconButton
                             style={{ padding: '0' }}
                             onClick={(event: SyntheticEvent): void => {
+                              this.openRemoveStudentModal(student)
                               event.preventDefault()
                               event.stopPropagation()
-                              this.removeStudent(student)
                             }}
                           >
                             <CloseIcon />
@@ -510,6 +529,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               </CardActionArea>
             </Card>
           ))}
+          <RemoveStudent 
+                  removeStudent={this.removeStudent}
+                  student={this.state.removeStudent}
+                  closeModal={this.closeRemoveStudentModal}
+                  isOpen={this.state.showRemoveStudenModal}
+                  />
           {this.state.status === Status.OBSERVATION && (
             <Grid
               container
