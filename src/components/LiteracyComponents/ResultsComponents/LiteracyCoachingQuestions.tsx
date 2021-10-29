@@ -1,10 +1,9 @@
 import * as React from 'react'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
 import DataQuestions from '../../ResultsComponents/DataQuestions'
-import { MuiThemeProvider } from '@material-ui/core/styles'
 import * as Constants from '../../../constants/Constants'
+import QuestionBox from './QuestionBox'
+import { FirebaseContext } from '../../Firebase'
 
 interface Props {
     handleAddToPlan(
@@ -23,6 +22,9 @@ interface Props {
 interface State {
     categoryView: number
     openPanel: string
+    user: {
+      favouriteQuestions?: Array<string>
+    }
 }
 
 const LiteracyCategories = {
@@ -32,6 +34,7 @@ const LiteracyCategories = {
         'Realistic Reading and Writing',
         'Assessment and Planning for Instruction',
         'Teacher Support for Foundational Skills',
+        'Favorite Questions'
     ],
     Writing: [
         'Focus on Meaning',
@@ -39,6 +42,7 @@ const LiteracyCategories = {
         'Meaningful Writing Activities',
         'Assessment and Planning for Instruction',
         'Teacher Support for Writing',
+        'Favorite Questions'
     ],
     Reading: [
         'Vocabulary',
@@ -46,6 +50,7 @@ const LiteracyCategories = {
         "Connections to Children's Experiences",
         'Speaking and Listening Skills',
         'Assessment and Planning for Instruction',
+        'Favorite Questions'
     ],
     Language: [
         'Discussing Vocabulary and Concepts',
@@ -53,6 +58,7 @@ const LiteracyCategories = {
         'Encouraging Children to Talk',
         'Responding to Children',
         'Assessment and Planning for Conversations',
+        'Favorite Questions'
     ],
 }
 
@@ -98,9 +104,33 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
         this.state = {
             categoryView: 0,
             openPanel: '',
+            user: {},
         }
     }
 
+    static contextType = FirebaseContext
+
+    // eslint-disable-next-line require-jsdoc
+    async setUserInformation(): Promise<void> {
+        this.setState({
+            user: await this.context.getUserInformation(),
+        })
+    }
+
+        /** lifecycle method invoked after component mounts */
+    async componentDidMount(): Promise<void> {
+        this.setUserInformation()
+    }
+
+    /** lifecycle method invoked after component mounts */
+    componentDidUpdate(_, previousState): void {
+        if (LiteracyCategories[this.props.literacyType].length === this.state.categoryView &&
+            previousState.categoryView !== this.state.categoryView) {
+            this.setUserInformation()
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     categoryClick = (category: number) => {
         if (this.state.categoryView !== category) {
             this.setState({
@@ -109,6 +139,39 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
             })
         }
     }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+     getQuestions = (value: string): Promise<void> => {
+        if (value === "Favorite Questions") {
+            const allQuestions = Object.values(
+                Constants.CoachingQuestions.Literacy[this.props.literacyType]
+            ).flat();
+            const flatAllQuestions = allQuestions.flatMap(
+                (questions) => questions.text
+            );
+            const favouriteQuestions = flatAllQuestions.filter((question) =>
+                this.state.user?.favouriteQuestions?.includes(question.id)
+            );
+    
+            return [
+                {
+                    name: "Favorite Questions",
+                    title: "Favorite Questions",
+                    text: favouriteQuestions,
+                },
+            ];
+        }
+    
+        return Constants.CoachingQuestions.Literacy[this.props.literacyType][
+            value as 
+            | LiteracyFoundationalKey
+            | LiteracyWritingKey
+            | LiteracyReadingKey
+            | LiteracyLanguageKey
+            | 'Favorite Questions'
+
+        ];
+    };
 
     /**
      * @param {string} panel
@@ -141,45 +204,13 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
                                     this.props.literacyType
                                 ].map((value, index) => {
                                     return (
-                                        <Grid item key={index}>
-                                            <MuiThemeProvider
-                                                theme={Constants.ListeningTheme}
-                                            >
-                                                <Button
-                                                    onClick={(): void =>
-                                                        this.categoryClick(
-                                                            index + 1
-                                                        )
-                                                    }
-                                                    variant="contained"
-                                                    style={{
-                                                        width: '9em',
-                                                        height: '9em',
-                                                        backgroundColor:
-                                                            this.state
-                                                                .categoryView ===
-                                                            index + 1
-                                                                ? Constants
-                                                                      .Colors.LI
-                                                                : '#f5f5f5',
-                                                        textTransform: 'none',
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        style={{
-                                                            color:
-                                                                this.state
-                                                                    .categoryView ===
-                                                                index + 1
-                                                                    ? 'white'
-                                                                    : 'black',
-                                                        }}
-                                                    >
-                                                        {value}
-                                                    </Typography>
-                                                </Button>
-                                            </MuiThemeProvider>
-                                        </Grid>
+                                        <QuestionBox
+                                            key={index}
+                                            index={index}
+                                            value={value}
+                                            categoryClick={this.categoryClick}
+                                            categoryView={this.state.categoryView}
+                                        />
                                     )
                                 })}
                             </Grid>
@@ -193,22 +224,11 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
                                 {LiteracyCategories[
                                     this.props.literacyType
                                 ].map((value, index) => {
-                                    const key = Object.keys(value)[0]
                                     return this.state.categoryView ===
                                         index + 1 ? (
                                         <DataQuestions
                                             key={index}
-                                            questions={
-                                                Constants.CoachingQuestions
-                                                    .Literacy[
-                                                    this.props.literacyType
-                                                ][
-                                                    value as LiteracyFoundationalKey &
-                                                        LiteracyWritingKey &
-                                                        LiteracyReadingKey &
-                                                        LiteracyLanguageKey
-                                                ]
-                                            }
+                                            questions={this.getQuestions(value)}
                                             openPanel={this.state.openPanel}
                                             handlePanelChange={
                                                 this.handlePanelChange
@@ -222,6 +242,7 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
                                             color={Constants.Colors.LI}
                                         />
                                     ) : null
+                                    
                                 })}
                             </Grid>
                         </Grid>
