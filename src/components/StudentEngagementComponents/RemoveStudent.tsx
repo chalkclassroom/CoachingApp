@@ -9,18 +9,19 @@ import Button from '@material-ui/core/Button'
 
 
 interface Props {
-  removeStudent(object),
+  removeStudent(object): void,
   student: object,
-  closeModal(),
+  closeModal(): void,
+  isOpen: boolean,
 }
 
 // eslint-disable-next-line require-jsdoc
 function RemoveStudent (props: Props) {
-  const { removeStudent, student, closeModal } = props;
+  const { removeStudent, student, closeModal, isOpen } = props;
 
   return (
            <Dialog
-          open={true}
+          open={isOpen}
           onClose={(): void => closeModal()}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"

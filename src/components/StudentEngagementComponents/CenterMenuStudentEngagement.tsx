@@ -519,12 +519,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               </CardActionArea>
             </Card>
           ))}
-           {(this.state.showRemoveStudenModal ) ? 
-                <RemoveStudent 
+          <RemoveStudent 
                   removeStudent={this.removeStudent}
                   student={this.state.removeStudent}
                   closeModal={this.closeRemoveStudentModal}
-                  /> : null}
+                  isOpen={this.state.showRemoveStudenModal}
+                  />
           {this.state.status === Status.OBSERVATION && (
             <Grid
               container
