@@ -2,7 +2,7 @@ import * as React from 'react'
 import Grid from '@material-ui/core/Grid'
 import DataQuestions from '../../ResultsComponents/DataQuestions'
 import * as Constants from '../../../constants/Constants'
-import QuestionBox from './QuestionBox.tsx'
+import QuestionBox from './QuestionBox'
 import { FirebaseContext } from '../../Firebase'
 
 interface Props {
@@ -22,6 +22,9 @@ interface Props {
 interface State {
     categoryView: number
     openPanel: string
+    user: {
+      favouriteQuestions?: Array<string>
+    }
 }
 
 const LiteracyCategories = {
@@ -65,7 +68,6 @@ type LiteracyFoundationalKey =
     | 'Realistic Reading and Writing'
     | 'Assessment and Planning for Instruction'
     | 'Teacher Support for Foundational Skills'
-    | 'Favorite Questions'
 
 type LiteracyWritingKey =
     | 'Focus on Meaning'
@@ -73,7 +75,6 @@ type LiteracyWritingKey =
     | 'Meaningful Writing Activities'
     | 'Assessment and Planning for Instruction'
     | 'Teacher Support for Writing'
-    | 'Favorite Questions'
 
 type LiteracyReadingKey =
     | 'Vocabulary'
@@ -81,7 +82,6 @@ type LiteracyReadingKey =
     | "Connections to Children's Experiences"
     | 'Speaking and Listening Skills'
     | 'Assessment and Planning for Instruction'
-    | 'Favorite Questions'
 
 type LiteracyLanguageKey =
     | 'Discussing Vocabulary and Concepts'
@@ -89,7 +89,6 @@ type LiteracyLanguageKey =
     | 'Encouraging Children to Talk'
     | 'Responding to Children'
     | 'Assessment and Planning for Conversations'
-    | 'Favorite Questions'
 
 /**
  * data reflection question layout for listening to children
@@ -112,15 +111,23 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
     static contextType = FirebaseContext
 
     // eslint-disable-next-line require-jsdoc
-    async setUserInformation(): void {
+    async setUserInformation(): Promise<void> {
         this.setState({
             user: await this.context.getUserInformation(),
         })
     }
 
         /** lifecycle method invoked after component mounts */
-    async componentDidMount(): void {
+    async componentDidMount(): Promise<void> {
         this.setUserInformation()
+    }
+
+    /** lifecycle method invoked after component mounts */
+    componentDidUpdate(_, previousState): void {
+        if (LiteracyCategories[this.props.literacyType].length === this.state.categoryView &&
+            previousState.categoryView !== this.state.categoryView) {
+            this.setUserInformation()
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -134,17 +141,16 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    getQuestions = (value: string) => {
+     getQuestions = (value: string): Promise<void> => {
         if (value === "Favorite Questions") {
-            this.setUserInformation();
             const allQuestions = Object.values(
                 Constants.CoachingQuestions.Literacy[this.props.literacyType]
-            ).flatMap((x) => x);
+            ).flat();
             const flatAllQuestions = allQuestions.flatMap(
                 (questions) => questions.text
             );
             const favouriteQuestions = flatAllQuestions.filter((question) =>
-                this.state.user?.favouriteQuestions.includes(question.id)
+                this.state.user?.favouriteQuestions?.includes(question.id)
             );
     
             return [
@@ -157,10 +163,13 @@ class LiteracyCoachingQuestions extends React.Component<Props, State> {
         }
     
         return Constants.CoachingQuestions.Literacy[this.props.literacyType][
-            value as LiteracyFoundationalKey &
-                LiteracyWritingKey &
-                LiteracyReadingKey &
-                LiteracyLanguageKey
+            value as 
+            | LiteracyFoundationalKey
+            | LiteracyWritingKey
+            | LiteracyReadingKey
+            | LiteracyLanguageKey
+            | 'Favorite Questions'
+
         ];
     };
 
