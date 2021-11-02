@@ -754,6 +754,9 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       case LiteracyTypes.WRITING:{
         return who === 'Child' ? "Engaged in other activities" : "Engaged in other behaviors";
       }
+      case LiteracyTypes.FOUNDATIONAL:{
+        return who === 'Child' ?  "Engaged in other behaviors" : "Not doing any target behaviors";
+      }
       default:{
         return "Not doing any target behaviors"
       }
@@ -773,7 +776,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
 
     switch(type){
       case LiteracyTypes.FOUNDATIONAL:{
-        return "Supporting children’s foundational skills development";
+        return who === 'Child' ? "Engaged in foundational skills activities" : "Supporting children’s foundational skills development";
       }
       case LiteracyTypes.WRITING:{
         return who === 'Child' ? "Engaged in writing activities" : "Supported children's writing";
