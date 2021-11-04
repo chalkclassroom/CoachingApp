@@ -400,7 +400,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 if (editedStudent) {
                   this.props.editStudent({ id: editedStudent.id, name })
                 } else {
-                  this.props.addStudent({ name, count: 0 })
+                  this.props.addStudent({
+                    student: { name, count: 0 },
+                    teacherId: this.props.teacherId
+                  })
                 }
 
                 this.handleClose()
