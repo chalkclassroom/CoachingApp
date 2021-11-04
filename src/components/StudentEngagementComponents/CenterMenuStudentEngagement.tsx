@@ -586,9 +586,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 }
 
-const mapState = (state: RootState) => ({
-  students: state.studentsState.students,
+const mapState = (state: RootState, ownProps: { teacherId: string }): { students: Student[] } => ({
+  students: state.studentsState.students.filter(
+    ({ teacherId }) => typeof teacherId === "undefined" || teacherId === ownProps.teacherId
+  ),
 })
+
 const mapDispatch = {
   updateEngagementCount,
   addStudent,
