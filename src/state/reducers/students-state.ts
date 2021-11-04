@@ -10,6 +10,7 @@ export type Student = {
   count: number
   id: string
   name: string
+  teacherId?: string
 }
 
 export type NewStudent = Omit<Student, 'id'>

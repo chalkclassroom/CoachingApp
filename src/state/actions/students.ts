@@ -13,12 +13,13 @@ export type StudentsActionType =
   | { type: typeof STUDENTS_REMOVE, student: Student }
   | { type: typeof RESET_STUDENTS }
 
-export const addStudent = (student: NewStudent): StudentsActionType => ({
+export const addStudent = ({ student, teacherId } : { student: NewStudent, teacherId: string }): StudentsActionType => ({
   type: STUDENTS_ADD,
   student: {
     ...student,
-    id: nanoid()
-  }
+    id: nanoid(),
+    teacherId
+  },
 });
 
 export const editStudent = (student: EditedStudent): StudentsActionType => ({
