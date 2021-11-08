@@ -2,6 +2,7 @@ export const STUDENTS_ADD = "add_student";
 export const STUDENTS_EDIT = "edit_student";
 export const STUDENTS_REMOVE = "remove_student";
 export const RESET_STUDENTS = "reset_students"
+export const REMOVE_UNASSIGNED_STUDENTS = "remove_unassigned_students";
 
 import { nanoid } from 'nanoid'
 
@@ -11,6 +12,7 @@ export type StudentsActionType =
   | { type: typeof STUDENTS_ADD, student: Student }
   | { type: typeof STUDENTS_EDIT, student: EditedStudent }
   | { type: typeof STUDENTS_REMOVE, student: Student }
+  | { type: typeof REMOVE_UNASSIGNED_STUDENTS }
   | { type: typeof RESET_STUDENTS }
 
 export const addStudent = ({ student, teacherId } : { student: NewStudent, teacherId: string }): StudentsActionType => ({
@@ -35,3 +37,7 @@ export const removeStudent = (student: Student): StudentsActionType => ({
 export const resetStudents = (): StudentsActionType => ({
   type: RESET_STUDENTS,
 });
+
+export const removeUnassignedStudents = (): StudentsActionType => ({
+  type: REMOVE_UNASSIGNED_STUDENTS,
+})

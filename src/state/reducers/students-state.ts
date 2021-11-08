@@ -2,6 +2,7 @@ import {
   STUDENTS_ADD,
   STUDENTS_EDIT,
   STUDENTS_REMOVE,
+  REMOVE_UNASSIGNED_STUDENTS,
   RESET_STUDENTS,
   StudentsActionType,
 } from '../actions/students'
@@ -60,6 +61,14 @@ export default (
         students: updatedStudents,
       }
     }
+
+    case REMOVE_UNASSIGNED_STUDENTS: {
+      return {
+        ...state,
+        students: state.students.filter(({ teacherId }) => Boolean(teacherId)),
+      }
+    }
+
     case RESET_STUDENTS: {
       return {
         ...state,
