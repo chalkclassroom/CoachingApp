@@ -31,6 +31,7 @@ import {
   editStudent,
   removeStudent,
   resetStudents,
+  removeUnassignedStudents
 } from '../../state/actions/students'
 import type { Student } from '../../state/reducers/students-state'
 import type { RootState } from '../../state/store'
@@ -295,7 +296,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   // eslint-disable-next-line require-jsdoc
-  componentDidMount() {
+  componentDidMount(): void {
+    this.props.removeUnassignedStudents()
     this.props.students.forEach(({id}) => {
       this.props.editStudent({
         id,
@@ -596,6 +598,7 @@ const mapDispatch = {
   updateEngagementCount,
   addStudent,
   editStudent,
+  removeUnassignedStudents,
   removeStudent,
   resetStudents,
 }
