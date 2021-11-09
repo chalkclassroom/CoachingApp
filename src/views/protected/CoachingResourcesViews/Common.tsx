@@ -162,7 +162,7 @@ export function ResourcesLandingAsideContent({ imageImport, label, backgroundCol
     <Card style={{maxWidth: "70%", marginLeft:"15%"}}>
       <LazyLoadedResourceCardMedia imageImport={imageImport}
                                    backgroundColor={backgroundColor}
-                                   backgroundSize={"165px"} />
+                                   backgroundSize={"60%"} />
       <ResourceCardContent>
         <ResourceLabel>{label}</ResourceLabel>
       </ResourceCardContent>
