@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import * as Types from '../../constants/Types';
 import * as Constants from '../../constants/Constants';
+import Firebase from '../Firebase'
 
 const styles: object = {
   root: {
@@ -212,7 +213,7 @@ class TrainingLayout extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Firebase | null): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.main}>
           <Grid container justify="center" alignItems="flex-start" className={classes.grid}>
