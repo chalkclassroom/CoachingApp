@@ -40,7 +40,6 @@ const ratingOptions = [
 ]
 
 interface StudentRatingModalProps {
-  confirmRatingDisabled: boolean
   countdownTime: number
   displayedStudentName: string | null
   fadeInActive: boolean
@@ -68,7 +67,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const StudentRatingModal: React.FC<StudentRatingModalProps> = ({
-  confirmRatingDisabled,
   countdownTime,
   displayedStudentName,
   fadeInActive,
@@ -81,6 +79,7 @@ const StudentRatingModal: React.FC<StudentRatingModalProps> = ({
 }) => {
   const classes = useStyles()
   const [localSelectedRating, setSelectedRating] = useState(selectedRating)
+  const confirmRatingDisabled = localSelectedRating === -1
   return <Dialog open={open} fullWidth maxWidth="md">
     <Grid
       container
