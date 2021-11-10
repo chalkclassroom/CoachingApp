@@ -17,13 +17,13 @@ interface Props {
 function getConceptsUrl(type: LiteracyTypes): string {
   switch (type) {
     case Constants.LiteracyTypes.FOUNDATIONAL:
-      return 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20LI%20FS(CC).mp4?alt=media&token=86c30b5b-130e-4b4f-a11a-618010c488c2'
+      return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Concepts%20LI%20FS(CC).mp4'
     case Constants.LiteracyTypes.WRITING:
-      return 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Writing%20Demonstration_FINAL.mp4?alt=media&token=d1a74b8a-2119-40c7-97bb-97135f0ab0a5'
+      return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Literacy-%20Writing%20Concepts%20(CC)-720p-210713.mp4'
     case Constants.LiteracyTypes.LANGUAGE:
-      return 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Concepts%20LI%20Lang%20(CC).mp4?alt=media&token=b9722bf1-9def-4f68-8f34-bc539d090658'
+      return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Concepts%20LI%20Lang%20(CC).mp4'
     case Constants.LiteracyTypes.READING:
-      return 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Book%20Reading%20Concepts_UPDATED.mp4?alt=media&token=32bf8ecd-0dc5-4080-9c76-c7385627bb72'
+      return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Book%20Reading%20Concepts_UPDATED.mp4'
     default:
       return ''
   }
@@ -32,7 +32,7 @@ function getConceptsUrl(type: LiteracyTypes): string {
 function getDemonstrationUrl(type: LiteracyTypes): string {
   switch (type) {
     case LiteracyTypes.FOUNDATIONAL: {
-      return 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20LI%20FS(CC).mp4?alt=media&token=9786bee0-fe69-471a-bb23-7181d620907d'
+      return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Demo%20LI%20FS(CC).mp4'
     }
     case LiteracyTypes.READING: {
       return 'https://storage.googleapis.com/cqrefpwa.appspot.com/Book%20Reading%20Demo-1080p-211025.mp4'
