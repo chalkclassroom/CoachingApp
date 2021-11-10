@@ -53,9 +53,9 @@ const styles: StyleRulesCallback<Theme, {}> = (theme) => ({
   },
   studentCards: {
     display: 'grid',
+    gridAutoRows: 'min-content',
     gridGap: theme.spacing(2),
     gridTemplateColumns: 'repeat(3, 1fr)',
-    gridTemplateRows: 'fit-content(40%)',
     padding: theme.spacing(4, 2),
   },
   cardRow: {
@@ -481,7 +481,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             <Card
               key={student.id}
               elevation={4}
-              style={{maxHeight: "56.3px"}}
               onClick={(): void => {
                 this.onStudentModalOpen(student)
               }}
