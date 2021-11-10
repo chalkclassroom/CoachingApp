@@ -23,7 +23,7 @@ import { connect, ConnectedProps } from 'react-redux'
 
 import ActivitySettingButtons from './ActivitySettingButtons'
 import SelectActivityModal from './SelectActivityModal'
-import RemoveStudent from './RemoveStudent.tsx'
+import RemoveStudent from './RemoveStudent'
 import StudentRatingModal from './StudentRatingModal'
 import { updateEngagementCount } from '../../state/actions/student-engagement'
 import {
@@ -343,7 +343,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           open={this.state.entryType === -1 && this.state.status === Status.OBSERVATION}
         />
         <StudentRatingModal
-          confirmRatingDisabled={this.state.selectedPoint === -1}
           countdownTime={this.props.time}
           displayedStudentName={this.state.currentStudent?.name ?? null}
           fadeInActive={this.props.background}
