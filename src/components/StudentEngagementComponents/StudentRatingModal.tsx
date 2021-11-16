@@ -45,10 +45,8 @@ interface StudentRatingModalProps {
   fadeInActive: boolean
   observeLabelPrefix: string
   onCloseClick(): void
-  onConfirmRating(): void
-  onSelectRating(rating: number): void
+  onConfirmRating(rating: number): void
   open: boolean
-  selectedRating: number
 }
 
 const useStyles = makeStyles(theme => ({
@@ -73,12 +71,10 @@ const StudentRatingModal: React.FC<StudentRatingModalProps> = ({
   observeLabelPrefix,
   onCloseClick,
   onConfirmRating,
-  onSelectRating,
   open,
-  selectedRating,
 }) => {
   const classes = useStyles()
-  const [localSelectedRating, setSelectedRating] = useState(selectedRating)
+  const [localSelectedRating, setSelectedRating] = useState(-1)
   const confirmRatingDisabled = localSelectedRating === -1
   return <Dialog open={open} fullWidth maxWidth="md">
     <Grid
@@ -222,8 +218,8 @@ const StudentRatingModal: React.FC<StudentRatingModalProps> = ({
             style={{ fontFamily: 'Arimo' }}
             disabled={confirmRatingDisabled}
             onClick={() => {
-              onSelectRating(localSelectedRating);
-              onConfirmRating()
+              setSelectedRating(-1);
+              onConfirmRating(localSelectedRating)
             }}
           >
             CONFIRM RATING
