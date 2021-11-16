@@ -97,7 +97,6 @@ interface State {
   entryType: number
   modal: boolean
   open: boolean
-  selectedPoint: number
   setOpen: boolean
   status: Status
   studentTextFieldValue: string
@@ -148,7 +147,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     setOpen: false,
     studentTextFieldValue: '',
     status: Status.NAME_LIST,
-    selectedPoint: -1,
     entryType: -1,
     entries: 0,
     modal: false,
@@ -203,25 +201,23 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
        })
   }
 
-  handleConfirmRating = (): void => {
+  handleConfirmRating = (rating: number): void => {
     const {
-      selectedPoint,
       currentStudent,
       entryType: entryTypeIndex,
     } = this.state
 
-    if (selectedPoint !== -1 && currentStudent) {
+    if (rating !== -1 && currentStudent) {
       const entryType = entryTypes[entryTypeIndex] || 'none'
 
       const mEntry = {
         id: this.generateHashCodeOfStudent(),
-        point: selectedPoint,
+        point: rating,
         entryType,
       }
 
       this.props.firebase.handlePushSEEachEntry(mEntry)
       this.props.handleTimerReset()
-      this.handleSelectedValue(-1)
 
       this.props.editStudent({
         id: currentStudent.id,
@@ -263,13 +259,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     let i = 0
     if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0
     return h
-  }
-
-  /**
-   * @param {number} point
-   */
-  handleSelectedValue = (point: number): void => {
-    this.setState({ selectedPoint: point })
   }
 
   onStudentModalOpen = (student?: Student): void => {
@@ -334,6 +323,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         alignItems="stretch"
         justify="center"
         direction="column"
+        style={{marginTop:"15px"}}
       >
         <SelectActivityModal
           entryType={this.state.entryType}
@@ -351,20 +341,18 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             this.setState({ modal: false })
             this.props.handleTimerReset()
           }}
-          onConfirmRating={(): void => {
+          onConfirmRating={(selectedValue: number): void => {
             this.handleConfirmRating()
             this.props.incrementVisitCount()
             this.props.handleTimerReset()
             this.setState({ modal: false })
-            if (this.state.selectedPoint > 0) {
+            if (selectedValue > 0) {
               this.props.updateEngagementCount(true)
             } else {
               this.props.updateEngagementCount(false)
             }
           }}
-          onSelectRating={this.handleSelectedValue}
           open={this.state.modal && this.state.status === Status.OBSERVATION}
-          selectedRating={this.state.selectedPoint} 
         />
         <Dialog
           open={this.state.setOpen}
