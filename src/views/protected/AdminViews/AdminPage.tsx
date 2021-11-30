@@ -82,6 +82,21 @@ const handleChange = (
     setSelectedTables(value as string[])
 }
 
+const ISO_DATE_REG = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/.compile()
+
+/**
+ *
+ */
+const maybeTransformForTime = (
+  record: string
+): string => {
+  if (ISO_DATE_REG.test(record)) {
+    return new Date(record).toLocaleString('en-US', { timeZone:'America/New_York'} )
+  } else {
+    return record
+  }
+}
+
 /**
  *
  * @param selectedTables
@@ -111,7 +126,8 @@ const generateExcel = async (
     results.forEach(r => {
         const wsName = r.table
         if (r.data.data) {
-            const wsData = r.data.data.split('\n').map(d => d.split(','))
+            const wsData = r.data.data.split('\n')
+              .map(d => d.split(',').map(r => maybeTransformForTime(r)))
             const ws = xlsx.utils.aoa_to_sheet(wsData)
             xlsx.utils.book_append_sheet(wb, ws, wsName)
         }

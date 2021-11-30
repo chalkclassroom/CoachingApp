@@ -92,9 +92,7 @@ exports.exportBqData = functions.https.onCall(async (data, context) => {
     return ''
   }
 
-
-
-  const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to `
+  const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to order by id`
 
   const options = {
     query: sqlQuery,
