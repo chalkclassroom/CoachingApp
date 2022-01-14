@@ -4,17 +4,8 @@ import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
 
-// Need to find a new place for this...
-// ask Jules about where to put it
-const config = {
-  apiKey: 'AIzaSyB7IUNOBelyA5-rMBSM4PtADvlvUOqe6NU',
-  authDomain: 'cqrefpwa.firebaseapp.com',
-  databaseURL: 'https://cqrefpwa.firebaseio.com',
-  projectId: 'cqrefpwa',
-  storageBucket: 'cqrefpwa.appspot.com',
-  messagingSenderId: '353838544707',
-  measurementId: 'G-S797QZ8L3N',
-}
+
+const config = process.env.FIREBASE_CONFIG
 
 interface TeacherInfo {
   firstName: string
