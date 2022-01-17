@@ -101,7 +101,7 @@
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production",
     "firebase": "firebase emulators:start --only firestore,functions --export-on-exit ./data --import ./data",
-    "localfirebase": " env-cmd -e development emulators:start --only firestore,functions --export-on-exit ./data --import ./data",
+    "localfirebase": "env-cmd -e development firebase emulators:start --only firestore,functions --export-on-exit ./data --import ./data",
     "localdev": "env-cmd -e development webpack-dev-server --mode=development",
     "deploydocs": "npm run doc && firebase target:apply hosting chalkdocs chalkdocs && firebase deploy --only hosting:chalkdocs",
     "deploy": "npm run removebuild && firebase target:apply hosting cqrefpwa cqrefpwa && npm run prod && firebase deploy --only hosting:cqrefpwa",
