@@ -9,7 +9,7 @@ module.exports = {
     "messagingSenderId": "353838544707",
     "measurementId": "G-S797QZ8L3N"
   }`,
-  FIREBASE_PROJECT_ID: 'cqrefpwa'
+  BQ_PROJECT_ID: 'cqrefpwa'
 },
   "development": {
     /*
@@ -25,7 +25,7 @@ module.exports = {
 }`,
     REACT_APP_USE_LOCAL_FIREBASE : true,
     REACT_APP_USE_LOCAL_FUNCTIONS: true,
-    FIREBASE_PROJECT_ID: 'chalk-dev-c6a5d-local'
+    BQ_PROJECT_ID: 'chalk-dev-c6a5d-local'
   },
   "staging": {
 
@@ -37,6 +37,6 @@ module.exports = {
   messagingSenderId: "602770325418",
   appId: "1:602770325418:web:9a2724b5619afe295cf5d3"
 }`,
-    FIREBASE_PROJECT_ID: 'chalk-dev-c6a5d'
+    BQ_PROJECT_ID: 'chalk-dev-c6a5d'
   }
 }
