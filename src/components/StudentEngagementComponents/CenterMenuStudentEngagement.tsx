@@ -200,7 +200,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
       entryType: entryTypeIndex,
     } = this.state
 
-    if (rating !== -1 && currentStudent) {
+    if (rating && rating !== -1 && currentStudent) {
       const entryType = entryTypes[entryTypeIndex] || 'none'
 
       const mEntry = {
