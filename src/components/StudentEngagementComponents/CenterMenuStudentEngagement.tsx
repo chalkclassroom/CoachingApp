@@ -35,6 +35,7 @@ import {
 } from '../../state/actions/students'
 import type { Student } from '../../state/reducers/students-state'
 import type { RootState } from '../../state/store'
+import Firebase from '../Firebase'
 
 const styles: StyleRulesCallback<Theme, {}> = (theme) => ({
   root: {
@@ -72,15 +73,7 @@ type Style = Record<keyof ReturnType<typeof styles>, string>
 interface Props extends PropsFromRedux {
   background: boolean
   classes: Style
-  firebase: {
-    auth: {
-      currentUser: {
-        uid: string
-      }
-    }
-    handleSession(entry: object): void
-    handlePushSEEachEntry(mEntry: object): void
-  }
+  firebase: Firebase
   handleTimerReset(): void
   handleTimerStart(): void
   incrementVisitCount(): void
@@ -342,7 +335,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             this.props.handleTimerReset()
           }}
           onConfirmRating={(selectedValue: number): void => {
-            this.handleConfirmRating()
+            this.handleConfirmRating(selectedValue)
             this.props.incrementVisitCount()
             this.props.handleTimerReset()
             this.setState({ modal: false })

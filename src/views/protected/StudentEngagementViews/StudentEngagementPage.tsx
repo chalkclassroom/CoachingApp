@@ -10,6 +10,7 @@ import Dashboard from '../../../components/Dashboard'
 import TotalVisitCount from '../../../components/TotalVisitCount'
 import TeacherModal from '../HomeViews/TeacherModal'
 import * as Types from '../../../constants/Types'
+import Firebase from '../../../components/Firebase'
 
 /*
     N.B. Time measured in milliseconds.
@@ -251,15 +252,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
               </Grid>
               <Grid className={this.props.classes.contentGrid}>
                 <FirebaseContext.Consumer>
-                  {(firebase: {
-                    auth: {
-                      currentUser: {
-                        uid: string
-                      }
-                    }
-                    handleSession(entry: object): void
-                    handlePushSEEachEntry(mEntry: object): void
-                  }): React.ReactNode => (
+                  {(firebase: Firebase): React.ReactNode => (
                     <CenterMenuStudentEngagement
                       teacherId={this.props.teacherSelected.id}
                       firebase={firebase}
@@ -284,9 +277,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
       </div>
     ) : (
       <FirebaseContext.Consumer>
-        {(firebase: {
-          getTeacherList(): Promise<Types.Teacher[]>
-        }): React.ReactElement => (
+        {(firebase: Firebase): React.ReactElement => (
           <TeacherModal
             handleClose={this.handleCloseTeacherModal}
             firebase={firebase}
