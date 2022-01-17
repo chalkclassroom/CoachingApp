@@ -7,6 +7,7 @@ import TeacherChecklist from '../../../components/ListeningComponents/TeacherChe
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 /* function handleCloseTeacherModal(): void => {
   this.setState({ teacherModal: false })
@@ -33,25 +34,11 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>
-            {(firebase: {
-              auth: {
-                currentUser: {
-                  uid: string
-                }
-              },
-              handleSession(mEntry: {
-                teacher: string,
-                observedBy: string,
-                type: string
-              }): void,
-              handlePushListening(mEntry: {
-                checked: Array<number>
-              }): Promise<void>
-            }): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <TeacherChecklist
                 firebase={firebase}
                 type='LC'
@@ -62,9 +49,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       </div>
     ) : (
       <FirebaseContext.Consumer>
-        {(firebase: {
-          getTeacherList(): Promise<Types.Teacher[]>
-        }): React.ReactElement => (
+        {(firebase: Firebase): React.ReactElement => (
           <TeacherModal
             handleClose={(): void => setTeacherModal(false)}
             firebase={firebase}

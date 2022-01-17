@@ -9,6 +9,7 @@ import DraftView from '../../../components/MessagingComponents/DraftView';
 import SentView from '../../../components/MessagingComponents/SentView';
 import { MenuOptions, MenuOptionsKey, Email } from '../../../components/MessagingComponents/MessagingTypes';
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 // No props to maintain API with other major views
 const MessagingView: React.FC<{}> = () => {
@@ -105,7 +106,7 @@ const MessagingView: React.FC<{}> = () => {
     <Grid container direction="column" style={{height: '100%', display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'auto'}}>
       <Grid item style={{width: '100%'}}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+          {(firebase: Firebase): React.ReactNode => (
             <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>

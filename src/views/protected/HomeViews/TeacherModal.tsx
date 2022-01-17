@@ -68,7 +68,7 @@ type Props = RouteComponentProps & {
   classes: Style,
   type: string,
   history: H.History,
-  firebase?: { getTeacherList(): Promise<Types.Teacher[]> } | null,
+  firebase?: Firebase | null,
   handleClose(): void,
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,

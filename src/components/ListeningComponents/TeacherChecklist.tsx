@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { updateListeningCount } from "../../state/actions/listening-to-children";
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import Firebase from '../Firebase'
 
 
 const styles: object = {
@@ -88,17 +89,7 @@ interface Props {
     contentGrid: string
   },
   type: Types.DashboardType,
-  firebase: {
-    auth: {
-      currentUser: {
-        uid: string
-      }
-    },
-    handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-    handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
-  },
-  teacherSelected: Types.Teacher,
-  updateListeningCount(behavior: boolean): void
+  firebase: Firebase
 }
 
 interface State {

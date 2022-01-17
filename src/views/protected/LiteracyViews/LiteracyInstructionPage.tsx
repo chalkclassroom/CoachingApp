@@ -8,6 +8,7 @@ import Checklist from '../../../components/LiteracyComponents/Checklist';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 interface Props {
   teacherSelected: Types.Teacher
@@ -31,25 +32,11 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>
-            {(firebase: {
-              auth: {
-                currentUser: {
-                  uid: string
-                }
-              },
-              handleSession(mEntry: {
-                teacher: string,
-                observedBy: string,
-                type: string
-              }): void,
-              handlePushListening(mEntry: {
-                checked: Array<number>
-              }): Promise<void>
-            }): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <Checklist
                 firebase={firebase}
                 type='LI'
@@ -62,9 +49,7 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
       </div>
     ) : (
       <FirebaseContext.Consumer>
-        {(firebase: {
-          getTeacherList(): Promise<Types.Teacher[]>
-        }): React.ReactElement => (
+        {(firebase: Firebase): React.ReactElement => (
           <TeacherModal
             handleClose={(): void => setTeacherModal(false)}
             firebase={firebase}
