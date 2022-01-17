@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
-import { withStyles } from '@material-ui/core/styles'
+import { Theme, withStyles } from '@material-ui/core/styles'
 import AppBar from '../../../components/AppBar'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import CenterMenuStudentEngagement from '../../../components/StudentEngagementComponents/CenterMenuStudentEngagement'
@@ -11,6 +11,8 @@ import TotalVisitCount from '../../../components/TotalVisitCount'
 import TeacherModal from '../HomeViews/TeacherModal'
 import * as Types from '../../../constants/Types'
 import Firebase from '../../../components/Firebase'
+import { WithStyles } from '@material-ui/styles'
+import { createStyles } from '@material-ui/core'
 
 /*
     N.B. Time measured in milliseconds.
@@ -23,7 +25,7 @@ import Firebase from '../../../components/Firebase'
 
 const RATING_INTERVAL = 5000
 
-const styles: object = {
+const styles = () => createStyles({
   root: {
     flexGrow: 1,
     backgroundColor: '#ffffff',
@@ -38,9 +40,6 @@ const styles: object = {
     height: '100%',
     paddingTop: '0.5em',
     paddingBottom: '0.5em',
-  },
-  grid: {
-    direction: 'row',
   },
   dashboardGrid: {
     width: '25%',
@@ -65,9 +64,6 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0,
     },
-    grid: {
-      direction: 'column',
-    },
     dashboardGrid: {
       width: '100%',
       height: '25%',
@@ -77,17 +73,9 @@ const styles: object = {
       height: '75%',
     },
   },
-}
+})
 
-interface Props {
-  classes: {
-    root: string
-    grow: string
-    main: string
-    grid: string
-    dashboardGrid: string
-    contentGrid: string
-  }
+interface Props extends WithStyles<typeof styles> {
   teacherSelected: Types.Teacher
 }
 
@@ -111,7 +99,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props)
-
+    this.timer = setTimeout(() => ({}), 100) // fix the uninitialized warning
     this.state = {
       time: RATING_INTERVAL,
       completeEnabled: false,
@@ -187,29 +175,15 @@ class StudentEngagementPage extends React.Component<Props, State> {
     }
   }
 
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    teacherSelected: PropTypes.exact({
-      email: PropTypes.string,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      notes: PropTypes.string,
-      id: PropTypes.string,
-      phone: PropTypes.string,
-      role: PropTypes.string,
-      school: PropTypes.string,
-    }).isRequired,
-  }
-
   /**
    * render function
    * @return {ReactElement}
    */
-  render(): React.ReactElement {
+  render(): React.ReactElement<Props> {
     return this.props.teacherSelected ? (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+          {(firebase: Firebase): React.ReactNode => (
             <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
@@ -218,7 +192,6 @@ class StudentEngagementPage extends React.Component<Props, State> {
             container
             alignItems={'center'}
             justify={'center'}
-            className={this.props.classes.grid}
             style={{ height: '100%' }}
           >
             <Grid

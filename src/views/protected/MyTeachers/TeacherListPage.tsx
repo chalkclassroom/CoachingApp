@@ -37,6 +37,7 @@ import { changeTeacher, updateTeacherInfo, addTeacher, removeTeacher } from '../
 import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
+import Firebase from '../../../components/Firebase'
 
 const localizer = momentLocalizer(moment);
 
@@ -1119,7 +1120,7 @@ class TeacherListPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>

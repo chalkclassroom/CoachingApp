@@ -16,8 +16,11 @@ import StudentEngagementCoachingQuestions
 import TeacherModal from '../HomeViews/TeacherModal';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
+import { WithStyles } from '@material-ui/styles'
+import { createStyles } from '@material-ui/core'
 
-const styles: object = {
+const styles = () => createStyles({
   root: {
     flexGrow: 1,
     height: "100vh",
@@ -25,9 +28,9 @@ const styles: object = {
     overflowY: "auto",
     overflowX: "hidden"
   },
-};
+})
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   classes: Style,
   teacherSelected: Types.Teacher,
   location: {
@@ -449,20 +452,6 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     }
   }
 
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    teacherSelected: PropTypes.exact({
-      email: PropTypes.string,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      notes: PropTypes.string,
-      id: PropTypes.string,
-      phone: PropTypes.string,
-      role: PropTypes.string,
-      school: PropTypes.string
-    }).isRequired
-  };
-
   /**
    * render function
    * @return {ReactNode}
@@ -530,9 +519,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: {
-            getTeacherList(): Promise<Types.Teacher[]>
-          }): React.ReactElement => (
+          {(firebase: Firebase): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}

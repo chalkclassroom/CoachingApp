@@ -15,6 +15,7 @@ import {
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import Firebase from '../../../components/Firebase'
 
 
 const styles: object = {
@@ -114,21 +115,13 @@ class MathInstructionPage extends React.Component<Props, State> {
       this.props.teacherSelected ? (
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <AppBar firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
           <main style={{ flexGrow: 1 }}>
             <FirebaseContext.Consumer>
-              {(firebase: {
-                auth: {
-                  currentUser: {
-                    uid: string
-                  }
-                },
-                handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-                handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
-              }): React.ReactNode => (
+              {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
                   teacher={this.props.teacherSelected}
                   history={this.props.history}

@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
+import Firebase from '../../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -173,7 +174,7 @@ class HomePage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
         </FirebaseContext.Consumer>
         {coachName ? (
           <Grid

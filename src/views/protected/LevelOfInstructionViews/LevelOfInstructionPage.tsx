@@ -9,6 +9,7 @@ import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -138,7 +139,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
       this.props.teacherSelected ? (
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <main className={classes.main}>
             <Grid
