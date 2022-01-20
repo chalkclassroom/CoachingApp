@@ -20,7 +20,7 @@ exports.funcAvgToneRating = functions.https.onCall(async (data, context) => {
     console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
   }
   // The SQL query to run
-  const sqlQuery = `SELECT AVG(toneRating) AS average FROM ${process.env.BQ_PROJECT_ID}.observations.climate WHERE id = '`+data.sessionId+`' AND type = 'rat'`;
+  const sqlQuery = `SELECT AVG(toneRating) AS average FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.climate WHERE id = '`+data.sessionId+`' AND type = 'rat'`;
   console.log(sqlQuery);
 
   const options = {

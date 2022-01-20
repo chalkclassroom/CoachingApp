@@ -28,7 +28,7 @@ exports.funcInstructionTrend = functions.https.onCall(async (data, context) => {
                     COUNT(CASE WHEN instructionType = 'followUp' OR instructionType = 'hlqResponse' THEN 'hlqResponse' ELSE NULL END) AS hlqResponse,
                     COUNT(CASE WHEN instructionType = 'lowLevel' OR instructionType = 'llq' THEN 'llq' ELSE NULL END) AS llq,
                     COUNT(CASE WHEN instructionType = 'specificSkill' OR instructionType = 'llqResponse' THEN 'llqResponse' ELSE NULL END) AS llqResponse,
-                  FROM ${process.env.BQ_PROJECT_ID}.observations.level
+                  FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.level
                   WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
                   GROUP BY dayOfEvent
                   ORDER BY dayOfEvent ASC

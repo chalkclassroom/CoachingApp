@@ -23,7 +23,7 @@ exports.funcTransitionLogNew = functions.https.onCall(async (data, context) => {
   }
   // The SQL query to run
   const sqlQuery = `SELECT transitionStart, transitionEnd, type 
-                    FROM ${process.env.BQ_PROJECT_ID}.observations.transition
+                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.transition
                     WHERE id = '${data.sessionId}'
                     LIMIT 100`;
 

@@ -29,7 +29,7 @@ exports.funcSeqDetails = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
                     COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
                     COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
-                    FROM ${process.env.BQ_PROJECT_ID}.observations.sequential
+                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential
                     WHERE id ='${data.sessionId}'`;
 
   console.log(sqlQuery);

@@ -15,33 +15,33 @@ const bigquery = new BigQuery();
 exports.funcRecentObservations = functions.https.onCall(async(data, context) => {
   //SQL query to get number of checks for each item on checklist
   const userId = context.auth.uid
-  const sqlQuery = `SELECT id, teacher, sessionStart, sessionEnd, 'AC' as type from ${process.env.BQ_PROJECT_ID}.observations.ac AS ac
+  const sqlQuery = `SELECT id, teacher, sessionStart, sessionEnd, 'AC' as type from ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.ac AS ac
     WHERE (ac.observedBy = '/user/${userId}' AND ac.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SA' as type FROM ${process.env.BQ_PROJECT_ID}.observations.sequential AS sequential
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SA' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential AS sequential
     WHERE (sequential.observedBy = '/user/${userId}' AND sequential.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'CC' as type FROM ${process.env.BQ_PROJECT_ID}.observations.climate AS climate
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'CC' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.climate AS climate
     WHERE (climate.observedBy = '/user/${userId}' AND climate.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'TT' as type FROM ${process.env.BQ_PROJECT_ID}.observations.transition AS transition
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'TT' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.transition AS transition
     WHERE (transition.observedBy = '/user/${userId}' AND transition.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'MI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.math AS math
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'MI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.math AS math
     WHERE (math.observedBy = '/user/${userId}' AND math.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'IN' as type FROM ${process.env.BQ_PROJECT_ID}.observations.level AS instruction
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'IN' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.level AS instruction
     WHERE (instruction.observedBy = '/user/${userId}' AND instruction.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LC' as type FROM ${process.env.BQ_PROJECT_ID}.observations.listening AS listening
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LC' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.listening AS listening
     WHERE (listening.observedBy = '/user/${userId}' AND listening.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SE' as type FROM ${process.env.BQ_PROJECT_ID}.observations.engagement AS engagement
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'SE' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.engagement AS engagement
     WHERE (engagement.observedBy = '/user/${userId}' AND engagement.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyFoundationalChild AS literacyFoundationalChild
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyFoundationalChild AS literacyFoundationalChild
     WHERE (literacyFoundationalChild.observedBy = '/user/${userId}' AND literacyFoundationalChild.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyFoundationalTeacher AS literacyFoundationalTeacher
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyFoundationalTeacher AS literacyFoundationalTeacher
     WHERE (literacyFoundationalTeacher.observedBy = '/user/${userId}' AND literacyFoundationalTeacher.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyWritingChild AS literacyWritingChild
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyWritingChild AS literacyWritingChild
     WHERE (literacyWritingChild.observedBy = '/user/${userId}' AND literacyWritingChild.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyWritingTeacher AS literacyWritingTeacher
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyWritingTeacher AS literacyWritingTeacher
     WHERE (literacyWritingTeacher.observedBy = '/user/${userId}' AND literacyWritingTeacher.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyReadingTeacher AS literacyReadingTeacher
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyReadingTeacher AS literacyReadingTeacher
     WHERE (literacyReadingTeacher.observedBy = '/user/${userId}' AND literacyReadingTeacher.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
-    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.observations.literacyLanguageTeacher AS literacyLanguageTeacher
+    UNION DISTINCT SELECT id, teacher, sessionStart, sessionEnd, 'LI' as type FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyLanguageTeacher AS literacyLanguageTeacher
     WHERE (literacyLanguageTeacher.observedBy = '/user/${userId}' AND literacyLanguageTeacher.teacher != '/user/rJxNhJmzjRZP7xg29Ko6')
     ORDER BY sessionStart desc`;
 

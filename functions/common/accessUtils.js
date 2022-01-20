@@ -1,6 +1,6 @@
 const Firestore = require("@google-cloud/firestore");
 
-const PROJECTID = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG).projectId;
+const PROJECTID = process.env.BQ_PROJECT_ID
 const firestore = new Firestore({
     projectId: PROJECTID
 });

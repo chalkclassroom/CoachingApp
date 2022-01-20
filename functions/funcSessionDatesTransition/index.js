@@ -22,7 +22,7 @@ exports.funcSessionDatesTransition = functions.https.onCall(async (data, context
     console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
   }
   // The SQL query to run
-  const sqlQuery = `SELECT DISTINCT id, sessionStart FROM ${process.env.BQ_PROJECT_ID}.observations.${data.type} 
+  const sqlQuery = `SELECT DISTINCT id, sessionStart FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.${data.type} 
 WHERE observedBy = '/user/${context.auth.uid}' AND teacher = '/user/${data.teacherId}' ORDER BY sessionStart DESC LIMIT 100;`;
 
   console.log(sqlQuery);

@@ -14,7 +14,7 @@ exports.fetchAvgToneRating = async (req, res) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
 
   // The SQL query to run fin avg tone rating for specific session id /observation id
-  const sqlQuery = `SELECT AVG(toneRating) AS average FROM ${process.env.BQ_PROJECT_ID}.observations.climate WHERE id = '`+req.query.id+`' AND type = 'rating'`;
+  const sqlQuery = `SELECT AVG(toneRating) AS average FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.climate WHERE id = '`+req.query.id+`' AND type = 'rating'`;
 
   const options = {
     query: sqlQuery,

@@ -31,7 +31,7 @@ exports.funcTransitionTypeSummary = functions.https.onCall(async (data, context)
       SUM(CASE WHEN type = 'behavior management disruption' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS behaviorManagement,
       SUM(CASE WHEN type = 'other' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS other,
 	  SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
-      FROM ${process.env.BQ_PROJECT_ID}.observations.transition
+      FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.transition
       WHERE id = '${data.sessionId}'
 	  LIMIT 100;`;
 

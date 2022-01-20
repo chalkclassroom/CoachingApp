@@ -23,7 +23,7 @@ exports.funcEngagementPieSummary = functions.https.onCall(async(data, context) =
     const sqlQuery = `SELECT
     COUNT(CASE WHEN (point = 0)  THEN 'offTask' ELSE NULL END) AS offTask,
     COUNT(CASE WHEN (point = 1 OR point = 2 OR point = 3) THEN 'engaged' ELSE NULL END) AS engaged,
-    FROM ${process.env.BQ_PROJECT_ID}.observations.engagement
+    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.engagement
     WHERE id ='`+data.sessionId+`'`;
 
     console.log(sqlQuery);

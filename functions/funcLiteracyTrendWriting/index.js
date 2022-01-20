@@ -29,7 +29,7 @@ exports.funcLiteracyTrendWriting = functions.https.onCall(async(data, context) =
                     COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                     COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                     COUNT (sessionStart) AS total,
-                    FROM ${process.env.BQ_PROJECT_ID}.observations.literacyWriting${data.who}
+                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyWriting${data.who}
                     WHERE teacher = @teacher AND observedBy = @coach
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;

@@ -17,7 +17,7 @@ exports.fetchTeacherSeqTrend = async (req, res) => {
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
   COUNT(CASE WHEN seqType = 'nosupport' AND (peopleType = 2) AND (checked = 0 OR checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'nosupport' ELSE NULL END) AS nosupport,
   COUNT(CASE WHEN seqType = 'support' AND (peopleType = 3 OR peopleType = 4) AND (checked = 0 OR checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'support' ELSE NULL END) AS support
-FROM ${process.env.BQ_PROJECT_ID}.observations.sequential
+FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential
 WHERE id = '`+req.query.id+`'
 GROUP BY startDate
 ORDER BY startDate ASC`;

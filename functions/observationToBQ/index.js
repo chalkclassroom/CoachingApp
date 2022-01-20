@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const { BigQuery } = require("@google-cloud/bigquery");
 
 const Firestore = require("@google-cloud/firestore");
-const PROJECTID = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG).projectId;
+const PROJECTID = process.env.BQ_PROJECT_ID
 const COLLECTION_NAME = "observations";
 const firestore = new Firestore({
     projectId: PROJECTID
@@ -24,7 +24,7 @@ exports.observationsToBQ = functions.firestore
             console.log(`Newv value is ${JSON.stringify(newValue)}`);
 
             // perform desired operations ...
-            let datasetName = "observations";
+            let datasetName = process.env.BQ_DATASET;
             let tableName = newValue.type.toLowerCase();
             if (newValue.type === 'LI') {
               tableName = 'literacy' + newValue.checklist;
