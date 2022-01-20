@@ -18,7 +18,7 @@ exports.fetchChildACTrend = async (req, res) => {
   COUNT(CASE WHEN acType = 'noOpportunity' AND (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
   COUNT(CASE WHEN acType = 'ac' AND (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'ac' ELSE NULL END) AS ac,
   COUNT(CASE WHEN acType = 'noac' AND (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checked = 0 THEN 'noac' ELSE NULL END) as noac
-FROM cqrefpwa.observations.ac
+FROM ${process.env.BQ_PROJECT_ID}.observations.ac
 WHERE teacher = '`+req.query.teacher+`'
 GROUP BY startDate
 ORDER BY startDate ASC;`;

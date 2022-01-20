@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const { BigQuery } = require("@google-cloud/bigquery");
 
 const Firestore = require("@google-cloud/firestore");
-const PROJECTID = "cqrefpwa";
+const PROJECTID = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG).projectId;
 const COLLECTION_NAME = "observations";
 const firestore = new Firestore({
     projectId: PROJECTID

@@ -24,7 +24,7 @@ exports.funcChildACSummary = functions.https.onCall(async (data, context) => {
                     COUNT(CASE WHEN (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'ac' ELSE NULL END) AS ac,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checklist.child5) THEN 'noac' ELSE NULL END) AS noac
-                    FROM cqrefpwa.observations.ac
+                    FROM ${process.env.BQ_PROJECT_ID}.observations.ac
                     WHERE id ='`+data.sessionId+`'`;
 
   console.log(sqlQuery);

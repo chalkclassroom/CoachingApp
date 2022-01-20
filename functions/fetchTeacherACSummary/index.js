@@ -17,7 +17,7 @@ exports.fetchTeacherACSummary = async (req, res) => {
   const sqlQuery = `SELECT
   COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checked = 0 OR checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'support' ELSE NULL END) AS support,
   COUNT(CASE WHEN peopleType = 1 OR ((peopleType = 2) AND (checked = 0 OR checked = 1 OR checked = 2 OR checked = 3 OR checked = 4)) THEN 'noSupport' ELSE NULL END) AS noSupport
-FROM cqrefpwa.observations.ac WHERE id = `+req.query.id;
+FROM ${process.env.BQ_PROJECT_ID}.observations.ac WHERE id = `+req.query.id;
 
   const options = {
     query: sqlQuery,

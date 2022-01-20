@@ -22,7 +22,7 @@ exports.funcInstructionTypeCount = functions.https.onCall(async (data, context) 
         console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
     }
     // The SQL query to run
-    const sqlQuery = `SELECT instructionType, COUNT(instructionType) AS count FROM cqrefpwa.observations.level 
+    const sqlQuery = `SELECT instructionType, COUNT(instructionType) AS count FROM ${process.env.BQ_PROJECT_ID}.observations.level 
   WHERE id = '${data.sessionId}' GROUP BY instructionType`;
     console.log(sqlQuery);
 

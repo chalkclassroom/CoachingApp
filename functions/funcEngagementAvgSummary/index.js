@@ -19,7 +19,7 @@ exports.funcEngagementAvgSummary = functions.https.onCall(async(data, context) =
   }else{
     console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
   }
-  const sqlQuery = `SELECT AVG(point) AS average FROM cqrefpwa.observations.engagement WHERE id = '`+data.sessionId+`' AND (point = 0 OR point = 1 OR point = 2 OR point = 3)`;
+  const sqlQuery = `SELECT AVG(point) AS average FROM ${process.env.BQ_PROJECT_ID}.observations.engagement WHERE id = '`+data.sessionId+`' AND (point = 0 OR point = 1 OR point = 2 OR point = 3)`;
 
   console.log(sqlQuery);
 

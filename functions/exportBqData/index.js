@@ -1,11 +1,13 @@
 const { BigQuery } = require('@google-cloud/bigquery')
 const functions = require('firebase-functions')
 const Firestore = require('@google-cloud/firestore')
-const PROJECTID = 'cqrefpwa'
+const PROJECTID = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG).projectId
 const COLLECTION_NAME = 'observations'
 const firestore = new Firestore({
   projectId: PROJECTID,
 })
+
+console.log(process.env.GCLOUD_PROJECT)
 
 const bigquery = new BigQuery()
 
@@ -92,7 +94,7 @@ exports.exportBqData = functions.https.onCall(async (data, context) => {
     return ''
   }
 
-  const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to order by id`
+  const sqlQuery = `select * from ${process.env.BQ_PROJECT_ID}.observations.${table} where sessionStart > @from and sessionEnd < @to order by id`
 
   const options = {
     query: sqlQuery,

@@ -18,7 +18,7 @@ exports.fetchBehaviourTrend = async (req, res) => {
                     DATE(start) AS dayOfEvent, 
                     COUNT(CASE WHEN behaviorResponse = 'specificapproval' THEN 'positive' WHEN behaviorResponse = 'nonspecificapproval' THEN 'positive' ELSE NULL END) AS positive, 
                     COUNT(CASE WHEN behaviorResponse = 'redirection' THEN 'negative' WHEN behaviorResponse = 'disapproval' THEN 'negative' ELSE NULL END) AS negative
-                  FROM cqrefpwa.observations.climate
+                  FROM ${process.env.BQ_PROJECT_ID}.observations.climate
                   WHERE teacher = '`+req.query.teacher+`' AND (type = 'transition' OR type = 'instruction')
                   GROUP BY dayofEvent
                   ORDER BY dayofEvent ASC

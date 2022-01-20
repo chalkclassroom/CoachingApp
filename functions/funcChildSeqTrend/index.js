@@ -25,7 +25,7 @@ exports.funcChildSeqTrend = functions.https.onCall(async(data, context) => {
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                     COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
                     COUNT(CASE WHEN checklist.child5 THEN 'notSequential' ELSE NULL END) as notSequential
-                    FROM cqrefpwa.observations.sequential
+                    FROM ${process.env.BQ_PROJECT_ID}.observations.sequential
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
                     ORDER BY startDate ASC;`;

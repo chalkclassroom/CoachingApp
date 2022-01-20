@@ -23,7 +23,7 @@ exports.funcBehaviourTrend = functions.https.onCall(async (data, context) => {
   }
   // The SQL query to run
   const sqlQuery = `SELECT transitionStart, transitionEnd, type 
-                    FROM cqrefpwa.observations.transition
+                    FROM ${process.env.BQ_PROJECT_ID}.observations.transition
                     WHERE id = '`+data.sessionId+`' AND (type = 'inside' OR type = 'outside')
                     LIMIT 100;`;
 
