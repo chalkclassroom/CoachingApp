@@ -55,7 +55,7 @@ class Firebase {
     this.db = firebase.firestore()
     this.sessionRef = null
     this.query = null
-    if (process.env.USE_LOCAL_FIRESTORE) {
+    if (process.env.USE_LOCAL_AUTH) {
       this.auth.useEmulator("http://localhost:9099");
     }
     if (process.env.USE_LOCAL_FIRESTORE) {

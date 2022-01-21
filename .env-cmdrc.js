@@ -24,6 +24,7 @@ module.exports = {
 }`,
     REACT_APP_USE_LOCAL_FIREBASE : true,
     REACT_APP_USE_LOCAL_FUNCTIONS: true,
+    REACT_APP_USE_LOCAL_AUTH: true,
     BQ_PROJECT_ID: 'chalk-dev-c6a5d',
     BQ_DATASET: 'observations_dev'
   },
