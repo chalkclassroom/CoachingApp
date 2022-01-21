@@ -56,6 +56,9 @@ class Firebase {
     this.sessionRef = null
     this.query = null
     if (process.env.USE_LOCAL_FIRESTORE) {
+      this.auth.useEmulator("http://localhost:9099");
+    }
+    if (process.env.USE_LOCAL_FIRESTORE) {
       this.db.settings({
         host: 'localhost:8080',
         ssl: false,
@@ -424,6 +427,7 @@ class Firebase {
       .catch(error => console.error("Error getting documents: ", error));
   }; */
   getUserInformation = async (): Promise<UserDocument | void> => {
+    console.log(this.auth.currentUser)
     if (this.auth.currentUser) {
       return await this.db
         .collection('users')
