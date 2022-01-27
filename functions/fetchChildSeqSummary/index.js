@@ -17,7 +17,7 @@ exports.fetchChildSeqSummary = async(req, res) => {
   COUNT(CASE WHEN (peopleType = 1) THEN 'noOpp' ELSE NULL END) AS noOpportunity,
   COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'sequential' ELSE NULL END) AS sequential,
   COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checked = 0 THEN 'sequential' ELSE NULL END) AS nonSequential
-FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential
+FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
 WHERE id =` + req.query.id;
 
   const options = {

@@ -23,7 +23,7 @@ exports.funcChildSeqSummary = functions.https.onCall(async(data, context) => {
   const sqlQuery = `SELECT
                     COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
                     COUNT(CASE WHEN (checklist.child5) THEN 'notSequential' ELSE NULL END) AS notSequential
-                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
                     WHERE id ='`+data.sessionId+`'`;
 
   console.log(sqlQuery);

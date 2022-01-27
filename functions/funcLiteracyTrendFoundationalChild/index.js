@@ -30,7 +30,7 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
                     COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                     COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                     COUNT (sessionStart) AS total,
-                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyFoundationalChild
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyFoundationalChild
                     WHERE teacher = @teacher AND observedBy = @coach
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;

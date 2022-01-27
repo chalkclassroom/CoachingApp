@@ -27,7 +27,7 @@ exports.funcListeningDetails = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (checklist.teacher4) THEN 'listening4' ELSE NULL END) AS listening4,
 					          COUNT(CASE WHEN (checklist.teacher5) THEN 'listening5' ELSE NULL END) AS listening5,
                     COUNT(CASE WHEN (checklist.teacher6) THEN 'listening6' ELSE NULL END) AS listening6,
-                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.listening
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.listening
                     WHERE id ='${data.sessionId}'`;
 
     console.log(sqlQuery);

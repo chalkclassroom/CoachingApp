@@ -25,7 +25,7 @@ exports.funcChildSeqTrend = functions.https.onCall(async(data, context) => {
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                     COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
                     COUNT(CASE WHEN checklist.child5 THEN 'notSequential' ELSE NULL END) as notSequential
-                    FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.sequential
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
                     ORDER BY startDate ASC;`;

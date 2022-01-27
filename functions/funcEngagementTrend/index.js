@@ -21,7 +21,7 @@ exports.funcEngagementTrend = functions.https.onCall(async(data, context) => {
   }
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
   AVG(point) AS average  
-  FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.engagement
+  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.engagement
   WHERE (teacher = '/user/${data.teacherId}'
   AND observedBy = '/user/${context.auth.uid}')
   AND (point =0 OR point = 1 OR point = 2 OR point = 3)

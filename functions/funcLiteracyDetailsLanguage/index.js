@@ -29,7 +29,7 @@ exports.funcLiteracyDetailsLanguage = functions.https.onCall(async(data, context
                       COUNT(CASE WHEN (checklist.item6) THEN 'literacy6' ELSE NULL END) AS literacy6,
                       COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                       COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
-                      FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.literacyLanguage${data.who}
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyLanguage${data.who}
                       WHERE id =@id`;
 
     console.log(sqlQuery);

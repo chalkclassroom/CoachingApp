@@ -23,7 +23,7 @@ exports.funcBehaviourTypeCount = functions.https.onCall(async (data, context) =>
   }
 
   // The SQL query to run
-  const sqlQuery = `SELECT behaviorResponse, COUNT(behaviorResponse) AS count FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.climate 
+  const sqlQuery = `SELECT behaviorResponse, COUNT(behaviorResponse) AS count FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.climate 
 	WHERE id = '`+data.sessionId+`' AND (type = 'climate') GROUP BY behaviorResponse`;
   console.log(sqlQuery);
 

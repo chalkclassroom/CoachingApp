@@ -1,10 +1,11 @@
 const Firestore = require("@google-cloud/firestore");
-
-const PROJECTID = process.env.BQ_PROJECT_ID
+const functions = require("firebase-functions")
+const PROJECTID =  functions.config().env.bq_project
 const firestore = new Firestore({
     projectId: PROJECTID
 });
 
+console.log("Project:", PROJECTID)
 const getUserDoc = async userId => {
     return firestore.collection("users").doc(userId)
 }

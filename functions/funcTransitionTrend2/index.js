@@ -27,7 +27,7 @@ exports.funcBehaviourTrend = functions.https.onCall(async (data, context) => {
       SUM(CASE WHEN type = 'outside' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS outside,
       SUM(TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond)) AS total,
       SUM(TIMESTAMP_DIFF(sessionEnd ,sessionStart, millisecond)) AS sessionTotal
-      FROM ${process.env.BQ_PROJECT_ID}.${process.env.BQ_DATASET}.transition
+      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.transition
       WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
       GROUP BY startDate
       ORDER BY startDate ASC
