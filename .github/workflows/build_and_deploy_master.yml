@@ -5,7 +5,7 @@ on:
     types:
       - closed
     branches:
-      - develop
+      - master
 
 jobs:
   build-and-deploy-functions:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
-          ref: develop
+          ref: master
       - name: Use Node.js
         uses: actions/setup-node@v1
       - name: NPM Install Functions
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
-          ref: develop
+          ref: master
       - name: Use Node.js
         uses: actions/setup-node@v1
       - name: NPM Install and Build Frontend
