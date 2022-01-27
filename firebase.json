@@ -1,7 +1,6 @@
 {
-  "hosting": [ {
-    "target": "devcqref",
-    "public": "public",
+  "hosting": {
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -13,47 +12,9 @@
         "destination": "/index.html"
       }
     ]
-  }, {
-    "target": "stagingcqref",
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }, {
-    "target": "cqrefpwa",
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  } , {
-    "target": "chalkdocs",
-    "public": "docs",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
 }

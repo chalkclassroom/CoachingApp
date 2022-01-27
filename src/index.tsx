@@ -1,29 +1,56 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
-import Firebase, { FirebaseContext } from "./components/Firebase";
-import { Provider } from "react-redux";
-import { store } from "./state/store";
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import './index.css'
+import App from './App'
+import Firebase, { FirebaseContext } from './components/Firebase'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from 'react-redux'
+import initializeStore from './state/store'
+import { AppContainer } from 'react-hot-loader'
 
-ReactDOM.render(
-  <Provider store={store}>
-    <FirebaseContext.Provider value={new Firebase()}>
-      <FirebaseContext.Consumer>
-        {firebase => <App firebase={firebase} />}
-      </FirebaseContext.Consumer>
-    </FirebaseContext.Provider>
-  </Provider>,
-  document.getElementById("root")
-);
+const { store, persistor } = initializeStore()
+
+const render = Component => {
+    ReactDOM.render(
+        <AppContainer>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <FirebaseContext.Consumer>
+                        {(firebase:Firebase) => <App firebase={firebase} />}
+                     </FirebaseContext.Consumer>
+                 </PersistGate>
+            </Provider>
+        </AppContainer>,
+        document.getElementById('root'),
+    )
+}
+
+render(App)
+
+// webpack Hot Module Replacement API
+if (module.hot) {
+    // keep in mind - here you are configuring HMR to accept CHILDREN MODULE
+    // while `hot` would configure HMR for the CURRENT module
+    module.hot.accept('./App', () => {
+        // if you are using harmony modules ({modules:false})
+        render(App)
+        // else older browsers need
+        render(require('./App'))
+
+    })
+}
 
 if ('serviceWorker' in navigator) {
-   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').then(registration => {
-       console.log('SW registered: ', registration);
-    }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-     });
-   });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('SW registered: ', registration)
+        }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError)
+        })
+    })
+}
+
+// exposes store when running app in cypress
+if (window.Cypress) {
+    window.store = store
 }
