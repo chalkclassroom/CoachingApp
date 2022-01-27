@@ -5,6 +5,7 @@ import AppBar from '../../components/AppBar';
 import LandingPage from './LandingPage';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import * as Types from '../../constants/Types';
+import Firebase from '../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -35,7 +36,7 @@ class WelcomePage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase}/>}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
           {(firebase: {

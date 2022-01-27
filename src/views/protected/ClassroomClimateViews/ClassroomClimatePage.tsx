@@ -18,6 +18,7 @@ import Countdown from '../../../components/Countdown'
 import EmptyToneRating from '../../../components/ClassroomClimateComponent/EmptyToneRating'
 import TeacherModal from '../HomeViews/TeacherModal'
 import * as Types from '../../../constants/Types'
+import Firebase from '../../../components/Firebase'
 
 /*
     N.B. Time measured in milliseconds.
@@ -229,7 +230,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
         return this.props.teacherSelected ? (
             <div className={this.props.classes.root}>
                 <FirebaseContext.Consumer>
-                    {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+                    {(firebase: Firebase): React.ReactNode => (
                         <AppBar firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>

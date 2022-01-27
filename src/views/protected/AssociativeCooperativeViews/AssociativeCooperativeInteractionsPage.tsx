@@ -15,6 +15,7 @@ import {
 } from "../../../state/actions/associative-cooperative";
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
+import Firebase from '../../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -114,21 +115,13 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
       this.props.teacherSelected ? (
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <AppBar firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
           <main style={{ flexGrow: 1 }}>
             <FirebaseContext.Consumer>
-              {(firebase: {
-                auth: {
-                  currentUser: {
-                    uid: string
-                  }
-                },
-                handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-                handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
-              }): React.ReactNode => (
+              {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
                   teacher={this.props.teacherSelected}
                   history={this.props.history}

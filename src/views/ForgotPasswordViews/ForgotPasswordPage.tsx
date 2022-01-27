@@ -5,6 +5,7 @@ import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import ResetForm from "./ResetForm";
 import * as Types from '../../constants/Types';
+import Firebase from '../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -22,10 +23,6 @@ interface Props {
     root: string,
     grow: string
   }
-}
-
-type FirebaseResetForm = Types.FirebaseAppBar & {
-  resetPassword(email: string): Promise<void>
 }
 
 /**
@@ -46,7 +43,7 @@ class ForgotPasswordPage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: FirebaseResetForm): React.ReactElement => (
+          {(firebase: Firebase): React.ReactElement => (
             <div>
               <AppBar firebase={firebase} />
               <ResetForm firebase={firebase} />

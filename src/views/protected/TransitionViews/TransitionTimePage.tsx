@@ -14,6 +14,7 @@ import Dashboard from "../../../components/Dashboard";
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -207,14 +208,7 @@ class TransitionTimePage extends React.Component<Props, State> {
         <div className={classes.root}>
           {this.state.notes ? (
             <FirebaseContext.Consumer>
-              {(firebase: {
-                handleFetchNotes(): Promise<Array<{
-                  id: string,
-                  content: string,
-                  timestamp: {seconds: number, nanoseconds: number}
-                }>>,
-                handlePushNotes(note: string): Promise<void>
-              }): React.ReactElement => (
+              {(firebase: Firebase): React.ReactElement => (
                 <Notes
                   open={true}
                   onClose={this.handleNotes}
@@ -226,7 +220,7 @@ class TransitionTimePage extends React.Component<Props, State> {
             </FirebaseContext.Consumer>
           ) : (<div />)}
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <main className={classes.main}>
             <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>

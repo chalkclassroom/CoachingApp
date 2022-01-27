@@ -1,19 +1,17 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import ReactRouterPropTypes from 'react-router-prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import PieSummary from './ResultsComponents/PieSummary';
-import {connect} from 'react-redux';
-import { clearTeacher } from "../../state/actions/teacher";
-import { clearEngagementCount } from "../../state/actions/student-engagement";
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import * as Constants from '../../constants/Constants';
-import * as Types from '../../constants/Types';
-import * as H from 'history';
+import * as React from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import PieSummary from './ResultsComponents/PieSummary'
+import { connect } from 'react-redux'
+import { clearTeacher } from '../../state/actions/teacher'
+import { clearEngagementCount } from '../../state/actions/student-engagement'
+import { MuiThemeProvider } from '@material-ui/core/styles'
+import * as Constants from '../../constants/Constants'
+import * as Types from '../../constants/Types'
+import * as H from 'history'
 
 interface Props {
   open: boolean,
@@ -92,14 +90,5 @@ const mapStateToProps = (state: Types.ReduxState): {engagedCount: number, notEng
     notEngagedCount: state.engagementCountState.notEngagedCount
   };
 };
-
-EngagementResultsDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  history: ReactRouterPropTypes.history.isRequired,
-  clearTeacher: PropTypes.func.isRequired,
-  engagedCount: PropTypes.number.isRequired,
-  notEngagedCount: PropTypes.number.isRequired,
-  clearEngagementCount: PropTypes.func.isRequired
-}
 
 export default connect(mapStateToProps, {clearTeacher, clearEngagementCount})(EngagementResultsDialog);

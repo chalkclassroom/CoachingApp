@@ -59,6 +59,7 @@ import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog'
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import Firebase from './Firebase'
 
 const styles: object = {
   card: {
@@ -415,14 +416,7 @@ class Dashboard extends React.Component<Props, State> {
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: {
-              handleFetchNotes(): Promise<Array<{
-                id: string,
-                content: string,
-                timestamp: {seconds: number, nanoseconds: number}
-              }>>,
-              handlePushNotes(note: string): Promise<void>
-            }): React.ReactNode => (
+            {(firebase: Firebase): React.ReactNode => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -505,9 +499,7 @@ class Dashboard extends React.Component<Props, State> {
                 {this.props.completeObservation ? (
                   <Grid item className={classes.completeGrid}>
                     <FirebaseContext.Consumer>
-                      {(firebase: {
-                        endSession(time?: Date): void
-                      }): React.ReactNode => (
+                      {(firebase: Firebase): React.ReactNode => (
                         <YesNoDialog
                           buttonText={<b>COMPLETE OBSERVATION</b>}
                           buttonVariant={"outlined"}

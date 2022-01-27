@@ -11,6 +11,7 @@ import FirebaseContext from '../../components/Firebase/FirebaseContext';
 import AppBar from '../../components/AppBar';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import Firebase from '../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -171,7 +172,7 @@ class TrainingPage extends React.Component<Props, State> {
     return(
       <div>
         <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         <Grid
           container

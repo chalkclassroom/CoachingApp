@@ -13,6 +13,7 @@ import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { Role } from '../../state/actions/coach'
+import Firebase from '../../components/Firebase'
 
 const styles: object = {
   root: {
@@ -135,7 +136,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
       <div className={classes.root}>
         <div>
           <FirebaseContext.Consumer>
-            {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         </div>
         <div style={{flexGrow: 1}}>

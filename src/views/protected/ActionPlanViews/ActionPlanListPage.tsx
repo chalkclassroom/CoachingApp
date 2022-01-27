@@ -25,6 +25,7 @@ import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
 import ActionPlanList from '../../../components/ActionPlanList';
 import * as H from 'history';
 import * as Types from '../../../constants/Types';
+import Firebase from '../../../components/Firebase'
 
 interface Props {
   history: H.History
@@ -66,7 +67,7 @@ class ActionPlanListPage extends React.Component<Props, {}>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid direction="column" justify="center" alignItems="center">
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
