@@ -427,7 +427,6 @@ class Firebase {
       .catch(error => console.error("Error getting documents: ", error));
   }; */
   getUserInformation = async (): Promise<UserDocument | void> => {
-    console.log(this.auth.currentUser)
     if (this.auth.currentUser) {
       return await this.db
         .collection('users')

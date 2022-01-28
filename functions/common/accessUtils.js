@@ -5,7 +5,6 @@ const firestore = new Firestore({
     projectId: PROJECTID
 });
 
-console.log("Project:", PROJECTID)
 const getUserDoc = async userId => {
     return firestore.collection("users").doc(userId)
 }
