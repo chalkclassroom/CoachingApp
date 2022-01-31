@@ -8773,7 +8773,7 @@
     "@google-cloud/firestore" "^4.5.0"
     "@google-cloud/storage" "^5.3.0"
 
-"firebase-functions@^3.11.0":
+"firebase-functions@^3.16.0":
   "integrity" "sha512-6ISOn0JckMtpA3aJ/+wCCGhThUhBUrpZD+tSkUeolx0Vr+NoYFXA0+2YzJZa/A2MDU8gotPzUtnauLSEQvfClQ=="
   "resolved" "https://registry.npmjs.org/firebase-functions/-/firebase-functions-3.16.0.tgz"
   "version" "3.16.0"
