@@ -1,5 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
+const functions = require("firebase-functions");
 
 const {canAccessTeacher} = require('../common/accessUtils')
 // Creates a client
