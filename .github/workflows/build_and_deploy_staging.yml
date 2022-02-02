@@ -12,11 +12,11 @@ jobs:
     name: Build and Deploy Functions
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Source Code
+      - name: Checkout Source Code
       uses: actions/checkout@v2-beta
       with:
-         ref: staging
-    - name: get changed functions
+       ref: staging
+      - name: get changed functions
       id: changed-functions
       uses: tj-actions/changed-files@v14.2
       with:
