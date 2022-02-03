@@ -38,7 +38,7 @@ exports.funcTransitionTrendNew = functions.https.onCall(async (data, context) =>
       SUM(CASE WHEN type = 'behavior management disruption' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) +
       SUM(CASE WHEN type = 'other' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END)) AS total,
       MAX(TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond)) AS sessionTotal
-      FROM cqrefpwa.observations.transition
+      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.transition
       WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
       GROUP BY startDate, id
       ORDER BY startDate ASC

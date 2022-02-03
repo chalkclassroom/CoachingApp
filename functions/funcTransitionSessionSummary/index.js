@@ -25,7 +25,7 @@ exports.funcTransitionSessionSummary = functions.https.onCall(async (data, conte
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                       SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
                       MAX(TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond)) AS sessionTotal
-                    FROM cqrefpwa.observations.transition
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.transition
                     WHERE id = '${data.sessionId}'
                     GROUP BY startDate
                     ORDER BY startDate ASC`;

@@ -14,7 +14,7 @@ exports.fetchSessionDates = async (req, res) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
 
   // The SQL query to run
-  const sqlQuery = `SELECT DISTINCT id, start FROM cqrefpwa.observations.climate WHERE observedBy = '`+req.query.coach+`' AND teacher = '`+req.query.teacher+`' ORDER BY start DESC LIMIT 100`;
+  const sqlQuery = `SELECT DISTINCT id, start FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.climate WHERE observedBy = '`+req.query.coach+`' AND teacher = '`+req.query.teacher+`' ORDER BY start DESC LIMIT 100`;
 
   const options = {
     query: sqlQuery,

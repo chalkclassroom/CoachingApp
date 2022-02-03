@@ -1,6 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
-
+const functions = require("firebase-functions");
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -14,7 +14,7 @@ exports.fetchBehaviourTypeCount = async (req, res) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
 
   // The SQL query to run fin avg tone rating for specific session id /observation id
-  const sqlQuery = `SELECT behaviorResponse, COUNT(behaviorResponse) AS count FROM cqrefpwa.observations.climate WHERE id = '`+req.query.id+`' AND (type = 'transition' OR type = 'instruction') GROUP BY behaviorResponse`;
+  const sqlQuery = `SELECT behaviorResponse, COUNT(behaviorResponse) AS count FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.climate WHERE id = '`+req.query.id+`' AND (type = 'transition' OR type = 'instruction') GROUP BY behaviorResponse`;
 
 
   const options = {

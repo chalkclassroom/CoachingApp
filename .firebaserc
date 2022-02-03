@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "cqrefpwa"
+    "default": "cqrefpwa",
+    "staging": "chalk-dev-c6a5d"
   },
   "targets": {
     "cqrefpwa": {

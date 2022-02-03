@@ -19,7 +19,7 @@ exports.fetchTransitionsTrend = async (req, res) => {
       SUM(CASE WHEN type = 'outside' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS outside,
       SUM(TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond)) AS total,
       SUM(TIMESTAMP_DIFF(sessionEnd ,sessionStart, millisecond)) AS sessionTotal
-      FROM cqrefpwa.observations.transition
+      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.transition
       WHERE teacher = '`+req.query.teacher+`'
       GROUP BY startDate
       ORDER BY startDate ASC;`;

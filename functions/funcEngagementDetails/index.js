@@ -37,7 +37,7 @@ exports.funcEngagementDetails = functions.https.onCall(async(data, context) => {
   COUNT(CASE WHEN (point = 3 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS highlyEngaged1,
   COUNT(CASE WHEN (point = 3 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS highlyEngaged2,
   COUNT(CASE WHEN (point = 3 AND entryType='centers')  THEN 'offTask' ELSE NULL END) AS highlyEngaged3,
-  FROM cqrefpwa.observations.engagement
+  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.engagement
   WHERE id ='`+data.sessionId+`'`;
 
 

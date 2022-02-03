@@ -27,7 +27,7 @@ exports.funcChildACTrend = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'ac' ELSE NULL END) AS ac,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checklist.child5 THEN 'noac' ELSE NULL END) as noac
-                    FROM cqrefpwa.observations.ac
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.ac
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
                     ORDER BY startDate ASC;`;

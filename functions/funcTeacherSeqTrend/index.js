@@ -23,7 +23,7 @@ exports.funcTeacherSeqTrend = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                     COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
                     COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support
-                    FROM cqrefpwa.observations.sequential
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
                     WHERE teacher = '/user/${data.teacherId}' AND observedBy = '/user/${context.auth.uid}'
                     GROUP BY startDate
                     ORDER BY startDate ASC`;

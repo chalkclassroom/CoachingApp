@@ -1,0 +1,84 @@
+name: Deploy staging Branch
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - staging
+
+jobs:
+  build-and-deploy-functions:
+    name: Build and Deploy Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: staging
+      - name: get changed functions
+        id: changed-functions
+        uses: tj-actions/changed-files@v14.2
+        with:
+         files: |
+          functions/*/
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: NPM Install Functions
+        working-directory: ./functions
+        run: |
+          npm install
+        env:
+          CXXFLAGS: -Wno-error
+      - name: set environment variables
+        uses: w9jds/firebase-action@master
+        with:
+            args: 'functions:config:set env.project_id=chalk-dev-c6a5d env.datastore=observations'
+        env:
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+            PROJECT_ID: chalk-dev-c6a5d
+      - name: get changed functions
+        run: |
+            echo "CHANGED_OUTPUT=$(echo "${{steps.changed-functions.outputs.all_changed_files}}" | sed 's/function
+      - name: prepare deploy string
+        run: |
+            echo $CHANGED_OUTPUT
+      - name: Deploy Functions on stage Server
+        uses: w9jds/firebase-action@master
+        if: steps.changed-functions.outputs.any_changed == 'true'
+        with:
+          args: deploy --only ${{env.CHANGED_OUTPUT}}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+          PROJECT_PATH: ./functions
+          PROJECT_ID: staging
+
+  build-and-deploy-fe:
+    name: Build and Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign Author
+        uses: technote-space/assign-author@v1.2.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: staging
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: NPM Install and Build Frontend
+        working-directory: ./
+        run: |
+          yarn install
+          yarn run removebuild
+          yarn run staging
+        env:
+          CXXFLAGS: -Wno-error
+      - name: Deploy on Stage Server
+        uses: w9jds/firebase-action@master
+        with:
+          args: "deploy --only hosting"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+          PROJECT_ID: staging
