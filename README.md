@@ -61,6 +61,10 @@ Launches the test runner in the Cypress Cloud Dashboar<br>
 1. Make sure you are logged in via firebase-tools cli into CQREF Account
 2. run deploy in the command prompt.
 
+### `gcloud functions deploy helloGET --runtime nodejs8 --trigger-http` Deploy Cloud Function
+1. Instead of helloGET substitute with function Folder name
+2. CI/CD Is not done for Cloud Functions so deploy and submit pull request.
+
 ## Learn More
 JSDocumentation is Available at [Chalk Docs](https://chalkdocs.web.app).
 You can learn more about webpack at [Webpack](https://webpack.js.org/).

@@ -1,0 +1,61 @@
+name: Deploy develop branch
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+jobs:
+  build-and-deploy-functions:
+    name: Build and Deploy Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: master
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: NPM Install Functions
+        working-directory: ./functions
+        run: |
+          npm install
+        env:
+          CXXFLAGS: -Wno-error
+      - name: Deploy Functions on Prod Server
+        uses: w9jds/firebase-action@master
+        with:
+          args: "deploy --only functions"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+          PROJECT_PATH: ./functions
+  build-and-deploy-fe:
+    name: Build and Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign Author
+        uses: technote-space/assign-author@v1.2.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: master
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: NPM Install and Build Frontend
+        working-directory: ./
+        run: |
+          yarn install
+          yarn run removebuild
+          yarn run prod
+        env:
+          CXXFLAGS: -Wno-error
+      - name: Deploy on Prod Server
+        uses: w9jds/firebase-action@master
+        with:
+          args: "deploy --only hosting:cqrefpwa"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
