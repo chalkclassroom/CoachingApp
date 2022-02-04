@@ -39,7 +39,7 @@ jobs:
             PROJECT_ID: chalk-dev-c6a5d
       - name: get changed functions
         run: |
-            echo "CHANGED_OUTPUT=$(echo "${{steps.changed-functions.outputs.all_changed_files}}" | sed 's/function
+            echo "CHANGED_OUTPUT=$(echo "${{steps.changed-functions.outputs.all_changed_files}}" | sed 's/functions\/\([[:alpha:]]\+\)\/index.js/\1/g' | sed 's/\([[:alpha:]]\+\)[[:space:]]\?/functions:\1,/g')" >> $GITHUB_ENV
       - name: prepare deploy string
         run: |
             echo $CHANGED_OUTPUT
