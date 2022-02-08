@@ -17,7 +17,9 @@ jobs:
         with:
           ref: master
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: NPM Install Functions
         working-directory: ./functions
         run: |
@@ -44,7 +46,9 @@ jobs:
         with:
           ref: master
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: NPM Install and Build Frontend
         working-directory: ./
         run: |
