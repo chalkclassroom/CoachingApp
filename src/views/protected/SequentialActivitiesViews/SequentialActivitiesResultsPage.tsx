@@ -220,7 +220,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         notSequentialArray.push(Math.round((data.notSequential / (data.notSequential + data.sequential)) * 100));
         sequentialArray.push(Math.round((data.sequential / (data.notSequential + data.sequential)) * 100));
@@ -247,7 +247,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
         supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));

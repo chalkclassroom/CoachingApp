@@ -195,7 +195,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, average: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
           avgArray.push(Math.round((data.average + Number.EPSILON) * 100) / 100);
       });

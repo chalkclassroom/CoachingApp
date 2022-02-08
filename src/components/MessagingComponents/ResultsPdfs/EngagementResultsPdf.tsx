@@ -81,7 +81,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
   } | undefined => {
     if (data && data.trends) {
       const dateArray: Array<Array<string>> = [];
-      data.trends.map(observation => dateArray.push([moment(observation.startDate.value).format("MMM Do")]))
+      data.trends.map(observation => dateArray.push([moment(observation.startDate.value).format("MMM Do YYYY")]))
       return {
         labels: dateArray,
         datasets: [

@@ -220,7 +220,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
         notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
@@ -247,7 +247,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
         noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));

@@ -94,7 +94,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
   } | undefined => {
     if (data) {
       return {
-        labels: data.childTrends ? data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.childTrends ? data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do YYYY")) : [],
         datasets: [
           {
             label: "Non-Math Activities",
@@ -136,7 +136,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
   } | undefined => {
     if (data) {
       return {
-        labels: data.teacherTrends ? data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.teacherTrends ? data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do YYYY")) : [],
         datasets: [
           {
             label: "Teacher Not at Center",

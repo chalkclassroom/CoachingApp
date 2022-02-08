@@ -205,7 +205,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         listeningArray.push(Math.round((data.listening / (data.listening + data.notListening)) * 100));
         notListeningArray.push(Math.round((data.notListening / (data.listening + data.notListening)) * 100));
