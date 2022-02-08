@@ -18,7 +18,7 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
     }else{
         console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
     }
-    const sqlQuery = `SELECT FORMAT_TIMESTAMP('%m/%d/%Y', DATE(sessionStart)) AS startDate,
+    const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                     activitySetting,
                     COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
                     COUNT(CASE WHEN (checklist.item2) THEN 'literacy2' ELSE NULL END) AS literacy2,

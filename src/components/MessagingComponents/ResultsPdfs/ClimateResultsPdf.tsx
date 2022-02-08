@@ -72,7 +72,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
   } | undefined => {
     if (data) {
       return {
-        labels: data.trends ? data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do")) : [],
+        labels: data.trends ? data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do YYYY")) : [],
         datasets: [
           {
             label: "Redirection/Disapproval",
