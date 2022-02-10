@@ -33,7 +33,7 @@ jobs:
       - name: set environment variables
         uses: w9jds/firebase-action@master
         with:
-            args: 'functions:config:set env.project_id=chalk-dev-c6a5d env.datastore=observations'
+            args: 'functions:config:set env.bq_project=chalk-dev-c6a5d env.bq_dataset=observations'
         env:
             FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
             PROJECT_ID: chalk-dev-c6a5d
