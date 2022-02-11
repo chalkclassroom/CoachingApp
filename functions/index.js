@@ -8,6 +8,17 @@ const functions = require('firebase-functions');
 //   response.send("Hello from Firebase!");
 // });
 
+/*
+* In order for these functions to work correctly,
+* the Cloud Functions Invoker role must be set for allUsers.
+* For functions missing this permission,
+* follow the instructions in the temp fix mentioned here:
+* https://github.com/firebase/firebase-functions/issues/646#issuecomment-606044335
+*
+* If any additional environments are created, the Browser API key should be
+* restricted based on HTTP referrers as outlined here
+* https://cloud.google.com/docs/authentication/api-keys?hl=en&visit_id=637801009870730225-1967615930&rd=1#api_key_restrictions
+* */
 
 exports.fetchACDetails = require('./fetchACDetails').fetchACDetails;
 exports.fetchAvgToneRating = require('./fetchAvgToneRating').fetchAvgToneRating;
