@@ -177,7 +177,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
                 <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
                 {teacherData.filter(obj => {
                   return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
-                }).map(a => [a.startDate, a.activitySetting]).map((description: Array<string>, index: number) => {
+                }).map(a => [a.startDate ? a.startDate.value : "", a.activitySetting]).map((description: Array<string>, index: number) => {
                   return(
                     <TableCell
                       key={index}
