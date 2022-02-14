@@ -16,6 +16,12 @@ jobs:
         uses: actions/checkout@v2-beta
         with:
           ref: master
+      - name: get changed functions
+        id: changed-functions
+        uses: tj-actions/changed-files@v14.2
+        with:
+          files: |
+            functions/*/
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
@@ -26,13 +32,28 @@ jobs:
           npm install
         env:
           CXXFLAGS: -Wno-error
-      - name: Deploy Functions on Prod Server
+      - name: set environment variables
         uses: w9jds/firebase-action@master
         with:
-          args: "deploy --only functions"
+          args: 'functions:config:set env.bq_project=cqrefpwa env.bq_dataset=observations'
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+          PROJECT_ID: cqrefpwa
+      - name: get changed functions
+        run: |
+          echo "CHANGED_OUTPUT=$(echo "${{steps.changed-functions.outputs.all_changed_files}}" | sed 's/functions\/\([[:alpha:]]\+\)\/index.js/\1/g' | sed 's/\([[:alpha:]]\+\)[[:space:]]\?/functions:\1,/g')" >> $GITHUB_ENV
+      - name: prepare deploy string
+        run: |
+          echo $CHANGED_OUTPUT
+      - name: Deploy Functions on Prod Server
+        uses: w9jds/firebase-action@master
+        if: steps.changed-functions.outputs.any_changed == 'true'
+        with:
+          args: deploy --only ${{env.CHANGED_OUTPUT}}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
           PROJECT_PATH: ./functions
+          PROJECT_ID: cqrefpwa
   build-and-deploy-fe:
     name: Build and Deploy Frontend
     runs-on: ubuntu-latest
