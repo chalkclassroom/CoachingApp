@@ -35,7 +35,7 @@ jobs:
       - name: set environment variables
         uses: w9jds/firebase-action@master
         with:
-          args: 'functions:config:set env.bq_project=chalk env.bq_dataset=observations'
+          args: 'functions:config:set env.bq_project=cqrefpwa env.bq_dataset=observations'
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
           PROJECT_ID: cqrefpwa
