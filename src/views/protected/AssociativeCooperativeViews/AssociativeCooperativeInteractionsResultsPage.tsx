@@ -255,7 +255,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
         noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
@@ -284,7 +284,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, nosupport: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
         ]);
         noSupportArray.push(Math.round((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
         supportArray.push(Math.round((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));

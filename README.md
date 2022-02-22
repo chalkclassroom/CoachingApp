@@ -19,15 +19,27 @@ To learn, check out the [How to Create Pull Requests](https://help.github.com/en
 
 ### `First Run for Development?`
 ### `RUN`
-    1. npm run install
-    2. npm run prod
-    3. npm run livedev
+    1. npm install
+    2. npm run firebase:local
+    3. npm run localdev
+
+`npm run firebase:local` will configure and start the Firebase emulator suite. 
+On your first run, you  will need to open the emulator suite and add yourself as a user. 
+Any data you modify will be saved locally for future use.
 
 In the project directory, you can run:
 
 ### `npm run livedev`
 
 Dev server will run which will watch if any file changes and updates instantly.
+
+### `npm run localdev`
+
+Will start the live development server preconfigured with the environment information needed to connect to the Firebase emulators.
+
+### `npm run firebase:local`
+
+Configures the Firebase emulator suite for local development and starts the emulators.
 
 ### `npm run prod`
 

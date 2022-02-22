@@ -164,7 +164,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       dataSet.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
+          moment(data.startDate.value).format("MMM Do YYYY"),
           formattedTime
         ]);
         lineArray.push(Math.round(data.line / data.sessionTotal * 100));
