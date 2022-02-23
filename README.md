@@ -77,6 +77,9 @@ Launches the test runner in the Cypress Cloud Dashboar<br>
 1. Instead of helloGET substitute with function Folder name
 2. CI/CD Is not done for Cloud Functions so deploy and submit pull request.
 
+## Creating New Environments
+When setting up a new environment, including locally, ensure that a practice teacher exists in the database with the ID rJxNhJmzjRZP7xg29Ko6.
+
 ## Learn More
 JSDocumentation is Available at [Chalk Docs](https://chalkdocs.web.app).
 You can learn more about webpack at [Webpack](https://webpack.js.org/).
