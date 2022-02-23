@@ -128,17 +128,26 @@ class NewUserPage extends React.Component<Props, State>{
         }
         const randomString = Math.random().toString(36).slice(-8)
         await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
-            .then(() => randomString).catch(e => {
+            .then(() => {
+              this.setState({
+                createdPassword: randomString
+              });
+              return randomString
+            }).catch(e => {
+                this.setState({
+                  createdPassword: undefined
+                });
                 console.log(e)
                 alert('Unable to create user. Please try again')
+            }).finally(() => {
+                this.setState({ // Hold off setting new state until success has been determined
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  role: Role.ANONYMOUS,
+                });
             });
-        this.setState({
-            firstName: '',
-            lastName: '',
-            email: '',
-            role: Role.ANONYMOUS,
-            createdPassword: randomString
-        });
+
 
 
     }
@@ -176,7 +185,7 @@ class NewUserPage extends React.Component<Props, State>{
                 {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
             </FirebaseContext.Consumer>
             {createdPassword  &&
-            <Alert severity={'success'}>User {email} has been created with password {createdPassword}</Alert>}
+            <Alert severity={'success'}>User has been created with password {createdPassword}</Alert>}
             <div className={classes.formContainer}>
                 <Grid container
                       direction="column"

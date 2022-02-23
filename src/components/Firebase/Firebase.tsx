@@ -129,36 +129,55 @@ class Firebase {
     role: string
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
-    const userInfo = await secondFirebase
-      .auth()
-      .createUserWithEmailAndPassword(userData.email, userData.password)
-    if (userInfo.user) {
-      console.log('Create user and sign in Success', userInfo)
-      const data = {
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        role: role,
-        id: userInfo.user ? userInfo.user.uid : '',
-      }
-      const docRef = firebase
-        .firestore()
-        .collection('users')
-        .doc(userInfo.user.uid)
-      docRef.set(data).then(() => {
-        docRef
-          .collection('partners')
-          .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
-          .set({})
-          .then(() => console.log('Practice Teacher added to new user'))
-          .catch((error: Error) =>
-            console.error(
-              'Error occurred while assigning practice teacher to coach: ',
-              error
-            )
-          )
+    // Added emulators for local testing
+    if(process.env.USE_LOCAL_AUTH) {
+      console.log('using local Auth');
+      secondFirebase.auth().useEmulator("http://localhost:9099");
+    }
+    if(process.env.use_LOCAL_FIRESTORE) {
+      secondFirebase.firestore().settings({
+        host: 'localhost:8080',
+        ssl: false,
       })
     }
+    try {
+      const userInfo = await secondFirebase
+        .auth()
+        .createUserWithEmailAndPassword(userData.email, userData.password)
+      if (userInfo.user) {
+        console.log('Create user and sign in Success', userInfo)
+        const data = {
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          role: role,
+          id: userInfo.user ? userInfo.user.uid : '',
+        }
+        const docRef = firebase
+          .firestore()
+          .collection('users')
+          .doc(userInfo.user.uid)
+        docRef.set(data).then(() => {
+          docRef
+            .collection('partners')
+            .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
+            .set({})
+            .then(() => console.log('Practice Teacher added to new user'))
+            .catch((error: Error) =>
+              console.error(
+                'Error occurred while assigning practice teacher to coach: ',
+                error
+              )
+            )
+        })
+      }
+    } catch (e) {
+      console.log("An Error occurred when creating the user:")
+      throw new Error(e) // Raise error to caller; prevents recreating password in NewUser
+    } finally {
+      secondFirebase.delete() // Frees resources for any subsequent users created
+    }
+
   }
 
   /**
