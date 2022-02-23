@@ -134,19 +134,19 @@ class NewUserPage extends React.Component<Props, State>{
               });
               return randomString
             }).catch(e => {
-            this.setState({
-              createdPassword: undefined
-            });
+                this.setState({
+                  createdPassword: undefined
+                });
                 console.log(e)
                 alert('Unable to create user. Please try again')
             }).finally(() => {
-            this.setState({ // Hold off setting new state until success has been determined
-              firstName: '',
-              lastName: '',
-              email: '',
-              role: Role.ANONYMOUS,
+                this.setState({ // Hold off setting new state until success has been determined
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  role: Role.ANONYMOUS,
+                });
             });
-          });
 
 
 

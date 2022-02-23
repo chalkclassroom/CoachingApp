@@ -131,9 +131,15 @@ class Firebase {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
     if(process.env.USE_LOCAL_AUTH) {
-      console.log('using local Auth')
-      secondFirebase.auth().useEmulator("http://localhost:9099");}
-    if(process.env.use_LOCAL_FIRESTORE) {secondFirebase.firestore().settings({host: 'localhost:8080', ssl: false,})}
+      console.log('using local Auth');
+      secondFirebase.auth().useEmulator("http://localhost:9099");
+    }
+    if(process.env.use_LOCAL_FIRESTORE) {
+      secondFirebase.firestore().settings({
+        host: 'localhost:8080',
+        ssl: false,
+      })
+    }
     try {
       const userInfo = await secondFirebase
         .auth()
