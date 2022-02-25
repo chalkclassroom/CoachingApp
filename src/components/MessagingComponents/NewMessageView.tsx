@@ -828,7 +828,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         heightLeft -= pageHeight;
       }
       // use this for downloading pdf
-      pdf.save("download.pdf");
+      // pdf.save("download.pdf");
       const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
       const reader = new FileReader();
       reader.readAsDataURL(blobPDF);
