@@ -49,8 +49,9 @@ const styles: object = {
   },
   list: {
     width: "100%",
-    height: "500",
-    backgroundColor: 'white'
+    maxHeight: "500px",
+    backgroundColor: 'white',
+    overflowY: "auto",
   },
   inline: {
     display: "inline"
