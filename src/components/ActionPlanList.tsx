@@ -483,9 +483,9 @@ class ActionPlanList extends React.Component<Props, State> {
             achieveBy = row.achieveBy.toDate()
         }
         const isItemSelected = this.isSelected(row.id)
-        const newDate = new Date(0)
-        newDate.setUTCSeconds(row.date.seconds)
-        row.modified = newDate
+        // const newDate = new Date(0)
+        // newDate.setUTCSeconds(row.date.seconds)
+        // row.modified = newDate
         row.name = row.teacherLastName + ', ' + row.teacherFirstName
         return (
             <TableRow key={index} selected={isItemSelected}>
