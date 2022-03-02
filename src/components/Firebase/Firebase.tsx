@@ -153,6 +153,22 @@ class Firebase {
           role: role,
           id: userInfo.user ? userInfo.user.uid : '',
         }
+        // Create the Practice Teacher if it does not currently exist
+        let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
+        if(!practiceTeacher.exists) {
+          firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6')
+            .set({
+              firstName: 'Practice',
+              lastName: 'Teacher',
+              school: 'Elum Entaree School',
+              email: 'practice@teacher.edu',
+              notes: "Notes are a useful place to put highlights or reminders!",
+              role: "teacher",
+              phone: '012-345-6789',
+              id: 'rJxNhJmzjRZP7xg29Ko6'
+            })
+
+        }
         const docRef = firebase
           .firestore()
           .collection('users')
