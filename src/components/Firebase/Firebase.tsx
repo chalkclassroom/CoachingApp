@@ -325,6 +325,7 @@ class Firebase {
           return doc.data()
         } else {
           console.log("Partner's ID is 'undefined' in dB.")
+          return ({id: null})
         }
       })
       .catch((error: Error) =>
