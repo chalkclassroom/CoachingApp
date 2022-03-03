@@ -1052,6 +1052,7 @@ class Firebase {
     this.sessionRef = this.db.collection('observations').doc(sessionId)
     return this.sessionRef
       .collection('notes')
+      .orderBy('Timestamp')
       .get()
       .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const notesArr: Array<Note> = []
