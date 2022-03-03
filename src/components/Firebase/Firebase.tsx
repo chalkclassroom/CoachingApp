@@ -2752,6 +2752,7 @@ class Firebase {
     teacherId: string
     date: { seconds: number; nanoseconds: number }
     practice: string
+    modified: number
     teacherFirstName: string
     teacherLastName: string
     achieveBy: firebase.firestore.Timestamp
@@ -2769,10 +2770,12 @@ class Firebase {
             date: { seconds: number; nanoseconds: number }
             practice: string
             teacherFirstName: string
+            modified: number
             teacherLastName: string
             achieveBy: firebase.firestore.Timestamp
           }> = []
-          querySnapshot.forEach(doc =>
+          querySnapshot.forEach(doc => {
+           // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
             idArr.push({
               id: doc.id,
               teacherId: doc.data().teacher,
@@ -2780,10 +2783,12 @@ class Firebase {
               teacherLastName: '',
               practice: doc.data().tool,
               date: doc.data().dateModified,
+              modified: new Date(0).setUTCSeconds(doc.data().dateModified.seconds),
               achieveBy: doc.data().goalTimeline
                 ? doc.data().goalTimeline
                 : firebase.firestore.Timestamp.fromDate(new Date()),
             })
+          }
           )
           console.log('idArr is2 ', idArr)
           return idArr

@@ -76,7 +76,7 @@ class ActionPlanListPage extends React.Component<Props, {}>{
             </Typography>
           </Grid>
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Grid container justify="center" alignItems="center" style={{maxHeight: '60vh', paddingLeft: '5em', paddingRight: '5em', overflow: 'auto'}}>
+            <Grid container justify="center" alignItems="center" style={{maxHeight: '70vh', paddingLeft: '5em', paddingRight: '5em', overflow: 'auto'}}>
               <ActionPlanList onClick={this.handleChooseActionPlan}/>
             </Grid>
           </Grid>
