@@ -199,8 +199,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
       currentStudent,
       entryType: entryTypeIndex,
     } = this.state
-// Not what sure rating !== -1 is for, but rating >= 0 will catch any null or undefined values
-    if (rating >= 0 && rating !== -1 && currentStudent) {
+    if (rating >= 0 && currentStudent) {
       const entryType = entryTypes[entryTypeIndex] || 'none'
 
       const mEntry = {
