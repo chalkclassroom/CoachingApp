@@ -2,6 +2,7 @@ import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AnytimeIconImage from '../../assets/images/AnytimeIconImage.svg';
+import SuggestedDuration from "../Shared/SuggestedDuration";
 
 /**
  * reminders for student engagement observation
@@ -11,8 +12,9 @@ export default function StudentEngagementObservationPopUp(): React.ReactElement 
   return (
     <div>
       <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item style={{paddingTop: '1em'}}>
-          <Typography variant="h6" align="left">
+        <Grid item style={{paddingTop: '1em'}} >
+          <Typography variant="h6" align="left"  style={{fontFamily: 'Arimo'}}>
+            <SuggestedDuration/>
             <ul>
               <li>
                 Observe each child for 3 seconds.

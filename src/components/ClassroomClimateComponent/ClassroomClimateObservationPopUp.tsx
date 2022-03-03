@@ -2,6 +2,7 @@ import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AnytimeIconImage from '../../assets/images/AnytimeIconImage.svg';
+import SuggestedDuration from "../Shared/SuggestedDuration";
 
 /**
  * reminders for classroom climate observation
@@ -12,10 +13,11 @@ export default function ClassroomClimateObservationPopUp(): React.ReactElement {
     <div>
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item style={{paddingTop: '1em'}}>
-          <Typography variant="h6" align="left">
+          <Typography variant="h6" align="left"  style={{fontFamily: 'Arimo'}}>
+            <SuggestedDuration />
             As you observe, select
           </Typography>
-          <Typography variant="h6" align="left">
+          <Typography variant="h6" align="left"  style={{fontFamily: 'Arimo'}}>
             <ul>
               <li>
                 teachers&apos; behaviors from the options provided
