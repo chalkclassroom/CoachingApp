@@ -241,9 +241,9 @@ class ResultsLayout extends React.Component<Props, State> {
         this.setState({ notesModal: false })
     }
 
-    onActionPlanModalOpen = async (): Promise<boolean> => {
+    onActionPlanModalOpen =  (): Promise<boolean> => {
       this.setState({actionPlanModalOpen: true})
-      return new Promise<boolean>((resolve: (value: boolean) => Promise<boolean>, reject): void => {
+      return new Promise<boolean>((resolve: (value: boolean) => boolean, reject): void => {
         this.setState({awaitingConfirmationRef: {resolve}})
       })
     }
@@ -274,7 +274,7 @@ class ResultsLayout extends React.Component<Props, State> {
       if(!(this.state.view === 'actionPlan') || this.state.actionPlanFormSaved) {
         return Promise.resolve(true)
       }
-      return await this.onActionPlanModalOpen();
+      return  this.onActionPlanModalOpen();
     }
 
     // eslint-disable-next-line require-jsdoc
