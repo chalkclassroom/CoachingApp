@@ -136,7 +136,7 @@ function StudentEngagementHelpCard(props: Props): React.ReactElement {
           </TableRow>
           <TableRow>
             <TableCell className={classes.childExample1}>
-              Looks at what other children are doing with little interest
+              Engages in challenging behavior
             </TableCell>
             <TableCell className={classes.childExample2}/>
             <TableCell className={classes.childExample3}/>
