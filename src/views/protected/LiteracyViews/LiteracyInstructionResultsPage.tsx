@@ -15,7 +15,7 @@ import LiteracyDetailsReading from '../../../components/LiteracyComponents/Resul
 import LiteracyTrendsReading from '../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsReading'
 import LiteracyDetailsLanguage from '../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsLanguage'
 import LiteracyTrendsLanguage from '../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsLanguage'
-import TrendsSlider from '../../../components/LiteracyComponents/ResultsComponents/TrendsSlider'
+import TrendsTabs from '../../../components/LiteracyComponents/ResultsComponents/TrendsTabs'
 import LiteracyCoachingQuestions
   from '../../../components/LiteracyComponents/ResultsComponents/LiteracyCoachingQuestions'
 import FadeAwayModal from '../../../components/FadeAwayModal'
@@ -917,7 +917,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               ) : this.props.location.state.type === Constants.LiteracyTypes.LANGUAGE ? (
                 <LiteracyTrendsLanguage data={this.state.teacherTrends} who={'Teacher'} />
               ) : (
-                <TrendsSlider type={this.props.location.state.type} teacherData={this.state.teacherTrends} childData={this.state.childTrends} />
+                <TrendsTabs type={this.props.location.state.type} teacherData={this.state.teacherTrends} childData={this.state.childTrends} />
               )
             }
             changeSessionId={this.changeSessionId}

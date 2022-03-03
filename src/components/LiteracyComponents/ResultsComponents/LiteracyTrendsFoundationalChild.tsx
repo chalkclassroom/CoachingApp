@@ -229,7 +229,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
                 }).map(a => a.total).map((total: number, index: number) => (
                   <TableCell
                     key={index}
-                    align={'right'}
+                    align={'center'}
                     width="20%"
                     style={{ fontWeight: 'bold'}}
                   >
