@@ -98,6 +98,18 @@ const useStyles = makeStyles({
     fontFamily: 'Arimo'
   },
 
+  tableWrapper: {
+    maxHeight: '55.5vh',
+    overflowY: "scroll",
+  },
+
+
+  "@media only screen and (orientation: portrait)": {
+    tableWrapper: {
+      maxHeight: '57vh'
+    }
+  },
+
   // iPad Pro 12.9" Portrait
   "@media only screen and (max-width:1024px) and (orientation:portrait)": {
     tableContainer: {
@@ -160,7 +172,8 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
         </Grid>
       </Grid>
       <Grid item style={{paddingTop: '1em'}}>
-        <Table style={{overflowY: 'auto'}}>
+        <Grid className={classes.tableWrapper}>
+          <Table style={{overflowY: 'auto'}} stickyHeader={true}>
           <TableHead>
             <TableRow>
               <TableCell className={classes.nameCellHeader}>
@@ -175,42 +188,47 @@ export default function MyTeachersTable(props: Props): React.ReactElement {
               <TableCell className={classes.nameCellHeader}>
                 Date
               </TableCell>
+              <TableCell className={classes.nameCellHeader}>
+                Latest Observation
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {teacherDetails.sort(((a, b) => new Date(b.start).valueOf() - new Date(a.start).valueOf())).map((teacher, index) => {
               return (
-              <TableRow
-                className={classes.row}
-                key={index}
-                onClick={(): void => selectTeacher(teacher)}
-              >
-                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {teacher.lastName}
-                </TableCell>
-                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {teacher.firstName}
-                </TableCell>
-                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {teacher.title ? teacher.title : 'N/A'}
-                </TableCell>
-                <TableCell className={classes.nameField} style={{width: '22%'}}>
-                  {teacher.start ? (moment(new Date(teacher.start)).format('MM/DD/YYYY')) : ('N/A')
-                }
-                </TableCell>
-                <TableCell className={classes.nameField}>
-                  <Grid container direction="row" justify="center" alignItems="center">
-                    {teacher.type ? (<img
-                      src={ToolIcons[teacher.type]}
-                      alt="Icon"
-                      style={{maxWidth: '4em'}}
-                    />) : null}
-                  </Grid>
-                </TableCell>
-              </TableRow>
-            )})}
+                <TableRow
+                  className={classes.row}
+                  key={index}
+                  onClick={(): void => selectTeacher(teacher)}
+                >
+                  <TableCell className={classes.nameField} style={{width: '22%'}}>
+                    {teacher.lastName}
+                  </TableCell>
+                  <TableCell className={classes.nameField} style={{width: '22%'}}>
+                    {teacher.firstName}
+                  </TableCell>
+                  <TableCell className={classes.nameField} style={{width: '22%'}}>
+                    {teacher.title ? teacher.title : 'N/A'}
+                  </TableCell>
+                  <TableCell className={classes.nameField} style={{width: '22%'}}>
+                    {teacher.start ? (moment(new Date(teacher.start)).format('MM/DD/YYYY')) : ('N/A')
+                    }
+                  </TableCell>
+                  <TableCell className={classes.nameField}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      {teacher.type ? (<img
+                        src={ToolIcons[teacher.type]}
+                        alt="Icon"
+                        style={{maxWidth: '4em'}}
+                      />) : null}
+                    </Grid>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
+        </Grid>
       </Grid>
     </Grid>
   )
