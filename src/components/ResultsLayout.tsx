@@ -158,7 +158,7 @@ interface State {
     actionPlanFormSaved: boolean
     actionPlanModalOpen: boolean
     nextView: string | null
-    awaitingConfirmationRef: { resolve: (discard: boolean) => Promise<boolean> } | null
+    awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
 
 /**
@@ -243,7 +243,7 @@ class ResultsLayout extends React.Component<Props, State> {
 
     onActionPlanModalOpen =  (): Promise<boolean> => {
       this.setState({actionPlanModalOpen: true})
-      return new Promise<boolean>((resolve: (value: boolean) => boolean, reject): void => {
+      return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
         this.setState({awaitingConfirmationRef: {resolve}})
       })
     }
@@ -274,7 +274,7 @@ class ResultsLayout extends React.Component<Props, State> {
       if(!(this.state.view === 'actionPlan') || this.state.actionPlanFormSaved) {
         return Promise.resolve(true)
       }
-      return  this.onActionPlanModalOpen();
+      return this.onActionPlanModalOpen();
     }
 
     // eslint-disable-next-line require-jsdoc
