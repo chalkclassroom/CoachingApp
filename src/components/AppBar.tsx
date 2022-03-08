@@ -131,6 +131,7 @@ type Props = RouteComponentProps & {
   firebase?: Firebase | null,
   history: H.History,
   noBack?: boolean
+  preBack?: () => Promise<boolean>
 }
 
 interface State {
@@ -213,7 +214,8 @@ class AppBar extends React.Component<Props, State> {
     }).isRequired,
     firebase: PropTypes.object,
     history: ReactRouterPropTypes.history,
-    noBack: PropTypes.bool
+    noBack: PropTypes.bool,
+    preBack: PropTypes.func
   }
 
   /**
@@ -221,7 +223,7 @@ class AppBar extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, preBack = () => Promise.resolve(true) } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
         <div>
@@ -260,7 +262,11 @@ class AppBar extends React.Component<Props, State> {
                           color="inherit"
                           aria-label="menu"
                           className={classes.menuButton}
-                          onClick={(): void => this.props.history.goBack()}
+                          onClick={async (): void => {
+                            if(await preBack()) {
+                              this.props.history.goBack()
+                            }
+                          }}
                         >
                           <BackIcon
                             color="secondary"

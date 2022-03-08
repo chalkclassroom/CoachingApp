@@ -1445,7 +1445,7 @@ const questionBank = {
     },
     // 3 - Relating the book to children’s experiences inside and/or outside the classroom
     {
-      text: "Before reading a book about a young boy who is nervous about being a ring bearer at his mother’s wedding, the teacher asks children if they have even been to a wedding and what they remember. Which behavior is this?",
+      text: "Before reading a book about a young boy who is nervous about being a ring bearer at his mother’s wedding, the teacher asks children if they have ever been to a wedding and what they remember. Which behavior is this?",
       options: new Map([
         ["Using multimodal instruction", false],
         ["Relating the book to children’s experiences inside and/or outside the classroom", true],

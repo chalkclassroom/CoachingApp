@@ -49,7 +49,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
       <HorizontalBar
         data={avgEngagementData}
         width={650}
-        height={50}
+        height={160}
         options={{
           animation: {
             onComplete: function(): void {

@@ -46,7 +46,7 @@
     "logrocket-react": "^3.0.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
-    "nanoid": "^3.1.25",
+    "nanoid": "^3.1.31",
     "pretty-ms": "^4.0.0",
     "prop-types": "latest",
     "rc-progress": "^3.1.4",

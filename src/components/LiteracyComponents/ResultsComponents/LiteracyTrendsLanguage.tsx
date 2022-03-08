@@ -174,15 +174,15 @@ export default function LiteracyTrendsLanguage(props: Props) {
                 <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
                 {data.filter(obj => {
                   return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
-                }).map(a => [a.startDate ? a.startDate.value : "", a.activitySetting]).map((description: Array<string>, index: number) => {
+                }).map(a => [a.startDate ? a.startDate : "", a.activitySetting]).map((description: Array<string>, index: number) => {
                   return(
                     <TableCell
                       key={index}
-                      align='right'
+                      align='center'
                       padding='none'
                       style={{ minWidth: 90, paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%'}}
                     >
-                      <Grid container direction="column" alignItems="flex-end" justify="center" style={{height: '100%'}}>
+                      <Grid container direction="column" alignItems="center" justify="center" style={{height: '100%'}}>
                         <Grid item>
                           {description[1]}
                         </Grid>
@@ -209,7 +209,7 @@ export default function LiteracyTrendsLanguage(props: Props) {
                     return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
                   }).map(a => a[checklistItem as sampleDataKey]).map((literacy: (number), index2: number) => {
                     return (
-                      <TableCell key={index2} width="20%" align='right' style={{backgroundColor: row.backgroundColor, width: '20%'}}>
+                      <TableCell key={index2} width="20%" align='center' style={{backgroundColor: row.backgroundColor, width: '20%'}}>
                         {view === 'number' ? literacy : (Math.round((literacy/data[index2].total)*100))+'%'}
                       </TableCell>
                     );
@@ -228,7 +228,7 @@ export default function LiteracyTrendsLanguage(props: Props) {
                 }).map(a => a.total).map((total: number, index: number) => (
                   <TableCell
                     key={index}
-                    align={'right'}
+                    align={'centerx'}
                     width="20%"
                     style={{ fontWeight: 'bold'}}
                   >
