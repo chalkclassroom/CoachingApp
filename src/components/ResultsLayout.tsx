@@ -158,6 +158,7 @@ interface State {
     actionPlanFormSaved: boolean
     actionPlanModalOpen: boolean
     nextView: string | null
+    awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
 
 /**
@@ -181,13 +182,14 @@ class ResultsLayout extends React.Component<Props, State> {
             notesModal: false,
             actionPlanFormSaved: true,
             actionPlanModalOpen: false,
+            awaitingConfirmationRef: null
         }
     }
 
     /**
      * @param {string} name
      */
-    viewClick = (name: string): void => {
+    viewClick = async (name: string): void => {
         if (this.state.view === 'actionPlan' &&
             name !== 'actionPlan' &&
             !this.state.actionPlanFormSaved) {
@@ -195,6 +197,7 @@ class ResultsLayout extends React.Component<Props, State> {
                 nextView: name,
                 actionPlanModalOpen: true,
             })
+          await this.handleActionPlanModal()
         } else if (this.state.view !== name) {
             this.setState({ view: name })
         }
@@ -238,18 +241,40 @@ class ResultsLayout extends React.Component<Props, State> {
         this.setState({ notesModal: false })
     }
 
+    onActionPlanModalOpen =  (): Promise<boolean> => {
+      this.setState({actionPlanModalOpen: true})
+      return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+        this.setState({awaitingConfirmationRef: {resolve}})
+      })
+    }
+
     onActionPlanModalDiscard = (): void => {
+      if(this.state.awaitingConfirmationRef) {
+        this.state.awaitingConfirmationRef.resolve(true)
+      }
         this.setState({
             actionPlanModalOpen: false,
             view: this.state.nextView,
             actionPlanFormSaved: true,
+          awaitingConfirmationRef: null
         })
     }
 
     onActionPlanModalClose = (): void => {
+      if(this.state.awaitingConfirmationRef) {
+        this.state.awaitingConfirmationRef.resolve(false)
+      }
         this.setState({
             actionPlanModalOpen: false,
+          awaitingConfirmationRef: null
         })
+    }
+
+    handleActionPlanModal = async () => {
+      if(!(this.state.view === 'actionPlan') || this.state.actionPlanFormSaved) {
+        return Promise.resolve(true)
+      }
+      return this.onActionPlanModalOpen();
     }
 
     // eslint-disable-next-line require-jsdoc
@@ -306,7 +331,7 @@ class ResultsLayout extends React.Component<Props, State> {
             <div>
                 <FirebaseContext.Consumer>
                     {(firebase: Firebase): React.ReactNode => (
-                        <AppBar firebase={firebase} />
+                        <AppBar preBack={this.handleActionPlanModal} firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>
                 <Dialog open={this.state.actionPlanModalOpen}>
