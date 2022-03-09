@@ -22,7 +22,7 @@ jobs:
         with:
           base_sha: ${{github.event.pull_request.base.sha}}
           files: |
-          functions/*/
+            functions/*/
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
