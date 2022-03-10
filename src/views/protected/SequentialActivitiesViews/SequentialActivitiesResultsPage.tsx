@@ -5,7 +5,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySlider";
-import DetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSlider";
+import DetailsSwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSwitcher";
 import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
@@ -603,7 +603,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               />
             }
             details={
-              <DetailsSlider
+              <DetailsSwitcher
                 sequential1={this.state.sequential1}
                 sequential2={this.state.sequential2}
                 sequential3={this.state.sequential3}
