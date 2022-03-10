@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/MathInstructionComponents/ResultsComponents/SummarySlider";
+import SummarySwitcher from "../../../components/MathInstructionComponents/ResultsComponents/SummarySwitcher";
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
@@ -595,7 +595,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
             teacher={this.props.teacherSelected}
             magic8="Math Instruction"
             summary={
-              <SummarySlider
+              <SummarySwitcher
                 math={this.state.math}
                 notMath={this.state.notMath}
                 support={this.state.support}
