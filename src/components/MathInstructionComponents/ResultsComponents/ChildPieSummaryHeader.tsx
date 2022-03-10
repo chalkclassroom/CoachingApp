@@ -5,7 +5,7 @@ interface OwnProps {}
 
 type Props = OwnProps;
 
-const ChildPieSummaryHeader: FunctionComponent<Props> = (props) => {
+const ChildPieSummaryHeader: FunctionComponent<Props> = () => {
 
   return (
     <Typography align={"center"} variant="h5" style={{fontFamily: 'Arimo'}}>

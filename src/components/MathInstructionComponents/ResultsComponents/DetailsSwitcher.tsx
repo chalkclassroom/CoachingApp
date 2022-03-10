@@ -30,10 +30,10 @@ interface Props {
 
 /**
  * Swipe View for Child and Teacher Math Activities Bar Charts
- * @class DetailsSlider
+ * @class DetailsSwitcher
  * @return {void}
  */
-class DetailsSlider extends React.Component<Props, {}> {
+class DetailsSwitcher extends React.Component<Props, {}> {
   static propTypes = {
     math1: PropTypes.number.isRequired,
     math2: PropTypes.number.isRequired,
@@ -82,4 +82,4 @@ class DetailsSlider extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(DetailsSlider)
+export default withStyles(styles)(DetailsSwitcher)

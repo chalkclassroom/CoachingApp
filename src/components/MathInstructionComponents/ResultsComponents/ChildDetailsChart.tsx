@@ -10,7 +10,7 @@ interface OwnProps {
   math3: number
   math4: number
   totalVisits: number
-  questionTextClass
+  questionTextClass: string
 }
 
 type Props = OwnProps;

@@ -8,7 +8,7 @@ interface OwnProps {}
 
 type Props = OwnProps;
 
-const TeacherPieSummaryLegend: FunctionComponent<Props> = (props) => {
+const TeacherPieSummaryLegend: FunctionComponent<Props> = () => {
 
   return (
     <Grid container direction="column" alignItems="center">

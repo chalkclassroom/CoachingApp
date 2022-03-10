@@ -5,7 +5,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySwitcher from "../../../components/MathInstructionComponents/ResultsComponents/SummarySwitcher";
-import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
+import DetailsSwitcher from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSwitcher";
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
@@ -604,7 +604,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               />
             }
             details={
-              <DetailsSlider
+              <DetailsSwitcher
                 math1={this.state.math1}
                 math2={this.state.math2}
                 math3={this.state.math3}
