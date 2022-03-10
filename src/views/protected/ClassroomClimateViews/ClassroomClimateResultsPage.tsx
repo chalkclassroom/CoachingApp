@@ -466,6 +466,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           magic8="Classroom Climate"
           summary={
             <ClimateSummarySlider
+              tabPanelHeight={'60vh'}
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
               negativeResponses={this.state.redirectionsBehaviorCount+this.state.disapprovalBehaviorCount}
               averageToneRating={this.state.averageToneRating}

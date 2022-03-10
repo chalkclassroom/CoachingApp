@@ -53,7 +53,7 @@ export default function AverageTone(props: Props): React.ReactElement {
     }
   ];
   return (
-    <Grid direction="column" justify="center" alignItems="center" style={{height: 400}}>
+    <Grid direction="column" justify="center" alignItems="center" style={{minHeight: 500}}>
       <Grid item style={{paddingTop: '1em'}}>
         {pdf ? (
           <Typography variant="h6" align="center" style={{fontFamily: 'Arimo', paddingBottom: '2em'}}>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Pie } from "react-chartjs-2";;
+import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
 import * as Constants from '../../../constants/Constants';
 
@@ -13,9 +13,9 @@ interface Props {
 
 /**
  * specifies data sets and formatting for the climate behavior responses pie chart
- * @class BehaviorResponsesSummaryChart
+ * @class BehaviorResponsesSummaryPie
  */
-class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
+class BehaviorResponsesSummaryPie extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -108,12 +108,12 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           }
         }}
-        width={650}
-        height={400}
+        width={750}
+        height={300}
       />
     );
   }
 }
 
-BehaviorResponsesSummaryChart.contextType = FirebaseContext;
-export default BehaviorResponsesSummaryChart;
+BehaviorResponsesSummaryPie.contextType = FirebaseContext;
+export default BehaviorResponsesSummaryPie;
