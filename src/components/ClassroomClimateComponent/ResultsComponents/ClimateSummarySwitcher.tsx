@@ -14,9 +14,9 @@ interface Props {
 }
 
 /**
- * @class ClimateSummarySlider
+ * @class ClimateSummarySwitcher
  */
-class ClimateSummarySlider extends React.Component<Props, {}> {
+class ClimateSummarySwitcher extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -40,7 +40,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
     return (
       <TwoTabbedSwitch
         tabPosition={'bottom'}
-        tabOneLabel={'Tone Summary'}
+        tabOneLabel={'Behavior'}
         tabOneContent={
           <BehaviorResponseSummaryChart
             height={this.props.tabPanelHeight}
@@ -48,7 +48,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
             negativeResponses={this.props.negativeResponses}
           />
         }
-        tabTwoLabel={'Average Tone'}
+        tabTwoLabel={'Tone'}
         tabTwoContent={<SummaryGraph height={this.props.tabPanelHeight} graphTitle={'Average Tone'} graph={<AverageTone averageToneRating={this.props.averageToneRating}/>} />}
 
       />
@@ -56,4 +56,4 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
   }
 }
 
-export default ClimateSummarySlider
+export default ClimateSummarySwitcher
