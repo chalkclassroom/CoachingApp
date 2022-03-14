@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySlider";
+import SummarySwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySwitcher";
 import DetailsSwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSwitcher";
 import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
@@ -594,7 +594,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             teacher={this.props.teacherSelected}
             magic8="Sequential Activities"
             summary={
-              <SummarySlider
+              <SummarySwitcher
                 sequential={this.state.sequential}
                 notSequential={this.state.notSequential}
                 support={this.state.support}
