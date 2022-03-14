@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import Grid from "@material-ui/core/Grid/Grid";
 import ChildBarDetails from "./ChildBarDetails";
-import ChildDetailsLegend from "./ChildDetailsLegend";
-import ChildDetailsHeader from "./ChildDetailsHeader";
+import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
+import BarChartLegend from "../../LayoutComponents/GraphLayouts/BarChartLegend";
 
 interface OwnProps {
   questionTextClass:string
@@ -20,8 +20,8 @@ const ChildDetailsChart: FunctionComponent<Props> = (props) => {
   return (
     <div>
       <Grid justify={"center"} direction={"column"}>
-        <ChildDetailsHeader/>
-        <ChildDetailsLegend questionTextClass={props.questionTextClass}/>
+        <GraphHeader graphTitle={'Child Behaviors'}/>
+        <BarChartLegend questionTextClass={props.questionTextClass} questions={['Which behaviors did children do more often?', "Which behaviors did children do less often?"]}/>
         <ChildBarDetails
           sequential1={props.sequential1}
           sequential2={props.sequential2}

@@ -6,7 +6,7 @@ import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySwitcher";
 import DetailsSwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSwitcher";
-import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
+import TrendsSwitcher from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSwitcher";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -616,7 +616,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               />
             }
             trendsGraph={
-              <TrendsSlider
+              <TrendsSwitcher
                 childData={this.handleTrendsChildFormatData}
                 teacherData={this.handleTrendsTeacherFormatData}
               />

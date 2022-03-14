@@ -43,16 +43,16 @@ class SummarySwitcher extends React.Component<Props, {}> {
     return (
       <TwoTabbedSwitch
         tabPosition={'bottom'}
-        tabOneLabel={'Teacher'}
-        tabTwoLabel={'Child'}
-        tabOneContent={
+        tabTwoLabel={'Teacher'}
+        tabOneLabel={'Child'}
+        tabTwoContent={
           <TeacherSummaryChart
             support={this.props.support}
             noSupport={this.props.noSupport}
             noTeacherOpp={this.props.noTeacherOpp}
           />
         }
-        tabTwoContent={<ChildSummaryChart sequential={this.props.sequential} notSequential={this.props.notSequential}/>}
+        tabOneContent={<ChildSummaryChart sequential={this.props.sequential} notSequential={this.props.notSequential}/>}
       />
     )
   }

@@ -10,7 +10,6 @@ interface OwnProps {
 type Props = OwnProps;
 
 const BarChartLegend: FunctionComponent<Props> = (props) => {
-const questionHeight = `${Math.floor(props.questions.length / 100)}%`
   return (
     <Grid container direction="column" alignItems="center">
       <Grid item style={{width: '100%'}}>
@@ -19,7 +18,7 @@ const questionHeight = `${Math.floor(props.questions.length / 100)}%`
             <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
               {props.questions.map(question => {
                 return (
-                  <Grid key={question} item style={{height:questionHeight, paddingBottom: '2em'}}>
+                  <Grid key={question} item style={{height:'33%', paddingBottom: '2em'}}>
                     <Typography variant="subtitle1" className={props.questionTextClass}>
                       {question}
                     </Typography>

@@ -1,32 +1,39 @@
-import React, { FunctionComponent } from 'react';
-import Grid from "@material-ui/core/Grid/Grid";
-import Typography from "@material-ui/core/Typography/Typography";
-import {List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
-import SignalWifi4BarIcon from "@material-ui/icons/SignalWifi4Bar";
-import * as Constants from "../../../constants/Constants";
-import ChildPieSummary from "./ChildPieSummary";
-import ChildSummaryHeader from "./ChildSummaryHeader";
-import ChildSummaryLegend from "./ChildSummaryLegend";
+import React, { FunctionComponent } from 'react'
+import Grid from '@material-ui/core/Grid/Grid'
+import * as Constants from '../../../constants/Constants'
+import ChildPieSummary from './ChildPieSummary'
+import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
+import PieChartLegend from '../../LayoutComponents/GraphLayouts/PieChartLegend'
 
 interface OwnProps {
   sequential: number
   notSequential: number
 }
 
-type Props = OwnProps;
+type Props = OwnProps
 
-const ChildSummaryChart: FunctionComponent<Props> = (props) => {
+const ChildSummaryChart: FunctionComponent<Props> = props => {
+  return (
+    <div>
+      <Grid container justify={'center'} direction={'column'}>
+        <GraphHeader graphTitle={'Child Behaviors'} />
+        <PieChartLegend
+          slices={[
+            { color: Constants.Colors.SA, label: 'Did sequential activities.' },
+            {
+              color: Constants.Colors.RedGraph,
+              label: 'Did non-sequential activities.',
+            },
+          ]}
+          legendTitle={'Compare how often children:'}
+        />
+        <ChildPieSummary
+          sequential={props.sequential}
+          notSequential={props.notSequential}
+        />
+      </Grid>
+    </div>
+  )
+}
 
-  return (<div>
-    <Grid container justify={"center"} direction={"column"}>
-      <ChildSummaryHeader/>
-      <ChildSummaryLegend/>
-      <ChildPieSummary
-        sequential={props.sequential}
-        notSequential={props.notSequential}
-      />
-    </Grid>
-  </div>);
-};
-
-export default ChildSummaryChart;
+export default ChildSummaryChart
