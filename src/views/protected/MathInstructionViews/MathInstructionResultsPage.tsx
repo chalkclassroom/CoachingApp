@@ -6,7 +6,7 @@ import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySwitcher from "../../../components/MathInstructionComponents/ResultsComponents/SummarySwitcher";
 import DetailsSwitcher from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSwitcher";
-import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
+import TrendsSwitcher from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSwitcher";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -617,7 +617,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               />
             }
             trendsGraph={
-              <TrendsSlider
+              <TrendsSwitcher
                 childData={this.handleTrendsChildFormatData}
                 teacherData={this.handleTrendsTeacherFormatData}
               />

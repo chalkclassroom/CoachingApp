@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
-import Grid from "@material-ui/core/Grid/Grid";
-import ChildBarDetails from "./ChildBarDetails";
-import ChildDetailsHeader from "./ChildDetailsHeader";
-import ChildDetailsLegend from "./ChildDetailsLegend";
+import React, { FunctionComponent } from 'react'
+import Grid from '@material-ui/core/Grid/Grid'
+import ChildBarDetails from './ChildBarDetails'
+import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
+import BarChartLegend from '../../LayoutComponents/GraphLayouts/BarChartLegend'
 
 interface OwnProps {
   math1: number
@@ -13,15 +13,21 @@ interface OwnProps {
   questionTextClass: string
 }
 
-type Props = OwnProps;
+type Props = OwnProps
 
-const ChildDetailsChart: FunctionComponent<Props> = (props) => {
-
+const ChildDetailsChart: FunctionComponent<Props> = props => {
   return (
     <div>
-      <Grid justify={"center"} direction={"column"}>
-        <ChildDetailsHeader/>
-        <ChildDetailsLegend questionTextClass={props.questionTextClass}/>
+      <Grid container justify={'center'} direction={'column'}>
+        <GraphHeader graphTitle={'Child Behaviors'} />
+        <BarChartLegend
+          questionTextClass={props.questionTextClass}
+          questions={[
+            'What types of math did children do during the observation?',
+            'Did they do one type of math more often than other types?',
+            'Did they do one type of math less often than other types?',
+          ]}
+        />
         <ChildBarDetails
           math1={props.math1}
           math2={props.math2}
@@ -31,7 +37,7 @@ const ChildDetailsChart: FunctionComponent<Props> = (props) => {
         />
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default ChildDetailsChart;
+export default ChildDetailsChart

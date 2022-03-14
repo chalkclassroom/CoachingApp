@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
-import Grid from "@material-ui/core/Grid/Grid";
-import TeacherBarDetails from "./TeacherBarDetails";
-import TeacherDetailsHeader from "./TeacherDetailsHeader";
-import TeacherDetailsLegend from "./TeacherDetailsLegend";
+import React, { FunctionComponent } from 'react'
+import Grid from '@material-ui/core/Grid/Grid'
+import TeacherBarDetails from './TeacherBarDetails'
+import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
+import BarChartLegend from '../../LayoutComponents/GraphLayouts/BarChartLegend'
 
 interface OwnProps {
   teacher1: number
@@ -13,15 +13,21 @@ interface OwnProps {
   questionTextClass: string
 }
 
-type Props = OwnProps;
+type Props = OwnProps
 
-const TeacherDetailsChart: FunctionComponent<Props> = (props) => {
-
+const TeacherDetailsChart: FunctionComponent<Props> = props => {
   return (
     <div>
       <Grid justify={'center'} direction={'column'}>
-        <TeacherDetailsHeader/>
-        <TeacherDetailsLegend questionTextClass={props.questionTextClass}/>
+        <GraphHeader graphTitle={'Teacher Behaviors'} />
+        <BarChartLegend
+          questionTextClass={props.questionTextClass}
+          questions={[
+            'What behaviors did the teacher use during the observation?',
+            'Did the teacher do one type of behavior more often than other behaviors?',
+            'Did the teacher do one behavior less often than other behaviors?',
+          ]}
+        />
         <TeacherBarDetails
           teacher1={props.teacher1}
           teacher2={props.teacher2}
@@ -31,7 +37,7 @@ const TeacherDetailsChart: FunctionComponent<Props> = (props) => {
         />
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default TeacherDetailsChart;
+export default TeacherDetailsChart
