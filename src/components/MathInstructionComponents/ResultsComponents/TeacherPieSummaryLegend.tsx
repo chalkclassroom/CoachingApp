@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import {List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import SignalWifi4BarIcon from "@material-ui/icons/SignalWifi4Bar";
 import * as Constants from "../../../constants/Constants";
+import Typography from "@material-ui/core/Typography/Typography";
 
 interface OwnProps {}
 
@@ -11,6 +12,10 @@ type Props = OwnProps;
 const TeacherPieSummaryLegend: FunctionComponent<Props> = () => {
 
   return (
+    <>
+      <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+        Compare how often the children were:
+      </Typography>
     <Grid container direction="column" alignItems="center">
       <Grid item style={{width: '100%'}}>
         <List>
@@ -35,6 +40,7 @@ const TeacherPieSummaryLegend: FunctionComponent<Props> = () => {
         </List>
       </Grid>
     </Grid>
+    </>
   );
 };
 

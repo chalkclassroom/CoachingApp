@@ -12,9 +12,7 @@ const TeacherPieSummaryHeader: FunctionComponent<Props> = (props) => {
     <Typography align={"center"} variant="h5" style={{fontFamily: 'Arimo'}}>
       Teacher Behaviors
     </Typography>
-  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-    Compare how often the children were:
-  </Typography>
+
   </>
   );
 };
