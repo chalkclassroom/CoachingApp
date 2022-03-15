@@ -35,7 +35,7 @@ const TeacherSummaryChart: FunctionComponent<Props> = props => {
               label: 'Was not present in the centers observed.',
             },
           ]}
-          legendTitle={'Compare how often the children were:'}
+          legendTitle={'Compare how often the teacher:'}
         />
 
         <TeacherBehaviorsPie

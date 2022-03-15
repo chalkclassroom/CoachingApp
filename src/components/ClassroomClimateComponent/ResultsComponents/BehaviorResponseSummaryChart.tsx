@@ -33,7 +33,7 @@ const BehaviorResponseSummaryChart: FunctionComponent<Props> = (props) => {
             label: "Disapproved of or redirected children's behavior.",
           },
         ]}
-        legendTitle={'Compare how often the children were:'}
+        legendTitle={'Compare how often the teacher:'}
       />
       <Grid item style={{ paddingTop: '1em' }}>
         <BehaviorResponsesSummaryPie
