@@ -8,6 +8,7 @@ import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import TrainingVideo from '../TrainingComponents/TrainingVideo';
 import * as Types from '../../constants/Types';
+import LiteracyResultsTrainingModal from "./LiteracyResultsTrainingModal";
 
 /**
  * specifies styling for modal
@@ -82,10 +83,11 @@ function ResultsTrainingModal(props: Props): React.ReactElement {
             direction="column"
             justify="flex-start"
             className={classes.root}
+            style={{height: type === 'LiteracyInstruction' ? '70vh': null}}
           >
             <Grid item>
               {type === 'LiteracyInstruction' ? (
-                <div>Video coming soon!</div>
+                <LiteracyResultsTrainingModal type={'Training'} foundational={true} writing={true} reading={true} language={true}/>
               ) : (<TrainingVideo
                 videoUrl={
                   type === 'AssociativeCooperativeInteractions' ? 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Results%20AC%20(CC).mp4?alt=media&token=3c96f321-af7c-4b33-9fd2-d25c565048c0'
