@@ -1,6 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import CheckmarkImage from "../../assets/images/CheckmarkImage.png";
-import LockImage from "../../assets/images/LockImage.png";
 import {Card} from "@material-ui/core";
 import * as Constants from "../../constants/Constants";
 import Grid from "@material-ui/core/Grid";
@@ -9,30 +7,25 @@ import Badge from "@material-ui/core/Badge";
 
 interface OwnProps {
   title: string,
-  setLiteracyType?: () => void
+  handleClick: () => void
 }
 
 type Props = OwnProps;
 
 const LiteracyResultsTrainingBadge: FunctionComponent<Props> = (props) => {
-const {title, setLiteracyType = () => null} = props
+const {title, handleClick} = props
   return (
-    <Grid style={{paddingBottom: '1em'}}>
+    <Grid style={{padding: '.5em 0'}}>
     <Badge
       color="primary"
-      // badgeContent={<img alt="Locked" src={activity === 'Training' ? CheckmarkImage : LockImage} height='150%' />}
-      style={{width: '100%'}}
+      style={{width: '100%', cursor: "pointer"}}
+      onClick={handleClick}
     >
       <Card
-        // onClick={(): void => {
-        //   if (unlocked || activity === 'Training') {
-        //     literacyType === type ? setLiteracyType(Constants.LiteracyTypes.NONE) : setLiteracyType(type)
-        //   }
-        // }}
         elevation={8}
         style={{
           color: Constants.Colors.LI,
-          height: '7em',
+          height: '5em',
           borderColor: Constants.Colors.LI,
           borderWidth: '1px',
           borderStyle: 'solid',

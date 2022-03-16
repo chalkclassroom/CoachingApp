@@ -29,7 +29,7 @@ const styles: object = {
   },
   paper: {
     position: "absolute",
-    width: "50%",
+    width: "70%",
     backgroundColor: 'white',
     padding: '2em',
     borderRadius: 8
@@ -83,11 +83,10 @@ function ResultsTrainingModal(props: Props): React.ReactElement {
             direction="column"
             justify="flex-start"
             className={classes.root}
-            style={{height: type === 'LiteracyInstruction' ? '70vh': null}}
           >
-            <Grid item>
+            <Grid item style={{ position: 'relative', width: 'fit-content', height: 'fit-content'}}>
               {type === 'LiteracyInstruction' ? (
-                <LiteracyResultsTrainingModal type={'Training'} foundational={true} writing={true} reading={true} language={true}/>
+                <LiteracyResultsTrainingModal/>
               ) : (<TrainingVideo
                 videoUrl={
                   type === 'AssociativeCooperativeInteractions' ? 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Results%20AC%20(CC).mp4?alt=media&token=3c96f321-af7c-4b33-9fd2-d25c565048c0'

@@ -1,20 +1,10 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { makeStyles } from "@material-ui/core/styles/index";
-import * as PropTypes from 'prop-types';
-import Grid from "@material-ui/core/Grid";
-import Modal from "@material-ui/core/Modal";
-import Typography from "@material-ui/core/Typography";
-import Button from '@material-ui/core/Button';
-import CloseIcon from "@material-ui/icons/Close";
-import { Tooltip, Collapse, Card, Divider, Fade } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import LiteracyTypeCard from "../LiteracyComponents/LiteracyTypeCard";
-import LiteracyObservationOptions from "../LiteracyComponents/LiteracyObservationOptions";
-import * as Constants from '../../constants/Constants';
-import LiteracyResultsTrainingBadge from "./LiteracyResultsTrainingBadge";
-import TrainingVideo from "./TrainingVideo";
+import * as React from 'react'
+import { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles/index'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import LiteracyResultsTrainingBadge from './LiteracyResultsTrainingBadge'
+import TrainingVideo from './TrainingVideo'
 
 /**
  * specifies styling for modal
@@ -22,34 +12,24 @@ import TrainingVideo from "./TrainingVideo";
  */
 function getModalStyle(): React.CSSProperties {
   return {
-    position: "fixed",
-    top: `50%`,
-    left: `50%`,
-    transform: `translate(-50%, -50%)`
-  } as React.CSSProperties;
+    position: 'relative',
+  } as React.CSSProperties
 }
 
 const useStyles = makeStyles({
   root: {
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
   },
   paper: {
-    position: "absolute",
-    height: '60vh',
-    width: "90%",
+    position: 'relative',
+    height: 'fit-content',
+    width: '60vw',
     backgroundColor: 'white',
-    padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
   },
-});
+})
 
-interface Props {
-  type: string,
-  foundational: boolean,
-  writing: boolean,
-  reading: boolean,
-  language: boolean
-}
+interface Props {}
 
 /**
  * Modal to confirm view results
@@ -58,79 +38,121 @@ interface Props {
  * @return {ReactElement}
  */
 function LiteracyResultsTrainingModal(props: Props): React.ReactElement {
-  const { type, foundational, writing, reading, language } = props;
-  const [literacyType, setLiteracyType] = useState(Constants.LiteracyTypes.NONE);
-  const classes = useStyles();
+  const [videoData, setVideoData] = useState({
+    type: 'Foundational Skills',
+    url:
+      'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Foundational%20Skills%20Results-720p-220107.mp4?alt=media&token=be52c691-187f-40a8-a4a4-98284210ea39',
+  })
+
+  const classes = useStyles()
   return (
-        <div style={getModalStyle()} className={classes.paper}>
+    <div style={getModalStyle()} className={classes.paper}>
+      <Grid
+        container
+        alignItems="center"
+        direction="column"
+        justify="flex-start"
+        className={classes.root}
+      >
+        <Grid item style={{ width: '100%' }}>
           <Grid
             container
             alignItems="center"
-            direction="column"
-            justify="flex-start"
-            className={classes.root}
+            direction="row"
+            justify="flex-end"
+            style={{ width: '100%' }}
           >
-            <Grid item style={{width: '100%'}}>
+            <Grid item xs={10}>
+              <Typography
+                variant="h4"
+                align="center"
+                style={{ fontFamily: 'Arimo' }}
+              >
+                Literacy Instruction Results Training
+              </Typography>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ fontFamily: 'Arimo', padding: '1rem'}}
+              >
+                {videoData.type} Results
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
               <Grid
                 container
                 alignItems="center"
                 direction="row"
                 justify="flex-end"
-                style={{width: '100%'}}
-              >
-                <Grid item xs={1}>
-                  <Fade in={literacyType!==Constants.LiteracyTypes.NONE}>
-                    <Grid
-                      container
-                      alignItems="center"
-                      direction="row"
-                      justify="flex-end"
-                    >
-                      <IconButton style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: 10 }}>
-                        <Tooltip title={"Back"} placement={"right"}>
-                          <ChevronLeftIcon onClick={(): void => setLiteracyType(Constants.LiteracyTypes.NONE)} />
-                        </Tooltip>
-                      </IconButton>
-                    </Grid>
-                  </Fade>
-                </Grid>
-                <Grid item xs={10}>
-                  <Typography variant="h4" align="center" style={{fontFamily: 'Arimo'}}>
-                    Literacy Instruction Results Training
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="row"
-                    justify="flex-end"
-                  >
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container wrap={'nowrap'} direction={'row'} alignItems={'center'} spacing={3} style={{paddingTop: '1em', height: '100%'}}>
-              <Grid item direction="column" justify="space-between" alignItems="center" xs={4} spacing={3}>
-               <LiteracyResultsTrainingBadge title={'Foundational Skills'} />
-               <LiteracyResultsTrainingBadge title={'Writing'}/>
-               <LiteracyResultsTrainingBadge title={'Book Reading'}/>
-               <LiteracyResultsTrainingBadge title={'Language Environment'}/>
-              </Grid>
-              <Grid item direction={'row'} justifyContent={'center'} xs={8}>
-                 <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Results%20AC%20(CC).mp4?alt=media&token=3c96f321-af7c-4b33-9fd2-d25c565048c0'}/>
-              </Grid>
+              ></Grid>
             </Grid>
           </Grid>
-        </div>
-  );
+        </Grid>
+        <Grid
+          container
+          wrap={'nowrap'}
+          direction={'row'}
+          alignItems={'center'}
+          spacing={3}
+          style={{ paddingTop: '1em', height: '100%' }}
+        >
+          <Grid
+            item
+            direction="column"
+            justify="space-between"
+            alignItems="center"
+            xs={4}
+            spacing={3}
+          >
+            <LiteracyResultsTrainingBadge
+              handleClick={() =>
+                setVideoData({
+                  url:
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Foundational%20Skills%20Results-720p-220107.mp4?alt=media&token=be52c691-187f-40a8-a4a4-98284210ea39',
+                  type: 'Foundational Skills',
+                })
+              }
+              title={'Foundational Skills'}
+            />
+            <LiteracyResultsTrainingBadge
+              handleClick={() =>
+                setVideoData({
+                  url:
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Writing%20Results-720p-220107.mp4?alt=media&token=fa9d4c8b-f5c3-44db-9d3f-e2096d49fbfb',
+                  type: 'Writing',
+                })
+              }
+              title={'Writing'}
+            />
+            <LiteracyResultsTrainingBadge
+              handleClick={() =>
+                setVideoData({
+                  url:
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Book%20Reading%20Results-720p-220123.mp4?alt=media&token=da524fcf-8108-44fd-b8e9-2c95b61b65c6',
+                  type: 'Book Reading',
+                })
+              }
+              title={'Book Reading'}
+            />
+            <LiteracyResultsTrainingBadge
+              handleClick={() =>
+                setVideoData({
+                  url:
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Language%20Environment%20Results-720p-220127.mp4?alt=media&token=14f151c1-c70f-4869-9813-ddd3eac6e813',
+                  type: 'Language Environment',
+                })
+              }
+              title={'Language Environment'}
+            />
+          </Grid>
+          <Grid item direction={'row'} justifyContent={'center'} xs={8}>
+            <TrainingVideo videoUrl={videoData.url} />
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
+  )
 }
 
-LiteracyResultsTrainingModal.propTypes = {
-  foundational: PropTypes.bool.isRequired,
-  writing: PropTypes.bool.isRequired,
-  reading: PropTypes.bool.isRequired,
-  language: PropTypes.bool.isRequired
-}
 
-export default LiteracyResultsTrainingModal;
+export default LiteracyResultsTrainingModal
