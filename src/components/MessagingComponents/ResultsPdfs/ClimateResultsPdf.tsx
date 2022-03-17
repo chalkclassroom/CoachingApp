@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import BehaviorResponsesSummaryChart from '../../ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryChart';
+import BehaviorResponsesSummaryPie from '../../ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryPie';
 import AverageTone from '../../ClassroomClimateComponent/ResultsComponents/AverageTone';
 import BehaviorResponsesDetailsChart from '../../ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart';
 import ClimateTrendsGraph from '../../ClassroomClimateComponent/ResultsComponents/ClimateTrendsGraph';
@@ -161,7 +161,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
               {data && data.summary && data.details ? (
-                <BehaviorResponsesSummaryChart
+                <BehaviorResponsesSummaryPie
                   positiveResponses={data.details.specificCount + data.details.nonspecificCount}
                   negativeResponses={data.details.disapprovalCount + data.details.redirectionCount}
                   completed={(): void => {setSummary(true)}}

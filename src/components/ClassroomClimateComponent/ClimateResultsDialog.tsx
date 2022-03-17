@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import BehaviorResponsesSummaryChart from './ResultsComponents/BehaviorResponsesSummaryChart';
+import BehaviorResponsesSummaryPie from './ResultsComponents/BehaviorResponsesSummaryPie';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { emptyClimateStack, emptyClimateRating } from "../../state/actions/classroom-climate";
@@ -50,7 +50,7 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <BehaviorResponsesSummaryChart
+          <BehaviorResponsesSummaryPie
             positiveResponses={positiveResponses}
             negativeResponses={negativeResponses}
           />
