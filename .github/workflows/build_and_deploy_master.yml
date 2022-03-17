@@ -20,6 +20,7 @@ jobs:
         id: changed-functions
         uses: tj-actions/changed-files@v14.2
         with:
+          base_sha: ${{github.event.pull_request.base.sha}}
           files: |
             functions/*/
       - name: Use Node.js
