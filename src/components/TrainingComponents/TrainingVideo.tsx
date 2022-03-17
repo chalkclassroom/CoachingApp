@@ -42,7 +42,6 @@ export default function TrainingVideo({ videoUrl }: Props): React.ReactNode {
   return (
     ready && (
       <Video
-        loop
         muted
         autoPlay={false}
         controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
