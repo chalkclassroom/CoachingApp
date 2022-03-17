@@ -21,7 +21,7 @@ const questionBank = {
       text: "What are the potential benefits of reducing transition time?",
       options: new Map([
         ["More time spent learning", false],
-        ["Less bad behavior", false],
+        ["Less challenging behavior", false],
         ["Lower engagement in learning", false],
         ["A and B only", true],
         ["A, B, and C", false]
