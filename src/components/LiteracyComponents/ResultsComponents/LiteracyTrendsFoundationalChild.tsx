@@ -96,6 +96,112 @@ export default function LiteracyTrendsFoundational(props: Props) {
 
   const activitySettings = Constants.LiteracyActivitySettings['FoundationalChild']
 
+  childData.push({
+    startDate: '03/21/21',
+      literacy1: 4,
+      literacy2: 3,
+      literacy3: 4,
+      literacy4: 1,
+      literacy5: 6,
+      literacy6: 3,
+      literacy7: 1,
+      literacy8: 1,
+      literacy9: 0,
+      total: 15,
+      activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/26/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/25/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/24/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/23/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/29/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/28/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  },{
+    startDate: '03/27/21',
+    literacy1: 4,
+    literacy2: 3,
+    literacy3: 4,
+    literacy4: 1,
+    literacy5: 6,
+    literacy6: 3,
+    literacy7: 1,
+    literacy8: 1,
+    literacy9: 0,
+    total: 15,
+    activitySetting: 'Morning Meeting'
+  })
+
   return (
     <Grid container direction="column">
       <Grid item style={{paddingBottom: '0.5em'}}>
@@ -169,7 +275,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
       </Grid>
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
-          <Table stickyHeader aria-label="sticky table" size="small">
+          <Table  aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
                 <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
@@ -221,7 +327,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
             </TableBody>
             <TableHead>
               <TableRow>
-                <TableCell style={{minWidth: 250, position: 'sticky', left: 0}}>
+                <TableCell style={{backgroundColor: '#fafafa', minWidth: 250, position: 'sticky', left: 0}}>
                   Total number of 1-minute intervals
                 </TableCell>
                 {childData.filter(obj => {
