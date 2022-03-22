@@ -10,5 +10,4 @@ export default function SuggestedDuration(props: Props) {
   return (
     <p style={{fontWeight: bold ? 900 : 500}}>Suggested observation length: {duration} minute{duration > 1 ? 's': ''} or more</p>
   )
-  
 }

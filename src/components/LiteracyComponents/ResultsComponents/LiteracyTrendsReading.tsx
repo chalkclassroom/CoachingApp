@@ -174,7 +174,7 @@ export default function LiteracyTrendsReading(props: Props) {
       </Grid>
       <Paper className={classes.root}>
         <TableContainer className={classes.container} style={{maxHeight: '65vh', overflowY: 'scroll', overflowX: 'scroll'}}>
-          <Table stickyHeader aria-label="sticky table" size="small">
+          <Table  aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
                 <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
@@ -226,7 +226,7 @@ export default function LiteracyTrendsReading(props: Props) {
             </TableBody>
             <TableHead style={{position: 'sticky'}}>
               <TableRow>
-                <TableCell style={{minWidth: 250, position: 'sticky', left: 0, bottom: 0}}>
+                <TableCell style={{backgroundColor: '#fafafa', minWidth: 250, position: 'sticky', left: 0}}>
                   Total number of 1-minute intervals
                 </TableCell>
                 {data.filter(obj => {

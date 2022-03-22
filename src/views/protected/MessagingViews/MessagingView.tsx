@@ -44,7 +44,7 @@ const MessagingView: React.FC<{}> = () => {
         }
       })
     }
-  })
+  },[])
 
   const updateDrafts = (email: Email): void => {
     const updatedDraftIndex = drafts.map(function(e) { return e.id; }).indexOf(email.id);

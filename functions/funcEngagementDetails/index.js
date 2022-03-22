@@ -17,7 +17,7 @@ exports.funcEngagementDetails = functions.https.onCall(async(data, context) => {
   //SQL query to get number of checks for each item on checklist
   if (!await canAccessObservation(data.sessionId, context.auth.uid)){
     return [];
-  }else{
+  } else {
     console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
   }
   const sqlQuery = `SELECT

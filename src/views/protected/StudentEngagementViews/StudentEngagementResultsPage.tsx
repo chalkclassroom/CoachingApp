@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/StudentEngagementComponents/ResultsComponents/SummarySlider";
+import SummarySwitcher from "../../../components/StudentEngagementComponents/ResultsComponents/SummarySwitcher";
 import DetailsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/TrendsSlider";
 import * as Constants from '../../../constants/Constants';
@@ -472,7 +472,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             teacher={this.props.teacherSelected}
             magic8="Level of Engagement"
             summary={
-              <SummarySlider
+              <SummarySwitcher
                 offTask={this.state.offTaskSummaryCount}
                 engaged={this.state.engagedSummaryCount}
                 avgRating={this.state.avgEngagementSummary}
