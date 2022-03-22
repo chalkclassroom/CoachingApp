@@ -4,9 +4,9 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
-import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import SummarySwitcher from "../../../components/AssociativeCooperativeComponents/ResultsComponents/SummarySwitcher";
+import DetailsSwitcher from "../../../components/AssociativeCooperativeComponents/ResultsComponents/DetailsSwitcher";
+import TrendsSwitcher from "../../../components/AssociativeCooperativeComponents/ResultsComponents/TrendsSwitcher";
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
@@ -617,7 +617,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             teacher={this.props.teacherSelected}
             magic8="AC"
             summary={
-              <ChildTeacherBehaviorPieSlider
+              <SummarySwitcher
                 ac={this.state.ac}
                 noAc={this.state.noAc}
                 noChildOpp={this.state.noChildOpp}
@@ -627,7 +627,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
               />
             }
             details={
-              <ChildTeacherBehaviorDetailsSlider
+              <DetailsSwitcher
                 ac1={this.state.ac1}
                 ac2={this.state.ac2}
                 ac3={this.state.ac3}
@@ -640,7 +640,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
               />
             }
             trendsGraph={
-              <ChildTeacherBehaviorTrendsSlider
+              <TrendsSwitcher
                 childData={this.handleTrendsChildFormatData}
                 teacherData={this.handleTrendsTeacherFormatData}
               />

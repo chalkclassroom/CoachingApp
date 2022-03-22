@@ -68,7 +68,7 @@ const styles: object = {
       flexDirection: 'column'
     },
     grid: {
-      direction: 'column'
+      flexDirection: 'column'
     },
     dashboardContainer: {
       boxShadow: '1px 1px 3px #8C8D91'

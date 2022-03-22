@@ -14,7 +14,7 @@ export default function TransitionTimeObservationPopUp(): React.ReactElement {
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item style={{paddingTop: '1em'}}>
           <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-          <SuggestedDuration />
+          <SuggestedDuration bold={true} duration={30} />
             When you observe a transition in the classroom,
           </Typography>
           <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>

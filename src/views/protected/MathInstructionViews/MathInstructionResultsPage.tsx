@@ -4,9 +4,9 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/MathInstructionComponents/ResultsComponents/SummarySlider";
-import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
-import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
+import SummarySwitcher from "../../../components/MathInstructionComponents/ResultsComponents/SummarySwitcher";
+import DetailsSwitcher from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSwitcher";
+import TrendsSwitcher from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSwitcher";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -595,7 +595,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
             teacher={this.props.teacherSelected}
             magic8="Math Instruction"
             summary={
-              <SummarySlider
+              <SummarySwitcher
                 math={this.state.math}
                 notMath={this.state.notMath}
                 support={this.state.support}
@@ -604,7 +604,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               />
             }
             details={
-              <DetailsSlider
+              <DetailsSwitcher
                 math1={this.state.math1}
                 math2={this.state.math2}
                 math3={this.state.math3}
@@ -617,7 +617,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               />
             }
             trendsGraph={
-              <TrendsSlider
+              <TrendsSwitcher
                 childData={this.handleTrendsChildFormatData}
                 teacherData={this.handleTrendsTeacherFormatData}
               />

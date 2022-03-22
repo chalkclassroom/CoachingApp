@@ -8,6 +8,7 @@ import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import TrainingVideo from '../TrainingComponents/TrainingVideo';
 import * as Types from '../../constants/Types';
+import LiteracyResultsTrainingModal from "./LiteracyResultsTrainingModal";
 
 /**
  * specifies styling for modal
@@ -28,7 +29,7 @@ const styles: object = {
   },
   paper: {
     position: "absolute",
-    width: "50%",
+    width: "70%",
     backgroundColor: 'white',
     padding: '2em',
     borderRadius: 8
@@ -83,9 +84,9 @@ function ResultsTrainingModal(props: Props): React.ReactElement {
             justify="flex-start"
             className={classes.root}
           >
-            <Grid item>
+            <Grid item style={{ position: 'relative', width: 'fit-content', height: 'fit-content'}}>
               {type === 'LiteracyInstruction' ? (
-                <div>Video coming soon!</div>
+                <LiteracyResultsTrainingModal/>
               ) : (<TrainingVideo
                 videoUrl={
                   type === 'AssociativeCooperativeInteractions' ? 'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Results%20AC%20(CC).mp4?alt=media&token=3c96f321-af7c-4b33-9fd2-d25c565048c0'
