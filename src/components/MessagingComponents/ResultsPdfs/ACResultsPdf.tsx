@@ -284,7 +284,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
               </div>
             ) : (null)}
             {data && data.teacherDetails ? (
-              <Grid item style={{paddingTop: '8em'}}>
+              <Grid item style={{paddingTop: '8em', paddingBottom: '3em'}}>
                 <TeacherBehaviorsDetailsHorizontalBar
                   teacher1={data.teacherDetails.teacher1}
                   teacher2={data.teacherDetails.teacher2}

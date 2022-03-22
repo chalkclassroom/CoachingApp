@@ -108,8 +108,8 @@ class BehaviorResponsesSummaryPie extends React.Component<Props, {}> {
             }
           }
         }}
-        width={750}
-        height={300}
+        width={650}
+        height={370}
       />
     );
   }

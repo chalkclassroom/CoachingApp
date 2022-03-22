@@ -238,7 +238,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.trends ? (
               <div>
                 {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
+                <Grid item style={{paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '4em' : '12em'}}>
                   <TransitionTrendsGraph
                     data={(): {
                       labels: Array<Array<string>>;
