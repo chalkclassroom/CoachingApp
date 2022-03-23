@@ -461,6 +461,27 @@ class ActionPlanForm extends React.Component<Props, State> {
     })
   }
 
+  handleExport = () => {
+    let data = {
+      CoachID: this.state.coachFirstName,
+      teacherID: this.state.teacher ?? null,
+      dateCreated: this.state.date,
+      goalDate: this.state.goalTimeline,
+      benefitForStudents: this.state.benefit
+    };
+
+    this.state.actionStepsArray.forEach((step, index) => {
+      data[`actionStep${index + 1}`] = step.step;
+      data[`person${index + 1}`] = step.person;
+      data[`Timeline${index + 1}`] = step.timeline;
+    })
+
+    // replace with some lib to export the data to excel
+    //e.g. https://github.com/exceljs/exceljs
+    console.log(data)
+
+  }
+
   handleUndoChanges = (): void => {
     this.getActionPlan(this.state.actionPlanId)
     this.setState({
@@ -603,7 +624,9 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2} />
+                  <Grid item xs={2} >
+                   <Button onClick={this.handleExport}>EXPORT</Button>
+                  </Grid>
                 </Grid>
               ) : (
                 <Grid
