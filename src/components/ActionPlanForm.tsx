@@ -27,6 +27,7 @@ import * as Constants from '../constants/Constants'
 import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Firebase from './Firebase'
+import * as xlsx from 'xlsx'
 
 const styles: object = {
   textField: {
@@ -415,7 +416,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.state.actionPlanId,
         this.state.goal,
         this.state.goalTimeline,
-        this.state.benefit,
+        this.state.benefit
       )
       .then(() => {
         this.props.firebase.completeAppointment(
@@ -423,7 +424,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           'Action Plan',
           Constants.ToolAbbreviations[
             this.props.magic8 as Types.ToolAbbreviationsKey
-            ],
+          ]
         )
         this.getActionPlan(this.state.actionPlanId)
       })
@@ -437,7 +438,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           index.toString(),
           value.step,
           value.person,
-          value.timeline,
+          value.timeline
         )
         .then(() => {
           this.setState(
@@ -451,7 +452,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   this.setState({ savedAlert: false })
                 }, 1500)
               })
-            },
+            }
           )
           this.getActionPlan(this.state.actionPlanId)
         })
@@ -462,24 +463,42 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   handleExport = () => {
-    let data = {
-      CoachID: this.state.coachFirstName,
-      teacherID: this.state.teacher ?? null,
-      dateCreated: this.state.date,
-      goalDate: this.state.goalTimeline,
-      benefitForStudents: this.state.benefit
-    };
+    let wb = xlsx.utils.book_new()
+
+    let headers = [
+      'Coach ID',
+      'Teacher ID',
+      'Date Created',
+      'Goal Date',
+      'Benefit for Students',
+    ]
+    // TODO: grab the coach and teacher IDs (?) instead of what's happening now.
+    let data = [
+      this.state.coachFirstName,
+      this.state.teacher ?? 'Teacher',
+      this.state.date,
+      this.state.goalTimeline,
+      this.state.benefit,
+    ]
 
     this.state.actionStepsArray.forEach((step, index) => {
-      data[`actionStep${index + 1}`] = step.step;
-      data[`person${index + 1}`] = step.person;
-      data[`Timeline${index + 1}`] = step.timeline;
+      headers.push(`Action Step ${index + 1}`)
+      data.push(step.step)
+      headers.push(`Person ${index + 1}`)
+      data.push(step.person)
+      headers.push(`Timeline ${index + 1}`)
+      data.push(step.timeline)
     })
 
-    // replace with some lib to export the data to excel
-    //e.g. https://github.com/exceljs/exceljs
-    console.log(data)
+    let sheet = xlsx.utils.aoa_to_sheet([headers, data])
 
+    // sets the column widths for each column -- each needs its own object.
+    sheet[`!cols`] = Array.from({ length: data.length }).map(_ => {
+      return { wch: 12 }
+    })
+
+    xlsx.utils.book_append_sheet(wb, sheet, 'Action Plan')
+     xlsx.writeFile(wb, 'Action_Plan.xlsx')
   }
 
   handleUndoChanges = (): void => {
