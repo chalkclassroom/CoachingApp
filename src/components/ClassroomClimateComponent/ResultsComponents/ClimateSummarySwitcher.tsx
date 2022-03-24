@@ -43,7 +43,6 @@ class ClimateSummarySwitcher extends React.Component<Props, {}> {
         tabOneLabel={'Behavior'}
         tabOneContent={
           <BehaviorResponseSummaryChart
-            height={this.props.tabPanelHeight}
             positiveResponses={this.props.positiveResponses}
             negativeResponses={this.props.negativeResponses}
           />
