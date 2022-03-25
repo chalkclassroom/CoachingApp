@@ -472,10 +472,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       'Goal Date',
       'Benefit for Students',
     ]
-    // TODO: grab the coach and teacher IDs (?) instead of what's happening now.
     let data = [
-      this.state.coachFirstName,
-      this.state.teacher ?? 'Teacher',
+      this.state.coachFirstName + ' ' + this.state.coachLastName,
+      this.props.teacher.firstName + ' ' + this.props.teacher.lastName,
       this.state.date,
       this.state.goalTimeline,
       this.state.benefit,
@@ -640,11 +639,16 @@ class ActionPlanForm extends React.Component<Props, State> {
                         }}
                       >
                         ACTION PLAN
+
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2} >
-                   <Button onClick={this.handleExport}>EXPORT</Button>
+                  <Grid container justify={'center'} xs={2}>
+                    <Button onClick={this.handleExport}>
+                      <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                        Export
+                      </Typography>
+                    </Button>
                   </Grid>
                 </Grid>
               ) : (
@@ -655,7 +659,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   alignItems="center"
                   style={{ width: '100%' }}
                 >
-                  <Grid item xs={11}>
+                  <Grid item xs={9}>
                     <Grid
                       container
                       direction="row"
@@ -687,6 +691,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Button>
                       </Grid>
                     </Grid>
+                  </Grid>
+                  <Grid container justify={'center'} xs={2}>
+                    <Button onClick={this.handleExport}>
+                      <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                        Export
+                      </Typography>
+                    </Button>
                   </Grid>
                   <Grid item xs={1}>
                     <Button onClick={this.handleSave}>
