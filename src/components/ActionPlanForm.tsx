@@ -28,6 +28,7 @@ import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Firebase from './Firebase'
 import * as xlsx from 'xlsx'
+import {generateActionPlanPdf} from "../services/PdfGenerator";
 
 const styles: object = {
   textField: {
@@ -463,41 +464,18 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   handleExport = () => {
-    let wb = xlsx.utils.book_new()
-
-    let headers = [
-      'Coach ID',
-      'Teacher ID',
-      'Date Created',
-      'Goal Date',
-      'Benefit for Students',
-    ]
-    let data = [
-      this.state.coachFirstName + ' ' + this.state.coachLastName,
-      this.props.teacher.firstName + ' ' + this.props.teacher.lastName,
-      this.state.date,
-      this.state.goalTimeline,
-      this.state.benefit,
-    ]
-
-    this.state.actionStepsArray.forEach((step, index) => {
-      headers.push(`Action Step ${index + 1}`)
-      data.push(step.step)
-      headers.push(`Person ${index + 1}`)
-      data.push(step.person)
-      headers.push(`Timeline ${index + 1}`)
-      data.push(step.timeline)
-    })
-
-    let sheet = xlsx.utils.aoa_to_sheet([headers, data])
-
-    // sets the column widths for each column -- each needs its own object.
-    sheet[`!cols`] = Array.from({ length: data.length }).map(_ => {
-      return { wch: 12 }
-    })
-
-    xlsx.utils.book_append_sheet(wb, sheet, 'Action Plan')
-     xlsx.writeFile(wb, 'Action_Plan.xlsx')
+    let resources = {
+      coachFirstName: this.state.coachFirstName,
+      coachLastName: this.state.coachLastName,
+      date: this.state.date,
+      benefit: this.state.benefit,
+      teacherFirstName: this.props.teacher.firstName,
+      teacherLastName: this.props.teacher.lastName,
+      goalTimeline: this.state.goalTimeline,
+      actionStepsArray: this.state.actionStepsArray
+    }
+  let wb = generateActionPlanPdf(resources)
+  xlsx.writeFile(wb, 'Action_Plan.xlsx')
   }
 
   handleUndoChanges = (): void => {
