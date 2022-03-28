@@ -28,7 +28,7 @@ import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Firebase from './Firebase'
 import * as xlsx from 'xlsx'
-import {generateActionPlanPdf} from "../services/PdfGenerator";
+import {generateActionPlanPdf, generateActionPlanXlsx} from "../services/xlsxGenerator";
 
 const styles: object = {
   textField: {
@@ -472,9 +472,10 @@ class ActionPlanForm extends React.Component<Props, State> {
       teacherFirstName: this.props.teacher.firstName,
       teacherLastName: this.props.teacher.lastName,
       goalTimeline: this.state.goalTimeline,
-      actionStepsArray: this.state.actionStepsArray
+      actionStepsArray: this.state.actionStepsArray,
+      goal: this.state.goal
     }
-  let wb = generateActionPlanPdf(resources)
+  let wb = generateActionPlanXlsx(resources)
   xlsx.writeFile(wb, 'Action_Plan.xlsx')
   }
 

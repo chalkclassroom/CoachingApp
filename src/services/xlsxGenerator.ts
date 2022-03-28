@@ -1,6 +1,6 @@
 import * as xlsx from 'xlsx'
 
-type ActionPlanPdfResources = {
+type ActionPlanXlsxResources = {
   coachFirstName: string
   coachLastName: string
   teacherFirstName: string
@@ -9,9 +9,10 @@ type ActionPlanPdfResources = {
   goalTimeline: Date | null
   benefit: string
   actionStepsArray: Array<{ step: string, person: string, timeline: Date | null }>
+  goal: string
 }
 
-export const generateActionPlanPdf = (resources: ActionPlanPdfResources) => {
+export const generateActionPlanXlsx = (resources: ActionPlanXlsxResources) => {
   let {
     coachFirstName,
     coachLastName,
@@ -20,7 +21,8 @@ export const generateActionPlanPdf = (resources: ActionPlanPdfResources) => {
     date,
     goalTimeline,
     benefit,
-    actionStepsArray
+    actionStepsArray,
+    goal
   } = resources
 
   let wb = xlsx.utils.book_new()
@@ -29,6 +31,7 @@ export const generateActionPlanPdf = (resources: ActionPlanPdfResources) => {
     'Coach ID',
     'Teacher ID',
     'Date Created',
+    'Goal',
     'Goal Date',
     'Benefit for Students',
   ]
@@ -36,6 +39,7 @@ export const generateActionPlanPdf = (resources: ActionPlanPdfResources) => {
     coachFirstName + ' ' + coachLastName,
     teacherFirstName + ' ' + teacherLastName,
     date,
+    goal,
     goalTimeline,
     benefit,
   ]
