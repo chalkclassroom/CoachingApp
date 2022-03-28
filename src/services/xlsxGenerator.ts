@@ -12,6 +12,17 @@ type ActionPlanXlsxResources = {
   goal: string
 }
 
+type ConferencePlanXlsxResources = {
+  coachFirstName: string
+  coachLastName: string
+  teacherFirstName: string
+  teacherLastName: string
+  date: Date
+  feedback: Array<string>
+  questions: Array<string>
+  notes: Array<string>
+}
+
 export const generateActionPlanXlsx = (resources: ActionPlanXlsxResources) => {
   let {
     coachFirstName,
@@ -62,4 +73,59 @@ export const generateActionPlanXlsx = (resources: ActionPlanXlsxResources) => {
 
   xlsx.utils.book_append_sheet(wb, sheet, 'Action Plan')
  return wb
+}
+
+
+
+export const generateConferencePlanXlsx = (resources: ConferencePlanXlsxResources) => {
+  let {
+    coachFirstName,
+    coachLastName,
+    teacherFirstName,
+    teacherLastName,
+    date,
+    feedback,
+    questions,
+    notes
+  } = resources
+
+  let headers = [
+    'Coach ID',
+    'Teacher ID',
+    'Date Created',
+    'Strengths-Based Feedback',
+    'Reflection Questions',
+    'Notes'
+  ]
+
+  let data = [
+    coachFirstName + ' ' + coachLastName,
+    teacherFirstName + ' ' + teacherLastName,
+    date,
+  ]
+
+  let rows =[]
+  const maxLength = Math.max(feedback.length, notes.length, questions.length);
+
+  for(let i = 0; i < maxLength; i++) {
+    let newRow = Array.from({length: data.length},(_) => '') // blanks number of lines equal to length of data.
+    newRow.push(feedback[i]?? '')
+    newRow.push(questions[i]?? '')
+    newRow.push(notes[i]?? '')
+    rows.push(newRow)
+  }
+  console.log(rows)
+
+  let wb = xlsx.utils.book_new()
+ // Concat() to bring the first notes/questions/feedback to the first row.
+  let sheet = xlsx.utils.aoa_to_sheet([headers, data.concat(rows[0].slice(data.length)), ...rows.slice(1)])
+
+  // sets the column widths for each column -- each needs its own object. Minimum length of 12, max of length of header string.
+  sheet[`!cols`] = Array.from({ length: headers.length }).map((_, i) => {
+    return { wch: Math.max(headers[i].length, 12) }
+  })
+
+  xlsx.utils.book_append_sheet(wb, sheet, 'Conference Plan')
+  return wb
+
 }
