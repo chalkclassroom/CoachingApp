@@ -463,21 +463,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     })
   }
 
-  handleExport = () => {
-    let resources = {
-      coachFirstName: this.state.coachFirstName,
-      coachLastName: this.state.coachLastName,
-      date: this.state.date,
-      benefit: this.state.benefit,
-      teacherFirstName: this.props.teacher.firstName,
-      teacherLastName: this.props.teacher.lastName,
-      goalTimeline: this.state.goalTimeline,
-      actionStepsArray: this.state.actionStepsArray,
-      goal: this.state.goal
-    }
-  let wb = generateActionPlanXlsx(resources)
-  xlsx.writeFile(wb, 'Action_Plan.xlsx')
-  }
 
   handleUndoChanges = (): void => {
     this.getActionPlan(this.state.actionPlanId)
@@ -623,11 +608,6 @@ class ActionPlanForm extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                   <Grid container justify={'center'} xs={2}>
-                    <Button onClick={this.handleExport}>
-                      <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                        Export
-                      </Typography>
-                    </Button>
                   </Grid>
                 </Grid>
               ) : (
@@ -672,11 +652,6 @@ class ActionPlanForm extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                   <Grid container justify={'center'} xs={2}>
-                    <Button onClick={this.handleExport}>
-                      <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                        Export
-                      </Typography>
-                    </Button>
                   </Grid>
                   <Grid item xs={1}>
                     <Button onClick={this.handleSave}>
