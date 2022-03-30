@@ -239,6 +239,11 @@ class Firebase {
       )
   }
 
+  userIsAdmin = async () => {
+    let userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
+    return userDocs.docs[0].get('role') === 'admin'
+  }
+
   sendEmail = async (msg: string): Promise<void> => {
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       'funcSendEmail'
@@ -2880,6 +2885,58 @@ class Firebase {
           console.log('unable to retrieve action plans')
         })
     }
+  }
+// Added this function because a lot of these timestamp values
+// are often stored as empty strings or null in the db
+/*
+* takes an object and, if it's a firestore timestamp,
+* converts it to a JS Date.  Returns null for other values.
+* @param {any} timestamp
+*/
+  convertFirestoreTimestamp = (timestamp: any): Date | null => {
+    return timestamp?.toDate ? timestamp.toDate() : null
+  }
+
+  getActionStepsForExport = async (actionPlanId: string) => {
+    return await this.db.collection('actionPlans')
+      .doc(actionPlanId)
+      .collection('actionSteps')
+      .get()
+      .then(res => {
+        return res.docs.map(doc => {
+          return {
+            step: doc.data().step || null,
+            person: doc.data().person || null,
+            timeline: this.convertFirestoreTimestamp(doc.data().timeline)
+          }
+        })
+      })
+  }
+
+  getActionPlansForExport = async (coachId: string | undefined = undefined): any => {
+    if (!await this.userIsAdmin()) {
+      throw new Error('Not authorized to Perform this action')
+    }
+    this.query = this.db
+      .collection('actionPlans').orderBy('dateModified', 'desc')
+    if (coachId) {
+      this.query = this.query.where('coach', '==', coachId)
+    }
+   const actionPlans = await this.query.get();
+    return Promise.all(actionPlans.docs.map(async (doc) => {
+      const {coach, benefit,dateCreated, dateModified, goal, goalTimeline, teacher, tool } = doc.data()
+        return {
+          coachId: coach,
+          teacherId: teacher,
+          benefit: benefit ?? '',
+          goal: goal ?? '',
+          tool: tool ?? '',
+          dateModified: this.convertFirestoreTimestamp(dateModified),
+          goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
+          dateCreated: this.convertFirestoreTimestamp(dateCreated),
+          steps: await this.getActionStepsForExport(doc.id)
+        }
+      } ))
   }
 
   /**
