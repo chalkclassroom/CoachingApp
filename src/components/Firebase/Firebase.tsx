@@ -455,6 +455,18 @@ class Firebase {
       )
   }
 
+  getCoaches = async () => {
+    if(!await this.userIsAdmin()) {
+      throw new Error('User is not authorized for this action')
+    }
+
+    let coaches = await this.db.collection('users')
+      .where('role', "in", ['coach', 'admin'])
+      .get();
+
+    return coaches.docs.map(doc => doc.data());
+  }
+
   /* getCoachList = async function() {
     return this.db
       .collection("users")
@@ -2913,7 +2925,7 @@ class Firebase {
       })
   }
 
-  getActionPlansForExport = async (coachId: string | undefined = undefined): any => {
+  getActionPlansForExport = async (coachId: string | undefined = undefined) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
@@ -2937,6 +2949,33 @@ class Firebase {
           steps: await this.getActionStepsForExport(doc.id)
         }
       } ))
+  }
+
+  getConferencePlansForExport = async (coachId: string | undefined  = undefined) => {
+    if (!await this.userIsAdmin()) {
+      throw new Error('Not authorized to Perform this action')
+    }
+
+    this.query = this.db
+      .collection('conferencePlans').orderBy('dateModified', 'desc')
+    if (coachId) {
+      this.query = this.query.where('coach', '==', coachId)
+    }
+    const conferencePlans = await this.query.get();
+    return Promise.all(conferencePlans.docs.map(async (doc) => {
+      const {coach,dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool } = doc.data()
+      return {
+        coachId: coach,
+        teacherId: teacher,
+        tool: tool ?? '',
+        dateModified: this.convertFirestoreTimestamp(dateModified),
+        dateCreated: this.convertFirestoreTimestamp(dateCreated),
+        feedback,
+        questions: questions.concat(addedQuestions),
+        notes
+      }
+    } ))
+
   }
 
   /**
