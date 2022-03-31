@@ -20,8 +20,7 @@ import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-import {generateConferencePlanXlsx} from "../services/xlsxGenerator";
-import * as xlsx from "xlsx";
+
 
 const BlankTheme = createTheme({
   palette: {
@@ -222,21 +221,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
       notes: newArray,
       saved: false
     });
-  }
-
-  handleExport = () => {
-    let resources = {
-    coachFirstName: this.state.coachFirstName,
-    coachLastName: this.state.coachLastName,
-    teacherFirstName: this.props.teacher.firstName,
-    teacherLastName: this.props.teacher.lastName,
-    date: this.state.date,
-      questions: this.state.questions,
-      notes: this.state.notes,
-      feedback: this.state.feedback
-    }
-    let wb = generateConferencePlanXlsx(resources)
-    xlsx.writeFile(wb, 'Conference_Plan.xlsx')
   }
 
   handleCreate = (): void => {
@@ -463,9 +447,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                             CONFERENCE PLAN
                           </Typography>
-                          <Button onClick={this.handleExport}>
-                            Export
-                          </Button>
                         </Grid>
                       </Grid>
                       <Grid item xs={2} />
@@ -483,9 +464,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                           CONFERENCE PLAN
                         </Typography>
-                        <Button onClick={this.handleExport}>
-                          Export
-                        </Button>
                       </Grid>
                       <Grid item xs={1}>
                         <Button onClick={this.handleSave}>
