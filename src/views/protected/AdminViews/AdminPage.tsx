@@ -6,7 +6,7 @@ import Firebase, {FirebaseContext} from '../../../components/Firebase'
 import AppBar from '../../../components/AppBar'
 import {connect} from 'react-redux'
 import {Role} from '../../../state/actions/coach'
-import BasicExport from "../../../components/AdminComponents/BasicExport";
+import ObservationsExport from "../../../components/AdminComponents/ObservationsExport";
 import ActionPlanExport from "../../../components/AdminComponents/ActionPlanExport";
 import ConferencePlanExport from "../../../components/AdminComponents/ConferencePlanExport";
 
@@ -65,7 +65,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
   const [tool, setTool] = useState('none')
 
   const toolSelect: ToolSelect = {
-    basic:  <BasicExport setLoading={setLoading} classes={classes}/>,
+    basic:  <ObservationsExport setLoading={setLoading} classes={classes}/>,
     actionPlan: <ActionPlanExport setLoading={setLoading} classes={classes}/>,
     conferencePlan: <ConferencePlanExport setLoading={setLoading} classes={classes}/>,
     none: <></>
@@ -115,7 +115,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
             value={tool}
             onChange={(e)=> setTool(e.target.value)}
             >
-              <MenuItem value={'basic'}>Basic</MenuItem>
+              <MenuItem value={'basic'}>Observations</MenuItem>
               <MenuItem value={'actionPlan'}>Action Plan</MenuItem>
               <MenuItem value={'conferencePlan'}>Conference Plan</MenuItem>
               <MenuItem value={'none'}>None</MenuItem>

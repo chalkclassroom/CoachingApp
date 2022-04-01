@@ -110,7 +110,7 @@ const StyledFormControl = withStyles(() => ({
 }))(FormControl)
 
 
-const BasicExport: FunctionComponent<Props> = (props) => {
+const ObservationsExport: FunctionComponent<Props> = (props) => {
   const [selectedTables, setSelectedTables] = useState([])
   const [from, setFrom] = useState(moment().add(-7, 'days'))
   const [to, setTo] = useState(moment())
@@ -246,4 +246,4 @@ const BasicExport: FunctionComponent<Props> = (props) => {
   );
 };
 
-export default BasicExport;
+export default ObservationsExport;
