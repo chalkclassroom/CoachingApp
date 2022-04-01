@@ -27,8 +27,6 @@ import * as Constants from '../constants/Constants'
 import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Firebase from './Firebase'
-import * as xlsx from 'xlsx'
-import {generateActionPlanPdf, generateActionPlanXlsx} from "../services/xlsxGenerator";
 
 const styles: object = {
   textField: {
@@ -618,7 +616,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   alignItems="center"
                   style={{ width: '100%' }}
                 >
-                  <Grid item xs={9}>
+                  <Grid item xs={11}>
                     <Grid
                       container
                       direction="row"
@@ -650,8 +648,6 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Button>
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container justify={'center'} xs={2}>
                   </Grid>
                   <Grid item xs={1}>
                     <Button onClick={this.handleSave}>

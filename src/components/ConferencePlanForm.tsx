@@ -21,7 +21,6 @@ import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
-
 const BlankTheme = createTheme({
   palette: {
     primary: {
