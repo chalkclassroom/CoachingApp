@@ -12,11 +12,11 @@ type ActionPlanXlsxResources = {
 }
 
 type ConferencePlanXlsxResources = {
-  coachFirstName: string
-  coachLastName: string
-  teacherFirstName: string
-  teacherLastName: string
-  date: Date
+  coachId: string
+  teacherId: string
+  tool: string
+  dateCreated: Date | null
+  dateModified: Date | null
   feedback: Array<string>
   questions: Array<string>
   notes: Array<string>
@@ -29,7 +29,7 @@ const convertDate = (date: Date | null) =>{
   return ''
 }
 
-const maxSteps = (resources: ActionPlanXlsxResources[]) => {
+const maxActionPlanSteps = (resources: ActionPlanXlsxResources[]) => {
   return resources
     .map(resource => resource.steps.length)
     .reduce((prev, cur) => Math.max(prev, cur), -Infinity)
@@ -46,7 +46,7 @@ const createActionPlanHeaders = (resources: ActionPlanXlsxResources[]) => {
     'Benefit for Students',
   ]
  // Adds the  required headers for the largest group of Action Plan steps
-  let steps = maxSteps(resources)
+  let steps = maxActionPlanSteps(resources)
     let questions = []
     for(let i = 0; i < steps; i++) {
       questions.push(`Action Step ${i + 1}`)
@@ -87,64 +87,63 @@ export const generateActionPlanXlsx = (
   sheet[`!cols`] = Array.from({ length: rows[0].length }).map(_ => {
     return { wch: 12 }
   })
-  xlsx.utils.book_append_sheet(wb, sheet, 'Action Plan')
+  xlsx.utils.book_append_sheet(wb, sheet, 'Action Plans')
   return wb
 }
 
-export const generateConferencePlanXlsx = (
-  resources: ConferencePlanXlsxResources
-) => {
-  let {
-    coachFirstName,
-    coachLastName,
-    teacherFirstName,
-    teacherLastName,
-    date,
-    feedback,
-    questions,
-    notes,
-  } = resources
+const maxConferencePlanSteps = (resources: ConferencePlanXlsxResources[]) => {
+  return resources
+    .flatMap(resource => [resource.questions.length, resource.notes.length, resource.questions.length])
+    .reduce((prev,cur) => Math.max(prev, cur), -Infinity)
+}
 
+const createConferecePlanHeaders = (resources: ConferencePlanXlsxResources[]) => {
   let headers = [
     'Coach ID',
     'Teacher ID',
-    'Date Created',
-    'Strengths-Based Feedback',
-    'Reflection Questions',
-    'Notes',
+    'Date Modified',
+    'Tool',
   ]
-
-  let data = [
-    coachFirstName + ' ' + coachLastName,
-    teacherFirstName + ' ' + teacherLastName,
-    date,
-  ]
-
-  let rows = []
-  const maxLength = Math.max(feedback.length, notes.length, questions.length)
-
-  for (let i = 0; i < maxLength; i++) {
-    let newRow = Array.from({ length: data.length }, _ => '') // blanks number of lines equal to length of data.
-    newRow.push(feedback[i] ?? '')
-    newRow.push(questions[i] ?? '')
-    newRow.push(notes[i] ?? '')
-    rows.push(newRow)
+  // Adds the  required headers for the largest group of Action Plan steps
+  let steps = maxConferencePlanSteps(resources)
+  let questions = []
+  for(let i = 0; i < steps; i++) {
+    questions.push(`Question ${i + 1}`)
+    questions.push(`Feedback ${i + 1}`)
+    questions.push(`Notes ${i + 1}`)
   }
-  console.log(rows)
+  return headers.concat(questions)
+}
 
-  let wb = xlsx.utils.book_new()
-  // Concat() to bring the first notes/questions/feedback to the first row.
-  let sheet = xlsx.utils.aoa_to_sheet([
-    headers,
-    data.concat(rows[0].slice(data.length)),
-    ...rows.slice(1),
-  ])
+const createConferencePlanRow = (conferencePlan: ConferencePlanXlsxResources): string[] => {
+  let { coachId, teacherId, dateModified, notes, feedback, questions, tool } = conferencePlan
+  let data = [
+    coachId,
+    teacherId,
+    convertDate(dateModified),
+    tool,
+  ]
+  for(let i = 0; i < Math.max(notes.length, feedback.length, questions.length); i++) {
+    data.push(questions[i] ?? '')
+    data.push(feedback[i] ?? '')
+    data.push(notes[i] ?? '')
+  }
 
-  // sets the column widths for each column -- each needs its own object. Minimum length of 12, max of length of header string.
-  sheet[`!cols`] = Array.from({ length: headers.length }).map((_, i) => {
-    return { wch: Math.max(headers[i].length, 12) }
+  return data
+}
+
+export const generateConferencePlanXlsx = (
+  resources: ConferencePlanXlsxResources[]
+) => {
+  const wb = xlsx.utils.book_new()
+  const baseRows =[createConferecePlanHeaders(resources)]
+  const rows = baseRows.concat(resources.map(conferencePlan =>createConferencePlanRow(conferencePlan)))
+
+  let sheet = xlsx.utils.aoa_to_sheet(rows)
+  // sets the column widths for each column -- each needs its own object.
+  sheet[`!cols`] = Array.from({ length: rows[0].length }).map(_ => {
+    return { wch: 12 }
   })
-
-  xlsx.utils.book_append_sheet(wb, sheet, 'Conference Plan')
+  xlsx.utils.book_append_sheet(wb, sheet, 'Conference Plans')
   return wb
 }

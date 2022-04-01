@@ -2971,7 +2971,7 @@ class Firebase {
         dateModified: this.convertFirestoreTimestamp(dateModified),
         dateCreated: this.convertFirestoreTimestamp(dateCreated),
         feedback,
-        questions: questions.concat(addedQuestions),
+        questions: questions.concat(addedQuestions), // flip the order here to put canned questions first
         notes
       }
     } ))
