@@ -579,14 +579,14 @@ class TeacherListPage extends React.Component<Props, State> {
   validateInputText = (type: string, val: string): void => {
     switch (type) {
       case "inputFirstName":
-        if (!/^[a-zA-Z ']{2,30}$/.test(val)) {
+        if (!/^[a-zA-Z '-]{2,30}$/.test(val)) {
           this.setState({ fnErrorText: "Invalid first name." });
         } else {
           this.setState({ fnErrorText: "" });
         }
         break;
       case "inputLastName":
-        if (!/^[a-zA-Z ']{2,30}$/.test(val)) {
+        if (!/^[a-zA-Z '-]{2,30}$/.test(val)) {
           this.setState({ lnErrorText: "Invalid last name." });
         } else {
           this.setState({ lnErrorText: "" });
@@ -600,7 +600,7 @@ class TeacherListPage extends React.Component<Props, State> {
         }
         break;
       case "inputSchool":
-        if (!/^[a-zA-Z ']{2,100}$/.test(val)) {
+        if (!/^[a-zA-Z '-]{2,100}$/.test(val)) {
           this.setState({
             schoolErrorText: "Invalid school (max 100 characters)."
           });
