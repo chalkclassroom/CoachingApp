@@ -239,6 +239,11 @@ class Firebase {
       )
   }
 
+  userIsAdmin = async () => {
+    let userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
+    return userDocs.docs[0].get('role') === 'admin'
+  }
+
   sendEmail = async (msg: string): Promise<void> => {
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       'funcSendEmail'
@@ -448,6 +453,18 @@ class Firebase {
       .catch((error: Error) =>
         console.error('Error occurred getting average tone rating: ', error)
       )
+  }
+
+  getCoaches = async () => {
+    if(!await this.userIsAdmin()) {
+      throw new Error('User is not authorized for this action')
+    }
+
+    let coaches = await this.db.collection('users')
+      .where('role', "in", ['coach', 'admin'])
+      .get();
+
+    return coaches.docs.map(doc => doc.data());
   }
 
   /* getCoachList = async function() {
@@ -2880,6 +2897,85 @@ class Firebase {
           console.log('unable to retrieve action plans')
         })
     }
+  }
+// Added this function because a lot of these timestamp values
+// are often stored as empty strings or null in the db
+/*
+* takes an object and, if it's a firestore timestamp,
+* converts it to a JS Date.  Returns null for other values.
+* @param {any} timestamp
+*/
+  convertFirestoreTimestamp = (timestamp: any): Date | null => {
+    return timestamp?.toDate ? timestamp.toDate() : null
+  }
+
+  getActionStepsForExport = async (actionPlanId: string) => {
+    return await this.db.collection('actionPlans')
+      .doc(actionPlanId)
+      .collection('actionSteps')
+      .get()
+      .then(res => {
+        return res.docs.map(doc => {
+          return {
+            step: doc.data().step || null,
+            person: doc.data().person || null,
+            timeline: this.convertFirestoreTimestamp(doc.data().timeline)
+          }
+        })
+      })
+  }
+
+  getActionPlansForExport = async (coachId: string | undefined = undefined) => {
+    if (!await this.userIsAdmin()) {
+      throw new Error('Not authorized to Perform this action')
+    }
+    this.query = this.db
+      .collection('actionPlans').orderBy('dateModified', 'desc')
+    if (coachId) {
+      this.query = this.query.where('coach', '==', coachId)
+    }
+   const actionPlans = await this.query.get();
+    return Promise.all(actionPlans.docs.map(async (doc) => {
+      const {coach, benefit,dateCreated, dateModified, goal, goalTimeline, teacher, tool } = doc.data()
+        return {
+          coachId: coach,
+          teacherId: teacher,
+          benefit: benefit ?? '',
+          goal: goal ?? '',
+          tool: tool ?? '',
+          dateModified: this.convertFirestoreTimestamp(dateModified),
+          goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
+          dateCreated: this.convertFirestoreTimestamp(dateCreated),
+          steps: await this.getActionStepsForExport(doc.id)
+        }
+      } ))
+  }
+
+  getConferencePlansForExport = async (coachId: string | undefined  = undefined) => {
+    if (!await this.userIsAdmin()) {
+      throw new Error('Not authorized to Perform this action')
+    }
+
+    this.query = this.db
+      .collection('conferencePlans').orderBy('dateModified', 'desc')
+    if (coachId) {
+      this.query = this.query.where('coach', '==', coachId)
+    }
+    const conferencePlans = await this.query.get();
+    return Promise.all(conferencePlans.docs.map(async (doc) => {
+      const {coach,dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool } = doc.data()
+      return {
+        coachId: coach,
+        teacherId: teacher,
+        tool: tool ?? '',
+        dateModified: this.convertFirestoreTimestamp(dateModified),
+        dateCreated: this.convertFirestoreTimestamp(dateCreated),
+        feedback,
+        questions: questions.concat(addedQuestions), // flip the order here to put canned questions first
+        notes
+      }
+    } ))
+
   }
 
   /**
