@@ -15,7 +15,7 @@ export default function EngagementSummaryChart(props: {
         <PieChartLegend
           slices={[
             { color: Constants.Colors.SE, label: 'Engaged' },
-            { color: Constants.Colors.RedGraph, label: 'OffTask' },
+            { color: Constants.Colors.RedGraph, label: 'Off Task' },
           ]}
           legendTitle={'Compare how often the students were:'}
         />
