@@ -1040,8 +1040,9 @@ class Firebase {
       )
   }
   
-  handleUpdateNote = (id:string, text: string) => {
-   this.sessionRef.collection('notes').doc(id).update({Note: text})
+  handleUpdateNote = (id:string, text: string, session: string | null = null) => {
+    let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
+   sessionRef.collection('notes').doc(id).update({Note: text})
      .catch(error => console.log('Could not update note:', error))
   }
 
