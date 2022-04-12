@@ -1886,7 +1886,6 @@ const questionBank = {
         ["Interacting with a teacher", false],
         ["Talking", false],
         ["A or B", true],
-        ["None of the above", false]
       ]),
       feedback: "The correct answer is D.  An interaction can be considered associative or " + 
       "cooperative if the child is interacting with another person, whether it is another " + 
