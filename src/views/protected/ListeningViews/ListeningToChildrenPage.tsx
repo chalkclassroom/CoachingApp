@@ -8,6 +8,7 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import withObservationTimeout from "../../../components/HOComponents/withObservationWrapper";
 
 /* function handleCloseTeacherModal(): void => {
   this.setState({ teacherModal: false })
@@ -15,6 +16,7 @@ import Firebase from '../../../components/Firebase'
 
 interface Props {
   teacherSelected: Types.Teacher
+  preBack: () => Promise<boolean>
 }
 
 /**
@@ -34,7 +36,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => (<AppBar firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar preBack={props.preBack} firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>
@@ -82,4 +84,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(ListeningToChildrenPage);
+export default connect(mapStateToProps, null)(withObservationTimeout(ListeningToChildrenPage));
