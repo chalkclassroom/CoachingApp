@@ -195,7 +195,7 @@ class AppBar extends React.Component<Props, State> {
     this.setState({ open: false });
   };
 
-  handleNavigation = async (navAction: () => void): Promise<void> => {
+  handleNavigation = async (navAction: () => void) => {
       if(!await this.props.confirmAction()) {
         return
     }

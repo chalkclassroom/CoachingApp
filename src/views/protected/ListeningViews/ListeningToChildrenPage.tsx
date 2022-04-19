@@ -36,7 +36,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => (<AppBar preBack={props.preBack} firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar confirmAction={props.preBack} firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>

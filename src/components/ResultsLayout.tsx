@@ -331,7 +331,7 @@ class ResultsLayout extends React.Component<Props, State> {
             <div>
                 <FirebaseContext.Consumer>
                     {(firebase: Firebase): React.ReactNode => (
-                        <AppBar preBack={this.handleActionPlanModal} firebase={firebase} />
+                        <AppBar confirmAction={this.handleActionPlanModal} firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>
                 <Dialog open={this.state.actionPlanModalOpen}>
