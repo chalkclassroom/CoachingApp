@@ -586,7 +586,7 @@ class Firebase {
   }
 
   /**
-   * sets fields in document for current observation
+   * sets fields in document for current observation incl. time zone
    * @param {object} mEntry
    */
   handleSession = async (mEntry: {
@@ -608,6 +608,7 @@ class Firebase {
         type: mEntry.type,
         checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false,
+        timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone
       })
       .catch((error: Error) =>
         console.error('Error setting session ref: ', error)
