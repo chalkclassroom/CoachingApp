@@ -11,6 +11,7 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
+import { useState } from 'react';
 
 const styles: object = {
   root: {
@@ -187,6 +188,7 @@ interface State{
   status: number,
   currentCenter: string,
   totalVisitCount: number
+  startTime: string;
 }
 
 /**
@@ -212,7 +214,12 @@ class CenterMenu extends React.Component<Props, State> {
       addDialog: false,
       status: CENTER_CHECKLIST,
       currentCenter: '',
-      totalVisitCount: 0
+      totalVisitCount: 0,
+      startTime: new Date().toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true
+      }),
     }
   }
 
@@ -339,6 +346,7 @@ class CenterMenu extends React.Component<Props, State> {
                       }
                       infoPlacement="flex-start"
                       completeObservation={true}
+                      startTime={this.state.startTime}
                     />
                   </Grid>
                 </Grid>
@@ -397,6 +405,7 @@ class CenterMenu extends React.Component<Props, State> {
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}
+            startTime={this.state.startTime}
           />
         );
       default:

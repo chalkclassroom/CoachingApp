@@ -140,6 +140,7 @@ interface Props {
   },
   type: Types.DashboardType,
   backToCenterMenu(): void
+  startTime:string
 }
 
 interface State {
@@ -685,6 +686,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                     completeObservation={false}
                     startTimer={this.startTimer}
                     stopTimer={this.stopTimer}
+                    startTime={this.props.startTime}
                   />
                 </Grid>
               </Grid>

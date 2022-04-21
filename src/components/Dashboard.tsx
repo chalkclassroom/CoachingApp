@@ -173,6 +173,7 @@ type Props = RouteComponentProps & {
   stopTimer?(): void,
   startTimer?(): void,
   checklistType?: string
+  startTime?: string
 }
 
 interface State {
@@ -205,7 +206,7 @@ class Dashboard extends React.Component<Props, State> {
       notes: false,
       help: false,
       auth: true,
-      time: new Date().toLocaleString("en-US", {
+      time: this.props.startTime || new Date().toLocaleString("en-US", {
         hour: "numeric",
         minute: "numeric",
         hour12: true
