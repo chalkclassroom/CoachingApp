@@ -11,7 +11,7 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
-import { useState } from 'react';
+
 
 const styles: object = {
   root: {
