@@ -1139,6 +1139,12 @@ class Firebase {
         console.error('Error occurred fetching coach notes: ', error)
       )
   }
+  
+  handleUpdateNote = (id:string, text: string, session: string | null = null) => {
+    let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
+   sessionRef.collection('notes').doc(id).update({Note: text})
+     .catch(error => console.log('Could not update note:', error))
+  }
 
   /* handleFetchTrainingStatus = async function() {
     return this.db
