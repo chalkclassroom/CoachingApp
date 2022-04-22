@@ -41,8 +41,8 @@ interface Entry {
 
 
 interface Observation {
-  activitySetting?: string
-  checklist: any //TODO: fix type
+  activitySetting?: string | null
+  checklist: string
   entries?: Entry[]
   notes?: []
   completed: boolean
@@ -632,7 +632,8 @@ class Firebase {
         type: mEntry.type,
         checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false,
-        timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone
+        timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+        activitySetting: null
       }
   }
 
@@ -658,11 +659,13 @@ class Firebase {
         type,
         timezone,
         entries,
+        activitySetting,
         notes
       } = this.currentObservation;
       // TODO: Figure out if I'll need to unreference sessionRef
       this.sessionRef = this.db.collection('observations').doc()
       this.sessionRef.set({
+        activitySetting,
         checklist,
         completed,
         end: firebase.firestore.Timestamp.fromDate(end),
