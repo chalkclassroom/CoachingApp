@@ -10,6 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Grid from "@material-ui/core/Grid";
+import NoteText from "./Shared/NoteText";
 
 interface Props {
   open: boolean,
@@ -19,6 +20,7 @@ interface Props {
       content: string,
       timestamp: {seconds: number, nanoseconds: number}
     }>>,
+    handleUpdateNote(id:string, newText:string):void
     handlePushNotes(note: string): Promise<void>
   },
   onClose(value: boolean): void,
@@ -29,7 +31,8 @@ interface Props {
 interface State {
   notes: Array<{
     content: string,
-    timestamp: string
+    timestamp: string,
+    id: string
   }>,
   open: boolean,
   newNote: string
@@ -50,7 +53,7 @@ class Notes extends React.Component<Props, State> {
     this.state = {
       notes: [],
       open: this.props.open,
-      newNote: ""
+      newNote: "",
     };
   }
 
@@ -59,7 +62,8 @@ class Notes extends React.Component<Props, State> {
     this.props.firebase.handleFetchNotes().then(notesArr => {
       const formattedNotesArr: Array<{
         content: string,
-        timestamp: string
+        timestamp: string,
+        id: string
       }> = [];
       notesArr.map(note => {
         const newTimestamp = new Date(
@@ -71,7 +75,8 @@ class Notes extends React.Component<Props, State> {
         });
         formattedNotesArr.push({
           content: note.content,
-          timestamp: newTimestamp
+          timestamp: newTimestamp,
+          id: note.id
         });
       });
       this.setState({
@@ -82,6 +87,18 @@ class Notes extends React.Component<Props, State> {
     });
   }
 
+
+  componentWillUnmount() {
+    /* To allow editing of newly-made notes, I've delayed pushing to firestore
+    * until the component unmounts. Otherwise, we'd have to wait for the new DB ids,
+    * which would cause the app to hang if offline.
+    */
+    let notesToSubmit = this.state.notes.filter(note => !note.id)
+    notesToSubmit.forEach(note => {
+      this.props.firebase.handlePushNotes(note.content)
+    })
+  }
+
   handleOpen = (): void => {
     this.setState({ open: true });
   };
@@ -90,6 +107,21 @@ class Notes extends React.Component<Props, State> {
     this.setState({ open: false });
     this.props.onClose(false);
   };
+  handleUpdateNote = (id: string | undefined, index: number ) => {
+      return (newText: string) => {
+        this.setState(prevState => {
+          let prevNote = prevState.notes[index]
+          prevState.notes.splice(index, 1, {...prevNote, content: newText})
+          return {
+            notes: prevState.notes
+          }
+        })
+
+        if(id !== undefined) {
+          this.props.firebase.handleUpdateNote(id, newText)
+        }
+      }
+    }
 
   /**
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
@@ -100,16 +132,6 @@ class Notes extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    // submit to firebase DB
-    this.props.firebase
-      .handlePushNotes(this.state.newNote)
-      .then(() => {
-        /* do nothing */
-      })
-      .catch(() => {
-        console.log("Something wrong with data fetch");
-      });
-
     // update local state for UI
     const notesArr: Array<{
       content: string,
@@ -248,7 +270,7 @@ class Notes extends React.Component<Props, State> {
                 <TableBody style={{overflowY: 'auto'}}>
                   {this.state.notes ? (
                     this.state.notes.map((note, index) => (
-                      <TableRow className="note" key={index}>
+                      <TableRow className="note" key={index} style={{padding: '.5rem 0'}}>
                         <TableCell component="th" scope="row">
                           <Grid
                             container
@@ -269,25 +291,8 @@ class Notes extends React.Component<Props, State> {
                             </Grid>
                           </Grid>
                         </TableCell>
-                        <TableCell align="right">
-                          <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            text-align="center"
-                          >
-                            <Grid
-                              container
-                              item
-                              xs={12}
-                              alignItems={"center"}
-                              justify={"center"}
-                              style={{fontFamily: 'Arimo'}}
-                            >
-                              {note.content}
-                            </Grid>
-                          </Grid>
+                        <TableCell  align="right" style={{overflowWrap:'break-word'}}>
+                          <NoteText text={note.content} id={note.id} handleUpdate={this.handleUpdateNote(note.id, index)} />
                         </TableCell>
                       </TableRow>
                     ))
