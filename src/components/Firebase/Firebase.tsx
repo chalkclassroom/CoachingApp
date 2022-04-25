@@ -643,12 +643,10 @@ class Firebase {
    */
   endSession = (time: Date | null = null) => {
     if (this.currentObservation) {
-      console.log(this.currentObservation.end)
       this.updateCurrentObservation({
         end: time ? time : new Date(),
         completed: true
       })
-      console.log(this.currentObservation.end)
       let {
         checklist,
         completed,
@@ -664,6 +662,12 @@ class Firebase {
       } = this.currentObservation;
       // TODO: Figure out if I'll need to unreference sessionRef
       this.sessionRef = this.db.collection('observations').doc()
+      // Entries must be added before the document is 'set', or else the
+      // observationToBQ may not grab all the entries.
+      let entryCollection = this.sessionRef.collection('entries')
+      entries?.forEach(entry => {
+        entryCollection.add({...entry, Timestamp: firebase.firestore.Timestamp.fromDate(entry.Timestamp)})
+      })
       this.sessionRef.set({
         activitySetting,
         checklist,
@@ -674,10 +678,6 @@ class Firebase {
         teacher,
         type,
         timezone
-      })
-      let entryCollection = this.sessionRef.collection('entries')
-      entries?.forEach(entry => {
-        entryCollection.add({...entry, Timestamp: firebase.firestore.Timestamp.fromDate(entry.Timestamp)})
       })
       let notesCollection = this.sessionRef.collection('notes')
       notes?.forEach(note => {
