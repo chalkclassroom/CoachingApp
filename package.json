@@ -86,6 +86,7 @@
     "rxjs": "^6.3.3",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.1.1",
+    "uuid": "^8.3.2",
     "victory-pie": "^31.2.0",
     "xlsx": "^0.17.0"
   },
