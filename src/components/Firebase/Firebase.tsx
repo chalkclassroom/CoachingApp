@@ -3,7 +3,7 @@ import {FirebaseFunctions} from '@firebase/functions-types'
 import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
-
+import {v4 as uuidv4} from 'uuid'
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -29,7 +29,7 @@ export interface UserDocument {
 interface Note {
   id: string
   content: string
-  timestamp: {
+  Timestamp: {
     seconds: number
     nanoseconds: number
   }
@@ -39,12 +39,17 @@ interface Entry {
   Timestamp: Date
 }
 
+interface LocalNote {
+  content: string
+  Timestamp: Date
+  id: string
+}
 
 interface Observation {
   activitySetting?: string | null
-  checklist: string
-  entries?: Entry[]
-  notes?: []
+  checklist: string | null
+  entries: Entry[]
+  notes: LocalNote[]
   completed: boolean
   end: Date
   start: Date
@@ -630,6 +635,7 @@ class Firebase {
         teacher: '/user/' + mEntry.teacher,
         end: new Date(),
         type: mEntry.type,
+        notes: [],
         checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false,
         timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -660,12 +666,11 @@ class Firebase {
         activitySetting,
         notes
       } = this.currentObservation;
-      // TODO: Figure out if I'll need to unreference sessionRef
       this.sessionRef = this.db.collection('observations').doc()
       // Entries must be added before the document is 'set', or else the
-      // observationToBQ may not grab all the entries.
+      // observationToBQ cloud function may not grab all the entries.
       let entryCollection = this.sessionRef.collection('entries')
-      entries?.forEach(entry => {
+      entries.forEach(entry => {
         entryCollection.add({...entry, Timestamp: firebase.firestore.Timestamp.fromDate(entry.Timestamp)})
       })
       this.sessionRef.set({
@@ -680,11 +685,14 @@ class Firebase {
         timezone
       })
       let notesCollection = this.sessionRef.collection('notes')
-      notes?.forEach(note => {
-        notesCollection.add(note)
+      notes.forEach(note => {
+        notesCollection.add({
+          Note: note.content,
+          Timestamp: firebase.firestore.Timestamp.fromDate(note.Timestamp)
+        })
       })
       this.currentObservation = null;
-
+      this.sessionRef = null;
     }
   }
 
@@ -737,7 +745,7 @@ class Firebase {
   }
 
   /**
-   * submits a single center observation to database
+   * submits a single center observation to local observation
    * @param {object} mEntry
    */
   handlePushCentersData =  (mEntry: {
@@ -749,16 +757,6 @@ class Firebase {
       PeopleType: mEntry.people,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     Checked: mEntry.checked,
-    //     PeopleType: mEntry.people,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
   }
 
   /**
@@ -776,21 +774,11 @@ class Firebase {
       entryType: mEntry.entryType,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     studentId: mEntry.id,
-    //     point: mEntry.point,
-    //     entryType: mEntry.entryType,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
+
   }
 
   /**
-   * adds level of instruction selection to database
+   * adds level of instruction selection to local observation
    * @param {string} insType
    */
   handlePushInstruction = async (
@@ -800,19 +788,11 @@ class Firebase {
       instructionType: insType,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     instructionType: insType,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
+
   }
 
   /**
-   * adds listening to children 1-minute observation to database
+   * adds listening to children 1-minute observation to local observation
    * @param {object} mEntry
    */
   handlePushListening = (mEntry: {
@@ -822,19 +802,10 @@ class Firebase {
       Checked: mEntry.checked,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     Checked: mEntry.checked,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
   }
 
   /**
-   * adds literacy 1-minute observation to database
+   * adds literacy 1-minute observation to local observation
    * @param {object} mEntry
    */
   handlePushLiteracy =  (mEntry: {
@@ -844,15 +815,6 @@ class Firebase {
       Checked: mEntry.checked,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     Checked: mEntry.checked,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
   }
 
   /**
@@ -867,15 +829,6 @@ class Firebase {
       end: new Date(),
       completed: true,
     })
-    // this.sessionRef
-    //   .update({
-    //     activitySetting: activitySetting,
-    //     end: firebase.firestore.FieldValue.serverTimestamp(),
-    //     completed: true,
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred updating session ref: ', error)
-    //   )
   }
 
   /**
@@ -1059,28 +1012,17 @@ class Firebase {
       TrnType: mEntry.transitionType,
       Timestamp: new Date(),
     })
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     TrnStart: mEntry.start,
-    //     TrnEnd: mEntry.end,
-    //     TrnDur: mEntry.duration,
-    //     TrnType: mEntry.transitionType,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
+
   }
 
   /**
    * adds climate selection to database
    * @param {object} mEntry
    */
-  handlePushClimate = async (mEntry: {
+  handlePushClimate =  (mEntry: {
     BehaviorResponse: string
     Type: string
-  }): Promise<firebase.firestore.DocumentReference | void> => {
+  })  => {
     if(this.currentObservation) {
       this.currentObservation.entries.push(
         {
@@ -1090,60 +1032,62 @@ class Firebase {
           }
       )
     }
-    // return this.sessionRef
-    //   .collection('entries')
-    //   .add({
-    //     BehaviorResponse: mEntry.BehaviorResponse,
-    //     Type: mEntry.Type,
-    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //   })
-    //   .catch((error: Error) =>
-    //     console.error('Error occurred adding observation: ', error)
-    //   )
+
   }
 
   /**
-   * add note to database
+   * add note to local observation
    * @param {string} mNote
    */
-  handlePushNotes = async (
+  handlePushNotes = (
     mNote: string
-  ): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('notes')
-      .add({
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        Note: mNote,
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding notes: ', error)
-      )
+  ) => {
+    if(this.currentObservation) {
+      this.currentObservation.notes.push(
+        {content: mNote,
+        Timestamp: new Date(),
+        id: uuidv4()})
+    }
   }
 
-  /**
-   *
-   */
-  handleFetchNotes = async (): Promise<Array<Note> | void> => {
-    return this.sessionRef
-      .collection('notes')
-      .get()
-      .then((snapshot: firebase.firestore.QuerySnapshot) => {
-        const notesArr: Array<Note> = []
-        snapshot.forEach(doc =>
-          notesArr.push({
-            id: doc.id,
-            content: doc.data().Note,
-            timestamp: doc.data().Timestamp,
-          })
+  handlePushNotesRemote = async (
+    mNote: string
+  ): Promise<firebase.firestore.DocumentReference | void> => {
+    if(this.sessionRef) {
+      return this.sessionRef
+        .collection('notes')
+        .add({
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          Note: mNote,
+        })
+        .catch((error: Error) =>
+          console.error('Error occurred adding notes: ', error)
         )
-        return notesArr
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred fetching coach notes: ', error)
-      )
+    }
+  }
+
+  handleFetchNotes = () => {
+    if(this.currentObservation) {
+      return this.currentObservation.notes
+    }
+    return []
+  }
+
+
+  handleUpdateNote = (id: string, text:string) => {
+    let noteIndex = this.currentObservation?.notes.findIndex(note => note.id === id)
+    if(noteIndex === undefined || noteIndex === -1) {
+      throw new Error(`Cannot find note with id ${id}`)
+    }
+    let newNote = {
+      id: id,
+      content: text,
+      Timestamp: new Date()
+    }
+    this.currentObservation?.notes.splice(noteIndex, 1, newNote)
   }
   
-  handleUpdateNote = (id:string, text: string, session: string | null = null) => {
+  handleUpdateNoteRemote = (id:string, text: string, session: string | null = null) => {
     let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
    sessionRef.collection('notes').doc(id).update({Note: text})
      .catch(error => console.log('Could not update note:', error))
