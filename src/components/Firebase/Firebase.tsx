@@ -696,6 +696,11 @@ class Firebase {
     }
   }
 
+  discardSession = () => {
+    this.sessionRef = null
+    this.currentObservation = null
+  }
+
   /**
    *
    * @param {teacherId:string}
