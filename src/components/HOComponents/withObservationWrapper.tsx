@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {FirebaseContext} from "../Firebase";
 
+
 import ButtonlessDialog from "../Shared/ButtonlessDialog";
 import ConfirmationDialog from "../Shared/ConfirmationDialog";
 
@@ -80,12 +81,32 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
     const endSession = (e: BeforeUnloadEvent) => {
       e.preventDefault()
       e.returnValue = ''
-      let x = confirm("LEAVING")
-      alert('LEAVING FOR REAL')
-      if (!x) {
-
-      } else firebase.endSession();
+      console.log('LEAVING');
     }
+
+
+    // For handling direct navigation, esp  browser's back button. We may want to ONLY handle back button presses and let the
+    // Beforeunload event handle direct navigation.
+    //adapted from https://stackoverflow.com/questions/66529690/using-history-block-with-asynchronous-functions-callback-async-await
+    useEffect(() => {
+      const unblock = props.history.block((tx) => {
+        handleConfirmationOpen().then(res => {
+          if(res) {
+            firebase.discardSession()
+            unblock()
+            props.history.push(tx.pathname, tx.state)
+          }
+          else {
+            console.log('STAYING ON PAGE')
+          }
+        })
+        return false
+        })
+      return () => {
+        unblock()
+      }
+    },[])
+
 
     useEffect(() => {
       resetTimeout()
