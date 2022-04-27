@@ -18,6 +18,7 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
 
     const intervalRef = useRef(0)
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>()
+    const canNavigateRef = useRef(false)
     const displayModalRef = useRef(false)
     const firebase = useContext(FirebaseContext)
 
@@ -28,6 +29,7 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
       if (confirmRef) {
         firebase.discardSession()
         confirmRef.resolve(true)
+        canNavigateRef.current = true
       }
     }
     //Runs when users stay on the page
@@ -90,6 +92,10 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
     //adapted from https://stackoverflow.com/questions/66529690/using-history-block-with-asynchronous-functions-callback-async-await
     useEffect(() => {
       const unblock = props.history.block((tx) => {
+        // This will bypass the normal blocking if the prompt has already been displayed.
+        if(canNavigateRef.current) {
+          return true
+        }
         handleConfirmationOpen().then(res => {
           if(res) {
             firebase.discardSession()
