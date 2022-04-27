@@ -131,7 +131,7 @@ type Props = RouteComponentProps & {
   firebase?: Firebase | null,
   history: H.History,
   noBack?: boolean
-  confirmAction: () => Promise<boolean>
+  confirmAction?: () => Promise<boolean>
 }
 
 interface State {
