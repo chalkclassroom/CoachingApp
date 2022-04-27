@@ -4,8 +4,8 @@ import {FirebaseContext} from "../Firebase";
 import ButtonlessDialog from "../Shared/ButtonlessDialog";
 import ConfirmationDialog from "../Shared/ConfirmationDialog";
 
-const MODAL_VISIBLE_TIME = 10 // length of time the modal is visible before completing the observation
-const TOTAL_TIME = 20 // Total time in seconds  that the timeout lasts
+const MODAL_VISIBLE_TIME = 20 // length of time the modal is visible before completing the observation
+const TOTAL_TIME = 60 * 2 // Total time in seconds  that the timeout lasts
 const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
 
 export default (WrappedComponent: React.FunctionComponent<any>) => {
