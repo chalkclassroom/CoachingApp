@@ -10,8 +10,8 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import BehaviorCounter from '../../../components/ClassroomClimateComponent/BehaviorCounter'
 import { connect } from 'react-redux'
 import {
-    appendClimateRating,
-    emptyClimateStack,
+  appendClimateRating, emptyClimateRating,
+  emptyClimateStack,
 } from '../../../state/actions/classroom-climate'
 import Dashboard from '../../../components/Dashboard'
 import Countdown from '../../../components/Countdown'
@@ -19,6 +19,7 @@ import EmptyToneRating from '../../../components/ClassroomClimateComponent/Empty
 import TeacherModal from '../HomeViews/TeacherModal'
 import * as Types from '../../../constants/Types'
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 /*
     N.B. Time measured in milliseconds.
@@ -102,8 +103,12 @@ interface Props {
         dashboardGrid: string
         contentGrid: string
         grid: string
+
     }
     appendClimateRating(rating: number): void
+  preBack(): Promise<boolean>
+  emptyClimateRating(): void
+  emptyClimateStack(): void
 }
 
 interface State {
@@ -205,6 +210,8 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     /** lifecycle method invoked just before component is unmounted */
     componentWillUnmount(): void {
         clearInterval(this.timer)
+      this.props.emptyClimateStack()
+      this.props.emptyClimateRating()
     }
 
     static propTypes = {
@@ -231,7 +238,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             <div className={this.props.classes.root}>
                 <FirebaseContext.Consumer>
                     {(firebase: Firebase): React.ReactNode => (
-                        <AppBar firebase={firebase} />
+                        <AppBar confirmAction={this.props.preBack} firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>
                 <Modal open={this.state.ratingIsOpen}>
@@ -357,4 +364,5 @@ ClassroomClimatePage.contextType = FirebaseContext
 export default connect(mapStateToProps, {
     appendClimateRating,
     emptyClimateStack,
-})(withStyles(styles)(ClassroomClimatePage))
+    emptyClimateRating
+})(withStyles(styles)(withObservationWrapper(ClassroomClimatePage)))

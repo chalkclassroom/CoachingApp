@@ -9,9 +9,13 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
+import {clearLiteracyCount} from "../../../state/actions/literacy-instruction";
 
 interface Props {
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  clearLiteracyCount(): void
 }
 
 /**
@@ -28,11 +32,16 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
       setTeacherModal(true)
     }
   });
+  useEffect(() => {
+    return () => {
+    props.clearLiteracyCount()
+    }
+  }, [])
   return (
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => (<AppBar firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar confirmAction={props.preBack} firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>
@@ -82,4 +91,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(LiteracyInstructionPage);
+export default connect(mapStateToProps, {clearLiteracyCount})(withObservationWrapper(LiteracyInstructionPage));

@@ -13,6 +13,8 @@ import * as Types from '../../../constants/Types'
 import Firebase from '../../../components/Firebase'
 import { WithStyles } from '@material-ui/styles'
 import { createStyles } from '@material-ui/core'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
+import {clearEngagementCount} from "../../../state/actions/student-engagement";
 
 /*
     N.B. Time measured in milliseconds.
@@ -77,6 +79,8 @@ const styles = () => createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  clearEngagementCount(): void
 }
 
 interface State {
@@ -175,6 +179,10 @@ class StudentEngagementPage extends React.Component<Props, State> {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clearEngagementCount()
+  }
+
   /**
    * render function
    * @return {ReactElement}
@@ -184,7 +192,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: Firebase): React.ReactNode => (
-            <AppBar firebase={firebase} />
+            <AppBar confirmAction={this.props.preBack} firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
         <div className={this.props.classes.main}>
@@ -274,5 +282,5 @@ StudentEngagementPage.contextType = FirebaseContext
 
 export default connect(
   mapStateToProps,
-  {}
-)(withStyles(styles)(StudentEngagementPage))
+  {clearEngagementCount}
+)(withStyles(styles)(withObservationWrapper(StudentEngagementPage)))

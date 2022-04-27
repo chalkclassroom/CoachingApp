@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
 import withObservationTimeout from "../../../components/HOComponents/withObservationWrapper";
+import {clearListeningCount} from "../../../state/actions/listening-to-children";
+
 
 /* function handleCloseTeacherModal(): void => {
   this.setState({ teacherModal: false })
@@ -17,6 +19,7 @@ import withObservationTimeout from "../../../components/HOComponents/withObserva
 interface Props {
   teacherSelected: Types.Teacher
   preBack: () => Promise<boolean>
+  clearListeningCount(): void
 }
 
 /**
@@ -32,6 +35,11 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       setTeacherModal(true)
     }
   });
+  useEffect(() => {
+    return () => {
+      props.clearListeningCount()
+    }
+  }, [])
   return (
     teacherSelected ? (
       <div>
@@ -84,4 +92,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(withObservationTimeout(ListeningToChildrenPage));
+export default connect(mapStateToProps, {clearListeningCount})(withObservationTimeout(ListeningToChildrenPage));

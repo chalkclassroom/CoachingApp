@@ -8,13 +8,19 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time";
+import {
+  clearSessionTime,
+  clearTransitionTime,
+  resetTransitionTime,
+  toggleNewTransitionType
+} from "../../../state/actions/transition-time";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 const styles: object = {
   root: {
@@ -102,6 +108,10 @@ interface Props {
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null,
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  resetTransitionTime(): void
+  clearSessionTime(): void
+  clearTransitionTime(): void
 };
 
 interface State {
@@ -110,6 +120,7 @@ interface State {
   open: boolean,
   transitionEnded: boolean,
   teacherModal: boolean
+  isStopped: boolean
 };
 
 /**
@@ -180,10 +191,16 @@ class TransitionTimePage extends React.Component<Props, State> {
       this.setState({ teacherModal: true })
     }
   };
+  componentWillUnmount() {
+    this.props.resetTransitionTime()
+      this.props.clearTransitionTime()
+      this.props.clearSessionTime()
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleNewTransitionType: PropTypes.func.isRequired,
+    preBack: PropTypes.func,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -220,7 +237,7 @@ class TransitionTimePage extends React.Component<Props, State> {
             </FirebaseContext.Consumer>
           ) : (<div />)}
           <FirebaseContext.Consumer>
-            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar confirmAction={this.props.preBack} firebase={firebase} />}
           </FirebaseContext.Consumer>
           <main className={classes.main}>
             <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>
@@ -327,6 +344,6 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 
-export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType })(
-  withStyles(styles)(TransitionTimePage)
+export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType, clearTransitionTime, clearSessionTime })(
+  withStyles(styles)(withObservationWrapper(TransitionTimePage))
 );

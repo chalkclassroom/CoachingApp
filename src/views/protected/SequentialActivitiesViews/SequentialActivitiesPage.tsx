@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteSACenters } from "../../../state/actions/sequential-activities";
+import {clearSequentialCount, deleteSACenters} from "../../../state/actions/sequential-activities";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import TeacherModal from '../HomeViews/TeacherModal';
 import {
@@ -16,6 +16,7 @@ import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 const styles: object = {
   root: {
@@ -56,8 +57,11 @@ interface Props {
     name: string,
     count: number
   }>,
+  preBack(): Promise<boolean>
   history: H.History,
   teacherSelected: Types.Teacher
+  clearSequentialCount(): void
+  deleteSACenters(): void
 }
 
 /**
@@ -85,6 +89,10 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
       this.setState({ teacherModal: true })
     }
   };
+  componentWillUnmount() {
+    this.props.clearSequentialCount()
+    this.props.deleteSACenters()
+  }
 
   static propTypes = {
     classes: PropTypes.exact({
@@ -119,7 +127,7 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
         <div className={classes.root}>
           <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => (
-              <AppBar firebase={firebase} />
+              <AppBar confirmAction={this.props.preBack} firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
           <main style={{ flexGrow: 1 }}>
@@ -169,6 +177,6 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, { deleteSACenters, addNewCenter, incrementCenterCount, updateSequentialCount })(
-  withStyles(styles)(SequentialActivitiesPage)
+export default connect(mapStateToProps, { deleteSACenters, addNewCenter, incrementCenterCount, updateSequentialCount, clearSequentialCount, deleteSACenters })(
+  withStyles(styles)(withObservationWrapper(SequentialActivitiesPage))
 );

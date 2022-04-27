@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteACCenters } from "../../../state/actions/associative-cooperative";
+import {clearACCount, deleteACCenters} from "../../../state/actions/associative-cooperative";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import TeacherModal from '../HomeViews/TeacherModal';
 import {
@@ -16,6 +16,7 @@ import {
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 const styles: object = {
   root: {
@@ -58,6 +59,9 @@ interface Props {
   }>,
   history: H.History,
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  deleteACCenters(): void
+  clearACCount():void
 }
 
 /**
@@ -85,6 +89,11 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
       this.setState({ teacherModal: true })
     }
   };
+
+  componentWillUnmount() {
+    this.props.deleteACCenters()
+    this.props.clearACCount()
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -116,7 +125,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
         <div className={classes.root}>
           <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => (
-              <AppBar firebase={firebase} />
+              <AppBar confirmAction={this.props.preBack} firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
           <main style={{ flexGrow: 1 }}>
@@ -166,6 +175,6 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount, updateACCount })(
-  withStyles(styles)(AssociativeCooperativeInteractionsPage)
+export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount, updateACCount, clearACCount })(
+  withStyles(styles)(withObservationWrapper(AssociativeCooperativeInteractionsPage))
 );
