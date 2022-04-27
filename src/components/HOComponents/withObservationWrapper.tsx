@@ -109,9 +109,9 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
         <ButtonlessDialog onClose={() => {
         }} display={displayModalRef.current} confirmationText={timeoutText}/>
         <ConfirmationDialog handleConfirm={handleLeaveObservation} handleCancel={handleStay}
-                            dialogText={'Leaving this page will save your work and complete the observation. Would you like to continue?'}
-                            cancelText={'No, stay here'}
-                            confirmText={'Yes, leave observation'}
+                            dialogText={'Leaving this page will cancel this observation. Are you sure you want to cancel this observation?'}
+                            cancelText={'CONTINUE THE OBSERVATION'}
+                            confirmText={'CANCEL THE OBSERVATION'}
                             showDialog={showConfirmDialog}/>
         <WrappedComponent preBack={handleConfirmationOpen} {...props} />
       </>
