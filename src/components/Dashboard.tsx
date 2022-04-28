@@ -174,6 +174,7 @@ type Props = RouteComponentProps & {
   startTimer?(): void,
   checklistType?: string
   startTime?: string
+  forceComplete?: boolean
 }
 
 interface State {
@@ -188,6 +189,7 @@ interface State {
   notesIcon: string,
   title: string,
   resultsDialog: string
+  displayResultsDialog: boolean
 }
 
 /**
@@ -217,7 +219,8 @@ class Dashboard extends React.Component<Props, State> {
       lookForsIcon: '',
       notesIcon: '',
       title: '',
-      resultsDialog: ''
+      resultsDialog: this.props.type,
+      displayResultsDialog: !!this.props.forceComplete
     };
   }
 
@@ -359,40 +362,40 @@ class Dashboard extends React.Component<Props, State> {
     return (
       <div>
         <TransitionResultsDialog
-          open={this.state.resultsDialog==="TT"}
+          open={this.state.resultsDialog==="TT" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <ClimateResultsDialog
-          open={this.state.resultsDialog==='CC'}
+          open={this.state.resultsDialog==='CC' && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <MathResultsDialog
-          open={this.state.resultsDialog==="MI"}
+          open={this.state.resultsDialog==="MI" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <EngagementResultsDialog 
-          open={this.state.resultsDialog==="SE"} 
+          open={this.state.resultsDialog==="SE" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <InstructionResultsDialog
-          open={this.state.resultsDialog==="IN"}
+          open={this.state.resultsDialog==="IN" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <ListeningResultsDialog
-          open={this.state.resultsDialog==="LC"}
+          open={this.state.resultsDialog==="LC" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <SequentialResultsDialog
-          open={this.state.resultsDialog==="SA"}
+          open={this.state.resultsDialog==="SA" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <LiteracyResultsDialog
-          open={this.state.resultsDialog==="LI"}
+          open={this.state.resultsDialog==="LI" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
           literacyType={this.props.checklistType}
         />
         <ACResultsDialog
-          open={this.state.resultsDialog==="AC"}
+          open={this.state.resultsDialog==="AC" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         {this.state.help ? (
@@ -502,6 +505,7 @@ class Dashboard extends React.Component<Props, State> {
                     <FirebaseContext.Consumer>
                       {(firebase: Firebase): React.ReactNode => (
                         <YesNoDialog
+                          forceComplete={this.props.forceComplete}
                           buttonText={<b>COMPLETE OBSERVATION</b>}
                           buttonVariant={"outlined"}
                           buttonColor={Constants.Colors[this.props.type]}
@@ -511,7 +515,7 @@ class Dashboard extends React.Component<Props, State> {
                           }
                           shouldOpen={true}
                           onAccept={(): void => {
-                            this.setState({resultsDialog: this.props.type});
+                            this.setState({displayResultsDialog: true});
                             if (this.props.teacherSelected.id !== "rJxNhJmzjRZP7xg29Ko6") {
                               firebase.completeAppointment(this.props.teacherSelected.id, 'Observation', this.props.type);
                             }

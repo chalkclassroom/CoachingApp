@@ -109,6 +109,7 @@ interface Props {
   preBack(): Promise<boolean>
   emptyClimateRating(): void
   emptyClimateStack(): void
+  forceComplete: boolean
 }
 
 interface State {
@@ -295,6 +296,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                                             completeObservation={true}
                                             startTimer={this.startTimer}
                                             stopTimer={this.stopTimer}
+                                            forceComplete={this.props.forceComplete}
                                         />
                                     </Grid>
                                 </Grid>
@@ -349,6 +351,14 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     }
 }
 
+const wrapperOptions = {
+  totalTime: 180,
+  modalTime: 170,
+  confirmationPrompt: 'Would you like to complete the Observation?',
+  confirmText: 'Yes, Complete',
+  cancelText: 'No, Continue here'
+}
+
 const mapStateToProps = (
     state: Types.ReduxState
 ): {
@@ -365,4 +375,4 @@ export default connect(mapStateToProps, {
     appendClimateRating,
     emptyClimateStack,
     emptyClimateRating
-})(withStyles(styles)(withObservationWrapper(ClassroomClimatePage)))
+})(withStyles(styles)(withObservationWrapper(ClassroomClimatePage, wrapperOptions)))

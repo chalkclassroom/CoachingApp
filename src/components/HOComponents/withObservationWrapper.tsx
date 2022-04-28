@@ -5,24 +5,36 @@ import {FirebaseContext} from "../Firebase";
 import ButtonlessDialog from "../Shared/ButtonlessDialog";
 import ConfirmationDialog from "../Shared/ConfirmationDialog";
 
-const MODAL_VISIBLE_TIME = 20 // length of time the modal is visible before completing the observation
-const TOTAL_TIME = 60 * 2 // Total time in seconds  that the timeout lasts
-const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
 
-export default (WrappedComponent: React.FunctionComponent<any>) => {
+interface Options {
+ totalTime: number
+  modalTime: number
+  confirmationPrompt: string
+  confirmText: string
+  cancelText: string
+}
+
+export default (WrappedComponent: React.FunctionComponent<any>, options: Partial<Options> = {}) => {
   return ({...props}) => {
 
-    const [timeoutText, setTimeoutText] = useState('')
+    const MODAL_VISIBLE_TIME = options?.modalTime ?? 20 // length of time the modal is visible before completing the observation
+    const TOTAL_TIME = options?.totalTime ?? 60 * .5 // Total time in seconds  that the timeout lasts
+    const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
+
     const [confirmRef, setConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
     const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+    const [displayTimeoutModal, setDisplayTimeoutModal] = useState(false)
+    const [timeoutConfirmRef, setTimeoutConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
+    const [showCompleteDialog, setShowCompeteDialog] = useState(false)
 
     const intervalRef = useRef(0)
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>()
     const canNavigateRef = useRef(false)
-    const displayModalRef = useRef(false)
+
     const firebase = useContext(FirebaseContext)
 
     // Code for the confirmation dialog
+
 
     //Runs when users confirm leaving the page
     const handleLeaveObservation = () => {
@@ -41,20 +53,45 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
       }
     }
 
-    const handleConfirmationOpen = (): Promise<boolean> => {
+    const handleOpenNavConfirmation = (): Promise<boolean> => {
       setShowConfirmDialog(true)
       return new Promise<boolean>((resolve, _) => {
         setConfirmRef({resolve})
       })
     }
-    const tick = () => {
+
+    const handleOpenTimeoutConfirmation = async () => {
+      setDisplayTimeoutModal(true)
+      let completeObservation = await new Promise<boolean>((resolve, _) => {
+        setTimeoutConfirmRef({resolve})
+      })
+      if(completeObservation) {
+        setShowCompeteDialog(true)
+        canNavigateRef.current = true
+        firebase.endSession()
+      }
+      setTimeoutConfirmRef(null)
+      setDisplayTimeoutModal(false)
+
+    }
+    const handleTimeoutCancel = () => {
+      if(timeoutConfirmRef) {
+        timeoutConfirmRef.resolve(false)
+
+      }
+    }
+    const handleTimeoutConfirm = () => {
+        if(timeoutConfirmRef) {
+          timeoutConfirmRef.resolve(true)
+        }
+    }
+    const tick =  () => {
       let intervalElapsed = intervalRef.current
       let secondsLeft = TOTAL_TIME - intervalElapsed
-      if (!displayModalRef.current && intervalElapsed > TIME_FOR_MODAL) {
-        displayModalRef.current = true
+      if (!displayTimeoutModal && intervalElapsed > TIME_FOR_MODAL) {
+        handleOpenTimeoutConfirmation()
       }
       if (intervalElapsed > TIME_FOR_MODAL) {
-        setTimeoutText(`This observation will automatically close in ${secondsLeft} seconds. Please touch or click anywhere to continue the observation.`)
       }
       if (intervalElapsed >= TOTAL_TIME) {
         clearInterval(timeoutRef.current!)
@@ -76,15 +113,12 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
       clearInterval(timeoutRef.current!)
       intervalRef.current = 0
       getTimeout()
-      displayModalRef.current = false
-      // This setTimeoutText is just a hacky way to force a rerender. without a rerender, the  timeout modal won't hide after a click,
-      // And the boolean variable needs to be a ref (which won't rerender a page), or else it won't show when the interval changes it.
-      setTimeoutText(`This observation will automatically close in ${MODAL_VISIBLE_TIME} seconds. Please touch or click anywhere to continue the observation.`)
     }
-    const endSession = (e: BeforeUnloadEvent) => {
+    const endSession =  async (e: BeforeUnloadEvent) => {
       e.preventDefault()
       e.returnValue = ''
-      console.log('LEAVING');
+      return "Leaving the page will result in losing the current observation."
+
     }
 
 
@@ -93,11 +127,11 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
     //adapted from https://stackoverflow.com/questions/66529690/using-history-block-with-asynchronous-functions-callback-async-await
     useEffect(() => {
       const unblock = props.history.block((tx) => {
-        // This will bypass the normal blocking if the prompt has already been displayed.
-        if(canNavigateRef.current) {
+        // This will bypass the normal blocking if the prompt has already been displayed OR the observation is over
+        if(canNavigateRef.current || !firebase.currentObservation) {
           return true
         }
-        handleConfirmationOpen().then(res => {
+        handleOpenNavConfirmation().then(res => {
           if(res) {
             firebase.discardSession()
             unblock()
@@ -131,14 +165,18 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
 
     return (
       <>
-        <ButtonlessDialog onClose={() => {
-        }} display={displayModalRef.current} confirmationText={timeoutText}/>
+        <ConfirmationDialog showDialog={displayTimeoutModal}
+                            confirmText={options.confirmText ?? 'PLACEHOLDER CONFIRM'}
+        handleCancel={handleTimeoutCancel}
+        handleConfirm={handleTimeoutConfirm}
+        cancelText={options.cancelText ??  "PLACEHOLDER CANCEL"}
+         dialogText={options.confirmationPrompt ?? "PLACEHOLDER PROMPT"}/>
         <ConfirmationDialog handleConfirm={handleLeaveObservation} handleCancel={handleStay}
                             dialogText={'Leaving this page will cancel this observation. Are you sure you want to cancel this observation?'}
                             cancelText={'CONTINUE THE OBSERVATION'}
                             confirmText={'CANCEL THE OBSERVATION'}
                             showDialog={showConfirmDialog}/>
-        <WrappedComponent preBack={handleConfirmationOpen} {...props} />
+        <WrappedComponent preBack={handleOpenNavConfirmation} forceComplete={showCompleteDialog} {...props} />
       </>
     )
   }

@@ -28,6 +28,7 @@ interface Props {
   onAcceptParams?: number,
   literacy: string,
   handleLiteracyActivitySetting(activitySetting: string): Promise<void>
+  forceComplete?: boolean
 }
 
 interface State {
@@ -53,9 +54,13 @@ class YesNoDialog extends React.Component<Props, State> {
       buttonVariant, buttonColor: use these to format the button to your liking.
     */
 
-  state = {
-    open: false
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      open: false || !!this.props.forceComplete
+    }
+    console.log('LOGGING')
+  }
 
   handleClickOpen = (): void => {
     if (this.props.shouldOpen) {
