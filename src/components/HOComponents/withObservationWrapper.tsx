@@ -59,6 +59,7 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
       if (intervalElapsed >= TOTAL_TIME) {
         clearInterval(timeoutRef.current!)
         firebase.endSession() // There will always be a sessionID (and therefore the ability to end a session) during an observation.
+        canNavigateRef.current =  true;
         props.history.goBack()
       }
       intervalRef.current = intervalElapsed + 1
@@ -101,9 +102,6 @@ export default (WrappedComponent: React.FunctionComponent<any>) => {
             firebase.discardSession()
             unblock()
             props.history.push(tx.pathname, tx.state)
-          }
-          else {
-            console.log('STAYING ON PAGE')
           }
         })
         return false
