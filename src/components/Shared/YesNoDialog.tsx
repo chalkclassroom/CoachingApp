@@ -17,7 +17,9 @@ const styles: object = {
 interface Props {
   classes: { button: string },
   shouldOpen?: boolean,
+
   onAccept?(param: number | void): void,
+
   buttonText?: string | React.ReactElement,
   buttonVariant: ButtonVariant,
   buttonColor?: string,
@@ -27,9 +29,15 @@ interface Props {
   dialogTitle?: string,
   onAcceptParams?: number,
   literacy: string,
+
   handleLiteracyActivitySetting(activitySetting: string): Promise<void>
+
   forceComplete?: boolean
   showLiteracyActivity?: boolean
+  disabled?: boolean
+
+  disabledOnClick(): void
+  disabledClass: string
 }
 
 interface State {
@@ -122,7 +130,7 @@ class YesNoDialog extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, disabled } = this.props;
     return (
       <div>
         {this.props.literacy !=='' ?
@@ -134,10 +142,10 @@ class YesNoDialog extends React.Component<Props, State> {
           checklistType={this.props.literacy}
         /> : null}
         <Button
-          onClick={this.handleClickOpen}
-          variant={this.props.buttonVariant}
+          onClick={ disabled? this.props.disabledOnClick : this.handleClickOpen}
+          variant={disabled? 'outlined' : this.props.buttonVariant}
           color={this.props.buttonColor}
-          style={{
+          style={disabled? {} : {
             color: this.props.buttonColor,
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
@@ -145,7 +153,7 @@ class YesNoDialog extends React.Component<Props, State> {
             margin: this.props.buttonMargin,
             fontFamily: 'Arimo'
           }}
-          className={classes.button}
+          className={disabled? this.props.disabledClass : classes.button}
         >
           {this.props.buttonText}
         </Button>

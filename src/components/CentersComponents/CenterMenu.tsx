@@ -408,6 +408,7 @@ class CenterMenu extends React.Component<Props, State> {
             firebase={this.props.firebase}
             type={this.props.type}
             startTime={this.state.startTime}
+            forceComplete={this.props.forceComplete}
           />
         );
       default:

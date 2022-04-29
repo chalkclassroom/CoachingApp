@@ -501,7 +501,7 @@ class Dashboard extends React.Component<Props, State> {
                     Start Time: {this.state.time}
                   </Typography>
                 </Grid>
-                {this.props.completeObservation ? (
+                {/*{this.props.completeObservation || this.props.forceComplete ? (*/}
                   <Grid item className={classes.completeGrid}>
                     <FirebaseContext.Consumer>
                       {(firebase: Firebase): React.ReactNode => (
@@ -511,6 +511,9 @@ class Dashboard extends React.Component<Props, State> {
                           buttonText={<b>COMPLETE OBSERVATION</b>}
                           buttonVariant={"outlined"}
                           buttonColor={Constants.Colors[this.props.type]}
+                          disabled={!this.props.completeObservation}
+                          disabledOnClick={this.handleIncomplete}
+                          disabledClass={classes.completeButton}
                           buttonMargin={10}
                           dialogTitle={
                             "Are you sure you want to complete this observation?"
@@ -538,17 +541,7 @@ class Dashboard extends React.Component<Props, State> {
                       )}
                     </FirebaseContext.Consumer>
                   </Grid>
-                ) : (
-                  <Grid item className={classes.completeGrid}>
-                    <Button
-                      variant="outlined"
-                      onClick={this.handleIncomplete}
-                      className={classes.completeButton}
-                    >
-                      <b>COMPLETE OBSERVATION</b>
-                    </Button>
-                  </Grid>
-                )}
+
               </Grid>
             </Grid>
           </Grid>
