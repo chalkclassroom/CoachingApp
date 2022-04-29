@@ -63,6 +63,7 @@ interface Props {
   history: H.History,
   teacherSelected: Types.Teacher
   preBack(): Promise<boolean>
+  forceComplete: boolean
 }
 
 /**
@@ -132,6 +133,7 @@ class MathInstructionPage extends React.Component<Props, State> {
             <FirebaseContext.Consumer>
               {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
+                  forceComplete={this.props.forceComplete}
                   teacher={this.props.teacherSelected}
                   history={this.props.history}
                   firebase={firebase}
@@ -162,6 +164,10 @@ class MathInstructionPage extends React.Component<Props, State> {
   }
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (state: Types.ReduxState): {
   centers: Array<{
     name: string,
@@ -176,5 +182,5 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 export default connect(mapStateToProps, { deleteMICenters, addNewCenter, incrementCenterCount, updateMathCount, clearMathCount })(
-  withStyles(styles)(withObservationWrapper(MathInstructionPage))
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(MathInstructionPage))
 );

@@ -81,6 +81,7 @@ interface Props extends WithStyles<typeof styles> {
   teacherSelected: Types.Teacher
   preBack(): Promise<boolean>
   clearEngagementCount(): void
+  forceComplete: boolean
 }
 
 interface State {
@@ -225,6 +226,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                         title="Total Observations:"
                       />
                     }
+                    forceComplete={this.props.forceComplete}
                     infoPlacement="flex-start"
                     completeObservation={this.state.completeEnabled}
                     stopTimer={this.stopTimer}
@@ -270,6 +272,10 @@ class StudentEngagementPage extends React.Component<Props, State> {
   }
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (
   state: Types.ReduxState
 ): { teacherSelected: Types.Teacher } => {
@@ -283,4 +289,4 @@ StudentEngagementPage.contextType = FirebaseContext
 export default connect(
   mapStateToProps,
   {clearEngagementCount}
-)(withStyles(styles)(withObservationWrapper(StudentEngagementPage)))
+)(withStyles(styles)(withObservationWrapper(wrapperOptions)(StudentEngagementPage)))

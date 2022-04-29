@@ -59,7 +59,12 @@ class YesNoDialog extends React.Component<Props, State> {
     this.state = {
       open: false || !!this.props.forceComplete
     }
-    console.log('LOGGING')
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if(prevProps.forceComplete != this.props.forceComplete) {
+      this.setState({open: !!this.props.forceComplete})
+    }
   }
 
   handleClickOpen = (): void => {
@@ -110,8 +115,9 @@ class YesNoDialog extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        {this.props.literacy !=='' ? <ActivitySettingModal
-          open={(this.props.literacy!=='') && this.state.open}
+        {this.props.literacy !=='' ?
+          <ActivitySettingModal
+          open={(this.props.literacy!=='') && this.state.open }
           handleClose={this.handleClose}
           handleAccept={this.handleAccept}
           handleLiteracyActivitySetting={this.props.handleLiteracyActivitySetting}

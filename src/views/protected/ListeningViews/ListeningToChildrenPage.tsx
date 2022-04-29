@@ -20,6 +20,7 @@ interface Props {
   teacherSelected: Types.Teacher
   preBack: () => Promise<boolean>
   clearListeningCount(): void
+  forceComplete: boolean
 }
 
 /**
@@ -52,6 +53,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
               <TeacherChecklist
                 firebase={firebase}
                 type='LC'
+                forceComplete={props.forceComplete}
               />
             )}
           </FirebaseContext.Consumer>
@@ -84,6 +86,10 @@ ListeningToChildrenPage.propTypes = {
   }).isRequired
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher
 } => {
@@ -92,4 +98,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, {clearListeningCount})(withObservationTimeout(ListeningToChildrenPage));
+export default connect(mapStateToProps, {clearListeningCount})(withObservationTimeout(wrapperOptions)(ListeningToChildrenPage));

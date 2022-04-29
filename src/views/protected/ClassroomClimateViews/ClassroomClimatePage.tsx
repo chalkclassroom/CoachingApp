@@ -371,8 +371,9 @@ const mapStateToProps = (
 
 ClassroomClimatePage.contextType = FirebaseContext
 
-export default connect(mapStateToProps, {
+export default
+connect(mapStateToProps, {
     appendClimateRating,
     emptyClimateStack,
     emptyClimateRating
-})(withStyles(styles)(withObservationWrapper(ClassroomClimatePage, wrapperOptions)))
+})(withStyles(styles)(withObservationWrapper(wrapperOptions)(ClassroomClimatePage)))

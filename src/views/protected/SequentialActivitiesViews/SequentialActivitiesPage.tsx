@@ -62,6 +62,7 @@ interface Props {
   teacherSelected: Types.Teacher
   clearSequentialCount(): void
   deleteSACenters(): void
+  forceComplete: boolean
 }
 
 /**
@@ -134,6 +135,7 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
             <FirebaseContext.Consumer>
               {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
+                  forceComplete={this.props.forceComplete}
                   teacher={this.props.teacherSelected}
                   history={this.props.history}
                   firebase={firebase}
@@ -163,6 +165,9 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
     );
   }
 }
+const wrapperOptions = {
+
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   centers: Array<{
@@ -178,5 +183,5 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 export default connect(mapStateToProps, { deleteSACenters, addNewCenter, incrementCenterCount, updateSequentialCount, clearSequentialCount, deleteSACenters })(
-  withStyles(styles)(withObservationWrapper(SequentialActivitiesPage))
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(SequentialActivitiesPage))
 );

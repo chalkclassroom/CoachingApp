@@ -87,6 +87,7 @@ interface Props {
   teacherSelected: Types.Teacher
   preBack(): Promise<boolean>
   emptyLoiStack(): void
+  forceComplete: boolean
 }
 
 /**
@@ -163,6 +164,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
                   <Dashboard
                     type="IN"
                     completeObservation={true}
+                    forceComplete={this.props.forceComplete}
                   />
                 </Grid>
               </Grid>
@@ -204,6 +206,9 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
     );
   }
 }
+const wrapperOptions = {
+
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher
@@ -213,4 +218,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, {emptyLoiStack})(withStyles(styles)(withObservationWrapper(LevelOfInstructionPage)));
+export default connect(mapStateToProps, {emptyLoiStack})(withStyles(styles)(withObservationWrapper(wrapperOptions)(LevelOfInstructionPage)));

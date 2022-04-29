@@ -16,6 +16,7 @@ interface Props {
   teacherSelected: Types.Teacher
   preBack(): Promise<boolean>
   clearLiteracyCount(): void
+  forceComplete: boolean
 }
 
 /**
@@ -47,6 +48,7 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
           <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => (
               <Checklist
+                forceComplete={props.forceComplete}
                 firebase={firebase}
                 type='LI'
                 checklist={location.state.checklist}
@@ -83,6 +85,10 @@ LiteracyInstructionPage.propTypes = {
   }).isRequired
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher
 } => {
@@ -91,4 +97,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, {clearLiteracyCount})(withObservationWrapper(LiteracyInstructionPage));
+export default connect(mapStateToProps, {clearLiteracyCount})(withObservationWrapper(wrapperOptions)(LiteracyInstructionPage));

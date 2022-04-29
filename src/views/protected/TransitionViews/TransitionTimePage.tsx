@@ -105,6 +105,7 @@ interface Props {
     typeGrid: string,
     timerGrid: string
   },
+  forceComplete: boolean
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null,
   teacherSelected: Types.Teacher
@@ -257,6 +258,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                       completeObservation={this.state.transitionEnded}
                       startTimer={this.startTimer}
                       stopTimer={this.stopTimer}
+                      forceComplete={this.props.forceComplete}
                     />
                   </Grid>
                 </Grid>
@@ -332,6 +334,9 @@ class TransitionTimePage extends React.Component<Props, State> {
     );
   }
 }
+const wrapperOptions = {
+
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   transitionType: string | null,
@@ -345,5 +350,5 @@ const mapStateToProps = (state: Types.ReduxState): {
 
 
 export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType, clearTransitionTime, clearSessionTime })(
-  withStyles(styles)(withObservationWrapper(TransitionTimePage))
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(TransitionTimePage))
 );

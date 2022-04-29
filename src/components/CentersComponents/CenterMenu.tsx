@@ -181,6 +181,7 @@ interface Props {
     contentGrid: string,
     centersGrid: string
   },
+  forceComplete: boolean
 }
 
 interface State{
@@ -340,6 +341,7 @@ class CenterMenu extends React.Component<Props, State> {
                 >
                   <Grid item>
                     <Dashboard
+                      forceComplete={this.props.forceComplete}
                       type={this.props.type}
                       infoDisplay={
                         <TotalVisitCount count={this.state.totalVisitCount} />

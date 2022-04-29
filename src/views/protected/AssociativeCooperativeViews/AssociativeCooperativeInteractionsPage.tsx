@@ -62,6 +62,7 @@ interface Props {
   preBack(): Promise<boolean>
   deleteACCenters(): void
   clearACCount():void
+  forceComplete: boolean
 }
 
 /**
@@ -132,6 +133,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
             <FirebaseContext.Consumer>
               {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
+                  forceComplete={this.props.forceComplete}
                   teacher={this.props.teacherSelected}
                   history={this.props.history}
                   firebase={firebase}
@@ -161,6 +163,9 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
     );
   }
 }
+const wrapperOptions = {
+
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   centers: Array<{
@@ -176,5 +181,5 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount, updateACCount, clearACCount })(
-  withStyles(styles)(withObservationWrapper(AssociativeCooperativeInteractionsPage))
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(AssociativeCooperativeInteractionsPage))
 );

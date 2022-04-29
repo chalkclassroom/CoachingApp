@@ -100,6 +100,7 @@ interface Props {
   teacherSelected: Types.Teacher
   updateLiteracyCount(behavior: boolean): void
   checklist: string
+  forceComplete: boolean
 }
 
 interface State {
@@ -415,6 +416,7 @@ class Checklist extends React.Component<Props, State> {
               >
                 <Grid item>
                   <Dashboard
+                    forceComplete={this.props.forceComplete}
                     type={this.props.type}
                     infoDisplay={
                       <Countdown

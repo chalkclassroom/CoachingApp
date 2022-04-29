@@ -89,6 +89,7 @@ interface Props {
   }
   type: Types.DashboardType
   firebase: Firebase
+  forceComplete: boolean
 }
 
 interface State {
@@ -389,6 +390,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                         timerTime={60000}
                       />
                     }
+                    forceComplete={this.props.forceComplete}
                     infoPlacement="center"
                     completeObservation={true}
                     startTimer={this.startTimer}
