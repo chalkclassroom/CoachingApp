@@ -23,7 +23,8 @@ export default (options: Partial<Options> = {}) => {
       const [showConfirmDialog, setShowConfirmDialog] = useState(false)
       const [displayTimeoutModal, setDisplayTimeoutModal] = useState(false)
       const [timeoutConfirmRef, setTimeoutConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
-      const [showCompleteDialog, setShowCompeteDialog] = useState(false)
+      const [forceComplete, setForceComplete] = useState(false)
+      const [showLiteracyActivity, setShowLiteracyActivity] = useState(true)
 
       const intervalRef = useRef(0)
       const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>()
@@ -64,7 +65,7 @@ export default (options: Partial<Options> = {}) => {
           setTimeoutConfirmRef({resolve})
         })
         if (completeObservation) {
-          setShowCompeteDialog(true)
+          setForceComplete(true)
           canNavigateRef.current = true
         }
         setTimeoutConfirmRef(null)
@@ -91,9 +92,9 @@ export default (options: Partial<Options> = {}) => {
         if (intervalElapsed >= TOTAL_TIME) {
           // What we do if the observation totally times out.
           clearInterval(timeoutRef.current!)
-          firebase.endSession() // There will always be a sessionID (and therefore the ability to end a session) during an observation.
           canNavigateRef.current = true;
-          props.history.goBack()
+          setShowLiteracyActivity(false) // This state change must fire before setForceComplete or else it won't be caught in the YesNoDialog
+          setForceComplete(true)
         }
         intervalRef.current = intervalElapsed + 1
       }
@@ -172,7 +173,7 @@ export default (options: Partial<Options> = {}) => {
                               cancelText={'CONTINUE THE OBSERVATION'}
                               confirmText={'CANCEL THE OBSERVATION'}
                               showDialog={showConfirmDialog}/>
-          <WrappedComponent preBack={handleOpenNavConfirmation} forceComplete={showCompleteDialog} {...props} />
+          <WrappedComponent preBack={handleOpenNavConfirmation} showLiteracyActivity={showLiteracyActivity} forceComplete={forceComplete} {...props} />
         </>
       )
     }

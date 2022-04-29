@@ -17,6 +17,7 @@ interface Props {
   preBack(): Promise<boolean>
   clearLiteracyCount(): void
   forceComplete: boolean
+  showLiteracyActivity: boolean
 }
 
 /**
@@ -48,6 +49,7 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
           <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => (
               <Checklist
+                showLiteracyActivity={props.showLiteracyActivity}
                 forceComplete={props.forceComplete}
                 firebase={firebase}
                 type='LI'

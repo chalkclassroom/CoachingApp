@@ -29,6 +29,7 @@ interface Props {
   literacy: string,
   handleLiteracyActivitySetting(activitySetting: string): Promise<void>
   forceComplete?: boolean
+  showLiteracyActivity?: boolean
 }
 
 interface State {
@@ -60,14 +61,18 @@ class YesNoDialog extends React.Component<Props, State> {
       open: false
     }
   }
-
+  /*
+  * Handles Completions for the timeout dialog. For Literacy observations, if the user
+  * confirms ending the observation, they will get to choose an activity setting.
+  * If it fully times out, it will just display the results preview. All other observation types
+  * just display the results preview.
+  * */
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
-    if(prevProps.forceComplete != this.props.forceComplete) {
-      // We only want to open this dialog to be forced open if it's a literacy observation.
-      this.setState({open: this.props.literacy!==''})
-
-      if(this.props.literacy==='') {
-        this.handleAccept()
+    if(prevProps.forceComplete !== this.props.forceComplete) {
+      if(this.props.literacy==='' || !this.props.showLiteracyActivity) {
+          this.handleAccept()
+      } else  {
+        this.setState({open: true})
       }
     }
   }

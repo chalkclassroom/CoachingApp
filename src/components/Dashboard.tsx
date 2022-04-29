@@ -175,6 +175,7 @@ type Props = RouteComponentProps & {
   checklistType?: string
   startTime?: string
   forceComplete?: boolean
+  showLiteracyActivity?:boolean
 }
 
 interface State {
@@ -505,6 +506,7 @@ class Dashboard extends React.Component<Props, State> {
                     <FirebaseContext.Consumer>
                       {(firebase: Firebase): React.ReactNode => (
                         <YesNoDialog
+                          showLiteracyActivity={!!this.props.showLiteracyActivity}
                           forceComplete={this.props.forceComplete}
                           buttonText={<b>COMPLETE OBSERVATION</b>}
                           buttonVariant={"outlined"}
