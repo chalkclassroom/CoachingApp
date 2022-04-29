@@ -63,8 +63,12 @@ class YesNoDialog extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
     if(prevProps.forceComplete != this.props.forceComplete) {
-      // We only want to open this dialog if forced open if it's a literacy observation.
-      this.setState({open: !!this.props.forceComplete && this.props.literacy!==''})
+      // We only want to open this dialog to be forced open if it's a literacy observation.
+      this.setState({open: this.props.literacy!==''})
+
+      if(this.props.literacy==='') {
+        this.handleAccept()
+      }
     }
   }
 

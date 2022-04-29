@@ -90,6 +90,8 @@ interface Props {
   type: Types.DashboardType
   firebase: Firebase
   forceComplete: boolean
+  teacherSelected: {id: string}
+  updateListeningCount(behavior: boolean): void
 }
 
 interface State {
@@ -98,6 +100,8 @@ interface State {
   timeUpOpen: boolean
   final: boolean
   in: boolean
+  isStopped: boolean
+  finishedForcedEntries: boolean
 }
 
 /**
@@ -127,6 +131,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       final: false,
       in: true,
       isStopped: false,
+      finishedForcedEntries: false
     }
   }
 
@@ -165,6 +170,19 @@ class TeacherChecklist extends React.Component<Props, State> {
   /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount(): void {
     clearInterval(this.timer)
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if(this.props.forceComplete && !prevProps.forceComplete) {
+      const checked = this.state.checked.length > 0 ? this.state.checked : [7]
+      if (checked.indexOf(7) === 0) {
+        this.props.updateListeningCount(false)
+      } else {
+        this.props.updateListeningCount(true)
+      }
+      this.props.firebase.handlePushListening({ checked })
+      this.setState({finishedForcedEntries: true})
+    }
   }
 
   handleTimeUpNotification = (): void => {
@@ -390,7 +408,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                         timerTime={60000}
                       />
                     }
-                    forceComplete={this.props.forceComplete}
+                    forceComplete={this.state.finishedForcedEntries}
                     infoPlacement="center"
                     completeObservation={true}
                     startTimer={this.startTimer}
