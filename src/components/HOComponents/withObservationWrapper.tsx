@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react'
+import React, {Reducer, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import {FirebaseContext} from "../Firebase";
 import ConfirmationDialog from "../Shared/ConfirmationDialog";
 
@@ -9,6 +9,11 @@ interface Options {
   confirmationPrompt: string
   confirmText: string
   cancelText: string
+}
+
+interface CompletionOptions {
+  forceComplete: boolean
+  showLiteracyActivity: boolean
 }
 
 export default (options: Partial<Options> = {}) => {
@@ -23,8 +28,6 @@ export default (options: Partial<Options> = {}) => {
       const [showConfirmDialog, setShowConfirmDialog] = useState(false)
       const [displayTimeoutModal, setDisplayTimeoutModal] = useState(false)
       const [timeoutConfirmRef, setTimeoutConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
-      const [forceComplete, setForceComplete] = useState(false)
-      const [showLiteracyActivity, setShowLiteracyActivity] = useState(true)
 
       const intervalRef = useRef(0)
       const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>()
@@ -32,8 +35,10 @@ export default (options: Partial<Options> = {}) => {
 
       const firebase = useContext(FirebaseContext)
 
-      // Code for the confirmation dialog
-
+      // written to get around non-batched state updates in async calls (like a timeout) https://github.com/facebook/react/issues/14259
+      const [completionOptions, setCompletionOptions] = useReducer<Reducer<CompletionOptions, Partial<CompletionOptions>>>(
+                (state, newState) => ({...state, ...newState}),
+        {forceComplete: false, showLiteracyActivity: true})
 
       //Runs when users confirm leaving the page
       const handleLeaveObservation = () => {
@@ -65,17 +70,16 @@ export default (options: Partial<Options> = {}) => {
           setTimeoutConfirmRef({resolve})
         })
         if (completeObservation) {
-          setForceComplete(true)
+          setCompletionOptions({forceComplete: true})
           canNavigateRef.current = true
         }
         setTimeoutConfirmRef(null)
         setDisplayTimeoutModal(false)
-
       }
+
       const handleTimeoutCancel = () => {
         if (timeoutConfirmRef) {
           timeoutConfirmRef.resolve(false)
-
         }
       }
       const handleTimeoutConfirm = () => {
@@ -90,11 +94,10 @@ export default (options: Partial<Options> = {}) => {
         }
 
         if (intervalElapsed >= TOTAL_TIME) {
-          // What we do if the observation totally times out.
           clearInterval(timeoutRef.current!)
           canNavigateRef.current = true;
-          setShowLiteracyActivity(false) // This state change must fire before setForceComplete or else it won't be caught in the YesNoDialog
-          setForceComplete(true)
+          console.log('Ending Observation')
+          setCompletionOptions({showLiteracyActivity: false, forceComplete: true})
         }
         intervalRef.current = intervalElapsed + 1
       }
@@ -111,7 +114,9 @@ export default (options: Partial<Options> = {}) => {
         intervalRef.current = 0
         getTimeout()
       }
-      const endSession = async (e: BeforeUnloadEvent) => {
+
+      // Still messing with this. I don't know think we can do any branching based on what a user chooses here.
+      const endSession = (e: BeforeUnloadEvent) => {
         e.preventDefault()
         e.returnValue = ''
         return "Leaving the page will result in losing the current observation."
@@ -123,7 +128,7 @@ export default (options: Partial<Options> = {}) => {
       // Beforeunload event handle direct navigation.
       //adapted from https://stackoverflow.com/questions/66529690/using-history-block-with-asynchronous-functions-callback-async-await
       useEffect(() => {
-        const unblock = props.history.block((tx) => {
+        const unblock = props.history.block((tx:{pathname: string, state: any}) => {
           // This will bypass the normal blocking if the prompt has already been displayed OR the observation is over
           if (canNavigateRef.current || !firebase.currentObservation) {
             return true
@@ -160,6 +165,8 @@ export default (options: Partial<Options> = {}) => {
       })
 
 
+      let {forceComplete, showLiteracyActivity} = completionOptions
+      console.log(completionOptions)
       return (
         <>
           <ConfirmationDialog showDialog={displayTimeoutModal}
@@ -173,7 +180,10 @@ export default (options: Partial<Options> = {}) => {
                               cancelText={'CONTINUE THE OBSERVATION'}
                               confirmText={'CANCEL THE OBSERVATION'}
                               showDialog={showConfirmDialog}/>
-          <WrappedComponent preBack={handleOpenNavConfirmation} showLiteracyActivity={showLiteracyActivity} forceComplete={forceComplete} {...props} />
+          <WrappedComponent preBack={handleOpenNavConfirmation}
+                            showLiteracyActivity={showLiteracyActivity}
+                            forceComplete={forceComplete}
+                            {...props} />
         </>
       )
     }
