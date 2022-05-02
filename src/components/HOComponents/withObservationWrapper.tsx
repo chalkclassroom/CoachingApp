@@ -72,6 +72,7 @@ export default (options: Partial<Options> = {}) => {
         if (completeObservation) {
           setCompletionOptions({forceComplete: true})
           canNavigateRef.current = true
+          clearInterval(timeoutRef.current!)
         }
         setTimeoutConfirmRef(null)
         setDisplayTimeoutModal(false)
@@ -96,7 +97,6 @@ export default (options: Partial<Options> = {}) => {
         if (intervalElapsed >= TOTAL_TIME) {
           clearInterval(timeoutRef.current!)
           canNavigateRef.current = true;
-          console.log('Ending Observation')
           setCompletionOptions({showLiteracyActivity: false, forceComplete: true})
         }
         intervalRef.current = intervalElapsed + 1
@@ -110,9 +110,11 @@ export default (options: Partial<Options> = {}) => {
 
 
       const resetTimeout = () => {
-        clearInterval(timeoutRef.current!)
-        intervalRef.current = 0
-        getTimeout()
+        if(!completionOptions.forceComplete) {
+          clearInterval(timeoutRef.current!)
+          intervalRef.current = 0
+          getTimeout()
+        }
       }
 
       // Still messing with this. I don't know think we can do any branching based on what a user chooses here.
