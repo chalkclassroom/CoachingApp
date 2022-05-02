@@ -1,6 +1,7 @@
 import React, {Reducer, useContext, useEffect, useReducer, useRef, useState} from 'react'
 import {FirebaseContext} from "../Firebase";
 import ConfirmationDialog from "../Shared/ConfirmationDialog";
+import {Alert} from "@material-ui/lab";
 
 
 interface Options {
@@ -168,8 +169,19 @@ export default (options: Partial<Options> = {}) => {
 
 
       let {forceComplete, showLiteracyActivity} = completionOptions
+      let timedOut = forceComplete && !showLiteracyActivity
       return (
         <>
+          {timedOut ?
+            <Alert style={{
+              zIndex: 4000,
+              fontSize: '1.3rem',
+              position: "absolute",
+              width: '100%',
+              backgroundColor: 'white',
+              color: "black"
+            }} severity={'info'}>Note: This observation was closed automatically due to inactivity</Alert>
+            :null}
           <ConfirmationDialog showDialog={displayTimeoutModal}
                               confirmText={options.confirmText ?? 'PLACEHOLDER CONFIRM'}
                               handleCancel={handleTimeoutCancel}
