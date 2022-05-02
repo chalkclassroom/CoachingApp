@@ -653,6 +653,9 @@ class Firebase {
         end: time ? time : new Date(),
         completed: true
       })
+      if(this.currentObservation.type === 'LI' && !this.currentObservation.activitySetting) {
+        this.handleLiteracyActivitySetting('Not Recorded')
+      }
       let {
         checklist,
         completed,
@@ -666,9 +669,6 @@ class Firebase {
         activitySetting,
         notes
       } = this.currentObservation;
-      if(type === 'LI' && ! activitySetting) {
-        this.handleLiteracyActivitySetting('Not Recorded')
-      }
       this.sessionRef = this.db.collection('observations').doc()
       // Entries must be added before the document is 'set', or else the
       // observationToBQ cloud function may not grab all the entries.
