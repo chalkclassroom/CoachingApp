@@ -166,7 +166,6 @@ export default (options: Partial<Options> = {}) => {
 
 
       let {forceComplete, showLiteracyActivity} = completionOptions
-      console.log(completionOptions)
       return (
         <>
           <ConfirmationDialog showDialog={displayTimeoutModal}
