@@ -21,8 +21,8 @@ export default (options: Partial<Options> = {}) => {
   return ( WrappedComponent: React.FunctionComponent<any>) => {
     return ({...props}) => {
 
-      const MODAL_VISIBLE_TIME = options?.modalTime ?? 20 // length of time the modal is visible before completing the observation
-      const TOTAL_TIME = options?.totalTime ?? 60 * .5 // Total time in seconds  that the timeout lasts
+      const MODAL_VISIBLE_TIME = options?.modalTime ?? 60 * 7 // length of time the modal is visible before completing the observation
+      const TOTAL_TIME = options?.totalTime ?? 60 * 10 // Total time in seconds  that the timeout lasts
       const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
 
       const [confirmRef, setConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
@@ -183,11 +183,11 @@ export default (options: Partial<Options> = {}) => {
             }} severity={'info'}>Note: This observation was closed automatically due to inactivity</Alert>
             :null}
           <ConfirmationDialog showDialog={displayTimeoutModal}
-                              confirmText={options.confirmText ?? 'PLACEHOLDER CONFIRM'}
+                              confirmText={options.confirmText ?? 'Yes, complete'}
                               handleCancel={handleTimeoutCancel}
                               handleConfirm={handleTimeoutConfirm}
-                              cancelText={options.cancelText ?? "PLACEHOLDER CANCEL"}
-                              dialogText={options.confirmationPrompt ?? "PLACEHOLDER PROMPT"}/>
+                              cancelText={options.cancelText ?? "No, continue"}
+                              dialogText={options.confirmationPrompt ?? "You have not made any selections recently. Would you like to complete this observation?"}/>
           <ConfirmationDialog handleConfirm={handleLeaveObservation} handleCancel={handleStay}
                               dialogText={'Leaving this page will cancel this observation. Are you sure you want to cancel this observation?'}
                               cancelText={'CONTINUE THE OBSERVATION'}

@@ -168,10 +168,10 @@ class TransitionTimer extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    firebase: PropTypes.exact({
+    firebase: PropTypes.shape({
       handleSession: PropTypes.func,
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
+      auth: PropTypes.shape({
+        currentUser: PropTypes.shape({
           uid: PropTypes.string
         })
       })

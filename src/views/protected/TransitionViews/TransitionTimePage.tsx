@@ -287,23 +287,11 @@ class TransitionTimePage extends React.Component<Props, State> {
                       direction={"column"}
                     >
                       <FirebaseContext.Consumer>
-                        {(firebase: {
-                          auth: {
-                            currentUser: {
-                              uid: string
-                            }
-                          },
-                          handleSession(mEntry: {
-                            observedBy: string,
-                            teacher: string,
-                            start?: Date,
-                            type: string
-                          }): Promise<void>
-                        }): React.ReactNode => (
+                        {(firebase: Firebase): React.ReactNode => (
                           <TransitionTimer
                             firebase={firebase}
                             typeSelected={
-                              this.props.transitionType === null ? false : true
+                              this.props.transitionType !== null
                             }
                             handleStartTransition={this.handleStartTransition}
                             handleEndTransition={this.handleEndTransition}
@@ -320,9 +308,7 @@ class TransitionTimePage extends React.Component<Props, State> {
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: {
-            getTeacherList(): Promise<Types.Teacher[]>
-          }): React.ReactElement => (
+          {(firebase: Firebase): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -335,7 +321,9 @@ class TransitionTimePage extends React.Component<Props, State> {
   }
 }
 const wrapperOptions = {
-
+ totalTime: 60*20,
+  modalTime: 60* 5,
+  confirmationPrompt: "You have not recorded Any Transitions recently. Would you like to complete this observation?"
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
