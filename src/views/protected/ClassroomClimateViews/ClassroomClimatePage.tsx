@@ -242,7 +242,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                         <AppBar confirmAction={this.props.preBack} firebase={firebase} />
                     )}
                 </FirebaseContext.Consumer>
-                <Modal open={this.state.ratingIsOpen}>
+                <Modal open={this.state.ratingIsOpen && !this.props.forceComplete}>
                     <RatingModal
                         handleRatingConfirmation={this.handleRatingConfirmation}
                         handleIncomplete={this.handleIncomplete}
