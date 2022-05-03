@@ -352,11 +352,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
 }
 
 const wrapperOptions = {
-  totalTime: 180,
-  modalTime: 170,
-  confirmationPrompt: 'Would you like to complete the Observation?',
-  confirmText: 'Yes, Complete',
-  cancelText: 'No, Continue here'
+
 }
 
 const mapStateToProps = (
