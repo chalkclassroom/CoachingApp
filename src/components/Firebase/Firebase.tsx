@@ -4,6 +4,7 @@ import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
 import {v4 as uuidv4} from 'uuid'
+import DateFnsUtils from "@date-io/date-fns";
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -57,6 +58,8 @@ interface Observation {
   teacher: string
   timezone: string
   type: string
+  lastClickTime: Date
+  timedOut: boolean
 }
 
 /**
@@ -639,7 +642,9 @@ class Firebase {
         checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false,
         timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
-        activitySetting: null
+        activitySetting: null,
+        lastClickTime: new Date(),
+        timedOut: false
       }
   }
 
@@ -667,7 +672,8 @@ class Firebase {
         timezone,
         entries,
         activitySetting,
-        notes
+        notes,
+        timedOut
       } = this.currentObservation;
       this.sessionRef = this.db.collection('observations').doc()
       // Entries must be added before the document is 'set', or else the
@@ -676,6 +682,9 @@ class Firebase {
       entries.forEach(entry => {
         entryCollection.add({...entry, Timestamp: firebase.firestore.Timestamp.fromDate(entry.Timestamp)})
       })
+      if(timedOut) {
+        end = this.currentObservation.lastClickTime
+      }
       this.sessionRef.set({
         activitySetting,
         checklist,
@@ -697,6 +706,13 @@ class Firebase {
       this.currentObservation = null;
       this.sessionRef = null;
     }
+  }
+
+  updateSessionLastClick = () => {
+    if(this.currentObservation) {
+      this.currentObservation.lastClickTime = new Date()
+    }
+
   }
 
   discardSession = () => {

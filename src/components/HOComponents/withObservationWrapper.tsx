@@ -19,11 +19,12 @@ interface CompletionOptions {
 
 export default (options: Partial<Options> = {}) => {
   return ( WrappedComponent: React.FunctionComponent<any>) => {
-    return ({...props}) => {
 
-      const MODAL_VISIBLE_TIME = options?.modalTime ?? 60 * 7 // length of time the modal is visible before completing the observation
-      const TOTAL_TIME = options?.totalTime ?? 60 * 10 // Total time in seconds  that the timeout lasts
-      const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
+    const MODAL_VISIBLE_TIME = options?.modalTime ?? 60 * 7 // length of time the modal is visible before completing the observation
+    const TOTAL_TIME = options?.totalTime ?? 60 * 10 // Total time in seconds  that the timeout lasts
+    const TIME_FOR_MODAL = TOTAL_TIME - MODAL_VISIBLE_TIME // The elapsed time in seconds before the modal is visible
+
+    return ({...props}) => {
 
       const [confirmRef, setConfirmRef] = useState<{ resolve: (x: boolean) => void } | null>(null)
       const [showConfirmDialog, setShowConfirmDialog] = useState(false)
@@ -109,6 +110,11 @@ export default (options: Partial<Options> = {}) => {
         return time
       }
 
+      const handleClick = () => {
+        firebase.updateSessionLastClick()
+        resetTimeout()
+      }
+
 
       const resetTimeout = () => {
         if(!completionOptions.forceComplete) {
@@ -120,8 +126,7 @@ export default (options: Partial<Options> = {}) => {
 
       // Still messing with this. I don't know think we can do any branching based on what a user chooses here.
       const endSession = (e: BeforeUnloadEvent) => {
-        e.preventDefault()
-        e.returnValue = ''
+        e.returnValue = "Leaving the page will result in losing the current observation."
         return "Leaving the page will result in losing the current observation."
 
       }
@@ -159,10 +164,10 @@ export default (options: Partial<Options> = {}) => {
       }, []);
 
       useEffect(() => {
-        window.addEventListener('click', resetTimeout)
+        window.addEventListener('click', handleClick)
         window.addEventListener('beforeunload', endSession)
         return () => {
-          window.removeEventListener('click', resetTimeout)
+          window.removeEventListener('click', handleClick)
           window.removeEventListener('beforeunload', endSession)
         }
       })

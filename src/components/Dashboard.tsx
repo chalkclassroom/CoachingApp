@@ -521,6 +521,8 @@ class Dashboard extends React.Component<Props, State> {
                           shouldOpen={true}
                           onAccept={(): void => {
                             this.setState({displayResultsDialog: true});
+                            let timedOut = !this.props.showLiteracyActivity && this.props.forceComplete
+                              firebase.updateCurrentObservation({timedOut})
                             if (this.props.teacherSelected.id !== "rJxNhJmzjRZP7xg29Ko6") {
                               firebase.completeAppointment(this.props.teacherSelected.id, 'Observation', this.props.type);
                             }
