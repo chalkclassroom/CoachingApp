@@ -196,7 +196,7 @@ class AppBar extends React.Component<Props, State> {
   };
 
   handleNavigation = async (navAction: () => void) => {
-      if(!await this.props.confirmAction()) {
+      if(!await this.props.confirmAction!()) {
         return
     }
       navAction()
@@ -233,7 +233,7 @@ class AppBar extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes, confirmAction = () => Promise.resolve(true) } = this.props;
+    const { classes } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
         <div>
@@ -250,7 +250,7 @@ class AppBar extends React.Component<Props, State> {
                             aria-label="Logo"
                             className={classes.menuButton}
                             style={{backgroundColor: "#FFFFFF"}}
-                            onClick = {() => this.handleNavigation((): void => this.props.history.push("/Home"))}
+                            onClick = {() => this.handleNavigation(() => this.props.history.push("/Home"))}
                           >
                             <img src={LogoImage} height='35vh' alt='OWL' />
                           </IconButton>
