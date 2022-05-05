@@ -143,9 +143,8 @@ class TransitionTimer extends React.Component<Props, State> {
         this.timer = setInterval(() => {
           if(!this.props.isStopped) {
           this.setState((prevState) => {
-            return {time: prevState.time + 1000, openConfirmation: prevState.openConfirmation || msToMinute(prevState.time) % 1 === 0 && prevState.time > 1000 }
+            return {time: prevState.time + 1000, openConfirmation: prevState.openConfirmation || msToMinute(prevState.time) % 10 === 0 && prevState.time > 1000 }
           });
-            console.log(msToMinute(this.state.time) % 1 === 0,  msToMinute(this.state.time) % 1, msToMinute(this.state.time));
           }
         }, 1000);
       }
