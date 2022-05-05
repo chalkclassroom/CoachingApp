@@ -323,7 +323,7 @@ class TransitionTimePage extends React.Component<Props, State> {
 const wrapperOptions = {
  totalTime: 60*20,
   modalTime: 60* 5,
-  confirmationPrompt: "You have not recorded Any Transitions recently. Would you like to complete this observation?"
+  confirmationPrompt: "You have not recorded made any selections recently. Would you like to complete this observation?"
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
