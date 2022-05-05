@@ -116,6 +116,10 @@ class TransitionTimer extends React.Component<Props, State> {
   };
   
   onStart = (): void => {
+    setTimeout(() => {
+      this.setState({ percentage: this.state.isOn ? 100 : 0 });
+    }, 100);
+    const msToMinute = (ms: number) => ms / 1000 / 60
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
@@ -215,9 +219,7 @@ class TransitionTimer extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    setTimeout(() => {
-      this.setState({ percentage: this.state.isOn ? 100 : 0 });
-    }, 100);
+
  
     return (
       <MuiThemeProvider theme={theme}>
