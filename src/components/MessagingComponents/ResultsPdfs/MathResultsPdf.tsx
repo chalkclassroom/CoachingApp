@@ -232,7 +232,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             {data && data.childSummary && data.teacherSummary ? (
-              <Grid item style={{paddingTop: '1em'}}>
+              <Grid item style={{paddingTop: '1em', paddingBottom: '1em'}}>
                 <ChildPieSummary
                   math={data.childSummary.math}
                   notMath={data.childSummary.notMath}
@@ -242,7 +242,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.teacherSummary ? (
-              <Grid item style={{paddingTop: '8em'}}>
+              <Grid item style={{paddingTop: '8em', paddingBottom: '1em'}}>
                 <TeacherPieSummary
                   support={data.teacherSummary.support}
                   noSupport={data.teacherSummary.noSupport}
@@ -269,7 +269,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
               </div>
             ) : (null)}
             {data && data.teacherDetails ? (
-              <Grid item style={{paddingTop: '8em'}}>
+              <Grid item style={{paddingTop: '8em', paddingBottom: '3em'}}>
                 <TeacherBarDetails
                   teacher1={data.teacherDetails.teacher1}
                   teacher2={data.teacherDetails.teacher2}

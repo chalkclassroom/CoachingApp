@@ -23,7 +23,7 @@ exports.funcChildMathSummary = functions.https.onCall(async (data, context) => {
   const sqlQuery = `SELECT
                     COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'math' ELSE NULL END) AS math,
                     COUNT(CASE WHEN (checklist.child5) THEN 'notMath' ELSE NULL END) AS notMath
-                    FROM cqrefpwa.observations.math
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.math
                     WHERE id ='`+data.sessionId+`'`;
 
   console.log(sqlQuery);

@@ -24,7 +24,7 @@ exports.funcSessionDates = functions.https.onCall(async (data, context) => {
   }
   // The SQL query to run
   const sqlQuery = `SELECT DISTINCT id, sessionStart FROM 
-cqrefpwa.observations.${data.type} WHERE observedBy = '/user/${context.auth.uid}' 
+${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${data.type} WHERE observedBy = '/user/${context.auth.uid}' 
 AND teacher = '/user/${data.teacherId}' ORDER BY sessionStart DESC LIMIT 100;`;
 
   console.log(sqlQuery);

@@ -27,7 +27,7 @@ exports.funcBehaviourTrend = functions.https.onCall(async (data, context) => {
                     DATE(sessionStart) AS dayOfEvent, 
                     COUNT(CASE WHEN behaviorResponse = 'specificapproval' THEN 'positive' WHEN behaviorResponse = 'nonspecificapproval' THEN 'positive' ELSE NULL END) AS positive, 
                     COUNT(CASE WHEN behaviorResponse = 'redirection' THEN 'negative' WHEN behaviorResponse = 'disapproval' THEN 'negative' ELSE NULL END) AS negative
-                  FROM cqrefpwa.observations.climate
+                  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.climate
                   WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`' AND (type = 'climate')
                   GROUP BY dayOfEvent
                   ORDER BY dayOfEvent ASC

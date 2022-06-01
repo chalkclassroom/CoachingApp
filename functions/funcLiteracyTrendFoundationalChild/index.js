@@ -18,7 +18,8 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
     }else{
         console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
     }
-    const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
+    const sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                    DATE(sessionStart) as GroupDate,
                     activitySetting,
                     COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
                     COUNT(CASE WHEN (checklist.item2) THEN 'literacy2' ELSE NULL END) AS literacy2,
@@ -30,10 +31,10 @@ exports.funcLiteracyTrendFoundationalChild = functions.https.onCall(async(data, 
                     COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                     COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                     COUNT (sessionStart) AS total,
-                    FROM cqrefpwa.observations.literacyFoundationalChild
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyFoundationalChild
                     WHERE teacher = @teacher AND observedBy = @coach
-                    GROUP BY startDate, activitySetting
-                    ORDER BY startDate ASC;`;
+                    GROUP BY GroupDate, activitySetting, startDate
+                    ORDER BY GroupDate ASC;`;
 
     console.log(sqlQuery);
 

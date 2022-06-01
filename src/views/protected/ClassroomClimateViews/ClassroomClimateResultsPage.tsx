@@ -7,7 +7,7 @@ import ClimateTrendsGraph from "../../../components/ClassroomClimateComponent/Re
 import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
-import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
+import ClimateSummarySwitcher from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySwitcher";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -465,7 +465,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
           summary={
-            <ClimateSummarySlider
+            <ClimateSummarySwitcher
+              tabPanelHeight={'60vh'}
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
               negativeResponses={this.state.redirectionsBehaviorCount+this.state.disapprovalBehaviorCount}
               averageToneRating={this.state.averageToneRating}

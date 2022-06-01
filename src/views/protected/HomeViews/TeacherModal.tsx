@@ -49,8 +49,9 @@ const styles: object = {
   },
   list: {
     width: "100%",
-    height: "500",
-    backgroundColor: 'white'
+    maxHeight: "500px",
+    backgroundColor: 'white',
+    overflowY: "auto",
   },
   inline: {
     display: "inline"
@@ -175,6 +176,7 @@ class TeacherModal extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props;
     console.log('teacher list', this.props.teacherList);
+    const filteredTeachers = this.props.teacherList.filter(teacher => teacher.id !== null);
     return (
       <div>
         <Modal open={this.state.open}>
@@ -201,41 +203,43 @@ class TeacherModal extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              <List className={classes.list}>
-                {this.props.teacherList.length === 0 ? (
-                  <>Fetching your teachers...</>
-                ) : (
-                  <></>
-                )}
-                {this.props.teacherList.map((teacher, index) => (
-                  <ListItem
+              {filteredTeachers.length > 0 ?
+                <List className={classes.list}>
+                  {this.props.teacherList.length === 0 ? (
+                    <>Fetching your teachers...</>
+                  ) : (
+                    <></>
+                  )}
+                  {filteredTeachers.map((teacher, index) => (
+                    <ListItem
                       key={index}
                       alignItems="center"
                       onClick={(): void =>
                         this.selectTeacher(teacher)
                       }
-                  >
-                    <ListItemIcon>
-                      <StarsIcon style={{color: Constants.Colors.SA }}/>
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={teacher.firstName + " " + teacher.lastName}
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            component="span"
-                            className={classes.inline}
-                            color="textPrimary"
-                          >
-                            School Name
-                          </Typography>
-                          {" — Class Name"}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
+                    >
+                      <ListItemIcon>
+                        <StarsIcon style={{color: Constants.Colors.SA}}/>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={teacher.firstName + " " + teacher.lastName}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              component="span"
+                              className={classes.inline}
+                              color="textPrimary"
+                            >
+                              School Name
+                            </Typography>
+                            {" — Class Name"}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List> :
+              <p>You have no teachers.</p>}
             </Grid>
           </div>
         </Modal>

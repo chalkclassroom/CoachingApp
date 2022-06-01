@@ -4,17 +4,8 @@ import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
 
-// Need to find a new place for this...
-// ask Jules about where to put it
-const config = {
-  apiKey: 'AIzaSyB7IUNOBelyA5-rMBSM4PtADvlvUOqe6NU',
-  authDomain: 'cqrefpwa.firebaseapp.com',
-  databaseURL: 'https://cqrefpwa.firebaseio.com',
-  projectId: 'cqrefpwa',
-  storageBucket: 'cqrefpwa.appspot.com',
-  messagingSenderId: '353838544707',
-  measurementId: 'G-S797QZ8L3N',
-}
+
+const config = process.env.FIREBASE_CONFIG
 
 interface TeacherInfo {
   firstName: string
@@ -64,6 +55,9 @@ class Firebase {
     this.db = firebase.firestore()
     this.sessionRef = null
     this.query = null
+    if (process.env.USE_LOCAL_AUTH) {
+      this.auth.useEmulator("http://localhost:9099");
+    }
     if (process.env.USE_LOCAL_FIRESTORE) {
       this.db.settings({
         host: 'localhost:8080',
@@ -135,36 +129,71 @@ class Firebase {
     role: string
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
-    const userInfo = await secondFirebase
-      .auth()
-      .createUserWithEmailAndPassword(userData.email, userData.password)
-    if (userInfo.user) {
-      console.log('Create user and sign in Success', userInfo)
-      const data = {
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        role: role,
-        id: userInfo.user ? userInfo.user.uid : '',
-      }
-      const docRef = firebase
-        .firestore()
-        .collection('users')
-        .doc(userInfo.user.uid)
-      docRef.set(data).then(() => {
-        docRef
-          .collection('partners')
-          .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
-          .set({})
-          .then(() => console.log('Practice Teacher added to new user'))
-          .catch((error: Error) =>
-            console.error(
-              'Error occurred while assigning practice teacher to coach: ',
-              error
-            )
-          )
+    // Added emulators for local testing
+    if(process.env.USE_LOCAL_AUTH) {
+      console.log('using local Auth');
+      secondFirebase.auth().useEmulator("http://localhost:9099");
+    }
+    if(process.env.use_LOCAL_FIRESTORE) {
+      secondFirebase.firestore().settings({
+        host: 'localhost:8080',
+        ssl: false,
       })
     }
+    try {
+      const userInfo = await secondFirebase
+        .auth()
+        .createUserWithEmailAndPassword(userData.email, userData.password)
+      if (userInfo.user) {
+        console.log('Create user and sign in Success', userInfo)
+        const data = {
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          role: role,
+          id: userInfo.user ? userInfo.user.uid : '',
+        }
+        // Create the Practice Teacher if it does not currently exist
+        let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
+        if(!practiceTeacher.exists) {
+          firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6')
+            .set({
+              firstName: 'Practice',
+              lastName: 'Teacher',
+              school: 'Elum Entaree School',
+              email: 'practice@teacher.edu',
+              notes: "Notes are a useful place to put highlights or reminders!",
+              role: "teacher",
+              phone: '012-345-6789',
+              id: 'rJxNhJmzjRZP7xg29Ko6'
+            })
+
+        }
+        const docRef = firebase
+          .firestore()
+          .collection('users')
+          .doc(userInfo.user.uid)
+        docRef.set(data).then(() => {
+          docRef
+            .collection('partners')
+            .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
+            .set({})
+            .then(() => console.log('Practice Teacher added to new user'))
+            .catch((error: Error) =>
+              console.error(
+                'Error occurred while assigning practice teacher to coach: ',
+                error
+              )
+            )
+        })
+      }
+    } catch (e) {
+      console.log("An Error occurred when creating the user:")
+      throw new Error(e) // Raise error to caller; prevents recreating password in NewUser
+    } finally {
+      secondFirebase.delete() // Frees resources for any subsequent users created
+    }
+
   }
 
   /**
@@ -296,6 +325,7 @@ class Firebase {
           return doc.data()
         } else {
           console.log("Partner's ID is 'undefined' in dB.")
+          return ({id: null})
         }
       })
       .catch((error: Error) =>
@@ -1022,6 +1052,7 @@ class Firebase {
     this.sessionRef = this.db.collection('observations').doc(sessionId)
     return this.sessionRef
       .collection('notes')
+      .orderBy('Timestamp')
       .get()
       .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const notesArr: Array<Note> = []
@@ -2721,6 +2752,7 @@ class Firebase {
     teacherId: string
     date: { seconds: number; nanoseconds: number }
     practice: string
+    modified: number
     teacherFirstName: string
     teacherLastName: string
     achieveBy: firebase.firestore.Timestamp
@@ -2738,10 +2770,12 @@ class Firebase {
             date: { seconds: number; nanoseconds: number }
             practice: string
             teacherFirstName: string
+            modified: number
             teacherLastName: string
             achieveBy: firebase.firestore.Timestamp
           }> = []
-          querySnapshot.forEach(doc =>
+          querySnapshot.forEach(doc => {
+           // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
             idArr.push({
               id: doc.id,
               teacherId: doc.data().teacher,
@@ -2749,10 +2783,12 @@ class Firebase {
               teacherLastName: '',
               practice: doc.data().tool,
               date: doc.data().dateModified,
+              modified: new Date(0).setUTCSeconds(doc.data().dateModified.seconds),
               achieveBy: doc.data().goalTimeline
                 ? doc.data().goalTimeline
                 : firebase.firestore.Timestamp.fromDate(new Date()),
             })
+          }
           )
           console.log('idArr is2 ', idArr)
           return idArr

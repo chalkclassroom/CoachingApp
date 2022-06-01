@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import SmallGroupIconImage from '../../assets/images/SmallGroupIconImage.svg'
 import WholeGroupIconImage from '../../assets/images/WholeGroupIconImage.svg'
+import SuggestedDuration from "../Shared/SuggestedDuration";
 
 /**
  * reminders for level of instruction observation
@@ -14,6 +15,7 @@ export default function LevelOfInstructionObservationPopUp(): React.ReactElement
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item style={{paddingTop: '1em'}}>
           <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
+            <SuggestedDuration duration={30} bold={true} />
             <ul>
               <li>
                 Observe the teacher delivering instruction or

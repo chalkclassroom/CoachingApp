@@ -16,7 +16,7 @@ exports.fetchSeqDetails = async(req, res) => {
   const sqlQuery = `SELECT
   COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2 OR checked = 3 OR checked = 4) THEN 'childBehavior' ELSE NULL END) AS childBehavior,
   COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'teacherBehavior' ELSE NULL END) AS teacherBehavior
-FROM cqrefpwa.observations.sequential
+FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
 WHERE id =` + req.query.id;
 
   const options = {

@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import * as PropTypes from 'prop-types';
@@ -320,7 +321,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     firstName: string
   }>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{
-   id: string,
+    id: string,
     date: {
       seconds: number,
       nanoseconds: number
@@ -345,10 +346,10 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [attachments, setAttachments] = useState<Array<Attachment>>();
   const [attachDisabled, setAttachDisabled] = useState(true);
   const [checkedResults, setCheckedResults] = useState<{[id: string]: {
-    summary: boolean,
-    details: boolean,
-    trends: boolean
-  }}>({});
+      summary: boolean,
+      details: boolean,
+      trends: boolean
+    }}>({});
   const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>();
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -813,7 +814,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       document.body.appendChild(link);
       link.download = "html_image.png";
       const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 190; 
+      const imgWidth = 190;
       const pageHeight = 265;
       const imgHeight = canvas.height * imgWidth / canvas.width;
       let heightLeft = imgHeight;
@@ -828,7 +829,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         heightLeft -= pageHeight;
       }
       // use this for downloading pdf
-      pdf.save("download.pdf");
+      // pdf.save("download.pdf");
       const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
       const reader = new FileReader();
       reader.readAsDataURL(blobPDF);
@@ -930,9 +931,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    ListeningData['summary'] | undefined,
-    ListeningData['details'] | undefined,
-    ListeningData['trends'] | undefined
+      ListeningData['summary'] | undefined,
+      ListeningData['details'] | undefined,
+      ListeningData['trends'] | undefined
   ]> => {
     return Promise.all([
       summary ? props.firebase.fetchListeningSummary(sessionId).then((summary: ListeningData['summary']) => {return summary}) : null,
@@ -947,9 +948,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    TransitionData['summary'] | undefined,
-    TransitionData['details'] | undefined,
-    TransitionData['trends'] | undefined
+      TransitionData['summary'] | undefined,
+      TransitionData['details'] | undefined,
+      TransitionData['trends'] | undefined
   ]> => {
     return Promise.all([
       summary ? props.firebase.fetchTransitionSummary(sessionId).then((summary: Array<{
@@ -987,9 +988,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    ClimateData['summary'] | undefined,
-    ClimateData['details'] & {detailsChecked: boolean} | undefined,
-    ClimateData['trends'] | undefined
+      ClimateData['summary'] | undefined,
+      ClimateData['details'] & {detailsChecked: boolean} | undefined,
+      ClimateData['trends'] | undefined
   ]> => {
     return Promise.all([
       summary ? props.firebase.fetchAvgToneRating(sessionId).then((rating: number) => {
@@ -1042,19 +1043,19 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     trends: boolean | undefined
   ): Promise<[
     MathData['childSummary'],
-    MathData['teacherSummary'] | undefined,
-    {
-      math1: number,
-      math2: number,
-      math3: number,
-      math4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    } | undefined,
-    MathData['childTrends'] | undefined,
-    MathData['teacherTrends'] | undefined
+      MathData['teacherSummary'] | undefined,
+      {
+        math1: number,
+        math2: number,
+        math3: number,
+        math4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      } | undefined,
+      MathData['childTrends'] | undefined,
+      MathData['teacherTrends'] | undefined
   ]> => {
     return Promise.all([
       props.firebase.fetchChildMathSummary(sessionId)
@@ -1084,9 +1085,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    InstructionData['summary'] | undefined,
-    InstructionData['details'] | undefined,
-    InstructionData['trends'] | undefined
+      InstructionData['summary'] | undefined,
+      InstructionData['details'] | undefined,
+      InstructionData['trends'] | undefined
   ]> => {
     return Promise.all([
       summary ? props.firebase.fetchInstructionTypeCount(sessionId).then((details: Array<{
@@ -1098,14 +1099,14 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         let highLevelResponse = 0;
         let lowLevelResponse = 0;
         details.forEach(instruction => {
-          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
-            lowLevelResponse = instruction.count;                       
-          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
-            lowLevelQuestion = instruction.count;                                 
-          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
-            highLevelQuestion = instruction.count;                                 
-          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
-            highLevelResponse = instruction.count;                                 
+          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") {
+            lowLevelResponse = instruction.count;
+          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {
+            lowLevelQuestion = instruction.count;
+          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {
+            highLevelQuestion = instruction.count;
+          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {
+            highLevelResponse = instruction.count;
           }
         });
         return {
@@ -1124,14 +1125,14 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         let highLevelResponse = 0;
         let lowLevelResponse = 0;
         details.forEach(instruction => {
-          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
-            lowLevelResponse = instruction.count;                       
-          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
-            lowLevelQuestion = instruction.count;                                 
-          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
-            highLevelQuestion = instruction.count;                                 
-          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
-            highLevelResponse = instruction.count;                                 
+          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") {
+            lowLevelResponse = instruction.count;
+          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {
+            lowLevelQuestion = instruction.count;
+          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {
+            highLevelQuestion = instruction.count;
+          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {
+            highLevelResponse = instruction.count;
           }
         });
         return {
@@ -1157,15 +1158,15 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    {
-      offTask: number,
-      engaged: number
-    } | undefined,
-    {
-      average: number
-    } | undefined,
-    EngagementData['details'] | undefined,
-    EngagementData['trends'] | undefined
+      {
+        offTask: number,
+        engaged: number
+      } | undefined,
+      {
+        average: number
+      } | undefined,
+      EngagementData['details'] | undefined,
+      EngagementData['trends'] | undefined
   ]> => {
     return Promise.all([
       summary ? props.firebase.fetchEngagementPieSummary(sessionId).then((summary: {
@@ -1185,19 +1186,19 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     trends: boolean | undefined
   ): Promise<[
     SequentialData['childSummary'],
-    SequentialData['teacherSummary'] | undefined,
-    {
-      sequential1: number,
-      sequential2: number,
-      sequential3: number,
-      sequential4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    } | undefined,
-    SequentialData['childTrends'] | undefined,
-    SequentialData['teacherTrends'] | undefined
+      SequentialData['teacherSummary'] | undefined,
+      {
+        sequential1: number,
+        sequential2: number,
+        sequential3: number,
+        sequential4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      } | undefined,
+      SequentialData['childTrends'] | undefined,
+      SequentialData['teacherTrends'] | undefined
   ]> => {
     return Promise.all([
       props.firebase.fetchChildSeqSummary(sessionId)
@@ -1228,7 +1229,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     type: string
   ): Promise<[
     LiteracyData['summary'],
-    LiteracyData['details'] | undefined
+      LiteracyData['details'] | undefined
   ]> => {
     let literacyType = '';
     let who = '';
@@ -1256,16 +1257,16 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         return summary}) : null,
       details ? ((type === 'FoundationalTeacher' || type === 'FoundationalChild') ? (
         props.firebase.fetchLiteracyDetailsFoundational(sessionId, who)
-        .then((details: LiteracyData['details']) => {return details})
+          .then((details: LiteracyData['details']) => {return details})
       ) : (type === 'WritingTeacher' || type === 'WritingChild') ? (
         props.firebase.fetchLiteracyDetailsWriting(sessionId, who)
-        .then((details: LiteracyData['details']) => {return details})
+          .then((details: LiteracyData['details']) => {return details})
       ) : (type === 'ReadingTeacher' || type === 'ReadingChild') ? (
         props.firebase.fetchLiteracyDetailsReading(sessionId, who)
-        .then((details: LiteracyData['details']) => {return details})
+          .then((details: LiteracyData['details']) => {return details})
       ) : (
         props.firebase.fetchLiteracyDetailsLanguage(sessionId, who)
-        .then((details: LiteracyData['details']) => {return details})
+          .then((details: LiteracyData['details']) => {return details})
       )) : (
         null
       )
@@ -1279,19 +1280,19 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     trends: boolean | undefined
   ): Promise<[
     ACData['childSummary'],
-    ACData['teacherSummary'] | undefined,
-    {
-      ac1: number,
-      ac2: number,
-      ac3: number,
-      ac4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    } | undefined,
-    ACData['childTrends'] | undefined,
-    ACData['teacherTrends'] | undefined
+      ACData['teacherSummary'] | undefined,
+      {
+        ac1: number,
+        ac2: number,
+        ac3: number,
+        ac4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      } | undefined,
+      ACData['childTrends'] | undefined,
+      ACData['teacherTrends'] | undefined
   ]> => {
     return Promise.all([
       props.firebase.fetchChildACSummary(sessionId)
@@ -1776,7 +1777,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
 
   const sendMail = async (): Promise<void> => {
     if (recipient === null) {
-      return;            
+      return;
     } else {
       // create the message object to send to funcSendEmail
       const msg: Message = {
@@ -1795,12 +1796,12 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
           'disposition': item['disposition'],
         }; })) : (undefined)
       };
-     
+
       // encrypted with the user's uid from firebase
       const encryptedMsg = CryptoJS.AES
         .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
         .toString();
-      
+
       firebase.sendEmail(encryptedMsg)
         .then((res: {data: string}): void => {
           console.log(JSON.stringify(res));
@@ -1812,28 +1813,25 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   };
 
   const thankYou = 'Hi ' + recipient.firstName + ', \n \n'
-  + 'Thanks for welcoming me today in your classroom! '
-  + 'I really enjoyed my visit and look forward to '
-  + 'chatting with you soon about Transition Time. \n \n'
-  + 'Best wishes, \n'
-  + 'Clare';
+    + 'Thanks for welcoming me today in your classroom! '
+    + 'I really enjoyed my visit and look forward to '
+    + 'chatting with you soon about Transition Time. \n \n'
+    + 'Best wishes, \n';
 
   const feedback = 'Hi ' + recipient.firstName + ', \n \n'
-  + 'Thanks for welcoming me today in your classroom! \n \n'
-  + 'It was a joy to see the children so engaged in those small '
-  + 'groups when you used cotton balls to teach counting. \n \n'
-  + 'Please see below for some notes on great teaching strategies '
-  + 'I noticed and why they’re effective for children. \n \n'
-  + 'Best, \n'
-  + 'Clare';
+    + 'Thanks for welcoming me today in your classroom! \n \n'
+    + 'It was a joy to see the children so engaged in those small '
+    + 'groups when you used cotton balls to teach counting. \n \n'
+    + 'Please see below for some notes on great teaching strategies '
+    + 'I noticed and why they’re effective for children. \n \n'
+    + 'Best, \n';
 
   const actionPlan = 'Hi ' + recipient.firstName + ', \n \n'
     + 'Thanks for meeting today and creating this action plan. '
     + 'I think it looks great, and I look forward to working '
     + 'on these goals with you! \n \n'
     + 'Please reach out with questions or ideas anytime. \n \n'
-    + 'Best, \n'
-    + 'Clare';
+    + 'Best, \n';
 
   const chalkPracticeSelection = `Hi ${recipient.firstName},
 
@@ -1854,7 +1852,6 @@ Which CHALK practices would you like to focus on or learn about next? (Bold or t
 Please share any additional comments about why you chose these practices or questions you have about CHALK coaching in general.
 
 Thank you!
-Katherine
 
 Visit https://chalkcoaching.com/Training for more information about each practice!
 `

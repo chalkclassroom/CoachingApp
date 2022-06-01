@@ -2,6 +2,7 @@ import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AnytimeIconImage from '../../assets/images/AnytimeIconImage.svg';
+import SuggestedDuration from "../Shared/SuggestedDuration";
 
 /**
  * reminders for transition time observation
@@ -13,7 +14,8 @@ export default function TransitionTimeObservationPopUp(): React.ReactElement {
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item style={{paddingTop: '1em'}}>
           <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-            When you observe a transtion in the classroom,
+          <SuggestedDuration bold={true} duration={30} />
+            When you observe a transition in the classroom,
           </Typography>
           <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
             <ul>

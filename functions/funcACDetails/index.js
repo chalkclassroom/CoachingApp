@@ -31,7 +31,7 @@ exports.funcACDetails = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
                     COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
                     COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
-                    FROM cqrefpwa.observations.ac
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.ac
                     WHERE id ='`+data.sessionId+`'`;
 
   console.log(sqlQuery);

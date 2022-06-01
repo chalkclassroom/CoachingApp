@@ -1,6 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
-
+const functions = require("firebase-functions");
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -18,7 +18,7 @@ exports.fetchInstructionTrend = async (req, res) => {
                     DATE(start) AS dayOfEvent, 
                      COUNT(CASE WHEN instructionType = 'highLevel' THEN 'inferential' WHEN instructionType = 'followUp' THEN 'inferential' ELSE NULL END) AS inferential, 
  					 COUNT(CASE WHEN instructionType = 'lowLevel' THEN 'basicSkills' WHEN instructionType = 'specificSkill' THEN 'basicSkills' ELSE NULL END) AS basicSkills
-                  FROM cqrefpwa.observations.level
+                  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.level
                   WHERE teacher = '`+req.query.teacher+`'
                   GROUP BY dayofEvent
                   ORDER BY dayofEvent ASC

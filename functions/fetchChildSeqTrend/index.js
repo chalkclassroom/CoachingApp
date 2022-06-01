@@ -1,6 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
-
+const functions = require("firebase-functions");
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -17,7 +17,7 @@ exports.fetchChildSeqTrend = async (req, res) => {
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
   COUNT(CASE WHEN seqType = 'nonSequential' AND (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'nonSequential' ELSE NULL END) AS nonSequential,
   COUNT(CASE WHEN seqType = 'sequential' AND (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checked = 0 THEN 'sequential' ELSE NULL END) as sequential
-FROM cqrefpwa.observations.sequential
+FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
 WHERE teacher = '`+req.query.teacher+`'
 GROUP BY startDate
 ORDER BY startDate ASC`;

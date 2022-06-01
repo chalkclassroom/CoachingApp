@@ -12,6 +12,7 @@ import AppBar from '../../components/AppBar';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import Firebase from '../../components/Firebase'
+import TrainingVideo from "../../components/TrainingComponents/TrainingVideo";
 
 const styles: object = {
   root: {
@@ -35,7 +36,8 @@ const styles: object = {
     paddingBottom: '0.5em'
   },
   grid: {
-    direction: 'row',
+    height: '90vh',
+    flexDirection: 'row',
     justify: 'center',
     alignItems: 'center',
     paddingTop: '3em',
@@ -79,7 +81,7 @@ const styles: object = {
       paddingBottom: 0
     },
     grid: {
-      direction: 'column',
+      flexDirection: 'column',
       height: '90vh',
       paddingTop: '1em',
       paddingBottom: '1em'
@@ -192,7 +194,7 @@ class TrainingPage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid> }
-          <Grid item className={classes.contentGrid}>
+          <Grid container justify={'center'} direction={'column'} alignItems={'center'} className={classes.contentGrid}>
             {this.state.view === 'observe' ? (
               <ToolIcons type={'Observe'} training={true} history={this.props.history} />
             ) : this.state.view === 'navigation' ? (
@@ -209,14 +211,9 @@ class TrainingPage extends React.Component<Props, State> {
             ) : this.state.view === 'results' ? (
               <ToolIcons type={'Results'} training={true} history={this.props.history} />
             ) : this.state.view === 'conferencePlan' ? (
-              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+              <Grid container direction="column" justify="center" alignItems="center" style={{ width: '100%', height: '100%', paddingTop: '3em'}}>
                 <Grid item>
-                  <img src={LogoImage} alt="CHALK" height="100vh" />
-                </Grid>
-                <Grid item style={{paddingTop: '3em'}}>
-                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-                    Conference Plan Training coming soon!
-                  </Typography>
+                  <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Conference%20Planning.mp4?alt=media&token=664c6c56-1fc6-4b16-84ed-a866e04e3782'}/>
                 </Grid>
               </Grid>
             ) : (

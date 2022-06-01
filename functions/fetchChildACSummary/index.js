@@ -1,6 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
-
+const functions = require("firebase-functions");
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -17,7 +17,7 @@ exports.fetchChildACSummary = async(req, res) => {
                     COUNT(CASE WHEN (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2 OR checked = 3 OR checked = 4 OR checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'ac' ELSE NULL END) AS ac,
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checked = 0 THEN 'noac' ELSE NULL END) AS noac
-                    FROM cqrefpwa.observations.ac
+                    FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.ac
                     WHERE id =` + req.query.id;
 
   const options = {

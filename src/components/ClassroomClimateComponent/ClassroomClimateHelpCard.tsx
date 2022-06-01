@@ -52,8 +52,13 @@ function ClassroomClimateHelpCard(props: Props): React.ReactElement {
             <TabBar position="static" color="default" className={classes.tabBar}>
               <Tabs
                 value={tabValue}
-                indicatorColor="secondary"
                 variant="fullWidth"
+                TabIndicatorProps={{
+                  style: {
+                    backgroundColor: tabValue === 0 ? Constants.Colors.TT : Constants.Colors.MI
+                  }
+                }
+                }
               >
                 <Tab
                   label="Behavior Responses"
@@ -62,7 +67,7 @@ function ClassroomClimateHelpCard(props: Props): React.ReactElement {
                     fontFamily: "Arimo",
                     fontSize: '1em',
                     color: tabValue === 0? 'white' : 'black',
-                    backgroundColor: tabValue === 0 ? Constants.Colors.CC : '#d3d3d3'
+                    backgroundColor: tabValue === 0 ?  Constants.ClimateTypeColors.disapproval : '#d3d3d3'
                   }}
                 />
                 <Tab

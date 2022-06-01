@@ -1,6 +1,6 @@
 const Firestore = require("@google-cloud/firestore");
-
-const PROJECTID = "cqrefpwa";
+const functions = require("firebase-functions")
+const PROJECTID =  functions.config().env.bq_project
 const firestore = new Firestore({
     projectId: PROJECTID
 });

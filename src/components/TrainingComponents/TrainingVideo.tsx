@@ -11,7 +11,6 @@ interface Props {
 
 export default function TrainingVideo({ videoUrl }: Props): React.ReactNode {
   const [playedVideos, setPlayedVideos] = React.useState<Array<string>>([])
-  const [autoPlay, setAutoPlay] = React.useState<boolean>(false)
   const [ready, setReady] = React.useState<boolean>(false)
 
   const firebaseContext = React.useContext(FirebaseContext)
@@ -30,11 +29,9 @@ export default function TrainingVideo({ videoUrl }: Props): React.ReactNode {
 
       if (newPlayedVideos.includes(videoUrl)) {
         setPlayedVideos(playedVideos)
-        setAutoPlay(false)
       } else {
         firebaseContext.updatePlayedVideos(videoUrl)
         setPlayedVideos([...playedVideos, videoUrl])
-        setAutoPlay(true)
       }
 
       setReady(true)
@@ -45,9 +42,8 @@ export default function TrainingVideo({ videoUrl }: Props): React.ReactNode {
   return (
     ready && (
       <Video
-        loop
         muted
-        autoPlay={autoPlay}
+        autoPlay={false}
         controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
         poster="http://sourceposter.jpg"
       >
