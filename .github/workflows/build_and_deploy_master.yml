@@ -1,4 +1,4 @@
-name: Deploy develop branch
+name: Deploy main branch
 
 on:
   pull_request:
