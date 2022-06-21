@@ -17,12 +17,12 @@ const styles = createStyles({
         textAlign: 'center',
     },
     card: {
-        height: '160px;',
+        height: 'min(160px, 20vh);',
         boxShadow: 'none',
     },
     cardAction: {
-        height: '160px',
-        width: '160px',
+        height: 'min(160px, 20vh)',
+        width: 'min(160px, 20vh)',
     },
 })
 
