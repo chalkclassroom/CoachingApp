@@ -90,7 +90,7 @@ function ToolIcons(props: Props): React.ReactElement {
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
-  
+
   const handleClick = (tool: Types.Selected, unlocked: boolean): void => {
     setSelected(tool);
     if (training) {
@@ -120,7 +120,7 @@ function ToolIcons(props: Props): React.ReactElement {
 
   return (
     <div style={{width: '100%', height: '100%'}}>
-      <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%', height: '100%'}}>
+      <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%', height: '100%', 'flex-wrap': 'nowrap'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
             <Grid item>

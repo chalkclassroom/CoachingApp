@@ -50,7 +50,8 @@ import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/Lite
 import AdminPage from './views/protected/AdminViews/AdminPage'
 import TeamPage from './views/WelcomeViews/TeamPage'
 import TrainingPage from './views/protected/TrainingPage'
-import * as ReactGA from 'react-ga'
+import * as ReactGA3 from 'react-ga'
+import ReactGA from "react-ga4";
 import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
 import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
 import CoachingProfessionalDevelopmentMaterials
@@ -82,9 +83,12 @@ import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 
+// Initialize Google Analytics
+ReactGA.initialize('G-NZCNF72EMG');
+ReactGA.send("pageview");
 
-ReactGA.initialize('UA-154034655-1');
-ReactGA.pageview(window.location.pathname + window.location.search);
+ReactGA3.initialize('UA-154034655-1');
+ReactGA3.pageview(window.location.pathname + window.location.search);
 
 // LogRocket.init('akprci/cqref');
 // setupLogRocketReact(LogRocket);
@@ -724,4 +728,3 @@ class App extends React.Component<Props, State> {
 }
 
 export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, setLiteracyTraining, getTeacherList})(App));
-
