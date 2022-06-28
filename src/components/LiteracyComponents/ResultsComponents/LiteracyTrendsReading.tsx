@@ -177,7 +177,7 @@ export default function LiteracyTrendsReading(props: Props) {
           <Table  aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
+                <TableCell style={{minWidth: 250, position: 'sticky', left: 0, top: 0, backgroundColor: '#fafafa', zIndex: 1}} />
                 {data.filter(obj => {
                   return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
                 }).map(a => [a.startDate ? a.startDate : "", a.activitySetting]).map((description: Array<string>, index: number) => {
@@ -186,7 +186,7 @@ export default function LiteracyTrendsReading(props: Props) {
                       key={index}
                       align='center'
                       padding='none'
-                      style={{ minWidth: 90, paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%'}}
+                      style={{ minWidth: 90, paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%', backgroundColor: '#ffffff', position: 'sticky', top: 0}}
                     >
                       <Grid container direction="column" alignItems="center" justify="center" style={{height: '100%'}}>
                         <Grid item>

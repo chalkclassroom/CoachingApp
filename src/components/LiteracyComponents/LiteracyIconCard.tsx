@@ -17,12 +17,12 @@ const styles: object = {
     textAlign: "center"
   },
   card: {
-    height: "160px;",
+    height: "min(160px, 20vh)",
     boxShadow: "none"
   },
   cardAction: {
-    height: "160px",
-    width: "160px"
+    height: "min(160px, 20vh)",
+    width: "min(160px, 20vh)"
   }
 };
 
@@ -79,11 +79,11 @@ interface State {
  */
 class LiteracyIconCard extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state = {
       selected: false
     };
