@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteMICenters } from "../../../state/actions/math-instruction";
+import {clearMathCount, deleteMICenters} from "../../../state/actions/math-instruction";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import TeacherModal from '../HomeViews/TeacherModal';
 import {
@@ -16,6 +16,7 @@ import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 
 const styles: object = {
@@ -53,12 +54,16 @@ interface Props {
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
   updateMathCount(behavior: string): void,
+  clearMathCount(): void
+  deleteMICenters(): void
   centers: Array<{
     name: string,
     count: number
   }>,
   history: H.History,
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  forceComplete: boolean
 }
 
 /**
@@ -86,6 +91,11 @@ class MathInstructionPage extends React.Component<Props, State> {
       this.setState({ teacherModal: true })
     }
   };
+
+  componentWillUnmount() {
+    this.props.clearMathCount()
+    this.props.deleteMICenters()
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -116,13 +126,14 @@ class MathInstructionPage extends React.Component<Props, State> {
         <div className={classes.root}>
           <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => (
-              <AppBar firebase={firebase} />
+              <AppBar confirmAction={this.props.preBack} firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
           <main style={{ flexGrow: 1 }}>
             <FirebaseContext.Consumer>
               {(firebase: Firebase): React.ReactNode => (
                 <CenterMenu
+                  forceComplete={this.props.forceComplete}
                   teacher={this.props.teacherSelected}
                   history={this.props.history}
                   firebase={firebase}
@@ -153,6 +164,10 @@ class MathInstructionPage extends React.Component<Props, State> {
   }
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (state: Types.ReduxState): {
   centers: Array<{
     name: string,
@@ -166,6 +181,6 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, { deleteMICenters, addNewCenter, incrementCenterCount, updateMathCount })(
-  withStyles(styles)(MathInstructionPage)
+export default connect(mapStateToProps, { deleteMICenters, addNewCenter, incrementCenterCount, updateMathCount, clearMathCount })(
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(MathInstructionPage))
 );

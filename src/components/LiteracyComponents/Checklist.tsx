@@ -100,6 +100,8 @@ interface Props {
   teacherSelected: Types.Teacher
   updateLiteracyCount(behavior: boolean): void
   checklist: string
+  forceComplete: boolean
+  showLiteracyActivity: boolean
 }
 
 interface State {
@@ -108,6 +110,7 @@ interface State {
   timeUpOpen: boolean
   final: boolean
   in: boolean
+  finishedForcedEntries: boolean
 }
 
 /**
@@ -137,6 +140,7 @@ class Checklist extends React.Component<Props, State> {
       timeUpOpen: false,
       final: false,
       in: true,
+      finishedForcedEntries: false
     }
   }
 
@@ -176,6 +180,19 @@ class Checklist extends React.Component<Props, State> {
   /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount(): void {
     clearInterval(this.timer)
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if(!prevProps.forceComplete && this.props.forceComplete) {
+      const checked = this.state.checked.length > 0 ? this.state.checked :  [Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1]
+      if (checked.indexOf(Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1) === 0) {
+        this.props.updateLiteracyCount(false)
+      } else {
+        this.props.updateLiteracyCount(true)
+      }
+      this.props.firebase.handlePushLiteracy({ checked })
+      this.setState({finishedForcedEntries: true})
+    }
   }
 
   handleTimeUpNotification = (): void => {
@@ -415,6 +432,8 @@ class Checklist extends React.Component<Props, State> {
               >
                 <Grid item>
                   <Dashboard
+                    showLiteracyActivity={this.props.showLiteracyActivity}
+                    forceComplete={this.state.finishedForcedEntries}
                     type={this.props.type}
                     infoDisplay={
                       <Countdown

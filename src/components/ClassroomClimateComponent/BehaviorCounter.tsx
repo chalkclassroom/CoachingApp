@@ -15,6 +15,7 @@ import {
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import * as Types from '../../constants/Types';
 import * as Constants from '../../constants/Constants';
+import Firebase from "../Firebase";
 
 const styles: object = {
   category: {
@@ -49,15 +50,7 @@ const styles: object = {
 };
 
 interface Props {
-  firebase: {
-    auth: {
-      currentUser: {
-        uid: string
-      }
-    },
-    handleSession(entry: object): void,
-    handlePushClimate(entry: object): void
-  },
+  firebase: Firebase,
   pushOntoClimateStack(entry: object): void,
   popOffClimateStack(): void,
   climateStackSize: number,
@@ -253,9 +246,9 @@ class BehaviorCounter extends React.Component<Props, {}> {
       school: PropTypes.string
     }).isRequired,
     climateStackSize: PropTypes.number.isRequired,
-    firebase: PropTypes.exact({
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
+    firebase: PropTypes.shape({
+      auth: PropTypes.shape({
+        currentUser: PropTypes.shape({
           uid: PropTypes.string
         })
       }).isRequired,

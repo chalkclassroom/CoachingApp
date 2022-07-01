@@ -8,13 +8,19 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time";
+import {
+  clearSessionTime,
+  clearTransitionTime,
+  resetTransitionTime,
+  toggleNewTransitionType
+} from "../../../state/actions/transition-time";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 const styles: object = {
   root: {
@@ -99,9 +105,14 @@ interface Props {
     typeGrid: string,
     timerGrid: string
   },
+  forceComplete: boolean
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null,
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  resetTransitionTime(): void
+  clearSessionTime(): void
+  clearTransitionTime(): void
 };
 
 interface State {
@@ -110,6 +121,7 @@ interface State {
   open: boolean,
   transitionEnded: boolean,
   teacherModal: boolean
+  isStopped: boolean
 };
 
 /**
@@ -180,10 +192,16 @@ class TransitionTimePage extends React.Component<Props, State> {
       this.setState({ teacherModal: true })
     }
   };
+  componentWillUnmount() {
+    this.props.resetTransitionTime()
+      this.props.clearTransitionTime()
+      this.props.clearSessionTime()
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleNewTransitionType: PropTypes.func.isRequired,
+    preBack: PropTypes.func,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -220,7 +238,7 @@ class TransitionTimePage extends React.Component<Props, State> {
             </FirebaseContext.Consumer>
           ) : (<div />)}
           <FirebaseContext.Consumer>
-            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar confirmAction={this.props.preBack} firebase={firebase} />}
           </FirebaseContext.Consumer>
           <main className={classes.main}>
             <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>
@@ -240,6 +258,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                       completeObservation={this.state.transitionEnded}
                       startTimer={this.startTimer}
                       stopTimer={this.stopTimer}
+                      forceComplete={this.props.forceComplete}
                     />
                   </Grid>
                 </Grid>
@@ -268,23 +287,11 @@ class TransitionTimePage extends React.Component<Props, State> {
                       direction={"column"}
                     >
                       <FirebaseContext.Consumer>
-                        {(firebase: {
-                          auth: {
-                            currentUser: {
-                              uid: string
-                            }
-                          },
-                          handleSession(mEntry: {
-                            observedBy: string,
-                            teacher: string,
-                            start?: Date,
-                            type: string
-                          }): Promise<void>
-                        }): React.ReactNode => (
+                        {(firebase: Firebase): React.ReactNode => (
                           <TransitionTimer
                             firebase={firebase}
                             typeSelected={
-                              this.props.transitionType === null ? false : true
+                              this.props.transitionType !== null
                             }
                             handleStartTransition={this.handleStartTransition}
                             handleEndTransition={this.handleEndTransition}
@@ -301,9 +308,7 @@ class TransitionTimePage extends React.Component<Props, State> {
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: {
-            getTeacherList(): Promise<Types.Teacher[]>
-          }): React.ReactElement => (
+          {(firebase: Firebase): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -314,6 +319,11 @@ class TransitionTimePage extends React.Component<Props, State> {
       )
     );
   }
+}
+const wrapperOptions = {
+ totalTime: 60*20,
+  modalTime: 60* 5,
+  confirmationPrompt: "You have not made any selections recently. Would you like to complete this observation?"
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
@@ -327,6 +337,6 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 
-export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType })(
-  withStyles(styles)(TransitionTimePage)
+export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType, clearTransitionTime, clearSessionTime })(
+  withStyles(styles)(withObservationWrapper(wrapperOptions)(TransitionTimePage))
 );

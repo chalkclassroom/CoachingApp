@@ -1,9 +1,10 @@
 import firebase from 'firebase'
-import { FirebaseFunctions } from '@firebase/functions-types'
+import {FirebaseFunctions} from '@firebase/functions-types'
 import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
-
+import {v4 as uuidv4} from 'uuid'
+import DateFnsUtils from "@date-io/date-fns";
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -29,10 +30,36 @@ export interface UserDocument {
 interface Note {
   id: string
   content: string
-  timestamp: {
+  Timestamp: {
     seconds: number
     nanoseconds: number
   }
+}
+
+interface Entry {
+  Timestamp: Date
+}
+
+interface LocalNote {
+  content: string
+  Timestamp: Date
+  id: string
+}
+
+interface Observation {
+  activitySetting?: string | null
+  checklist: string | null
+  entries: Entry[]
+  notes: LocalNote[]
+  completed: boolean
+  end: Date
+  start: Date
+  observedBy: string
+  teacher: string
+  timezone: string
+  type: string
+  lastClickTime: Date
+  timedOut: boolean
 }
 
 /**
@@ -45,6 +72,7 @@ class Firebase {
   sessionRef: firebase.firestore.DocumentReference | null
   query: firebase.firestore.Query | null
   app: firebase.app.App | null = null
+  currentObservation?: Observation | null
 
   /**
    * initializes firebase
@@ -65,7 +93,7 @@ class Firebase {
       })
     }
     this.db
-      .enablePersistence({ synchronizeTabs: true })
+      .enablePersistence({synchronizeTabs: true})
       .catch((error: Error) => console.error('Offline Not Working: ', error))
     this.functions = firebase.functions()
     if (process.env.USE_LOCAL_FUNCTIONS) {
@@ -73,11 +101,17 @@ class Firebase {
     }
   }
 
+  updateCurrentObservation = (observation: Partial<Observation>) => {
+    this.currentObservation = {
+      ...this.currentObservation,
+      ...observation
+    }
+  }
   /**
    * submits pilot form to database
    * @param {object} userData
    */
-  firebasePilotSignUp = async function(userData: {
+  firebasePilotSignUp = async function (userData: {
     email: string
     firstName: string
     lastName: string
@@ -98,7 +132,7 @@ class Firebase {
       .then(() => {
         console.log('Visitor submitted pilot form')
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error('Error signing up: ', error)
       })
   }
@@ -130,11 +164,11 @@ class Firebase {
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
-    if(process.env.USE_LOCAL_AUTH) {
+    if (process.env.USE_LOCAL_AUTH) {
       console.log('using local Auth');
       secondFirebase.auth().useEmulator("http://localhost:9099");
     }
-    if(process.env.use_LOCAL_FIRESTORE) {
+    if (process.env.use_LOCAL_FIRESTORE) {
       secondFirebase.firestore().settings({
         host: 'localhost:8080',
         ssl: false,
@@ -155,7 +189,7 @@ class Firebase {
         }
         // Create the Practice Teacher if it does not currently exist
         let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
-        if(!practiceTeacher.exists) {
+        if (!practiceTeacher.exists) {
           firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6')
             .set({
               firstName: 'Practice',
@@ -259,9 +293,7 @@ class Firebase {
   /**
    * gets list of all teachers linked to current user's account
    */
-  getTeacherList = async (): Promise<
-    Array<firebase.firestore.DocumentData> | void | undefined
-  > => {
+  getTeacherList = async (): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
     if (this.auth.currentUser) {
       return this.db
         .collection('users')
@@ -294,8 +326,8 @@ class Firebase {
           const favouriteQuestions = user.data().favouriteQuestions || []
           const newFavouriteQuestions = favouriteQuestions.includes(questionId)
             ? favouriteQuestions.filter(
-                favouriteQuestions => favouriteQuestions !== questionId
-              )
+              favouriteQuestions => favouriteQuestions !== questionId
+            )
             : [questionId, ...favouriteQuestions]
           return this.db
             .collection('users')
@@ -350,7 +382,7 @@ class Firebase {
     if (partnerID === 'rJxNhJmzjRZP7xg29Ko6') {
       console.log("You can't edit the Practice Teacher!")
     } else {
-      const { firstName, lastName, school, email, phone, notes } = edits
+      const {firstName, lastName, school, email, phone, notes} = edits
       return this.db
         .collection('users')
         .doc(partnerID)
@@ -363,7 +395,7 @@ class Firebase {
             phone: phone,
             notes: notes,
           },
-          { merge: true }
+          {merge: true}
         )
         .catch((error: Error) =>
           console.error('Error occurred when writing document:', error)
@@ -376,7 +408,7 @@ class Firebase {
    * @param {TeacherInfo} teacherInfo
    */
   addTeacher = async (teacherInfo: TeacherInfo): Promise<string | void> => {
-    const { firstName, lastName, school, email, notes, phone } = teacherInfo
+    const {firstName, lastName, school, email, notes, phone} = teacherInfo
     const newTeacherRef = this.db.collection('users').doc() // auto-generated iD
     return newTeacherRef
       .set({
@@ -432,7 +464,7 @@ class Firebase {
         .catch((error: Error) =>
           console.error(
             'An error occurred trying to remove the teacher from' +
-              ' the Partners list: ',
+            ' the Partners list: ',
             error
           )
         )
@@ -456,7 +488,7 @@ class Firebase {
   }
 
   getCoaches = async () => {
-    if(!await this.userIsAdmin()) {
+    if (!await this.userIsAdmin()) {
       throw new Error('User is not authorized for this action')
     }
 
@@ -564,7 +596,7 @@ class Firebase {
     answerIndex: number
     isCorrect: boolean
   }): Promise<firebase.firestore.DocumentReference | void> => {
-    const { type, questionIndex, answerIndex, isCorrect } = entry
+    const {type, questionIndex, answerIndex, isCorrect} = entry
     if (this.auth.currentUser) {
       return this.db
         .collection('knowledgeChecks')
@@ -595,38 +627,97 @@ class Firebase {
     type: string
     start?: Date
     checklist?: string // specific literacy type
-  }): Promise<void> => {
-    this.sessionRef = this.db.collection('observations').doc()
-    this.sessionRef
-      .set({
+  }) => {
+    this.currentObservation =
+      {
+        entries: [],
         observedBy: '/user/' + mEntry.observedBy,
         start: mEntry.start
           ? mEntry.start
-          : firebase.firestore.FieldValue.serverTimestamp(),
+          : new Date(),
         teacher: '/user/' + mEntry.teacher,
-        end: firebase.firestore.FieldValue.serverTimestamp(),
+        end: new Date(),
         type: mEntry.type,
+        notes: [],
         checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false,
-      })
-      .catch((error: Error) =>
-        console.error('Error setting session ref: ', error)
-      )
+        timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+        activitySetting: null,
+        lastClickTime: new Date(),
+        timedOut: false
+      }
   }
 
   /**
    * updates the end time of the observation session when completed
    * @param {Date | null} time
    */
-  endSession = async (time: Date | null = null): Promise<void> => {
-    this.sessionRef
-      .update({
-        end: time ? time : firebase.firestore.FieldValue.serverTimestamp(),
-        completed: true,
+  endSession = (time: Date | null = null) => {
+    if (this.currentObservation) {
+      this.updateCurrentObservation({
+        end: time ? time : new Date(),
+        completed: true
       })
-      .catch((error: Error) =>
-        console.error('Error occurred updating session ref: ', error)
-      )
+      if(this.currentObservation.type === 'LI' && !this.currentObservation.activitySetting) {
+        this.handleLiteracyActivitySetting('Not Recorded')
+      }
+      let {
+        checklist,
+        completed,
+        end,
+        observedBy,
+        start,
+        teacher,
+        type,
+        timezone,
+        entries,
+        activitySetting,
+        notes,
+        timedOut
+      } = this.currentObservation;
+      this.sessionRef = this.db.collection('observations').doc()
+      // Entries must be added before the document is 'set', or else the
+      // observationToBQ cloud function may not grab all the entries.
+      let entryCollection = this.sessionRef.collection('entries')
+      entries.forEach(entry => {
+        entryCollection.add({...entry, Timestamp: firebase.firestore.Timestamp.fromDate(entry.Timestamp)})
+      })
+      if(timedOut) {
+        end = this.currentObservation.lastClickTime
+      }
+      this.sessionRef.set({
+        activitySetting,
+        checklist,
+        completed,
+        end: firebase.firestore.Timestamp.fromDate(end),
+        observedBy,
+        start: firebase.firestore.Timestamp.fromDate(start),
+        teacher,
+        type,
+        timezone
+      })
+      let notesCollection = this.sessionRef.collection('notes')
+      notes.forEach(note => {
+        notesCollection.add({
+          Note: note.content,
+          Timestamp: firebase.firestore.Timestamp.fromDate(note.Timestamp)
+        })
+      })
+      this.currentObservation = null;
+      this.sessionRef = null;
+    }
+  }
+
+  updateSessionLastClick = () => {
+    if(this.currentObservation) {
+      this.currentObservation.lastClickTime = new Date()
+    }
+
+  }
+
+  discardSession = () => {
+    this.sessionRef = null
+    this.currentObservation = null
   }
 
   /**
@@ -678,99 +769,76 @@ class Firebase {
   }
 
   /**
-   * submits a single center observation to database
+   * submits a single center observation to local observation
    * @param {object} mEntry
    */
-  handlePushCentersData = async (mEntry: {
+  handlePushCentersData =  (mEntry: {
     checked: Array<number>
     people: number
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  }) => {
+    this.currentObservation?.entries.push({
+      Checked: mEntry.checked,
+      PeopleType: mEntry.people,
+      Timestamp: new Date(),
+    })
   }
 
   /**
    *
    * @param {object} mEntry
    */
-  handlePushSEEachEntry = async (mEntry: {
+  handlePushSEEachEntry =  (mEntry: {
     entryType: string
     point: number
     id: number
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        studentId: mEntry.id,
-        point: mEntry.point,
-        entryType: mEntry.entryType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  }) => {
+    this.currentObservation?.entries.push({
+      studentId: mEntry.id,
+      point: mEntry.point,
+      entryType: mEntry.entryType,
+      Timestamp: new Date(),
+    })
+
   }
 
   /**
-   * adds level of instruction selection to database
+   * adds level of instruction selection to local observation
    * @param {string} insType
    */
   handlePushInstruction = async (
     insType: string
-  ): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        instructionType: insType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  ) => {
+    this.currentObservation?.entries.push({
+      instructionType: insType,
+      Timestamp: new Date(),
+    })
+
   }
 
   /**
-   * adds listening to children 1-minute observation to database
+   * adds listening to children 1-minute observation to local observation
    * @param {object} mEntry
    */
-  handlePushListening = async (mEntry: {
+  handlePushListening = (mEntry: {
     checked: Array<number>
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        Checked: mEntry.checked,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  }) => {
+    this.currentObservation?.entries.push({
+      Checked: mEntry.checked,
+      Timestamp: new Date(),
+    })
   }
 
   /**
-   * adds literacy 1-minute observation to database
+   * adds literacy 1-minute observation to local observation
    * @param {object} mEntry
    */
-  handlePushLiteracy = async (mEntry: {
+  handlePushLiteracy =  (mEntry: {
     checked: Array<number>
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        Checked: mEntry.checked,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  }) => {
+    this.currentObservation?.entries.push({
+      Checked: mEntry.checked,
+      Timestamp: new Date(),
+    })
   }
 
   /**
@@ -779,16 +847,12 @@ class Firebase {
    */
   handleLiteracyActivitySetting = async (
     activitySetting: string
-  ): Promise<void> => {
-    this.sessionRef
-      .update({
-        activitySetting: activitySetting,
-        end: firebase.firestore.FieldValue.serverTimestamp(),
-        completed: true,
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred updating session ref: ', error)
-      )
+  ) => {
+    this.updateCurrentObservation({
+      activitySetting: activitySetting,
+      end: new Date(),
+      completed: true,
+    })
   }
 
   /**
@@ -959,88 +1023,95 @@ class Firebase {
    * saves a logged transition in the database
    * @param {object} mEntry
    */
-  handlePushTransition = async (mEntry: {
+  handlePushTransition =  (mEntry: {
     start: string
     end: string
     duration: string
     transitionType: string
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        TrnStart: mEntry.start,
-        TrnEnd: mEntry.end,
-        TrnDur: mEntry.duration,
-        TrnType: mEntry.transitionType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
-      )
+  }) => {
+    this.currentObservation?.entries?.push({
+      TrnStart: mEntry.start,
+      TrnEnd: mEntry.end,
+      TrnDur: mEntry.duration,
+      TrnType: mEntry.transitionType,
+      Timestamp: new Date(),
+    })
+
   }
 
   /**
    * adds climate selection to database
    * @param {object} mEntry
    */
-  handlePushClimate = async (mEntry: {
+  handlePushClimate =  (mEntry: {
     BehaviorResponse: string
     Type: string
-  }): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('entries')
-      .add({
-        BehaviorResponse: mEntry.BehaviorResponse,
-        Type: mEntry.Type,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding observation: ', error)
+  })  => {
+    if(this.currentObservation) {
+      this.currentObservation.entries.push(
+        {
+            BehaviorResponse: mEntry.BehaviorResponse,
+            Type: mEntry.Type,
+            Timestamp: new Date(),
+          }
       )
+    }
+
   }
 
   /**
-   * add note to database
+   * add note to local observation
    * @param {string} mNote
    */
-  handlePushNotes = async (
+  handlePushNotes = (
     mNote: string
-  ): Promise<firebase.firestore.DocumentReference | void> => {
-    return this.sessionRef
-      .collection('notes')
-      .add({
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        Note: mNote,
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred adding notes: ', error)
-      )
+  ) => {
+    if(this.currentObservation) {
+      this.currentObservation.notes.push(
+        {content: mNote,
+        Timestamp: new Date(),
+        id: uuidv4()})
+    }
   }
 
-  /**
-   *
-   */
-  handleFetchNotes = async (): Promise<Array<Note> | void> => {
-    return this.sessionRef
-      .collection('notes')
-      .get()
-      .then((snapshot: firebase.firestore.QuerySnapshot) => {
-        const notesArr: Array<Note> = []
-        snapshot.forEach(doc =>
-          notesArr.push({
-            id: doc.id,
-            content: doc.data().Note,
-            timestamp: doc.data().Timestamp,
-          })
+  handlePushNotesRemote = async (
+    mNote: string
+  ): Promise<firebase.firestore.DocumentReference | void> => {
+    if(this.sessionRef) {
+      return this.sessionRef
+        .collection('notes')
+        .add({
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          Note: mNote,
+        })
+        .catch((error: Error) =>
+          console.error('Error occurred adding notes: ', error)
         )
-        return notesArr
-      })
-      .catch((error: Error) =>
-        console.error('Error occurred fetching coach notes: ', error)
-      )
+    }
+  }
+
+  handleFetchNotes = () => {
+    if(this.currentObservation) {
+      return this.currentObservation.notes
+    }
+    return []
+  }
+
+
+  handleUpdateNote = (id: string, text:string) => {
+    let noteIndex = this.currentObservation?.notes.findIndex(note => note.id === id)
+    if(noteIndex === undefined || noteIndex === -1) {
+      throw new Error(`Cannot find note with id ${id}`)
+    }
+    let newNote = {
+      id: id,
+      content: text,
+      Timestamp: new Date()
+    }
+    this.currentObservation?.notes.splice(noteIndex, 1, newNote)
   }
   
-  handleUpdateNote = (id:string, text: string, session: string | null = null) => {
+  handleUpdateNoteRemote = (id:string, text: string, session: string | null = null) => {
     let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
    sessionRef.collection('notes').doc(id).update({Note: text})
      .catch(error => console.log('Could not update note:', error))
@@ -1115,7 +1186,7 @@ class Firebase {
     const getAvgToneRatingFirebaseFunction = this.functions.httpsCallable(
       'funcAvgToneRating'
     )
-    return getAvgToneRatingFirebaseFunction({ sessionId: sessionId })
+    return getAvgToneRatingFirebaseFunction({sessionId: sessionId})
       .then(
         (result: { data: Array<Array<{ average: number }>> }) =>
           result.data[0][0].average
@@ -1136,7 +1207,7 @@ class Firebase {
     const getEngagementAvgSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcEngagementAvgSummary'
     )
-    return getEngagementAvgSummaryFirebaseFunction({ sessionId: sessionId })
+    return getEngagementAvgSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: { data: Array<Array<{ average: number }>> }) =>
           result.data[0][0]
@@ -1157,7 +1228,7 @@ class Firebase {
     const getBehaviourTypeCountFirebaseFunction = this.functions.httpsCallable(
       'funcBehaviourTypeCount'
     )
-    return getBehaviourTypeCountFirebaseFunction({ sessionId: sessionId })
+    return getBehaviourTypeCountFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
           data: Array<Array<{ behaviorResponse: string; count: number }>>
@@ -1183,16 +1254,14 @@ class Firebase {
     const getBehaviourTrendFirebaseFunction = this.functions.httpsCallable(
       'funcBehaviourTrend'
     )
-    return getBehaviourTrendFirebaseFunction({ teacherId: teacherId })
+    return getBehaviourTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              dayOfEvent: { value: string }
-              positive: number
-              negative: number
-            }>
-          >
+          data: Array<Array<{
+            dayOfEvent: { value: string }
+            positive: number
+            negative: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1214,7 +1283,7 @@ class Firebase {
     const getEngagementTrendFirebaseFunction = this.functions.httpsCallable(
       'funcEngagementTrend'
     )
-    return getEngagementTrendFirebaseFunction({ teacherId: teacherId })
+    return getEngagementTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
           data: Array<Array<{ startDate: { value: string }; average: number }>>
@@ -1236,7 +1305,7 @@ class Firebase {
     const getInstructionTypeCountFirebaseFunction = this.functions.httpsCallable(
       'funcInstructionTypeCount'
     )
-    return getInstructionTypeCountFirebaseFunction({ sessionId: sessionId })
+    return getInstructionTypeCountFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
           data: Array<Array<{ instructionType: string; count: number }>>
@@ -1264,18 +1333,16 @@ class Firebase {
     const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
       'funcInstructionTrend'
     )
-    return getInstructionTrendFirebaseFunction({ teacherId: teacherId })
+    return getInstructionTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              dayOfEvent: { value: string }
-              hlq: number
-              hlqResponse: number
-              llq: number
-              llqResponse: number
-            }>
-          >
+          data: Array<Array<{
+            dayOfEvent: { value: string }
+            hlq: number
+            hlqResponse: number
+            llq: number
+            llqResponse: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1336,13 +1403,11 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              id: string
-              sessionStart: { value: string }
-              who: string
-            }>
-          >
+          data: Array<Array<{
+            id: string
+            sessionStart: { value: string }
+            who: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1365,16 +1430,14 @@ class Firebase {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
       'funcTransitionSessionSummary'
     )
-    return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
+    return getTransitionTypeCountFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              total: number
-              sessionTotal: number
-              startDate: { value: string }
-            }>
-          >
+          data: Array<Array<{
+            total: number
+            sessionTotal: number
+            startDate: { value: string }
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1400,20 +1463,18 @@ class Firebase {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
       'funcTransitionTypeSummary'
     )
-    return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
+    return getTransitionTypeCountFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              line: number
-              traveling: number
-              waiting: number
-              routines: number
-              behaviorManagement: number
-              other: number
-              total: number
-            }>
-          >
+          data: Array<Array<{
+            line: number
+            traveling: number
+            waiting: number
+            routines: number
+            behaviorManagement: number
+            other: number
+            total: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1457,23 +1518,21 @@ class Firebase {
     const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
       'funcTransitionTrendNew'
     )
-    return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
+    return getTransitionTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              id: string
-              line: number
-              traveling: number
-              waiting: number
-              routines: number
-              behaviorManagement: number
-              other: number
-              total: number
-              sessionTotal: number
-              startDate: { value: string }
-            }>
-          >
+          data: Array<Array<{
+            id: string
+            line: number
+            traveling: number
+            waiting: number
+            routines: number
+            behaviorManagement: number
+            other: number
+            total: number
+            sessionTotal: number
+            startDate: { value: string }
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -1491,7 +1550,7 @@ class Firebase {
     to: string
   ): Promise<{} | void> => {
     const exportBqFunction = this.functions.httpsCallable('exportBqData')
-    return exportBqFunction({ tableName, from, to })
+    return exportBqFunction({tableName, from, to})
   }
 
   /**
@@ -1514,21 +1573,19 @@ class Firebase {
     const getACDetailsFirebaseFunction = this.functions.httpsCallable(
       'funcACDetails'
     )
-    return getACDetailsFirebaseFunction({ sessionId: sessionId })
+    return getACDetailsFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              ac1: number
-              ac2: number
-              ac3: number
-              ac4: number
-              teacher1: number
-              teacher2: number
-              teacher3: number
-              teacher4: number
-            }>
-          >
+          data: Array<Array<{
+            ac1: number
+            ac2: number
+            ac3: number
+            ac4: number
+            teacher1: number
+            teacher2: number
+            teacher3: number
+            teacher4: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1556,21 +1613,19 @@ class Firebase {
     const getSeqDetailsFirebaseFunction = this.functions.httpsCallable(
       'funcSeqDetails'
     )
-    return getSeqDetailsFirebaseFunction({ sessionId: sessionId })
+    return getSeqDetailsFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              sequential1: number
-              sequential2: number
-              sequential3: number
-              sequential4: number
-              teacher1: number
-              teacher2: number
-              teacher3: number
-              teacher4: number
-            }>
-          >
+          data: Array<Array<{
+            sequential1: number
+            sequential2: number
+            sequential3: number
+            sequential4: number
+            teacher1: number
+            teacher2: number
+            teacher3: number
+            teacher4: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1602,25 +1657,23 @@ class Firebase {
     const getEngagementDetailsFirebaseFunction = this.functions.httpsCallable(
       'funcEngagementDetails'
     )
-    return getEngagementDetailsFirebaseFunction({ sessionId: sessionId })
+    return getEngagementDetailsFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              offTask0: number
-              offTask1: number
-              offTask2: number
-              mildlyEngaged0: number
-              mildlyEngaged1: number
-              mildlyEngaged2: number
-              engaged0: number
-              engaged1: number
-              engaged2: number
-              highlyEngaged0: number
-              highlyEngaged1: number
-              highlyEngaged2: number
-            }>
-          >
+          data: Array<Array<{
+            offTask0: number
+            offTask1: number
+            offTask2: number
+            mildlyEngaged0: number
+            mildlyEngaged1: number
+            mildlyEngaged2: number
+            engaged0: number
+            engaged1: number
+            engaged2: number
+            highlyEngaged0: number
+            highlyEngaged1: number
+            highlyEngaged2: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1648,21 +1701,19 @@ class Firebase {
     const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
       'funcMathDetails'
     )
-    return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+    return getMathDetailsFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              math1: number
-              math2: number
-              math3: number
-              math4: number
-              teacher1: number
-              teacher2: number
-              teacher3: number
-              teacher4: number
-            }>
-          >
+          data: Array<Array<{
+            math1: number
+            math2: number
+            math3: number
+            math4: number
+            teacher1: number
+            teacher2: number
+            teacher3: number
+            teacher4: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1688,19 +1739,17 @@ class Firebase {
     const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
       'funcListeningDetails'
     )
-    return getListeningDetailsFirebaseFunction({ sessionId: sessionId })
+    return getListeningDetailsFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              listening1: number
-              listening2: number
-              listening3: number
-              listening4: number
-              listening5: number
-              listening6: number
-            }>
-          >
+          data: Array<Array<{
+            listening1: number
+            listening2: number
+            listening3: number
+            listening4: number
+            listening5: number
+            listening6: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1723,16 +1772,14 @@ class Firebase {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcChildACSummary'
     )
-    return getChildACSummaryFirebaseFunction({ sessionId: sessionId })
+    return getChildACSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              noOpportunity: number
-              noac: number
-              ac: number
-            }>
-          >
+          data: Array<Array<{
+            noOpportunity: number
+            noac: number
+            ac: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1754,7 +1801,7 @@ class Firebase {
     const getChildSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcChildSeqSummary'
     )
-    return getChildSeqSummaryFirebaseFunction({ sessionId: sessionId })
+    return getChildSeqSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
           data: Array<Array<{ notSequential: number; sequential: number }>>
@@ -1782,15 +1829,13 @@ class Firebase {
     const getEngagementPieSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcEngagementPieSummary'
     )
-    return getEngagementPieSummaryFirebaseFunction({ sessionId: sessionId })
+    return getEngagementPieSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              offTask: number
-              engaged: number
-            }>
-          >
+          data: Array<Array<{
+            offTask: number
+            engaged: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1815,15 +1860,13 @@ class Firebase {
     const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcChildMathSummary'
     )
-    return getChildMathSummaryFirebaseFunction({ sessionId: sessionId })
+    return getChildMathSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              math: number
-              notMath: number
-            }>
-          >
+          data: Array<Array<{
+            math: number
+            notMath: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1846,16 +1889,14 @@ class Firebase {
     const getTeacherACSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherACSummary'
     )
-    return getTeacherACSummaryFirebaseFunction({ sessionId: sessionId })
+    return getTeacherACSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              noOpportunity: number
-              noSupport: number
-              support: number
-            }>
-          >
+          data: Array<Array<{
+            noOpportunity: number
+            noSupport: number
+            support: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1878,16 +1919,14 @@ class Firebase {
     const getTeacherSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherSeqSummary'
     )
-    return getTeacherSeqSummaryFirebaseFunction({ sessionId: sessionId })
+    return getTeacherSeqSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              noOpportunity: number
-              noSupport: number
-              support: number
-            }>
-          >
+          data: Array<Array<{
+            noOpportunity: number
+            noSupport: number
+            support: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1913,16 +1952,14 @@ class Firebase {
     const getTeacherMathSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherMathSummary'
     )
-    return getTeacherMathSummaryFirebaseFunction({ sessionId: sessionId })
+    return getTeacherMathSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              noOpportunity: number
-              noSupport: number
-              support: number
-            }>
-          >
+          data: Array<Array<{
+            noOpportunity: number
+            noSupport: number
+            support: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -1944,7 +1981,7 @@ class Firebase {
     const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
       'funcListeningSummary'
     )
-    return getListeningSummaryFirebaseFunction({ sessionId: sessionId })
+    return getListeningSummaryFirebaseFunction({sessionId: sessionId})
       .then(
         (result: {
           data: Array<Array<{ listening: number; notListening: number }>>
@@ -1974,10 +2011,10 @@ class Firebase {
       type === 'Foundational'
         ? this.functions.httpsCallable('funcLiteracySummaryFoundational')
         : type === 'Writing'
-        ? this.functions.httpsCallable('funcLiteracySummaryWriting')
-        : type === 'Reading'
-        ? this.functions.httpsCallable('funcLiteracySummaryReading')
-        : this.functions.httpsCallable('funcLiteracySummaryLanguage')
+          ? this.functions.httpsCallable('funcLiteracySummaryWriting')
+          : type === 'Reading'
+            ? this.functions.httpsCallable('funcLiteracySummaryReading')
+            : this.functions.httpsCallable('funcLiteracySummaryLanguage')
     return getLiteracySummaryFirebaseFunction({
       sessionId: sessionId,
       type: type,
@@ -2023,20 +2060,18 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              literacy9: number
-              literacy10: number
-            }>
-          >
+          data: Array<Array<{
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            literacy9: number
+            literacy10: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -2072,18 +2107,16 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-            }>
-          >
+          data: Array<Array<{
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -2121,20 +2154,18 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              literacy9: number
-              literacy10: number
-            }>
-          >
+          data: Array<Array<{
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            literacy9: number
+            literacy10: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -2170,18 +2201,16 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-            }>
-          >
+          data: Array<Array<{
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+          }>>
         }) => result.data[0][0]
       )
       .catch((error: Error) =>
@@ -2219,23 +2248,21 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              literacy9: number
-              literacy10: number
-              total: number
-              activitySetting: string
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            literacy9: number
+            literacy10: number
+            total: number
+            activitySetting: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2272,22 +2299,20 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              literacy9: number
-              total: number
-              activitySetting: string
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            literacy9: number
+            total: number
+            activitySetting: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2325,21 +2350,19 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              total: number
-              activitySetting: string
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            total: number
+            activitySetting: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2377,21 +2400,19 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              total: number
-              activitySetting: string
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            total: number
+            activitySetting: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2431,23 +2452,21 @@ class Firebase {
     })
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              literacy1: number
-              literacy2: number
-              literacy3: number
-              literacy4: number
-              literacy5: number
-              literacy6: number
-              literacy7: number
-              literacy8: number
-              literacy9: number
-              literacy10: number
-              total: number
-              activitySetting: string
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            literacy1: number
+            literacy2: number
+            literacy3: number
+            literacy4: number
+            literacy5: number
+            literacy6: number
+            literacy7: number
+            literacy8: number
+            literacy9: number
+            literacy10: number
+            total: number
+            activitySetting: string
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2471,17 +2490,15 @@ class Firebase {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
       'funcChildACTrend'
     )
-    return getChildACTrendFirebaseFunction({ teacherId: teacherId })
+    return getChildACTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              noOpportunity: number
-              ac: number
-              noac: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            noOpportunity: number
+            ac: number
+            noac: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2504,16 +2521,14 @@ class Firebase {
     const getChildSeqTrendFirebaseFunction = this.functions.httpsCallable(
       'funcChildSeqTrend'
     )
-    return getChildSeqTrendFirebaseFunction({ teacherId: teacherId })
+    return getChildSeqTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              sequential: number
-              notSequential: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            sequential: number
+            notSequential: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2537,16 +2552,14 @@ class Firebase {
       'funcChildMathTrend'
     )
     console.log('fetchChildMathTrend from firebase executed')
-    return getChildMathTrendFirebaseFunction({ teacherId: teacherId })
+    return getChildMathTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              math: number
-              notMath: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            math: number
+            notMath: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2570,17 +2583,15 @@ class Firebase {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherACTrend'
     )
-    return getTeacherACTrendFirebaseFunction({ teacherId: teacherId })
+    return getTeacherACTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              noOpportunity: number
-              support: number
-              nosupport: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            noOpportunity: number
+            support: number
+            nosupport: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2604,17 +2615,15 @@ class Firebase {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherSeqTrend'
     )
-    return getTeacherSeqTrendFirebaseFunction({ teacherId: teacherId })
+    return getTeacherSeqTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              noOpportunity: number
-              support: number
-              noSupport: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            noOpportunity: number
+            support: number
+            noSupport: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2641,17 +2650,15 @@ class Firebase {
     const getTeacherMathTrendFirebaseFunction = this.functions.httpsCallable(
       'funcTeacherMathTrend'
     )
-    return getTeacherMathTrendFirebaseFunction({ teacherId: teacherId })
+    return getTeacherMathTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              noOpportunity: number
-              support: number
-              noSupport: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            noOpportunity: number
+            support: number
+            noSupport: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2674,16 +2681,14 @@ class Firebase {
     const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
       'funcListeningTrend'
     )
-    return getListeningTrendFirebaseFunction({ teacherId: teacherId })
+    return getListeningTrendFirebaseFunction({teacherId: teacherId})
       .then(
         (result: {
-          data: Array<
-            Array<{
-              startDate: { value: string }
-              listening: number
-              notListening: number
-            }>
-          >
+          data: Array<Array<{
+            startDate: { value: string }
+            listening: number
+            notListening: number
+          }>>
         }) => result.data[0]
       )
       .catch((error: Error) =>
@@ -2798,20 +2803,20 @@ class Firebase {
             achieveBy: firebase.firestore.Timestamp
           }> = []
           querySnapshot.forEach(doc => {
-           // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
-            idArr.push({
-              id: doc.id,
-              teacherId: doc.data().teacher,
-              teacherFirstName: '',
-              teacherLastName: '',
-              practice: doc.data().tool,
-              date: doc.data().dateModified,
-              modified: new Date(0).setUTCSeconds(doc.data().dateModified.seconds),
-              achieveBy: doc.data().goalTimeline
-                ? doc.data().goalTimeline
-                : firebase.firestore.Timestamp.fromDate(new Date()),
-            })
-          }
+              // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
+              idArr.push({
+                id: doc.id,
+                teacherId: doc.data().teacher,
+                teacherFirstName: '',
+                teacherLastName: '',
+                practice: doc.data().tool,
+                date: doc.data().dateModified,
+                modified: new Date(0).setUTCSeconds(doc.data().dateModified.seconds),
+                achieveBy: doc.data().goalTimeline
+                  ? doc.data().goalTimeline
+                  : firebase.firestore.Timestamp.fromDate(new Date()),
+              })
+            }
           )
           console.log('idArr is2 ', idArr)
           return idArr
@@ -2906,11 +2911,11 @@ class Firebase {
   }
 // Added this function because a lot of these timestamp values
 // are often stored as empty strings or null in the db
-/*
-* takes an object and, if it's a firestore timestamp,
-* converts it to a JS Date.  Returns null for other values.
-* @param {any} timestamp
-*/
+  /*
+  * takes an object and, if it's a firestore timestamp,
+  * converts it to a JS Date.  Returns null for other values.
+  * @param {any} timestamp
+  */
   convertFirestoreTimestamp = (timestamp: any): Date | null => {
     return timestamp?.toDate ? timestamp.toDate() : null
   }
@@ -2940,24 +2945,24 @@ class Firebase {
     if (coachId) {
       this.query = this.query.where('coach', '==', coachId)
     }
-   const actionPlans = await this.query.get();
+    const actionPlans = await this.query.get();
     return Promise.all(actionPlans.docs.map(async (doc) => {
-      const {coach, benefit,dateCreated, dateModified, goal, goalTimeline, teacher, tool } = doc.data()
-        return {
-          coachId: coach,
-          teacherId: teacher,
-          benefit: benefit ?? '',
-          goal: goal ?? '',
-          tool: tool ?? '',
-          dateModified: this.convertFirestoreTimestamp(dateModified),
-          goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
-          dateCreated: this.convertFirestoreTimestamp(dateCreated),
-          steps: await this.getActionStepsForExport(doc.id)
-        }
-      } ))
+      const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool} = doc.data()
+      return {
+        coachId: coach,
+        teacherId: teacher,
+        benefit: benefit ?? '',
+        goal: goal ?? '',
+        tool: tool ?? '',
+        dateModified: this.convertFirestoreTimestamp(dateModified),
+        goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
+        dateCreated: this.convertFirestoreTimestamp(dateCreated),
+        steps: await this.getActionStepsForExport(doc.id)
+      }
+    }))
   }
 
-  getConferencePlansForExport = async (coachId: string | undefined  = undefined) => {
+  getConferencePlansForExport = async (coachId: string | undefined = undefined) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
@@ -2969,7 +2974,7 @@ class Firebase {
     }
     const conferencePlans = await this.query.get();
     return Promise.all(conferencePlans.docs.map(async (doc) => {
-      const {coach,dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool } = doc.data()
+      const {coach, dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool} = doc.data()
       return {
         coachId: coach,
         teacherId: teacher,
@@ -2980,7 +2985,7 @@ class Firebase {
         questions: questions.concat(addedQuestions), // flip the order here to put canned questions first
         notes
       }
-    } ))
+    }))
 
   }
 
@@ -3611,10 +3616,10 @@ class Firebase {
       .update({
         type: 'sent',
       })
-      .then(function() {
+      .then(function () {
         console.log('Document successfully updated!')
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error('Error updating document: ', error)
       })
   }
@@ -3729,9 +3734,7 @@ class Firebase {
   /**
    * finds all action plan events for my teachers calendar
    */
-  getActionPlanEvents = async (): Promise<Array<
-    Types.CalendarEvent
-  > | void> => {
+  getActionPlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db
         .collection('actionPlans')
@@ -3752,20 +3755,20 @@ class Firebase {
                 doc.data().tool === 'Transition Time'
                   ? 'TT'
                   : doc.data().tool === 'Classroom Climate'
-                  ? 'CC'
-                  : doc.data().tool === 'Math Instruction'
-                  ? 'MI'
-                  : doc.data().tool === 'Level of Instruction'
-                  ? 'IN'
-                  : doc.data().tool === 'Student Engagement'
-                  ? 'SE'
-                  : doc.data().tool === 'Listening to Children'
-                  ? 'LC'
-                  : doc.data().tool === 'Sequential Activities'
-                  ? 'SA'
-                  : doc.data().tool === 'Literacy Instruction'
-                  ? 'LI'
-                  : 'AC',
+                    ? 'CC'
+                    : doc.data().tool === 'Math Instruction'
+                      ? 'MI'
+                      : doc.data().tool === 'Level of Instruction'
+                        ? 'IN'
+                        : doc.data().tool === 'Student Engagement'
+                          ? 'SE'
+                          : doc.data().tool === 'Listening to Children'
+                            ? 'LC'
+                            : doc.data().tool === 'Sequential Activities'
+                              ? 'SA'
+                              : doc.data().tool === 'Literacy Instruction'
+                                ? 'LI'
+                                : 'AC',
               id: doc.id,
             })
             // }
@@ -3781,9 +3784,7 @@ class Firebase {
   /**
    * finds all conference plan events for my teachers calendar
    */
-  getConferencePlanEvents = async (): Promise<Array<
-    Types.CalendarEvent
-  > | void> => {
+  getConferencePlanEvents = async (): Promise<Array<Types.CalendarEvent> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db
         .collection('conferencePlans')
@@ -3804,20 +3805,20 @@ class Firebase {
                 doc.data().tool === 'Transition Time'
                   ? 'TT'
                   : doc.data().tool === 'Classroom Climate'
-                  ? 'CC'
-                  : doc.data().tool === 'Math Instruction'
-                  ? 'MI'
-                  : doc.data().tool === 'Level of Instruction'
-                  ? 'IN'
-                  : doc.data().tool === 'Student Engagement'
-                  ? 'SE'
-                  : doc.data().tool === 'Listening to Children'
-                  ? 'LC'
-                  : doc.data().tool === 'Sequential Activities'
-                  ? 'SA'
-                  : doc.data().tool === 'Literacy Instruction'
-                  ? 'LI'
-                  : 'AC',
+                    ? 'CC'
+                    : doc.data().tool === 'Math Instruction'
+                      ? 'MI'
+                      : doc.data().tool === 'Level of Instruction'
+                        ? 'IN'
+                        : doc.data().tool === 'Student Engagement'
+                          ? 'SE'
+                          : doc.data().tool === 'Listening to Children'
+                            ? 'LC'
+                            : doc.data().tool === 'Sequential Activities'
+                              ? 'SA'
+                              : doc.data().tool === 'Literacy Instruction'
+                                ? 'LI'
+                                : 'AC',
               id: doc.id,
               conferencePlanSessionId: doc.data().sessionId,
             })
@@ -3956,8 +3957,8 @@ class Firebase {
 
 
   /**
-    * Updates played training videos URL list
-    */
+   * Updates played training videos URL list
+   */
   updatePlayedVideos = async (videoUrl: string): Promise<void> => {
     if (this.auth.currentUser) {
       const userDocument = await this.db

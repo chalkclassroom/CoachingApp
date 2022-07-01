@@ -15,13 +15,13 @@ import NoteText from "./Shared/NoteText";
 interface Props {
   open: boolean,
   firebase: {
-    handleFetchNotes(): Promise<Array<{
+    handleFetchNotes(): Array<{
       id: string,
       content: string,
-      timestamp: {seconds: number, nanoseconds: number}
-    }>>,
+      Timestamp: Date
+    }>,
     handleUpdateNote(id:string, newText:string):void
-    handlePushNotes(note: string): Promise<void>
+    handlePushNotes(note: string): void
   },
   onClose(value: boolean): void,
   text: string,
@@ -59,43 +59,37 @@ class Notes extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.handleFetchNotes().then(notesArr => {
-      const formattedNotesArr: Array<{
-        content: string,
-        timestamp: string,
-        id: string
-      }> = [];
-      notesArr.map(note => {
-        const newTimestamp = new Date(
-          note.timestamp.seconds * 1000
-        ).toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true
-        });
-        formattedNotesArr.push({
-          content: note.content,
-          timestamp: newTimestamp,
-          id: note.id
-        });
-      });
+    let notesArr = this.props.firebase.handleFetchNotes()
+      let formattedNotesArr = notesArr.map(note => {
+          return {
+            content: note.content,
+            id: note.id,
+            timestamp: note.Timestamp.toLocaleString("en-US", {
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true
+            })
+          }
+        })
       this.setState({
         newNote: "",
         notes: formattedNotesArr,
         open: this.props.open
       });
-    });
   }
 
 
-  componentWillUnmount() {
-    /* To allow editing of newly-made notes, I've delayed pushing to firestore
-    * until the component unmounts. Otherwise, we'd have to wait for the new DB ids,
-    * which would cause the app to hang if offline.
-    */
-    let notesToSubmit = this.state.notes.filter(note => !note.id)
-    notesToSubmit.forEach(note => {
-      this.props.firebase.handlePushNotes(note.content)
+  getFormatedNotes = () => {
+    return this.props.firebase.handleFetchNotes().map(note => {
+      return {
+        content: note.content,
+        id: note.id,
+        timestamp: note.Timestamp.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true
+        })
+      }
     })
   }
 
@@ -107,20 +101,13 @@ class Notes extends React.Component<Props, State> {
     this.setState({ open: false });
     this.props.onClose(false);
   };
-  handleUpdateNote = (id: string | undefined, index: number ) => {
+  handleUpdateNote = (id: string) => {
       return (newText: string) => {
-        this.setState(prevState => {
-          let prevNote = prevState.notes[index]
-          prevState.notes.splice(index, 1, {...prevNote, content: newText})
-          return {
-            notes: prevState.notes
-          }
-        })
-
-        if(id !== undefined) {
           this.props.firebase.handleUpdateNote(id, newText)
+        this.setState({
+          notes: this.getFormatedNotes()
+        })
         }
-      }
     }
 
   /**
@@ -132,27 +119,11 @@ class Notes extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    // update local state for UI
-    const notesArr: Array<{
-      content: string,
-      timestamp: string
-    }> = [];
-    this.state.notes.map(note => {
-      notesArr.push(note);
-    });
-    const newNoteTimestamp = new Date().toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true
-    });
-    notesArr.push({
-      content: this.state.newNote,
-      timestamp: newNoteTimestamp
-    });
+    this.props.firebase.handlePushNotes(this.state.newNote)
     this.setState(state => {
       return {
         newNote: "",
-        notes: notesArr,
+        notes: this.getFormatedNotes(),
         open: state.open
       };
     });
