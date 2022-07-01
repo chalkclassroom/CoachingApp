@@ -79,7 +79,7 @@ interface State {
  */
 class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -446,8 +446,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     }
   }
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {
@@ -516,7 +516,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Engaged in other behaviors" />
+                        <ListItemText primary="Engaged in listening/encouraging behaviors" />
                       </ListItem>
                     </List>
                   </Grid>
@@ -542,10 +542,10 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                       What behaviors did the teacher use during the observation?
                     </Typography>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                      Did the teacher do one type of behavior more often than the other behaviors?               
+                      Did the teacher do one type of behavior more often than the other behaviors?
                     </Typography>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                      Did the teacher do one type of behavior less often than the other behaviors?               
+                      Did the teacher do one type of behavior less often than the other behaviors?
                     </Typography>
                   </Grid>
                   <ListeningDetailsChart
