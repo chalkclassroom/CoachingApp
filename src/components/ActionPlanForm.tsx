@@ -415,7 +415,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.state.actionPlanId,
         this.state.goal,
         this.state.goalTimeline,
-        this.state.benefit,
+        this.state.benefit
       )
       .then(() => {
         this.props.firebase.completeAppointment(
@@ -423,7 +423,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           'Action Plan',
           Constants.ToolAbbreviations[
             this.props.magic8 as Types.ToolAbbreviationsKey
-            ],
+          ]
         )
         this.getActionPlan(this.state.actionPlanId)
       })
@@ -437,7 +437,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           index.toString(),
           value.step,
           value.person,
-          value.timeline,
+          value.timeline
         )
         .then(() => {
           this.setState(
@@ -451,7 +451,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   this.setState({ savedAlert: false })
                 }, 1500)
               })
-            },
+            }
           )
           this.getActionPlan(this.state.actionPlanId)
         })
@@ -460,6 +460,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         })
     })
   }
+
 
   handleUndoChanges = (): void => {
     this.getActionPlan(this.state.actionPlanId)
@@ -600,10 +601,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                         }}
                       >
                         ACTION PLAN
+
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2} />
+                  <Grid container justify={'center'} xs={2}>
+                  </Grid>
                 </Grid>
               ) : (
                 <Grid

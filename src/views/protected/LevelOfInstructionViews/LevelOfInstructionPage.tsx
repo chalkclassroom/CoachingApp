@@ -10,6 +10,8 @@ import InstructionCounter from '../../../components/LevelOfInstructionComponents
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import {emptyLoiStack} from "../../../state/actions/level-of-instruction";
+import withObservationWrapper from "../../../components/HOComponents/withObservationWrapper";
 
 const styles: object = {
   root: {
@@ -83,6 +85,9 @@ interface Props {
     contentGrid: string
   },
   teacherSelected: Types.Teacher
+  preBack(): Promise<boolean>
+  emptyLoiStack(): void
+  forceComplete: boolean
 }
 
 /**
@@ -112,6 +117,11 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
     }
   };
 
+  componentWillUnmount() {
+    console.log('clearing LOI')
+    this.props.emptyLoiStack()
+  }
+
   /**
    * @param {string} type
    */
@@ -139,7 +149,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
       this.props.teacherSelected ? (
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Firebase): React.ReactNode => <AppBar confirmAction={this.props.preBack} firebase={firebase} />}
           </FirebaseContext.Consumer>
           <main className={classes.main}>
             <Grid
@@ -154,6 +164,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
                   <Dashboard
                     type="IN"
                     completeObservation={true}
+                    forceComplete={this.props.forceComplete}
                   />
                 </Grid>
               </Grid>
@@ -195,6 +206,9 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
     );
   }
 }
+const wrapperOptions = {
+
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher
@@ -204,4 +218,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(withStyles(styles)(LevelOfInstructionPage));
+export default connect(mapStateToProps, {emptyLoiStack})(withStyles(styles)(withObservationWrapper(wrapperOptions)(LevelOfInstructionPage)));

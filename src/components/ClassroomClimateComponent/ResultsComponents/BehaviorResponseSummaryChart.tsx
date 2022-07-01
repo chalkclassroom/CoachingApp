@@ -6,7 +6,6 @@ import * as Constants from "../../../constants/Constants";
 import BehaviorResponsesSummaryPie from "./BehaviorResponsesSummaryPie";
 
 interface OwnProps {
-  height: string
   negativeResponses: number
   positiveResponses: number
 }
@@ -19,7 +18,6 @@ const BehaviorResponseSummaryChart: FunctionComponent<Props> = (props) => {
     <Grid
       justify={'center'}
       direction={'column'}
-      style={{ height: props.height }}
     >
       <GraphHeader graphTitle={'Classroom Climate'} />
       <PieChartLegend

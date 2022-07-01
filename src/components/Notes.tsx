@@ -10,16 +10,18 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Grid from "@material-ui/core/Grid";
+import NoteText from "./Shared/NoteText";
 
 interface Props {
   open: boolean,
   firebase: {
-    handleFetchNotes(): Promise<Array<{
+    handleFetchNotes(): Array<{
       id: string,
       content: string,
-      timestamp: {seconds: number, nanoseconds: number}
-    }>>,
-    handlePushNotes(note: string): Promise<void>
+      Timestamp: Date
+    }>,
+    handleUpdateNote(id:string, newText:string):void
+    handlePushNotes(note: string): void
   },
   onClose(value: boolean): void,
   text: string,
@@ -29,7 +31,8 @@ interface Props {
 interface State {
   notes: Array<{
     content: string,
-    timestamp: string
+    timestamp: string,
+    id: string
   }>,
   open: boolean,
   newNote: string
@@ -50,36 +53,44 @@ class Notes extends React.Component<Props, State> {
     this.state = {
       notes: [],
       open: this.props.open,
-      newNote: ""
+      newNote: "",
     };
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.handleFetchNotes().then(notesArr => {
-      const formattedNotesArr: Array<{
-        content: string,
-        timestamp: string
-      }> = [];
-      notesArr.map(note => {
-        const newTimestamp = new Date(
-          note.timestamp.seconds * 1000
-        ).toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true
-        });
-        formattedNotesArr.push({
-          content: note.content,
-          timestamp: newTimestamp
-        });
-      });
+    let notesArr = this.props.firebase.handleFetchNotes()
+      let formattedNotesArr = notesArr.map(note => {
+          return {
+            content: note.content,
+            id: note.id,
+            timestamp: note.Timestamp.toLocaleString("en-US", {
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true
+            })
+          }
+        })
       this.setState({
         newNote: "",
         notes: formattedNotesArr,
         open: this.props.open
       });
-    });
+  }
+
+
+  getFormatedNotes = () => {
+    return this.props.firebase.handleFetchNotes().map(note => {
+      return {
+        content: note.content,
+        id: note.id,
+        timestamp: note.Timestamp.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true
+        })
+      }
+    })
   }
 
   handleOpen = (): void => {
@@ -90,6 +101,14 @@ class Notes extends React.Component<Props, State> {
     this.setState({ open: false });
     this.props.onClose(false);
   };
+  handleUpdateNote = (id: string) => {
+      return (newText: string) => {
+          this.props.firebase.handleUpdateNote(id, newText)
+        this.setState({
+          notes: this.getFormatedNotes()
+        })
+        }
+    }
 
   /**
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
@@ -100,37 +119,11 @@ class Notes extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    // submit to firebase DB
-    this.props.firebase
-      .handlePushNotes(this.state.newNote)
-      .then(() => {
-        /* do nothing */
-      })
-      .catch(() => {
-        console.log("Something wrong with data fetch");
-      });
-
-    // update local state for UI
-    const notesArr: Array<{
-      content: string,
-      timestamp: string
-    }> = [];
-    this.state.notes.map(note => {
-      notesArr.push(note);
-    });
-    const newNoteTimestamp = new Date().toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true
-    });
-    notesArr.push({
-      content: this.state.newNote,
-      timestamp: newNoteTimestamp
-    });
+    this.props.firebase.handlePushNotes(this.state.newNote)
     this.setState(state => {
       return {
         newNote: "",
-        notes: notesArr,
+        notes: this.getFormatedNotes(),
         open: state.open
       };
     });
@@ -248,7 +241,7 @@ class Notes extends React.Component<Props, State> {
                 <TableBody style={{overflowY: 'auto'}}>
                   {this.state.notes ? (
                     this.state.notes.map((note, index) => (
-                      <TableRow className="note" key={index}>
+                      <TableRow className="note" key={index} style={{padding: '.5rem 0'}}>
                         <TableCell component="th" scope="row">
                           <Grid
                             container
@@ -269,25 +262,8 @@ class Notes extends React.Component<Props, State> {
                             </Grid>
                           </Grid>
                         </TableCell>
-                        <TableCell align="right">
-                          <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            text-align="center"
-                          >
-                            <Grid
-                              container
-                              item
-                              xs={12}
-                              alignItems={"center"}
-                              justify={"center"}
-                              style={{fontFamily: 'Arimo'}}
-                            >
-                              {note.content}
-                            </Grid>
-                          </Grid>
+                        <TableCell  align="right" style={{overflowWrap:'break-word'}}>
+                          <NoteText text={note.content} id={note.id} handleUpdate={this.handleUpdateNote(note.id, index)} />
                         </TableCell>
                       </TableRow>
                     ))

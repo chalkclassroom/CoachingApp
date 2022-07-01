@@ -14,6 +14,8 @@ import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import * as Constants from "../../constants/Constants";
+import NoteText from "../Shared/NoteText";
+import Firebase from "../Firebase";
 
 /**
  * specifies styling for modal
@@ -60,20 +62,29 @@ interface Style {
 
 interface Props {
   classes: Style,
-  data: Array<{ timestamp: string, content: string }>,
+  data: Array<{ timestamp: string, content: string, id: string }>,
   magic8: string,
   conferencePlanId: string,
+  sessionId: string
   addNoteToPlan(conferencePlanId: string, note: string): void,
   handleClose(): void,
   open: boolean
+  firebase: Firebase
 }
 
 /**
  * formats table display of observation notes on results screens
  * @class NotesListDetailTable
  */
-class NotesListDetailTable extends React.Component<Props, {}> {
-  
+class NotesListDetailTable extends React.Component<Props, {notes: {id: string, content:string, timestamp:string}[]}> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      notes: this.props.data
+    }
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
@@ -83,6 +94,20 @@ class NotesListDetailTable extends React.Component<Props, {}> {
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired
   };
+
+  handleUpdateNote = (index: number, id: string) => {
+    return (newText: string) => {
+      this.setState(prevState => {
+        let prevNote = prevState.notes[index]
+        prevState.notes.splice(index, 1, {...prevNote, content: newText})
+        return {
+          notes: prevState.notes
+        }
+      })
+        this.props.firebase.handleUpdateNoteRemote(id, newText, this.props.sessionId)
+    }
+
+  }
 
   /**
    * render function
@@ -141,12 +166,14 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.props.data.map((row, index) => (
+                  {this.state.notes.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell component="th" scope="row" className={classes.tableText}>
                         {row.timestamp}
                       </TableCell>
-                      <TableCell align="left" className={classes.tableText} style={{whiteSpace: 'normal', wordWrap: 'break-word'}}>{row.content}</TableCell>
+                      <TableCell align="left" className={classes.tableText} style={{whiteSpace: 'normal', wordWrap: 'break-word'}}>
+                        <NoteText text={row.content}  id={row.id} handleUpdate={this.handleUpdateNote(index, row.id)}/>
+                      </TableCell>
                       <TableCell align="center" className={classes.tableText}>
                         <Button onClick={(): void => {this.props.addNoteToPlan(this.props.conferencePlanId, row.content)}}>
                           <AddCircleIcon style={{fill: color}} />

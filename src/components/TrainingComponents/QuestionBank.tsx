@@ -23,8 +23,7 @@ const questionBank = {
         ["More time spent learning", false],
         ["Less challenging behavior", false],
         ["Lower engagement in learning", false],
-        ["A and B only", true],
-        ["A, B, and C", false]
+        ["A and B only", true]
       ]),
       feedback: "The correct answer is D. When children spend time in transition, " +
         "there is automatically less time available for learning activities. " +
@@ -1887,7 +1886,6 @@ const questionBank = {
         ["Interacting with a teacher", false],
         ["Talking", false],
         ["A or B", true],
-        ["None of the above", false]
       ]),
       feedback: "The correct answer is D.  An interaction can be considered associative or " + 
       "cooperative if the child is interacting with another person, whether it is another " + 

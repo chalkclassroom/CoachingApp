@@ -131,7 +131,7 @@ type Props = RouteComponentProps & {
   firebase?: Firebase | null,
   history: H.History,
   noBack?: boolean
-  preBack?: () => Promise<boolean>
+  confirmAction?: () => Promise<boolean>
 }
 
 interface State {
@@ -162,6 +162,9 @@ class AppBar extends React.Component<Props, State> {
       open: false
     };
   }
+  static defaultProps = {
+    confirmAction: () => Promise.resolve(true)
+  }
 
   /* checkAuth = () => {
     return !(
@@ -191,6 +194,13 @@ class AppBar extends React.Component<Props, State> {
   handleDrawerClickAway = (): void => {
     this.setState({ open: false });
   };
+
+  handleNavigation = async (navAction: () => void) => {
+      if(!await this.props.confirmAction!()) {
+        return
+    }
+      navAction()
+  }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
@@ -223,7 +233,7 @@ class AppBar extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes, preBack = () => Promise.resolve(true) } = this.props;
+    const { classes } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
         <div>
@@ -240,7 +250,7 @@ class AppBar extends React.Component<Props, State> {
                             aria-label="Logo"
                             className={classes.menuButton}
                             style={{backgroundColor: "#FFFFFF"}}
-                            onClick = {(): void => this.props.history.push("/Home")}
+                            onClick = {() => this.handleNavigation(() => this.props.history.push("/Home"))}
                           >
                             <img src={LogoImage} height='35vh' alt='OWL' />
                           </IconButton>
@@ -262,11 +272,7 @@ class AppBar extends React.Component<Props, State> {
                           color="inherit"
                           aria-label="menu"
                           className={classes.menuButton}
-                          onClick={async (): void => {
-                            if(await preBack()) {
-                              this.props.history.goBack()
-                            }
-                          }}
+                          onClick={() =>  this.handleNavigation(this.props.history.goBack)}
                         >
                           <BackIcon
                             color="secondary"
@@ -325,6 +331,7 @@ class AppBar extends React.Component<Props, State> {
                 open={this.state.open}
                 handleClose={this.handleMenu}
                 firebase={this.props.firebase}
+                handleNavigation={this.handleNavigation}
               />
             </NavBar>
           ) : (
@@ -340,7 +347,7 @@ class AppBar extends React.Component<Props, State> {
                             aria-label="Logo"
                             className={classes.menuButton}
                             style={{backgroundColor: "#FFFFFF"}}
-                            onClick = {(): void => this.props.history.push("/Home")}
+                            onClick = {() => this.props.history.push("/Home")}
                           >
                             <img src={LogoImage} height='35vh' alt='OWL' />
                           </IconButton>
@@ -353,7 +360,7 @@ class AppBar extends React.Component<Props, State> {
                               <Button
                                 color="secondary"
                                 className={classes.menuButton}
-                                onClick={(): void => this.props.history.push("/team")}
+                                onClick={() => this.props.history.push("/team")}
                               >
                                 <strong>Team</strong>
                               </Button>

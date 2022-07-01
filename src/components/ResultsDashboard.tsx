@@ -46,6 +46,7 @@ import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
+import {FirebaseContext} from "./Firebase";
 
 const styles: object = {
   card: {
@@ -150,7 +151,7 @@ interface Props {
   addNoteToPlan(conferencePlanId: string, note: string): void,
   changeSessionId(event: React.SyntheticEvent): void,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
-  notes: Array<{content: string, timestamp: string}>,
+  notes: Array<{content: string, timestamp: string, id:string}>,
   handleOpenNotes(): void,
   handleCloseNotes(): void,
   notesModal: boolean,
@@ -337,14 +338,19 @@ class ResultsDashboard extends React.Component<Props, State> {
             <LiteracyInstructionHelp open={this.state.help} close={this.handleCloseHelp} type={this.props.literacyType ? this.props.literacyType : ''} />
           : <div />
         ) : this.props.notesModal ? (
-          <NotesListDetailTable
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <NotesListDetailTable
             data={this.props.notes}
             magic8={this.props.magic8}
             open={this.props.notesModal}
             addNoteToPlan={this.props.addNoteToPlan}
             conferencePlanId={this.props.conferencePlanId}
             handleClose={this.props.handleCloseNotes}
-          />
+            sessionId={this.props.sessionId}
+            firebase={firebase}
+          />)}
+          </FirebaseContext.Consumer>
         ) : (<div />)}
         <Card className={classes.card}>
           <Grid

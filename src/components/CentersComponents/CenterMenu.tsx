@@ -12,6 +12,7 @@ import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
 
+
 const styles: object = {
   root: {
     flexGrow: 1,
@@ -180,6 +181,7 @@ interface Props {
     contentGrid: string,
     centersGrid: string
   },
+  forceComplete: boolean
 }
 
 interface State{
@@ -187,6 +189,7 @@ interface State{
   status: number,
   currentCenter: string,
   totalVisitCount: number
+  startTime: string;
 }
 
 /**
@@ -212,7 +215,12 @@ class CenterMenu extends React.Component<Props, State> {
       addDialog: false,
       status: CENTER_CHECKLIST,
       currentCenter: '',
-      totalVisitCount: 0
+      totalVisitCount: 0,
+      startTime: new Date().toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true
+      }),
     }
   }
 
@@ -333,12 +341,14 @@ class CenterMenu extends React.Component<Props, State> {
                 >
                   <Grid item>
                     <Dashboard
+                      forceComplete={this.props.forceComplete}
                       type={this.props.type}
                       infoDisplay={
                         <TotalVisitCount count={this.state.totalVisitCount} />
                       }
                       infoPlacement="flex-start"
                       completeObservation={true}
+                      startTime={this.state.startTime}
                     />
                   </Grid>
                 </Grid>
@@ -397,6 +407,8 @@ class CenterMenu extends React.Component<Props, State> {
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}
+            startTime={this.state.startTime}
+            forceComplete={this.props.forceComplete}
           />
         );
       default:
