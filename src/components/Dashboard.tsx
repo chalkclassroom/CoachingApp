@@ -174,6 +174,8 @@ type Props = RouteComponentProps & {
   startTimer?(): void,
   checklistType?: string
   startTime?: string
+  forceComplete?: boolean
+  showLiteracyActivity?:boolean
 }
 
 interface State {
@@ -188,6 +190,7 @@ interface State {
   notesIcon: string,
   title: string,
   resultsDialog: string
+  displayResultsDialog: boolean
 }
 
 /**
@@ -217,7 +220,8 @@ class Dashboard extends React.Component<Props, State> {
       lookForsIcon: '',
       notesIcon: '',
       title: '',
-      resultsDialog: ''
+      resultsDialog: this.props.type,
+      displayResultsDialog: !!this.props.forceComplete
     };
   }
 
@@ -359,40 +363,40 @@ class Dashboard extends React.Component<Props, State> {
     return (
       <div>
         <TransitionResultsDialog
-          open={this.state.resultsDialog==="TT"}
+          open={this.state.resultsDialog==="TT" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <ClimateResultsDialog
-          open={this.state.resultsDialog==='CC'}
+          open={this.state.resultsDialog==='CC' && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <MathResultsDialog
-          open={this.state.resultsDialog==="MI"}
+          open={this.state.resultsDialog==="MI" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <EngagementResultsDialog 
-          open={this.state.resultsDialog==="SE"} 
+          open={this.state.resultsDialog==="SE" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <InstructionResultsDialog
-          open={this.state.resultsDialog==="IN"}
+          open={this.state.resultsDialog==="IN" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <ListeningResultsDialog
-          open={this.state.resultsDialog==="LC"}
+          open={this.state.resultsDialog==="LC" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <SequentialResultsDialog
-          open={this.state.resultsDialog==="SA"}
+          open={this.state.resultsDialog==="SA" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         <LiteracyResultsDialog
-          open={this.state.resultsDialog==="LI"}
+          open={this.state.resultsDialog==="LI" && (this.state.displayResultsDialog)}
           history={this.props.history}
           literacyType={this.props.checklistType}
         />
         <ACResultsDialog
-          open={this.state.resultsDialog==="AC"}
+          open={this.state.resultsDialog==="AC" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
         {this.state.help ? (
@@ -497,21 +501,28 @@ class Dashboard extends React.Component<Props, State> {
                     Start Time: {this.state.time}
                   </Typography>
                 </Grid>
-                {this.props.completeObservation ? (
+                {/*{this.props.completeObservation || this.props.forceComplete ? (*/}
                   <Grid item className={classes.completeGrid}>
                     <FirebaseContext.Consumer>
                       {(firebase: Firebase): React.ReactNode => (
                         <YesNoDialog
+                          showLiteracyActivity={!!this.props.showLiteracyActivity}
+                          forceComplete={this.props.forceComplete}
                           buttonText={<b>COMPLETE OBSERVATION</b>}
                           buttonVariant={"outlined"}
                           buttonColor={Constants.Colors[this.props.type]}
+                          disabled={!this.props.completeObservation}
+                          disabledOnClick={this.handleIncomplete}
+                          disabledClass={classes.completeButton}
                           buttonMargin={10}
                           dialogTitle={
                             "Are you sure you want to complete this observation?"
                           }
                           shouldOpen={true}
                           onAccept={(): void => {
-                            this.setState({resultsDialog: this.props.type});
+                            this.setState({displayResultsDialog: true});
+                            let timedOut = !this.props.showLiteracyActivity && this.props.forceComplete
+                              firebase.updateCurrentObservation({timedOut})
                             if (this.props.teacherSelected.id !== "rJxNhJmzjRZP7xg29Ko6") {
                               firebase.completeAppointment(this.props.teacherSelected.id, 'Observation', this.props.type);
                             }
@@ -522,7 +533,7 @@ class Dashboard extends React.Component<Props, State> {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);
                               firebase.endSession(new Date(sessionEnd));
-                            } else if (this.props.type !== "LI") {
+                            } else {
                               firebase.endSession();
                             }
                           }}
@@ -532,17 +543,7 @@ class Dashboard extends React.Component<Props, State> {
                       )}
                     </FirebaseContext.Consumer>
                   </Grid>
-                ) : (
-                  <Grid item className={classes.completeGrid}>
-                    <Button
-                      variant="outlined"
-                      onClick={this.handleIncomplete}
-                      className={classes.completeButton}
-                    >
-                      <b>COMPLETE OBSERVATION</b>
-                    </Button>
-                  </Grid>
-                )}
+
               </Grid>
             </Grid>
           </Grid>

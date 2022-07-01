@@ -224,7 +224,7 @@ export default function LiteracyTrendsReading(props: Props) {
                 );
               })}
             </TableBody>
-            <TableHead style={{position: 'sticky'}}>
+            <TableHead >
               <TableRow>
                 <TableCell style={{backgroundColor: '#fafafa', minWidth: 250, position: 'sticky', left: 0}}>
                   Total number of 1-minute intervals
@@ -236,7 +236,7 @@ export default function LiteracyTrendsReading(props: Props) {
                     key={index}
                     align={'center'}
                     width="20%"
-                    style={{ fontWeight: 'bold'}}
+                    style={{ fontWeight: 'bold', bottom: 0}}
                   >
                     {total}
                   </TableCell>
