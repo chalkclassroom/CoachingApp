@@ -8,6 +8,15 @@ const firestore = new Firestore({
     projectId: PROJECTID
 });
 
+const findLastIndex = (array, fn ) => {
+  for(let i = array.length - 1; i >= 0; i--) {
+    if (fn(array[i], i)) {
+      return i
+    }
+  }
+  return -1
+}
+
 exports.observationsToBQ = functions.firestore
     .document("/observations/{observationID}")
     .onCreate((snapshot, context) => {
@@ -60,8 +69,11 @@ exports.observationsToBQ = functions.firestore
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
                             if( entryData.Type === "UNDO"){
-                              //TODO: This could inadvertently pop a tone rating, which does not match the behavior in app.
-                                rows.pop();
+                              // Will only remove climate entries, not tone.
+                              const lastClimateIndex = findLastIndex(rows, (entry, idx) => entry.json.type === 'climate')
+                              if(lastClimateIndex !== -1) {
+                                rows.splice(lastClimateIndex, 1)
+                              }
                             } else if( entryData.Type === "Rat"){
                                 let row = {
                                     insertId: entry.id,
