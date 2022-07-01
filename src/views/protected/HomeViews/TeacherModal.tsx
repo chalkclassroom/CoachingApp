@@ -21,6 +21,7 @@ import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import Firebase from "../../../components/Firebase";
 
 /**
  * specifies styling for modal

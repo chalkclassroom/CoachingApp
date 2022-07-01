@@ -19,18 +19,17 @@ const findLastIndex = (array, fn ) => {
 
 exports.observationsToBQ = functions.firestore
     .document("/observations/{observationID}")
-    .onUpdate((change, context) => {
+    .onCreate((snapshot, context) => {
         // Get an object representing the document
         // e.g. {'name': 'Marie', 'age': 66}
-        const newValue = change.after.data();
+        const newValue = snapshot.data();
 
         // ...or the previous value before this update
-        const previousValue = change.before.data();
+        // const previousValue = change.before.data();
 
         // access a particular field as you would any JS property
-        if (newValue.end !== previousValue.end) {
             console.log("Session Finished");
-            console.log(`Newv value is ${JSON.stringify(newValue)}`);
+            console.log(`New value is ${JSON.stringify(newValue)}`);
 
             // perform desired operations ...
             let datasetName = functions.config().env.bq_dataset;
@@ -68,7 +67,6 @@ exports.observationsToBQ = functions.firestore
                     .then(entries => {
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
-
                             let entryData = entry.data();
                             if( entryData.Type === "UNDO"){
                               // Will only remove climate entries, not tone.
@@ -76,7 +74,6 @@ exports.observationsToBQ = functions.firestore
                               if(lastClimateIndex !== -1) {
                                 rows.splice(lastClimateIndex, 1)
                               }
-                                // rows.pop();
                             } else if( entryData.Type === "Rat"){
                                 let row = {
                                     insertId: entry.id,
@@ -721,5 +718,4 @@ exports.observationsToBQ = functions.firestore
               } else {
                 console.log("Next Magic 8 will be filled");
             }
-        }
     });

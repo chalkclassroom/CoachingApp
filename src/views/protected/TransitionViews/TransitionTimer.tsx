@@ -15,6 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import * as Types from '../../../constants/Types';
+import ConfirmationDialog from "../../../components/Shared/ConfirmationDialog";
 
 const theme = createTheme({
   palette: {
@@ -64,6 +65,7 @@ interface State {
   start: Date | null,
   startMilliseconds: number,
   openDialog: boolean
+  openConfirmation: boolean
 }
 
 /**
@@ -84,7 +86,8 @@ class TransitionTimer extends React.Component<Props, State> {
       time: 0,
       start: null,
       startMilliseconds: 0,
-      openDialog: false
+      openDialog: false,
+      openConfirmation: false
     };
 
     const sessionStart = Date.now();
@@ -98,12 +101,25 @@ class TransitionTimer extends React.Component<Props, State> {
 
     this.props.firebase.handleSession(mEntry);
   }
+  handleTransitionConfirm = () => {
+    this.setState({openConfirmation: false})
+    console.log('closing');
+  }
+
+  handleTransitionCancel = () => {
+    this.setState({openConfirmation: false})
+    this.onStart()
+  }
  
   guide = (): void => {
     this.setState({ openDialog: true });
   };
   
   onStart = (): void => {
+    setTimeout(() => {
+      this.setState({ percentage: this.state.isOn ? 100 : 0 });
+    }, 100);
+    const msToMinute = (ms: number) => ms / 1000 / 60
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
@@ -126,7 +142,9 @@ class TransitionTimer extends React.Component<Props, State> {
         this.setState({ start: new Date(startTime), startMilliseconds: startTime });
         this.timer = setInterval(() => {
           if(!this.props.isStopped) {
-          this.setState({ time: this.state.time + 1000 });  
+          this.setState((prevState) => {
+            return {time: prevState.time + 1000, openConfirmation: prevState.openConfirmation || msToMinute(prevState.time) % 10 === 0 && prevState.time > 1000 }
+          });
           }
         }, 1000);
       }
@@ -168,10 +186,10 @@ class TransitionTimer extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    firebase: PropTypes.exact({
+    firebase: PropTypes.shape({
       handleSession: PropTypes.func,
-      auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
+      auth: PropTypes.shape({
+        currentUser: PropTypes.shape({
           uid: PropTypes.string
         })
       })
@@ -200,12 +218,16 @@ class TransitionTimer extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    setTimeout(() => {
-      this.setState({ percentage: this.state.isOn ? 100 : 0 });
-    }, 100);
+
  
     return (
       <MuiThemeProvider theme={theme}>
+        <ConfirmationDialog handleConfirm={this.handleTransitionConfirm}
+                            handleCancel={this.handleTransitionCancel}
+                            dialogText={'Is the class still in transition?'}
+                            cancelText={"No"}
+                            confirmText={"Yes"}
+                            showDialog={this.state.openConfirmation}/>
         <div style={{ width: 400, fontFamily: 'Arimo' }}>
           <CircularProgressbar
             fill={Constants.Colors.TT}

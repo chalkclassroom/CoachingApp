@@ -104,7 +104,7 @@ class NotesListDetailTable extends React.Component<Props, {notes: {id: string, c
           notes: prevState.notes
         }
       })
-        this.props.firebase.handleUpdateNote(id, newText, this.props.sessionId)
+        this.props.firebase.handleUpdateNoteRemote(id, newText, this.props.sessionId)
     }
 
   }
