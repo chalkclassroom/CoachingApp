@@ -51,7 +51,6 @@ import AdminPage from './views/protected/AdminViews/AdminPage'
 import TeamPage from './views/WelcomeViews/TeamPage'
 import TrainingPage from './views/protected/TrainingPage'
 import * as ReactGA3 from 'react-ga'
-import ReactGA from "react-ga4";
 import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
 import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
 import CoachingProfessionalDevelopmentMaterials
@@ -82,10 +81,6 @@ import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
 import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
-
-// Initialize Google Analytics
-ReactGA.initialize('G-NZCNF72EMG');
-ReactGA.send("pageview");
 
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
