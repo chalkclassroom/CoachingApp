@@ -494,7 +494,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     if (this.state.final) {
       this.handleChecklists();
     }
-    
+
     this.handleTimeUpNotification();
   }
 
@@ -710,8 +710,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   <Dashboard
                     type={this.props.type}
                     infoDisplay={
-                      <>
-                      <div onClick={() => this.handleCompleteObservation()}>Sweet</div>
                       <Countdown
                         type={this.props.type}
                         time={this.state.time}
@@ -719,7 +717,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
 
                       />
 
-                      </>
                     }
                     infoPlacement="center"
                     completeObservation={true}
