@@ -142,7 +142,7 @@ class YesNoDialog extends React.Component<Props, State> {
           checklistType={this.props.literacy}
         /> : null}
         <Button
-          onClick={ disabled? this.props.disabledOnClick : this.handleClickOpen}
+          onClick={ this.props.completeCallBackFunctionOverride ? this.props.completeCallBackFunctionOverride : (disabled? this.props.disabledOnClick : this.handleClickOpen)}
           variant={disabled? 'outlined' : this.props.buttonVariant}
           color={this.props.buttonColor}
           style={disabled? {} : {

@@ -202,6 +202,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       clearInterval(this.timer);
       if (this.state.final) {
         this.handleChecklists();
+        this.handleTimeUpNotification();
       } else {
         this.handleTimeUpNotification();
       }
@@ -303,7 +304,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
   }
 
   /**
-   * 
+   *
    * @param {Array<number>} childChecked
    * @param {Array<number>} teacherChecked
    */
@@ -482,6 +483,21 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
   }
 
+  /*
+   * We're reenabling the "Complete Observation" button
+   *
+   * This function will get passed to the Dashboard Component, which
+   *  will then pass it to the 'YesNoDialog'. So the button will run this
+   *  function instead of the usual function
+   */
+  handleCompleteObservation = (): void => {
+    if (this.state.final) {
+      this.handleChecklists();
+    }
+    
+    this.handleTimeUpNotification();
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleScreen: PropTypes.func.isRequired,
@@ -594,7 +610,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               If teachers or students leave or join while you are observing a center,
               make sure your final selection reflects the largest number of people
               that were present at any point during the 1 minute observation in that
-              center. 
+              center.
             </DialogContentText>
             <Grid
               container
@@ -639,7 +655,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           : this.props.type === 'SA' ? Sequential2
                           : AC2
                       }
-                      
+
                       alt="2+ children without teacher"
                     />
                   </Button>
@@ -694,18 +710,24 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   <Dashboard
                     type={this.props.type}
                     infoDisplay={
+                      <>
+                      <div onClick={() => this.handleCompleteObservation()}>Sweet</div>
                       <Countdown
-                        type={this.props.type} 
-                        time={this.state.time} 
-                        timerTime={60000}  
-                        
-                      />}
+                        type={this.props.type}
+                        time={this.state.time}
+                        timerTime={60000}
+
+                      />
+
+                      </>
+                    }
                     infoPlacement="center"
-                    completeObservation={false}
+                    completeObservation={true}
                     startTimer={this.startTimer}
                     stopTimer={this.stopTimer}
                     startTime={this.props.startTime}
                     forceComplete={this.state.canForceEndSession}
+                    completeCallBackFunctionOverride={() => this.handleCompleteObservation()}
                   />
                 </Grid>
               </Grid>
@@ -788,7 +810,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               : this.props.type === 'SA' ? Sequential2
                               : AC2
                           }
-                          
+
                           alt="2+ children without teacher"
                         />
                       </Button>
