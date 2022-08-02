@@ -4,9 +4,36 @@ const { BigQuery } = require("@google-cloud/bigquery");
 const Firestore = require("@google-cloud/firestore");
 const PROJECTID = functions.config().env.bq_project
 const COLLECTION_NAME = "observations";
-const firestore = new Firestore({
-    projectId: PROJECTID
-});
+
+
+
+var firestore;
+if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
+{
+  firestore = new Firestore({
+      projectId: PROJECTID
+  });
+}
+else
+{
+  const admin = require('firebase-admin');
+  if (admin.apps.length === 0) {
+    admin.initializeApp();
+  }
+  firestore = admin.firestore();
+}
+
+
+
+
+var today= new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+console.log("TESTTTTTTTTTTTTTT " + today);
+console.log("TESTTTTTTTTTTTTTT " + today);
+console.log("TESTTTTTTTTTTTTTT " + today);
+console.log("Planet : " + process.env.PLANET);
+console.log("PROJECTID : " + PROJECTID);
+console.log("Firebase Config : " + process.env.REACT_APP_FIREBASE_CONFIG);
+console.log("Use local firestore : " + process.env.REACT_APP_USE_LOCAL_FIRESTORE);
 
 const findLastIndex = (array, fn ) => {
   for(let i = array.length - 1; i >= 0; i--) {
@@ -563,7 +590,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -610,7 +637,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -657,7 +684,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -706,7 +733,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
