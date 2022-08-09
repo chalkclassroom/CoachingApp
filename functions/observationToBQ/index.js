@@ -4,9 +4,28 @@ const { BigQuery } = require("@google-cloud/bigquery");
 const Firestore = require("@google-cloud/firestore");
 const PROJECTID = functions.config().env.bq_project
 const COLLECTION_NAME = "observations";
-const firestore = new Firestore({
-    projectId: PROJECTID
-});
+
+
+
+var firestore;
+// If we're not in local development, we want to retrieve the firestore remotely using @google-cloud/firestore package
+if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
+{
+  firestore = new Firestore({
+      projectId: PROJECTID
+  });
+}
+// If we are in local development, we want to retrieve our local firestore using firebase-admin
+else
+{
+  const admin = require('firebase-admin');
+  if (admin.apps.length === 0) {
+    admin.initializeApp();
+  }
+  firestore = admin.firestore();
+}
+
+
 
 const findLastIndex = (array, fn ) => {
   for(let i = array.length - 1; i >= 0; i--) {
@@ -563,7 +582,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -610,7 +629,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -657,7 +676,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
@@ -706,7 +725,7 @@ exports.observationsToBQ = functions.firestore
                             }
                         });
                         console.log(rows);
-  
+
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
                         });
