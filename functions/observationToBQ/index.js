@@ -8,12 +8,14 @@ const COLLECTION_NAME = "observations";
 
 
 var firestore;
+// If we're not in local development, we want to retrieve the firestore remotely using @google-cloud/firestore package
 if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
 {
   firestore = new Firestore({
       projectId: PROJECTID
   });
 }
+// If we are in local development, we want to retrieve our local firestore using firebase-admin
 else
 {
   const admin = require('firebase-admin');
@@ -24,16 +26,6 @@ else
 }
 
 
-
-
-var today= new Date().toLocaleString('en-US', { timeZone: 'UTC' });
-console.log("TESTTTTTTTTTTTTTT " + today);
-console.log("TESTTTTTTTTTTTTTT " + today);
-console.log("TESTTTTTTTTTTTTTT " + today);
-console.log("Planet : " + process.env.PLANET);
-console.log("PROJECTID : " + PROJECTID);
-console.log("Firebase Config : " + process.env.REACT_APP_FIREBASE_CONFIG);
-console.log("Use local firestore : " + process.env.REACT_APP_USE_LOCAL_FIRESTORE);
 
 const findLastIndex = (array, fn ) => {
   for(let i = array.length - 1; i >= 0; i--) {
