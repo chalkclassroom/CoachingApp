@@ -1,9 +1,24 @@
 const Firestore = require("@google-cloud/firestore");
 const functions = require("firebase-functions")
 const PROJECTID =  functions.config().env.bq_project
-const firestore = new Firestore({
-    projectId: PROJECTID
-});
+
+var firestore;
+// If we're not in local development, we want to retrieve the firestore remotely using @google-cloud/firestore package
+if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
+{
+  firestore = new Firestore({
+      projectId: PROJECTID
+  });
+}
+// If we are in local development, we want to retrieve our local firestore using firebase-admin
+else
+{
+  const admin = require('firebase-admin');
+  if (admin.apps.length === 0) {
+    admin.initializeApp();
+  }
+  firestore = admin.firestore();
+}
 
 const getUserDoc = async userId => {
     return firestore.collection("users").doc(userId)
@@ -82,4 +97,3 @@ module.exports = {
     canAccessActionPlans,
     getUser
 };
-
