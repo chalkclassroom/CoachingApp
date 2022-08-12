@@ -194,15 +194,6 @@ exports.observationsToBQ = functions.firestore
                           }
                         }
 
-                        console.log("================= TEST =====================");
-                        console.log("approval : " + approval);
-                        console.log("redirection_disapproval : " + redirection_disapproval);
-                        console.log("specific_approval : " + specific_approval);
-                        console.log("general_approval : " + general_approval);
-                        console.log("redirection : " + redirection);
-                        console.log("disapproval : " + disapproval);
-                        console.log("================= TEST =====================");
-
 
                         resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
