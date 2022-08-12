@@ -77,6 +77,18 @@ exports.observationsToBQ = functions.firestore
                 return err;
             });
 
+            // Get the results table
+            let resultsTableName = tableName + "_results";
+            let resultsTable = dataset.table(resultsTableName);
+            resultsTable.exists().catch(err => {
+                console.error(
+                    `table.exists: table ${resultsTableName} does not exist: ${JSON.stringify(
+                        err
+                    )}`
+                );
+                return err;
+            });
+
             const SESSION_ID = context.params.observationID;
             let session = newValue;
             console.log(`Storing observation ${SESSION_ID} in BQ`);
@@ -256,9 +268,22 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+
+                        // More info about the results database schema and how it relates with the observation results can be found here: https://docs.google.com/document/d/1nM7ZccAGqlPWA-h3rnVtbsBXRD7CheC-msPEHZsEiS0/edit?usp=sharing
+                        // Holds the calculated results of the children (0: child.ac; 1: child.noAc; 2: child.noChildOpp)
+                        let childResults = Array(3).fill(0);
+                        // Holds the calculated results of the teacher (0: teacher.ac; 1: teacher.noAc; 2: teacher.notThere)
+                        let teacherResults = Array(3).fill(0);
+                        // Holds the calculated results of the checklist selections (0: child1; 1: child2; 2: child3; 3: teacher1; 4: teacher2' 5: teacher3; 6: teacher4)
+                        let checklistResults = Array(7).fill(0);
+                        // Hold entry id
+                        let entryId;
+                        let entryData
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
-                            let entryData = entry.data();
+                            entryData = entry.data();
+                            entryId = entry.id;
                             console.log(entryData.Checked);
                             console.log(entryData.PeopleType);
                             if (entryData.Type === "UNDO") {
@@ -293,8 +318,75 @@ exports.observationsToBQ = functions.firestore
                                 console.log(row);
                                 rows.push(row);
                             }
+
+                            // Modify results data
+                            // Update child results
+                            if(entryData.Checked.includes(2) || entryData.Checked.includes(3) || entryData.Checked.includes(4)){childResults[0]++;} // If any of the child check boxes are selected
+                            else{
+                              if(entryData.PeopleType == 1){childResults[2]++;} // If the single child option is selected
+                              else{childResults[1]++;} // If the single child option is not selected and there's nothing checked under child
+                            }
+
+                            // Update Teacher Results
+                            if(entryData.Checked.includes(6) || entryData.Checked.includes(7) || entryData.Checked.includes(8) || entryData.Checked.includes(9)){teacherResults[0]++;} // If any of the teacher check boxes are selected
+                            else{
+                              if(entryData.PeopleType == 1 || entryData.PeopleType == 2){teacherResults[2]++;} // If the teacher isn't there (1st or 2nd type option is selected)
+                              else{teacherResults[1]++;}
+                            }
+
+                            // Update checklistResults
+                            if(entryData.Checked.includes(2)){checklistResults[0]++;}
+                            if(entryData.Checked.includes(3)){checklistResults[1]++;}
+                            if(entryData.Checked.includes(4)){checklistResults[2]++;}
+                            if(entryData.Checked.includes(6)){checklistResults[3]++;}
+                            if(entryData.Checked.includes(7)){checklistResults[4]++;}
+                            if(entryData.Checked.includes(8)){checklistResults[5]++;}
+                            if(entryData.Checked.includes(9)){checklistResults[6]++;}
                         });
                         console.log(rows);
+
+
+                        // We need to calculate the results and insert them into
+                        let resultsRow = {
+                          insertId: entryId,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacherId: session.teacher,
+                              observedBy: session.observedBy,
+                              type: entryData.PeopleType,
+                              child: {
+                                ac: childResults[0],
+                                noAc: childResults[1],
+                                noChildOpp: childResults[2],
+                              },
+                              teacher: {
+                                ac: teacherResults[0],
+                                noAc: teacherResults[1],
+                                notThere: teacherResults[2],
+                              },
+                              checklist: {
+                                  child1: checklistResults[0],
+                                  child2: checklistResults[1],
+                                  child3: checklistResults[2],
+                                  teacher1: checklistResults[3],
+                                  teacher2: checklistResults[4],
+                                  teacher3: checklistResults[5],
+                                  teacher4: checklistResults[6],
+                              },
+                              timestamp: Math.floor(entryData.Timestamp.toDate() / 1000),
+                              acType: (entryData.acType+'').toLowerCase()
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
+
+
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -738,3 +830,22 @@ exports.observationsToBQ = functions.firestore
                 console.log("Next Magic 8 will be filled");
             }
     });
+
+
+    function getCountOfEntries(collection, document, value, obj) {
+        // Sum the count of each shard in the subcollection
+        console.log("Test 1");
+        obj.value = "cmon";
+        return firestore.collection(collection).doc(document).collection("entries").where("Checked", "array-contains", value).get()
+          .then((snapshot) => {
+              let total_count = 0;
+              console.log("Test 2");
+              snapshot.forEach((doc) => {
+                console.log("Test 3");
+                  total_count++;;
+              });
+              console.log("Totale count : " + total_count);
+              obj.value = total_count;
+              return total_count;
+        });
+    }
