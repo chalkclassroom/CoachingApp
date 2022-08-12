@@ -96,9 +96,14 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        // Initialize Results
+                        var approval = 0, redirection_disapproval = 0, specific_approval = 0, general_approval = 0, redirection = 0, disapproval = 0;
+                        var timeStamp, tone;
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
+                            timeStamp = Math.floor(entryData.Timestamp.toDate() / 1000);
+                            tone = parseInt(entryData.BehaviorResponse);
                             if( entryData.Type === "UNDO"){
                               // Will only remove climate entries, not tone.
                               const lastClimateIndex = findLastIndex(rows, (entry, idx) => entry.json.type === 'climate')
@@ -124,6 +129,8 @@ exports.observationsToBQ = functions.firestore
                                 console.log(row);
                                 rows.push(row);
 
+                                console.log("============================RAT");
+
                             } else if (entryData.Type === "climate"){
                                 let row = {
                                     insertId: entry.id,
@@ -141,7 +148,66 @@ exports.observationsToBQ = functions.firestore
                                 console.log(row);
                                 rows.push(row);
                             }
+
+                            // Calculate results
+                            switch(entryData.BehaviorResponse) {
+                              case 'specificapproval':
+                                approval++;
+                                specific_approval++;
+                                break;
+                              case 'nonspecificapproval':
+                                approval++;
+                                general_approval++;
+                                break;
+                              case 'disapproval':
+                                disapproval++;
+                                redirection_disapproval++;
+                                break;
+                              case 'redirection':
+                                redirection++;
+                                redirection_disapproval++;
+                                break;
+                            }
+
+
+
                         });
+
+                        // We need to calculate the results and insert them into
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacher: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: timeStamp,
+                              approval: approval,
+                              redirection_disapproval: redirection_disapproval,
+                              specific_approval: specific_approval,
+                              general_approval: general_approval,
+                              redirection: redirection,
+                              disapproval: disapproval,
+                              tone: tone,
+
+                          }
+                        }
+
+                        console.log("================= TEST =====================");
+                        console.log("approval : " + approval);
+                        console.log("redirection_disapproval : " + redirection_disapproval);
+                        console.log("specific_approval : " + specific_approval);
+                        console.log("general_approval : " + general_approval);
+                        console.log("redirection : " + redirection);
+                        console.log("disapproval : " + disapproval);
+                        console.log("================= TEST =====================");
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
+
                         console.log(rows);
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
