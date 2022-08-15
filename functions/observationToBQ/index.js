@@ -129,7 +129,6 @@ exports.observationsToBQ = functions.firestore
                                 console.log(row);
                                 rows.push(row);
 
-                                console.log("============================RAT");
 
                             } else if (entryData.Type === "climate"){
                                 let row = {
@@ -249,6 +248,26 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+
+
+                      // More info about the results database schema and how it relates with the observation results can be found here: https://docs.google.com/document/d/1nM7ZccAGqlPWA-h3rnVtbsBXRD7CheC-msPEHZsEiS0/edit?usp=sharing
+                      // All arrays below allocate 4 indexes to hold the number of times each of these were selected: [0]="Off Task", [1]="Mildly Engaged", [2]="Engaged", [3]="Highly Engaged";
+                      // Holds the calculated results of the Small Group observation results
+                      let smallGroup = Array(4).fill(0);
+                      // Holds the calculated results of the Whole Group observations results
+                      let wholeGroup = Array(4).fill(0);
+                      // Holds the calculated results of the Center observations results
+                      let centers = Array(4).fill(0);
+                      // Holds the calculated results of the Transition observations results
+                      let transition = Array(4).fill(0);
+
+                      // Holds the number of times "Off Task" was selected
+                      let offTask = 0;
+                      // Holds the number of times "Off Task" WASN'T selected
+                      let engaged = 0;
+
+
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -271,8 +290,74 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Generate results
+                                switch( (entryData.entryType+'').toLowerCase().trim() ) {
+                                  case "small" :
+                                    smallGroup[entryData.point]++;
+                                    break;
+                                  case "whole" :
+                                    wholeGroup[entryData.point]++;
+                                    break;
+                                  case "centers" :
+                                    centers[entryData.point]++;
+                                    break;
+                                  case "transition" :
+                                    transition[entryData.point]++;
+                                    break;
+                                }
+
+                                if(entryData.point == 0){offTask++;}
+                                else{engaged++;}
+
                             }
                         });
+
+                        // Build results data and push to engagement_results table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacher: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.end.toDate() / 1000),
+                              engaged: engaged,
+                              off_task: offTask,
+                              small_group: {
+                                off_task: smallGroup[0],
+                                mildly_engaged: smallGroup[1],
+                                engaged: smallGroup[2],
+                                highly_engaged: smallGroup[3],
+                              },
+                              whole_group: {
+                                off_task: wholeGroup[0],
+                                mildly_engaged: wholeGroup[1],
+                                engaged: wholeGroup[2],
+                                highly_engaged: wholeGroup[3],
+                              },
+                              centers: {
+                                off_task: centers[0],
+                                mildly_engaged: centers[1],
+                                engaged: centers[2],
+                                highly_engaged: centers[3],
+                              },
+                              transition: {
+                                off_task: transition[0],
+                                mildly_engaged: transition[1],
+                                engaged: transition[2],
+                                highly_engaged: transition[3],
+                              },
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
+
                         console.log(rows);
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
