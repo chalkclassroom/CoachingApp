@@ -211,6 +211,19 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+
+                        // Initialize variables to hold data for the results table
+                        // More info about the results database schema and how it relates with the observation results can be found here: https://docs.google.com/document/d/1nM7ZccAGqlPWA-h3rnVtbsBXRD7CheC-msPEHZsEiS0/edit?usp=sharing
+                        // Saves number of low-level instructions
+                        var lowLevelCount = 0;
+                        // Saves number of high-level instructions
+                        var highLevelCount = 0;
+                        // Holds teacher results [0] = low level; [1] = high level;
+                        let teacher = Array(2).fill(0);
+                        // Holds child results. [0] = low level; [1] = high level;
+                        let child = Array(2).fill(0);
+
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -232,8 +245,57 @@ exports.observationsToBQ = functions.firestore
                                 console.log(row);
                                 rows.push(row);
                             }
+
+                            // Generate results data
+                            switch(entryData.instructionType){
+                              case "llq":
+                                lowLevelCount++;
+                                teacher[0]++;
+                                break;
+                              case "hlq":
+                                highLevelCount++;
+                                teacher[1]++;
+                                break;
+                              case "llqResponse":
+                                lowLevelCount++;
+                                child[0]++;
+                                break;
+                              case "hlqResponse":
+                                highLevelCount++;
+                                child[1]++;
+                                break;
+                            }
                         });
                         console.log(rows);
+
+                        // Build results data and push to engagement_results table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacherId: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.end.toDate() / 1000),
+                              low_level_instruction: lowLevelCount,
+                              high_level_instruction: highLevelCount,
+                              teacher: {
+                                low: teacher[0],
+                                high: teacher[1],
+                              },
+                              child: {
+                                low: child[0], 
+                                high: child[1],
+                              }
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
