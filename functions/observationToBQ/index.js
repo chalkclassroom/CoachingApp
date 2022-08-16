@@ -1667,22 +1667,3 @@ exports.observationsToBQ = functions.firestore
                 console.log("Next Magic 8 will be filled");
             }
     });
-
-
-    function getCountOfEntries(collection, document, value, obj) {
-        // Sum the count of each shard in the subcollection
-        console.log("Test 1");
-        obj.value = "cmon";
-        return firestore.collection(collection).doc(document).collection("entries").where("Checked", "array-contains", value).get()
-          .then((snapshot) => {
-              let total_count = 0;
-              console.log("Test 2");
-              snapshot.forEach((doc) => {
-                console.log("Test 3");
-                  total_count++;;
-              });
-              console.log("Totale count : " + total_count);
-              obj.value = total_count;
-              return total_count;
-        });
-    }
