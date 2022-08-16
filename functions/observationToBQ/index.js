@@ -738,6 +738,16 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        // Initialize variables to hold data for the results table
+                        // More info about the results database schema and how it relates with the observation results can be found here: https://docs.google.com/document/d/1nM7ZccAGqlPWA-h3rnVtbsBXRD7CheC-msPEHZsEiS0/edit?usp=sharing
+                        // Holds teacher results [0] = math; [1] = noMath; [2] = notThere;
+                        let teacher = Array(3).fill(0);
+                        // Holds child results. [0] = math; [1] = noMath; [2] = noChildOpp;
+                        let child = Array(3).fill(0);
+                        // Holds results for which checkboxes were clicked [0-3] = child checkboxes; [4-7] = teacher checkboxes;
+                        let checklistResults = Array(8).fill(0);
+                        var totalVisits = 0;
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -772,9 +782,79 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                totalVisits++;
+
+                                // Calculate data for the results table
+                                // If no children checkboxes were selected
+                                if(entryData.Checked.includes(5))
+                                {
+                                  // If the first people type is selected
+                                  if(entryData.PeopleType == 1){ child[2]++; }
+                                  else{ child[1]++; }
+                                }
+                                else{ child[0]++; }
+
+                                // If no teacher checkboxes were selected
+                                if(entryData.Checked.includes(10))
+                                {
+                                  // If the third people type is selected
+                                  if(entryData.PeopleType == 3){ teacher[1]++; }
+                                  else{ teacher[2]++; }
+                                }
+                                else{ teacher[0]++; }
+
+                                if(entryData.Checked.includes(1)){checklistResults[0]++;}
+                                if(entryData.Checked.includes(2)){checklistResults[1]++;}
+                                if(entryData.Checked.includes(3)){checklistResults[2]++;}
+                                if(entryData.Checked.includes(4)){checklistResults[3]++;}
+                                if(entryData.Checked.includes(6)){checklistResults[4]++;}
+                                if(entryData.Checked.includes(7)){checklistResults[5]++;}
+                                if(entryData.Checked.includes(8)){checklistResults[6]++;}
+                                if(entryData.Checked.includes(9)){checklistResults[7]++;}
                             }
                         });
                         console.log(rows);
+
+                        // We need to calculate the results and insert them into
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacher: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.start.toDate() / 1000),
+                              total_visits: totalVisits,
+                              child: {
+                                math: child[0],
+                                noMath: child[1],
+                                noChildOpp: child[2]
+                              },
+                              teacher: {
+                                math: teacher[0],
+                                noMath: teacher[1],
+                                notThere: teacher[2]
+                              },
+                              checklist: {
+                                child1: checklistResults[0],
+                                child2: checklistResults[1],
+                                child3: checklistResults[2],
+                                child4: checklistResults[3],
+                                teacher1: checklistResults[4],
+                                teacher2: checklistResults[5],
+                                teacher3: checklistResults[6],
+                                teacher4: checklistResults[7],
+                              }
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -1000,6 +1080,8 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                      var intervalTotal = 0, supportedWriting = 0, otherBehaviors = 0, writingContent = 0, printProcess = 0, talksAboutContent = 0, invitesWritingMessage = 0, writesMeaningfulMessage = 0, demonstratesPrintProcess = 0, invitesWritingName = 0, positiveResponseWriting = 0, supportsInventiveSpelling = 0, invitesReadingMessage = 0;
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -1031,9 +1113,60 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Update interval count
+                                intervalTotal++;
+
+                                // Calculate results data
+                                // If nothing is checked
+                                if(entryData.Checked.includes(9)){otherBehaviors++;}
+                                else{supportedWriting++;}
+
+                                if(entryData.Checked.includes(1)){talksAboutContent++; writingContent++;}
+                                if(entryData.Checked.includes(2)){invitesWritingMessage++; writingContent++;}
+                                if(entryData.Checked.includes(3)){writesMeaningfulMessage++; writingContent++;}
+                                if(entryData.Checked.includes(4)){demonstratesPrintProcess++; printProcess++;}
+                                if(entryData.Checked.includes(5)){invitesWritingName++; printProcess++;}
+                                if(entryData.Checked.includes(6)){positiveResponseWriting++; printProcess++;}
+                                if(entryData.Checked.includes(7)){supportsInventiveSpelling++; printProcess++;}
+                                if(entryData.Checked.includes(8)){invitesReadingMessage++; printProcess++;}
                             }
                         });
                         console.log(rows);
+
+                        // We need to insert results into table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teachId: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.start.toDate() / 1000),
+                              activity_setting: session.activitySetting,
+                              interval_total: intervalTotal,
+                              supported_writing: supportedWriting,
+                              other_behaviors: otherBehaviors,
+                              behavior_type: {
+                                writing_content: writingContent,
+                                print_process: printProcess
+                              },
+                              talks_about_content: talksAboutContent,
+                              invites_writing_message: invitesWritingMessage,
+                              writes_meaningful_message: writesMeaningfulMessage,
+                              demonstrates_print_process: demonstratesPrintProcess,
+                              invites_writing_name: invitesWritingName,
+                              positive_response_writing: positiveResponseWriting,
+                              supports_inventive_spelling: supportsInventiveSpelling,
+                              invites_reading_message: invitesReadingMessage
+
+                          }
+                        }
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -1047,6 +1180,9 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        // Initialize variables to hold data for results table
+                        var intervalTotal = 0, supportedWriting = 0, otherBehaviors = 0, writingContent = 0, printProcess = 0, talksContentMeaning = 0, drawsMeaning = 0, makesForms = 0, saysMessageAloud = 0, writesNameLetters = 0, usesAlphabetKnowledge = 0, spellingsCount = 0, readsMessage = 0;
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -1078,9 +1214,60 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Update interval count
+                                intervalTotal++;
+
+                                // Calculate results data
+                                // If nothing is checked
+                                if(entryData.Checked.includes(9)){otherBehaviors++;}
+                                else{supportedWriting++;}
+
+                                if(entryData.Checked.includes(1)){talksContentMeaning++; writingContent++;}
+                                if(entryData.Checked.includes(2)){drawsMeaning++; writingContent++;}
+                                if(entryData.Checked.includes(3)){makesForms++; writingContent++;}
+                                if(entryData.Checked.includes(4)){saysMessageAloud++; printProcess++;}
+                                if(entryData.Checked.includes(5)){writesNameLetters++; printProcess++;}
+                                if(entryData.Checked.includes(6)){usesAlphabetKnowledge++; printProcess++;}
+                                if(entryData.Checked.includes(7)){spellingsCount++; printProcess++;}
+                                if(entryData.Checked.includes(8)){readsMessage++; printProcess++;}
                             }
                         });
                         console.log(rows);
+
+                        // We need to insert results into table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teachId: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.start.toDate() / 1000),
+                              activity_setting: session.activitySetting,
+                              interval_total: intervalTotal,
+                              supported_writing: supportedWriting,
+                              other_behaviors: otherBehaviors,
+                              behavior_type: {
+                                writing_content: writingContent,
+                                print_process: printProcess
+                              },
+                              talks_content_meaning: talksContentMeaning,
+                              draws_meaning: drawsMeaning,
+                              makes_forms: makesForms,
+                              says_message_aloud: saysMessageAloud,
+                              writes_name_letters: writesNameLetters,
+                              uses_alphabet_knowledge: usesAlphabetKnowledge,
+                              spellings: spellingsCount,
+                              reads_message: readsMessage
+
+                          }
+                        }
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -1094,6 +1281,7 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        var intervalTotal = 0, supportingDevelopment = 0, noBehaviors = 0, vocabSocial = 0, encourageTalk = 0, respondCount = 0, discussingVocab = 0, converseEmotions = 0, encouragingStorytelling = 0, encouragingListening = 0, askingOpenQuestions = 0, enterChildrensActivity = 0, clarifyingComments = 0, followUpQuestions = 0;
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -1125,9 +1313,60 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Increase number of intervals
+                                intervalTotal++;
+
+                                // If nothing was selected
+                                if(entryData.Checked.includes(9)){noBehaviors++;}
+                                else {supportingDevelopment++;}
+
+                                if(entryData.Checked.includes(1)){discussingVocab++; vocabSocial++;}
+                                if(entryData.Checked.includes(2)){converseEmotions++; vocabSocial++;}
+                                if(entryData.Checked.includes(3)){encouragingStorytelling++; encourageTalk++;}
+                                if(entryData.Checked.includes(4)){encouragingListening++; encourageTalk++;}
+                                if(entryData.Checked.includes(5)){askingOpenQuestions++; encourageTalk++;}
+                                if(entryData.Checked.includes(6)){enterChildrensActivity++; respondCount++;}
+                                if(entryData.Checked.includes(7)){clarifyingComments++; respondCount++;}
+                                if(entryData.Checked.includes(8)){followUpQuestions++; respondCount++;}
                             }
                         });
                         console.log(rows);
+
+                        // We need to insert results into table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacherId: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.start.toDate() / 1000),
+                              activity_setting: session.activitySetting,
+                              interval_total: intervalTotal,
+                              supporting_development: supportingDevelopment,
+                              no_behaviors: noBehaviors,
+                              behavior_type: {
+                                vocab_social: vocabSocial,
+                                encourage_talk: encourageTalk,
+                                respond: respondCount,
+                              },
+                              discussing_vocab: discussingVocab,
+                              converse_emotions: converseEmotions,
+                              encouraging_storytelling: encouragingStorytelling,
+                              encouraging_listening: encouragingListening,
+                              asking_open_questions: askingOpenQuestions,
+                              enter_childrens_activity: enterChildrensActivity,
+                              clarifying_comments: clarifyingComments,
+                              follow_up_questions: followUpQuestions
+
+                          }
+                        }
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
