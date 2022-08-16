@@ -435,6 +435,13 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        // Holds the calculated results of the Center observations results
+                        let transitionType = Array(6).fill(0);
+                        var transitionTotal = 0, totalTransitionTime = 0.0, learningActivity = 0.0;
+                        var totalTime, totalTimeSeconds, totalTimeRemainingSeconds, totalTimeMinutes;
+                        var transitionTimeSeconds, transitionTimeMinutes, transitionTimeRemainingSeconds;
+                        var tempTotalTransitionTime, tempStartDate, tempEndDate;
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -456,9 +463,108 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Number of transition observed
+                                transitionTotal++;
+
+                                // Grab the date object for the start and end of this transition
+                                tempStartDate = new Date(entryData.TrnStart);
+                                tempEndDate = new Date(entryData.TrnEnd);
+
+                                // Get how many seconds this transition lasted
+                                transitionTimeSeconds = Math.floor( ( tempEndDate.getTime() - tempStartDate.getTime() ) / 1000 );
+
+                                // Calculate the how the remaining amount of seconds without minutes (ex: if the time was 1:46, it'll return 46)
+                                transitionTimeRemainingSeconds = transitionTimeSeconds % 60;
+
+                                // Calculate how many minutes
+                                transitionTimeMinutes = Math.floor(  transitionTimeSeconds / 60 );
+
+                                // Calculate the total amount of this time in Double format (ex: if the time was 1:46, this saves 1.46)
+                                tempTotalTransitionTime = transitionTimeMinutes + (transitionTimeRemainingSeconds / 100);
+
+                                // Update the total amount of time used by all transitions
+                                totalTransitionTime += tempTotalTransitionTime;
+
+                                // Update the time taken for each type of transition
+                                switch( (entryData.TrnType+'').toLowerCase() ){
+                                  case "waiting":
+                                    transitionType[0] += tempTotalTransitionTime;
+                                    break;
+                                  case "traveling":
+                                    transitionType[1] += tempTotalTransitionTime;
+                                    break;
+                                  case "child waiting":
+                                    transitionType[2] += tempTotalTransitionTime;
+                                    break;
+                                  case "classroom routines":
+                                    transitionType[3] += tempTotalTransitionTime;
+                                    break;
+                                  case "behavior management disruption":
+                                    transitionType[4] += tempTotalTransitionTime;
+                                    break;
+                                  case "other":
+                                    transitionType[5] += tempTotalTransitionTime;
+                                    break;
+                                }
                             }
                         });
                         console.log(rows);
+
+                        // Calculate how many minutes was spent total
+
+                        console.log("=============== TEST ================================");
+                        console.log("=============== TEST ================================");
+                        console.log("=============== TEST ================================");
+
+                        totalTimeSeconds = Math.floor( ( session.end.toDate().getTime() - session.start.toDate().getTime() ) / 1000 );
+
+                        totalTimeRemainingSeconds = totalTimeSeconds % 60;   // Need to dive by 1000 because it returns in ms.
+                        totalTimeMinutes = Math.floor( totalTimeSeconds / 60 );
+
+                        totalTime = totalTimeMinutes + (totalTimeRemainingSeconds / 100);
+
+                        learningActivity = totalTime - totalTransitionTime;
+
+
+                        console.log('totalTimeRemainingSeconds: ' + totalTimeRemainingSeconds + 's');
+                        console.log('totalTimeMinutes: ' + totalTimeMinutes + 's');
+                        console.log('Total Time: ' + totalTime + 's');
+                        console.log('totalTimeSeconds: ' + totalTimeSeconds + 's');
+
+                        console.log("=============== TEST ================================");
+                        console.log("=============== TEST ================================");
+                        console.log("=============== TEST ================================");
+
+                        // Build results data and push to engagement_results table
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacherId: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.end.toDate() / 1000),
+                              transition_total: totalTimeSeconds,
+                              transition_time: totalTransitionTime,
+                              learning_activity: learningActivity,
+                              transition_type: {
+                                waiting_in_line: transitionType[0],
+                                traveling: transitionType[1],
+                                children_waiting: transitionType[2],
+                                classroom_routines: transitionType[3],
+                                behavior_management: transitionType[4],
+                                other: transitionType[5]
+                              }
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -521,31 +627,33 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                // Modify results data
+                                // Update child results
+                                if(entryData.Checked.includes(2) || entryData.Checked.includes(3) || entryData.Checked.includes(4)){childResults[0]++;} // If any of the child check boxes are selected
+                                else{
+                                  if(entryData.PeopleType == 1){childResults[2]++;} // If the single child option is selected
+                                  else{childResults[1]++;} // If the single child option is not selected and there's nothing checked under child
+                                }
+
+                                // Update Teacher Results
+                                if(entryData.Checked.includes(6) || entryData.Checked.includes(7) || entryData.Checked.includes(8) || entryData.Checked.includes(9)){teacherResults[0]++;} // If any of the teacher check boxes are selected
+                                else{
+                                  if(entryData.PeopleType == 1 || entryData.PeopleType == 2){teacherResults[2]++;} // If the teacher isn't there (1st or 2nd type option is selected)
+                                  else{teacherResults[1]++;}
+                                }
+
+                                // Update checklistResults
+                                if(entryData.Checked.includes(2)){checklistResults[0]++;}
+                                if(entryData.Checked.includes(3)){checklistResults[1]++;}
+                                if(entryData.Checked.includes(4)){checklistResults[2]++;}
+                                if(entryData.Checked.includes(6)){checklistResults[3]++;}
+                                if(entryData.Checked.includes(7)){checklistResults[4]++;}
+                                if(entryData.Checked.includes(8)){checklistResults[5]++;}
+                                if(entryData.Checked.includes(9)){checklistResults[6]++;}
+
                             }
 
-                            // Modify results data
-                            // Update child results
-                            if(entryData.Checked.includes(2) || entryData.Checked.includes(3) || entryData.Checked.includes(4)){childResults[0]++;} // If any of the child check boxes are selected
-                            else{
-                              if(entryData.PeopleType == 1){childResults[2]++;} // If the single child option is selected
-                              else{childResults[1]++;} // If the single child option is not selected and there's nothing checked under child
-                            }
-
-                            // Update Teacher Results
-                            if(entryData.Checked.includes(6) || entryData.Checked.includes(7) || entryData.Checked.includes(8) || entryData.Checked.includes(9)){teacherResults[0]++;} // If any of the teacher check boxes are selected
-                            else{
-                              if(entryData.PeopleType == 1 || entryData.PeopleType == 2){teacherResults[2]++;} // If the teacher isn't there (1st or 2nd type option is selected)
-                              else{teacherResults[1]++;}
-                            }
-
-                            // Update checklistResults
-                            if(entryData.Checked.includes(2)){checklistResults[0]++;}
-                            if(entryData.Checked.includes(3)){checklistResults[1]++;}
-                            if(entryData.Checked.includes(4)){checklistResults[2]++;}
-                            if(entryData.Checked.includes(6)){checklistResults[3]++;}
-                            if(entryData.Checked.includes(7)){checklistResults[4]++;}
-                            if(entryData.Checked.includes(8)){checklistResults[5]++;}
-                            if(entryData.Checked.includes(9)){checklistResults[6]++;}
                         });
                         console.log(rows);
 
@@ -604,6 +712,16 @@ exports.observationsToBQ = functions.firestore
                 let rows=[]
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
+                        // Initialize variables to hold data for the results table
+                        // More info about the results database schema and how it relates with the observation results can be found here: https://docs.google.com/document/d/1nM7ZccAGqlPWA-h3rnVtbsBXRD7CheC-msPEHZsEiS0/edit?usp=sharing
+                        // Holds teacher results [0] = math; [1] = noMath; [2] = notThere;
+                        let teacher = Array(3).fill(0);
+                        // Holds child results. [0] = math; [1] = noMath; [2] = noChildOpp;
+                        let child = Array(3).fill(0);
+                        // Holds results for which checkboxes were clicked [0-3] = child checkboxes; [4-7] = teacher checkboxes;
+                        let checklistResults = Array(8).fill(0);
+                        var totalVisits = 0;
+
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
                             let entryData = entry.data();
@@ -618,7 +736,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacher: session.teacher,
+                                        teacherId: session.teacher,
                                         observedBy: session.observedBy,
                                         checklist: {
                                             child1: entryData.Checked.includes(1),
@@ -638,9 +756,81 @@ exports.observationsToBQ = functions.firestore
                                 };
                                 console.log(row);
                                 rows.push(row);
+
+                                totalVisits++;
+
+                                // Calculate data for the results table
+                                // If no children checkboxes were selected
+                                if(entryData.Checked.includes(5))
+                                {
+                                  // If the first people type is selected
+                                  if(entryData.PeopleType == 1){ child[2]++; }
+                                  else{ child[1]++; }
+                                }
+                                else{ child[0]++; }
+
+                                // If no teacher checkboxes were selected
+                                if(entryData.Checked.includes(10))
+                                {
+                                  // If the third people type is selected
+                                  if(entryData.PeopleType == 3){ teacher[1]++; }
+                                  else{ teacher[2]++; }
+                                }
+                                else{ teacher[0]++; }
+
+                                if(entryData.Checked.includes(1)){checklistResults[0]++;}
+                                if(entryData.Checked.includes(2)){checklistResults[1]++;}
+                                if(entryData.Checked.includes(3)){checklistResults[2]++;}
+                                if(entryData.Checked.includes(4)){checklistResults[3]++;}
+                                if(entryData.Checked.includes(6)){checklistResults[4]++;}
+                                if(entryData.Checked.includes(7)){checklistResults[5]++;}
+                                if(entryData.Checked.includes(8)){checklistResults[6]++;}
+                                if(entryData.Checked.includes(9)){checklistResults[7]++;}
+
+
                             }
                         });
                         console.log(rows);
+
+                        // We need to calculate the results and insert them into
+                        let resultsRow = {
+                          insertId: context.params.observationID,
+                          json: {
+                              id: context.params.observationID,
+                              sessionStart: Math.floor(session.start.toDate() / 1000),
+                              sessionEnd: Math.floor(session.end.toDate() / 1000),
+                              teacher: session.teacher,
+                              observedBy: session.observedBy,
+                              timestamp: Math.floor(session.start.toDate() / 1000),
+                              total_visits: totalVisits,
+                              child: {
+                                seq: child[0],
+                                noSeq: child[1],
+                                noChildOpp: child[2]
+                              },
+                              teacher: {
+                                seq: teacher[0],
+                                noSeq: teacher[1],
+                                notThere: teacher[2]
+                              },
+                              checklist: {
+                                child1: checklistResults[0],
+                                child2: checklistResults[1],
+                                child3: checklistResults[2],
+                                child4: checklistResults[3],
+                                teacher1: checklistResults[4],
+                                teacher2: checklistResults[5],
+                                teacher3: checklistResults[6],
+                                teacher4: checklistResults[7],
+                              }
+
+                          }
+                        }
+
+
+                        resultsTable.insert(resultsRow, { raw: true, skipInvalidRows: true }).catch(err => {
+                            console.error(`table.insert: ${JSON.stringify(err)}`);
+                        });
 
                         return table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
                             console.error(`table.insert: ${JSON.stringify(err)}`);
@@ -762,7 +952,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacher: session.teacher,
+                                        teacherId: session.teacher,
                                         observedBy: session.observedBy,
                                         checklist: {
                                             child1: entryData.Checked.includes(1),
@@ -1094,7 +1284,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacher: session.teacher,
+                                        teacherId: session.teacher,
                                         observedBy: session.observedBy,
                                         activitySetting: session.activitySetting,
                                         checklist: {
