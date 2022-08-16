@@ -511,30 +511,15 @@ exports.observationsToBQ = functions.firestore
                         });
                         console.log(rows);
 
-                        // Calculate how many minutes was spent total
-
-                        console.log("=============== TEST ================================");
-                        console.log("=============== TEST ================================");
-                        console.log("=============== TEST ================================");
-
+                        // Calculate how many minutes was spent total the same way we did for transition above
                         totalTimeSeconds = Math.floor( ( session.end.toDate().getTime() - session.start.toDate().getTime() ) / 1000 );
 
-                        totalTimeRemainingSeconds = totalTimeSeconds % 60;   // Need to dive by 1000 because it returns in ms.
+                        totalTimeRemainingSeconds = totalTimeSeconds % 60;
                         totalTimeMinutes = Math.floor( totalTimeSeconds / 60 );
 
                         totalTime = totalTimeMinutes + (totalTimeRemainingSeconds / 100);
 
                         learningActivity = totalTime - totalTransitionTime;
-
-
-                        console.log('totalTimeRemainingSeconds: ' + totalTimeRemainingSeconds + 's');
-                        console.log('totalTimeMinutes: ' + totalTimeMinutes + 's');
-                        console.log('Total Time: ' + totalTime + 's');
-                        console.log('totalTimeSeconds: ' + totalTimeSeconds + 's');
-
-                        console.log("=============== TEST ================================");
-                        console.log("=============== TEST ================================");
-                        console.log("=============== TEST ================================");
 
                         // Build results data and push to engagement_results table
                         let resultsRow = {
