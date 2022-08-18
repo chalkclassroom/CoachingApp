@@ -17,11 +17,15 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NZCNF72EMG"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-NZCNF72EMG');
+  // Don't collect data from local environment
+  if (document.location.hostname !== "127.0.0.1" && document.location.hostname !== "localhost") {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NZCNF72EMG');
+  }
+
 </script>
 
 <body>
