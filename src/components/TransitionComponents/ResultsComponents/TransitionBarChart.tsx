@@ -100,9 +100,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
                   padding: 0,
                   lineHeight: 1
                 },
-                afterFit: function(scale: { height: number }): void {
-                  scale.height = 100 // creates pading between ticks and scaleLabel
-                }
+                // afterFit: function(scale: { height: number }): void {
+                //   scale.height = 100 // creates pading between ticks and scaleLabel
+                // }
               }
             ],
             yAxes: [
@@ -118,9 +118,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
                   fontColor: "#000000",
                   fontFamily: 'Arimo'
                 },
-                afterFit: function(scale: { width: number }): void {
-                  scale.width = 260
-                },
+                // afterFit: function(scale: { width: number }): void {
+                //   scale.width = 260
+                // },
               }
             ]
           },
@@ -168,10 +168,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
                 }
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}
       />
     );
   }

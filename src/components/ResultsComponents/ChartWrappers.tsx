@@ -28,7 +28,7 @@ export function BarWrapperDetails({children}) {
 
 export function GridWrapperDetails({children}) {
     return (
-        <Grid container justify={"center"} direction={"column"} style={{position: 'relative', height: '60vh', width: '57vw'}}>
+        <Grid container justify={"center"} direction={"column"} style={{position: 'relative', height: '50vh', width: '57vw'}}>
             {children}
         </Grid>
     )

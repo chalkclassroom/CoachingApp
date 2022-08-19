@@ -48,8 +48,6 @@ class AvgBarSummary extends React.Component<Props, {}> {
     return (
       <HorizontalBar
         data={avgEngagementData}
-        width={650}
-        height={160}
         options={{
           animation: {
             onComplete: function(): void {
@@ -57,7 +55,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
             }
           },
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           scales: {
             xAxes: [{
               ticks: {
@@ -80,7 +78,15 @@ class AvgBarSummary extends React.Component<Props, {}> {
                   }
                 }
               }
-            }]
+            }],
+            yAxes: [
+              {
+                ticks: {
+                  fontSize: 16,
+                  fontColor: 'black',
+                }
+              }
+            ]
           },
           title: {
             display: this.props.title,

@@ -71,11 +71,6 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={climateData}
         options={{
-          layout: {
-            padding: {
-              left: -79
-            }
-          },
           animation: {
             onComplete: function(): void {
               isCompleted ? isCompleted() : null
@@ -98,9 +93,9 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000",
                 },
-                afterFit: function(scale: { height: number }): void {
-                  scale.height = 100 // creates pading between ticks and scaleLabel
-                }
+                // afterFit: function(scale: { height: number }): void {
+                //   scale.height = 100 // creates pading between ticks and scaleLabel
+                // }
               }
             ],
             yAxes: [
@@ -114,9 +109,9 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000"
                 },
-                afterFit: function(scale: { width: number }): void {
-                  scale.width = 260
-                },
+                // afterFit: function(scale: { width: number }): void {
+                //   scale.width = 260
+                // },
               }
             ]
           },

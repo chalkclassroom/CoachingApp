@@ -119,10 +119,9 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
                 return value + "%";
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={600}
-        height={350}
       />
     );
   }
