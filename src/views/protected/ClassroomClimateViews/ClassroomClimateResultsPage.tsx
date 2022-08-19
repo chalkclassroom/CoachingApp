@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
+import { GridWrapperDetails, LineWrapperTrends } from "../../../components/ResultsComponents/ChartWrappers";
 
 const styles: object = {
   root: {
@@ -495,12 +496,14 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <BehaviorResponsesDetailsChart
-                    disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
-                    redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}
-                    nonspecificBehaviorCount={this.state.nonspecificBehaviorCount}
-                    specificBehaviorCount={this.state.specificBehaviorCount}
-                  />
+                  <GridWrapperDetails>
+                    <BehaviorResponsesDetailsChart
+                      disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
+                      redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}
+                      nonspecificBehaviorCount={this.state.nonspecificBehaviorCount}
+                      specificBehaviorCount={this.state.specificBehaviorCount}
+                    />
+                  </GridWrapperDetails>
                 </Grid>
               </Grid>
             </div>
@@ -512,7 +515,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
                   Behavior Responses
                 </Typography>
               </Grid>
-              <ClimateTrendsGraph data={this.trendsFormatData}/>
+              <LineWrapperTrends>
+                <ClimateTrendsGraph data={this.trendsFormatData}/>
+              </LineWrapperTrends>
             </Grid>    
           }
           changeSessionId={this.changeSessionId}

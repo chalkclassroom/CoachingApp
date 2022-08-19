@@ -71,6 +71,11 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={climateData}
         options={{
+          layout: {
+            padding: {
+              left: -79
+            }
+          },
           animation: {
             onComplete: function(): void {
               isCompleted ? isCompleted() : null
@@ -146,10 +151,9 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                 }
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}
       />
     );
   }

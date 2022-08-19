@@ -60,6 +60,11 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={instructionData}
         options={{
+          layout: {
+            padding: {
+              left: -60
+            }
+          },
           animation: {
             onComplete: function(): void {
               isCompleted ? isCompleted() : null
@@ -145,10 +150,9 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
                 }
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}       
       />
     );
   }

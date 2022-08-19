@@ -46,7 +46,6 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
     };
     const total = this.props.highLevel + this.props.lowLevel;
     return (
-      <div>
         <Pie
           data={instructionResponseData}
           options={{
@@ -105,12 +104,10 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
                   }
                 }
               }
-            }
+            },
+            maintainAspectRatio: false
           }}
-          width={650}
-          height={400}
         />
-      </div>
     );
   }
 }
