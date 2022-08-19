@@ -15,6 +15,7 @@ import * as Constants from '../../constants/Constants'
 import { LiteracyTypes } from '../../constants/Constants'
 import * as Types from '../../constants/Types'
 import * as H from 'history'
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers'
 
 interface Props {
     open: boolean,
@@ -79,11 +80,13 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
                     Results Preview
                 </DialogTitle>
                 <DialogContent>
-                    <LiteracySummaryChart
-                        literacy={literacyCount}
-                        noLiteracy={noLiteracyCount}
-                        type={getLiteracyType(literacyType)}
-                    />
+                    <PieWrapperDialog>
+                        <LiteracySummaryChart
+                            literacy={literacyCount}
+                            noLiteracy={noLiteracyCount}
+                            type={getLiteracyType(literacyType)}
+                        />
+                    </PieWrapperDialog>
                 </DialogContent>
                 <Grid container direction="row" justify="space-around" alignItems="center"
                       style={{ paddingBottom: '1em' }}>
