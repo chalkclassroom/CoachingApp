@@ -69,6 +69,11 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={listeningData}
         options={{
+          layout: {
+            padding: {
+              left: -60
+            }
+          },
           animation: {
             onComplete: function(): void {
               isCompleted ? isCompleted() : null
@@ -159,10 +164,9 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                 }
               }
             }
-          }
-        }}
-        width={650}
-        height={400}       
+          },
+          maintainAspectRatio: false
+        }} 
       />
     );
   }
