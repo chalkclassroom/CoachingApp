@@ -2,6 +2,7 @@ import Grid from "@material-ui/core/Grid";
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+// Check
 const useMediaQuery = (query) => {
     const mediaMatch = window.matchMedia(query);
     const [matches, setMatches] = useState(mediaMatch.matches);
