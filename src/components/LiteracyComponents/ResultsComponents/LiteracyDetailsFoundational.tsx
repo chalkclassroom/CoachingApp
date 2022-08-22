@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import LiteracyDetailsFoundationalChart from './LiteracyDetailsFoundationalChart';
 import * as Constants from '../../../constants/Constants';
+import { GridWrapperDetails_lg } from '../../ResultsComponents/ChartWrappers';
 
 interface Props {
   literacy1: number,
@@ -106,19 +107,21 @@ export default function LiteracyDetailsFoundational(props: Props) {
             </Grid>
           </Grid>
         </Grid>
-        <LiteracyDetailsFoundationalChart
-          literacy1={literacy1}
-          literacy2={literacy2}
-          literacy3={literacy3}
-          literacy4={literacy4}
-          literacy5={literacy5}
-          literacy6={literacy6}
-          literacy7={literacy7}
-          literacy8={literacy8}
-          literacy9={literacy9}
-          literacy10={literacy10}
-          who={who}
-        />
+        <GridWrapperDetails_lg>
+          <LiteracyDetailsFoundationalChart
+            literacy1={literacy1}
+            literacy2={literacy2}
+            literacy3={literacy3}
+            literacy4={literacy4}
+            literacy5={literacy5}
+            literacy6={literacy6}
+            literacy7={literacy7}
+            literacy8={literacy8}
+            literacy9={literacy9}
+            literacy10={literacy10}
+            who={who}
+          />
+        </GridWrapperDetails_lg>
       </Grid>
     </div>
   );

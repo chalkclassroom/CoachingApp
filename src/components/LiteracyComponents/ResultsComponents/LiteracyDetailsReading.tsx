@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import LiteracyDetailsReadingChart from './LiteracyDetailsReadingChart';
 import * as Constants from '../../../constants/Constants';
+import { GridWrapperDetails } from '../../ResultsComponents/ChartWrappers';
 
 interface Props {
   literacy1: number,
@@ -106,19 +107,21 @@ export default function LiteracyDetailsReading(props: Props) {
             </Grid>
           </Grid>
         </Grid>
-        <LiteracyDetailsReadingChart
-          literacy1={literacy1}
-          literacy2={literacy2}
-          literacy3={literacy3}
-          literacy4={literacy4}
-          literacy5={literacy5}
-          literacy6={literacy6}
-          literacy7={literacy7}
-          literacy8={literacy8}
-          literacy9={literacy9}
-          literacy10={literacy10}
-          who={who}
-        />
+        <GridWrapperDetails>
+          <LiteracyDetailsReadingChart
+            literacy1={literacy1}
+            literacy2={literacy2}
+            literacy3={literacy3}
+            literacy4={literacy4}
+            literacy5={literacy5}
+            literacy6={literacy6}
+            literacy7={literacy7}
+            literacy8={literacy8}
+            literacy9={literacy9}
+            literacy10={literacy10}
+            who={who}
+          />
+        </GridWrapperDetails>
         <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
           Total Length of Observation: {Math.floor((sessionTime/1000)/60)}m {Math.round((((sessionTime/1000)/60) % 1) * 60) }s
         </Typography>

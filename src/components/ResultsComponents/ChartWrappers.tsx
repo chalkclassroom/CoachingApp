@@ -34,6 +34,14 @@ export function GridWrapperDetails({children}) {
     )
 }
 
+export function GridWrapperDetails_lg({children}) {
+    return (
+        <Grid container justify={"center"} direction={"column"} style={{position: 'relative', height: '58vh', width: '57vw'}}>
+            {children}
+        </Grid>
+    )
+}
+
 export function LineWrapperTrends({children}) {
     return (
         <Grid container justify={"center"} direction={"column"} style={{position: 'relative', height: '60vh', width: '57vw'}}>

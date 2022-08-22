@@ -18,7 +18,7 @@ const BarChartLegend: FunctionComponent<Props> = (props) => {
             <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
               {props.questions.map(question => {
                 return (
-                  <Grid key={question} item style={{height:'33%', paddingBottom: '1.8em'}}>
+                  <Grid key={question} item style={{height:'33%', paddingBottom: '2em'}}>
                     <Typography variant="subtitle1" className={props.questionTextClass}>
                       {question}
                     </Typography>
