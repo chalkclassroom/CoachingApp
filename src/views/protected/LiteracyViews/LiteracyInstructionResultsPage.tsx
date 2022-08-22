@@ -840,7 +840,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
                   <PieWrapperSummary>
                     <LiteracySummaryChart
                       literacy={this.state.literacy}
@@ -848,7 +847,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                       type={this.props.location.state.type}
                     />
                   </PieWrapperSummary>
-                </Grid>
                 {(this.props.location.state.type === Constants.LiteracyTypes.READING) ? (
                   <Grid item style={{paddingTop: '1em'}}>
                     <Typography variant="h6" style={{textAlign: "center", fontFamily: 'Arimo'}}>

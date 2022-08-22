@@ -638,7 +638,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
                   <PieWrapperSummary>
                     <TransitionTimePie
                       transitionTime={this.state.transitionTime}
@@ -646,7 +645,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
                       // style={{overflow:"hidden", height: '80vh'}}
                     />
                   </PieWrapperSummary>
-                </Grid>
                 <Grid item>
                   <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
                     Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s

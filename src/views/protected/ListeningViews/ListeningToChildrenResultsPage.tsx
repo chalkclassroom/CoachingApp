@@ -522,14 +522,12 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
                   <PieWrapperSummary>
                     <ListeningSummaryChart
                       listening={this.state.listening}
                       notListening={this.state.notListening}
                     />
                   </PieWrapperSummary>
-                </Grid>
               </Grid>
             }
             details={
