@@ -142,11 +142,6 @@ exports.createTables = functions.https.onCall(async (data, context) => {
           "type": "TIMESTAMP",
           "mode": "NULLABLE"
       },
-      {
-          "name": "acType",
-          "type": "STRING",
-          "mode": "NULLABLE"
-      },
     ],
     climate_results: [
       {
@@ -926,7 +921,7 @@ exports.createTables = functions.https.onCall(async (data, context) => {
       },
       {
           "name": "activity_setting",
-          "type": "INTEGER",
+          "type": "STRING",
           "mode": "NULLABLE"
       },
       {
@@ -1019,11 +1014,6 @@ exports.createTables = functions.https.onCall(async (data, context) => {
       {
           "name": "using_multimodal_instruction",
           "type": "INTEGER",
-          "mode": "NULLABLE"
-      },
-      {
-          "name": "activity_setting2",
-          "type": "STRING",
           "mode": "NULLABLE"
       },
 
@@ -1451,7 +1441,7 @@ exports.createTables = functions.https.onCall(async (data, context) => {
                   "mode": "NULLABLE"
               },
               {
-                  "name": "noChildOpp",
+                  "name": "notThere",
                   "type": "INTEGER",
                   "mode": "NULLABLE"
               },
@@ -1542,7 +1532,7 @@ exports.createTables = functions.https.onCall(async (data, context) => {
       },
       {
           "name": "transition_total",
-          "type": "INTEGER",
+          "type": "FLOAT",
           "mode": "NULLABLE"
       },
       {

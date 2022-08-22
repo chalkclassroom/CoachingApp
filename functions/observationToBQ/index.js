@@ -438,9 +438,9 @@ exports.observationsToBQ = functions.firestore
                         // Holds the calculated results of the Center observations results
                         let transitionType = Array(6).fill(0);
                         var transitionTotal = 0, totalTransitionTime = 0.0, learningActivity = 0.0;
-                        var totalTime, totalTimeSeconds, totalTimeRemainingSeconds, totalTimeMinutes;
+                        var totalTime = 0.0, totalTimeSeconds, totalTimeRemainingSeconds, totalTimeMinutes;
                         var transitionTimeSeconds, transitionTimeMinutes, transitionTimeRemainingSeconds;
-                        var tempTotalTransitionTime, tempStartDate, tempEndDate;
+                        var tempTotalTransitionTime, totalTransitionTimeSeconds = 0, tempStartDate, tempEndDate;
 
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
@@ -471,40 +471,37 @@ exports.observationsToBQ = functions.firestore
                                 tempStartDate = new Date(entryData.TrnStart);
                                 tempEndDate = new Date(entryData.TrnEnd);
 
+
                                 // Get how many seconds this transition lasted
                                 transitionTimeSeconds = Math.floor( ( tempEndDate.getTime() - tempStartDate.getTime() ) / 1000 );
 
-                                // Calculate the how the remaining amount of seconds without minutes (ex: if the time was 1:46, it'll return 46)
-                                transitionTimeRemainingSeconds = transitionTimeSeconds % 60;
+                                tempTotalTransitionTime = convertSecondToDouble(transitionTimeSeconds);
 
-                                // Calculate how many minutes
-                                transitionTimeMinutes = Math.floor(  transitionTimeSeconds / 60 );
+                                // Update the total amount of time in seconds used by all transitions
+                                totalTransitionTimeSeconds += transitionTimeSeconds;
 
-                                // Calculate the total amount of this time in Double format (ex: if the time was 1:46, this saves 1.46)
-                                tempTotalTransitionTime = transitionTimeMinutes + (transitionTimeRemainingSeconds / 100);
 
-                                // Update the total amount of time used by all transitions
-                                totalTransitionTime += tempTotalTransitionTime;
+                                //totalTransitionTime += tempTotalTransitionTime;
 
                                 // Update the time taken for each type of transition
                                 switch( (entryData.TrnType+'').toLowerCase() ){
                                   case "waiting":
-                                    transitionType[0] += tempTotalTransitionTime;
+                                    transitionType[0] += transitionTimeSeconds;
                                     break;
                                   case "traveling":
-                                    transitionType[1] += tempTotalTransitionTime;
+                                    transitionType[1] += transitionTimeSeconds;
                                     break;
                                   case "child waiting":
-                                    transitionType[2] += tempTotalTransitionTime;
+                                    transitionType[2] += transitionTimeSeconds;
                                     break;
                                   case "classroom routines":
-                                    transitionType[3] += tempTotalTransitionTime;
+                                    transitionType[3] += transitionTimeSeconds;
                                     break;
                                   case "behavior management disruption":
-                                    transitionType[4] += tempTotalTransitionTime;
+                                    transitionType[4] += transitionTimeSeconds;
                                     break;
                                   case "other":
-                                    transitionType[5] += tempTotalTransitionTime;
+                                    transitionType[5] += transitionTimeSeconds;
                                     break;
                                 }
                             }
@@ -514,12 +511,16 @@ exports.observationsToBQ = functions.firestore
                         // Calculate how many minutes was spent total the same way we did for transition above
                         totalTimeSeconds = Math.floor( ( session.end.toDate().getTime() - session.start.toDate().getTime() ) / 1000 );
 
-                        totalTimeRemainingSeconds = totalTimeSeconds % 60;
-                        totalTimeMinutes = Math.floor( totalTimeSeconds / 60 );
+                        totalTime = convertSecondToDouble(totalTimeSeconds);
 
-                        totalTime = totalTimeMinutes + (totalTimeRemainingSeconds / 100);
+                        // Do the same for the totalTransitionTime
+                        totalTransitionTime = convertSecondToDouble(totalTransitionTimeSeconds);
+                        // Make sure we round to the nearest 100th
+                        totalTransitionTime = totalTransitionTime.toFixed(2);
 
-                        learningActivity = totalTime - totalTransitionTime;
+                        learningActivity = convertSecondToDouble(totalTimeSeconds - totalTransitionTimeSeconds);
+                        learningActivity = learningActivity.toFixed(2);
+
 
                         // Build results data and push to engagement_results table
                         let resultsRow = {
@@ -531,15 +532,15 @@ exports.observationsToBQ = functions.firestore
                               teacherId: session.teacher,
                               observedBy: session.observedBy,
                               timestamp: Math.floor(session.end.toDate() / 1000),
-                              transition_total: totalTimeSeconds,
+                              transition_total: totalTime,
                               transition_time: totalTransitionTime,
                               learning_activity: learningActivity,
                               transition_type: {
-                                waiting_in_line: transitionType[0],
-                                traveling: transitionType[1],
-                                children_waiting: transitionType[2],
-                                classroom_routines: transitionType[3],
-                                behavior_management: transitionType[4],
+                                waiting_in_line: convertSecondToDouble(transitionType[0]),
+                                traveling: convertSecondToDouble(transitionType[1]),
+                                children_waiting: convertSecondToDouble(transitionType[2]),
+                                classroom_routines: convertSecondToDouble(transitionType[3]),
+                                behavior_management: convertSecondToDouble(transitionType[4]),
                                 other: transitionType[5]
                               }
 
@@ -573,7 +574,7 @@ exports.observationsToBQ = functions.firestore
                         let checklistResults = Array(7).fill(0);
                         // Hold entry id
                         let entryId;
-                        let entryData
+                        let entryData;
 
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
@@ -673,8 +674,6 @@ exports.observationsToBQ = functions.firestore
                                   teacher4: checklistResults[6],
                               },
                               timestamp: Math.floor(entryData.Timestamp.toDate() / 1000),
-                              acType: (entryData.acType+'').toLowerCase()
-
                           }
                         }
 
@@ -721,7 +720,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacherId: session.teacher,
+                                        teacher: session.teacher,
                                         observedBy: session.observedBy,
                                         checklist: {
                                             child1: entryData.Checked.includes(1),
@@ -784,7 +783,7 @@ exports.observationsToBQ = functions.firestore
                               id: context.params.observationID,
                               sessionStart: Math.floor(session.start.toDate() / 1000),
                               sessionEnd: Math.floor(session.end.toDate() / 1000),
-                              teacher: session.teacher,
+                              teacherId: session.teacher,
                               observedBy: session.observedBy,
                               timestamp: Math.floor(session.start.toDate() / 1000),
                               total_visits: totalVisits,
@@ -937,7 +936,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacherId: session.teacher,
+                                        teacher: session.teacher,
                                         observedBy: session.observedBy,
                                         checklist: {
                                             child1: entryData.Checked.includes(1),
@@ -998,7 +997,7 @@ exports.observationsToBQ = functions.firestore
                               id: context.params.observationID,
                               sessionStart: Math.floor(session.start.toDate() / 1000),
                               sessionEnd: Math.floor(session.end.toDate() / 1000),
-                              teacher: session.teacher,
+                              teacherId: session.teacher,
                               observedBy: session.observedBy,
                               timestamp: Math.floor(session.start.toDate() / 1000),
                               total_visits: totalVisits,
@@ -1556,7 +1555,7 @@ exports.observationsToBQ = functions.firestore
                 return firestore.collection(COLLECTION_NAME).doc(SESSION_ID).collection("entries").orderBy('Timestamp').get()
                     .then(entries => {
                         // Initialize variables to hold data for results table
-                        var intervalTotal = 0, readingInstruction = 0, otherBehaviors = 0, vocabFocus = 0, languageConnections = 0, childrenSupport = 0, fairnessDiscussions = 0, multimodalInstruction = 0, discussingVocab = 0, discussingTextConcepts = 0, encourageSummarizing = 0, relatingBooks = 0, languageConnections = 0, openEndedQuestions = 0, followUpQuestions = 0, encourageListening = 0, discussingFairness = 0, usingMultimodalInstruction = 0;
+                        var intervalTotal = 0, readingInstruction = 0, otherBehaviors = 0, vocabFocus = 0, languageConnections = 0, childrenSupport = 0, fairnessDiscussions = 0, multimodalInstruction = 0, discussingVocab = 0, discussingTextConcepts = 0, encourageSummarizing = 0, relatingBooks = 0, languageConnections2 = 0, openEndedQuestions = 0, followUpQuestions = 0, encourageListening = 0, discussingFairness = 0, usingMultimodalInstruction = 0;
 
                         entries.forEach(entry => {
                             console.log(entry.id, "=>", entry.data());
@@ -1601,11 +1600,11 @@ exports.observationsToBQ = functions.firestore
                                 if(entryData.Checked.includes(2)){discussingTextConcepts++; vocabFocus++;}
                                 if(entryData.Checked.includes(3)){encourageSummarizing++; vocabFocus++;}
                                 if(entryData.Checked.includes(4)){relatingBooks++; languageConnections++;}
-                                if(entryData.Checked.includes(5)){languageConnections++; languageConnections++;}
+                                if(entryData.Checked.includes(5)){languageConnections2++; languageConnections++;}
                                 if(entryData.Checked.includes(6)){openEndedQuestions++; childrenSupport++;}
                                 if(entryData.Checked.includes(7)){followUpQuestions++; childrenSupport++;}
                                 if(entryData.Checked.includes(8)){encourageListening++; childrenSupport++;}
-                                if(entryData.Checked.includes(9)){discussingDairness++; fairnessDiscussions++;}
+                                if(entryData.Checked.includes(9)){discussingFairness++; fairnessDiscussions++;}
                                 if(entryData.Checked.includes(10)){usingMultimodalInstruction++; multimodalInstruction++;}
                             }
 
@@ -1625,8 +1624,7 @@ exports.observationsToBQ = functions.firestore
                               observedBy: session.observedBy,
                               timestamp: Math.floor(session.start.toDate() / 1000),
                               interval_total: intervalTotal,
-                              activity_setting: 2,
-                              activity_setting2: session.activitySetting,
+                              activity_setting: session.activitySetting,
                               reading_instruction: readingInstruction,
                               other_behaviors: otherBehaviors,
                               behavior_type: {
@@ -1640,7 +1638,7 @@ exports.observationsToBQ = functions.firestore
                               discussing_text_concepts: discussingTextConcepts,
                               encourage_summarizing: encourageSummarizing,
                               relating_books: relatingBooks,
-                              language_connections: languageConnections,
+                              language_connections: languageConnections2,
                               open_ended_questions: openEndedQuestions,
                               follow_up_questions: followUpQuestions,
                               encourage_listening: encourageListening,
@@ -1667,3 +1665,24 @@ exports.observationsToBQ = functions.firestore
                 console.log("Next Magic 8 will be filled");
             }
     });
+
+
+function convertSecondToDouble(totalSeconds) {
+  var results = 0.0;
+  // Calculate the how the remaining amount of seconds without minutes (ex: if the time was 1:46, it'll return 46)
+  var transitionTimeRemainingSeconds = totalSeconds % 60;
+
+  // Calculate how many minutes
+  var transitionTimeMinutes = Math.floor(  totalSeconds / 60 );
+
+  // Calculate the total amount of this time in Double format (ex: if the time was 1:46, this saves 1.46)
+  var tempTotalTransitionTime = transitionTimeMinutes + (transitionTimeRemainingSeconds / 100);
+
+  console.log("========== totalSeconds: " + totalSeconds + "===========");
+  console.log("========== tempTotalTransitionTime: " + tempTotalTransitionTime + "===========");
+  // Round to the nearest 100th
+  results = Math.round( ( tempTotalTransitionTime + Number.EPSILON ) * 100) / 100;
+
+  console.log("========== RESULTS: " + results + "===========");
+  return results;
+}
