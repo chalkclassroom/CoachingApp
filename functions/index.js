@@ -94,3 +94,4 @@ exports.funcTransitionTrendNew = require('./funcTransitionTrendNew').funcTransit
 exports.funcTransitionTypeSummary = require('./funcTransitionTypeSummary').funcTransitionTypeSummary;
 exports.observationsToBQ = require('./observationToBQ').observationsToBQ;
 exports.exportBqData = require('./exportBqData').exportBqData;
+exports.createTables = require('./createTables').createTables;
