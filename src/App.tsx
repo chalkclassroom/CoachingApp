@@ -81,6 +81,8 @@ import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
 import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
+import LeadersDashboard from './views/protected/LeadersViews/LeadersDashboard'
+import NewProgram from './views/protected/LeadersViews/NewProgramPage'
 
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
@@ -714,6 +716,22 @@ class App extends React.Component<Props, State> {
               exact={true}
               component={CoachingChalkCrosswalks}
             />
+
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
+                path="/LeadersDashboard"
+                render={(props: object) : React.ReactElement=> <LeadersDashboard {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
+                path="/NewProgram"
+                render={(props: object) : React.ReactElement=> <NewProgram {...props}/>}
+            />
+
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>
