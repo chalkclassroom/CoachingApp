@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
+import { GridWrapperDetails, LineWrapperTrends, PieWrapperSummary } from "../../../components/ResultsComponents/ChartWrappers";
 
 const styles: object = {
   root: {
@@ -521,12 +522,12 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <ListeningSummaryChart
-                    listening={this.state.listening}
-                    notListening={this.state.notListening}
-                  />
-                </Grid>
+                  <PieWrapperSummary>
+                    <ListeningSummaryChart
+                      listening={this.state.listening}
+                      notListening={this.state.notListening}
+                    />
+                  </PieWrapperSummary>
               </Grid>
             }
             details={
@@ -548,14 +549,16 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                       Did the teacher do one type of behavior less often than the other behaviors?               
                     </Typography>
                   </Grid>
-                  <ListeningDetailsChart
-                    listening1={this.state.listening1}
-                    listening2={this.state.listening2}
-                    listening3={this.state.listening3}
-                    listening4={this.state.listening4}
-                    listening5={this.state.listening5}
-                    listening6={this.state.listening6}
-                  />
+                  <GridWrapperDetails>
+                    <ListeningDetailsChart
+                      listening1={this.state.listening1}
+                      listening2={this.state.listening2}
+                      listening3={this.state.listening3}
+                      listening4={this.state.listening4}
+                      listening5={this.state.listening5}
+                      listening6={this.state.listening6}
+                    />
+                  </GridWrapperDetails>
                 </Grid>
               </div>
             }
@@ -566,9 +569,11 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                     Teacher Behaviors
                   </Typography>
                 </Grid>
-                <ListeningTrendsGraph
-                  data={this.handleTrendsFormatData}
-                />
+                <LineWrapperTrends>
+                  <ListeningTrendsGraph
+                    data={this.handleTrendsFormatData}
+                  />
+                </LineWrapperTrends>
               </Grid>
             }
             changeSessionId={this.changeSessionId}

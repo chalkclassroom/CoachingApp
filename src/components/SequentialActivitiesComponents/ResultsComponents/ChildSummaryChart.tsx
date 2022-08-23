@@ -4,6 +4,7 @@ import * as Constants from '../../../constants/Constants'
 import ChildPieSummary from './ChildPieSummary'
 import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
 import PieChartLegend from '../../LayoutComponents/GraphLayouts/PieChartLegend'
+import { PieWrapperSummary } from '../../ResultsComponents/ChartWrappers'
 
 interface OwnProps {
   sequential: number
@@ -27,10 +28,12 @@ const ChildSummaryChart: FunctionComponent<Props> = props => {
           ]}
           legendTitle={'Compare how often children:'}
         />
-        <ChildPieSummary
-          sequential={props.sequential}
-          notSequential={props.notSequential}
-        />
+        <PieWrapperSummary>
+          <ChildPieSummary
+            sequential={props.sequential}
+            notSequential={props.notSequential}
+          />
+        </PieWrapperSummary>
       </Grid>
     </div>
   )

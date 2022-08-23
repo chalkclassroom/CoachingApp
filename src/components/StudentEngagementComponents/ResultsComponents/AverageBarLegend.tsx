@@ -14,7 +14,7 @@ const AverageBarLegend: FunctionComponent<Props> = (props) => {
     <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo'}}>
     What do you notice about the average class room engagement?
   </Typography>
-  <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', marginBottom: '100px'}}>
+  <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
     Average Level of Engagement Score: {Math.round((props.avgRating + Number.EPSILON) * 100) / 100}
   </Typography>
 </>

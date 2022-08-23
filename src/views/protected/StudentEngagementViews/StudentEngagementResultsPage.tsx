@@ -19,6 +19,7 @@ import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
 import { WithStyles } from '@material-ui/styles'
 import { createStyles } from '@material-ui/core'
+import { LineWrapperTrends } from "../../../components/ResultsComponents/ChartWrappers";
 
 const styles = () => createStyles({
   root: {
@@ -493,9 +494,11 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
                     Average Student Engagement
                   </Typography>
                 </Grid>
-                <TrendsSlider
-                  data={this.handleTrendsFormatData}
-                />
+                <LineWrapperTrends>
+                  <TrendsSlider
+                    data={this.handleTrendsFormatData}
+                  />
+                </LineWrapperTrends>
               </Grid>
             }
             changeSessionId={this.changeSessionId}

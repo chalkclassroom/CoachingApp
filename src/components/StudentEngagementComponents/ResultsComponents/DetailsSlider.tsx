@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import EngagementBarDetails from "./EngagementBarDetails";
 import { withStyles } from "@material-ui/core/styles";
+import { GridWrapperDetails } from "../../ResultsComponents/ChartWrappers";
 
 const styles: object = {
   questionText: {
@@ -78,12 +79,14 @@ class DetailsSlider extends React.Component<Props, {}> {
                 </Grid>
               </Grid>
             </Grid>
-            <EngagementBarDetails
-              offTaskDetailSplit={this.props.offTaskDetailSplit}
-              mildlyEngagedDetailSplit={this.props.mildlyEngagedDetailSplit}
-              engagedDetailSplit={this.props.engagedDetailSplit}
-              highlyEngagedDetailSplit={this.props.highlyEngagedDetailSplit}
-            />
+            <GridWrapperDetails>
+              <EngagementBarDetails
+                offTaskDetailSplit={this.props.offTaskDetailSplit}
+                mildlyEngagedDetailSplit={this.props.mildlyEngagedDetailSplit}
+                engagedDetailSplit={this.props.engagedDetailSplit}
+                highlyEngagedDetailSplit={this.props.highlyEngagedDetailSplit}
+              />
+            </GridWrapperDetails>
           </Grid>
         </div>
     );

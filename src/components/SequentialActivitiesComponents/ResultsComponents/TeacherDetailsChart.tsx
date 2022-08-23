@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import TeacherBarDetails from "./TeacherBarDetails";
 import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
 import BarChartLegend from "../../LayoutComponents/GraphLayouts/BarChartLegend";
+import { BarWrapperDetails } from '../../ResultsComponents/ChartWrappers';
 
 interface OwnProps {
   questionTextClass: string
@@ -25,13 +26,15 @@ const TeacherDetailsChart: FunctionComponent<Props> = (props) => {
           "Was there a strategy the teacher used more often to support children's sequential activities?",
           "Was there a strategy the teacher used less often?"
         ]}/>
-        <TeacherBarDetails
-          teacher1={props.teacher1}
-          teacher2={props.teacher2}
-          teacher3={props.teacher3}
-          teacher4={props.teacher4}
-          totalVisits={props.totalVisits}
-        />
+        <BarWrapperDetails>
+          <TeacherBarDetails
+            teacher1={props.teacher1}
+            teacher2={props.teacher2}
+            teacher3={props.teacher3}
+            teacher4={props.teacher4}
+            totalVisits={props.totalVisits}
+          />
+        </BarWrapperDetails>
       </Grid>
     </div>
   );

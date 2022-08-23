@@ -18,6 +18,7 @@ import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { GridWrapperDetails, LineWrapperTrends, PieWrapperSummary } from "../../../components/ResultsComponents/ChartWrappers";
 
 const styles: object = {
   root: {
@@ -637,13 +638,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <TransitionTimePie
-                    transitionTime={this.state.transitionTime}
-                    learningActivityTime={this.state.learningActivityTime}
-                    // style={{overflow:"hidden", height: '80vh'}}
-                  />
-                </Grid>
+                  <PieWrapperSummary>
+                    <TransitionTimePie
+                      transitionTime={this.state.transitionTime}
+                      learningActivityTime={this.state.learningActivityTime}
+                      // style={{overflow:"hidden", height: '80vh'}}
+                    />
+                  </PieWrapperSummary>
                 <Grid item>
                   <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
                     Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
@@ -671,15 +672,17 @@ class TransitionResultsPage extends React.Component<Props, State> {
                     </Typography>
                   </Grid>
                   <Grid item style={{paddingTop: '0.5em', paddingBottom: '0.5em'}}>
-                    <TransitionBarChart
-                      line={this.state.sessionLine}
-                      traveling={this.state.sessionTraveling}
-                      waiting={this.state.sessionWaiting}
-                      routines={this.state.sessionRoutines}
-                      behaviorManagement={this.state.sessionBehaviorManagement}
-                      other={this.state.sessionOther}
-                      // style={{alignItems: "center", height: '80vh'}}
-                    />
+                    <GridWrapperDetails>
+                      <TransitionBarChart
+                        line={this.state.sessionLine}
+                        traveling={this.state.sessionTraveling}
+                        waiting={this.state.sessionWaiting}
+                        routines={this.state.sessionRoutines}
+                        behaviorManagement={this.state.sessionBehaviorManagement}
+                        other={this.state.sessionOther}
+                        // style={{alignItems: "center", height: '80vh'}}
+                      />
+                    </GridWrapperDetails>
                   </Grid>
                   <Grid item style={{paddingTop: '0.5em'}}>
                     <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
@@ -696,10 +699,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
                     Transition Time
                   </Typography>
                 </Grid>
-                <TransitionTrendsGraph
-                  data={this.handleTrendsFormatData}
-                  // style={{overflow:"hidden", height: '80vh'}}
-                />
+                <LineWrapperTrends>
+                  <TransitionTrendsGraph
+                    data={this.handleTrendsFormatData}
+                    // style={{overflow:"hidden", height: '80vh'}}
+                  />
+                </LineWrapperTrends>
               </Grid>
             }
             changeSessionId={this.changeSessionId}

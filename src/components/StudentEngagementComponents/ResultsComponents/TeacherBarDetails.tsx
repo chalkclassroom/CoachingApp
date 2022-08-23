@@ -94,9 +94,9 @@ class TeacherBarDetails extends React.Component<Props, {}> {
                 weight: 'bold'
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={260}
       />
     );
   }
