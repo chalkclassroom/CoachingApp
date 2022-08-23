@@ -13,7 +13,7 @@ import * as Constants from '../../../constants/Constants'
 import EngagementSummaryChart from './EngagementSummaryChart'
 import AverageBarLegend from './AverageBarLegend'
 import TwoTabbedSwitch from '../../LayoutComponents/TwoTabbedSwitch'
-import { GridWrapperDetails } from '../../ResultsComponents/ChartWrappers'
+import { BarWrapperDetails } from '../../ResultsComponents/ChartWrappers'
 
 interface Props {
   offTask: number
@@ -62,9 +62,9 @@ class SummarySwitcher extends React.Component<Props, {}> {
           tabTwoContent={
             <Grid container justify={'center'} direction={'column'}>
               <AverageBarLegend avgRating={this.props.avgRating} />
-              <GridWrapperDetails>
+              <BarWrapperDetails>
                 <AvgBarSummary avgRating={this.props.avgRating} />
-              </GridWrapperDetails>
+              </BarWrapperDetails>
             </Grid>
           }
         />

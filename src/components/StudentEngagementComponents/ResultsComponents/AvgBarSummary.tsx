@@ -79,14 +79,6 @@ class AvgBarSummary extends React.Component<Props, {}> {
                 }
               }
             }],
-            yAxes: [
-              {
-                ticks: {
-                  fontSize: 16,
-                  fontColor: 'black',
-                }
-              }
-            ]
           },
           title: {
             display: this.props.title,

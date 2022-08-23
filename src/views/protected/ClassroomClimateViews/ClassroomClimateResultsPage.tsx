@@ -495,7 +495,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
                     less often than other types?            
                   </Typography>
                 </Grid>
-                <Grid item>
                   <GridWrapperDetails>
                     <BehaviorResponsesDetailsChart
                       disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
@@ -504,7 +503,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
                       specificBehaviorCount={this.state.specificBehaviorCount}
                     />
                   </GridWrapperDetails>
-                </Grid>
               </Grid>
             </div>
           }
