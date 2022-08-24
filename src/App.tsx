@@ -82,7 +82,8 @@ import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 import LeadersDashboard from './views/protected/LeadersViews/LeadersDashboard'
-import NewProgram from './views/protected/LeadersViews/NewProgramPage'
+import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
+import NewSitePage from './views/protected/LeadersViews/NewSitePage'
 import ReportsPage from './views/protected/ReportsViews/ReportsPage'
 
 ReactGA3.initialize('UA-154034655-1');
@@ -730,7 +731,14 @@ class App extends React.Component<Props, State> {
                 allowedRoles={[]}
                 userRole={role}
                 path="/NewProgram"
-                render={(props: object) : React.ReactElement=> <NewProgram {...props}/>}
+                render={(props: object) : React.ReactElement=> <NewProgramPage {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
+                path="/NewSite"
+                render={(props: object) : React.ReactElement=> <NewSitePage {...props}/>}
             />
             <PrivateRoute
               auth={auth}
