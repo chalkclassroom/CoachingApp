@@ -268,7 +268,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
-                {[Role.COACH, Role.ADMIN].find(r => r === userRole) ? <Card className={classes.card}>
+                {[Role.COACH, Role.ADMIN, Role.SITELEADER, Role.PROGRAMLEADER].find(r => r === userRole) ? <Card className={classes.card}>
                   <CardContent>
                     <Grid
                       container
@@ -316,7 +316,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
-                {[Role.ADMIN, Role.COACH].find(r => r === userRole) ? <Card className={classes.card}>
+                {[Role.ADMIN, Role.COACH, Role.SITELEADER, Role.PROGRAMLEADER].find(r => r === userRole) ? <Card className={classes.card}>
                   <CardContent>
                     <Grid
                       container
