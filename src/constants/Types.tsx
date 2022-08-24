@@ -214,3 +214,12 @@ export interface CalendarEvent {
   conferencePlanSessionId?: string,
   appointment?: boolean
 }
+
+export interface Site {
+  name: string,
+  id: string,
+  siteLeaderId: string,
+  coaches: Array<{
+    id: string
+  }>
+}

@@ -18,7 +18,8 @@ import { Alert } from '@material-ui/lab'
 import { Role } from '../../../state/actions/coach'
 import { RouteComponentProps } from 'react-router-dom'
 import * as H from 'history'
-
+import * as Types from '../../../constants/Types';
+import { changeTeacher } from '../../../state/actions/teacher';
 
 const styles:object = {
     root: {
@@ -68,12 +69,11 @@ type Props = RouteComponentProps & {
 }
 
 interface State {
-    firstName: string,
-    lastName: string,
-    email: string,
-    role: Role,
-    createdPassword: string | undefined
+    programName: string,
+    selectedSites: Array<string>,
+    sitesList: Array<string>
 }
+
 
 /**
  *
@@ -87,64 +87,59 @@ class NewProgramPage extends React.Component<Props, State>{
     constructor(props: Props){
         super(props);
         this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            role: Role.ANONYMOUS,
-            selectedSites: []
+            programName: "",
+            selectedSites: [],
+            sitesList: []
         }
     }
 
+    componentDidMount(): void {
+      this.setSites();
+    }
+
     /**
-     *
+     * Set the sites for the dropdown
      */
+     async setSites(){
+       console.log("Sweet");
+       //firebase = new Firebase;
+       const firebase = this.context;
+       firebase.getUserSites()
+        .then((data)=>{
+          console.log("data " + data);
+          console.log("cool");
+
+          this.setState({sitesList: data});
+
+        });
+
+     }
+
+
     async save(firebase:Firebase){
 
         const {
-            email,
-            firstName,
-            lastName,
-            role
+          programName,
+          selectedSites
         } = this.state;
 
-        if (!email || email === ""){
-            alert("Email is required");
-            return
-        }
 
-        if (!firstName || firstName === ""){
-            alert("First name is required");
+        if (!programName || programName === ""){
+            alert("Program name is required");
             return;
         }
 
-        if (!lastName || lastName === ""){
-            alert("Last name is required");
-            return;
-        }
 
-        if (![Role.ADMIN, Role.COACH, Role.TEACHER].includes(role)){
-            alert("Please select a role");
-            return;
-        }
-        const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
+        await firebase.createProgram({ programName, selectedSites: selectedSites})
             .then(() => {
-              this.setState({
-                createdPassword: randomString
-              });
-              return randomString
+              console.log("Program Created");
             }).catch(e => {
-                this.setState({
-                  createdPassword: undefined
-                });
                 console.log(e)
-                alert('Unable to create user. Please try again')
+                alert('Unable to create Program. Please try again')
             }).finally(() => {
                 this.setState({ // Hold off setting new state until success has been determined
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  role: Role.ANONYMOUS,
+                  programName: programName,
+                  selectedSites: selectedSites
                 });
             });
 
@@ -152,21 +147,6 @@ class NewProgramPage extends React.Component<Props, State>{
 
     }
 
-    /*
-     * Set the sites that are chosen for this program
-     */
-    setSelectedSites = (site) => {
-      var sites = this.state.selectedSites.slice();
-
-      //sites.push(site);
-
-      console.warn('Sites: ' + sites.toString());
-      console.warn('Site: ' + site);
-
-
-
-      this.setState({selectedSites: site});
-    }
 
     /**
      * @return React.ReactNode
@@ -190,11 +170,7 @@ class NewProgramPage extends React.Component<Props, State>{
             </div>
         }
         const {
-            createdPassword,
-            email,
-            firstName,
-            lastName,
-            role,
+            programName
         } = this.state
 
         // For the 'select sites' component
@@ -213,8 +189,7 @@ class NewProgramPage extends React.Component<Props, State>{
             <FirebaseContext.Consumer>
                 {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
             </FirebaseContext.Consumer>
-            {createdPassword  &&
-            <Alert severity={'success'}>User has been created with password {createdPassword}</Alert>}
+
             <div className={classes.formContainer}>
                 <Grid container
                       direction="column"
@@ -231,27 +206,12 @@ class NewProgramPage extends React.Component<Props, State>{
                             <InputLabel id="demo-mutiple-name-label">Name of Program</InputLabel>
                             <Input
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                    this.setState({firstName: event.target.value})}
-                                value={firstName} placeholder={'First name'} />
+                                    this.setState({programName: event.target.value})}
+                                value={programName} placeholder={'Name of Program'} />
                         </StyledFormControl>
                     </Grid>
-                    <Grid item xs={6} spacing={8} className={classes.container}>
-                        <StyledFormControl className={classes.formControl}>
-                            <InputLabel id="demo-mutiple-name-label">Last Name</InputLabel>
-                            <Input
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                    this.setState({lastName:event.target.value})}
-                                value={lastName} placeholder={'Last name'} />
-                        </StyledFormControl>
-                    </Grid>
-                    <Grid item xs={8} spacing={8} className={classes.container}>
-                        <StyledFormControl className={classes.formControl}>
-                            <InputLabel id="demo-mutiple-name-label">Email</InputLabel>
-                            <Input onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                this.setState({email: event.target.value})}
-                                   value={email} />
-                        </StyledFormControl>
-                    </Grid>
+
+
                     <Grid item xs={8} spacing={8} className={classes.container}>
 
                         {
@@ -273,50 +233,16 @@ class NewProgramPage extends React.Component<Props, State>{
                               input={<Input />}
                               MenuProps={MenuProps}
                             >
-                              <MenuItem value="ac">
-                                Associative Cooperative
-                              </MenuItem>
-                              <MenuItem value="climate">
-                                Classroom Climate
-                              </MenuItem>
-                              <MenuItem value="engagement">
-                                Engagement
-                              </MenuItem>
-                              <MenuItem value="level">Level</MenuItem>
-                              <MenuItem value="listening">
-                                Listening
-                              </MenuItem>
-                              <MenuItem value="math">Math</MenuItem>
-                              <MenuItem value="sequential">
-                                Sequential
-                              </MenuItem>
-                              <MenuItem value="transition">
-                                Transition
-                              </MenuItem>
-                              <MenuItem value="literacyFoundationalChild">
-                                Literacy - Foundational Child
-                              </MenuItem>
-                              <MenuItem value="literacyWritingChild">
-                                Literacy - Writing Child
-                              </MenuItem>
-                              <MenuItem value="literacyFoundationalTeacher">
-                                Literacy - Foundational Teacher
-                              </MenuItem>
-                              <MenuItem value="literacyLanguageTeacher">
-                                Literacy - Language Teacher
-                              </MenuItem>
-                              <MenuItem value="literacyReadingTeacher">
-                                Literacy - Reading Teacher
-                              </MenuItem>
-                              <MenuItem value="literacyWritingTeacher">
-                                Literacy - Writing Teacher
-                              </MenuItem>
+                              {this.state.sitesList.map(
+                                (site, index)=>{
+                                  return <MenuItem value={site.id}>
+                                    {site.name}
+                                  </MenuItem>
+                              })}
                             </Select>
                         </StyledFormControl>
                     </Grid>
-                    <Grid item xs={8} spacing={2} className={classes.container}>
-                        <FormHelperText>A password will be automatically generated for this user</FormHelperText>
-                    </Grid>
+
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FirebaseContext.Consumer>
                             {(firebase: Firebase) => (
@@ -332,4 +258,7 @@ class NewProgramPage extends React.Component<Props, State>{
     }
 }
 
-export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewProgramPage))
+NewProgramPage.contextType = FirebaseContext
+
+//export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN, teacherSelected: state.teacherSelectedState.teacher, testing: "SWEET", teacherList: state.teacherListState.teachers}))(withStyles(styles)(NewProgramPage))
+export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN}))(withStyles(styles)(NewProgramPage))

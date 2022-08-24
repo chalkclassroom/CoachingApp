@@ -1110,7 +1110,7 @@ class Firebase {
     }
     this.currentObservation?.notes.splice(noteIndex, 1, newNote)
   }
-  
+
   handleUpdateNoteRemote = (id:string, text: string, session: string | null = null) => {
     let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
    sessionRef.collection('notes').doc(id).update({Note: text})
@@ -3956,6 +3956,57 @@ class Firebase {
   }
 
 
+  /*
+   * Get a user's stites
+   */
+  getUserSites = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+      return this.db
+        .collection('sites')
+        .get()
+        .then((querySnapshot) => {
+          const sitesArray: Array<Types.Site> = []
+          querySnapshot.forEach((doc) => {
+              console.log("Doc id => " + doc.data().name );
+
+              sitesArray.push({
+                name: doc.data().name,
+                id: doc.data().id,
+                siteLeaderId: doc.data().siteLeaderId,
+                coaches: doc.data().coaches
+              })
+
+          });
+
+          return sitesArray;
+
+        })
+        .catch((error: Error) =>
+          console.error('Error updating played videos list', error)
+        )
+    }
+  }
+
+  /*
+   * Save New Program
+   */
+   createProgram = async (
+
+     programData: {
+       programName: string,
+       selectedSites: Array<string>
+     }
+   ): Promise<void> => {
+     const res = await this.db.collection('programs').add({
+        name: programData.programName,
+        selectedSites: programData.selectedSites
+      });
+
+      console.log('Added Prgram with ID: ', res.id);
+
+   }
+
+
   /**
    * Updates played training videos URL list
    */
@@ -3988,6 +4039,8 @@ class Firebase {
           console.error('Error updating played videos list', error)
         )
     }
+
+
   }
 }
 
