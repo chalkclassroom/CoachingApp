@@ -89,7 +89,8 @@ class NewProgramPage extends React.Component<Props, State>{
         this.state = {
             programName: "",
             selectedSites: [],
-            sitesList: []
+            sitesList: [],
+            savedProgramName: ""
         }
     }
 
@@ -101,14 +102,9 @@ class NewProgramPage extends React.Component<Props, State>{
      * Set the sites for the dropdown
      */
      async setSites(){
-       console.log("Sweet");
-       //firebase = new Firebase;
        const firebase = this.context;
-       firebase.getUserSites()
+       firebase.getSites()
         .then((data)=>{
-          console.log("data " + data);
-          console.log("cool");
-
           this.setState({sitesList: data});
 
         });
@@ -133,6 +129,7 @@ class NewProgramPage extends React.Component<Props, State>{
         await firebase.createProgram({ programName, selectedSites: selectedSites})
             .then(() => {
               console.log("Program Created");
+              this.setState({savedProgramName: programName});
             }).catch(e => {
                 console.log(e)
                 alert('Unable to create Program. Please try again')
@@ -170,7 +167,8 @@ class NewProgramPage extends React.Component<Props, State>{
             </div>
         }
         const {
-            programName
+            programName,
+            savedProgramName
         } = this.state
 
         // For the 'select sites' component
@@ -189,6 +187,8 @@ class NewProgramPage extends React.Component<Props, State>{
             <FirebaseContext.Consumer>
                 {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
             </FirebaseContext.Consumer>
+            {savedProgramName  &&
+            <Alert severity={'success'}>Program has been created with the name "{savedProgramName}"</Alert>}
 
             <div className={classes.formContainer}>
                 <Grid container

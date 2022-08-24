@@ -3957,9 +3957,9 @@ class Firebase {
 
 
   /*
-   * Get a user's stites
+   * Get a all sites
    */
-  getUserSites = async (): Promise<void> => {
+  getSites = async (): Promise<void> => {
     if(this.auth.currentUser) {
       return this.db
         .collection('sites')
@@ -3967,7 +3967,6 @@ class Firebase {
         .then((querySnapshot) => {
           const sitesArray: Array<Types.Site> = []
           querySnapshot.forEach((doc) => {
-              console.log("Doc id => " + doc.data().name );
 
               sitesArray.push({
                 name: doc.data().name,
@@ -3988,9 +3987,72 @@ class Firebase {
   }
 
   /*
+   * Get a all programs
+   */
+  getPrograms = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+      return this.db
+        .collection('programs')
+        .get()
+        .then((querySnapshot) => {
+          const programsArray: Array<Types.Site> = []
+          querySnapshot.forEach((doc) => {
+
+              programsArray.push({
+                name: doc.data().name,
+                id: doc.data().id,
+                siteLeaderId: doc.data().siteLeaderId,
+                coaches: doc.data().coaches
+              })
+
+          });
+
+          return programsArray;
+
+        })
+        .catch((error: Error) =>
+          console.error('Error updating played videos list', error)
+        )
+    }
+  }
+
+  /*
    * Save New Program
    */
    createProgram = async (
+
+     programData: {
+       programName: string,
+       selectedSites: Array<string>
+     }
+   ): Promise<void> => {
+     // Create New document for program
+     const res = await this.db.collection('programs').add({
+        name: programData.programName,
+        selectedSites: programData.selectedSites,
+      })
+        .then( (data) => {
+          console.log("Successfully written document " + data.id);
+
+          // Add the id to the document
+          var programDoc = this.db.collection('programs').doc(data.id);
+          var addIdToDoc = programDoc.set({
+            id: data.id
+          }, {merge: true})
+          .then(() => {
+              console.log("ID successfully written!");
+          })
+          .catch((error) => {
+              console.error("Error writing document: ", error);
+          });
+        });
+
+   }
+
+  /*
+   * Save New Site
+   */
+   createSite = async (
 
      programData: {
        programName: string,
@@ -4002,7 +4064,7 @@ class Firebase {
         selectedSites: programData.selectedSites
       });
 
-      console.log('Added Prgram with ID: ', res.id);
+      console.log('Added Site with ID: ', res.id);
 
    }
 
