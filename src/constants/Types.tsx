@@ -223,3 +223,13 @@ export interface Site {
     id: string
   }>
 }
+
+export interface User {
+  firstName: string,
+  lastName: string,
+  id: string,
+  role: string,
+  programs: Array<{
+    id: string
+  }>
+}

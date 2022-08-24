@@ -4015,6 +4015,80 @@ class Firebase {
   }
 
   /*
+   * Get all leaders (users with role 'programLeader' or 'siteLeader' or 'admin')
+   */
+  getProgramLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+      console.log("Start programleaders");
+
+      return this.db
+      .collection('users')
+      .where('role', '==', 'programLeader')
+      .get()
+      .then((querySnapshot) => {
+        const leadersArray: Array<Types.User> = []
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+
+
+            leadersArray.push({
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              id: doc.data().id,
+              role: doc.data().role,
+              programs: doc.data().programs
+            })
+
+        });
+
+        return leadersArray;
+      });
+    }
+  }
+  /*
+   * Get all leaders (users with role 'programLeader' or 'siteLeader' or 'admin')
+   */
+   /*
+  getLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+      return this.db
+      .collection('users')
+      .where('role', '==', 'admin')
+      .get();
+    }
+  }
+  */
+
+
+  /*
+   * Get all programs for a specific user
+   */
+  getProgramsForUser = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+      return this.db
+        .collection('programs')
+        .get()
+        .then((querySnapshot) => {
+          const programsArray: Array<Types.Site> = []
+          querySnapshot.forEach((doc) => {
+
+              programsArray.push({
+                name: doc.data().name,
+                id: doc.data().id,
+              })
+
+          });
+
+          return programsArray;
+
+        })
+        .catch((error: Error) =>
+          console.error('Error retrieving list of programs', error)
+        )
+    }
+  }
+
+  /*
    * Save New Program
    */
    createProgram = async (
@@ -4032,6 +4106,9 @@ class Firebase {
         .then( (data) => {
           console.log("Successfully written document " + data.id);
 
+          // Add the id to list of user's programs
+          this.assignProgramToUser({ userId: "user", programId: data.id})
+
           // Add the id to the document
           var programDoc = this.db.collection('programs').doc(data.id);
           var addIdToDoc = programDoc.set({
@@ -4044,6 +4121,65 @@ class Firebase {
               console.error("Error writing document: ", error);
           });
         });
+
+   }
+
+   /*
+    * Assign a program to a user
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    */
+   assignProgramToUser = async (
+     data: {
+       userId: string,
+       programId: string
+      }
+   ): Promise<void> => {
+
+     var userId = data.userId;
+     var programId = data.programId;
+
+     // If the userId is set to "user" we want to use the current user
+     if(userId == "user")
+     {
+       userId = this.auth.currentUser.uid;
+     }
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var programsArr = [];
+
+         // Check if list of programs already exist
+         if(docData.programs)
+         {
+           programsArr = docData.programs;
+         }
+
+         // Add program id
+         programsArr.push(programId);
+
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           programs: programsArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Program successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
 
    }
 

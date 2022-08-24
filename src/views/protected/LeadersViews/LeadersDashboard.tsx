@@ -268,6 +268,40 @@ class LeadersDashboard extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
+
+                {
+                /*
+                 * 'Observe' Card
+                 */
+                }
+                <Card
+                  className={classes.card}
+                  onClick={(): void =>
+                    this.props.history.push({
+                      pathname: "/MyPrograms",
+                      // state: { type: "Training" }
+                    })
+                  }
+                >
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                    >
+                      <Grid item>
+                        <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Programs
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+
               </Grid>
               <Grid
                 container
@@ -309,7 +343,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                  */
                 }
 
-                {[Role.ADMIN, Role.COACH].find(r => r === userRole) ? <Card className={classes.card}>
+                {[Role.ADMIN, Role.COACH, Role.PROGRAMLEADER, Role.SITELEADER].find(r => r === userRole) ? <Card className={classes.card}>
                   <CardContent>
                     <Grid
                       container
@@ -432,7 +466,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                     </Card>
                   </Grid>
                   <Grid item xs={6}>
-                    {[Role.ADMIN, Role.COACH].find(r => userRole === r) ? <Card className={classes.card}>
+                    {[Role.ADMIN, Role.COACH, Role.PROGRAMLEADER, Role.SITELEADER].find(r => userRole === r) ? <Card className={classes.card}>
                       <CardContent>
                         <Grid
                           container

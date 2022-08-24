@@ -90,27 +90,26 @@ class NewProgramPage extends React.Component<Props, State>{
             programName: "",
             selectedSites: [],
             sitesList: [],
-            savedProgramName: ""
+            savedProgramName: "",
+            programLeaderList: [],
         }
     }
 
     componentDidMount(): void {
-      this.setSites();
+      const firebase = this.context;
+      // Set the sites for the dropdown
+      firebase.getSites()
+       .then((data)=>{
+         this.setState({sitesList: data});
+       });
+
+      // Set the users for the dropdown
+      firebase.getProgramLeaders()
+       .then((data)=>{
+         this.setState({programLeaderList: data});
+       });
+
     }
-
-    /**
-     * Set the sites for the dropdown
-     */
-     async setSites(){
-       const firebase = this.context;
-       firebase.getSites()
-        .then((data)=>{
-          this.setState({sitesList: data});
-
-        });
-
-     }
-
 
     async save(firebase:Firebase){
 
@@ -142,6 +141,17 @@ class NewProgramPage extends React.Component<Props, State>{
 
 
 
+    }
+
+    async assignProgramToUser(firebase:Firebase, programId){
+
+        await firebase.assignProgramToUser({ userId: "user", programId: programId})
+            .then(() => {
+              console.log("Sweet Created");
+            }).catch(e => {
+                console.log(e)
+                alert('Unable to create Program. Please try again')
+            });
     }
 
 
@@ -212,13 +222,13 @@ class NewProgramPage extends React.Component<Props, State>{
                     </Grid>
 
 
+                    {
+                      /*
+                      * Select sites
+                      */
+                    }
                     <Grid item xs={8} spacing={8} className={classes.container}>
 
-                        {
-                          /*
-                           * Select Programs
-                           */
-                        }
                         <StyledFormControl className={classes.formControl}>
                             <InputLabel id="role-select-label">Sites</InputLabel>
                             <Select
@@ -243,6 +253,37 @@ class NewProgramPage extends React.Component<Props, State>{
                         </StyledFormControl>
                     </Grid>
 
+                    {
+                      /*
+                      * Select Program Leader
+                      */
+                    }
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+
+                        <StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Program Leaders</InputLabel>
+                            <Select
+                              labelId="demo-mutiple-name-label"
+                              id="demo-mutiple-name"
+                              multiple
+                              className={classes.select}
+                              autoWidth={true}
+                              value={this.state.programLeaderList}
+                              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                  this.setState({programLeaderList:event.target.value})}
+                              input={<Input />}
+                              MenuProps={MenuProps}
+                            >
+                              {this.state.programLeaderList.map(
+                                (site, index)=>{
+                                  return <MenuItem value={site.id}>
+                                    {site.name}
+                                  </MenuItem>
+                              })}
+                            </Select>
+                        </StyledFormControl>
+                    </Grid>
+
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FirebaseContext.Consumer>
                             {(firebase: Firebase) => (
@@ -251,6 +292,7 @@ class NewProgramPage extends React.Component<Props, State>{
                                             this.save(firebase)}>Save</Button>)}
                         </FirebaseContext.Consumer>
                     </Grid>
+
                 </Grid>
             </div>
 
