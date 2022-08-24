@@ -3981,13 +3981,13 @@ class Firebase {
 
         })
         .catch((error: Error) =>
-          console.error('Error updating played videos list', error)
+          console.error('Error retrieving list of site', error)
         )
     }
   }
 
   /*
-   * Get a all programs
+   * Get all programs
    */
   getPrograms = async (): Promise<void> => {
     if(this.auth.currentUser) {
@@ -4001,8 +4001,6 @@ class Firebase {
               programsArray.push({
                 name: doc.data().name,
                 id: doc.data().id,
-                siteLeaderId: doc.data().siteLeaderId,
-                coaches: doc.data().coaches
               })
 
           });
@@ -4011,7 +4009,7 @@ class Firebase {
 
         })
         .catch((error: Error) =>
-          console.error('Error updating played videos list', error)
+          console.error('Error retrieving list of programs', error)
         )
     }
   }
@@ -4054,19 +4052,35 @@ class Firebase {
    */
    createSite = async (
 
-     programData: {
-       programName: string,
-       selectedSites: Array<string>
+     siteData: {
+       siteName: string,
+       selectedProgram: string
      }
    ): Promise<void> => {
-     const res = await this.db.collection('programs').add({
-        name: programData.programName,
-        selectedSites: programData.selectedSites
-      });
+     // Create New document for program
+     const res = await this.db.collection('sites').add({
+        name: siteData.siteName,
+        program: siteData.selectedProgram,
+      })
+        .then( (data) => {
+          console.log("Successfully written site document " + data.id);
 
-      console.log('Added Site with ID: ', res.id);
+          // Add the id to the document
+          var programDoc = this.db.collection('sites').doc(data.id);
+          var addIdToDoc = programDoc.set({
+            id: data.id
+          }, {merge: true})
+          .then(() => {
+              console.log("ID successfully written!");
+          })
+          .catch((error) => {
+              console.error("Error writing site document: ", error);
+          });
+        });
 
    }
+
+
 
 
   /**
