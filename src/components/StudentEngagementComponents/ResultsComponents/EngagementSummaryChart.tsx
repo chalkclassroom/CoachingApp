@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import * as Constants from '../../../constants/Constants'
 import PieChartLegend from '../../LayoutComponents/GraphLayouts/PieChartLegend'
+import { PieWrapperSummary } from '../../ResultsComponents/ChartWrappers'
 
 export default function EngagementSummaryChart(props: {
   offTask: number
@@ -19,8 +20,9 @@ export default function EngagementSummaryChart(props: {
           ]}
           legendTitle={'Compare how often the students were:'}
         />
-
-        <PieSummary offTask={props.offTask} engaged={props.engaged} />
+        <PieWrapperSummary>
+          <PieSummary offTask={props.offTask} engaged={props.engaged} />
+        </PieWrapperSummary>
       </Grid>
     </div>
   )

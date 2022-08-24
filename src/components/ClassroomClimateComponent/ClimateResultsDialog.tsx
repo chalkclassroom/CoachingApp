@@ -14,6 +14,7 @@ import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
 
 interface Props {
   open: boolean,
@@ -50,10 +51,12 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <BehaviorResponsesSummaryPie
-            positiveResponses={positiveResponses}
-            negativeResponses={negativeResponses}
-          />
+          <PieWrapperDialog>
+            <BehaviorResponsesSummaryPie
+              positiveResponses={positiveResponses}
+              negativeResponses={negativeResponses}
+            />
+          </PieWrapperDialog>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>

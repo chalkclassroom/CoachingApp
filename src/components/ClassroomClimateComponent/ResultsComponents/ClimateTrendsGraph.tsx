@@ -86,10 +86,20 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
                 }
               }
             ]
-          }
+          },
+          plugins: {
+            datalabels: {
+              display: 'auto',
+              color: 'gray',
+              fontFamily: 'Arimo',
+              align: 'right',
+              formatter: function(value: number): string {
+                return value + '%'
+              },
+            },
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}
       />
     );
   }

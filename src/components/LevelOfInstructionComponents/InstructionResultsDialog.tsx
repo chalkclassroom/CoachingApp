@@ -14,6 +14,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
+import { Pie } from 'react-chartjs-2';
 
 interface Props {
   open: boolean,
@@ -49,10 +51,12 @@ function InstructionResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <LevelOfInstructionSummaryChart
-            lowLevel={lowLevel}
-            highLevel={highLevel}
-          />
+          <PieWrapperDialog>
+            <LevelOfInstructionSummaryChart
+              lowLevel={lowLevel}
+              highLevel={highLevel}
+            />
+          </PieWrapperDialog>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>

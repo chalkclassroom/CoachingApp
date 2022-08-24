@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import ChildBarDetails from "./ChildBarDetails";
 import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
 import BarChartLegend from "../../LayoutComponents/GraphLayouts/BarChartLegend";
+import { BarWrapperDetails } from '../../ResultsComponents/ChartWrappers';
 
 interface OwnProps {
   questionTextClass:string
@@ -22,13 +23,15 @@ const ChildDetailsChart: FunctionComponent<Props> = (props) => {
       <Grid justify={"center"} direction={"column"}>
         <GraphHeader graphTitle={'Child Behaviors'}/>
         <BarChartLegend questionTextClass={props.questionTextClass} questions={['Which behaviors did children do more often?', "Which behaviors did children do less often?"]}/>
-        <ChildBarDetails
-          sequential1={props.sequential1}
-          sequential2={props.sequential2}
-          sequential3={props.sequential3}
-          sequential4={props.sequential4}
-          totalVisits={props.totalVisits}
-        />
+        <BarWrapperDetails>
+          <ChildBarDetails
+            sequential1={props.sequential1}
+            sequential2={props.sequential2}
+            sequential3={props.sequential3}
+            sequential4={props.sequential4}
+            totalVisits={props.totalVisits}
+          />
+        </BarWrapperDetails>
       </Grid>
     </div>
   );

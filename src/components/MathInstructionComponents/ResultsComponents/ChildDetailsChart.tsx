@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid/Grid'
 import ChildBarDetails from './ChildBarDetails'
 import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
 import BarChartLegend from '../../LayoutComponents/GraphLayouts/BarChartLegend'
+import { BarWrapperDetails } from '../../ResultsComponents/ChartWrappers'
 
 interface OwnProps {
   math1: number
@@ -28,13 +29,15 @@ const ChildDetailsChart: FunctionComponent<Props> = props => {
             'Did they do one type of math less often than other types?',
           ]}
         />
-        <ChildBarDetails
-          math1={props.math1}
-          math2={props.math2}
-          math3={props.math3}
-          math4={props.math4}
-          totalVisits={props.totalVisits}
-        />
+        <BarWrapperDetails>
+          <ChildBarDetails
+            math1={props.math1}
+            math2={props.math2}
+            math3={props.math3}
+            math4={props.math4}
+            totalVisits={props.totalVisits}
+          />
+        </BarWrapperDetails>
       </Grid>
     </div>
   )

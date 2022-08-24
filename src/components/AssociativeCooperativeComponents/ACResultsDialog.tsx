@@ -15,6 +15,7 @@ import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
 
 interface Props {
   open: boolean,
@@ -61,11 +62,13 @@ function ACResultsDialog(props: Props): React.ReactElement {
             >
               Child Behaviors
             </Typography>
-            <ChildBehaviorsPie
-              ac={acCount}
-              noAc={noACCount}
-              noChildOpp={noOppCount}
-            />
+            <PieWrapperDialog>
+              <ChildBehaviorsPie
+                ac={acCount}
+                noAc={noACCount}
+                noChildOpp={noOppCount}
+              />
+            </PieWrapperDialog>
           </Grid>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>

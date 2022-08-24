@@ -25,6 +25,7 @@ import { LiteracyTypes } from '../../../constants/Constants'
 import * as Types from '../../../constants/Types'
 import TeacherModal from '../HomeViews/TeacherModal'
 import Firebase from '../../../components/Firebase'
+import { PieWrapperSummary } from '../../../components/ResultsComponents/ChartWrappers'
 
 const styles: object = {
   root: {
@@ -839,13 +840,13 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <LiteracySummaryChart
-                    literacy={this.state.literacy}
-                    noLiteracy={this.state.noLiteracy}
-                    type={this.props.location.state.type}
-                  />
-                </Grid>
+                  <PieWrapperSummary>
+                    <LiteracySummaryChart
+                      literacy={this.state.literacy}
+                      noLiteracy={this.state.noLiteracy}
+                      type={this.props.location.state.type}
+                    />
+                  </PieWrapperSummary>
                 {(this.props.location.state.type === Constants.LiteracyTypes.READING) ? (
                   <Grid item style={{paddingTop: '1em'}}>
                     <Typography variant="h6" style={{textAlign: "center", fontFamily: 'Arimo'}}>

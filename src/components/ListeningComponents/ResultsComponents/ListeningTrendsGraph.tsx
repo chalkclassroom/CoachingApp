@@ -115,10 +115,9 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
                 return value + "%";
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}
       />
     );
   }

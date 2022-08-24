@@ -4,6 +4,7 @@ import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
 import PieChartLegend from "../../LayoutComponents/GraphLayouts/PieChartLegend";
 import * as Constants from "../../../constants/Constants";
 import BehaviorResponsesSummaryPie from "./BehaviorResponsesSummaryPie";
+import { PieWrapperSummary } from '../../ResultsComponents/ChartWrappers';
 
 interface OwnProps {
   negativeResponses: number
@@ -34,10 +35,12 @@ const BehaviorResponseSummaryChart: FunctionComponent<Props> = (props) => {
         legendTitle={'Compare how often the teacher:'}
       />
       <Grid item style={{ paddingTop: '1em' }}>
-        <BehaviorResponsesSummaryPie
-          negativeResponses={props.negativeResponses}
-          positiveResponses={props.positiveResponses}
-        />
+        <PieWrapperSummary>
+          <BehaviorResponsesSummaryPie
+            negativeResponses={props.negativeResponses}
+            positiveResponses={props.positiveResponses}
+          />
+        </PieWrapperSummary>
       </Grid>
     </Grid>
   </div>);
