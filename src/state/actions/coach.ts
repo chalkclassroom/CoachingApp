@@ -7,7 +7,9 @@ export enum Role {
   TEACHER = "teacher",
   COACH = "coach",
   ADMIN = "admin",
-  ANONYMOUS = "anonymous"
+  ANONYMOUS = "anonymous",
+  PROGRAMLEADER = "programLeader",
+  SITELEADER = "siteLeader"
 }
 
 

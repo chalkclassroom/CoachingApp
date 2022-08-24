@@ -260,4 +260,4 @@ class NewSitePage extends React.Component<Props, State>{
 NewSitePage.contextType = FirebaseContext
 
 //export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN, teacherSelected: state.teacherSelectedState.teacher, testing: "SWEET", teacherList: state.teacherListState.teachers}))(withStyles(styles)(NewSitePage))
-export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN}))(withStyles(styles)(NewSitePage))
+export default connect(state => ({ isAdmin: (state.coachState.role === Role.ADMIN || state.coachState.role === Role.PROGRAMLEADER )}))(withStyles(styles)(NewSitePage))
