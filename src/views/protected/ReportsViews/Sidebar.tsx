@@ -59,7 +59,7 @@ function checkBack() {
 }
 
 function checkPrint() {
-    for ( let i = 3; i < BackList.length; i++) {
+    for ( let i = 4; i < BackList.length; i++) {
         if (location.pathname === BackList[i]) {
             return (
                 <li style={listStyle}>

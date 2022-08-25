@@ -776,6 +776,42 @@ class App extends React.Component<Props, State> {
                 history: H.History
               }) : React.ReactElement=> <ReportsPage {...props}/>}
             />
+            <PrivateRoute
+              auth={auth}
+              path="/TeacherProfile"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/CoachProfile"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/SiteProfile"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/ProgramProfile"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
 
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>

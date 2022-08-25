@@ -114,7 +114,7 @@ class Reports extends React.Component<Props, State> {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Button variant="contained" color="primary">
+                                    <Button onClick = {() => this.props.history.push("/TeacherProfile")} variant="contained" color="primary">
                                         Go
                                     </Button>
                                 </Grid>
@@ -150,7 +150,7 @@ class Reports extends React.Component<Props, State> {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Button variant="contained" color="primary">
+                                    <Button onClick = {() => this.props.history.push("/SiteProfile")} variant="contained" color="primary">
                                         Go
                                     </Button>
                                 </Grid>
@@ -188,7 +188,7 @@ class Reports extends React.Component<Props, State> {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Button variant="contained" color="primary">
+                                    <Button onClick = {() => this.props.history.push("/CoachProfile")} variant="contained" color="primary">
                                         Go
                                     </Button>
                                 </Grid>
@@ -224,7 +224,7 @@ class Reports extends React.Component<Props, State> {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Button variant="contained" color="primary">
+                                    <Button onClick = {() => this.props.history.push("/ProgramProfile")} variant="contained" color="primary">
                                         Go
                                     </Button>
                                 </Grid>

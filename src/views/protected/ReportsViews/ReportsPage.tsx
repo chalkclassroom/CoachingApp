@@ -19,6 +19,10 @@ import ReportImages from "./ReportImages";
 import Sidebar from "./Sidebar";
 import { Switch, Route,} from "react-router-dom";
 import ReportsImages from "./ReportImages";
+import TeacherProfile from "../../../components/TeacherProfileComponents/TeacherProfile";
+import CoachProfile from "../../../components/CoachProfileComponents/CoachProfile";
+import SiteProfile from "../../../components/SiteProfileComponents/SiteProfile";
+import ProgramProfile from "../../../components/ProgramProfileComponents/ProgramProfile";
 
 
 const styles: object = {
@@ -130,6 +134,14 @@ class ReportsPage extends React.Component<Props, State> {
             <Route path="/ReportsList" component={ReportsList} /> 
             <Route path="/ReportImages" component={ReportImages} />
             <Route path="/ReportDesc" component={ReportDesc} />
+            <Route path="/TeacherProfile" component={TeacherProfile} />
+            <Route path="/CoachProfile" component={CoachProfile} /> 
+            <Route path="/SiteProfile" component={SiteProfile} />
+            <Route path="/ProgramProfile" component={ProgramProfile} />
+            {/* <Route path="/TeacherResults" component={TeacherResults} />
+            <Route path="/CoachResults" component={CoachResults} /> 
+            <Route path="/SiteResults" component={SiteResults} />
+            <Route path="/ProgramResults" component={ProgramResults} /> */}
           </Switch>
         </div>
       </div>
