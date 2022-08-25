@@ -82,6 +82,8 @@ import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 
+import CreateTable from './components/tempCustomFunction/CreateTable'
+
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
 
@@ -713,6 +715,12 @@ class App extends React.Component<Props, State> {
               path="/CoachingResources/ChalkCrosswalks"
               exact={true}
               component={CoachingChalkCrosswalks}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CreateTable"
+              exact={true}
+              component={CreateTable}
             />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>

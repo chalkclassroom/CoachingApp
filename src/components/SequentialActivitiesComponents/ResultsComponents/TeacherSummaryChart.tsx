@@ -4,6 +4,7 @@ import * as Constants from '../../../constants/Constants'
 import TeacherPieSummary from './TeacherPieSummary'
 import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
 import PieChartLegend from '../../LayoutComponents/GraphLayouts/PieChartLegend'
+import { PieWrapperSummary } from '../../ResultsComponents/ChartWrappers'
 
 interface OwnProps {
   support: number
@@ -36,11 +37,13 @@ const TeacherSummaryChart: FunctionComponent<Props> = props => {
           ]}
           legendTitle={'Compare how often the teacher:'}
         />
-        <TeacherPieSummary
-          support={props.support}
-          noSupport={props.noSupport}
-          noTeacherOpp={props.noTeacherOpp}
-        />
+        <PieWrapperSummary>
+          <TeacherPieSummary
+            support={props.support}
+            noSupport={props.noSupport}
+            noTeacherOpp={props.noTeacherOpp}
+          />
+        </PieWrapperSummary>
       </Grid>
     </div>
   )

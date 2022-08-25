@@ -65,7 +65,7 @@ export default function AverageTone(props: Props): React.ReactElement {
           </Typography>
         )}
       </Grid>
-      <Grid item style={{padding: '1em'}}>
+      <Grid item style={{padding: '3em'}}>
         <Slider
           aria-labelledby="continuous-slider"
           step={1}

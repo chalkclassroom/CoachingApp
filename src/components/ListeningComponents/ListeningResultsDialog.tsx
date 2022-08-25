@@ -14,6 +14,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
 
 interface Props {
   open: boolean,
@@ -48,7 +49,9 @@ function ListeningResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <ListeningSummaryChart listening={listeningCount} notListening={noListeningCount} />
+          <PieWrapperDialog>
+            <ListeningSummaryChart listening={listeningCount} notListening={noListeningCount} />
+          </PieWrapperDialog>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>

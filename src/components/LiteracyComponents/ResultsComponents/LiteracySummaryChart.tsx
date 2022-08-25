@@ -76,7 +76,6 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
     };
     const total = this.props.literacy + this.props.noLiteracy;
     return (
-      <div>
         <Pie
           data={literacyData}
           options={{
@@ -135,12 +134,10 @@ class LiteracySummaryChart extends React.Component<Props, {}> {
                   }
                 }
               }
-            }
+            },
+            maintainAspectRatio: false
           }}
-          width={650}
-          height={350}
         />
-      </div>
     );
   }
 }

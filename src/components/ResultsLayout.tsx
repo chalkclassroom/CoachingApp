@@ -277,21 +277,6 @@ class ResultsLayout extends React.Component<Props, State> {
       return this.onActionPlanModalOpen();
     }
 
-    // eslint-disable-next-line require-jsdoc
-    componentDidMount(): void {
-        Chart.Legend.prototype.afterFit = function () {
-            this.height = this.height + 20;
-        }
-    }
-
-    // eslint-disable-next-line require-jsdoc
-    componentWillUnmount(): void {
-        Chart.Legend.prototype.afterFit = function () {
-            this.height = this.height - 20;
-        }
-    }
-
-
     static propTypes = {
         teacher: PropTypes.exact({
             email: PropTypes.string,

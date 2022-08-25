@@ -47,7 +47,6 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
     };
     const total = this.props.listening + this.props.notListening;
     return (
-      <div>
         <Pie
           data={listeningData}
           options={{
@@ -106,12 +105,10 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
                   }
                 }
               }
-            }
+            },
+            maintainAspectRatio: false
           }}
-          width={650}
-          height={400}
         />
-      </div>
     );
   }
 }

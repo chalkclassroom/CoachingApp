@@ -374,7 +374,7 @@ class Dashboard extends React.Component<Props, State> {
           open={this.state.resultsDialog==="MI" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
-        <EngagementResultsDialog 
+        <EngagementResultsDialog
           open={this.state.resultsDialog==="SE" && (this.state.displayResultsDialog || this.props.forceComplete)}
           history={this.props.history}
         />
@@ -416,7 +416,7 @@ class Dashboard extends React.Component<Props, State> {
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.typeString === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.typeString === "LI" ? 
+          : this.typeString === "LI" ?
             <LiteracyInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} type={this.props.checklistType} />
           : <div />
         ) : this.state.notes ? (
@@ -459,7 +459,7 @@ class Dashboard extends React.Component<Props, State> {
                     {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
                   </Typography>
                 </Grid>
-              </Grid> 
+              </Grid>
             </Grid>
             <Grid
               container
@@ -513,6 +513,7 @@ class Dashboard extends React.Component<Props, State> {
                           buttonColor={Constants.Colors[this.props.type]}
                           disabled={!this.props.completeObservation}
                           disabledOnClick={this.handleIncomplete}
+                          completeCallBackFunctionOverride={this.props.completeCallBackFunctionOverride}
                           disabledClass={classes.completeButton}
                           buttonMargin={10}
                           dialogTitle={

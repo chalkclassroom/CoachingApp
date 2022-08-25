@@ -33,6 +33,29 @@ const handleChange = (
   setSelectedTables: Function,
 ) => {
   const { value } = event.target
+
+  // Remove any table name with '_results' in it. Just in case they removed a table from the list, we want to make sure its 'results' table does to
+  for(var i = 0; i < value.length; i++)
+  {
+    if(value[i].includes('_results'))
+    {
+      var index = value.indexOf(value[i]);
+      if (index > -1) {
+        value.splice(index, 1);
+      }
+      i--;
+    }
+  }
+
+  // Add the '_results' tables back in.
+  value.forEach(tableName => {
+    if(!tableName.includes("_results"))
+    {
+      value.push(tableName + "_results");
+    }
+
+  });
+
   setSelectedTables(value as string[])
 }
 

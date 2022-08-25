@@ -41,8 +41,6 @@ class TrendsSlider extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const isCompleted = this.props.completed;
     return (
-      <div>
-        <Grid justify={"center"} direction={"column"}>
           <Line
             data={this.props.data}
             options={{
@@ -133,13 +131,10 @@ class TrendsSlider extends React.Component<Props, {}> {
                     return value.dataset.data[value.dataIndex] >= 4.9 ? "bottom" : "top";
                   }
                 }
-              }
+              },
+              maintainAspectRatio: false
             }}
-            width={650}
-            height={400}
           />
-        </Grid>
-      </div>
     );
   }
 }

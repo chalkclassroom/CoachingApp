@@ -21,6 +21,7 @@ import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
+import { GridWrapperDetails, LineWrapperTrends, PieWrapperSummary } from "../../../components/ResultsComponents/ChartWrappers";
 
 const styles: object = {
   root: {
@@ -536,10 +537,12 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                     </List>
                     </Grid>
                   </Grid>
-                  <LevelOfInstructionSummaryChart
-                    lowLevel={this.state.llqResponseCount+this.state.llqCount}
-                    highLevel={this.state.hlqResponseCount+this.state.hlqCount}
-                  />
+                  <PieWrapperSummary>
+                    <LevelOfInstructionSummaryChart
+                      lowLevel={this.state.llqResponseCount+this.state.llqCount}
+                      highLevel={this.state.hlqResponseCount+this.state.hlqCount}
+                    />
+                  </PieWrapperSummary>
                 </Grid>
               </div>} 
             details={
@@ -558,12 +561,14 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                       How often did children respond to different question types?              
                     </Typography>
                   </Grid>
-                  <InstructionTypeDetailsChart
-                    hlqCount={this.state.hlqCount}               
-                    hlqResponseCount={this.state.hlqResponseCount}            
-                    llqCount={this.state.llqCount}             
-                    llqResponseCount={this.state.llqResponseCount}                  
-                  />
+                  <GridWrapperDetails>
+                    <InstructionTypeDetailsChart
+                      hlqCount={this.state.hlqCount}               
+                      hlqResponseCount={this.state.hlqResponseCount}            
+                      llqCount={this.state.llqCount}             
+                      llqResponseCount={this.state.llqResponseCount}                  
+                    />
+                  </GridWrapperDetails>
                 </Grid>
               </div>
             }
@@ -574,7 +579,9 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                     Teacher and Child Behaviors
                   </Typography>
                 </Grid>
-                <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
+                <LineWrapperTrends>
+                  <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
+                </LineWrapperTrends>
               </Grid>
             }
             changeSessionId={this.changeSessionId}

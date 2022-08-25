@@ -121,10 +121,9 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 }
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={400}
       />
     );
   }

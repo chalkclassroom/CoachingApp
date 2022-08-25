@@ -1110,7 +1110,7 @@ class Firebase {
     }
     this.currentObservation?.notes.splice(noteIndex, 1, newNote)
   }
-  
+
   handleUpdateNoteRemote = (id:string, text: string, session: string | null = null) => {
     let sessionRef = session ? this.db.collection('observations').doc(session) : this.sessionRef
    sessionRef.collection('notes').doc(id).update({Note: text})
@@ -1551,6 +1551,11 @@ class Firebase {
   ): Promise<{} | void> => {
     const exportBqFunction = this.functions.httpsCallable('exportBqData')
     return exportBqFunction({tableName, from, to})
+  }
+
+  createTables = async (): Promise<{} | void> => {
+    const createTables = this.functions.httpsCallable('createTables')
+    return createTables()
   }
 
   /**

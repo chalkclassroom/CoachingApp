@@ -14,6 +14,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
 
 interface Props {
   open: boolean,
@@ -54,10 +55,12 @@ function TransitionResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <TransitionTimePie
-            transitionTime={transitionTime}
-            learningActivityTime={(endTime - startTime) - transitionTime}
-          />
+          <PieWrapperDialog>
+            <TransitionTimePie
+              transitionTime={transitionTime}
+              learningActivityTime={(endTime - startTime) - transitionTime}
+            />
+          </PieWrapperDialog>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
