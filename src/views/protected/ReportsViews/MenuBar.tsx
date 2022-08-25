@@ -1,56 +1,64 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router";
 
 const MenuItems = [
     {
         title: 'Reports',
         url: '/Reports',
-        cName: 'nav-links'
     },
     {
         title: 'Reports List',
-        url: '/',
-        cName: 'nav-links'
+        url: '/ReportsList',
     },
 ]
 
-const navItems = {
-    background: 'rgb(234, 234, 234)',
-    border: '1px',
-    borderColor: 'gray',
-    height: '50px',
-    display: 'flex',
-    /* justify-content: center; */
-    alignItems: 'center',
-    fontSize: '1.2rem',
+const Styles = {
+    navItems: {
+        background: 'rgb(234, 234, 234)',
+        border: '1px',
+        borderColor: 'gray',
+        height: '50px',
+        display: 'flex',
+        /* justify-content: center; */
+        alignItems: 'center',
+        fontSize: '1.2rem',
+    },
+
+
+    navMenu: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, auto)',
+        gridColumnGap: '50px',
+        listStyle: 'none',
+        textAlign: 'center',
+        width: '70vw',
+        justifyContent: 'start'
+    },
+
+    navLinks: is_current => ({
+        color: 'Black',
+        textDecoration: is_current ? 'underline' : 'none',
+        padding: '0.5rem 1rem',
+        cursor: 'default',
+        fontWeight: is_current ? 'bold' : 'normal'
+    })
 }
 
-
-const navMenu = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(5, auto)',
-    gridColumnGap: '50px',
-    listStyle: 'none',
-    textAlign: 'center',
-    width: '70vw',
-    justifyContent: 'start'
-}
-
-const navLinks = {
-    color: 'Black',
-    textDecoration: 'none',
-    padding: '0.5rem 1rem',
-    cursor: 'default'
+function checkCurrent(item) {
+    if ( item.url === location.pathname )
+        return true;
+    return false;
 }
 
 class Navbar extends Component {
-    render() { 
+    render() {
         return (
-            <nav style={navItems}>
-                <ul style={navMenu}>
+            <nav style={Styles.navItems}>
+                <ul style={Styles.navMenu}>
                     {MenuItems.map((item, index) => {
                         return (
                             <li key={index}>
-                                <a style={navLinks} href={item.url}>
+                                <a style={Styles.navLinks(checkCurrent(item))} onClick = {() => this.props.history.push(item.url)}>
                                 {item.title}
                                 </a>
                             </li>
@@ -62,4 +70,4 @@ class Navbar extends Component {
     }
 }
  
-export default Navbar;
+export default withRouter(Navbar);

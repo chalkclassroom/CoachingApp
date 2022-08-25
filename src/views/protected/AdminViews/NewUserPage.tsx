@@ -235,6 +235,8 @@ class NewUserPage extends React.Component<Props, State>{
                             >
                                 <MenuItem value="teacher">Teacher</MenuItem>
                                 <MenuItem value="coach">Coach</MenuItem>
+                                <MenuItem value="siteLeader">Site Leader</MenuItem>
+                                <MenuItem value="programLeader">Program Leader</MenuItem>
                                 <MenuItem value="admin">Admin</MenuItem>
                             </Select>
                         </StyledFormControl>

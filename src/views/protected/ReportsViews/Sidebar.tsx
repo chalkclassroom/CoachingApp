@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import React from "react";
+import { withRouter } from "react-router";
+import React, { Component } from "react";
 import styled from 'styled-components'
 
 const SidebarParent = styled.div`
@@ -23,26 +23,29 @@ const aStyle = {
 const MenuItems = [
     {
         title: 'View Report Images',
-        url: '/Reports',
+        url: '/ReportImages',
     },
     {
         title: 'View Report Descriptions',
-        url: '/',
+        url: '/ReportDesc',
     },
 ]
 
 
-function Sidebar() {
+class Sidebar extends Component {
+    render() {
     return (
         <>
             <SidebarParent>
-                <ul style={{    padding: '0 0 0 .4em',
+                <ul style={{    padding: '0 0 0 .8em',
                                 margin: '0'}}>
                     <li style={listStyle}/>
-                    {MenuItems.map((item, index) => {
+
+                    {
+                    MenuItems.map((item, index) => {
                         return (
                             <li style={listStyle} key={index}>
-                                <a style={aStyle} href={item.url}>
+                                <a style={aStyle} onClick = {() => this.props.history.push(item.url)}>
                                 {item.title}
                                 </a>
                             </li>
@@ -52,6 +55,7 @@ function Sidebar() {
             </SidebarParent>
         </>
     );
+    }
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);
