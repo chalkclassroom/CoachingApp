@@ -31,18 +31,56 @@ const MenuItems = [
     },
 ]
 
+const BackItems = [
+    {
+        title: 'Back to Reports',
+        url: '/Reports',
+    },
+]
+
+const BackList = [
+    "/TeacherProfile", 
+    "/CoachProfile", 
+    "/SiteProfile", 
+    "/ProgramProfile",
+    "/TeacherResults", 
+    "/CoachResults", 
+    "/SiteResults", 
+    "/ProgramResults"
+]
+
+function checkBack() {
+    for ( let i = 0; i < BackList.length; i++) {
+        if (location.pathname === BackList[i]) {
+            return BackItems;
+        }
+    }
+    return MenuItems;
+}
+
+function checkPrint() {
+    for ( let i = 3; i < BackList.length; i++) {
+        if (location.pathname === BackList[i]) {
+            return (
+                <li style={listStyle}>
+                        <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/>
+                        <a style={aStyle} href="javascript:window.print();">&ensp;Print</a>
+                </li>
+            );
+        }
+    }
+    return (<li style={listStyle}/>);
+}
+
 
 class Sidebar extends Component {
     render() {
     return (
         <>
             <SidebarParent>
-                <ul style={{    padding: '0 0 0 .8em',
-                                margin: '0'}}>
-                    <li style={listStyle}/>
-
-                    {
-                    MenuItems.map((item, index) => {
+                <ul style={{    padding: '0 0 0 .8em', margin: '0'}}>
+                    {checkPrint()}
+                    {checkBack().map((item, index) => {
                         return (
                             <li style={listStyle} key={index}>
                                 <a style={aStyle} onClick = {() => this.props.history.push(item.url)}>
