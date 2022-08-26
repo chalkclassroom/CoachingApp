@@ -83,6 +83,7 @@ import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 import LeadersDashboard from './views/protected/LeadersViews/LeadersDashboard'
 import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
+import MyProgramsPage from './views/protected/LeadersViews/MyProgramsPage'
 import NewSitePage from './views/protected/LeadersViews/NewSitePage'
 import ReportsPage from './views/protected/ReportsViews/ReportsPage'
 
@@ -725,6 +726,13 @@ class App extends React.Component<Props, State> {
                 userRole={role}
                 path="/LeadersDashboard"
                 render={(props: object) : React.ReactElement=> <LeadersDashboard {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[]}
+                userRole={role}
+                path="/MyPrograms"
+                render={(props: object) : React.ReactElement=> <MyProgramsPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
