@@ -119,7 +119,7 @@ class ReportsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container className={classes.pictureBar}>
             <Grid item xs={1} style={{padding: '1.5em 0 1.5em 0'}}>
