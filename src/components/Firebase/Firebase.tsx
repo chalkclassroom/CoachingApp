@@ -4363,7 +4363,7 @@ class Firebase {
      }
    ): Promise<void> => {
      // Create New document for program
-     const res = await this.db.collection('sites').add({
+     return this.db.collection('sites').add({
         name: siteData.siteName,
         program: siteData.selectedProgram,
       })
@@ -4381,6 +4381,8 @@ class Firebase {
           .catch((error) => {
               console.error("Error writing site document: ", error);
           });
+
+          return data;
         });
 
    }

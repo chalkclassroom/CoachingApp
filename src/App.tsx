@@ -83,7 +83,7 @@ import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 import LeadersDashboard from './views/protected/LeadersViews/LeadersDashboard'
 import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
-//import NewSitePage from './views/protected/LeadersViews/NewSitePage'
+import NewSitePage from './views/protected/LeadersViews/NewSitePage'
 import ReportsPage from './views/protected/ReportsViews/ReportsPage'
 
 ReactGA3.initialize('UA-154034655-1');

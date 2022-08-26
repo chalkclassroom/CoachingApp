@@ -89,7 +89,9 @@ class NewSitePage extends React.Component<Props, State>{
             siteName: "",
             selectedProgram: [],
             programsList: [],
-            savedSiteName: ""
+            savedSiteName: "",
+            allLeadersList: [],
+            selectedSiteLeaderList: [],
         }
     }
 
@@ -109,6 +111,12 @@ class NewSitePage extends React.Component<Props, State>{
 
         });
 
+        // Set the users for the dropdown
+        firebase.getAllLeaders()
+         .then((data)=>{
+           this.setState({allLeadersList: data});
+         });
+
      }
 
 
@@ -116,23 +124,38 @@ class NewSitePage extends React.Component<Props, State>{
 
         const {
           siteName,
-          selectedProgram
+          selectedProgram,
+          selectedSiteLeaderList
         } = this.state;
 
 
         if (!siteName || siteName === ""){
-            alert("Program name is required");
+            alert("Site name is required");
             return;
         }
 
 
         await firebase.createSite({ siteName, selectedProgram: selectedProgram})
-            .then(() => {
+            .then((data) => {
               console.log("Site Created");
               this.setState({savedSiteName: siteName});
+
+              // Add the program and sites to list of programs/sites for every user selected as a 'Program Leader'
+              selectedSiteLeaderList.forEach(leader => {
+
+                // Add new program to users
+                firebase.assignProgramToUser({userId: leader, programId: selectedProgram}).then((res) => {
+                  console.log("Program " + data.id + "added to user " + leader);
+                }).catch(e => console.error("error => ", e));
+
+                firebase.assignSiteToUser({userId: leader, siteId: data.id}).then((res) => {
+                  console.log("Sites added to user " + leader);
+                }).catch(e => console.error("error => ", e));
+
+              });
             }).catch(e => {
                 console.log(e)
-                alert('Unable to create Program. Please try again')
+                alert('Unable to create Site. Please try again')
             }).finally(() => {
                 this.setState({ // Hold off setting new state until success has been determined
                   siteName: siteName,
@@ -203,7 +226,7 @@ class NewSitePage extends React.Component<Props, State>{
                     </Grid>
                     <Grid item xs={6} spacing={8} className={classes.container}>
                         <StyledFormControl className={classes.formControl}>
-                            <InputLabel id="demo-mutiple-name-label">Name of Program</InputLabel>
+                            <InputLabel id="demo-mutiple-name-label">Name of Site</InputLabel>
                             <Input
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                                     this.setState({siteName: event.target.value})}
@@ -241,6 +264,38 @@ class NewSitePage extends React.Component<Props, State>{
                             </Select>
                         </StyledFormControl>
                     </Grid>
+
+                    {
+                      /*
+                      * Select Program Leader
+                      */
+                    }
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+
+                        <StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Site Leaders</InputLabel>
+                            <Select
+                              labelId="demo-mutiple-name-label"
+                              id="demo-mutiple-name"
+                              multiple
+                              className={classes.select}
+                              autoWidth={true}
+                              value={this.state.selectedSiteLeaderList}
+                              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                  this.setState({selectedSiteLeaderList:event.target.value})}
+                              input={<Input />}
+                              MenuProps={MenuProps}
+                            >
+                              {this.state.allLeadersList.map(
+                                (user, index)=>{
+                                  return <MenuItem value={user.id}>
+                                    {user.lastName + ", " + user.firstName}
+                                  </MenuItem>
+                              })}
+                            </Select>
+                        </StyledFormControl>
+                    </Grid>
+
 
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FirebaseContext.Consumer>

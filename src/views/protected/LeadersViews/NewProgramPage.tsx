@@ -132,7 +132,7 @@ class NewProgramPage extends React.Component<Props, State>{
               console.log("Program Created");
               this.setState({savedProgramName: programName});
 
-              // Add the program and sites to list of programs for every user selected as a 'Program Leader'
+              // Add the program and sites to list of programs/sites for every user selected as a 'Program Leader'
               selectedProgramLeaderList.forEach(leader => {
 
                 // Add new program to users
