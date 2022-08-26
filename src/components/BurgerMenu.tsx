@@ -380,7 +380,7 @@ class BurgerMenu extends React.Component<Props, State>{
                 primary="Home"
               />
             </ListItem>
-            {role == Role.COACH || role == Role.ADMIN
+            {role == Role.COACH || role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER
                 ? this.coachNavigationMenu(classes) : this.teacherNavigationMenu(classes)}
             <ListItem button onClick={this.handleOpenChalk}>
               <ListItemIcon>
@@ -471,7 +471,7 @@ class BurgerMenu extends React.Component<Props, State>{
                   primary="Help"
               />
             </ListItem>
-              {role == Role.ADMIN && <>
+              {(role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER) && <>
                   <ListItem
                       button
                       onClick={() => this.props.handleNavigation( (): void => {

@@ -325,14 +325,14 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Messaging"
-              allowedRoles={[Role.COACH,Role.ADMIN]}
+              allowedRoles={[Role.COACH,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               component={MessagingView}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              allowedRoles={[Role.COACH, ,Role.ADMIN]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History
@@ -341,7 +341,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={auth}
               path="/ActionPlan"
-              allowedRoles={[Role.COACH, ,Role.ADMIN]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -354,7 +354,7 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
               auth={auth}
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               path="/ConferencePlans"
               render={(props: {
@@ -364,7 +364,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -550,7 +550,7 @@ class App extends React.Component<Props, State> {
               exact
               auth={this.state.auth}
               path="/MyTeachers"
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -625,14 +625,14 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[Role.ADMIN]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/Admin"
                 component={AdminPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[Role.ADMIN]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/NewUser"
                 component={NewUserPage}

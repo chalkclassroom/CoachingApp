@@ -17,7 +17,8 @@ import { connect } from 'react-redux'
 import { Alert } from '@material-ui/lab'
 import { Role } from '../../../state/actions/coach'
 import { RouteComponentProps } from 'react-router-dom'
-import * as H from 'history'
+import * as H from 'history' 
+import * as Types from '../constants/Types';
 
 
 const styles:object = {
@@ -64,7 +65,9 @@ interface Style {
 type Props = RouteComponentProps & {
     history: H.History,
     firebase: Firebase,
-    isAdmin: boolean
+    isAdmin: boolean,
+    highLevelCreate: boolean,
+    lowLevelCreate: boolean
 }
 
 interface State {
@@ -122,7 +125,7 @@ class NewUserPage extends React.Component<Props, State>{
             return;
         }
 
-        if (![Role.ADMIN, Role.COACH, Role.TEACHER].includes(role)){
+        if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
             alert("Please select a role");
             return;
         }
@@ -158,6 +161,8 @@ class NewUserPage extends React.Component<Props, State>{
     render():React.ReactNode {
         const {
             isAdmin,
+            lowLevelCreate,
+            highLevelCreate,
             classes
         } = this.props;
 
@@ -235,9 +240,9 @@ class NewUserPage extends React.Component<Props, State>{
                             >
                                 <MenuItem value="teacher">Teacher</MenuItem>
                                 <MenuItem value="coach">Coach</MenuItem>
-                                <MenuItem value="siteLeader">Site Leader</MenuItem>
-                                <MenuItem value="programLeader">Program Leader</MenuItem>
-                                <MenuItem value="admin">Admin</MenuItem>
+                                {lowLevelCreate ? <MenuItem value="siteLeader">Site Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="siteLeader">Site Leader</MenuItem>}
+                                {highLevelCreate ? <MenuItem value="programLeader">Program Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="programLeader">Program Leader</MenuItem>}
+                                {highLevelCreate ? <MenuItem value="admin">Admin</MenuItem> : <MenuItem style={{display: 'none'}} value="admin">Admin</MenuItem>}
                             </Select>
                         </StyledFormControl>
                     </Grid>
@@ -259,4 +264,13 @@ class NewUserPage extends React.Component<Props, State>{
     }
 }
 
-export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewUserPage))
+const mapStateToProps = (state: Types.ReduxState): {isAdmin: boolean, highLevelCreate: boolean, lowLevelCreate: boolean} => {
+    return {
+      isAdmin: [Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER].indexOf(state.coachState.role) >= 0,
+      highLevelCreate: state.coachState.role === Role.ADMIN,
+      lowLevelCreate: [Role.ADMIN, Role.PROGRAMLEADER].indexOf(state.coachState.role) >= 0
+    }
+  }
+
+// export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewUserPage))
+export default connect(mapStateToProps)(withStyles(styles)(NewUserPage))
