@@ -4035,7 +4035,8 @@ class Firebase {
               lastName: doc.data().lastName,
               id: doc.data().id,
               role: doc.data().role,
-              programs: doc.data().programs
+              programs: doc.data().programs,
+              sites: doc.data().sites
             })
 
         });
@@ -4066,7 +4067,8 @@ class Firebase {
               lastName: doc.data().lastName,
               id: doc.data().id,
               role: doc.data().role,
-              programs: doc.data().programs
+              programs: doc.data().programs,
+              sites: doc.data().sites
             })
 
         });
@@ -4096,7 +4098,8 @@ class Firebase {
                lastName: doc.data().lastName,
                id: doc.data().id,
                role: doc.data().role,
-               programs: doc.data().programs
+               programs: doc.data().programs,
+               sites: doc.data().sites
              })
 
          });
@@ -4352,6 +4355,85 @@ class Firebase {
 
    }
 
+   /*
+    * Assign a site to a program
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkSiteIds: an array of site ID's in case we want to add a bunch of sites together
+    */
+   assignSiteToProgram = async (
+     data: {
+       programId: string,
+       siteId: string,
+       bulkSiteIds: Array<string>
+      }
+   ): Promise<void> => {
+
+     var programId = data.programId;
+
+     // If we're just adding one site
+     var siteId;
+     if(data.siteId)
+     {
+       siteId = data.siteId;
+     }
+
+     // If we're adding multiple sites at once
+     var bulkSiteIds = [];
+     if(data.bulkSiteIds)
+     {
+       bulkSiteIds = data.bulkSiteIds;
+     }
+
+
+     // Get the user's document
+     var programDoc = this.db.collection('programs').doc(programId);
+
+     programDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var sitesArr = [];
+
+         // Check if list of programs already exist
+         if(docData.sites)
+         {
+           sitesArr = docData.sites;
+         }
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkSiteIds.length > 0)
+         {
+           sitesArr = sitesArr.concat(bulkSiteIds);
+         }
+         else
+         {
+           sitesArr.push(siteId);
+         }
+         // Remove any duplicates
+         sitesArr = sitesArr.filter((item,index)=>{
+            return (sitesArr.indexOf(item) == index)
+         })
+
+         // Push programs array to the document
+         var addIdToDoc = programDoc.set({
+           sites: sitesArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully saved to program!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("Program's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting program document:", error);
+      });
+
+   }
+
   /*
    * Save New Site
    */
@@ -4370,9 +4452,12 @@ class Firebase {
         .then( (data) => {
           console.log("Successfully written site document " + data.id);
 
+          // Add site to program
+          this.assignSiteToProgram({ programId: siteData.selectedProgram, siteId: data.id}).then(data => {console.log("Site added to program " + siteData.selectedProgram);});
+
           // Add the id to the document
-          var programDoc = this.db.collection('sites').doc(data.id);
-          var addIdToDoc = programDoc.set({
+          var siteDoc = this.db.collection('sites').doc(data.id);
+          var addIdToDoc = siteDoc.set({
             id: data.id
           }, {merge: true})
           .then(() => {
@@ -4386,7 +4471,6 @@ class Firebase {
         });
 
    }
-
 
 
 
