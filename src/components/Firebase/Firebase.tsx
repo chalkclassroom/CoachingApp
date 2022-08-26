@@ -4015,11 +4015,10 @@ class Firebase {
   }
 
   /*
-   * Get all leaders (users with role 'programLeader' or 'siteLeader' or 'admin')
+   * Get all users with role 'programLeader'
    */
   getProgramLeaders = async (): Promise<void> => {
     if(this.auth.currentUser) {
-      console.log("Start programleaders");
 
       return this.db
       .collection('users')
@@ -4045,19 +4044,91 @@ class Firebase {
       });
     }
   }
+
+  /*
+   * Get all users with role 'siteLeader'
+   */
+  getSiteLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+
+      return this.db
+      .collection('users')
+      .where('role', '==', 'siteLeader')
+      .get()
+      .then((querySnapshot) => {
+        const leadersArray: Array<Types.User> = []
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+
+
+            leadersArray.push({
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              id: doc.data().id,
+              role: doc.data().role,
+              programs: doc.data().programs
+            })
+
+        });
+
+        return leadersArray;
+      });
+    }
+  }
+
+
   /*
    * Get all leaders (users with role 'programLeader' or 'siteLeader' or 'admin')
    */
-   /*
-  getLeaders = async (): Promise<void> => {
-    if(this.auth.currentUser) {
-      return this.db
-      .collection('users')
-      .where('role', '==', 'admin')
-      .get();
-    }
-  }
-  */
+   getAllLeaders = async (): Promise<void> => {
+     if(this.auth.currentUser) {
+       return this.db
+       .collection('users')
+       .where('role', '==', 'admin')
+       .get()
+       .then((querySnapshot) => {
+         let leadersArray: Array<Types.User> = []
+         querySnapshot.forEach((doc) => {
+             console.log(doc.data());
+
+             leadersArray.push({
+               firstName: doc.data().firstName,
+               lastName: doc.data().lastName,
+               id: doc.data().id,
+               role: doc.data().role,
+               programs: doc.data().programs
+             })
+
+         });
+
+         // Add program leaders
+         return this.getProgramLeaders().then((programLeaders) => {
+           leadersArray = leadersArray.concat(programLeaders);
+
+           // Add site leaders
+           return this.getSiteLeaders().then((siteLeaders) => {
+             leadersArray = leadersArray.concat(siteLeaders);
+
+             // Sort list by last name alphabetically
+             leadersArray = leadersArray.sort((a, b) => {
+                if (a.lastName < b.lastName) {
+                    return -1;
+                }
+                if (a.lastName > b.lastName) {
+                    return 1;
+                }
+                return 0;
+             });
+
+             return leadersArray;
+           });
+         });
+
+
+
+       });
+     }
+   }
 
 
   /*
@@ -4099,9 +4170,9 @@ class Firebase {
      }
    ): Promise<void> => {
      // Create New document for program
-     const res = await this.db.collection('programs').add({
+     return this.db.collection('programs').add({
         name: programData.programName,
-        selectedSites: programData.selectedSites,
+        sites: programData.selectedSites,
       })
         .then( (data) => {
           console.log("Successfully written document " + data.id);
@@ -4120,6 +4191,8 @@ class Firebase {
           .catch((error) => {
               console.error("Error writing document: ", error);
           });
+
+          return data;
         });
 
    }
@@ -4160,8 +4233,16 @@ class Firebase {
            programsArr = docData.programs;
          }
 
-         // Add program id
-         programsArr.push(programId);
+         // Add program id if it's not already in there
+         if(!programsArr.includes(programId))
+         {
+           programsArr.push(programId);
+         }
+
+         // Remove any duplicates
+         programsArr = programsArr.filter((item,index)=>{
+            return (programsArr.indexOf(item) == index)
+         })
 
          // Push programs array to the document
          var addIdToDoc = userDoc.set({
@@ -4169,6 +4250,94 @@ class Firebase {
          }, {merge: true})
          .then(() => {
              console.log("Program successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
+
+   }
+
+
+   /*
+    * Assign a site to a user
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkSiteIds: an array of site ID's in case we want to add a bunch of sites together
+    */
+   assignSiteToUser = async (
+     data: {
+       userId: string,
+       siteId: string,
+       bulkSiteIds: Array<string>
+      }
+   ): Promise<void> => {
+
+     var userId = data.userId;
+
+     // If we're just adding one site
+     var siteId;
+     if(data.siteId)
+     {
+       siteId = data.siteId;
+     }
+
+     // If we're adding multiple sites at once
+     var bulkSiteIds = [];
+     if(data.bulkSiteIds)
+     {
+       bulkSiteIds = data.bulkSiteIds;
+     }
+
+     // If the userId is set to "user" we want to use the current user
+     if(userId == "user")
+     {
+       userId = this.auth.currentUser.uid;
+     }
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var sitesArr = [];
+
+         // Check if list of programs already exist
+         if(docData.sites)
+         {
+           sitesArr = docData.sites;
+         }
+
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkSiteIds.length > 0)
+         {
+           sitesArr = sitesArr.concat(bulkSiteIds);
+         }
+         else
+         {
+           sitesArr.push(siteId);
+         }
+
+         // Remove any duplicates
+         sitesArr = sitesArr.filter((item,index)=>{
+            return (sitesArr.indexOf(item) == index)
+         })
+
+
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           sites: sitesArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully written to user!");
          })
          .catch((error) => {
              console.error("Error writing document: ", error);

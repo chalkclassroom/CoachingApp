@@ -91,7 +91,8 @@ class NewProgramPage extends React.Component<Props, State>{
             selectedSites: [],
             sitesList: [],
             savedProgramName: "",
-            programLeaderList: [],
+            allLeadersList: [],
+            selectedProgramLeaderList: [],
         }
     }
 
@@ -104,9 +105,9 @@ class NewProgramPage extends React.Component<Props, State>{
        });
 
       // Set the users for the dropdown
-      firebase.getProgramLeaders()
+      firebase.getAllLeaders()
        .then((data)=>{
-         this.setState({programLeaderList: data});
+         this.setState({allLeadersList: data});
        });
 
     }
@@ -115,7 +116,8 @@ class NewProgramPage extends React.Component<Props, State>{
 
         const {
           programName,
-          selectedSites
+          selectedSites,
+          selectedProgramLeaderList
         } = this.state;
 
 
@@ -124,11 +126,26 @@ class NewProgramPage extends React.Component<Props, State>{
             return;
         }
 
-
+        // Create the program
         await firebase.createProgram({ programName, selectedSites: selectedSites})
-            .then(() => {
+            .then((data) => {
               console.log("Program Created");
               this.setState({savedProgramName: programName});
+
+              // Add the program and sites to list of programs for every user selected as a 'Program Leader'
+              selectedProgramLeaderList.forEach(leader => {
+
+                // Add new program to users
+                firebase.assignProgramToUser({userId: leader, programId: data.id}).then((res) => {
+                  console.log("Program " + data.id + "added to user " + leader);
+                }).catch(e => console.error("error => ", e));
+
+                firebase.assignSiteToUser({userId: leader, bulkSiteIds: selectedSites}).then((res) => {
+                  console.log("Sites added to user " + leader);
+                }).catch(e => console.error("error => ", e));
+
+              });
+
             }).catch(e => {
                 console.log(e)
                 alert('Unable to create Program. Please try again')
@@ -139,19 +156,6 @@ class NewProgramPage extends React.Component<Props, State>{
                 });
             });
 
-
-
-    }
-
-    async assignProgramToUser(firebase:Firebase, programId){
-
-        await firebase.assignProgramToUser({ userId: "user", programId: programId})
-            .then(() => {
-              console.log("Sweet Created");
-            }).catch(e => {
-                console.log(e)
-                alert('Unable to create Program. Please try again')
-            });
     }
 
 
@@ -268,16 +272,16 @@ class NewProgramPage extends React.Component<Props, State>{
                               multiple
                               className={classes.select}
                               autoWidth={true}
-                              value={this.state.programLeaderList}
+                              value={this.state.selectedProgramLeaderList}
                               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                  this.setState({programLeaderList:event.target.value})}
+                                  this.setState({selectedProgramLeaderList:event.target.value})}
                               input={<Input />}
                               MenuProps={MenuProps}
                             >
-                              {this.state.programLeaderList.map(
-                                (site, index)=>{
-                                  return <MenuItem value={site.id}>
-                                    {site.name}
+                              {this.state.allLeadersList.map(
+                                (user, index)=>{
+                                  return <MenuItem value={user.id}>
+                                    {user.lastName + ", " + user.firstName}
                                   </MenuItem>
                               })}
                             </Select>
