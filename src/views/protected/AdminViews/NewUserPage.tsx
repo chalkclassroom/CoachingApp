@@ -170,8 +170,8 @@ class NewUserPage extends React.Component<Props, State>{
         }
 
         const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
-            .then(() => {
+        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
+            .then((data) => {
               this.setState({
                 createdPassword: randomString
               });
@@ -188,6 +188,8 @@ class NewUserPage extends React.Component<Props, State>{
                   lastName: '',
                   email: '',
                   role: Role.ANONYMOUS,
+                  program: '',
+                  site: ''
                 });
             });
 
@@ -237,6 +239,8 @@ class NewUserPage extends React.Component<Props, State>{
             firstName,
             lastName,
             role,
+            program,
+            site
         } = this.state
         return <div className={classes.root}>
             <FirebaseContext.Consumer>
@@ -305,7 +309,7 @@ class NewUserPage extends React.Component<Props, State>{
                             <Select
                                 labelId="role-select-label"
                                 id="role-select"
-                                value=""
+                                value={site}
                                 onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                                     this.setState({site: event.target.value})}
                             >
@@ -321,7 +325,7 @@ class NewUserPage extends React.Component<Props, State>{
                         <Select
                             labelId="role-select-label"
                             id="role-select"
-                            value=""
+                            value={program}
                             onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                                 this.setState({program: event.target.value})}
                         >
