@@ -91,6 +91,7 @@ class NewProgramPage extends React.Component<Props, State>{
             selectedSites: [],
             sitesList: [],
             savedProgramName: "",
+            savedProgramId: "",
             allLeadersList: [],
             selectedProgramLeaderList: [],
         }
@@ -117,7 +118,8 @@ class NewProgramPage extends React.Component<Props, State>{
         const {
           programName,
           selectedSites,
-          selectedProgramLeaderList
+          selectedProgramLeaderList,
+          savedProgramId
         } = this.state;
 
 
@@ -130,7 +132,7 @@ class NewProgramPage extends React.Component<Props, State>{
         await firebase.createProgram({ programName, selectedSites: selectedSites})
             .then((data) => {
               console.log("Program Created");
-              this.setState({savedProgramName: programName});
+              this.setState({savedProgramName: programName, savedProgramId: data.id});
 
               // Add the program and sites to list of programs/sites for every user selected as a 'Program Leader'
               selectedProgramLeaderList.forEach(leader => {
@@ -140,8 +142,24 @@ class NewProgramPage extends React.Component<Props, State>{
                   console.log("Program " + data.id + "added to user " + leader);
                 }).catch(e => console.error("error => ", e));
 
+                // Assign selected sites to the user
                 firebase.assignSiteToUser({userId: leader, bulkSiteIds: selectedSites}).then((res) => {
                   console.log("Sites added to user " + leader);
+                }).catch(e => console.error("error => ", e));
+
+              });
+
+              // Add the UserID to every selected site
+              selectedSites.forEach(site => {
+
+                // Assign new program ID to each of the sites
+                firebase.assignProgramToSite({siteId: site, programId: data.id}).then((res) => {
+                  console.log("Program added to site " + site);
+                }).catch(e => console.error("error => ", e));
+
+                // Assign selected users to each of the sites
+                firebase.assignUserToSiteOrProgram({siteId: site, bulkUserIds: selectedProgramLeaderList}).then((res) => {
+                  console.log("Users added to site " + site);
                 }).catch(e => console.error("error => ", e));
 
               });
@@ -154,6 +172,12 @@ class NewProgramPage extends React.Component<Props, State>{
                   programName: programName,
                   selectedSites: selectedSites
                 });
+
+                // Assign the selected users to this program
+                firebase.assignUserToSiteOrProgram({programId: this.state.savedProgramId, bulkUserIds: selectedProgramLeaderList}).then((res) => {
+                  console.log("Users added to program " + this.state.savedProgramId);
+                }).catch(e => console.error("error => Program : " + this.state.savedProgramId, e));
+
             });
 
     }
