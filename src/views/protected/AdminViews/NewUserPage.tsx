@@ -75,7 +75,13 @@ interface State {
     lastName: string,
     email: string,
     role: Role,
-    createdPassword: string | undefined
+    createdPassword: string | undefined,
+    showProgram: boolean,
+    showSite: boolean,
+    programsList: Array<string>,
+    sitesList: Array<string>,
+    program: string,
+    site: string
 }
 
 /**
@@ -94,9 +100,26 @@ class NewUserPage extends React.Component<Props, State>{
             lastName: "",
             email: "",
             role: Role.ANONYMOUS,
-            createdPassword: undefined
+            createdPassword: undefined,
+            showProgram: false,
+            showSite: false,
+            programsList: [],
+            sitesList: [],
+            program: "",
+            site: ""
         }
     }
+
+    componentDidMount(): void {
+        const firebase = this.context;
+        firebase.getPrograms().then((data) => {
+            this.setState({programsList: data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+        });
+        firebase.getSites().then((data) => {
+            this.setState({sitesList: data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+        })
+    }
+
 
     /**
      *
@@ -153,6 +176,19 @@ class NewUserPage extends React.Component<Props, State>{
 
 
 
+    }
+   
+    renderDropdown = param => () => {
+        this.setState({showProgram: false, showSite: false});
+        switch(param) {
+            default: case 0:
+                break;
+            case 1:
+                this.setState({showProgram: true});
+                break;
+            case 2:
+                this.setState({showSite: true})
+        }
     }
 
     /**
@@ -238,13 +274,46 @@ class NewUserPage extends React.Component<Props, State>{
                                 onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                                     this.setState({role: event.target.value})}
                             >
-                                <MenuItem value="teacher">Teacher</MenuItem>
-                                <MenuItem value="coach">Coach</MenuItem>
-                                {lowLevelCreate ? <MenuItem value="siteLeader">Site Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="siteLeader">Site Leader</MenuItem>}
-                                {highLevelCreate ? <MenuItem value="programLeader">Program Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="programLeader">Program Leader</MenuItem>}
-                                {highLevelCreate ? <MenuItem value="admin">Admin</MenuItem> : <MenuItem style={{display: 'none'}} value="admin">Admin</MenuItem>}
+                                <MenuItem onClick={this.renderDropdown(0)} value="teacher">Teacher</MenuItem>
+                                <MenuItem onClick={this.renderDropdown(2)} value="coach">Coach</MenuItem>
+                                {lowLevelCreate ? <MenuItem onClick={this.renderDropdown(2)} value="siteLeader">Site Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="siteLeader">Site Leader</MenuItem>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(1)} value="programLeader">Program Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="programLeader">Program Leader</MenuItem>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(0)} value="admin">Admin</MenuItem> : <MenuItem style={{display: 'none'}} value="admin">Admin</MenuItem>}
                             </Select>
                         </StyledFormControl>
+                    </Grid>
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+                    {this.state.showSite && (<StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Site</InputLabel>
+                            <Select
+                                labelId="role-select-label"
+                                id="role-select"
+                                // value={role}
+                                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                //     this.setState({role: event.target.value})}
+                            >
+                                {this.state.sitesList.map((site, index) => {
+                                return <MenuItem value={site.id}>
+                                    {site.name}
+                                </MenuItem>})}
+                                
+                            </Select>
+                        </StyledFormControl>)}
+                    {this.state.showProgram && (<StyledFormControl className={classes.formControl}>
+                        <InputLabel id="role-select-label">Program</InputLabel>
+                        <Select
+                            labelId="role-select-label"
+                            id="role-select"
+                            // value={role}
+                            // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                            //     this.setState({role: event.target.value})}
+                        >
+                            {this.state.programsList.map((program, index) => {
+                                return <MenuItem value={program.id}>
+                                    {program.name}
+                                </MenuItem>})}
+                        </Select>
+                    </StyledFormControl>)}
                     </Grid>
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FormHelperText>A password will be automatically generated for this user</FormHelperText>
@@ -272,5 +341,6 @@ const mapStateToProps = (state: Types.ReduxState): {isAdmin: boolean, highLevelC
     }
   }
 
+NewUserPage.contextType = FirebaseContext
 // export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewUserPage))
 export default connect(mapStateToProps)(withStyles(styles)(NewUserPage))
