@@ -4015,6 +4015,88 @@ class Firebase {
   }
 
   /*
+   * Get one program
+   */
+  getProgram = async (
+    data: {
+      programId: string
+    }
+  ): Promise<void> => {
+
+    if(this.auth.currentUser) {
+      var programDoc = this.db.collection('programs').doc(data.programId);
+
+      return programDoc.get().then((doc) => {
+        if (doc.exists)
+        {
+          return doc.data();
+        }
+      }).catch((e) => {
+        console.error("Can't find document!")
+      });
+    }
+  }
+
+  /*
+   * Get all programs for a specific user
+   *
+   * If user is set to "user" then return programs of current user.
+   */
+  getProgramsForUser = async (
+    data: {
+      userId: string
+    }
+  ): Promise<void> => {
+
+    if(this.auth.currentUser) {
+      var userId = data.userId;
+
+      // If user id is set to "user" we want to use the current user
+      if(userId == "user")
+      {
+        userId = this.auth.currentUser.uid;
+      }
+
+      // Grab the user's document
+      var userDoc = this.db.collection('users').doc(userId);
+
+      // Grab the data from the user's document
+      return userDoc.get().then( async (doc) => {
+
+        // Initialize the list of program's to return
+        var programRes = [];
+
+        // Make sure the document exists
+        if (doc.exists)
+        {
+          var docData = doc.data();
+
+          // Make sure this user has an array of program ids
+          if(docData.programs)
+          {
+            var programIds = docData.programs;
+
+            // Go through each program ID in the list
+            for(let programId of programIds)
+            {
+              // Get the program for this program ID
+              var tempProgram = await this.getProgram({programId: programId});
+
+              // Add the program data to the list to return
+              programRes.push(tempProgram);
+            };
+          }
+        }
+
+        return programRes;
+      }).catch((e) => {
+        console.error("There was a problem getting the user's document!", e);
+      });
+
+    }
+  }
+
+  /*
    * Get all users with role 'programLeader'
    */
   getProgramLeaders = async (): Promise<void> => {
@@ -4134,33 +4216,7 @@ class Firebase {
    }
 
 
-  /*
-   * Get all programs for a specific user
-   */
-  getProgramsForUser = async (): Promise<void> => {
-    if(this.auth.currentUser) {
-      return this.db
-        .collection('programs')
-        .get()
-        .then((querySnapshot) => {
-          const programsArray: Array<Types.Site> = []
-          querySnapshot.forEach((doc) => {
 
-              programsArray.push({
-                name: doc.data().name,
-                id: doc.data().id,
-              })
-
-          });
-
-          return programsArray;
-
-        })
-        .catch((error: Error) =>
-          console.error('Error retrieving list of programs', error)
-        )
-    }
-  }
 
   /*
    * Save New Program
