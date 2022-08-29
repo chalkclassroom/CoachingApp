@@ -130,7 +130,9 @@ class NewUserPage extends React.Component<Props, State>{
             email,
             firstName,
             lastName,
-            role
+            role,
+            site,
+            program
         } = this.state;
 
         if (!email || email === ""){
@@ -152,8 +154,23 @@ class NewUserPage extends React.Component<Props, State>{
             alert("Please select a role");
             return;
         }
+
+        if (this.state.showSite) {
+            if (!site || site === "") {
+                alert("Please select a site")
+                return;
+            }
+        }
+
+        if (this.state.showProgram) {
+            if (!program || program === "") {
+                alert("Please select a program")
+                return;
+            }
+        }
+
         const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
+        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
             .then(() => {
               this.setState({
                 createdPassword: randomString
@@ -288,9 +305,9 @@ class NewUserPage extends React.Component<Props, State>{
                             <Select
                                 labelId="role-select-label"
                                 id="role-select"
-                                // value={role}
-                                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                                //     this.setState({role: event.target.value})}
+                                value=""
+                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                    this.setState({site: event.target.value})}
                             >
                                 {this.state.sitesList.map((site, index) => {
                                 return <MenuItem value={site.id}>
@@ -304,9 +321,9 @@ class NewUserPage extends React.Component<Props, State>{
                         <Select
                             labelId="role-select-label"
                             id="role-select"
-                            // value={role}
-                            // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                            //     this.setState({role: event.target.value})}
+                            value=""
+                            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                this.setState({program: event.target.value})}
                         >
                             {this.state.programsList.map((program, index) => {
                                 return <MenuItem value={program.id}>
