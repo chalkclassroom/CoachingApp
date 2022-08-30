@@ -4190,7 +4190,7 @@ class Firebase {
 
              // Get the user's information from their id
              let tempLeader;
-             tempLeader = await this.getUser({userId: leaderId}).then((user) => {
+             tempLeader = await this.getUserProgramOrSite({userId: leaderId}).then((user) => {
                return user;
              });
 
@@ -4215,20 +4215,39 @@ class Firebase {
   /*
    * Gets a user from their ID
    */
-   getUser = async (
+   getUserProgramOrSite = async (
      data: {
-       userId: string
+       userId: string,
+       programId: string,
+       siteId: string
      }
    ): Promise<void> => {
      if(this.auth.currentUser) {
 
-       const userId = data.userId;
+       var programDoc, docType, docId;
 
-       console.log("ID => " + userId);
+       // If we're getting a user
+       if(data.userId)
+       {
+         docType = "User";
+         docId = data.userId;
+         programDoc = this.db.collection('users').doc(data.userId);
+       }
+       // If we're getting a program
+       if(data.programId)
+       {
+         docType = "Program";
+         docId = data.programId;
+         programDoc = this.db.collection('programs').doc(data.programId);
+       }
+       // If we're getting a program
+       if(data.siteId)
+       {
+         docType = "Site";
+         docId = data.siteId;
+         programDoc = this.db.collection('sites').doc(data.siteId);
+       }
 
-
-       // Get the user's document
-       var programDoc = this.db.collection('users').doc(userId);
 
        return programDoc.get().then((doc) => {
          if (doc.exists)
@@ -4238,7 +4257,7 @@ class Firebase {
          }
          else
          {
-           console.error("User with ID " + userId + " does not exist");
+           console.error(docType + " document with ID " + docId + " does not exist");
          }
        }).catch((e) => {
          console.error("There was an error retrieving the user.", e);
