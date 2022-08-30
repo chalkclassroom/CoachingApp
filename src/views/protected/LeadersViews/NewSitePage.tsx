@@ -152,6 +152,10 @@ class NewSitePage extends React.Component<Props, State>{
                   console.log("Sites added to user " + leader);
                 }).catch(e => console.error("error => ", e));
 
+                firebase.assignUserToSiteOrProgram({siteId: data.id, userId: leader}).then((res) => {
+                    console.log(leader + " Users added to site " + data.id);
+                  }).catch(e => console.error("error => site : " + data.id, e));
+
               });
             }).catch(e => {
                 console.log(e)
