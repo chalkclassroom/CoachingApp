@@ -239,7 +239,7 @@ class Firebase {
             console.log("User added to program " + program);
           }).catch(e => console.error("error => Program : " + program, e));
         }
-  
+
         if ( hasSite ) {
           this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
             console.log("Site " + site + "added to user " + data.id);
@@ -4156,6 +4156,97 @@ class Firebase {
       });
     }
   }
+
+
+  /*
+   * Gets all users that are leaders of a particular program
+   */
+   getLeadersFromProgram = async (
+     data: {
+       programId: string
+     }
+   ): Promise<void> => {
+     if(this.auth.currentUser) {
+
+       const programId = data.programId;
+
+       // Get the program's document
+       var programDoc = this.db.collection('programs').doc(programId);
+
+       // Fetch data from the program's document
+       return programDoc.get().then( async (doc) => {
+         if (doc.exists)
+         {
+           const docData = doc.data();
+
+           // Get the leaders that are saved in the document
+           const leaderIds = docData.leaders;
+           let leadersResults = [];
+
+           // Go through each leader in the list
+           for(var leader in leaderIds)
+           {
+             let leaderId = leaderIds[leader];
+
+             // Get the user's information from their id
+             let tempLeader;
+             tempLeader = await this.getUser({userId: leaderId}).then((user) => {
+               return user;
+             });
+
+             // Put that info in the results list
+             leadersResults.push(tempLeader);
+           }
+
+           return leadersResults;
+
+         }
+         else
+         {
+           console.error("Program with ID " + programId + " does not exist");
+         }
+       }).catch((e) => {
+         console.error("There was an error retrieving the program.", e);
+       });
+
+     }
+   }
+
+  /*
+   * Gets a user from their ID
+   */
+   getUser = async (
+     data: {
+       userId: string
+     }
+   ): Promise<void> => {
+     if(this.auth.currentUser) {
+
+       const userId = data.userId;
+
+       console.log("ID => " + userId);
+
+
+       // Get the user's document
+       var programDoc = this.db.collection('users').doc(userId);
+
+       return programDoc.get().then((doc) => {
+         if (doc.exists)
+         {
+           const docData = doc.data();
+           return docData;
+         }
+         else
+         {
+           console.error("User with ID " + userId + " does not exist");
+         }
+       }).catch((e) => {
+         console.error("There was an error retrieving the user.", e);
+       });
+
+     }
+   }
+
 
   /*
    * Get all users with role 'siteLeader'
