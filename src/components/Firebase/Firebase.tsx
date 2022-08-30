@@ -160,7 +160,11 @@ class Firebase {
       firstName: string
       lastName: string
     },
-    role: string
+    role: string,
+    hasProgram: boolean,
+    program: string,
+    hasSite: boolean,
+    site: string
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
@@ -187,6 +191,18 @@ class Firebase {
           role: role,
           id: userInfo.user ? userInfo.user.uid : '',
         }
+        if( hasProgram ) {
+          this.assignProgramToUser({userId: userInfo.user.uid, programId: program }).then((res) => {
+            console.log("Program " + program + "added to user " + data.id);
+          }).catch(e => console.error("error =>", e));
+        }
+
+        if ( hasSite ) {
+          this.assignSiteToUser({userId: userInfo.user.uid, siteId: site , bulkSiteIds: []}).then((res) => {
+            console.log("Site " + site + "added to user " + data.id);
+          }).catch(e => console.error("error =>", e));
+        }
+
         // Create the Practice Teacher if it does not currently exist
         let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
         if (!practiceTeacher.exists) {

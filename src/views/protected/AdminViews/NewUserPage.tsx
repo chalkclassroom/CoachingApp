@@ -171,7 +171,7 @@ class NewUserPage extends React.Component<Props, State>{
 
         const randomString = Math.random().toString(36).slice(-8)
         await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
-            .then((data) => {
+            .then(() => {
               this.setState({
                 createdPassword: randomString
               });
@@ -183,6 +183,17 @@ class NewUserPage extends React.Component<Props, State>{
                 console.log(e)
                 alert('Unable to create user. Please try again')
             }).finally(() => {
+                // if( this.state.showProgram ) {
+                //     firebase.assignProgramToUser({userId: data.id, programId: program }).then((res) => {
+                //       console.log("Program " + program + "added to user " + data.id);
+                //     }).catch(e => console.error("error =>", e));
+                //   }
+          
+                //   if ( this.state.showSite) {
+                //     firebase.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then((res) => {
+                //       console.log("Site " + site + "added to user " + data.id);
+                //     }).catch(e => console.error("error =>", e));
+                //   }
                 this.setState({ // Hold off setting new state until success has been determined
                   firstName: '',
                   lastName: '',
@@ -314,7 +325,7 @@ class NewUserPage extends React.Component<Props, State>{
                                     this.setState({site: event.target.value})}
                             >
                                 {this.state.sitesList.map((site, index) => {
-                                return <MenuItem value={site.id}>
+                                return <MenuItem key={site.id} value={site.id}>
                                     {site.name}
                                 </MenuItem>})}
                                 
@@ -330,7 +341,7 @@ class NewUserPage extends React.Component<Props, State>{
                                 this.setState({program: event.target.value})}
                         >
                             {this.state.programsList.map((program, index) => {
-                                return <MenuItem value={program.id}>
+                                return <MenuItem key={program.id} value={program.id}>
                                     {program.name}
                                 </MenuItem>})}
                         </Select>
