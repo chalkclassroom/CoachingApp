@@ -235,12 +235,18 @@ class Firebase {
           this.assignProgramToUser({userId: data.id, programId: program }).then(() => {
             console.log("Program " + program + "added to user " + data.id);
           }).catch(e => console.error("error =>", e));
+          this.assignUserToSiteOrProgram({programId: program, userId: data.id}).then(() => {
+            console.log("User added to program " + program);
+          }).catch(e => console.error("error => Program : " + program, e));
         }
-
+  
         if ( hasSite ) {
           this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
             console.log("Site " + site + "added to user " + data.id);
           }).catch(e => console.error("error =>", e));
+          this.assignUserToSiteOrProgram({siteId: site, userId: data.id}).then(() => {
+            console.log("User added to site " + site);
+          }).catch(e => console.error("error => Site : " + site, e));
         }
       }
     } catch (e) {
@@ -4443,10 +4449,10 @@ class Firebase {
     */
    assignUserToSiteOrProgram = async (
      data: {
-       siteId: string,
-       programId: string,
-       userId: string,
-       bulkUserIds: Array<string>
+       siteId?: string,
+       programId?: string,
+       userId?: string,
+       bulkUserIds?: Array<string>
       }
    ): Promise<void> => {
 

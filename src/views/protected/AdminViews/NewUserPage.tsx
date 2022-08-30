@@ -297,9 +297,9 @@ class NewUserPage extends React.Component<Props, State>{
                             >
                                 <MenuItem onClick={this.renderDropdown(0)} value="teacher">Teacher</MenuItem>
                                 <MenuItem onClick={this.renderDropdown(2)} value="coach">Coach</MenuItem>
-                                {lowLevelCreate ? <MenuItem onClick={this.renderDropdown(2)} value="siteLeader">Site Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="siteLeader">Site Leader</MenuItem>}
-                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(1)} value="programLeader">Program Leader</MenuItem> : <MenuItem style={{display: 'none'}} value="programLeader">Program Leader</MenuItem>}
-                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(0)} value="admin">Admin</MenuItem> : <MenuItem style={{display: 'none'}} value="admin">Admin</MenuItem>}
+                                {lowLevelCreate ? <MenuItem onClick={this.renderDropdown(2)} value="siteLeader">Site Leader</MenuItem> : <></>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(1)} value="programLeader">Program Leader</MenuItem> : <></>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(0)} value="admin">Admin</MenuItem> : <></>}
                             </Select>
                         </StyledFormControl>
                     </Grid>
