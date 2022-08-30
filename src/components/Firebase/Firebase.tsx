@@ -148,6 +148,12 @@ class Firebase {
     })
   }
 
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   /**
    * creates account for user, makes entry in users collection, adds practice teacher if role===coach
    * @param {object} userData
@@ -191,17 +197,6 @@ class Firebase {
           role: role,
           id: userInfo.user ? userInfo.user.uid : '',
         }
-        if( hasProgram ) {
-          this.assignProgramToUser({userId: userInfo.user.uid, programId: program }).then((res) => {
-            console.log("Program " + program + "added to user " + data.id);
-          }).catch(e => console.error("error =>", e));
-        }
-
-        if ( hasSite ) {
-          this.assignSiteToUser({userId: userInfo.user.uid, siteId: site , bulkSiteIds: []}).then((res) => {
-            console.log("Site " + site + "added to user " + data.id);
-          }).catch(e => console.error("error =>", e));
-        }
 
         // Create the Practice Teacher if it does not currently exist
         let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
@@ -236,6 +231,17 @@ class Firebase {
               )
             )
         })
+        if( hasProgram ) {
+          this.assignProgramToUser({userId: data.id, programId: program }).then(() => {
+            console.log("Program " + program + "added to user " + data.id);
+          }).catch(e => console.error("error =>", e));
+        }
+
+        if ( hasSite ) {
+          this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
+            console.log("Site " + site + "added to user " + data.id);
+          }).catch(e => console.error("error =>", e));
+        }
       }
     } catch (e) {
       console.log("An Error occurred when creating the user:")

@@ -170,7 +170,7 @@ class NewUserPage extends React.Component<Props, State>{
         }
 
         const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
+        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
             .then(() => {
               this.setState({
                 createdPassword: randomString
@@ -183,17 +183,6 @@ class NewUserPage extends React.Component<Props, State>{
                 console.log(e)
                 alert('Unable to create user. Please try again')
             }).finally(() => {
-                // if( this.state.showProgram ) {
-                //     firebase.assignProgramToUser({userId: data.id, programId: program }).then((res) => {
-                //       console.log("Program " + program + "added to user " + data.id);
-                //     }).catch(e => console.error("error =>", e));
-                //   }
-          
-                //   if ( this.state.showSite) {
-                //     firebase.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then((res) => {
-                //       console.log("Site " + site + "added to user " + data.id);
-                //     }).catch(e => console.error("error =>", e));
-                //   }
                 this.setState({ // Hold off setting new state until success has been determined
                   firstName: '',
                   lastName: '',
