@@ -23,13 +23,11 @@ import PeopleIcon from "@material-ui/icons/People";
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import { Calendar, momentLocalizer, SlotInfo } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import NewEventStepper from '../../../components/MyTeachersComponents/NewEventStepper';
 import CalendarEventPopover from '../../../components/MyTeachersComponents/CalendarEventPopover';
 import MyProgramsTable from '../../../components/LeadersComponents/MyProgramsTable';
-import EditTeacherDialog from '../../../components/MyTeachersComponents/EditTeacherDialog';
-import TeacherDetails from '../../../components/MyTeachersComponents/TeacherDetails';
+import EditProgramDialog from '../../../components/LeadersComponents/EditProgramDialog';
+import ProgramDetails from '../../../components/LeadersComponents/ProgramDetails';
 import moment from 'moment';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -39,7 +37,6 @@ import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 import Firebase from '../../../components/Firebase'
 
-const localizer = momentLocalizer(moment);
 
 /**
  * specifies styling for modal
@@ -293,9 +290,9 @@ interface Teacher {
 
 interface State {
   teachers: Array<Teacher>,
-  selectedTeacher: Teacher | undefined,
+  selectedProgram: Teacher | undefined,
   searched: Array<Teacher>,
-  teacherDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
+  ProgramDetails: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}>,
   isAdding: boolean,
   editing: boolean,
   inputFirstName: string,
@@ -337,9 +334,14 @@ class MyProgramsPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       teachers: [],
-      selectedTeacher: undefined,
+      selectedProgram: undefined,
+      selectedProgramLeaders: [],
+      selectedProgramLeadersIds: [],
+      selectedProgramSites: undefined,
+      allSitesList: [],
+      allLeadersList: [],
       searched: [],
-      teacherDetails: [],
+      ProgramDetails: [],
       isAdding: false,
       editing: false,
       inputFirstName: "",
@@ -372,26 +374,6 @@ class MyProgramsPage extends React.Component<Props, State> {
     };
   }
 
-  addEventsToTeachers = (): Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> => {
-    const teachers = [...this.state.searched];
-    const teachersWithEvents: Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> = [];
-    teachers.forEach((teacher) => {
-      const teacherEvents = this.state.allEvents.filter(obj => {
-        return( obj.resource === teacher.id && !obj.appointment )
-      })
-      const mostRecentEvent = teacherEvents.length > 0 ? (teacherEvents.reduce(function(prev, current) {
-        return (new Date(prev.start) > new Date(current.start)) ? prev : current
-      })) : (undefined)
-      teachersWithEvents.push({
-        ...teacher,
-        start: mostRecentEvent ? mostRecentEvent.start : undefined,
-        title: mostRecentEvent ? mostRecentEvent.title : undefined,
-        type: mostRecentEvent ? mostRecentEvent.type : undefined
-      })
-    })
-    return teachersWithEvents
-  }
-
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
@@ -401,124 +383,32 @@ class MyProgramsPage extends React.Component<Props, State> {
      */
     firebase.getProgramsForUser({userId: "user"}).then(data => {
       this.setState({programDetails: data});
+
+      // Signal that data is loaded so we can remove loading icon
+      this.setState({dataLoaded: true});
+
     }).catch((e) => {
-      console.error("ERROR ", e)
+      console.error("ERROR ", e);
     });
 
 
+    /*
+     * Build list of sites for the dropdown in the edit component
+     */
+    this.setState({allSitesList: ["Test", "Sweet"]});
 
-
-    let allEvents: Array<Types.CalendarEvent> = [];
-    this.setState({
-      searched: this.props.teacherList
+    /*
+     * Build list of leader for the dropdown in the edit component
+     */
+    //this.setState({allLeadersList: ["Test2", "Sweet2"]});
+    firebase.getAllLeaders().then(data => {
+      var results = [];
+      this.setState({allLeadersList: data});
+    }).catch((e) => {
+      console.error("ERROR ", e);
     });
-    firebase.getRecentObservations().then((data: Array<{
-      id: string,
-      sessionStart: {value: Date},
-      sessionEnd: {value: Date},
-      teacher: string,
-      type: Types.ToolNamesKey
-    }>) => {
-      const myArr: Array<Types.CalendarEvent> = [];
-      data.forEach((observation: {
-        id: string,
-        sessionStart: {value: Date},
-        sessionEnd: {value: Date},
-        teacher: string,
-        type: Types.ToolNamesKey
-      }) => {
-        myArr.push({
-          title: 'Observation',
-          start: observation.sessionStart.value,
-          end: observation.sessionEnd.value,
-          allDay: false,
-          resource: observation.teacher.slice(6),
-          type: observation.type,
-          id: observation.id
-        })
-      })
-      allEvents = allEvents.concat(myArr)
-    }).then(() => {
-      firebase.getActionPlanEvents().then((actionPlanEvents: Array<Types.CalendarEvent>) => {
-        allEvents = allEvents.concat(actionPlanEvents)
-      }).then(() => {
-        firebase.getConferencePlanEvents().then((conferencePlanEvents: Array<Types.CalendarEvent>) => {
-          allEvents = allEvents.concat(conferencePlanEvents)
-        }).then(() => {
-          firebase.getAppointments().then((appointmentEvents: Array<Types.CalendarEvent>) => {
-            allEvents = allEvents.concat(appointmentEvents)
-          }).then(() => {
-            this.setState({
-              allEvents: allEvents
-            }, () => {
-              const teacherDetails = this.addEventsToTeachers();
-              this.setState({
-                teacherDetails: teacherDetails,
-                dataLoaded: true
-              })
-            })
-          })
-        })
-      })
-    })
-    this.setState({
-      teachers: this.props.teacherList
-    })
   }
 
-  createAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
-    const firebase = this.context;
-    firebase.createAppointment(teacherId, date, tool, type).then((id: string) => {
-      const newEvent = {
-        title: type,
-        start: date,
-        end: date,
-        allDay: false,
-        resource: teacherId,
-        type: tool,
-        id: id,
-        appointment: true
-      }
-      const allEventsUpdated = [...this.state.allEvents, newEvent]
-      this.setState({allEvents: allEventsUpdated})
-    })
-  }
-
-  saveAppointment = (id: string, teacherId: string, date: Date, tool: string, type: string): void => {
-    const firebase = this.context;
-    firebase.saveAppointment(id, teacherId, date, tool, type).then((id: string) => {
-      const newEvent = {
-        title: type,
-        start: date,
-        end: date,
-        allDay: false,
-        resource: teacherId,
-        type: tool,
-        id: id,
-        appointment: true
-      }
-      const updatedEvents = [...this.state.allEvents]
-      const index = updatedEvents.findIndex(event => event.id === newEvent.id)
-      updatedEvents.splice(index, 1)
-      updatedEvents.push(newEvent)
-      this.setState({allEvents: updatedEvents})
-    })
-  }
-
-  deleteAppointment = (id: string): void => {
-    const firebase = this.context;
-    firebase.removeAppointment(id).then(() => {
-      const updatedEvents = [...this.state.allEvents]
-      const index = updatedEvents.findIndex(event => event.id === id)
-      updatedEvents.splice(index, 1)
-      this.setState({allEvents: updatedEvents})
-    })
-  }
-
-  getAppointment = (teacherId: string, date: Date, tool: string, type: string): void => {
-    const firebase = this.context;
-    firebase.completeAppointment(teacherId, type, tool)
-  }
 
   /**
    * function for editing teacher name or email
@@ -526,6 +416,8 @@ class MyProgramsPage extends React.Component<Props, State> {
    */
   onChangeText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const text = event.target.value.toLowerCase();
+    console.log("TEXT : " + text);
+
     if (text === "") {
       this.setState((prevState: State) => {
         return { searched: prevState.teachers }; // original teacher list
@@ -547,12 +439,64 @@ class MyProgramsPage extends React.Component<Props, State> {
   /**
    * @param {Teacher} teacherInfo
    */
-  selectTeacher = (teacherInfo: Teacher): void => {
+  selectProgram = (programInfo: Teacher): void => {
+    const firebase = this.context;
+
+    // Get the leaders for the newly selected program and save it to state
+    firebase.getLeadersFromProgram({programId: programInfo.id}).then(data => {
+      this.setState({selectedProgramLeaders: data});
+
+      // Set the array of ids for the 'Edit Program' component
+      var tempArray = [];
+      for(var programIndex in data)
+      {
+        tempArray.push(data[programIndex].id)
+      }
+      this.setState({selectedProgramLeadersIds: tempArray});
+    }).catch((e) => {
+      console.error("ERROR ", e);
+    });
+
+
+    this.getSites(programInfo.id);
+
+    // Change the selected program and open the details popup
     this.setState({
       view: 3,
-      selectedTeacher: teacherInfo
+      selectedProgram: programInfo
     })
+
   };
+
+  handleSitesChange = (data) => {
+    console.log("SITES CHANGE " + data);
+    this.setState({selectedProgramLeadersIds: data});
+  }
+
+  getSites = async (programId) => {
+    const firebase = this.context;
+
+    // Get all the sites for the newly selected program and save it to state
+    firebase.getUserProgramOrSite({programId: programId}).then( async (data) => {
+      const sites = data.sites;
+      let sitesResults = [];
+      for(var site in sites)
+      {
+        console.log("Site ID : " + sites[site]);
+        var tempSite = await firebase.getUserProgramOrSite({siteId: sites[site]});
+        console.log("Site Name : " + tempSite.name);
+
+        sitesResults.push(tempSite);
+
+      }
+
+      this.setState({selectedProgramSites: sitesResults});
+
+    }).catch((e) => {
+      console.error("ERROR ", e);
+    });
+  }
+
 
   /**
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
@@ -647,91 +591,11 @@ class MyProgramsPage extends React.Component<Props, State> {
     }
   };
 
-  handleAddConfirm = (): void | null => {
-    const {
-      inputFirstName,
-      inputLastName,
-      inputSchool,
-      inputEmail,
-      inputNotes,
-      inputPhone,
-      fnErrorText,
-      lnErrorText,
-      emailErrorText,
-      schoolErrorText,
-      notesErrorText,
-      phoneErrorText
-    } = this.state;
-    this.validateInputText("inputFirstName", inputFirstName);
-    this.validateInputText("inputLastName", inputLastName);
-    this.validateInputText("inputEmail", inputEmail);
-    this.validateInputText("inputSchool", inputSchool);
-    if (
-      // any inputs cause an error or required are missing
-      !!fnErrorText ||
-      !!lnErrorText ||
-      !!emailErrorText ||
-      !!schoolErrorText ||
-      !!notesErrorText ||
-      !!phoneErrorText ||
-      !inputFirstName ||
-      !inputLastName ||
-      !inputEmail ||
-      !inputSchool
-    ) {
-      return null;
-    } else {
-      // fields are validated
-      const firebase = this.context;
-      firebase
-        .addTeacher({
-          firstName: inputFirstName,
-          lastName: inputLastName,
-          school: inputSchool,
-          email: inputEmail,
-          notes: inputNotes,
-          phone: inputPhone
-        })
-        .then((id: string) =>
-          firebase
-            .getTeacherInfo(id)
-            .then((teacherInfo: Teacher) => {
-              this.props.addTeacher(teacherInfo);
-              this.setState(
-                prevState => {
-                  return {
-                    teachers: prevState.teachers.concat(teacherInfo),
-                    searched: prevState.teachers.concat(teacherInfo),
-                    teacherDetails: prevState.teacherDetails.concat({...teacherInfo, type: undefined, title: '', start: undefined })
-                  };
-                },
-                () => {
-                  this.handleCloseModal();
-                  this.handleAddAlert(true);
-                }
-              )
-            })
-            .catch((error: Error) => {
-              console.error(
-                "Error occurred fetching new teacher's info: ",
-                error
-              );
-              this.handleCloseModal();
-              this.handleAddAlert(false);
-            })
-        )
-        .catch((error: Error) => {
-          console.error("Error occurred adding teacher to dB: ", error);
-          this.handleCloseModal();
-          this.handleAddAlert(false);
-        });
-    }
-  };
 
   handleEditConfirm = (): void | null => {
     const {
       // teacherUID,
-      selectedTeacher,
+      selectedProgram,
       inputFirstName,
       inputLastName,
       inputSchool,
@@ -744,7 +608,7 @@ class MyProgramsPage extends React.Component<Props, State> {
       schoolErrorText,
       notesErrorText,
       phoneErrorText,
-      teacherDetails
+      ProgramDetails
     } = this.state;
     this.validateInputText("inputFirstName", inputFirstName);
     this.validateInputText("inputLastName", inputLastName);
@@ -764,11 +628,11 @@ class MyProgramsPage extends React.Component<Props, State> {
       !inputSchool
     ) {
       return null;
-    } else if (selectedTeacher) {
+    } else if (selectedProgram) {
       // fields are validated
       const firebase = this.context;
       if (
-        firebase.setTeacherInfo(selectedTeacher.id, {
+        firebase.setTeacherInfo(selectedProgram.id, {
           firstName: inputFirstName,
           lastName: inputLastName,
           school: inputSchool,
@@ -780,16 +644,16 @@ class MyProgramsPage extends React.Component<Props, State> {
         // Edit successfully written
         this.setState(
           {
-            selectedTeacher: {
+            selectedProgram: {
               email: inputEmail,
               firstName: inputFirstName,
               lastName: inputLastName,
               notes: inputNotes,
-              id: selectedTeacher.id,
+              id: selectedProgram.id,
               phone: inputPhone,
-              role: selectedTeacher.role,
+              role: selectedProgram.role,
               school: inputSchool,
-              unlocked: selectedTeacher.unlocked
+              unlocked: selectedProgram.unlocked
             },
             inputFirstName: inputFirstName,
             inputLastName: inputLastName,
@@ -805,27 +669,27 @@ class MyProgramsPage extends React.Component<Props, State> {
             notesErrorText: ""
           },
           () => {
-            const updatedTeacherDetails = [...teacherDetails];
-            const index = updatedTeacherDetails.findIndex(x => x.id === selectedTeacher.id);
-            const updatedTeacherWithDetails = {...updatedTeacherDetails[index]}
+            const updatedProgramDetails = [...ProgramDetails];
+            const index = updatedProgramDetails.findIndex(x => x.id === selectedProgram.id);
+            const updatedTeacherWithDetails = {...updatedProgramDetails[index]}
             updatedTeacherWithDetails.firstName = inputFirstName;
             updatedTeacherWithDetails.lastName = inputLastName;
             updatedTeacherWithDetails.email = inputEmail;
             updatedTeacherWithDetails.school = inputSchool;
             updatedTeacherWithDetails.phone = inputPhone;
             updatedTeacherWithDetails.notes = inputNotes;
-            updatedTeacherDetails[index] = {...updatedTeacherWithDetails};
+            updatedProgramDetails[index] = {...updatedTeacherWithDetails};
             this.setState({
-              teacherDetails: updatedTeacherDetails
+              ProgramDetails: updatedProgramDetails
             })
-            const updatedTeacher = {...this.state.selectedTeacher}
+            const updatedTeacher = {...this.state.selectedProgram}
             this.handleEditAlert(true);
             this.props.updateTeacherInfo(updatedTeacher);
             const oldTeacherList = [...this.state.searched];
             const updatedTeacherList = oldTeacherList.filter(teacher => {
-              return teacher.id !== selectedTeacher.id
+              return teacher.id !== selectedProgram.id
             });
-            updatedTeacherList.push(selectedTeacher);
+            updatedTeacherList.push(selectedProgram);
             this.setState({
               searched: updatedTeacherList
             })
@@ -894,18 +758,18 @@ class MyProgramsPage extends React.Component<Props, State> {
     }
   };
 
-  closeTeacherDetails = (): void => {
-    this.setState({view: 0, selectedTeacher: undefined})
+  closeProgramDetails = (): void => {
+    this.setState({view: 0, selectedProgram: undefined})
   }
 
   handleEdit = (): void => {
     this.setState({
-      inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
-      inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
-      inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
-      inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
-      inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
-      inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
+      inputFirstName: this.state.selectedProgram ? this.state.selectedProgram.firstName : '',
+      inputLastName: this.state.selectedProgram ? this.state.selectedProgram.lastName : '',
+      inputEmail: this.state.selectedProgram ? this.state.selectedProgram.email : '',
+      inputSchool: this.state.selectedProgram ? this.state.selectedProgram.school : '',
+      inputPhone: this.state.selectedProgram ? this.state.selectedProgram.phone : '',
+      inputNotes: this.state.selectedProgram ? this.state.selectedProgram.notes : '',
     }, (): void => {
       this.setState({editing: true})
     })
@@ -933,14 +797,14 @@ class MyProgramsPage extends React.Component<Props, State> {
   handleDeleteConfirm = (): Promise<void> => {
     const firebase = this.context;
     return firebase
-      .removePartner(this.state.selectedTeacher.id)
+      .removePartner(this.state.selectedProgram.id)
       .then(() => {
-        this.props.removeTeacher(this.state.selectedTeacher.id);
-        const updatedTeacherDetails = [...this.state.teacherDetails];
-        const index = updatedTeacherDetails.findIndex(x => x.id === this.state.selectedTeacher.id);
-        updatedTeacherDetails.splice(index, 1)
+        this.props.removeTeacher(this.state.selectedProgram.id);
+        const updatedProgramDetails = [...this.state.ProgramDetails];
+        const index = updatedProgramDetails.findIndex(x => x.id === this.state.selectedProgram.id);
+        updatedProgramDetails.splice(index, 1)
         this.setState({
-          teacherDetails: updatedTeacherDetails
+          ProgramDetails: updatedProgramDetails
         })
       })
       .catch(() => {
@@ -1023,12 +887,12 @@ class MyProgramsPage extends React.Component<Props, State> {
         clickedEvent: event
       });
       if (event.appointment) {
-        const selectedTeacher = this.props.teacherList.filter(teacher => {
+        const selectedProgram = this.props.teacherList.filter(teacher => {
           return teacher.id === event.resource
         });
         this.setState({
           newEventDate: event.start,
-          newEventTeacher: selectedTeacher[0],
+          newEventTeacher: selectedProgram[0],
           newEventTool: event.type,
           newEventType: event.title
         })
@@ -1199,7 +1063,7 @@ class MyProgramsPage extends React.Component<Props, State> {
                     <MyProgramsTable
                       onChangeText={this.onChangeText}
                       programDetails={this.state.programDetails}
-                      selectTeacher={this.selectTeacher}
+                      selectProgram={this.selectProgram}
                       addingTeacher={(): void => this.setState({ isAdding: true })}
                       push={this.props.history.push}
                     />
@@ -1210,25 +1074,27 @@ class MyProgramsPage extends React.Component<Props, State> {
                       <img src={CHALKLogoGIF} alt="Loading" width="80%" />
                     </Grid>
                   )}
-                  <TeacherDetails
-                    teacher={this.state.selectedTeacher}
+                  <ProgramDetails
+                    program={this.state.selectedProgram}
                     recentEvents={this.state.allEvents}
                     handleDeleteConfirm={this.handleDeleteConfirm}
                     handleCloseModal={this.handleCloseModal}
                     setEditing={(): void => {
                       this.setState({
-                        inputFirstName: this.state.selectedTeacher ? this.state.selectedTeacher.firstName : '',
-                        inputLastName: this.state.selectedTeacher ? this.state.selectedTeacher.lastName : '',
-                        inputEmail: this.state.selectedTeacher ? this.state.selectedTeacher.email : '',
-                        inputSchool: this.state.selectedTeacher ? this.state.selectedTeacher.school : '',
-                        inputPhone: this.state.selectedTeacher ? this.state.selectedTeacher.phone : '',
-                        inputNotes: this.state.selectedTeacher ? this.state.selectedTeacher.notes : '',
+                        inputFirstName: this.state.selectedProgram ? this.state.selectedProgram.firstName : '',
+                        inputLastName: this.state.selectedProgram ? this.state.selectedProgram.lastName : '',
+                        inputEmail: this.state.selectedProgram ? this.state.selectedProgram.email : '',
+                        inputSchool: this.state.selectedProgram ? this.state.selectedProgram.school : '',
+                        inputPhone: this.state.selectedProgram ? this.state.selectedProgram.phone : '',
+                        inputNotes: this.state.selectedProgram ? this.state.selectedProgram.notes : '',
                       }, (): void => {
                         this.setState({editing: true})
                       })
                     }}
-                    closeTeacherDetails={this.closeTeacherDetails}
+                    closeProgramDetails={this.closeProgramDetails}
                     open={this.state.view===3}
+                    programLeaders={this.state.selectedProgramLeaders}
+                    programSites={this.state.selectedProgramSites}
                   />
                 </Grid>
               </Grid>
@@ -1244,56 +1110,13 @@ class MyProgramsPage extends React.Component<Props, State> {
                   }}
                   showLabels
                 >
-                  <BottomNavigationAction label="Teachers" icon={<PeopleIcon />} />
-                  <BottomNavigationAction label="Calendar" icon={<DateRangeIcon />} />
+                  <BottomNavigationAction label="Programs" icon={<PeopleIcon />} />
                 </BottomNavigation>
               </Paper>
             </Grid>
           ) : (null)}
-          <Modal open={newEventModal}>
-            <div style={getModalStyle()} className={classes.paper}>
-              <Grid container direction="column" style={{height: '100%', overflowY: 'auto'}}>
-                <Grid item style={{height: '20%'}}>
-                  <Grid container direction="row" style={{height: '100%'}}>
-                    <Grid item xs={1} />
-                    <Grid item xs={10}>
-                      <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', padding: '1em'}}>
-                        {clickedEvent ? 'Update Event' : 'Create New Event'}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1}>
-                      <IconButton style={{ padding: 10 }}>
-                        <Tooltip title={"Close"} placement={"right"}>
-                          <CloseIcon
-                            onClick={(): void => {this.setState({newEventModal: false})}}
-                          />
-                        </Tooltip>
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item style={{height: '80%'}}>
-                  <NewEventStepper
-                    id={clickedEvent ? clickedEvent.id : undefined}
-                    date={newEventDate}
-                    setDate={(newDate: Date): void => {this.setState({newEventDate: newDate})}}
-                    teacher={newEventTeacher}
-                    setTeacher={(newTeacher: Types.Teacher): void => {this.setState({newEventTeacher: newTeacher})}}
-                    tool={newEventTool}
-                    setTool={(newTool: Types.ToolNamesKey): void => {this.setState({newEventTool: newTool})}}
-                    type={newEventType}
-                    setType={(newType: string): void => {this.setState({newEventType: newType})}}
-                    teacherList={this.state.teachers}
-                    closeModal={(): void => this.setState({newEventModal: false})}
-                    createAppointment={this.createAppointment}
-                    saveAppointment={this.saveAppointment}
-                    closeAppointmentModal={handleClose}
-                  />
-                </Grid>
-              </Grid>
-            </div>
-          </Modal>
-          <EditTeacherDialog
+
+          <EditProgramDialog
             adding={isAdding}
             editing={editing}
             handleCloseModal={this.handleCloseModal}
@@ -1311,6 +1134,10 @@ class MyProgramsPage extends React.Component<Props, State> {
             phoneErrorText={phoneErrorText}
             notesErrorText={notesErrorText}
             handleComplete={isAdding ? this.handleAddConfirm : this.handleEditConfirm}
+            classes={classes}
+            leadersOptions={this.state.allLeadersList}
+            handleSitesChange={this.handleSitesChange}
+            selectedProgramLeaders={this.state.selectedProgramLeadersIds}
           />
           <Dialog
             open={addAlert}
