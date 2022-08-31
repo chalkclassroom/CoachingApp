@@ -395,7 +395,12 @@ class MyProgramsPage extends React.Component<Props, State> {
     /*
      * Build list of sites for the dropdown in the edit component
      */
-    this.setState({allSitesList: ["Test", "Sweet"]});
+    // this.setState({allSitesList: ["Test", "Sweet"]});
+    firebase.getSites({userId: "user"}).then(data => {
+      this.setState({allSitesList: data});
+    }).catch((e) => {
+      console.error("ERROR ", e);
+    });
 
     /*
      * Build list of leader for the dropdown in the edit component
@@ -1063,6 +1068,8 @@ class MyProgramsPage extends React.Component<Props, State> {
                     <MyProgramsTable
                       onChangeText={this.onChangeText}
                       programDetails={this.state.programDetails}
+                      allSites={this.state.allSitesList}
+                      allLeaders={this.state.allLeadersList}
                       selectProgram={this.selectProgram}
                       addingTeacher={(): void => this.setState({ isAdding: true })}
                       push={this.props.history.push}
