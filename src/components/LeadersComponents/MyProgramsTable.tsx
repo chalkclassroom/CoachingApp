@@ -33,6 +33,10 @@ import AddIcon from "@material-ui/icons/Add";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
 import DateRange from '@material-ui/icons/DateRange';
+import id from 'date-fns/esm/locale/id/index.js';
+import coachState from '../../state/reducers/coach-state';
+import { resultsAriaMessage } from 'react-select/src/accessibility';
+import LeadersDashboard from '../../views/protected/LeadersViews/LeadersDashboard';
 
 
 
@@ -158,8 +162,23 @@ const useStyles = makeStyles({
   }
 });
 
-function Row(props: { row }) {
-  const { row } = props;
+function getSiteLeaders(site, leader) {
+  let result = ""
+
+  leader.map((leader) => {
+    if (leader.sites) {
+      if (leader.sites.includes(site)) {
+        result += (leader.firstName + " " + leader.lastName + ", ");
+      }
+    }
+  })
+
+  result = result.replace(/,\s*$/, "");
+  return result;
+}
+
+function Row(props: { row, sites, siteLeaders, programLeaders }) {
+  const { row, sites, siteLeaders, programLeaders } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -177,7 +196,7 @@ function Row(props: { row }) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.name} Leader</TableCell>
+        <TableCell align="right">{programLeaders}</TableCell>
         <TableCell align="right">Hold</TableCell>
         <TableCell align="right">Hold</TableCell>
         <TableCell align="right">Hold</TableCell>
@@ -198,12 +217,12 @@ function Row(props: { row }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.sites.map((sitesRow) => (
-                    <TableRow key={sitesRow}>
+                  {sites.map((sitesRow, index) => (
+                    <TableRow key={index}>
                       <TableCell component="th" scope="row">
-                        {sitesRow}
+                        {sitesRow.name}
                       </TableCell>
-                      <TableCell>Hold</TableCell>
+                        <TableCell>{getSiteLeaders(sitesRow.id, siteLeaders)}</TableCell>
                       <TableCell align="right">Edit/Delete</TableCell>
                     </TableRow>
                   ))}
@@ -217,10 +236,83 @@ function Row(props: { row }) {
   );
 }
 
+function filterSites(programs, sites) {
+  let result = [];
+
+  for (let i = 0; i < programs.length; i++) {
+    let temp = [];
+    for (let j = 0; j < sites.length; j++) {
+      for (let k = 0; k < programs[i].sites.length; k++) {
+        if ( sites[j].id == programs[i].sites[k]) {
+          temp.push(sites[j]);
+        }
+      }
+    }
+    result.push(temp);
+  }
+  return result;
+}
+
+function filterSiteLeaders(programs, leaders) {
+  let result  = [];
+
+  for (let m = 0; m < programs.length; m++) { //2
+    let temp = []
+    for (let i = 0; i < leaders.length; i++) {
+      if (leaders[i].role === "siteLeader") {
+        if(leaders[i].sites) {
+          for (let j = 0; j < programs[m].length; j++) { //9
+            if (leaders[i].sites.includes(programs[m][j].id)) {
+              temp.push(leaders[i]);
+              j = programs[m].length;
+            }
+          }
+        }
+      }
+    }
+    result.push(temp)
+  }
+  return result;
+}
+
+function filterProgramLeaders(program, leaders) {
+  let result  = [];
+
+  for (let j = 0; j < program.length; j++) { //2
+    let temp = [];
+    for (let i = 0; i < leaders.length; i++) { //24
+      if (leaders[i].role === "programLeader") {
+        if (leaders[i].programs) {
+          if (leaders[i].programs.includes(program[j].id)) {
+            temp.push(leaders[i]);
+          }
+        }
+      }
+    }
+    result.push(temp)
+  }
+  let returnResult = []
+  for (let i = 0; i < result.length; i++) {
+    let returnString = "";
+    result[i].map((res) => {
+          returnString += (res.firstName + " " + res.lastName + ", ")
+        })
+    returnString = returnString.replace(/,\s*$/, "");
+    returnResult.push(returnString);
+  }
+  return returnResult;
+}
+
 
 export default function MyProgramsTable(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { push, onChangeText, selectTeacher, addingTeacher, programDetails } = props;
+  const { push, onChangeText, selectTeacher, addingTeacher, programDetails, allSites, allLeaders } = props;
+
+  const sites = filterSites(programDetails, allSites);
+  const siteLeaders = filterSiteLeaders(sites, allLeaders);
+
+  const programLeaders = filterProgramLeaders(programDetails, allLeaders);
+
 
   return (
     <Grid container direction="column" justify="center" alignItems="stretch">
@@ -248,74 +340,6 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
           </Fab>
         </Grid>
       </Grid>
-      {/* <Grid item style={{paddingTop: '1em'}}>
-        <Grid className={classes.tableWrapper}>
-          <Table style={{overflowY: 'auto'}} stickyHeader={true}>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.nameCellHeader}>
-                Program Name
-              </TableCell>
-              <TableCell className={classes.nameCellHeader}>
-                Program Leader
-              </TableCell> */}
-              {/*
-              <TableCell className={classes.nameCellHeader}>
-                Recent Activity
-              </TableCell>
-              <TableCell className={classes.nameCellHeader}>
-                Date
-              </TableCell>
-              <TableCell className={classes.nameCellHeader}>
-                Latest Observation
-              </TableCell>
-              */}
-            {/* </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-
-              programDetails.sort(((a, b) => new Date(b.start).valueOf() - new Date(a.start).valueOf())).map((program, index) => {
-              return (
-                <TableRow
-                  className={classes.row}
-                  key={index}
-                  onClick={(): void => selectTeacher(teacher)}
-                >
-                  <TableCell className={classes.nameField} style={{width: '22%'}}>
-                    {program.name}
-                  </TableCell>
-                  <TableCell className={classes.nameField} style={{width: '22%'}}>
-                    {program.firstName}
-                  </TableCell> */}
-                  {/*
-                  <TableCell className={classes.nameField} style={{width: '22%'}}>
-                    {teacher.title ? teacher.title : 'N/A'}
-                  </TableCell>
-                  <TableCell className={classes.nameField} style={{width: '22%'}}>
-                    {teacher.start ? (moment(new Date(teacher.start)).format('MM/DD/YYYY')) : ('N/A')
-                    }
-                  </TableCell>
-                  <TableCell className={classes.nameField}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      {teacher.type ? (<img
-                        src={ToolIcons[teacher.type]}
-                        alt="Icon"
-                        style={{maxWidth: '4em'}}
-                      />) : null}
-                    </Grid>
-                  </TableCell>
-                  */}
-                {/* </TableRow>
-              )
-            })
-          }
-          </TableBody>
-        </Table>
-        </Grid>
-      </Grid> */}
-
-
       <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
               <TableHead>
@@ -329,9 +353,9 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {programDetails.map((row) => (
-                  <Row key={row.name} row={row} />
-                ))}
+                {programDetails.map((row, index) => {
+                  return <Row key={index} row={row} siteLeaders={siteLeaders[index]} sites={sites[index]} programLeaders={programLeaders[index]} />
+              })}
               </TableBody>
             </Table>
           </TableContainer>
