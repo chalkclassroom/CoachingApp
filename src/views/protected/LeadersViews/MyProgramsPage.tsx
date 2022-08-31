@@ -334,11 +334,12 @@ class MyProgramsPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       teachers: [],
-      selectedProgram: undefined,
+      selectedProgram: {id: "", name: ""},
+      selectedProgramName: "",
       selectedProgramLeaders: [],
-      selectedProgramLeadersIds: [],
       selectedProgramSites: undefined,
       allSitesList: [],
+      allSitesOptions: [],
       allLeadersList: [],
       searched: [],
       ProgramDetails: [],
@@ -395,9 +396,24 @@ class MyProgramsPage extends React.Component<Props, State> {
     /*
      * Build list of sites for the dropdown in the edit component
      */
-    // this.setState({allSitesList: ["Test", "Sweet"]});
     firebase.getSites({userId: "user"}).then(data => {
       this.setState({allSitesList: data});
+
+    }).catch((e) => {
+      console.error("ERROR ", e);
+    });
+
+    firebase.getSites().then(data => {
+      // Set the array of site ids for the 'Edit Program' component
+      var tempArray = [];
+      var tempObj;
+      for(var siteIndex in data)
+      {
+        tempObj = {id: data[siteIndex].id, name: data[siteIndex].name};
+        tempArray.push(tempObj);
+      }
+      this.setState({allSitesOptions: tempArray});
+
     }).catch((e) => {
       console.error("ERROR ", e);
     });
@@ -412,6 +428,33 @@ class MyProgramsPage extends React.Component<Props, State> {
     }).catch((e) => {
       console.error("ERROR ", e);
     });
+  }
+
+
+  /*
+   * Set/Reset data for selectedProgram by grabbing it from the firestore
+   */
+  setDataFromFirestore = (programId) => {
+    const firebase = this.context;
+
+    // Reset the selected program name and data
+    firebase.getUserProgramOrSite({programId: programId}).then(data => {
+        this.setState({
+          selectedProgram: data,
+          selectedProgramName: data.name,
+        })
+    });
+
+    // Set selected leader Objects
+    firebase.getLeadersFromProgram({programId: programId}).then(data => {
+      this.setState({selectedProgramLeaders: data});
+    }).catch((e) => {
+      console.error("ERROR ", e);
+    });
+
+    // Set selecte site objects
+    this.getSites(programId);
+
   }
 
 
@@ -442,28 +485,12 @@ class MyProgramsPage extends React.Component<Props, State> {
   };
 
   /**
-   * @param {Teacher} teacherInfo
+   * When a program is clicked on
    */
   selectProgram = (programInfo: Teacher): void => {
-    const firebase = this.context;
 
-    // Get the leaders for the newly selected program and save it to state
-    firebase.getLeadersFromProgram({programId: programInfo.id}).then(data => {
-      this.setState({selectedProgramLeaders: data});
-
-      // Set the array of ids for the 'Edit Program' component
-      var tempArray = [];
-      for(var programIndex in data)
-      {
-        tempArray.push(data[programIndex].id)
-      }
-      this.setState({selectedProgramLeadersIds: tempArray});
-    }).catch((e) => {
-      console.error("ERROR ", e);
-    });
-
-
-    this.getSites(programInfo.id);
+    // Set selected program information
+    this.setDataFromFirestore(programInfo.id);
 
     // Change the selected program and open the details popup
     this.setState({
@@ -473,9 +500,17 @@ class MyProgramsPage extends React.Component<Props, State> {
 
   };
 
+  // When the dropdowns are changed in the 'edit' popup
+  handleLeaderChange = (data) => {
+    var tempSelectedProgram = this.state.selectedProgram;
+    tempSelectedProgram.leaders = data;
+    this.setState({selectedProgram: tempSelectedProgram});
+  }
+
   handleSitesChange = (data) => {
-    console.log("SITES CHANGE " + data);
-    this.setState({selectedProgramLeadersIds: data});
+    var tempSelectedProgram = this.state.selectedProgram;
+    tempSelectedProgram.sites = data;
+    this.setState({selectedProgram: tempSelectedProgram});
   }
 
   getSites = async (programId) => {
@@ -509,29 +544,14 @@ class MyProgramsPage extends React.Component<Props, State> {
   handleAddText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = event.target.name;
     const val = event.target.value;
-    if (type === 'inputFirstName') {
+    console.log("TYPE: " + type);
+
+    var tempProgram = this.state.selectedProgram;
+
+    if (type === 'inputProgramName') {
+      tempProgram.name = val;
       this.setState({
-        inputFirstName: val
-      }, () => this.validateInputText(type, val))
-    } else if (type === 'inputLastName') {
-      this.setState({
-        inputLastName: val
-      }, () => this.validateInputText(type, val))
-    } else if (type === 'inputSchool') {
-      this.setState({
-        inputSchool: val
-      }, () => this.validateInputText(type, val))
-    } else if (type === 'inputEmail') {
-      this.setState({
-        inputEmail: val
-      }, () => this.validateInputText(type, val))
-    } else if (type === 'inputPhone') {
-      this.setState({
-        inputPhone: val
-      }, () => this.validateInputText(type, val))
-    } else if (type === 'inputNotes') {
-      this.setState({
-        inputNotes: val
+        selectedProgram: tempProgram
       }, () => this.validateInputText(type, val))
     }
   };
@@ -543,52 +563,11 @@ class MyProgramsPage extends React.Component<Props, State> {
    */
   validateInputText = (type: string, val: string): void => {
     switch (type) {
-      case "inputFirstName":
+      case "inputProgramName":
         if (!/^[a-zA-Z '-]{2,30}$/.test(val)) {
-          this.setState({ fnErrorText: "Invalid first name." });
+          this.setState({ fnErrorText: "Invalid Program name." });
         } else {
           this.setState({ fnErrorText: "" });
-        }
-        break;
-      case "inputLastName":
-        if (!/^[a-zA-Z '-]{2,30}$/.test(val)) {
-          this.setState({ lnErrorText: "Invalid last name." });
-        } else {
-          this.setState({ lnErrorText: "" });
-        }
-        break;
-      case "inputEmail":
-        if (!/^\S+@\S+$/.test(val)) {
-          this.setState({ emailErrorText: "Invalid email address." });
-        } else {
-          this.setState({ emailErrorText: "" });
-        }
-        break;
-      case "inputSchool":
-        if (!/^[a-zA-Z '-]{2,100}$/.test(val)) {
-          this.setState({
-            schoolErrorText: "Invalid school (max 100 characters)."
-          });
-        } else {
-          this.setState({ schoolErrorText: "" });
-        }
-        break;
-      case "inputPhone":
-        if (val === "") {
-          this.setState({ phoneErrorText: "" });
-        } else if (!/^\d{3}?-\d{3}-\d{4}$/.test(val)) {
-          this.setState({
-            phoneErrorText: "Invalid number or format (use ###-###-####)."
-          });
-        } else {
-          this.setState({ phoneErrorText: "" });
-        }
-        break;
-      case "inputNotes":
-        if (val.length > 250) {
-          this.setState({ notesErrorText: "Max 250 characters." });
-        } else {
-          this.setState({ notesErrorText: "" });
         }
         break;
       default:
@@ -599,81 +578,38 @@ class MyProgramsPage extends React.Component<Props, State> {
 
   handleEditConfirm = (): void | null => {
     const {
-      // teacherUID,
       selectedProgram,
-      inputFirstName,
-      inputLastName,
-      inputSchool,
-      inputEmail,
-      inputNotes,
-      inputPhone,
-      fnErrorText,
-      lnErrorText,
-      emailErrorText,
-      schoolErrorText,
-      notesErrorText,
-      phoneErrorText,
-      ProgramDetails
     } = this.state;
-    this.validateInputText("inputFirstName", inputFirstName);
-    this.validateInputText("inputLastName", inputLastName);
-    this.validateInputText("inputEmail", inputEmail);
-    this.validateInputText("inputSchool", inputSchool);
-    if (
-      // any inputs cause an error or required are missing
-      !!fnErrorText ||
-      !!lnErrorText ||
-      !!emailErrorText ||
-      !!schoolErrorText ||
-      !!notesErrorText ||
-      !!phoneErrorText ||
-      !inputFirstName ||
-      !inputLastName ||
-      !inputEmail ||
-      !inputSchool
-    ) {
-      return null;
-    } else if (selectedProgram) {
+
+
+    if (selectedProgram) {
       // fields are validated
       const firebase = this.context;
       if (
-        firebase.setTeacherInfo(selectedProgram.id, {
-          firstName: inputFirstName,
-          lastName: inputLastName,
-          school: inputSchool,
-          email: inputEmail,
-          phone: inputPhone,
-          notes: inputNotes
+        firebase.setProgram(selectedProgram.id, {
+          name: selectedProgram.name,
+          leaders: selectedProgram.leaders,
+          sites: selectedProgram.sites,
         })
       ) {
+
         // Edit successfully written
         this.setState(
           {
-            selectedProgram: {
-              email: inputEmail,
-              firstName: inputFirstName,
-              lastName: inputLastName,
-              notes: inputNotes,
-              id: selectedProgram.id,
-              phone: inputPhone,
-              role: selectedProgram.role,
-              school: inputSchool,
-              unlocked: selectedProgram.unlocked
-            },
-            inputFirstName: inputFirstName,
-            inputLastName: inputLastName,
-            inputSchool: inputSchool,
-            inputEmail: inputEmail,
-            inputPhone: inputPhone,
-            inputNotes: inputNotes,
-            editing: false,
-            fnErrorText: "",
-            lnErrorText: "",
-            schoolErrorText: "",
-            emailErrorText: "",
-            notesErrorText: ""
+            selectedProgram: selectedProgram,
           },
           () => {
+
+
+            // Get the leaders for the newly selected program and save it to state
+            firebase.getLeadersFromProgram({programId: selectedProgram.id}).then(data => {
+              this.setState({selectedProgramLeaders: data});
+            }).catch((e) => {
+              console.error("ERROR ", e);
+            });
+
+            this.handleCloseModal();
+            /*
             const updatedProgramDetails = [...ProgramDetails];
             const index = updatedProgramDetails.findIndex(x => x.id === selectedProgram.id);
             const updatedTeacherWithDetails = {...updatedProgramDetails[index]}
@@ -698,11 +634,13 @@ class MyProgramsPage extends React.Component<Props, State> {
             this.setState({
               searched: updatedTeacherList
             })
+            */
           }
         );
       } else {
         this.handleCloseModal();
         this.handleEditAlert(false);
+
       }
     }
   };
@@ -764,7 +702,7 @@ class MyProgramsPage extends React.Component<Props, State> {
   };
 
   closeProgramDetails = (): void => {
-    this.setState({view: 0, selectedProgram: undefined})
+    this.setState({view: 0})
   }
 
   handleEdit = (): void => {
@@ -797,6 +735,11 @@ class MyProgramsPage extends React.Component<Props, State> {
       editing: false,
       alertText: ""
     });
+
+    // Set selected program information
+    this.setDataFromFirestore(this.state.selectedProgram.id);
+
+
   };
 
   handleDeleteConfirm = (): Promise<void> => {
@@ -1102,6 +1045,7 @@ class MyProgramsPage extends React.Component<Props, State> {
                     open={this.state.view===3}
                     programLeaders={this.state.selectedProgramLeaders}
                     programSites={this.state.selectedProgramSites}
+                    programName={this.state.selectedProgramName}
                   />
                 </Grid>
               </Grid>
@@ -1143,8 +1087,11 @@ class MyProgramsPage extends React.Component<Props, State> {
             handleComplete={isAdding ? this.handleAddConfirm : this.handleEditConfirm}
             classes={classes}
             leadersOptions={this.state.allLeadersList}
+            selectedProgram={this.state.selectedProgram}
             handleSitesChange={this.handleSitesChange}
-            selectedProgramLeaders={this.state.selectedProgramLeadersIds}
+            handleLeaderChange={this.handleLeaderChange}
+            sitesOptions={this.state.allSitesOptions}
+
           />
           <Dialog
             open={addAlert}

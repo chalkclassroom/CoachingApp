@@ -83,10 +83,13 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
     notesErrorText,
     handleComplete,
     classes,
+    selectedProgram,
+    selectedSites,
     handleSitesChange,
     sitesOptions,
     leadersOptions,
-    selectedProgramLeaders
+    selectedProgramLeaders,
+    handleLeaderChange
   } = props;
 
 
@@ -107,7 +110,7 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
       aria-labelledby="add-teacher-title"
     >
       <DialogTitle id="add-teacher-title">
-        {adding ? 'Add a New Teacher' : 'Edit ' + inputFirstName + ' ' + inputLastName + '\'s Information'}
+        {adding ? 'Add a New Teacher' : 'Edit ' + selectedProgram.name + ' Information'}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -120,7 +123,7 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
         <TextField
           autoFocus
           required
-          defaultValue={inputFirstName}
+          defaultValue={selectedProgram.name}
           onChange={handleAddText}
           margin="dense"
           id="first-name"
@@ -135,7 +138,7 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
         {/*
           Leaders dropdown
           */}
-        <StyledFormControl className={classes.formControl}>
+        <StyledFormControl className={classes.formControl} fullWidth>
             <InputLabel id="role-select-label">Site Leaders</InputLabel>
             <Select
               labelId="demo-mutiple-name-label"
@@ -143,9 +146,9 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
               multiple
               className={classes.select}
               autoWidth={true}
-              value={selectedProgramLeaders}
+              value={selectedProgram.leaders}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>{
-                handleSitesChange(event.target.value)}
+                handleLeaderChange(event.target.value)}
               }
               input={<Input />}
               MenuProps={MenuProps}
@@ -162,74 +165,39 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
             </Select>
         </StyledFormControl>
 
+        {/*
+          Sites dropdown
+          */}
+        <StyledFormControl className={classes.formControl} fullWidth>
+            <InputLabel id="role-select-label">Sites</InputLabel>
+            <Select
+              labelId="demo-mutiple-name-label"
+              id="demo-mutiple-name"
+              multiple
+              className={classes.select}
+              autoWidth={true}
+              value={selectedProgram.sites}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>{
+                handleSitesChange(event.target.value)}
+              }
+              input={<Input />}
+              MenuProps={MenuProps}
+              autoWidth={true}
+            >
+              {sitesOptions.map(
+                (option, index)=>{
+
+                  return <MenuItem value={option.id}>
+                    {option.name}
+                  </MenuItem>
+
+              })}
+            </Select>
+        </StyledFormControl>
 
 
-        <TextField
-          required
-          defaultValue={inputLastName}
-          onChange={handleAddText}
-          margin="dense"
-          id="last-name"
-          name="inputLastName"
-          label="Last Name"
-          helperText={lnErrorText}
-          error={!!lnErrorText}
-          type="text"
-          fullWidth
-        />
-        <TextField
-          required
-          defaultValue={inputSchool}
-          onChange={handleAddText}
-          margin="dense"
-          id="school"
-          name="inputSchool"
-          label="School"
-          helperText={schoolErrorText}
-          error={!!schoolErrorText}
-          type="text"
-          fullWidth
-        />
-        <TextField
-          required
-          defaultValue={inputEmail}
-          onChange={handleAddText}
-          margin="dense"
-          id="email"
-          name="inputEmail"
-          label="Email"
-          helperText={emailErrorText}
-          error={!!emailErrorText}
-          type="email"
-          fullWidth
-        />
-        <TextField
-          defaultValue={inputPhone}
-          onChange={handleAddText}
-          margin="dense"
-          id="phone"
-          name="inputPhone"
-          label="Phone"
-          placeholder="###-###-####"
-          helperText={phoneErrorText}
-          error={!!phoneErrorText}
-          type="tel"
-          fullWidth
-        />
-        <TextField
-          defaultValue={inputNotes}
-          onChange={handleAddText}
-          margin="dense"
-          id="notes"
-          name="inputNotes"
-          label="Notes"
-          helperText={notesErrorText}
-          error={!!notesErrorText}
-          multiline
-          minRows={8}
-          maxRows={8}
-          fullWidth
-        />
+
+
       </DialogContent>
       <DialogActions>
         <Button

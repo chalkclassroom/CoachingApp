@@ -8,6 +8,12 @@ import DateFnsUtils from "@date-io/date-fns";
 
 const config = process.env.FIREBASE_CONFIG
 
+interface ProgramInfo {
+  name: string
+  leaders: Array<string>
+  sites: Array<string>
+}
+
 interface TeacherInfo {
   firstName: string
   lastName: string
@@ -4851,6 +4857,31 @@ class Firebase {
 
           return data;
         });
+
+   }
+
+
+
+   setProgram = async (
+     programId: string,
+     edits: ProgramInfo
+   ): Promise<void> => {
+
+     const {name, leaders, sites} = edits
+     return this.db
+       .collection('programs')
+       .doc(programId)
+       .set(
+         {
+           name: name,
+           leaders: leaders,
+           sites: sites
+         },
+         {merge: true}
+       )
+       .catch((error: Error) =>
+         console.error('Error occurred when writing document:', error)
+       )
 
    }
 

@@ -309,7 +309,8 @@ export default function ProgramDetails(props: Props): React.ReactElement {
     closeProgramDetails,
     open,
     programLeaders,
-    programSites
+    programSites,
+    programName
   } = props;
 
 
@@ -388,7 +389,7 @@ export default function ProgramDetails(props: Props): React.ReactElement {
                       minWidth: "45%"
                     }}
                   >
-                    <LabeledInfo label="Program Name" field={program.name} />
+                    <LabeledInfo label="Program Name" field={programName} />
                   </div>
                   <div
                     style={{
