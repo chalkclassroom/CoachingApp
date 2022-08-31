@@ -8,8 +8,16 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TextField
+  TextField,
+  TableContainer,
+  Box,
+  Collapse,
+  IconButton,
+  Typography,
+  Paper,
 } from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import moment from 'moment';
 import * as Types from '../../constants/Types';
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
@@ -24,6 +32,8 @@ import AssocCoopIconImage from "../../assets/images/AssocCoopIconImage.svg";
 import AddIcon from "@material-ui/icons/Add";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
+import DateRange from '@material-ui/icons/DateRange';
+
 
 
 interface Teacher {
@@ -148,6 +158,66 @@ const useStyles = makeStyles({
   }
 });
 
+function Row(props: { row }) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <React.Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <TableCell align="right">{row.name} Leader</TableCell>
+        <TableCell align="right">Hold</TableCell>
+        <TableCell align="right">Hold</TableCell>
+        <TableCell align="right">Hold</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Sites
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Leader</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.sites.map((sitesRow) => (
+                    <TableRow key={sitesRow}>
+                      <TableCell component="th" scope="row">
+                        {sitesRow}
+                      </TableCell>
+                      <TableCell>Hold</TableCell>
+                      <TableCell align="right">Edit/Delete</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
+
+
 export default function MyProgramsTable(props: Props): React.ReactElement {
   const classes = useStyles();
   const { push, onChangeText, selectTeacher, addingTeacher, programDetails } = props;
@@ -178,7 +248,7 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
           </Fab>
         </Grid>
       </Grid>
-      <Grid item style={{paddingTop: '1em'}}>
+      {/* <Grid item style={{paddingTop: '1em'}}>
         <Grid className={classes.tableWrapper}>
           <Table style={{overflowY: 'auto'}} stickyHeader={true}>
           <TableHead>
@@ -188,7 +258,7 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
               </TableCell>
               <TableCell className={classes.nameCellHeader}>
                 Program Leader
-              </TableCell>
+              </TableCell> */}
               {/*
               <TableCell className={classes.nameCellHeader}>
                 Recent Activity
@@ -200,7 +270,7 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
                 Latest Observation
               </TableCell>
               */}
-            </TableRow>
+            {/* </TableRow>
           </TableHead>
           <TableBody>
             {
@@ -217,7 +287,7 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
                   </TableCell>
                   <TableCell className={classes.nameField} style={{width: '22%'}}>
                     {program.firstName}
-                  </TableCell>
+                  </TableCell> */}
                   {/*
                   <TableCell className={classes.nameField} style={{width: '22%'}}>
                     {teacher.title ? teacher.title : 'N/A'}
@@ -236,14 +306,35 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
                     </Grid>
                   </TableCell>
                   */}
-                </TableRow>
+                {/* </TableRow>
               )
             })
           }
           </TableBody>
         </Table>
         </Grid>
-      </Grid>
-    </Grid>
+      </Grid> */}
+
+
+      <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Program Name</TableCell>
+                  <TableCell align="right">Program Leader</TableCell>
+                  <TableCell align="right">Recent Activity</TableCell>
+                  <TableCell align="right">Date</TableCell>
+                  <TableCell align="right">Latest Observation</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {programDetails.map((row) => (
+                  <Row key={row.name} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          </Grid>
   )
 }
