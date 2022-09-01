@@ -196,10 +196,10 @@ function Row(props: { row, sites, siteLeaders, programLeaders }) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{programLeaders}</TableCell>
-        <TableCell align="right">Hold</TableCell>
-        <TableCell align="right">Hold</TableCell>
-        <TableCell align="right">Hold</TableCell>
+        <TableCell align="left">{programLeaders}</TableCell>
+        <TableCell align="right">Edit/Delete</TableCell>
+        {/* <TableCell align="right">Hold</TableCell>
+        <TableCell align="right">Hold</TableCell> */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -212,7 +212,7 @@ function Row(props: { row, sites, siteLeaders, programLeaders }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Leader</TableCell>
+                    <TableCell>Leaders</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -346,10 +346,10 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
                 <TableRow>
                   <TableCell />
                   <TableCell>Program Name</TableCell>
-                  <TableCell align="right">Program Leader</TableCell>
-                  <TableCell align="right">Recent Activity</TableCell>
-                  <TableCell align="right">Date</TableCell>
-                  <TableCell align="right">Latest Observation</TableCell>
+                  <TableCell align="left">Program Leaders</TableCell>
+                  <TableCell align="right">Action</TableCell>
+                  {/* <TableCell align="right">Date</TableCell>
+                  <TableCell align="right">Latest Observation</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
