@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const SidebarParent = styled.div`
   background: white;
-  width: 1000px;
+  white-space: nowrap;
   height: fit-content;
 `;
 
