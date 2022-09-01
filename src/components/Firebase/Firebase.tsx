@@ -4909,8 +4909,6 @@ class Firebase {
        // If we're deleting a site
        if(data.siteId)
        {
-         console.log("site");
-
          itemType = "Site";
          itemId = data.siteId;
          document =  this.db.collection('sites').doc(data.siteId);
