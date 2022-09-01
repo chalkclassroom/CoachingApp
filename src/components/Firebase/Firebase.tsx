@@ -4394,7 +4394,8 @@ class Firebase {
           // Add the id to the document
           var programDoc = this.db.collection('programs').doc(data.id);
           var addIdToDoc = programDoc.set({
-            id: data.id
+            id: data.id,
+            leaders: [this.auth.currentUser.uid]
           }, {merge: true})
           .then(() => {
               console.log("ID successfully written!");
@@ -4567,7 +4568,7 @@ class Firebase {
    /*
     * Assign a user to a site or program
     *
-    * @param userId: set to "user" that you want to add the program or site to
+    * @param userId: set to "user" that you want to add the program or site to this user
     * @param bulkUserIds: an array of user ID's in case we want to add a bunch of users to the site or program all at once
     */
    assignUserToSiteOrProgram = async (
@@ -4791,7 +4792,7 @@ class Firebase {
          var programsArr = [];
 
          // Check if list of programs already exist
-         if(docData.sites)
+         if(docData.programs)
          {
            programsArr = docData.programs;
          }
@@ -4802,7 +4803,7 @@ class Firebase {
          }
          else
          {
-           programsArr.push(siteId);
+           programsArr.push(programId);
          }
          // Remove any duplicates
          programsArr = programsArr.filter((item,index)=>{
@@ -4850,7 +4851,6 @@ class Firebase {
           // Add site to program
           this.assignSiteToProgram({ programId: siteData.selectedProgram, siteId: data.id}).then(data => {console.log("Site added to program " + siteData.selectedProgram);});
 
-          // Add the id to the document
           var siteDoc = this.db.collection('sites').doc(data.id);
           var addIdToDoc = siteDoc.set({
             id: data.id
@@ -4919,7 +4919,6 @@ class Firebase {
        // If we're deleting a program
        if(data.programId)
        {
-         console.log("program");
 
          itemType = "Program";
          itemId = data.programId;
@@ -4927,8 +4926,66 @@ class Firebase {
        }
 
        if (this.auth.currentUser) {
-         console.log("Current user");
 
+
+         // Need to remove this program/site from all programs/sites/users that hold this.
+         await document.get().then( async doc => {
+           if (doc.exists)
+           {
+             var docData = doc.data();
+
+             var tempArray = [];
+             // If it has programs
+             if(docData.programs)
+             {
+               tempArray = docData.programs;
+
+               // Go through each program and remove this site from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 await this.removeItemFromArray({siteToRemove: itemId, programToRemoveFrom: tempItemId})
+               }
+
+             }
+
+             // If it has sites
+             if(docData.sites)
+             {
+               tempArray = docData.sites;
+
+               // Go through each site and remove this program from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 await this.removeItemFromArray({programToRemove: itemId, siteToRemoveFrom: tempItemId})
+               }
+             }
+
+             // If it has leaders
+             if(docData.leaders)
+             {
+               tempArray = docData.leaders;
+
+               // Go through each leader and remove this program from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 if(itemType == "Program")
+                 {
+                   await this.removeItemFromArray({programToRemove: itemId, userToRemoveFrom: tempItemId})
+                 }
+                 if(itemType == "Site")
+                 {
+                   await this.removeItemFromArray({siteToRemove: itemId, userToRemoveFrom: tempItemId})
+                 }
+               }
+             }
+
+           }
+         });
+
+         // Actually delete the document
          return document
            .delete()
            .then(() =>
@@ -4940,7 +4997,146 @@ class Firebase {
                error
              )
            )
+
      }
+   }
+
+
+
+
+   /*
+    * Removes a User, Program, or Site from a User, Program, or Site
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkProgramIds: an array of program ID's in case we want to add a bunch of programs together
+    */
+   removeItemFromArray = async (
+     data: {
+       userToRemove: string,
+       siteToRemove: string,
+       programToRemove: string,
+
+       userToRemoveFrom: string,
+       siteToRemoveFrom: string,
+       programToRemoveFrom: string,
+      }
+   ): Promise<void> => {
+
+     var siteId = data.siteId;
+
+     // Decide what we are removing
+     var toRemove, toRemoveType;
+     if(data.userToRemove)
+     {
+       toRemove = data.userToRemove;
+       toRemoveType = "users";
+     }
+     else if(data.siteToRemove)
+     {
+       toRemove = data.siteToRemove;
+       toRemoveType = "sites";
+     }
+     else if(data.programToRemove)
+     {
+       toRemove = data.programToRemove;
+       toRemoveType = "programs";
+     }
+
+     // Decide where we are removing from
+     var removeFrom, toRemoveFromType;
+     if(data.userToRemoveFrom)
+     {
+       removeFrom = data.userToRemoveFrom;
+       toRemoveFromType = "users";
+     }
+     else if(data.siteToRemoveFrom)
+     {
+       removeFrom = data.siteToRemoveFrom;
+       toRemoveFromType = "sites";
+     }
+     else if(data.programToRemoveFrom)
+     {
+       removeFrom = data.programToRemoveFrom;
+       toRemoveFromType = "programs";
+     }
+
+
+     // Get the document to delete from
+     var removeFromDoc = this.db.collection(toRemoveFromType).doc(removeFrom);
+
+     removeFromDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var tempArray = [];
+
+         // Get the list to remove from if it already exists
+         switch(toRemoveType){
+          case "users":
+            tempArray = docData.leaders;
+            break;
+          case "sites":
+            tempArray = docData.sites;
+            break;
+          case "programs":
+            tempArray = docData.programs;
+            break;
+         }
+
+
+          // Remove Item from array
+          var indexToRemove = tempArray.indexOf(toRemove);
+          tempArray.splice(indexToRemove, 1);
+
+
+         // Push new array to the document
+         var removeResults;
+         switch(toRemoveType){
+          case "users":
+            removeResults = removeFromDoc.set({
+              leaders: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+          case "sites":
+            removeResults = removeFromDoc.set({
+              sites: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+          case "programs":
+            removeResults = removeFromDoc.set({
+              programs: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+         }
+
+
+
+      }
+      else {
+        console.log("Site document " + siteId + " doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting site document: " + siteId, error);
+      });
+
    }
 
 
