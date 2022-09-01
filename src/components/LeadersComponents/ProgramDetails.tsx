@@ -425,9 +425,9 @@ export default function ProgramDetails(props: Props): React.ReactElement {
               >
                 Are you sure you want to remove {' '}
                 <b style={{ textDecoration: "underline", color: "#2196F3" }}>
-                  {program.firstName} {program.lastName}
+                  {program.name}
                 </b>{" "}
-                from My programs?
+                from My Programs?
               </DialogTitle>
               <DialogActions className={classes.deleteModalButtonContainer}>
                 <Button
@@ -440,7 +440,7 @@ export default function ProgramDetails(props: Props): React.ReactElement {
                   <b style={{ color: "#2196F3", padding: "0 0.3em 0 0.3em" }}>
                     KEEP
                   </b>
-                  {program.firstName} {program.lastName}
+                  {program.name}
                 </Button>
                 <Button
                   onClick={(): void => {

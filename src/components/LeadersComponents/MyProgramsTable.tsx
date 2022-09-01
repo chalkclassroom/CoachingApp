@@ -177,8 +177,8 @@ function getSiteLeaders(site, leader) {
   return result;
 }
 
-function Row(props: { row, sites, siteLeaders, programLeaders }) {
-  const { row, sites, siteLeaders, programLeaders } = props;
+function Row(props: { row, sites, siteLeaders, programLeaders, selectProgram }) {
+  const { row, sites, siteLeaders, programLeaders, selectProgram } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -197,7 +197,7 @@ function Row(props: { row, sites, siteLeaders, programLeaders }) {
           {row.name}
         </TableCell>
         <TableCell align="left">{programLeaders}</TableCell>
-        <TableCell align="right">Edit/Delete</TableCell>
+        <TableCell align="right" onClick={() => selectProgram(row)}>Edit/Delete</TableCell>
         {/* <TableCell align="right">Hold</TableCell>
         <TableCell align="right">Hold</TableCell> */}
       </TableRow>
@@ -238,6 +238,9 @@ function Row(props: { row, sites, siteLeaders, programLeaders }) {
 
 function filterSites(programs, sites) {
   let result = [];
+
+  console.log("PROGRAMS : " + programs);
+
 
   for (let i = 0; i < programs.length; i++) {
     let temp = [];
@@ -306,7 +309,8 @@ function filterProgramLeaders(program, leaders) {
 
 export default function MyProgramsTable(props: Props): React.ReactElement {
   const classes = useStyles();
-  const { push, onChangeText, selectTeacher, addingTeacher, programDetails, allSites, allLeaders } = props;
+  const { push, onChangeText, selectProgram, addingTeacher, programDetails, allSites, allLeaders } = props;
+  console.log("PROGRAM DETAILS " + programDetails);
 
   const sites = filterSites(programDetails, allSites);
   const siteLeaders = filterSiteLeaders(sites, allLeaders);
@@ -354,7 +358,7 @@ export default function MyProgramsTable(props: Props): React.ReactElement {
               </TableHead>
               <TableBody>
                 {programDetails.map((row, index) => {
-                  return <Row key={index} row={row} siteLeaders={siteLeaders[index]} sites={sites[index]} programLeaders={programLeaders[index]} />
+                  return <Row key={index} row={row} siteLeaders={siteLeaders[index]} sites={sites[index]} selectProgram={(row) => selectProgram(row)} programLeaders={programLeaders[index]} />
               })}
               </TableBody>
             </Table>

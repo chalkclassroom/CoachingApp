@@ -4117,8 +4117,15 @@ class Firebase {
               // Get the program for this program ID
               var tempProgram = await this.getProgram({programId: programId});
 
-              // Add the program data to the list to return
-              programRes.push(tempProgram);
+              // There's a problem with the array being filled with deleted information,
+              //  so we have to check to make sure the data is there
+              //  The problem is most likely a local firestore issue but it couldn't hurt
+              if (tempProgram.id && tempProgram.id !== "")
+              {
+                // Add the program data to the list to return
+                programRes.push(tempProgram);
+              }
+
             };
           }
         }
@@ -4883,6 +4890,57 @@ class Firebase {
          console.error('Error occurred when writing document:', error)
        )
 
+   }
+
+
+
+   /**
+    * Remove site or progrm
+    * @param {string} partnerID
+    */
+   removeSiteOrProgram = async (
+     data: {
+       siteId: string,
+       programId: string
+     }): Promise<void> => {
+
+       var document, itemType, itemId;
+
+       // If we're deleting a site
+       if(data.siteId)
+       {
+         console.log("site");
+
+         itemType = "Site";
+         itemId = data.siteId;
+         document =  this.db.collection('sites').doc(data.siteId);
+       }
+
+       // If we're deleting a program
+       if(data.programId)
+       {
+         console.log("program");
+
+         itemType = "Program";
+         itemId = data.programId;
+         document = this.db.collection('programs').doc(data.programId);
+       }
+
+       if (this.auth.currentUser) {
+         console.log("Current user");
+
+         return document
+           .delete()
+           .then(() =>
+             console.log(itemType + ' with id, ' + itemId + ', successfully removed!')
+           )
+           .catch((error: Error) =>
+             console.error(
+               'There was a problem removing ' + itemType + ' with id, ' + itemId,
+               error
+             )
+           )
+     }
    }
 
 

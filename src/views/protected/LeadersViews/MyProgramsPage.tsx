@@ -371,7 +371,7 @@ class MyProgramsPage extends React.Component<Props, State> {
       dataLoaded: false,
       view: 0,
       deleteAppointmentDialog: false,
-      programDetails: []
+      programDetails: [{id:"", name:""}]
     };
   }
 
@@ -383,6 +383,8 @@ class MyProgramsPage extends React.Component<Props, State> {
      * Get list of programs
      */
     firebase.getProgramsForUser({userId: "user"}).then(data => {
+      console.log("DATA : " + data);
+
       this.setState({programDetails: data});
 
       // Signal that data is loaded so we can remove loading icon
@@ -492,6 +494,8 @@ class MyProgramsPage extends React.Component<Props, State> {
     // Set selected program information
     this.setDataFromFirestore(programInfo.id);
 
+
+
     // Change the selected program and open the details popup
     this.setState({
       view: 3,
@@ -522,9 +526,7 @@ class MyProgramsPage extends React.Component<Props, State> {
       let sitesResults = [];
       for(var site in sites)
       {
-        console.log("Site ID : " + sites[site]);
         var tempSite = await firebase.getUserProgramOrSite({siteId: sites[site]});
-        console.log("Site Name : " + tempSite.name);
 
         sitesResults.push(tempSite);
 
@@ -544,7 +546,6 @@ class MyProgramsPage extends React.Component<Props, State> {
   handleAddText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = event.target.name;
     const val = event.target.value;
-    console.log("TYPE: " + type);
 
     var tempProgram = this.state.selectedProgram;
 
@@ -609,32 +610,7 @@ class MyProgramsPage extends React.Component<Props, State> {
             });
 
             this.handleCloseModal();
-            /*
-            const updatedProgramDetails = [...ProgramDetails];
-            const index = updatedProgramDetails.findIndex(x => x.id === selectedProgram.id);
-            const updatedTeacherWithDetails = {...updatedProgramDetails[index]}
-            updatedTeacherWithDetails.firstName = inputFirstName;
-            updatedTeacherWithDetails.lastName = inputLastName;
-            updatedTeacherWithDetails.email = inputEmail;
-            updatedTeacherWithDetails.school = inputSchool;
-            updatedTeacherWithDetails.phone = inputPhone;
-            updatedTeacherWithDetails.notes = inputNotes;
-            updatedProgramDetails[index] = {...updatedTeacherWithDetails};
-            this.setState({
-              ProgramDetails: updatedProgramDetails
-            })
-            const updatedTeacher = {...this.state.selectedProgram}
-            this.handleEditAlert(true);
-            this.props.updateTeacherInfo(updatedTeacher);
-            const oldTeacherList = [...this.state.searched];
-            const updatedTeacherList = oldTeacherList.filter(teacher => {
-              return teacher.id !== selectedProgram.id
-            });
-            updatedTeacherList.push(selectedProgram);
-            this.setState({
-              searched: updatedTeacherList
-            })
-            */
+
           }
         );
       } else {
@@ -703,6 +679,8 @@ class MyProgramsPage extends React.Component<Props, State> {
 
   closeProgramDetails = (): void => {
     this.setState({view: 0})
+    // Set selected program information
+    //this.setDataFromFirestore(this.state.selectedProgram.id);
   }
 
   handleEdit = (): void => {
@@ -744,24 +722,31 @@ class MyProgramsPage extends React.Component<Props, State> {
 
   handleDeleteConfirm = (): Promise<void> => {
     const firebase = this.context;
+    console.log("WRONG SPOT");
+
     return firebase
-      .removePartner(this.state.selectedProgram.id)
+      .removeSiteOrProgram({programId: this.state.selectedProgram.id})
       .then(() => {
         this.props.removeTeacher(this.state.selectedProgram.id);
-        const updatedProgramDetails = [...this.state.ProgramDetails];
+
+        const updatedProgramDetails = [...this.state.programDetails];
         const index = updatedProgramDetails.findIndex(x => x.id === this.state.selectedProgram.id);
         updatedProgramDetails.splice(index, 1)
         this.setState({
-          ProgramDetails: updatedProgramDetails
+          programDetails: updatedProgramDetails
         })
+
       })
-      .catch(() => {
+      .catch((e) => {
+
+        console.error("ERROR : ", e);
+
         // problem with removing teacher
         this.setState(
           {
             editAlert: true,
             alertText:
-              "Something went wrong removing this teacher... " +
+              "Something went wrong removing this program... " +
               "try refreshing your page or logging out and back in."
           },
           () => setTimeout(() => this.setState({ editAlert: false }), 3000)
