@@ -1036,7 +1036,7 @@ class MyProgramsPage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-          {this.state.view !== 3 ? (
+          {/* {this.state.view !== 3 ? (
             <Grid item style={{paddingTop: '2em'}}>
               <Paper elevation={2}>
                 <BottomNavigation
@@ -1050,7 +1050,7 @@ class MyProgramsPage extends React.Component<Props, State> {
                 </BottomNavigation>
               </Paper>
             </Grid>
-          ) : (null)}
+          ) : (null)} */}
 
           <EditProgramDialog
             adding={isAdding}
