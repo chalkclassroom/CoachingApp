@@ -106,7 +106,7 @@ class NewProgramPage extends React.Component<Props, State>{
        });
 
       // Set the users for the dropdown
-      firebase.getAllLeaders()
+      firebase.getProgramLeaders()
        .then((data)=>{
          this.setState({allLeadersList: data});
        });
