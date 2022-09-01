@@ -112,7 +112,7 @@ class NewSitePage extends React.Component<Props, State>{
         });
 
         // Set the users for the dropdown
-        firebase.getAllLeaders()
+        firebase.getSiteLeaders()
          .then((data)=>{
            this.setState({allLeadersList: data});
          });
