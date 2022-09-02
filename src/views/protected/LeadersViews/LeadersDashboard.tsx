@@ -14,6 +14,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import ResultsIcon from "@material-ui/icons/PieChart";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
 import ConferencePlansIcon from "@material-ui/icons/ListAlt";
+import Assignment from '@material-ui/icons/Assignment';
 import TeacherModal from "../HomeViews/TeacherModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
@@ -271,7 +272,7 @@ class LeadersDashboard extends React.Component<Props, State> {
 
                 {
                 /*
-                 * 'Observe' Card
+                 * 'My Programs' Card
                  */
                 }
                 <Card
@@ -291,11 +292,11 @@ class LeadersDashboard extends React.Component<Props, State> {
                       justify="flex-start"
                     >
                       <Grid item>
-                        <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                        <Assignment style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                          Programs
+                          My Programs
                         </Typography>
                       </Grid>
                     </Grid>
