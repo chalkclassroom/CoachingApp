@@ -4,6 +4,7 @@ import * as Constants from "../../../constants/Constants";
 import ChildBehaviorsPie from "./ChildBehaviorsPie";
 import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
 import PieChartLegend from "../../LayoutComponents/GraphLayouts/PieChartLegend";
+import { PieWrapperSummary } from '../../ResultsComponents/ChartWrappers';
 
 interface OwnProps {
   ac: number
@@ -26,11 +27,13 @@ const ChildSummaryChart: FunctionComponent<Props> = (props) => {
           label: "Played in the same area but did not interact."},
           {color: '#bababa', label: "Played alone (had no opportunity for interaction)."}
         ]} legendTitle={'Compare how often the children:'}/>
-        <ChildBehaviorsPie
-          ac={props.ac}
-          noAc={props.noAc}
-          noChildOpp={props.noChildOpp}
-        />
+        <PieWrapperSummary>
+          <ChildBehaviorsPie
+            ac={props.ac}
+            noAc={props.noAc}
+            noChildOpp={props.noChildOpp}
+          />
+        </PieWrapperSummary>
       </Grid>
     </div>
   );

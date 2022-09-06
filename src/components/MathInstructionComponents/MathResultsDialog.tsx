@@ -15,6 +15,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import { PieWrapperDialog } from '../ResultsComponents/ChartWrappers';
 
 
 interface Props {
@@ -60,7 +61,9 @@ function MathResultsDialog(props: Props): React.ReactElement {
             >
               Child Behaviors
             </Typography>
-            <ChildPieSummary math={mathCount} notMath={noMathCount} />
+            <PieWrapperDialog>
+              <ChildPieSummary math={mathCount} notMath={noMathCount} />
+            </PieWrapperDialog>
           </Grid>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>

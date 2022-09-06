@@ -140,6 +140,8 @@ interface Props {
   },
   type: Types.DashboardType,
   backToCenterMenu(): void
+  startTime:string
+  forceComplete: boolean
 }
 
 interface State {
@@ -151,6 +153,8 @@ interface State {
   peopleWarning: boolean,
   confirmReturn: boolean,
   final: boolean
+  isStopped: boolean
+  canForceEndSession: boolean
 }
 
 type ChecklistKey = 'MI' | 'AC' | 'SA';
@@ -177,7 +181,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       peopleWarning: false,
       confirmReturn: false,
       final: false,
-      isStopped: false
+      isStopped: false,
+      canForceEndSession: false
     }
   }
 
@@ -197,6 +202,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       clearInterval(this.timer);
       if (this.state.final) {
         this.handleChecklists();
+        this.handleTimeUpNotification();
       } else {
         this.handleTimeUpNotification();
       }
@@ -212,6 +218,16 @@ class CenterRatingChecklist extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.timer = global.setInterval(this.tick, 1000);
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if(prevProps.forceComplete !== this.props.forceComplete) {
+      console.log('ENDING...')
+      let [childChecked, teacherChecked] = this.handleChecklists()
+      this.handleCentersData(childChecked, teacherChecked)
+      this.handleStoreData()
+      this.setState({canForceEndSession: true})
+    }
   }
 
   /** lifecycle method invoked just before component is unmounted */
@@ -245,51 +261,60 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.props.toggleScreen();
   };
 
+  handleCentersData = (childChecked: Array<number>, teacherChecked: Array<number>) => {
+    const ACChildChecked: Array<number> = [];
+    if (this.props.type === 'AC') {
+      childChecked.forEach((value: number) => {
+        if (value !== 5) {
+          ACChildChecked.push(value+1)
+        } else {
+          ACChildChecked.push(value)
+        }
+      })
+    }
+    let validChildChecked = this.props.type === 'AC' ? ACChildChecked : childChecked;
+    if (validChildChecked.includes(5) && validChildChecked.length > 1) {
+      validChildChecked = validChildChecked.filter(e => e !== 5)
+    }
+    let validTeacherChecked = teacherChecked;
+    if (teacherChecked.includes(10) && teacherChecked.length > 1) {
+      validTeacherChecked = teacherChecked.filter(e => e !== 10)
+    }
+    const mEntry = {
+      checked: [...validChildChecked, ...validTeacherChecked],
+      people: this.state.people
+    };
+    this.props.firebase.handlePushCentersData(mEntry);
+  }
+
+  handleStoreData = () => {
+    this.props.finishVisit(this.props.currentCenter);
+    if (this.props.type==="AC" && this.state.people===TeacherChildEnum.CHILD_1) {
+      this.props.updateCount('noOpp')
+    } else if (
+      this.state.childChecked.includes(1) ||
+      this.state.childChecked.includes(2) ||
+      this.state.childChecked.includes(3) ||
+      this.state.childChecked.includes(4)
+    ){
+      this.props.updateCount('true')
+    } else {
+      this.props.updateCount('false')
+    }
+  }
+
   /**
-   * 
+   *
    * @param {Array<number>} childChecked
    * @param {Array<number>} teacherChecked
    */
-  handleSubmit = (childChecked: Array<number>, teacherChecked: Array<number>): void => {
+  handleSubmit = (): void => {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      const ACChildChecked: Array<number> = [];
-      if (this.props.type === 'AC') {
-        childChecked.forEach((value: number) => {
-          if (value !== 5) {
-            ACChildChecked.push(value+1)
-          } else {
-            ACChildChecked.push(value)
-          }
-        })
-      }
-      let validChildChecked = this.props.type === 'AC' ? ACChildChecked : childChecked;
-      if (validChildChecked.includes(5) && validChildChecked.length > 1) {
-        validChildChecked = validChildChecked.filter(e => e !== 5)
-      }
-      let validTeacherChecked = teacherChecked;
-      if (teacherChecked.includes(10) && teacherChecked.length > 1) {
-        validTeacherChecked = teacherChecked.filter(e => e !== 10)
-      }
-      const mEntry = {
-        checked: [...validChildChecked, ...validTeacherChecked],
-        people: this.state.people
-      };
-      this.props.firebase.handlePushCentersData(mEntry);
-      this.props.finishVisit(this.props.currentCenter);
-      if (this.props.type==="AC" && this.state.people===TeacherChildEnum.CHILD_1) {
-        this.props.updateCount('noOpp')
-      } else if (
-        this.state.childChecked.includes(1) ||
-        this.state.childChecked.includes(2) ||
-        this.state.childChecked.includes(3) ||
-        this.state.childChecked.includes(4)
-      ){
-        this.props.updateCount('true')
-      } else {
-        this.props.updateCount('false')
-      }
+      let [childChecked, teacherChecked] = this.handleChecklists()
+     this.handleCentersData(childChecked, teacherChecked)
+     this.handleStoreData()
       this.props.toggleScreen();
     }
   };
@@ -307,20 +332,15 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       timeUpOpen: false,
       time: 60000
     }, () => {
-      this.handleChecklists();
+      this.handleSubmit();
     });
   }
 
-  handleChecklists = (): void => {
-    if (this.state.childChecked.length > 0 && this.state.teacherChecked.length > 0) {
-      this.handleSubmit(this.state.childChecked, this.state.teacherChecked);
-    } else if (this.state.childChecked.length > 0 && this.state.teacherChecked.length === 0) {
-      this.handleSubmit(this.state.childChecked, [10]);
-    } else if (this.state.childChecked.length === 0 && this.state.teacherChecked.length > 0) {
-      this.handleSubmit([5], this.state.teacherChecked);
-    } else {
-      this.handleSubmit([5], [10]);
-    }
+  handleChecklists = (): number[][] => {
+    let childChecked = this.state.childChecked.length  > 0 ? this.state.childChecked : [5]
+    let teacherChecked = this.state.teacherChecked.length > 0 ? this.state.teacherChecked : [10]
+  return [childChecked, teacherChecked]
+
   }
 
   /**
@@ -463,6 +483,21 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
   }
 
+  /*
+   * We're reenabling the "Complete Observation" button
+   *
+   * This function will get passed to the Dashboard Component, which
+   *  will then pass it to the 'YesNoDialog'. So the button will run this
+   *  function instead of the usual function
+   */
+  handleCompleteObservation = (): void => {
+    if (this.state.final) {
+      this.handleChecklists();
+    }
+
+    this.handleTimeUpNotification();
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleScreen: PropTypes.func.isRequired,
@@ -575,7 +610,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               If teachers or students leave or join while you are observing a center,
               make sure your final selection reflects the largest number of people
               that were present at any point during the 1 minute observation in that
-              center. 
+              center.
             </DialogContentText>
             <Grid
               container
@@ -620,7 +655,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           : this.props.type === 'SA' ? Sequential2
                           : AC2
                       }
-                      
+
                       alt="2+ children without teacher"
                     />
                   </Button>
@@ -676,15 +711,20 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                     type={this.props.type}
                     infoDisplay={
                       <Countdown
-                        type={this.props.type} 
-                        time={this.state.time} 
-                        timerTime={60000}  
-                        
-                      />}
+                        type={this.props.type}
+                        time={this.state.time}
+                        timerTime={60000}
+
+                      />
+
+                    }
                     infoPlacement="center"
-                    completeObservation={false}
+                    completeObservation={true}
                     startTimer={this.startTimer}
                     stopTimer={this.stopTimer}
+                    startTime={this.props.startTime}
+                    forceComplete={this.state.canForceEndSession}
+                    completeCallBackFunctionOverride={() => this.handleCompleteObservation()}
                   />
                 </Grid>
               </Grid>
@@ -767,7 +807,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               : this.props.type === 'SA' ? Sequential2
                               : AC2
                           }
-                          
+
                           alt="2+ children without teacher"
                         />
                       </Button>

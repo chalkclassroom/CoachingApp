@@ -8,6 +8,9 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
 import Firebase from '../../../components/Firebase'
+import withObservationTimeout from "../../../components/HOComponents/withObservationWrapper";
+import {clearListeningCount} from "../../../state/actions/listening-to-children";
+
 
 /* function handleCloseTeacherModal(): void => {
   this.setState({ teacherModal: false })
@@ -15,6 +18,9 @@ import Firebase from '../../../components/Firebase'
 
 interface Props {
   teacherSelected: Types.Teacher
+  preBack: () => Promise<boolean>
+  clearListeningCount(): void
+  forceComplete: boolean
 }
 
 /**
@@ -30,11 +36,16 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       setTeacherModal(true)
     }
   });
+  useEffect(() => {
+    return () => {
+      props.clearListeningCount()
+    }
+  }, [])
   return (
     teacherSelected ? (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => (<AppBar firebase={firebase} />)}
+          {(firebase: Firebase): React.ReactNode => (<AppBar confirmAction={props.preBack} firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
           <FirebaseContext.Consumer>
@@ -42,6 +53,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
               <TeacherChecklist
                 firebase={firebase}
                 type='LC'
+                forceComplete={props.forceComplete}
               />
             )}
           </FirebaseContext.Consumer>
@@ -74,6 +86,10 @@ ListeningToChildrenPage.propTypes = {
   }).isRequired
 }
 
+const wrapperOptions = {
+
+}
+
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher
 } => {
@@ -82,4 +98,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(ListeningToChildrenPage);
+export default connect(mapStateToProps, {clearListeningCount})(withObservationTimeout(wrapperOptions)(ListeningToChildrenPage));

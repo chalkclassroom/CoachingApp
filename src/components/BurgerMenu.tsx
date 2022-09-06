@@ -65,6 +65,7 @@ type Props = RouteComponentProps & {
   history: H.History,
   firebase: Firebase,
   clearCoach(): void
+  handleNavigation(cb: (...args: any[])=> void): void
 }
 
 interface State {
@@ -147,14 +148,14 @@ class BurgerMenu extends React.Component<Props, State>{
     return <React.Fragment>
       <ListItem
           button
-          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+          onClick={() => this.props.handleNavigation((event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
             this.setState({ menu: 1, chalkOpen: false });
             this.props.history.push({
               pathname: "/Training",
               // state: { type: "Training" }
             });
             this.props.handleClose(event);
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -166,11 +167,11 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+          onClick={() => this.props.handleNavigation((event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
             this.setState({ menu: 2, chalkOpen: false });
             this.showTeacherModal("Observe");
             this.props.handleClose(event);
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -182,10 +183,10 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(): void => {
+          onClick={()=> this.props.handleNavigation((): void => {
             this.setState({ menu: 3, chalkOpen: false });
             this.props.history.push("/MyTeachers");
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -197,11 +198,11 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+          onClick={() => this.props.handleNavigation( (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
             this.setState({ menu: 4, chalkOpen: false });
             this.showTeacherModal("Results");
             this.props.handleClose(event);
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -214,10 +215,10 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(): void => {
+          onClick={() => this.props.handleNavigation( (): void => {
             this.setState({ menu: 5, chalkOpen: false });
             this.props.history.push("/ActionPlans")
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -229,10 +230,10 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(): void => {
+          onClick={() => this.props.handleNavigation( (): void => {
             this.setState({ menu: 6, chalkOpen: false });
             this.props.history.push("/ConferencePlans")
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -244,9 +245,9 @@ class BurgerMenu extends React.Component<Props, State>{
       </ListItem>
       <ListItem
           button
-          onClick={(): void => {
+          onClick={() => this.props.handleNavigation( (): void => {
             this.setState({ menu: 7, chalkOpen: false });
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -254,15 +255,15 @@ class BurgerMenu extends React.Component<Props, State>{
         </ListItemIcon>
         <ListItemText
             primary="Messages"
-            onClick={(): void => this.props.history.push("/Messaging")}
+            onClick={() => this.props.handleNavigation( (): void => this.props.history.push("/Messaging"))}
         />
       </ListItem>
         <ListItem
             button
-            onClick={(): void => {
+            onClick={() => this.props.handleNavigation( (): void => {
                 this.setState({ menu: 8, chalkOpen: false });
                 this.props.history.push("/CoachingResources")
-            }}
+            })}
             className={classes.regular}
         >
             <ListItemIcon>
@@ -283,10 +284,10 @@ class BurgerMenu extends React.Component<Props, State>{
     return <React.Fragment>
       <ListItem
           button
-          onClick={(): void => {
+          onClick={() => this.props.handleNavigation( (): void => {
             this.setState({ menu: 5, chalkOpen: false });
             this.props.history.push("/ActionPlans")
-          }}
+          })}
           className={classes.regular}
       >
         <ListItemIcon>
@@ -296,7 +297,7 @@ class BurgerMenu extends React.Component<Props, State>{
             primary="My Action Plans"
         />
       </ListItem>
-      <ListItem button onClick={this.togglePracticeCollapse}>
+      <ListItem button onClick={() => this.props.handleNavigation( this.togglePracticeCollapse)}>
         <ListItemIcon>
           <Practice style={{ fill: Constants.Colors.IN }} />
         </ListItemIcon>
@@ -310,11 +311,11 @@ class BurgerMenu extends React.Component<Props, State>{
       <Collapse in={this.state.practiceOpen} timeout="auto">
         <ListItem
             button
-            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+            onClick={() => this.props.handleNavigation( (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
               this.setState({ menu: 2, practiceOpen: false });
               this.showTeacherModal("Observe");
               this.props.handleClose(event);
-            }}
+            })}
             className={classes.nested}
         >
           <ListItemIcon>
@@ -326,11 +327,11 @@ class BurgerMenu extends React.Component<Props, State>{
         </ListItem>
         <ListItem
             button
-            onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+            onClick={() => this.props.handleNavigation( (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
               this.setState({ menu: 4, practiceOpen: false });
               this.showTeacherModal("Results");
               this.props.handleClose(event);
-            }}
+            })}
             className={classes.nested}
         >
           <ListItemIcon>
@@ -366,10 +367,10 @@ class BurgerMenu extends React.Component<Props, State>{
           <List>
             <ListItem
               button
-              onClick={(): void => {
+              onClick={() => this.props.handleNavigation( (): void => {
                 this.setState({ menu: 0, chalkOpen: false });
                 this.props.history.push("/Home");
-              }}
+              })}
               className={classes.regular}
             >
               <ListItemIcon>
@@ -395,10 +396,10 @@ class BurgerMenu extends React.Component<Props, State>{
             <Collapse in={this.state.chalkOpen} timeout="auto">
               <ListItem
                   button
-                  onClick={(): void => {
+                  onClick={() => this.props.handleNavigation( (): void => {
                     this.setState({ menu: 9, chalkOpen: false });
                     this.props.history.push("/Landing");
-                  }}
+                  })}
                   className={classes.nested}
               >
                 <ListItemIcon>
@@ -410,10 +411,10 @@ class BurgerMenu extends React.Component<Props, State>{
               </ListItem>
               <ListItem
                   button
-                  onClick={(): void => {
+                  onClick={() => this.props.handleNavigation( (): void => {
                     this.setState({ menu: 10, chalkOpen: false });
                     this.props.history.push("/Team");
-                  }}
+                  })}
                   className={classes.nested}
               >
                 <ListItemIcon>
@@ -425,10 +426,10 @@ class BurgerMenu extends React.Component<Props, State>{
               </ListItem>
               <ListItem
                   button
-                  onClick={(): void => {
+                  onClick={() => this.props.handleNavigation( (): void => {
                     this.setState({ menu: 11, chalkOpen: false });
                     this.props.history.push("/About");
-                  }}
+                  })}
                   disabled
                   className={classes.nested}
               >
@@ -442,10 +443,10 @@ class BurgerMenu extends React.Component<Props, State>{
             </Collapse>
             <ListItem
               button
-              onClick={(): void => {
+              onClick={() => this.props.handleNavigation( (): void => {
                 this.setState({ menu: 12, chalkOpen: false });
                 this.props.history.push("/MyAccount");
-              }}
+              })}
               className={classes.regular}
             >
               <ListItemIcon>
@@ -458,10 +459,10 @@ class BurgerMenu extends React.Component<Props, State>{
             <ListItem
                 button
                 disabled
-                onClick={(): void => {
+                onClick={() => this.props.handleNavigation( (): void => {
                   this.setState({ menu: 13, chalkOpen: false });
                   this.props.history.push("/help");
-                }}
+                })}
             >
               <ListItemIcon>
                 <HelpIcon style={{ fill: Constants.Colors.TT }} />
@@ -473,10 +474,10 @@ class BurgerMenu extends React.Component<Props, State>{
               {role == Role.ADMIN && <>
                   <ListItem
                       button
-                      onClick={(): void => {
+                      onClick={() => this.props.handleNavigation( (): void => {
                           this.setState({ menu: 13, chalkOpen: false });
                           this.props.history.push("/NewUser");
-                      }}
+                      })}
                   >
                       <ListItemIcon>
                           <PeopleIcon style={{ fill: Constants.Colors.IN }} />
@@ -488,13 +489,13 @@ class BurgerMenu extends React.Component<Props, State>{
               </>}
             <ListItem
                 button
-                onClick={(): void => {
+                onClick={() => this.props.handleNavigation( (): void => {
                   this.setState({ menu: 14, chalkOpen: false });
                   this.props.firebase.firebaseSignOut().then(() => {
                     this.props.history.push("/");
                     this.props.clearCoach();
                   });
-                }}
+                })}
             >
               <ListItemIcon>
                 <LogoutIcon style={{ fill: Constants.Colors.SA }} />

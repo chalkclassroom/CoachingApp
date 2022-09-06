@@ -50,7 +50,7 @@ import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/Lite
 import AdminPage from './views/protected/AdminViews/AdminPage'
 import TeamPage from './views/WelcomeViews/TeamPage'
 import TrainingPage from './views/protected/TrainingPage'
-import * as ReactGA from 'react-ga'
+import * as ReactGA3 from 'react-ga'
 import CoachingResources from './views/protected/CoachingResourcesViews/CoachingResources'
 import CoachingCoachingCycle from './views/protected/CoachingResourcesViews/CoachingCycle'
 import CoachingProfessionalDevelopmentMaterials
@@ -82,9 +82,10 @@ import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
 
+import CreateTable from './components/tempCustomFunction/CreateTable'
 
-ReactGA.initialize('UA-154034655-1');
-ReactGA.pageview(window.location.pathname + window.location.search);
+ReactGA3.initialize('UA-154034655-1');
+ReactGA3.pageview(window.location.pathname + window.location.search);
 
 // LogRocket.init('akprci/cqref');
 // setupLogRocketReact(LogRocket);
@@ -715,6 +716,12 @@ class App extends React.Component<Props, State> {
               exact={true}
               component={CoachingChalkCrosswalks}
             />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CreateTable"
+              exact={true}
+              component={CreateTable}
+            />
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>
@@ -724,4 +731,3 @@ class App extends React.Component<Props, State> {
 }
 
 export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked, setLiteracyTraining, getTeacherList})(App));
-

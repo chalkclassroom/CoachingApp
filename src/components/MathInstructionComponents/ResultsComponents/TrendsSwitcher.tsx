@@ -6,8 +6,10 @@ import Grid from '@material-ui/core/Grid/Grid'
 import { Line } from 'react-chartjs-2'
 import GraphHeader from '../../LayoutComponents/GraphLayouts/GraphHeader'
 import TwoTabbedSwitch from '../../LayoutComponents/TwoTabbedSwitch'
+import { LineWrapperTrends } from '../../ResultsComponents/ChartWrappers'
 
 const ChildBehaviorTrendsOptions = {
+  maintainAspectRatio: false,
   showScale: true,
   pointDot: true,
   showLines: true,
@@ -66,6 +68,7 @@ const ChildBehaviorTrendsOptions = {
 }
 
 const TeacherBehaviorTrendsOptions = {
+  maintainAspectRatio: false,
   showScale: true,
   pointDot: true,
   showLines: true,
@@ -172,12 +175,12 @@ class TrendsSwitcher extends React.Component<Props, {}> {
           <div>
             <Grid justify={'center'} direction={'column'}>
               <GraphHeader graphTitle={'Teacher Behaviors'} />
-              <Line
-                data={this.props.teacherData}
-                options={TeacherBehaviorTrendsOptions}
-                width={650}
-                height={400}
-              />
+              <LineWrapperTrends>
+                <Line
+                  data={this.props.teacherData}
+                  options={TeacherBehaviorTrendsOptions}
+                />
+              </LineWrapperTrends>
             </Grid>
           </div>
         }
@@ -185,12 +188,12 @@ class TrendsSwitcher extends React.Component<Props, {}> {
           <div>
             <Grid justify={'center'} direction={'column'}>
               <GraphHeader graphTitle={'Child Behaviors'} />
-              <Line
-                data={this.props.childData}
-                options={ChildBehaviorTrendsOptions}
-                width={650}
-                height={400}
-              />
+              <LineWrapperTrends>
+                <Line
+                  data={this.props.childData}
+                  options={ChildBehaviorTrendsOptions}
+                />
+              </LineWrapperTrends>
             </Grid>
           </div>
         }

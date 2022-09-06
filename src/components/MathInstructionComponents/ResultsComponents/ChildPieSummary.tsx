@@ -111,10 +111,9 @@ class ChildPieSummary extends React.Component<Props, {}> {
                 }
               }
             }
-          }
+          },
+          maintainAspectRatio: false
         }}
-        width={650}
-        height={370}
       />
     );
   }

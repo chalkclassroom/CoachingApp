@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
 import GraphHeader from "../../LayoutComponents/GraphLayouts/GraphHeader";
+import { BarWrapperDetails } from '../../ResultsComponents/ChartWrappers';
 
 interface OwnProps {
   questionTextClass: string
@@ -48,13 +49,15 @@ const ChildDetailsChart: FunctionComponent<Props> = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        <ChildBehaviorsDetailsHorizontalBar
-          ac1={props.ac1}
-          ac2={props.ac2}
-          ac3={props.ac3}
-          ac4={props.ac4}
-          totalVisits={props.totalVisits}
-        />
+        <BarWrapperDetails>
+          <ChildBehaviorsDetailsHorizontalBar
+            ac1={props.ac1}
+            ac2={props.ac2}
+            ac3={props.ac3}
+            ac4={props.ac4}
+            totalVisits={props.totalVisits}
+          />
+        </BarWrapperDetails>
       </Grid>
     </div>
   );

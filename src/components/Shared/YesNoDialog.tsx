@@ -17,7 +17,9 @@ const styles: object = {
 interface Props {
   classes: { button: string },
   shouldOpen?: boolean,
+
   onAccept?(param: number | void): void,
+
   buttonText?: string | React.ReactElement,
   buttonVariant: ButtonVariant,
   buttonColor?: string,
@@ -27,7 +29,15 @@ interface Props {
   dialogTitle?: string,
   onAcceptParams?: number,
   literacy: string,
+
   handleLiteracyActivitySetting(activitySetting: string): Promise<void>
+
+  forceComplete?: boolean
+  showLiteracyActivity?: boolean
+  disabled?: boolean
+
+  disabledOnClick(): void
+  disabledClass: string
 }
 
 interface State {
@@ -53,9 +63,27 @@ class YesNoDialog extends React.Component<Props, State> {
       buttonVariant, buttonColor: use these to format the button to your liking.
     */
 
-  state = {
-    open: false
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      open: false
+    }
+  }
+  /*
+  * Handles Completions for the timeout dialog. For Literacy observations, if the user
+  * confirms ending the observation, they will get to choose an activity setting.
+  * If it fully times out, it will just display the results preview. All other observation types
+  * just display the results preview.
+  * */
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if(prevProps.forceComplete !== this.props.forceComplete) {
+      if(this.props.literacy==='' || !this.props.showLiteracyActivity) {
+          this.handleAccept()
+      } else  {
+        this.setState({open: true})
+      }
+    }
+  }
 
   handleClickOpen = (): void => {
     if (this.props.shouldOpen) {
@@ -102,10 +130,11 @@ class YesNoDialog extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, disabled } = this.props;
     return (
       <div>
-        {this.props.literacy !=='' ? <ActivitySettingModal
+        {this.props.literacy !=='' ?
+          <ActivitySettingModal
           open={(this.props.literacy!=='') && this.state.open}
           handleClose={this.handleClose}
           handleAccept={this.handleAccept}
@@ -113,10 +142,10 @@ class YesNoDialog extends React.Component<Props, State> {
           checklistType={this.props.literacy}
         /> : null}
         <Button
-          onClick={this.handleClickOpen}
-          variant={this.props.buttonVariant}
+          onClick={ this.props.completeCallBackFunctionOverride ? this.props.completeCallBackFunctionOverride : (disabled? this.props.disabledOnClick : this.handleClickOpen)}
+          variant={disabled? 'outlined' : this.props.buttonVariant}
           color={this.props.buttonColor}
-          style={{
+          style={disabled? {} : {
             color: this.props.buttonColor,
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
@@ -124,7 +153,7 @@ class YesNoDialog extends React.Component<Props, State> {
             margin: this.props.buttonMargin,
             fontFamily: 'Arimo'
           }}
-          className={classes.button}
+          className={disabled? this.props.disabledClass : classes.button}
         >
           {this.props.buttonText}
         </Button>
