@@ -17,6 +17,8 @@ import {
     FormControlLabel
 } from '@material-ui/core'
 
+import SiteProfileResults from './SiteProfileResults'
+
 import CalendarIcon from '../../assets/icons/CalendarIcon.png';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -77,7 +79,10 @@ class SiteProfile extends React.Component {
           checked: [],
           error: false,
           selectedProgram: "",
-          selectedSite: ""
+          selectedSite: "",
+          view: 1,
+          startDate: new Date(),
+          endDate: new Date()
       }
   }
 
@@ -142,6 +147,16 @@ class SiteProfile extends React.Component {
     {
       this.setSites(event.target.value);
     }
+
+    // If it's a site, we need to save the site name to pass to the results page
+    if(event.target.name == "selectedSite")
+    {
+
+        const siteName = this.state.siteOptions.find(x => x.id === event.target.value).name;
+        console.log("Site selected " + siteName);
+        this.setState({selectedSiteName: siteName});
+    }
+
   };
 
   // When any of the checkboxes are checked or unchecked
@@ -168,11 +183,18 @@ class SiteProfile extends React.Component {
     this.setState({[event.target.name]: dateVal});
   };
 
+  // Function to switch between Form and Results page
+  handlePageChange = (pageNumber) => {
+    this.setState({view: pageNumber});
+  }
+
 
     render() {
 
       return (
         <>
+        {/* Control what we see based on page number */}
+        {this.state.view === 1 ? (
         <Grid container style={{paddingLeft: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -182,6 +204,7 @@ class SiteProfile extends React.Component {
                 {/*
                   Dropdown Section
                 */}
+
                 <Grid container item xs={12} style={centerRow}>
                   <Grid container style={centerRow}>
 
@@ -238,6 +261,7 @@ class SiteProfile extends React.Component {
                   </Grid>
                 </Grid>
 
+
                 {/*
                   Date Section
                 */}
@@ -253,7 +277,7 @@ class SiteProfile extends React.Component {
                           id="date"
                           label="Start"
                           type="date"
-                          defaultValue={new Date().toISOString().slice(0, 10)}
+                          defaultValue={this.state.startDate.toISOString().slice(0, 10)}
                           name="startDate"
                           className={datePickerStyle}
                           style={{marginRight: 20}}
@@ -266,7 +290,7 @@ class SiteProfile extends React.Component {
                           id="date"
                           label="End"
                           type="date"
-                          defaultValue={new Date().toISOString().slice(0, 10)}
+                          defaultValue={this.state.endDate.toISOString().slice(0, 10)}
                           name="endDate"
                           className={datePickerStyle}
                           onChange={this.handleDateChange}
@@ -279,7 +303,9 @@ class SiteProfile extends React.Component {
                   </Grid>
                 </Grid>
 
-
+                {/*
+                  Calendar icons
+                */}
                 <Grid item xs={12}>
                   <Grid container xs={12} style={centerRow}>
 
@@ -362,16 +388,32 @@ class SiteProfile extends React.Component {
                     </FormControl>
                   </Grid>
                 </Grid>
+
+                {/*
+                  Submit button
+                */}
                 <Grid item xs={12} style={centerRow}>
-                  <Button variant="contained" color="primary"
-                          onClick={(_) =>
-                              save(name, email, currentPassword, password, confirmPassword, firebase)
-                                  .then(() => history.push("/Home"))}>
-                                  View Report
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.handlePageChange(2)}>
+                    View Report
                   </Button>
                 </Grid>
             </Grid>
         </Grid>
+
+      ) : (this.state.view === 2 ? (
+        <SiteProfileResults
+          handlePageChange={(val) => this.handlePageChange(val)}
+          selectedSiteName={this.state.selectedSiteName}
+          selectedSiteId={this.state.selectedSite}
+          selectedPractices={this.state.checked}
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+         />
+      ) : null)}
+
         </>
         )
     }

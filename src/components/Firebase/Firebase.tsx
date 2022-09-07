@@ -348,6 +348,33 @@ class Firebase {
     }
   }
 
+  getTeacherListFromUser = async (
+    data: {
+      userId: string,
+     }
+ ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db
+        .collection('users')
+        .doc(data.userId)
+        .collection('partners')
+        .get()
+        .then( async (partners: firebase.firestore.QuerySnapshot) => {
+          const teacherList: Array<firebase.firestore.DocumentData> = [];
+
+          partners.forEach(partner => {
+              teacherList.push(partner.id.trim());
+            }
+          )
+
+          return teacherList;
+        })
+        .catch((error: Error) =>
+          console.error('Error getting partner list: ', error)
+        )
+    }
+  }
+
   updateFavouriteQuestions = async (
     questionId: string[]
   ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
