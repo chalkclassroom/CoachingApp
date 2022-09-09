@@ -447,7 +447,6 @@ class Checklist extends React.Component<Props, State> {
                     checklistType={this.props.checklist}
                     stopTimer={this.stopTimer}
                     startTimer={this.startTimer}
-                    handleNext={this.handleNext}
                   />
                 </Grid>
               </Grid>
