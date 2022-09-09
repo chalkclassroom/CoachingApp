@@ -176,7 +176,7 @@ type Props = RouteComponentProps & {
   startTime?: string
   forceComplete?: boolean
   showLiteracyActivity?:boolean,
-  handleNext?(): void
+  // handleNext?(): void
 }
 
 interface State {
@@ -531,9 +531,9 @@ class Dashboard extends React.Component<Props, State> {
                             if (this.props.stopTimer) {
                               this.props.stopTimer()
                             }
-                            if (this.props.handleNext) {
-                              this.props.handleNext();
-                            }
+                            // if (this.props.handleNext) {
+                            //   this.props.handleNext();
+                            // }
                             if (this.props.type === "TT") {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);
