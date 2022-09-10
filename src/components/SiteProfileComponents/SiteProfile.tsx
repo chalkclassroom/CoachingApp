@@ -14,7 +14,9 @@ import {
     Checkbox,
     FormLabel,
     FormGroup,
-    FormControlLabel
+    FormControlLabel,
+    Radio,
+    RadioGroup
 } from '@material-ui/core'
 
 import SiteProfileResults from './SiteProfileResults'
@@ -82,7 +84,8 @@ class SiteProfile extends React.Component {
           selectedSite: "",
           view: 1,
           startDate: new Date(),
-          endDate: new Date()
+          endDate: new Date(),
+          radioValue: ""
       }
   }
 
@@ -187,6 +190,12 @@ class SiteProfile extends React.Component {
   handlePageChange = (pageNumber) => {
     this.setState({view: pageNumber});
   }
+
+  // When any of the checkboxes are checked or unchecked
+  handleRadioChange = (event: SelectChangeEvent) => {
+    // If we're checking it, add to array
+      this.setState({radioValue: event.target.value});
+  };
 
 
     render() {
@@ -326,69 +335,90 @@ class SiteProfile extends React.Component {
                 {/*
                     The checklists
                 */}
-                <Grid container style={centerRow}>
-                  <Grid item xs={4}>
-                    <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.transitionTime} onChange={this.handleCheckboxChange} name="transitionTime" />}
-                          label="Transition Time"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.classroomClimate} onChange={this.handleCheckboxChange} name="classroomClimate" />}
-                          label="Classroom Climate"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.mathInstruction} onChange={this.handleCheckboxChange} name="mathInstruction" />}
-                          label="Math Instruction"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.levelOfInstruction} onChange={this.handleCheckboxChange} name="levelOfInstruction" />}
-                          label="Level of Instruction"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.studentEngagement} onChange={this.handleCheckboxChange} name="studentEngagement" />}
-                          label="Student Engagement"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.listeningToChildren} onChange={this.handleCheckboxChange} name="listeningToChildren" />}
-                          label="Listening to Children"
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.sequentialActivities} onChange={this.handleCheckboxChange} name="sequentialActivities" />}
-                          label="Sequential Activities"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.foundationSkills} onChange={this.handleCheckboxChange} name="foundationSkills" />}
-                          label="Foundation Skills"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.writing} onChange={this.handleCheckboxChange} name="writing" />}
-                          label="Writing"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.bookReading} onChange={this.handleCheckboxChange} name="bookReading" />}
-                          label="Book Reading"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.languageEnvironment} onChange={this.handleCheckboxChange} name="languageEnvironment" />}
-                          label="Language Environment"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox checked={this.state.associativeSndCooperative} onChange={this.handleCheckboxChange} name="associativeSndCooperative" />}
-                          label="Associative and Cooperative"
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                </Grid>
 
+                <RadioGroup aria-label="Practices" name="practices" value={this.state.radioValue} onChange={this.handleRadioChange} style={{width: '100%'}}>
+                  <Grid container style={centerRow}>
+                    <Grid item xs={6}>
+                      <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
+                        <FormGroup>
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Transition Time"
+                            value="transitionTime"
+                          />
+
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Classroom Climate"
+                            value="classroomClimate"
+                          />
+
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Math Instruction"
+                            value="mathInstruction"
+                          />
+
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Level of Instruction"
+                            value="levelOfInstruction"
+                          />
+
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Student Engagement"
+                            value="studentEngagement"
+                          />
+
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Listening to Children"
+                            value="listeningToChildren"
+                          />
+
+                        </FormGroup>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
+                        <FormGroup>
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Sequential Activities"
+                            value="sequentialActivities"
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Foundation Skills"
+                            value="foundationSkills"
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Writing"
+                            value="writing"
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Book Reading"
+                            value="bookReading"
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Language Environment"
+                            value="languageEnvironment"
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Associative and Cooperative"
+                            value="associativeSndCooperative"
+                          />
+
+                        </FormGroup>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </RadioGroup>
                 {/*
                   Submit button
                 */}
@@ -408,9 +438,10 @@ class SiteProfile extends React.Component {
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedSiteName={this.state.selectedSiteName}
           selectedSiteId={this.state.selectedSite}
-          selectedPractices={this.state.checked}
+          selectedPractices={this.state.radioValue}
           startDate={this.state.startDate}
           endDate={this.state.endDate}
+          observationType={this.state.radioValue}
          />
       ) : null)}
 

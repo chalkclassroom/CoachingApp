@@ -5165,6 +5165,39 @@ class Firebase {
    }
 
 
+   /**
+    * Listening to Children cloud function
+    * gets counts of each listening behavior type
+    * @param {string} sessionId
+    */
+   fetchSiteProfileAverages = async (
+     data: {
+       type: string,
+       startDate: string,
+       endDate: string,
+       teacherIds: string
+     }
+   ): Promise<void> => {
+
+     console.log("Running Firebase.");
+
+     const fetchSiteProfileAverages = this.functions.httpsCallable(
+       'fetchSiteProfileAverages'
+     )
+     return fetchSiteProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+       .then(
+         (result) => {
+           console.log("Result: " + result.data[0][0]);
+           return result.data[0];
+         }
+       )
+       .catch((error: Error) =>
+         console.error('Error occurred getting site profile averages : ', error)
+       )
+   }
+
+
+
 
   /**
    * Updates played training videos URL list
