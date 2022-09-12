@@ -543,6 +543,114 @@ class RadioSets extends React.Component<Props, {}> {
       )
     }
 
+
+
+    if(this.props.type === "languageEnvironment")
+    {
+      return (
+        <Grid container style={centerRow}>
+          <Grid item xs={6}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
+              <FormGroup>
+
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Language Environment - Total Instruction"
+                  value="languageEnvironmentAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Talk with children about vocabulary or social-emotional topics"
+                  value="talkAverage"
+                />
+
+              </FormGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Encourage children to talk"
+                  value="encourageChildrenAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Respond to children"
+                  value="respondChildrenAverage"
+                />
+
+              </FormGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+      )
+    }
+
+
+
+
+    if(this.props.type === "associativeAndCooperative")
+    {
+      return (
+        <Grid container style={centerRow}>
+          <Grid item xs={6}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
+              <FormGroup>
+
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Participating in children's play"
+                  value="childrensPlayAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Asking questions to extend children's thinking about their shared activity"
+                  value="askingQuestionsAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Encouraging children to share, work, or interact with each other"
+                  value="encouragingChildrenAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Helping children find the words to communicate"
+                  value="helpingChildrenAverage"
+                />
+
+
+              </FormGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
+              <FormGroup>
+
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Supported children's associative and cooperative interactions."
+                  value="supportAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Was present in the center but did not support associative and cooperative interactions."
+                  value="noSupportAverage"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Was not present in the centers observed."
+                  value="notAtCenterAverage"
+                />
+
+              </FormGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+      )
+    }
+
   }
 
 }

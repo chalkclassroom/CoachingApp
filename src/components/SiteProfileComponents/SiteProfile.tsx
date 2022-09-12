@@ -411,7 +411,7 @@ class SiteProfile extends React.Component {
                           <FormControlLabel
                             control={<Radio />}
                             label="Associative and Cooperative"
-                            value="associativeSndCooperative"
+                            value="associativeAndCooperative"
                           />
 
                         </FormGroup>

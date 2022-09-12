@@ -19,7 +19,7 @@ const practicesArr = {
   "writing": "literacyWritingTeacher",
   "bookReading": "literacyReadingTeacher",
   "languageEnvironment": "literacyLanguageTeacher",
-  "associativeSndCooperative": "ac",
+  "associativeAndCooperative": "ac",
 }
 
 // Array used to match the name of a practice to the teacher Column name
@@ -35,7 +35,7 @@ const teacherColumnArr = {
   "writing": "teachId",
   "bookReading": "teacherId",
   "languageEnvironment": "teacherId",
-  "associativeSndCooperative": "teacherId",
+  "associativeAndCooperative": "teacherId",
 }
 
 
@@ -244,11 +244,13 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
                       COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
                       COUNT (sessionStart) AS total,
-                      teacher
+                      teacher,
+                      time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY GroupDate, startDate, teacher
+                      GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
 
@@ -270,13 +272,13 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.item8) THEN 'writing8' ELSE NULL END) AS writing8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'writing9' ELSE NULL END) AS writing9,
                       COUNT (sessionStart) AS total,
-                      teacher
+                      teacher,
+                      time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY GroupDate, startDate, teacher
+                      GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
-
 
     /*
      * Book Reading
@@ -295,13 +297,67 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                       COUNT(CASE WHEN (checklist.item10) THEN 'literacy10' ELSE NULL END) AS literacy10,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'literacy11' ELSE NULL END) AS literacy11,
                       COUNT (sessionStart) AS total,
-                      teacher
+                      teacher,
+                      time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY GroupDate, startDate, teacher
+                      GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
+
+    /*
+     * Language Environment
+     */
+    if(observationType == "literacyLanguageTeacher")
+    {
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
+                      COUNT(CASE WHEN (checklist.item2) THEN 'literacy2' ELSE NULL END) AS literacy2,
+                      COUNT(CASE WHEN (checklist.item3) THEN 'literacy3' ELSE NULL END) AS literacy3,
+                      COUNT(CASE WHEN (checklist.item4) THEN 'literacy4' ELSE NULL END) AS literacy4,
+                      COUNT(CASE WHEN (checklist.item5) THEN 'literacy5' ELSE NULL END) AS literacy5,
+                      COUNT(CASE WHEN (checklist.item6) THEN 'literacy6' ELSE NULL END) AS literacy6,
+                      COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
+                      COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
+                      COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
+                      COUNT (sessionStart) AS total,
+                      teacher,
+                      time
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
+                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      GROUP BY time, GroupDate, startDate, teacher
+                      ORDER BY GroupDate ASC;`;
+    }
+
+
+
+    /*
+     * Associative Cooperation
+     */
+    if(observationType == "ac")
+    {
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.teacher1) THEN 'teacher1' ELSE NULL END) AS teacher1,
+                      COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
+                      COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
+                      COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
+                      COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
+                      COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
+                      COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
+                      timestamp,
+                      peopleType,
+                      teacher,
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
+                      where (${teacherSqlQuery}) and timestamp <= '${endDate}' and timestamp >= '${startDate}'
+                      GROUP BY timestamp, GroupDate, peopleType, startDate, teacher
+                      ORDER BY GroupDate DESC;`;
+    }
+
+
 
 
 

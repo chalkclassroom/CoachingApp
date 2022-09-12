@@ -719,14 +719,14 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
       openEndedQuestions: new Array(12).fill(0),
       realisticReading: new Array(12).fill(0),
       multimodalInstruction: new Array(12).fill(0),
-      foundationalSkillsAverage: new Array(12).fill(0),
+      foundationalSkills: new Array(12).fill(0),
 
       phonologicalAverage: new Array(12).fill(0),
       alphabeticAverage: new Array(12).fill(0),
       openEndedQuestionsAverage: new Array(12).fill(0),
       realisticReadingAverage: new Array(12).fill(0),
       multimodalInstructionAverage: new Array(12).fill(0),
-      foundationalSkillsAverageAverage: new Array(12).fill(0),
+      foundationalSkillsAverage: new Array(12).fill(0),
     };
 
   }
@@ -753,9 +753,11 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
     // Add to total # of intervals
-    results[teacherId].totalIntervals[rowMonth] += row.total;
+    // results[teacherId].totalIntervals[rowMonth] += row.total;
+    results[teacherId].totalIntervals[rowMonth]++;
 
     // Add to behavior types
+    /*
     results[teacherId].phonological[rowMonth] += row.foundational1 + row.foundational2;
     results[teacherId].alphabetic[rowMonth] += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
     results[teacherId].openEndedQuestions[rowMonth] += row.foundational8;
@@ -764,6 +766,39 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // THIS ONE ISN'T RIGHT FOR NOW
     results[teacherId].foundationalSkillsAverage[rowMonth] += row.foundational10;
+    */
+
+    // If this observation has a phonal answer.
+    if(row.foundational1 || row.foundational2)
+    {
+      results[teacherId].phonological[rowMonth]++;
+    }
+    // If this observation has a alphabetic answer
+    if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
+    {
+      results[teacherId].alphabetic[rowMonth]++;
+    }
+    // If this observation has a open ended question
+    if(row.foundational8)
+    {
+      results[teacherId].openEndedQuestions[rowMonth]++;
+    }
+    // If this observation has a realistic Reading
+    if(row.foundational9)
+    {
+      results[teacherId].realisticReading[rowMonth]++;
+    }
+    // If this observation has a Multi Modal
+    if(row.foundational10)
+    {
+      results[teacherId].multimodalInstruction[rowMonth]++;
+    }
+    // If this observation has anything
+    if(!row.foundational11)
+    {
+      results[teacherId].foundationalSkills[rowMonth]++;
+    }
+
 
     // Calculate the total Number of instructions
     results[teacherId].totalInstructions[rowMonth] += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
@@ -781,14 +816,14 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
       var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
 
-      result.phonologicalAverage[i] = result.phonological[i] > 0 ? (result.phonological[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.alphabeticAverage[i] = result.alphabetic[i] > 0 ? (result.alphabetic[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.openEndedQuestionsAverage[i] = result.openEndedQuestions[i] > 0 ? (result.openEndedQuestions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.realisticReadingAverage[i] = result.realisticReading[i] > 0 ? (result.realisticReading[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.phonologicalAverage[i] = result.phonological[i] > 0 ? (result.phonological[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.alphabeticAverage[i] = result.alphabetic[i] > 0 ? (result.alphabetic[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.openEndedQuestionsAverage[i] = result.openEndedQuestions[i] > 0 ? (result.openEndedQuestions[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.realisticReadingAverage[i] = result.realisticReading[i] > 0 ? (result.realisticReading[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
       // THIS ONE ISN'T RIGHT FOR NOW
-      result.foundationalSkillsAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.foundationalSkillsAverage[i] = result.foundationalSkills[i] > 0 ? (result.foundationalSkills[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
     }
   }
@@ -861,15 +896,34 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
     // Add to total # of intervals
-    results[teacherId].totalIntervals[rowMonth] += row.total;
+    // results[teacherId].totalIntervals[rowMonth] += row.total;
+    results[teacherId].totalIntervals[rowMonth]++;
 
     // Add to behavior types
+    /*
     results[teacherId].meaning[rowMonth] += row.writing1 + row.writing2;
     results[teacherId].printProcesses[rowMonth] += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
 
-
     // THIS ONE ISN'T RIGHT FOR NOW
     results[teacherId].writingSkills[rowMonth] += row.writing1;
+    */
+
+    // Count each observation interval that has a meaning in it.
+    if(row.writing1 || row.writing2)
+    {
+      results[teacherId].meaning[rowMonth]++;
+    }
+    // Count each observation interval that has a Print Process in it
+    if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
+    {
+      results[teacherId].printProcesses[rowMonth]++;
+    }
+
+    // Count each observation interval that has anything in it
+    if(!row.writing9)
+    {
+      results[teacherId].writingSkills[rowMonth]++;
+    }
 
     // Calculate the total Number of instructions
     results[teacherId].totalInstructions[rowMonth] += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
@@ -887,11 +941,11 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
 
-      result.meaningAverage[i] = result.meaning[i] > 0 ? (result.meaning[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.printProcessesAverage[i] = result.printProcesses[i] > 0 ? (result.printProcesses[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.meaningAverage[i] = result.meaning[i] > 0 ? (result.meaning[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.printProcessesAverage[i] = result.printProcesses[i] > 0 ? (result.printProcesses[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
       // THIS ONE ISN'T RIGHT FOR NOW
-      result.writingSkillsAverage[i] = result.printProcesses[i] > 0 ? (result.printProcesses[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.writingSkillsAverage[i] = result.writingSkills[i] > 0 ? (result.writingSkills[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
     }
   }
@@ -967,18 +1021,52 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      results[teacherId].totalIntervals[rowMonth] += row.total;
+      //results[teacherId].totalIntervals[rowMonth] += row.total;
+      results[teacherId].totalIntervals[rowMonth]++;
 
       // Add to behavior types
+      /*
       results[teacherId].vocabFocus[rowMonth] +=  row.literacy1 + row.literacy2 + row.literacy3;
 
       results[teacherId].languageConnections[rowMonth] += row.literacy4 + row.literacy5;
       results[teacherId].childrenSupport[rowMonth] += row.literacy6 + row.literacy7 + row.literacy8;
       results[teacherId].fairnessDiscussions[rowMonth] += row.literacy9;
       results[teacherId].multimodalInstruction[rowMonth] += row.literacy10;
-
+      */
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
+
+      // If there were any vocabanswers in this observation
+      if( row.literacy1 || row.literacy2 || row.literacy3 )
+      {
+        results[teacherId].vocabFocus[rowMonth]++;
+      }
+      // If there were any Language Connection answers in this observation
+      if( row.literacy4 || row.literacy5 )
+      {
+        results[teacherId].languageConnections[rowMonth]++;
+      }
+      // If there were any Children Support answers in this observation
+      if( row.literacy6 || row.literacy7 || row.literacy8 )
+      {
+        results[teacherId].childrenSupport[rowMonth]++;
+      }
+      // If there were any Fairness Discussion answers in this observation
+      if( row.literacy9 )
+      {
+        results[teacherId].fairnessDiscussions[rowMonth]++;
+      }
+      // If there were any Fairness Discussion answers in this observation
+      if( row.literacy10 )
+      {
+        results[teacherId].multimodalInstruction[rowMonth]++;
+      }
+      // If there were any answers in this observation
+      if( !row.literacy11 )
+      {
+        results[teacherId].bookReading[rowMonth]++;
+      }
+
     }
 
     // Calculate the averages in percentages
@@ -991,17 +1079,290 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       for(var i = 0; i < 12; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
+        var tempTotalIntervals = result.totalIntervals[i];
 
         console.log("result.vocabFocus[i] " + result.vocabFocus[i]);
 
-        result.vocabFocusAverage[i] = result.vocabFocus[i] > 0 ? (result.vocabFocus[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.languageConnectionsAverage[i] = result.languageConnections[i] > 0 ? (result.languageConnections[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.childrenSupportAverage[i] = result.childrenSupport[i] > 0 ? (result.childrenSupport[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.fairnessDiscussionsAverage[i] = result.fairnessDiscussions[i] > 0 ? (result.fairnessDiscussions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.vocabFocusAverage[i] = result.vocabFocus[i] > 0 ? (result.vocabFocus[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.languageConnectionsAverage[i] = result.languageConnections[i] > 0 ? (result.languageConnections[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.childrenSupportAverage[i] = result.childrenSupport[i] > 0 ? (result.childrenSupport[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.fairnessDiscussionsAverage[i] = result.fairnessDiscussions[i] > 0 ? (result.fairnessDiscussions[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
-        // THIS ONE ISN'T RIGHT FOR NOW
-        result.bookReadingAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.bookReadingAverage[i] = result.bookReading[i] > 0 ? (result.bookReading[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+      }
+    }
+
+    return results;
+
+  }
+
+
+
+  /*
+   * Language Environment
+   */
+  calculateLanguageEnvironmentTrends = (data, teachers, startDate, endDate) => {
+
+    // Initialize the array that will hold all the data
+    var results = {};
+
+    var totalIntervals = 0;
+
+    // Get start month and year
+    const startMonth = startDate.getMonth();
+
+    const endMonth = endDate.getMonth();
+
+    // Add each teacher to the object
+    var tempName = "";
+    for(var teacherIndex in teachers)
+    {
+
+      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+
+      results[teachers[teacherIndex].id] = {
+        name: tempName,
+        totalIntervals: new Array(12).fill(0),
+        totalInstructions: new Array(12).fill(0),
+        languageEnvironment: new Array(12).fill(0),
+        talk: new Array(12).fill(0),
+        encourageChildren: new Array(12).fill(0),
+        respondChildren: new Array(12).fill(0),
+
+
+        languageEnvironmentAverage: new Array(12).fill(0),
+        talkAverage: new Array(12).fill(0),
+        encourageChildrenAverage: new Array(12).fill(0),
+        respondChildrenAverage: new Array(12).fill(0),
+
+      };
+
+    }
+
+
+    // Sort by date just in case
+    data.sort(function(a,b){
+      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
+    });
+
+
+    // Get number of instances for each type of data
+    var tempIntervalData = 0;
+    var prevMonth = 0, rowMonth = startMonth;
+
+
+
+    for(var rowIndex in data)
+    {
+      var row = data[rowIndex];
+
+      var teacherId = row.teacher.split("/")[2];
+
+      rowMonth = new Date(row.GroupDate.value).getMonth();
+
+      // Add to total # of intervals
+      //results[teacherId].totalIntervals[rowMonth] += row.total;
+      results[teacherId].totalIntervals[rowMonth]++;
+
+      // Add to behavior types
+
+      // Calculate the total Number of instructions
+      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
+
+
+      // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
+      if( row.literacy1 || row.literacy2)
+      {
+        results[teacherId].talk[rowMonth]++;
+      }
+      // If there were any "Encourage Children to talk" answers in this observation
+      if( row.literacy3 || row.literacy4 || row.literacy5 )
+      {
+        results[teacherId].encourageChildren[rowMonth]++;
+      }
+      // If there were any "Respond to children" answers in this observation
+      if( row.literacy6 || row.literacy7 || row.literacy8 )
+      {
+        results[teacherId].respondChildren[rowMonth]++;
+      }
+
+      // If there were any answers in this observation
+      if( !row.literacy9 )
+      {
+        results[teacherId].languageEnvironment[rowMonth]++;
+      }
+    }
+
+    // Calculate the averages in percentages
+    // Go through each teacher
+    for(var resultsIndex in results)
+    {
+      var result = results[resultsIndex];
+
+      // Go through the months
+      for(var i = 0; i < 12; i++)
+      {
+        var tempTotalInstructions = result.totalInstructions[i];
+        var tempTotalIntervals = result.totalIntervals[i];
+
+        result.talkAverage[i] = result.talk[i] > 0 ? (result.talk[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.encourageChildrenAverage[i] = result.encourageChildren[i] > 0 ? (result.encourageChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.respondChildrenAverage[i] = result.respondChildren[i] > 0 ? (result.respondChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+        result.languageEnvironmentAverage[i] = result.languageEnvironment[i] > 0 ? (result.languageEnvironment[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+      }
+    }
+
+    return results;
+
+  }
+
+
+  /*
+   * Language Environment
+   */
+  calculateACTrends = (data, teachers, startDate, endDate) => {
+
+    // Initialize the array that will hold all the data
+    var results = {};
+
+    // Get start month and year
+    const startMonth = startDate.getMonth();
+
+    const endMonth = endDate.getMonth();
+
+    // Add each teacher to the object
+    var tempName = "";
+    for(var teacherIndex in teachers)
+    {
+
+      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+
+      results[teachers[teacherIndex].id] = {
+        name: tempName,
+        totalIntervals: new Array(12).fill(0),
+        totalInstructions: new Array(12).fill(0),
+
+        childrensPlay: new Array(12).fill(0),
+        askingQuestions: new Array(12).fill(0),
+        encouragingChildren: new Array(12).fill(0),
+        helpingChildren: new Array(12).fill(0),
+
+        support: new Array(12).fill(0),
+        noSupport: new Array(12).fill(0),
+        notAtCenter: new Array(12).fill(0),
+
+
+        childrensPlayAverage: new Array(12).fill(0),
+        askingQuestionsAverage: new Array(12).fill(0),
+        encouragingChildrenAverage: new Array(12).fill(0),
+        helpingChildrenAverage: new Array(12).fill(0),
+
+        supportAverage: new Array(12).fill(0),
+        noSupportAverage: new Array(12).fill(0),
+        notAtCenterAverage: new Array(12).fill(0),
+
+      };
+
+    }
+
+
+    // Sort by date just in case
+    data.sort(function(a,b){
+      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
+    });
+
+
+    // Get number of instances for each type of data
+    var tempIntervalData = 0;
+    var prevMonth = 0, rowMonth = startMonth;
+
+
+
+    for(var rowIndex in data)
+    {
+      var row = data[rowIndex];
+
+      var teacherId = row.teacher.split("/")[2];
+
+      rowMonth = new Date(row.GroupDate.value).getMonth();
+
+      // Add to total # of intervals
+      //results[teacherId].totalIntervals[rowMonth] += row.total;
+      results[teacherId].totalIntervals[rowMonth]++;
+
+      // Add to behavior types
+
+      // Calculate the total Number of instructions
+      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
+
+
+      // If there were any "Participating in children's play" in this observation
+      if( row.teacher1 )
+      {
+        results[teacherId].childrensPlay[rowMonth]++;
+      }
+      // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
+      if( row.teacher2 )
+      {
+        results[teacherId].askingQuestions[rowMonth]++;
+      }
+      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
+      if( row.teacher3 )
+      {
+        results[teacherId].encouragingChildren[rowMonth]++;
+      }
+      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
+      if( row.teacher4 )
+      {
+        results[teacherId].helpingChildren[rowMonth]++;
+      }
+
+      // Check for act types
+      // If teacher was there
+      if(row.peopleType == 3)
+      {
+        // Check for support
+        if(row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4)
+        {
+          results[teacherId].support[rowMonth]++;
+        }
+        // If there was no support
+        else
+        {
+          results[teacherId].noSupport[rowMonth]++;
+        }
+      }
+      // Teacher not there
+      else
+      {
+        results[teacherId].notAtCenter[rowMonth]++;
+      }
+    }
+
+    // Calculate the averages in percentages
+    // Go through each teacher
+    for(var resultsIndex in results)
+    {
+      var result = results[resultsIndex];
+
+      // Go through the months
+      for(var i = 0; i < 12; i++)
+      {
+        var tempTotalInstructions = result.totalInstructions[i];
+        var tempTotalIntervals = result.totalIntervals[i];
+
+        result.childrensPlayAverage[i] = result.childrensPlay[i] > 0 ? (result.childrensPlay[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.askingQuestionsAverage[i] = result.askingQuestions[i] > 0 ? (result.askingQuestions[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.encouragingChildrenAverage[i] = result.encouragingChildren[i] > 0 ? (result.encouragingChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.helpingChildrenAverage[i] = result.helpingChildren[i] > 0 ? (result.helpingChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+        result.supportAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.noSupportAverage[i] = result.noSupport[i] > 0 ? (result.noSupport[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
+        result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
 
       }
     }

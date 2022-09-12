@@ -157,7 +157,7 @@ const practicesArr = {
   "writing": "Writing",
   "bookReading": "Book Reading",
   "languageEnvironment": "Language Environment",
-  "associativeSndCooperative": "Associative and Cooperative",
+  "associativeAndCooperative": "Associative and Cooperative",
 }
 
 // Array used to match the default radio value based on the type
@@ -172,8 +172,8 @@ const radioValueArr = {
   "foundationSkills": "foundationalSkillsAverage",
   "writing": "writingSkillsAverage",
   "bookReading": "bookReadingAverage",
-  "languageEnvironment": "Language Environment",
-  "associativeSndCooperative": "Associative and Cooperative",
+  "languageEnvironment": "languageEnvironmentAverage",
+  "associativeAndCooperative": "childrensPlayAverage",
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -352,12 +352,12 @@ class SiteProfileResults extends React.Component {
          trends = this.state.trendsClass.calculateBookReadingTrends(data, teachers, this.props.startDate, this.props.endDate);
          break;
        case "languageEnvironment":
-         averages = this.state.averagesClass.calculateBookReadingAverages(data, teachers);
-         trends = this.state.trendsClass.calculateBookReadingTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(data, teachers);
+         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(data, teachers, this.props.startDate, this.props.endDate);
          break;
-       case "associativeSndCooperative":
-         averages = this.state.averagesClass.calculateBookReadingAverages(data, teachers);
-         trends = this.state.trendsClass.calculateBookReadingTrends(data, teachers, this.props.startDate, this.props.endDate);
+       case "associativeAndCooperative":
+         averages = this.state.averagesClass.calculateACAverages(data, teachers);
+         trends = this.state.trendsClass.calculateACTrends(data, teachers, this.props.startDate, this.props.endDate);
          break;
 
        default:
