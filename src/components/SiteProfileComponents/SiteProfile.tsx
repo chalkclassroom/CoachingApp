@@ -87,7 +87,19 @@ class SiteProfile extends React.Component {
           view: 1,
           startDate: new Date(),
           endDate: new Date(),
-          radioValue: ""
+          radioValue: "",
+          error: {
+            program: false,
+            site: false,
+            startDate: false,
+            endDate: false,
+          },
+          errorMessages: {
+            program: "",
+            site: "",
+            startDate: "",
+            endDate: "",
+          }
       }
   }
 
@@ -147,10 +159,17 @@ class SiteProfile extends React.Component {
   handleChangeDropdown = (event: SelectChangeEvent) => {
     this.setState({[event.target.name]: event.target.value});
 
+    var error = this.state.error;
+    var errorMessages = this.state.errorMessages;
+
     // If program was selected, we need to generate options to put in site dropdown
     if(event.target.name == "selectedProgram")
     {
       this.setSites(event.target.value);
+
+      // Reset Error
+      error['program'] = false;
+      errorMessages['program'] = "";
     }
 
     // If it's a site, we need to save the site name to pass to the results page
@@ -159,7 +178,13 @@ class SiteProfile extends React.Component {
 
         const siteName = this.state.siteOptions.find(x => x.id === event.target.value).name;
         this.setState({selectedSiteName: siteName});
+
+        // Reset Error
+        error['site'] = false;
+        errorMessages['program'] = "";
     }
+
+    this.setState({error: error, errorMessages: errorMessages});
 
   };
 
@@ -185,6 +210,42 @@ class SiteProfile extends React.Component {
   handleDateChange = (event: SelectChangeEvent) => {
     const dateVal = new Date(event.target.value);
     this.setState({[event.target.name]: dateVal});
+
+    // Error Message Handling
+    var error = this.state.error;
+    var errorMessages = this.state.errorMessages;
+
+    var startDate = this.state.startDate
+    var endDate = this.state.endDate;
+    if(event.target.name == "startDate"){
+      startDate = dateVal;
+    }
+    else {
+      endDate = dateVal;
+    }
+
+
+    if(startDate > endDate)
+    {
+      error['startDate'] = true;
+      error['endDate'] = true;
+      errorMessages['startDate'] = "Start has to be before end";
+    }
+    else if (startDate > new Date())
+    {
+      error['startDate'] = true;
+      error['endDate'] = true;
+      errorMessages['startDate'] = "Start can't be in the future";
+    }
+    else
+    {
+      error['startDate'] = false;
+      error['endDate'] = false;
+      errorMessages['startDate'] = "";
+    }
+
+    this.setState({error: error, errorMessages: errorMessages});
+
   };
 
   // Function to switch between Form and Results page
@@ -206,6 +267,61 @@ class SiteProfile extends React.Component {
     // If we're checking it, add to array
       this.setState({radioValue: event.target.value});
   };
+
+  // When View Report is clicked
+  handleViewReport = () => {
+    var error = {
+      program: false,
+      site: false,
+      startDate: false,
+      endDate: false,
+    };
+
+    var errorMessages = {
+        program: "",
+        site: "",
+        startDate: "",
+        endDate: "",
+    }
+
+    if(this.state.selectedProgram == "")
+    {
+      error['program'] = true;
+      errorMessages['program'] = "Please select a program";
+    }
+    if(this.state.selectedSite == "")
+    {
+      error['site'] = true;
+      errorMessages['site'] = "Please select a site";
+    }
+    if(this.state.startDate > this.state.endDate)
+    {
+      error['startDate'] = true;
+      error['endDate'] = true;
+      errorMessages['startDate'] = "Start has to be before end";
+    }
+    if(this.state.startDate > new Date())
+    {
+      error['startDate'] = true;
+      error['endDate'] = true;
+      errorMessages['startDate'] = "Start can't be in the future";
+    }
+    if(this.state.radioValue == "")
+    {
+      alert("Please select a practice.")
+    }
+
+    // If there are no errors, change page
+    if ( !(Object.values(error).indexOf(true) > -1) ) {
+      this.handlePageChange(2);
+    }
+    else
+    {
+      this.setState({error: error});
+      this.setState({errorMessages: errorMessages});
+    }
+
+  }
 
 
     render() {
@@ -247,7 +363,8 @@ class SiteProfile extends React.Component {
                     </Grid>
 
                     <Grid container xs={6} style={startRow}>
-                      <FormControl variant="outlined" >
+                      <FormControl variant="outlined" error={this.state.error['program']}>
+
                         <StyledSelect
                           labelId="demo-simple-select-outlined-label"
                           id="demo-simple-select-outlined"
@@ -262,6 +379,7 @@ class SiteProfile extends React.Component {
                                 </MenuItem>
                             })}
                         </StyledSelect>
+                        <FormHelperText>{this.state.errorMessages['program']}</FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -273,7 +391,8 @@ class SiteProfile extends React.Component {
                     </Grid>
 
                     <Grid container xs={6} style={startRow}>
-                      <FormControl variant="outlined" >
+                      <FormControl variant="outlined" error={this.state.error['site']}>
+                        <FormHelperText>{this.state.error['site']}</FormHelperText>
                         <StyledSelect
                           labelId="demo-simple-select-outlined-label"
                           id="demo-simple-select-outlined"
@@ -289,6 +408,7 @@ class SiteProfile extends React.Component {
                                   </MenuItem>
                               })}
                         </StyledSelect>
+                        <FormHelperText>{this.state.errorMessages['site']}</FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -319,6 +439,8 @@ class SiteProfile extends React.Component {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          error={this.state.error['startDate']}
+                          helperText={this.state.errorMessages['startDate']}
                           />
                         <TextField
                           id="date"
@@ -331,6 +453,8 @@ class SiteProfile extends React.Component {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          error={this.state.error['endDate']}
+                          helperText={this.state.errorMessages['endDate']}
                         />
                       </Grid>
 
@@ -361,10 +485,10 @@ class SiteProfile extends React.Component {
                     The checklists
                 */}
 
-                <RadioGroup aria-label="Practices" name="practices" value={this.state.radioValue} onChange={this.handleRadioChange} style={{width: '100%'}}>
+                <RadioGroup aria-label="Practices" name="practices" error={true} value={this.state.radioValue} onChange={this.handleRadioChange} style={{width: '100%'}}>
                   <Grid container style={centerRow}>
                     <Grid item xs={6}>
-                      <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
+                      <FormControl required error={true} component="fieldset" className={"checkboxesform"}>
                         <FormGroup>
                           <FormControlLabel
                             control={<Radio />}
@@ -451,7 +575,7 @@ class SiteProfile extends React.Component {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => this.handlePageChange(2)}>
+                    onClick={() => this.handleViewReport()}>
                     View Report
                   </Button>
                 </Grid>
