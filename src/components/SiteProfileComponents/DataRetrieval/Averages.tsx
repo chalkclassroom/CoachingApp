@@ -819,7 +819,6 @@ class AveragesData {
     {
 
       var result = results[resultsIndex];
-      console.log("Start Loop for " + result.name);
 
       var tempTotalInstructions = result.totalInstructions;
       var tempTotalIntervals = result.totalIntervals;

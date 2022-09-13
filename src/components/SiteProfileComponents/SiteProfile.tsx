@@ -29,6 +29,8 @@ import * as React from 'react';
 import { Component } from 'react';
 import Firebase, { FirebaseContext } from '../../components/Firebase'
 
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+
 
 const centerRow = {
     display:'flex',
@@ -156,7 +158,6 @@ class SiteProfile extends React.Component {
     {
 
         const siteName = this.state.siteOptions.find(x => x.id === event.target.value).name;
-        console.log("Site selected " + siteName);
         this.setState({selectedSiteName: siteName});
     }
 
@@ -189,6 +190,15 @@ class SiteProfile extends React.Component {
   // Function to switch between Form and Results page
   handlePageChange = (pageNumber) => {
     this.setState({view: pageNumber});
+
+    if(pageNumber == 1)
+    {
+      this.props.changePage("SiteProfile");
+    }
+    if(pageNumber == 2)
+    {
+      this.props.changePage("SiteResults");
+    }
   }
 
   // When any of the checkboxes are checked or unchecked
@@ -199,6 +209,21 @@ class SiteProfile extends React.Component {
 
 
     render() {
+
+      {/*
+        Redirect to the homepage if they're not an admin, program leader, or site leader
+      */}
+      if(this.props.userRole !== "admin" && this.props.userRole !== "programLeader" && this.props.userRole !== "siteLeader")
+      {
+        return (
+          <Route
+            render={ (props) =>
+              <Redirect to={{ pathname: '/', state: {from: this.props.location}}} />
+            }
+            />
+        )
+      }
+
 
       return (
         <>

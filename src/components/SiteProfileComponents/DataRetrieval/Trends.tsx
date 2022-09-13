@@ -1081,8 +1081,6 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         var tempTotalInstructions = result.totalInstructions[i];
         var tempTotalIntervals = result.totalIntervals[i];
 
-        console.log("result.vocabFocus[i] " + result.vocabFocus[i]);
-
         result.vocabFocusAverage[i] = result.vocabFocus[i] > 0 ? (result.vocabFocus[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
         result.languageConnectionsAverage[i] = result.languageConnections[i] > 0 ? (result.languageConnections[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
         result.childrenSupportAverage[i] = result.childrenSupport[i] > 0 ? (result.childrenSupport[i] / tempTotalIntervals).toFixed(2) * 100 : 0;

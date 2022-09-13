@@ -15,7 +15,7 @@ const listStyle = {
 }
 
 const aStyle = {
-    textDecoration: 'none', 
+    textDecoration: 'none',
     color: 'black',
     cursor: 'default',
 }
@@ -39,13 +39,13 @@ const BackItems = [
 ]
 
 const BackList = [
-    "/TeacherProfile", 
-    "/CoachProfile", 
-    "/SiteProfile", 
+    "/TeacherProfile",
+    "/CoachProfile",
+    "/SiteProfile",
     "/ProgramProfile",
-    "/TeacherResults", 
-    "/CoachResults", 
-    "/SiteResults", 
+    "/TeacherResults",
+    "/CoachResults",
+    "/SiteResults",
     "/ProgramResults"
 ]
 
@@ -58,9 +58,9 @@ function checkBack() {
     return MenuItems;
 }
 
-function checkPrint() {
+function checkPrint(currentPage) {
     for ( let i = 4; i < BackList.length; i++) {
-        if (location.pathname === BackList[i]) {
+        if (location.pathname === BackList[i] || ("/" + currentPage) === BackList[i] ) {
             return (
                 <li style={listStyle}>
                         <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/>
@@ -74,12 +74,18 @@ function checkPrint() {
 
 
 class Sidebar extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+      }
+    }
+
     render() {
     return (
         <>
             <SidebarParent>
                 <ul style={{    padding: '0 0 0 .8em', margin: '0'}}>
-                    {checkPrint()}
+                    {checkPrint(this.props.currPage)}
                     {checkBack().map((item, index) => {
                         return (
                             <li style={listStyle} key={index}>
@@ -89,7 +95,7 @@ class Sidebar extends Component {
                             </li>
                         )
                     })}
-                </ul>           
+                </ul>
             </SidebarParent>
         </>
     );

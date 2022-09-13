@@ -722,28 +722,28 @@ class App extends React.Component<Props, State> {
 
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/LeadersDashboard"
                 render={(props: object) : React.ReactElement=> <LeadersDashboard {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/MyPrograms"
                 render={(props: object) : React.ReactElement=> <MyProgramsPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/NewProgram"
                 render={(props: object) : React.ReactElement=> <NewProgramPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/NewSite"
                 render={(props: object) : React.ReactElement=> <NewSitePage {...props}/>}

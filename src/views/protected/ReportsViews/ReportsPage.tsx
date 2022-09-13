@@ -75,7 +75,8 @@ class ReportsPage extends React.Component<Props, State> {
     this.state = {
       teacherModal: false,
       type: "",
-      coachName: ""
+      coachName: "",
+      currentPage: "",
     }
   }
 
@@ -109,13 +110,18 @@ class ReportsPage extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history
   }
 
+
+  changePage = (pageName) => {
+    this.setState({currentPage: pageName});
+  }
+
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
     const { classes, userRole, coachName } = this.props;
-  
+
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
@@ -128,18 +134,24 @@ class ReportsPage extends React.Component<Props, State> {
         </Grid>
         <MenuBar/>
         <div style={{display: "flex"}}>
-          <Sidebar/>
+          <Sidebar currPage={this.state.currentPage} />
           <Switch location={location} key={location.pathname}>
             <Route path="/Reports" component={Reports} />
-            <Route path="/ReportsList" component={ReportsList} /> 
+            <Route path="/ReportsList" component={ReportsList} />
             <Route path="/ReportImages" component={ReportImages} />
             <Route path="/ReportDesc" component={ReportDesc} />
             <Route path="/TeacherProfile" component={TeacherProfile} />
-            <Route path="/CoachProfile" component={CoachProfile} /> 
-            <Route path="/SiteProfile" component={SiteProfile} />
+            <Route path="/CoachProfile" component={CoachProfile} />
+            <Route path="/SiteProfile" render={(props) =>
+              <SiteProfile
+                changePage={(pageName) => this.changePage(pageName)}
+                userRole={userRole}
+                location={this.props.location}
+                />
+            } />
             <Route path="/ProgramProfile" component={ProgramProfile} />
             {/* <Route path="/TeacherResults" component={TeacherResults} />
-            <Route path="/CoachResults" component={CoachResults} /> 
+            <Route path="/CoachResults" component={CoachResults} />
             <Route path="/SiteResults" component={SiteResults} />
             <Route path="/ProgramResults" component={ProgramResults} /> */}
           </Switch>

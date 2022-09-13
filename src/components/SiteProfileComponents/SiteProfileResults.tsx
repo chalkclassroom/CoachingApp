@@ -29,6 +29,9 @@ import * as React from 'react';
 import { Component } from 'react';
 import Firebase, { FirebaseContext } from '../../components/Firebase'
 
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+
 import SiteProfileBarDetails from './SiteProfileBarDetails'
 import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import BarChartLegend from '../LayoutComponents/GraphLayouts/BarChartLegend'
@@ -249,12 +252,8 @@ class SiteProfileResults extends React.Component {
       {
         var coachId = coachIdsArr[coachIndex];
 
-        console.log("Coach ID : " + coachId);
-
         // Get the the coaches teacher
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
-
-        console.log("teachersIdList : " + teachersIdList);
 
         // Go through each teacher the coach observes
         for(var teacherIndex in teachersIdList)
@@ -295,7 +294,6 @@ class SiteProfileResults extends React.Component {
     // Grab results data
     firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
       .then( (data) => {
-        console.log("Firebase done.");
         this.setState({BQData: data});
         this.calculateResultsForCharts(data, teachers);
       });
@@ -384,8 +382,6 @@ class SiteProfileResults extends React.Component {
        var teacher = teachers[teacherIndex];
        var fullName = teacher.firstName + " " + teacher.lastName;
 
-       console.log("TYPE : " + type);
-
        var chosenData = trends[teacher.id][type];
 
        // Round off all the numbers
@@ -415,6 +411,35 @@ class SiteProfileResults extends React.Component {
      };
 
      this.setState({lineGraphData: lineData, lineColors: lineColors});
+   }
+
+   // Handle downloading the PDF
+   downloadPDF = () => {
+     console.log("Downloading!");
+     const input = document.getElementById('siteProfileResultsContainer');
+      html2canvas(input)
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const imgWidth = 190;
+          const pageHeight = 265;
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          let heightLeft = imgHeight;
+          const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+          let position = 10;
+          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          const currDate = new Date();
+
+
+          pdf.save("Site_Profile_Results_" + currDate.getMonth() + '_' + currDate.getDate() + "_" + currDate.getFullYear() + ".pdf");
+        });
    }
 
   // When any of the checkboxes are checked or unchecked
@@ -466,7 +491,7 @@ class SiteProfileResults extends React.Component {
     render() {
 
       return (
-        <>
+        <div id="siteProfileResultsContainer">
 
         <Grid container style={{paddingLeft: '30px', paddingRight: '30px', marginBottom: '30px'}}>
             <Grid container>
@@ -554,13 +579,14 @@ class SiteProfileResults extends React.Component {
                   <Button
                     variant="contained"
                     color="primary"
+                    onClick={() => this.downloadPDF()}
                     >
                     Download as PDF
                   </Button>
                 </Grid>
             </Grid>
         </Grid>
-        </>
+        </div>
         )
     }
   }
