@@ -290,6 +290,19 @@ class Firebase {
       .catch(error => error)
   }
 
+
+  sendMLE = async (email: string): Promise<void> => {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      'funcSendMLE'
+    )
+    return sendEmailFirebaseFunction(email)
+      .then(result => {
+        result
+        console.log('result is', result)
+      })
+      .catch(error => error)
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -2939,6 +2952,22 @@ class Firebase {
           }
         })
       })
+  }
+
+  getNotesForExport = async () => {
+    if (!await this.userIsAdmin()) {
+      throw new Error('Not authorized to perform this action')
+    }
+    this.query = this.db.collection('observations').doc('').collection('notes');
+    const notes = await this.query.get();
+
+    return Promise.all(notes.docs.map(async (doc) => {
+      const {content, timestamp} = doc.data()
+      return {
+        content: content,
+        timestamp: this.convertFirestoreTimestamp(timestamp)
+      }
+    }))
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {

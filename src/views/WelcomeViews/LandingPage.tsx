@@ -40,6 +40,7 @@ import PilotModal from '../../components/LandingPageComponents/PilotModal';
 import DemoModal from '../../components/LandingPageComponents/DemoModal';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import * as Constants from '../../constants/Constants';
+import Firebase from '../../components/Firebase/Firebase'
 
 const styles: object = {
   root: {
@@ -204,7 +205,8 @@ interface Props {
       firstName: string,
       lastName: string
     }): Promise<void>
-  }
+  },
+  fb: Firebase
 }
 
 interface State {
@@ -272,6 +274,7 @@ class LandingPage extends React.Component<Props, State> {
       this.props.firebase.emailListSignUp(this.state.email)
       .then((): void => {
         this.setState({ emailAdded: true });
+        this.props.fb.sendMLE(this.state.email);
       });
     }
   };
