@@ -5,11 +5,12 @@ sgMail.setApiKey(functions.config().sendgrid ? functions.config().sendgrid.key :
 
 exports.funcSendMLE = (item) => {
     const message = {
-      to: 'contacts@chalkcoaching.com',
+      to: 'contact@chalkcoaching.com',
+      replyTo: 'chalkcoaching@gmail.com',
+      cc: 'chalkcoaching@gmail.com',
       from: 'chalkcoaching@gmail.com',
       subject: 'New Mailing List Member!',
-      html: `<p><strong>Email:</strong> ${item}, just joined the mailing list!</p>
-      <p>Sent from Chalk Coaching</p>`
+      text: `Email: ${item} has just signed up for the mailing list!\nSent from CHALK Coaching`
     }
 
     return sgMail.send(message)
