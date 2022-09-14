@@ -145,6 +145,7 @@ class Firebase {
     this.sessionRef = this.db.collection('emailList').doc()
     this.sessionRef.set({
       email: email,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp().toString
     })
   }
 
@@ -2982,6 +2983,20 @@ class Firebase {
     }))
 
     return await arr
+  }
+
+  getEmailForExport = async () =>  {
+    this.query = this.db.collection('emailList');
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async (doc) => {
+      const {email, timestamp} = doc.data()
+      return {
+        email: email,
+        timestamp: this.convertFirestoreTimestamp(timestamp),
+      }
+    }))
+
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {

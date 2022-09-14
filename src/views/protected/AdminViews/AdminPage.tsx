@@ -10,6 +10,7 @@ import ObservationsExport from "../../../components/AdminComponents/Observations
 import ActionPlanExport from "../../../components/AdminComponents/ActionPlanExport";
 import ConferencePlanExport from "../../../components/AdminComponents/ConferencePlanExport";
 import NotesExport from "../../../components/AdminComponents/NotesExport";
+import MailingListExport from "../../../components/AdminComponents/MailingListExport"
 
 interface Props {
   isAdmin: boolean
@@ -70,6 +71,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
     actionPlan: <ActionPlanExport setLoading={setLoading} classes={classes}/>,
     conferencePlan: <ConferencePlanExport setLoading={setLoading} classes={classes}/>,
     notes: <NotesExport setLoading={setLoading} classes={classes}/>,
+    mailingList: <MailingListExport setLoading={setLoading} classes={classes}/>,
     none: <></>
   }
 
@@ -121,6 +123,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
               <MenuItem value={'actionPlan'}>Action Plan</MenuItem>
               <MenuItem value={'conferencePlan'}>Conference Plan</MenuItem>
               <MenuItem value={'notes'}>Notes</MenuItem>
+              <MenuItem value={'mailingList'}>Mailing List</MenuItem>
               <MenuItem value={'none'}>None</MenuItem>
             </Select>
           </FormControl>

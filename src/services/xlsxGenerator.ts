@@ -33,6 +33,11 @@ type NotesXlsxResources = {
   content: string
 }
 
+type EmailXlsxResources = {
+  email: string
+  timestamp: Date | null
+}
+
 const convertDate = (date: Date | null) =>{
   if( date instanceof Date) {
     return date.toLocaleDateString()
@@ -82,6 +87,14 @@ const createNotesHeaders = () => {
   return headers;
 }
 
+const createEmailHeaders = () => {
+  let headers = [
+    'Email Address',
+    'TimeStamp'
+  ]
+  return headers;
+}
+
 const createActionPlanRow = (actionPlan: ActionPlanXlsxResources): string[] => {
   let { coachId, teacherId, dateModified, goal, goalTimeline, benefit, steps, tool } = actionPlan
   let data = [
@@ -116,6 +129,15 @@ const createNotesRow = (notes: NotesXlsxResources) => {
   return data;
 }
 
+const createEmailRow = (content: EmailXlsxResources) => {
+  let {email, timestamp} = content;
+  let data = [
+    email,
+    timestamp?.toString()
+  ];
+  return data;
+}
+
 export const generateActionPlanXlsx = (
   resources: ActionPlanXlsxResources[]
 ) => {
@@ -142,6 +164,21 @@ export const generateNotesXlsx = (
   let sheet = xlsx.utils.aoa_to_sheet(rows)
   // sets the column widths for each column -- each needs its own object.
   const wbcols = [ {wch:22}, {wch:34}, {wch:28}, {wch:10}, {wch:12}, {wch:20}, {wch:21}, {wch:50}];
+  sheet[`!cols`] = wbcols;
+  xlsx.utils.book_append_sheet(wb, sheet, 'Notes')
+  return wb
+}
+
+export const generateEmailXlsx = (
+  resources: EmailXlsxResources[]
+) => {
+  let wb = xlsx.utils.book_new();
+  const baseRows = [createEmailHeaders()];
+  const rows = baseRows.concat(resources.map(content => createEmailRow(content)));
+
+  let sheet = xlsx.utils.aoa_to_sheet(rows)
+  // sets the column widths for each column -- each needs its own object.
+  const wbcols = [{wch:30}, {wch:50}];
   sheet[`!cols`] = wbcols;
   xlsx.utils.book_append_sheet(wb, sheet, 'Notes')
   return wb
