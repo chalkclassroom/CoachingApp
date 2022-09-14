@@ -1,0 +1,8 @@
+{
+  "env": {
+    "bq_project": "chalk-dev-c6a5d",
+    "project_id": "chalk-dev-c6a5d",
+    "bq_dataset": "observations_dev",
+    "datastore": "observations"
+  }
+}

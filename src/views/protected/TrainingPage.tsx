@@ -99,9 +99,6 @@ const styles: object = {
     },
     timerGrid: {
       width: '50%'
-    },
-    trainingText: {
-      paddingBottom: '1.5em'
     }
   }
 };
@@ -184,12 +181,10 @@ class TrainingPage extends React.Component<Props, State> {
         >
           {!isTeacher && <Grid item className={classes.dashboardGrid}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-              {<Grid item>
-                <Typography align="center" variant="h4" className={classes.trainingText}>
+              <Grid item style={{width: '100%'}}>
+              <Typography align="center" variant="h4" className={classes.trainingText}>
                   Training
                 </Typography>
-              </Grid>}
-              <Grid item style={{width: '100%'}}>
                 <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
               </Grid>
             </Grid>
