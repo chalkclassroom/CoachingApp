@@ -1340,7 +1340,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             <Grid
               item
               xs={12}
-              style={{ width: '100%', height: '38vh' }}
+              style={{ width: '100%', height: '38vh', border: '2px solid #0988ec', borderRadius: '0.5em', }}
             >
               <Grid
                 container
@@ -1352,8 +1352,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                   item
                   style={{
                     width: '48%',
-                    border: '2px solid #0988ec',
-                    borderRadius: '0.5em',
+                    // border: '2px solid #0988ec',
+                    // borderRadius: '0.5em',
                     height: '100%',
                     overflow: 'auto',
                   }}
@@ -1578,8 +1578,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                                 variant="standard"
                                 fullWidth
                                 multiline
-                                rowsMax={4}
-                                rows={4}
+                                rowsMax={2}
+                                rows={2}
                                 className={
                                   classes.textField
                                 }
@@ -1659,8 +1659,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                   item
                   style={{
                     width: '28%',
-                    border: '2px solid #ffd300',
-                    borderRadius: '0.5em',
+                    // border: '2px solid #ffd300',
+                    // borderRadius: '0.5em',
                     height: '100%',
                     overflow: 'auto',
                   }}
@@ -1853,9 +1853,9 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   fullWidth
                                   multiline
                                   rowsMax={
-                                    4
+                                    2
                                   }
-                                  rows={4}
+                                  rows={2}
                                   className={
                                     classes.textField
                                   }
@@ -1895,8 +1895,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                   item
                   style={{
                     width: '21%',
-                    border: '2px solid #6f39c4',
-                    borderRadius: '0.5em',
+                    // borderLeft: '2px solid #6f39c4',
+                    // borderRadius: '0.5em',
                     height: '100%',
                     overflow: 'auto',
                   }}

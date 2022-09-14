@@ -110,7 +110,7 @@ const headCells = [
         id: 'achieveBy',
         numeric: false,
         disablePadding: false,
-        label: 'Achieve By:',
+        label: 'Status',
     },
 ]
 
