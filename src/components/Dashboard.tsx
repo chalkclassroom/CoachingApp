@@ -521,7 +521,9 @@ class Dashboard extends React.Component<Props, State> {
                             "Are you sure you want to complete this observation?"
                           }
                           shouldOpen={true}
-                          onAccept={(): void => {
+                          onAccept={async () => {
+                            const delay = ms => new Promise(res => setTimeout(res, ms));
+                            await delay(1500);
                             this.setState({displayResultsDialog: true});
                             let timedOut = !this.props.showLiteracyActivity && this.props.forceComplete
                               firebase.updateCurrentObservation({timedOut})
