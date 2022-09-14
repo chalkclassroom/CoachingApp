@@ -2955,19 +2955,33 @@ class Firebase {
   }
 
   getNotesForExport = async () => {
-    if (!await this.userIsAdmin()) {
-      throw new Error('Not authorized to perform this action')
-    }
-    this.query = this.db.collection('observations').doc('').collection('notes');
-    const notes = await this.query.get();
 
-    return Promise.all(notes.docs.map(async (doc) => {
-      const {content, timestamp} = doc.data()
-      return {
-        content: content,
-        timestamp: this.convertFirestoreTimestamp(timestamp)
-      }
+    let arr = []
+    this.query = this.db.collection('observations');
+    const collection = await this.query.get();
+
+    Promise.all(collection.docs.map(async (obs) => {
+      const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = obs.data();
+      const docId = obs.id;
+      this.query = this.db.collection('observations').doc(obs.id).collection('notes');
+      const subCollection = await this.query.get();
+      Promise.all(subCollection.docs.map(async (notes) => {
+        const { Note, Timestamp } = notes.data();
+        const noteId = notes.id;
+        arr.push({
+          observationId: docId,
+          coachId: observedBy,
+          teacherId: teacher,
+          dateModified: this.convertFirestoreTimestamp(start),
+          tool: type,
+          noteId: noteId,
+          timestamp: this.convertFirestoreTimestamp(Timestamp),
+          content: Note,
+        })
+      }))
     }))
+
+    return await arr
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {

@@ -9,6 +9,7 @@ import {Role} from '../../../state/actions/coach'
 import ObservationsExport from "../../../components/AdminComponents/ObservationsExport";
 import ActionPlanExport from "../../../components/AdminComponents/ActionPlanExport";
 import ConferencePlanExport from "../../../components/AdminComponents/ConferencePlanExport";
+import NotesExport from "../../../components/AdminComponents/NotesExport";
 
 interface Props {
   isAdmin: boolean
@@ -68,6 +69,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
     basic:  <ObservationsExport setLoading={setLoading} classes={classes}/>,
     actionPlan: <ActionPlanExport setLoading={setLoading} classes={classes}/>,
     conferencePlan: <ConferencePlanExport setLoading={setLoading} classes={classes}/>,
+    notes: <NotesExport setLoading={setLoading} classes={classes}/>,
     none: <></>
   }
 
@@ -118,6 +120,7 @@ const AdminPage = ({isAdmin = false}): React.ReactNode => {
               <MenuItem value={'basic'}>Observations</MenuItem>
               <MenuItem value={'actionPlan'}>Action Plan</MenuItem>
               <MenuItem value={'conferencePlan'}>Conference Plan</MenuItem>
+              <MenuItem value={'notes'}>Notes</MenuItem>
               <MenuItem value={'none'}>None</MenuItem>
             </Select>
           </FormControl>

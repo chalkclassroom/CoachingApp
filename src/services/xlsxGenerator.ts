@@ -22,6 +22,17 @@ type ConferencePlanXlsxResources = {
   notes: Array<string>
 }
 
+type NotesXlsxResources = {
+  observationId: string
+  coachId: string
+  teacherId: string
+  dateModified: Date | null
+  tool: string
+  noteId: string
+  timestamp: Date | null
+  content: string
+}
+
 const convertDate = (date: Date | null) =>{
   if( date instanceof Date) {
     return date.toLocaleDateString()
@@ -56,6 +67,21 @@ const createActionPlanHeaders = (resources: ActionPlanXlsxResources[]) => {
   return headers.concat(questions)
 }
 
+const createNotesHeaders = () => {
+  let headers = [
+    'Observation Id',
+    'Coach ID',
+    'Teacher ID',
+    'Observation Date',
+    'Tool',
+    'Note Id',
+    'TimeStamp',
+    'Content'
+  ]
+
+  return headers;
+}
+
 const createActionPlanRow = (actionPlan: ActionPlanXlsxResources): string[] => {
   let { coachId, teacherId, dateModified, goal, goalTimeline, benefit, steps, tool } = actionPlan
   let data = [
@@ -64,7 +90,7 @@ const createActionPlanRow = (actionPlan: ActionPlanXlsxResources): string[] => {
     convertDate(dateModified),
     tool,
     goal,
-   convertDate(goalTimeline),
+    convertDate(goalTimeline),
     benefit,
   ]
   steps.forEach((step) => {
@@ -73,6 +99,21 @@ const createActionPlanRow = (actionPlan: ActionPlanXlsxResources): string[] => {
     data.push(convertDate(step.timeline))
   })
   return data
+}
+
+const createNotesRow = (notes: NotesXlsxResources) => {
+  let {observationId, coachId, teacherId, dateModified, tool, noteId, timestamp, content } = notes;
+  let data = [
+    observationId,
+    coachId,
+    teacherId,
+    convertDate(dateModified),
+    tool,
+    noteId,
+    timestamp?.toString(),
+    content
+  ];
+  return data;
 }
 
 export const generateActionPlanXlsx = (
@@ -88,6 +129,21 @@ export const generateActionPlanXlsx = (
     return { wch: 12 }
   })
   xlsx.utils.book_append_sheet(wb, sheet, 'Action Plans')
+  return wb
+}
+
+export const generateNotesXlsx = (
+  resources: NotesXlsxResources[]
+) => {
+  let wb = xlsx.utils.book_new()
+  const baseRows = [createNotesHeaders()]
+  const rows = baseRows.concat(resources.map(notes => createNotesRow(notes)))
+
+  let sheet = xlsx.utils.aoa_to_sheet(rows)
+  // sets the column widths for each column -- each needs its own object.
+  const wbcols = [ {wch:22}, {wch:34}, {wch:28}, {wch:10}, {wch:12}, {wch:20}, {wch:21}, {wch:50}];
+  sheet[`!cols`] = wbcols;
+  xlsx.utils.book_append_sheet(wb, sheet, 'Notes')
   return wb
 }
 
