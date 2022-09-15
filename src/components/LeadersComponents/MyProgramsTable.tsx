@@ -213,7 +213,7 @@ function Row(props: { row, sites, siteLeaders, programLeaders, selectProgram }) 
                   <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell>Leaders</TableCell>
-                    <TableCell align="right">Action</TableCell>
+                    <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -223,7 +223,7 @@ function Row(props: { row, sites, siteLeaders, programLeaders, selectProgram }) 
                         {sitesRow.name}
                       </TableCell>
                         <TableCell>{getSiteLeaders(sitesRow.id, siteLeaders)}</TableCell>
-                      <TableCell align="right">Edit/Delete</TableCell>
+                      <TableCell align="right"></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

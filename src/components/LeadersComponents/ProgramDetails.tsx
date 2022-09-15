@@ -402,7 +402,7 @@ export default function ProgramDetails(props: Props): React.ReactElement {
 
                   <LabeledInfo label="Sites" sitesList={programSites} />
 
-                  <LabeledInfo label="Notes" />
+                  <LabeledInfo label="" />
                 </div>
               </Grid>
               <Grid item xs={6} style={{paddingBottom: '1em', overflowY: 'auto'}}>
