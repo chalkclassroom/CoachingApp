@@ -4902,6 +4902,35 @@ class Firebase {
    ): Promise<void> => {
 
      const {name, leaders, sites} = edits
+
+     // Remove program from user documents that were deselected
+     // First get the user documents that currently have this program saved
+     this.db
+       .collection('users')
+       .where('programs', 'array-contains-any', [programId])
+       .get()
+       .then( async (querySnapshot) => {
+         let coachesArray = {};
+
+         querySnapshot.forEach( async (doc) => {
+           // If this user isn't in the selected list of program leaders, remove the program
+           if( !leaders.includes(doc.data().id) )
+           {
+             this.removeItemFromArray({programToRemove: programId, userToRemoveFrom: doc.data().id});
+           }
+         });
+
+         return coachesArray;
+       });
+
+     // If they are selected for the program, add the program to their doc
+     for(var userIndex in leaders)
+     {
+       this.assignProgramToUser({userId: leaders[userIndex], programId: programId});
+     }
+
+
+     // Save program document
      return this.db
        .collection('programs')
        .doc(programId)
@@ -4923,7 +4952,6 @@ class Firebase {
 
    /**
     * Remove site or progrm
-    * @param {string} partnerID
     */
    removeSiteOrProgram = async (
      data: {
@@ -5195,6 +5223,69 @@ class Firebase {
          console.error('Error occurred getting site profile averages : ', error)
        )
    }
+
+
+   /**
+    * Returns list of Coaches that are associated with a program
+    */
+   fetchProgramTeachers = async (
+     data: {
+       programId: string,
+     }
+   ): Promise<void> => {
+      console.log("PROGRAM ID : " + data.programId);
+
+      var programInfo = await this.getUserProgramOrSite({programId: data.programId});
+      console.log("PROGRAM NAME : " + programInfo.name);
+
+
+       if(this.auth.currentUser) {
+         return this.db
+           .collection('users')
+           .where('programs', 'array-contains-any', [data.programId])
+           .get()
+           .then( async (querySnapshot) => {
+             let coachesArray = {};
+
+             querySnapshot.forEach( async (doc) => {
+                 var coachData = doc.data();
+
+                 // Make sure this user has teachers, if not, we don't need it.
+                 var teachers = await this.getTeacherListFromUser({userId: coachData.id});
+
+                 if(teachers.length > 0)
+                 {
+                   // Insert teachers into their site
+                   for(var siteIndex in coachData.sites)
+                   {
+                     var siteId = coachData.sites[siteIndex];
+
+                     // If this site isn't part of the program, just move on
+                     if(!programInfo.sites.includes(siteId))
+                     {
+                       continue;
+                     }
+
+                     // Check to see if the array exists yet
+                     if(coachesArray[siteId])
+                     {
+                       coachesArray[siteId].push(teachers);
+                     }
+                     else
+                     {
+                       coachesArray[siteId] = teachers
+                     }
+
+                   }
+
+                 }
+
+             });
+
+             return coachesArray;
+           });
+       }
+     }
 
 
 

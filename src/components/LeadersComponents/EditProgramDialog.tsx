@@ -139,7 +139,7 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
           Leaders dropdown
           */}
         <StyledFormControl className={classes.formControl} fullWidth>
-            <InputLabel id="role-select-label">Site Leaders</InputLabel>
+            <InputLabel id="role-select-label">Program Leaders</InputLabel>
             <Select
               labelId="demo-mutiple-name-label"
               id="demo-mutiple-name"
@@ -158,7 +158,7 @@ export default function EditProgramDialog(props: Props): React.ReactElement {
                 (option, index)=>{
 
                   return <MenuItem value={option.id}>
-                    {option.firstName}
+                    {option.firstName + " " + option.lastName}
                   </MenuItem>
 
               })}

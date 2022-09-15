@@ -29,6 +29,9 @@ import * as React from 'react';
 import { Component } from 'react';
 import Firebase, { FirebaseContext } from '../../components/Firebase'
 
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+
 import ProgramProfileBarDetails from './ProgramProfileBarDetails'
 import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import BarChartLegend from '../LayoutComponents/GraphLayouts/BarChartLegend'
@@ -37,7 +40,10 @@ import {  } from '../ResultsComponents/ChartWrappers'
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
 import TabBarWrapper from '../LayoutComponents/TabBarWrapper'
-import { GridWrapperDetails } from '../ResultsComponents/ChartWrappers'
+
+import AveragesData from './DataRetrieval/Averages';
+import TrendData from './DataRetrieval/Trends';
+import RadioSets from './RadioSets';
 
 
 
@@ -154,7 +160,33 @@ const practicesArr = {
   "writing": "Writing",
   "bookReading": "Book Reading",
   "languageEnvironment": "Language Environment",
-  "associativeSndCooperative": "Associative and Cooperative",
+  "associativeAndCooperative": "Associative and Cooperative",
+}
+
+// Array used to match the default radio value based on the type
+const radioValueArr = {
+  "transitionTime": "lineAverage",
+  "classroomClimate": "nonspecificapprovalAverage",
+  "mathInstruction": "mathVocabularyAverage",
+  "levelOfInstruction": "hlqAverage",
+  "studentEngagement": "offTaskAverage",
+  "listeningToChildren": "eyeLevelAverage",
+  "sequentialActivities": "sequentialActivitiesAverage",
+  "foundationSkills": "foundationalSkillsAverage",
+  "writing": "writingSkillsAverage",
+  "bookReading": "bookReadingAverage",
+  "languageEnvironment": "languageEnvironmentAverage",
+  "associativeAndCooperative": "childrensPlayAverage",
+}
+
+// Set array so we can edit the label on top of the Chart based on type
+const chartTitleArr = {
+  bookReadingAverage: "Book Reading: Total Instruction",
+  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
+  languageConnectionsAverage: "Book Reading: Makes Connections",
+  childrenSupportAverage: "Book Reading: Support Children's Speaking",
+  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
+  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
 }
 
 class ProgramProfileResults extends React.Component {
@@ -165,48 +197,46 @@ class ProgramProfileResults extends React.Component {
         lineGraphData: {},
         tabState: 0,
         reportDate: new Date(),
-        siteCoaches: [],
-        teacherNames: [],
-        radioValue: "total"
+        programCoaches: [],
+        sites: [],
+        teacherInfo: {},
+        siteNames: [],
+        radioValue: radioValueArr[this.props.observationType],
+        BQData: [],
+        averagesClass: new AveragesData(),
+        trendsClass: new TrendData(),
+        averages: [],
+        trends: [],
+        trendsDataSet: [
+          {
+            label: 'Dataset 1',
+            data: [2,7,3,5,4,6,8,2,7,8,9,1],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          },
+        ],
+        lineColors: [],
       }
   }
 
-  componentDidMount(): void {
+  componentDidMount = async () => {
     const firebase = this.context;
 
-    // Set the data for the line graph
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    // Get a list of sites for this program
 
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: 'Dataset 1',
-          data: [2,7,3,5,4,6,8,2,7,8,9,1],
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-        {
-          label: 'Dataset 2',
-          data: [5,2,5,7,1,6,8,3,1,2,7,6],
-          borderColor: 'rgb(53, 162, 235)',
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        },
-      ],
-    };
+    var programInfo = await firebase.getUserProgramOrSite({programId: this.props.selectedProgramId});
 
-    this.setState({lineGraphData: data});
+    var fullSitesList = {};
 
-    // Get a list of the coaches for the chosen site.
-    firebase.getUserProgramOrSite({siteId: this.props.selectedSiteId}).then((data) => {
+    var siteIds = [];
 
-      // Save the teachers' information to the state.
-      if(data.coaches)
-      {
-        this.getSitesTeachersInfo(data.coaches)
-      }
+    var coaches = await firebase.fetchProgramTeachers({programId: this.props.selectedProgramId});
 
-    });
+    this.setState({test2: coaches});
+
+    this.setState({sites: fullSitesList});
+
+    var siteNames = [];
 
 
   }
@@ -214,13 +244,19 @@ class ProgramProfileResults extends React.Component {
   /*
    * Get the info of eache teacher in the site
    */
-  getSitesTeachersInfo = async (coaches) => {
+  getSitesTeachersInfo = async (coaches, siteId) => {
       const firebase = this.context;
 
       var coachIdsArr = coaches;
       this.setState({siteCoaches: coachIdsArr});
 
       // Gather information for each coach.
+      var teacherResults = this.state.teacherInfo;
+      teacherResults[siteId] = [];
+
+      var teacherNames = [];
+
+      // Go through each coach in the site
       for(var coachIndex in coachIdsArr)
       {
         var coachId = coachIdsArr[coachIndex];
@@ -228,28 +264,192 @@ class ProgramProfileResults extends React.Component {
         // Get the the coaches teacher
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
 
-        var teacherResults = [];
-        var teacherNames = [];
+        // Go through each teacher the coach observes
         for(var teacherIndex in teachersIdList)
         {
           var teacherId = teachersIdList[teacherIndex];
 
+          // Get all information of the teacher
           var tempTeacher = await firebase.getUserProgramOrSite({userId: teacherId});
 
-          // Save all information
-          teacherResults.push(tempTeacher);
+          // Make sure it exists
+          if(tempTeacher)
+          {
+            // Save all information
+            teacherResults[siteId].push(tempTeacher);
 
-          // Save just the names
-          teacherNames.push(tempTeacher.firstName + " " + tempTeacher.lastName);
+            // Save just the names
+            teacherNames.push(tempTeacher.firstName + " " + tempTeacher.lastName);
+          }
+
         }
 
-        this.setState({teacherInfo: teacherResults});
-        this.setState({teacherNames: teacherNames});
 
       }
 
+      this.setState({teacherInfo: teacherResults});
+      this.setState({teacherNames: teacherNames});
+
+      this.getResultsFromBQ(teacherResults);
+
   }
 
+  /*
+   * Get all the Results data from each of the teachers between the two given dates
+   */
+  getResultsFromBQ = (teachers) => {
+    const firebase = this.context;
+
+    // Grab results data
+    firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
+      .then( (data) => {
+        this.setState({BQData: data});
+        this.calculateResultsForCharts(data, teachers);
+      });
+
+  }
+
+
+  /*
+   * Calculate results for the charts using the rows of data from BQ results
+   */
+   calculateResultsForCharts = (data, teachers) => {
+
+     // Excute function based on observation type
+     var averages, trends;
+     switch (this.props.observationType) {
+       case "transitionTime":
+         averages = this.state.averagesClass.calculateTransitionAverage(data, teachers);
+         trends = this.state.trendsClass.calculateTransitionTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "classroomClimate":
+         averages = this.state.averagesClass.calculateClimateAverage(data, teachers);
+         trends = this.state.trendsClass.calculateClimateTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "mathInstruction":
+         averages = this.state.averagesClass.calculateMathAverages(data, teachers);
+         trends = this.state.trendsClass.calculateMathTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "levelOfInstruction":
+         averages = this.state.averagesClass.calculateLevelInstructionAverages(data, teachers);
+         trends = this.state.trendsClass.calculateLevelInstructionTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "studentEngagement":
+         averages = this.state.averagesClass.calculateStudentEngagementAverages(data, teachers);
+         trends = this.state.trendsClass.calculateStudentEngagementTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "listeningToChildren":
+         averages = this.state.averagesClass.calculateListeningToChildrenAverages(data, teachers);
+         trends = this.state.trendsClass.calculateListeningToChildrenTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "sequentialActivities":
+         averages = this.state.averagesClass.calculateSequentialActivitiesAverages(data, teachers);
+         trends = this.state.trendsClass.calculateSequentialActivitiesTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "foundationSkills":
+         averages = this.state.averagesClass.calculateFoundationalSkillsAverages(data, teachers);
+         trends = this.state.trendsClass.calculateFoundationalSkillsTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "writing":
+         averages = this.state.averagesClass.calculateWritingSkillsAverages(data, teachers);
+         trends = this.state.trendsClass.calculateWritingSkillsTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "bookReading":
+         averages = this.state.averagesClass.calculateBookReadingAverages(data, teachers);
+         trends = this.state.trendsClass.calculateBookReadingTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "languageEnvironment":
+         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(data, teachers);
+         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+       case "associativeAndCooperative":
+         averages = this.state.averagesClass.calculateACAverages(data, teachers);
+         trends = this.state.trendsClass.calculateACTrends(data, teachers, this.props.startDate, this.props.endDate);
+         break;
+
+       default:
+         break;
+     }
+     this.setState({averages: averages, trends: trends});
+
+     // Build data for line graph
+     this.setLineGraphData(teachers, this.state.radioValue)
+
+   }
+
+
+   // Set Line Graph data
+   setLineGraphData = (teachers, type) => {
+
+     var trends = this.state.trends;
+
+     var tempDataSet = [];
+     var lineColors = this.state.lineColors;
+     var i = 0;
+     for(var teacherIndex in teachers)
+     {
+       var teacher = teachers[teacherIndex];
+       var fullName = teacher.firstName + " " + teacher.lastName;
+
+       var chosenData = trends[teacher.id][type];
+
+       // Round off all the numbers
+        chosenData = chosenData.map(function(each_element){
+         return Math.round((each_element + Number.EPSILON) * 100) / 100;
+        });
+
+       // If there isn't a color set for this teacher, set it
+       if(!lineColors[i])
+       {
+         lineColors[i] = this.randomRgbColor();
+       }
+       var tempData = {
+         label: fullName,
+         data: chosenData,
+         borderColor: lineColors[i],
+       };
+
+       tempDataSet.push(tempData);
+       i++;
+     }
+
+     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+     const lineData = {
+       labels,
+       datasets: tempDataSet
+     };
+
+     this.setState({lineGraphData: lineData, lineColors: lineColors});
+   }
+
+   // Handle downloading the PDF
+   downloadPDF = () => {
+     console.log("Downloading!");
+     const input = document.getElementById('ProgramProfileResultsContainer');
+      html2canvas(input)
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const imgWidth = 190;
+          const pageHeight = 265;
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          let heightLeft = imgHeight;
+          const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+          let position = 10;
+          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          const currDate = new Date();
+
+
+          pdf.save("Site_Profile_Results_" + currDate.getMonth() + '_' + currDate.getDate() + "_" + currDate.getFullYear() + ".pdf");
+        });
+   }
 
   // When any of the checkboxes are checked or unchecked
   handleCheckboxChange = (event: SelectChangeEvent) => {
@@ -270,10 +470,11 @@ class ProgramProfileResults extends React.Component {
   };
 
 
-  // When any of the checkboxes are checked or unchecked
+  // When any of the radio buttons are selected
   handleRadioChange = (event: SelectChangeEvent) => {
-    // If we're checking it, add to array
       this.setState({radioValue: event.target.value});
+
+      this.setLineGraphData(this.state.teacherInfo, event.target.value);
   };
 
   // When any of the date dropdowns are changed
@@ -287,20 +488,28 @@ class ProgramProfileResults extends React.Component {
     this.setState({tabState: newValue});
   }
 
+  randomRgbColor = () => {
+    return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
+  }
+
+  randomInteger = (max) => {
+      return Math.floor(Math.random()*(max + 1));
+  }
+
 
     render() {
 
       return (
-        <>
+        <div id="ProgramProfileResultsContainer">
 
-        <Grid container style={{paddingLeft: '30px', paddingRight: '30px'}}>
+        <Grid container style={{paddingLeft: '30px', paddingRight: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12} style={{paddingTop: 12}} onClick={() => this.props.handlePageChange(1)}>
                     <span>&#12296; Back to Report Criteria</span>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <h2>Program Profile</h2>
+                    <h2>Site Profile</h2>
                 </Grid>
 
                 {/*
@@ -308,7 +517,7 @@ class ProgramProfileResults extends React.Component {
                 */}
                 <Grid container item xs={12} style={startColumn}>
                   <Grid style={startRow}>Site: {this.props.selectedSiteName}</Grid>
-                  <Grid style={startRow}>CHALK Practice: {this.props.selectedPractices.map((practiceId, i, arr) => { var practiceName = practicesArr[practiceId]; if (arr.length - 1 !== i) { practiceName += ", "}; return practiceName })}</Grid>
+                  <Grid style={startRow}>CHALK Practice: {practicesArr[this.props.selectedPractices]}</Grid>
                   <Grid style={startRow}>Report Period: {this.props.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})} - {this.props.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})}</Grid>
                   <Grid style={startRow}>Generated on: {this.state.reportDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})}</Grid>
                 </Grid>
@@ -317,53 +526,8 @@ class ProgramProfileResults extends React.Component {
                 {/*
                     The checklists
                 */}
-                <RadioGroup aria-label="gender" name="gender1" value={this.state.radioValue} onChange={this.handleRadioChange}>
-                  <Grid container style={centerRow}>
-                    <Grid item xs={6}>
-                      <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
-                        <FormGroup>
-
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Book Reading - Total Instruction"
-                            value="total"
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Focus on vocabulary, concepts, or comprehension"
-                            value="vocabulary"
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Make connections to children's language, cultural backgrounds, and experiences"
-                            value="makeConnections"
-                          />
-                        </FormGroup>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControl required error={this.state.error} component="fieldset" className={"checkboxesform"}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Support children's speaking and listening skills"
-                            value="supportSpeaking"
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Facilitate discussions around equity and fairness"
-                            value="facilitateDiscussions"
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Use Multimodal Instruction"
-                            value="multimodalInstruction"
-                          />
-
-                        </FormGroup>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
+                <RadioGroup aria-label="gender" name="gender1" value={this.state.radioValue} onChange={this.handleRadioChange} style={{width: '100%'}}>
+                  <RadioSets type={this.props.observationType} />
                 </RadioGroup>
 
 
@@ -382,32 +546,29 @@ class ProgramProfileResults extends React.Component {
                 </Grid>
 
 
-                {/* The "averages" bar graph and "trends" line graph */}
+                {/*
+                  The "averages" bar graph and "trends" line graph
+                */}
                 <Grid item xs={12} style={centerColumn}>
                   {this.state.tabState == 1 ? (
-                    <Grid container justify="center" direction="column" alignItems="center" style={{height: 500}} >
-                      <LineWrapperTrends>
+                    <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
                         options={LineGraphOptions}
                       />
-                      </LineWrapperTrends>
                     </Grid>
 
                   ) : (this.state.tabState == 0 ? (
 
-                    <Grid container justify="center" direction="column" alignItems="center" style={{height: 500, flexWrap: 'nowrap'}}>
-                      <GraphHeader graphTitle={"Title"} />
-                      <GridWrapperDetails>
+                    <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
+                      <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
+
                       <ProgramProfileBarDetails
-                        math1={1}
-                        math2={2}
-                        math3={3}
-                        math4={4}
                         totalVisits={10}
-                        labels={this.state.teacherNames}
+                        labels={this.state.siteNames}
+                        data={this.state.averages}
+                        type={this.state.radioValue}
                       />
-                      </GridWrapperDetails>
                     </Grid>
                   ) : null)}
 
@@ -427,13 +588,14 @@ class ProgramProfileResults extends React.Component {
                   <Button
                     variant="contained"
                     color="primary"
+                    onClick={() => this.downloadPDF()}
                     >
                     Download as PDF
                   </Button>
                 </Grid>
             </Grid>
         </Grid>
-        </>
+        </div>
         )
     }
   }
