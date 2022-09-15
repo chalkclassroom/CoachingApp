@@ -188,7 +188,7 @@ class LeadersDashboard extends React.Component<Props, State> {
             alignItems="center"
             direction="column"
             justify="flex-start"
-            style={{ flexGrow: 1 }}
+            style={{ flexGrow: 1}}
           >
             <Grid item style={{height: '15vh'}}>
               <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
@@ -235,7 +235,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" align="center" style={{fontFamily: 'Arimo'}}>
-                          Explore CHALK Classroom Practices
+                          Explore CHALK
                         </Typography>
                       </Grid>
                     </Grid>
@@ -327,7 +327,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/LeadersUsers")}
                     >
                       <Grid item>
-                        <img src={UsersIcon} className="card-icon" style={{width: '12vw'}} />
+                        <img src={UsersIcon} style={{ fill: "#094492", width: '7vw', height: '10vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -354,7 +354,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/Reports")}
                     >
                       <Grid item>
-                        <img src={ReportsIcon} className="card-icon" style={{width: '12vw'}} />
+                        <img src={ReportsIcon} style={{ fill: "#094492", width: '7vw', height: '10vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -384,7 +384,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                   style={{width: '100%'}}
                 >
 
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <Card
                       className={classes.card}
                       onClick={(): void =>
@@ -406,14 +406,14 @@ class LeadersDashboard extends React.Component<Props, State> {
                           </Grid>
                           <Grid item>
                             <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                              Explore CHALK classroom Practices
+                              Explore CHALK
                             </Typography>
                           </Grid>
                         </Grid>
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <Card
                       className={classes.card}
                       onClick={(): void => this.showTeacherModal("Observe")}
@@ -437,6 +437,37 @@ class LeadersDashboard extends React.Component<Props, State> {
                       </CardContent>
                     </Card>
                   </Grid>
+
+                  <Grid item xs={4}>
+                    <Card
+                      className={classes.card}
+                      onClick={(): void =>
+                        this.props.history.push({
+                          pathname: "/MyPrograms",
+                          state: { type: "MyPrograms" }
+                        })
+                      }
+                    >
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                        >
+                          <Grid item>
+                            <Assignment style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              My Programs
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
                   <Grid item xs={6}>
                     <Card
                       className={classes.card}
