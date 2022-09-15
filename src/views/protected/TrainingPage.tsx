@@ -182,7 +182,7 @@ class TrainingPage extends React.Component<Props, State> {
           {!isTeacher && <Grid item className={classes.dashboardGrid}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
               <Grid item style={{width: '100%'}}>
-              <Typography align="center" variant="h4" className={classes.trainingText}>
+                <Typography align="center" variant="h4" className={classes.trainingText}>
                   Training
                 </Typography>
                 <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
