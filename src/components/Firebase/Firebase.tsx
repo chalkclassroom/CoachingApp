@@ -145,6 +145,7 @@ class Firebase {
     this.sessionRef = this.db.collection('emailList').doc()
     this.sessionRef.set({
       email: email,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp().toString
     })
   }
 
@@ -283,6 +284,19 @@ class Firebase {
       'funcSendEmail'
     )
     return sendEmailFirebaseFunction(msg)
+      .then(result => {
+        result
+        console.log('result is', result)
+      })
+      .catch(error => error)
+  }
+
+
+  sendMLE = async (email: string): Promise<void> => {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      'funcSendMLE'
+    )
+    return sendEmailFirebaseFunction(email)
       .then(result => {
         result
         console.log('result is', result)
@@ -2939,6 +2953,50 @@ class Firebase {
           }
         })
       })
+  }
+
+  getNotesForExport = async () => {
+
+    let arr = []
+    this.query = this.db.collection('observations');
+    const collection = await this.query.get();
+
+    Promise.all(collection.docs.map(async (obs) => {
+      const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = obs.data();
+      const docId = obs.id;
+      this.query = this.db.collection('observations').doc(obs.id).collection('notes');
+      const subCollection = await this.query.get();
+      Promise.all(subCollection.docs.map(async (notes) => {
+        const { Note, Timestamp } = notes.data();
+        const noteId = notes.id;
+        arr.push({
+          observationId: docId,
+          coachId: observedBy,
+          teacherId: teacher,
+          dateModified: this.convertFirestoreTimestamp(start),
+          tool: type,
+          noteId: noteId,
+          timestamp: this.convertFirestoreTimestamp(Timestamp),
+          content: Note,
+        })
+      }))
+    }))
+
+    return await arr
+  }
+
+  getEmailForExport = async () =>  {
+    this.query = this.db.collection('emailList');
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async (doc) => {
+      const {email, timestamp} = doc.data()
+      return {
+        email: email,
+        timestamp: this.convertFirestoreTimestamp(timestamp),
+      }
+    }))
+
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {
