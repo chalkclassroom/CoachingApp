@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { TextField, Popover } from '@material-ui/core'
+import { TextField, Popover, Collapse } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import InfoIcon from '@material-ui/icons/Info'
@@ -1336,74 +1336,33 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
+            </Grid>   
             <Grid
               item
               xs={12}
               style={{ width: '100%', height: '38vh', border: '2px solid #0988ec', borderRadius: '0.5em', }}
             >
-              <Grid
-                container
-                direction="row"
-                justify="space-between"
-                style={{ height: '100%' }}
-              >
-                <Grid
-                  item
-                  style={{
-                    width: '48%',
-                    // border: '2px solid #0988ec',
-                    // borderRadius: '0.5em',
-                    height: '100%',
-                    overflow: 'auto',
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    style={{ width: '100%' }}
-                  >
-                    <Grid item>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                        style={{ width: '100%' }}
-                      >
-                        <Grid item xs={11}>
-                          <Typography
+              <table style={{borderCollapse: 'collapse', width: '100%' }}>
+                <tr >
+                  <th style={{paddingBottom: '8px'}}></th>
+                  <th style={{textAlign: 'left', width: '55%', paddingBottom: '8px'}}><Typography
                             style={{
                               fontSize: '1em',
                               fontFamily:
                                 'Arimo',
                               marginLeft:
                                 '0.5em',
-                              marginTop:
-                                '0.5em',
                               fontWeight:
                                 'bold',
                             }}
                           >
-                            Action Steps
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <Grid
-                            container
-                            justify="flex-end"
-                            direction="row"
-                            alignItems="center"
-                          >
-                            <Grid item>
-                              <InfoIcon
+                            Action Steps&ensp;
+                            <InfoIcon
                                 style={{
                                   fill:
                                     '#0988ec',
                                   marginRight:
-                                    '0.3em',
-                                  marginTop:
-                                    '0.3em',
+                                    '0.3em'
                                 }}
                                 onClick={(
                                   e: React.ChangeEvent<| HTMLInputElement
@@ -1541,145 +1500,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     </li>
                                   </ul>
                                 </div>
-                              </Popover>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <ol
-                      style={{
-                        paddingLeft: '1.5em',
-                        marginTop: '0.5em',
-                        marginBottom: 0,
-                      }}
-                    >
-                      {this.state.actionStepsArray.map(
-                        (value, index) => {
-                          return (
-                            <li key={index}>
-                              <TextField
-                                id={
-                                  'actionSteps' +
-                                  index.toString()
-                                }
-                                name={
-                                  'actionSteps' +
-                                  index.toString()
-                                }
-                                type="text"
-                                value={
-                                  value.step
-                                }
-                                onChange={this.handleChangeActionStep(
-                                  index,
-                                )}
-                                margin="normal"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                rowsMax={2}
-                                rows={2}
-                                className={
-                                  classes.textField
-                                }
-                                InputProps={{
-                                  disableUnderline: true,
-                                  readOnly: this
-                                    .props
-                                    .readOnly,
-                                  style: {
-                                    fontFamily:
-                                      'Arimo',
-                                    width:
-                                      '90%',
-                                    marginLeft:
-                                      '0.5em',
-                                    marginRight:
-                                      '0.5em',
-                                  },
-                                }}
-                                style={{
-                                  marginTop:
-                                    '-0.25em',
-                                  paddingBottom:
-                                    '0.5em',
-                                  marginBottom: 0,
-                                }}
-                              />
-                            </li>
-                          )
-                        },
-                      )}
-                    </ol>
-                    <Grid item>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                      >
-                        <Grid item xs={1}>
-                          <Button
-                            disabled={
-                              this.props
-                                .readOnly
-                            }
-                            onClick={
-                              this
-                                .handleAddActionStep
-                            }
-                            style={{
-                              marginLeft:
-                                '0.3em',
-                              paddingBottom:
-                                '0.5em',
-                            }}
-                          >
-                            <AddCircleIcon
-                              style={{
-                                fill: this
-                                  .props
-                                  .readOnly
-                                  ? '#a9a9a9'
-                                  : '#0988ec',
-                                marginRight:
-                                  '0.3em',
-                                marginTop:
-                                  '0.3em',
-                              }}
-                            />
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid
-                  item
-                  style={{
-                    width: '28%',
-                    // border: '2px solid #ffd300',
-                    // borderRadius: '0.5em',
-                    height: '100%',
-                    overflow: 'auto',
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    style={{ width: '100%' }}
-                  >
-                    <Grid item>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                        style={{ width: '100%' }}
-                      >
-                        <Grid item xs={11}>
-                          <Typography
+                              </Popover></Typography></th>
+                  <th style={{textAlign: 'left', width:'22%', paddingBottom: '8px'}}><Typography
                             style={{
                               fontSize: '1em',
                               fontFamily:
@@ -1692,25 +1514,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                 'bold',
                             }}
                           >
-                            Persons
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <Grid
-                            container
-                            justify="flex-end"
-                            direction="row"
-                            alignItems="center"
-                          >
-                            <Grid item>
-                              <InfoIcon
+                            Persons&ensp;<InfoIcon
                                 style={{
                                   fill:
                                     '#ffd300',
                                   marginRight:
-                                    '0.3em',
-                                  marginTop:
-                                    '0.3em',
+                                    '0.3em'
                                 }}
                                 onClick={(
                                   e: React.ChangeEvent<| HTMLInputElement
@@ -1815,138 +1624,24 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   </ul>
                                 </div>
                               </Popover>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <ol
-                        style={{
-                          paddingLeft: '1.5em',
-                          marginTop: '0.5em',
-                          marginBottom: 0,
-                        }}
-                      >
-                        {this.state.actionStepsArray.map(
-                          (value, index) => {
-                            return (
-                              <li key={index}>
-                                <TextField
-                                  id={
-                                    'person' +
-                                    index.toString()
-                                  }
-                                  name={
-                                    'person' +
-                                    index.toString()
-                                  }
-                                  type="text"
-                                  value={
-                                    value.person
-                                  }
-                                  onChange={this.handleChangePerson(
-                                    index,
-                                  )}
-                                  margin="normal"
-                                  variant="standard"
-                                  fullWidth
-                                  multiline
-                                  rowsMax={
-                                    2
-                                  }
-                                  rows={2}
-                                  className={
-                                    classes.textField
-                                  }
-                                  InputProps={{
-                                    disableUnderline: true,
-                                    readOnly: this
-                                      .props
-                                      .readOnly,
-                                    style: {
-                                      fontFamily:
-                                        'Arimo',
-                                      width:
-                                        '90%',
-                                      marginLeft:
-                                        '0.5em',
-                                      marginRight:
-                                        '0.5em',
-                                    },
-                                  }}
-                                  style={{
-                                    marginTop:
-                                      '-0.25em',
-                                    paddingBottom:
-                                      '0.5em',
-                                    marginBottom: 0,
-                                  }}
-                                />
-                              </li>
-                            )
-                          },
-                        )}
-                      </ol>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid
-                  item
-                  style={{
-                    width: '21%',
-                    // borderLeft: '2px solid #6f39c4',
-                    // borderRadius: '0.5em',
-                    height: '100%',
-                    overflow: 'auto',
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="column"
-                    style={{ width: '100%' }}
-                  >
-                    <Grid item>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                        style={{ width: '100%' }}
-                      >
-                        <Grid item xs={11}>
-                          <Typography
+                          </Typography></th>
+                  <th style={{textAlign: 'left', width:'23%', paddingBottom: '8px'}}><Typography
                             style={{
                               fontSize: '1em',
                               fontFamily:
                                 'Arimo',
                               marginLeft:
                                 '0.5em',
-                              marginTop:
-                                '0.5em',
                               fontWeight:
                                 'bold',
                             }}
                           >
-                            Timeline
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <Grid
-                            container
-                            justify="flex-end"
-                            direction="row"
-                            alignItems="center"
-                          >
-                            <Grid item>
-                              <InfoIcon
+                            Timeline&ensp;<InfoIcon
                                 style={{
                                   fill:
                                     '#6f39c4',
                                   marginRight:
-                                    '0.3em',
-                                  marginTop:
-                                    '0.3em',
+                                    '0.3em'
                                 }}
                                 onClick={(
                                   e: React.ChangeEvent<| HTMLInputElement
@@ -2061,24 +1756,114 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   </ul>
                                 </div>
                               </Popover>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <ol
-                        style={{
-                          paddingLeft: '1.5em',
-                          marginTop: '0.5em',
-                          marginBottom: 0,
-                        }}
-                      >
-                        {this.state.actionStepsArray.map(
-                          (value, index) => {
-                            return (
-                              <li key={index}>
-                                <MuiPickersUtilsProvider
+                          </Typography></th>
+                </tr>
+                {this.state.actionStepsArray.map(
+                        (value, index) => {
+                          return (
+                            <tr style={{verticalAlign: 'top'}} key={index}>
+                              <td>{index+1+'.'}</td>
+                              <td><TextField
+                                id={
+                                  'actionSteps' +
+                                  index.toString()
+                                }
+                                name={
+                                  'actionSteps' +
+                                  index.toString()
+                                }
+                                type="text"
+                                value={
+                                  value.step
+                                }
+                                onChange={this.handleChangeActionStep(
+                                  index,
+                                )}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                multiline
+                                // rowsMax={2}
+                                // rows={2}
+                                className={
+                                  classes.textField
+                                }
+                                InputProps={{
+                                  disableUnderline: true,
+                                  readOnly: this
+                                    .props
+                                    .readOnly,
+                                  style: {
+                                    fontFamily:
+                                      'Arimo',
+                                    width:
+                                      '90%',
+                                    marginLeft:
+                                      '0.5em',
+                                    marginRight:
+                                      '0.5em',
+                                  },
+                                }}
+                                style={{
+                                  marginTop:
+                                    '-0.25em',
+                                  paddingBottom:
+                                    '0.5em',
+                                  marginBottom: 0,
+                                }}
+                              /></td>
+                              <td><TextField
+                                  id={
+                                    'person' +
+                                    index.toString()
+                                  }
+                                  name={
+                                    'person' +
+                                    index.toString()
+                                  }
+                                  type="text"
+                                  value={
+                                    value.person
+                                  }
+                                  onChange={this.handleChangePerson(
+                                    index,
+                                  )}
+                                  margin="normal"
+                                  variant="standard"
+                                  fullWidth
+                                  multiline
+                                  // rowsMax={
+                                  //   2
+                                  // }
+                                  // rows={2}
+                                  className={
+                                    classes.textField
+                                  }
+                                  InputProps={{
+                                    disableUnderline: true,
+                                    readOnly: this
+                                      .props
+                                      .readOnly,
+                                    style: {
+                                      fontFamily:
+                                        'Arimo',
+                                      width:
+                                        '90%',
+                                      marginLeft:
+                                        '0.5em',
+                                      marginRight:
+                                        '0.5em',
+                                    },
+                                  }}
+                                  style={{
+                                    marginTop:
+                                      '-0.25em',
+                                    paddingBottom:
+                                      '0.5em',
+                                    marginBottom: 0,
+                                  }}
+                                /></td>
+                                <td style={{textAlign:'right'}}><MuiPickersUtilsProvider
                                   utils={
                                     DateFnsUtils
                                   }
@@ -2117,16 +1902,42 @@ class ActionPlanForm extends React.Component<Props, State> {
                                       )
                                     }}
                                   />
-                                </MuiPickersUtilsProvider>
-                              </li>
-                            )
-                          },
-                        )}
-                      </ol>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
+                                </MuiPickersUtilsProvider></td>
+                            </tr>
+                          )
+                        },
+                      )}
+              </table>
+              <Button
+                            disabled={
+                              this.props
+                                .readOnly
+                            }
+                            onClick={
+                              this
+                                .handleAddActionStep
+                            }
+                            style={{
+                              marginLeft:
+                                '0.3em',
+                              paddingBottom:
+                                '0.5em',
+                            }}
+                          >
+                            <AddCircleIcon
+                              style={{
+                                fill: this
+                                  .props
+                                  .readOnly
+                                  ? '#a9a9a9'
+                                  : '#0988ec',
+                                marginRight:
+                                  '0.3em',
+                                marginTop:
+                                  '0.3em',
+                              }}
+                            />
+                          </Button>
             </Grid>
             <Grid
                 container
@@ -2153,7 +1964,28 @@ class ActionPlanForm extends React.Component<Props, State> {
                         style={{ width: '100%' }}
                       >
                         <Grid item> 
-                        <Button style={{ width: '100%' }} variant="contained">Send to Maintenance folder</Button>
+                        <Button 
+                        style={{ width: '100%' }} 
+                        variant="contained"
+                        onClick={
+                          this.handleCreate
+                        }
+                        ><Typography
+                        style={{
+                          fontSize: '1em',
+                          fontFamily:
+                            'Arimo',
+                          marginLeft:
+                            '0.5em',
+                          marginTop:
+                            '0.5em',
+                          fontWeight:
+                            'bold',
+                        }}
+                      >
+                        Send to Maintenance folder
+                      </Typography>
+                        </Button>
                   </Grid>
                 </Grid>
                 </Grid>
