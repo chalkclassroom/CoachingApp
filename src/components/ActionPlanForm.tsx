@@ -2128,6 +2128,36 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                alignItems="stretch"
+                style={{ height: '100%', paddingTop: '0.8em',}}
+              >
+            <Grid
+                  item
+                  style={{
+                    width: '21%',
+                    // border: '2px solid #6f39c4',
+                    borderRadius: '0.5em',
+                    height: '100%',
+                    overflow: 'auto',
+                  }}
+                >
+                      <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        style={{ width: '100%' }}
+                      >
+                        <Grid item> 
+                        <Button style={{ width: '100%' }} variant="contained">Send to Maintenance folder</Button>
+                  </Grid>
+                </Grid>
+                </Grid>
+                </Grid>
           </Grid>
         ) : (
           <div>
