@@ -86,6 +86,7 @@ import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
 import MyProgramsPage from './views/protected/LeadersViews/MyProgramsPage'
 import NewSitePage from './views/protected/LeadersViews/NewSitePage'
 import ReportsPage from './views/protected/ReportsViews/ReportsPage'
+import ChalkPracticePage from './views/protected/ChalkPracticeViews/chalkPracticePage'
 
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
@@ -819,6 +820,15 @@ class App extends React.Component<Props, State> {
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersClassroomPractices"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ChalkPracticePage {...props}/>}
             />
 
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
