@@ -81,6 +81,7 @@ interface State {
   createDialog: boolean
   dialog: boolean
   savedAlert: boolean
+  planNumber: Number
 }
 
 interface Style {
@@ -125,6 +126,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       createDialog: false,
       dialog: false,
       savedAlert: false,
+      planNumber: 0
     }
   }
 
@@ -256,7 +258,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   createNewActionPlan = (): void => {
     this.props.firebase
-      .createActionPlan(this.props.teacher.id, this.props.magic8)
+      .createActionPlan(this.props.teacher.id, this.props.magic8, this.state.planNumber)
       .then(() => {
         this.props.firebase.completeAppointment(
           this.props.teacher.id,
@@ -278,11 +280,16 @@ class ActionPlanForm extends React.Component<Props, State> {
       })
   }
 
+  handleYes = () => {
+    this.props.firebase.setActionPlanStatus(this.state.actionPlanId);
+    this.createNewActionPlan()
+  }
+
   /**
    * @param {string} actionPlanId
    */
-  getActionPlan = (actionPlanId: string): void => {
-    this.props.firebase
+  getActionPlan = async (actionPlanId: string) => {
+    await this.props.firebase
       .getAPInfo(actionPlanId)
       .then(
         (actionPlanData: {
@@ -295,6 +302,8 @@ class ActionPlanForm extends React.Component<Props, State> {
           coach: string
           teacher: string
           tool: string
+          planNum: number
+          status: string
         }) => {
           const newDate = this.changeDateType(
             actionPlanData.dateModified,
@@ -308,6 +317,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 : null,
             benefit: actionPlanData.benefit,
             date: newDate,
+            planNumber: actionPlanData.planNum ? actionPlanData.planNum : 1
           })
           const newActionStepsArray: Array<{
             step: string
@@ -547,18 +557,18 @@ class ActionPlanForm extends React.Component<Props, State> {
         {this.state.createDialog ? (
           <Dialog open={this.state.createDialog}>
             <DialogTitle style={{ fontFamily: 'Arimo' }}>
-              Create new Action Plan
+              Send Plan to Maintenance Folder
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Would you like to create a new Action Plan? You will not be able to edit the current one from this page.
+                Are you sure you want to send this action plan to the Maintenance Folder? Action plans in the maintenance folder cannot be re-opened for editing.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleCloseCreate}>
                 No
               </Button>
-              <Button onClick={this.createNewActionPlan}>
+              <Button onClick={this.handleYes}>
                 Yes
               </Button>
             </DialogActions>
@@ -630,11 +640,11 @@ class ActionPlanForm extends React.Component<Props, State> {
                             fontFamily: 'Arimo',
                           }}
                         >
-                          ACTION PLAN
+                          {"ACTION PLAN " + this.state.planNumber}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Button
+                        {/* <Button
                           onClick={
                             this.handleCreate
                           }
@@ -645,7 +655,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                               fill: '#459aeb',
                             }}
                           />
-                        </Button>
+                        </Button> */}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1762,8 +1772,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                         (value, index) => {
                           return (
                             <tr style={{verticalAlign: 'top'}} key={index}>
-                              <td>{index+1+'.'}</td>
-                              <td><TextField
+                              <td style={{paddingTop: '1.2em'}}>{index+1+'.'}</td>
+                              <td style={{paddingTop: '1.2em'}}><TextField
                                 id={
                                   'actionSteps' +
                                   index.toString()
@@ -1812,7 +1822,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   marginBottom: 0,
                                 }}
                               /></td>
-                              <td><TextField
+                              <td style={{paddingTop: '1.2em'}}><TextField
                                   id={
                                     'person' +
                                     index.toString()
@@ -1939,7 +1949,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                             />
                           </Button>
             </Grid>
-            <Grid
+            {this.props.history ? (<></>) : (<Grid
                 container
                 direction="row"
                 justify="flex-end"
@@ -1989,7 +1999,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
                 </Grid>
-                </Grid>
+                </Grid>)}
           </Grid>
         ) : (
           <div>
