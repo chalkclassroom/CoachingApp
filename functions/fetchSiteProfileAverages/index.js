@@ -70,13 +70,33 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
 
 
     // Make sure to include every teacher in the site
-    var teacherSqlQuery = `teacher = '/user/${teacherIds[0].id}' `;
+    // We're using this function for multiple profile pages. The pages save teacher data in different ways. So we have to check for it
+    var teacherSqlQuery;
+    if(teacherIds[0].id)
+    {
+      teacherSqlQuery = `teacher = '/user/${teacherIds[0].id}' `;
+    }
+    else
+    {
+      teacherSqlQuery = `teacher = '/user/${teacherIds[0]}' `;
+    }
+
+
     if(teacherIds.length > 1)
     {
       for(var i = 1; i < teacherIds.length; i++)
       {
         console.log("Teacher ID : " + teacherIds[i]);
-        teacherSqlQuery += ` or teacher = '/user/${teacherIds[i].id}' `
+
+        // We're using this function for multiple profile pages. The pages save teacher data in different ways. So we have to check for it
+        if(teacherIds[i].id)
+        {
+          teacherSqlQuery += ` or teacher = '/user/${teacherIds[i].id}' `
+        }
+        else
+        {
+          teacherSqlQuery += ` or teacher = '/user/${teacherIds[i]}' `
+        }
       }
     }
 

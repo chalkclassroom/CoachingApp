@@ -1,17 +1,17 @@
 // Array used to match the name of a practice to the teacher Column name
 const teacherColumnArr = {
-  "transitionTime": "teacherId",
+  "transitionTime": "siteIndex",
   "classroomClimate": "teacher",
-  "mathInstruction": "teacherId",
-  "levelOfInstruction": "teacherId",
+  "mathInstruction": "siteIndex",
+  "levelOfInstruction": "siteIndex",
   "studentEngagement": "teacher",
   "listeningToChildren": "teacher",
-  "sequentialActivities": "teacherId",
-  "foundationSkills": "teacherId",
+  "sequentialActivities": "siteIndex",
+  "foundationSkills": "siteIndex",
   "writing": "teachId",
-  "bookReading": "teacherId",
-  "languageEnvironment": "teacherId",
-  "associativeSndCooperative": "teacherId",
+  "bookReading": "siteIndex",
+  "languageEnvironment": "siteIndex",
+  "associativeSndCooperative": "siteIndex",
 }
 
 class AveragesData {
@@ -23,20 +23,17 @@ class AveragesData {
   /*
    * Will return an object that holds data for all of the trends data for Book Reading
    */
-  calculateTransitionAverage = (data, teachers) => {
+  calculateTransitionAverage = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
 
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    // Add each site to the object
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         total: 0,
         line: 0,
         traveling: 0,
@@ -49,22 +46,23 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+        // Add to behavior types
+        results[siteIndex].line +=  row.line;
+        results[siteIndex].traveling += row.traveling;
+        results[siteIndex].waiting += row.waiting;
+        results[siteIndex].routines += row.routines;
+        results[siteIndex].behaviorManagement += row.behaviorManagement;
+        results[siteIndex].other += row.other;
 
-      // Add to behavior types
-      results[teacherId].line +=  row.line;
-      results[teacherId].traveling += row.traveling;
-      results[teacherId].waiting += row.waiting;
-      results[teacherId].routines += row.routines;
-      results[teacherId].behaviorManagement += row.behaviorManagement;
-      results[teacherId].other += row.other;
-
-      // Calculate the total Number of instructions
-      results[teacherId].total += row.total;
+        // Calculate the total Number of instructions
+        results[siteIndex].total += row.total;
+      }
     }
 
     // Calculate the averages in percentages
@@ -90,20 +88,17 @@ class AveragesData {
   /*
    * Classroom Climate
    */
-  calculateClimateAverage = (data, teachers) => {
+  calculateClimateAverage = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         total: 0,
         nonspecificapproval: 0,
         specificapproval: 0,
@@ -113,21 +108,22 @@ class AveragesData {
 
     }
 
-    // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      // Add to behavior types
-      // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
-      if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
+      // Get number of instances for each type of data
+      for(var rowIndex in sites[siteIndex])
       {
-        results[teacherId][row.behaviorResponse] +=  row.count;
-        results[teacherId].total += row.count;
-      }
+        var row = sites[siteIndex][rowIndex];
 
+        // Add to behavior types
+        // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+        if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
+        {
+          results[siteIndex][row.behaviorResponse] +=  row.count;
+          results[siteIndex].total += row.count;
+        }
+
+      }
     }
 
     // Calculate the averages in percentages
@@ -152,22 +148,19 @@ class AveragesData {
   /*
    * Math Instructions
    */
-  calculateMathAverages = (data, teachers) => {
+  calculateMathAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
 
     var totalIntervals = 0;
 
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    // Add each site to the object
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalInstructions: 0,
         mathVocabulary: 0,
         askingQuestions: 0,
@@ -181,24 +174,25 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+        // Add to behavior types
+        results[siteIndex].mathVocabulary += row.mathVocabulary;
+        results[siteIndex].askingQuestions += row.askingQuestions;
+        results[siteIndex].mathConcepts += row.mathConcepts;
+        results[siteIndex].helpingChildren += row.helpingChildren;
 
-      // Add to behavior types
-      results[teacherId].mathVocabulary += row.mathVocabulary;
-      results[teacherId].askingQuestions += row.askingQuestions;
-      results[teacherId].mathConcepts += row.mathConcepts;
-      results[teacherId].helpingChildren += row.helpingChildren;
+        results[siteIndex].notAtCenter += row.noOpportunity;
+        results[siteIndex].support += row.support;
+        results[siteIndex].noSupport += row.noSupport;
 
-      results[teacherId].notAtCenter += row.noOpportunity;
-      results[teacherId].support += row.support;
-      results[teacherId].noSupport += row.noSupport;
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.noSupport + row.noOpportunity + row.support;
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.noSupport + row.noOpportunity + row.support;
+      }
     }
 
     // Calculate the averages in percentages
@@ -229,7 +223,7 @@ class AveragesData {
   /*
    * Level of Instructions
    */
-  calculateLevelInstructionAverages = (data, teachers) => {
+  calculateLevelInstructionAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -238,13 +232,11 @@ class AveragesData {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalInstructions: 0,
         hlq: 0,
         hlqResponse: 0,
@@ -255,17 +247,19 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
 
-      // Add to total # of intervals
-      results[teacherId].totalInstructions += row.count;
+        // Add to total # of intervals
+        results[siteIndex].totalInstructions += row.count;
 
-      // Add to behavior types
-      results[teacherId][row.instructionType] += row.count;
+        // Add to behavior types
+        results[siteIndex][row.instructionType] += row.count;
+      }
     }
 
     // Calculate the averages in percentages
@@ -290,7 +284,7 @@ class AveragesData {
   /*
    * Student Engagement
    */
-  calculateStudentEngagementAverages = (data, teachers) => {
+  calculateStudentEngagementAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -298,14 +292,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalInstructions: 0,
         offTask: 0,
         mildlyEngaged: 0,
@@ -316,32 +307,33 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+        // Add to behavior types
+        switch (row.point) {
+          case 0:
+            results[siteIndex].offTask += row.count;
+            break;
+          case 1:
+            results[siteIndex].mildlyEngaged += row.count;
+            break;
+          case 2:
+            results[siteIndex].engaged += row.count;
+            break;
+          case 3:
+            results[siteIndex].highlyEngaged += row.count;
+            break;
+          default:
+            break;
+        }
 
-      // Add to behavior types
-      switch (row.point) {
-        case 0:
-          results[teacherId].offTask += row.count;
-          break;
-        case 1:
-          results[teacherId].mildlyEngaged += row.count;
-          break;
-        case 2:
-          results[teacherId].engaged += row.count;
-          break;
-        case 3:
-          results[teacherId].highlyEngaged += row.count;
-          break;
-        default:
-          break;
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.count;
       }
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.count;
     }
 
     // Calculate the averages in percentages
@@ -368,7 +360,7 @@ class AveragesData {
   /*
    * Listening To Children
    */
-  calculateListeningToChildrenAverages = (data, teachers) => {
+  calculateListeningToChildrenAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -376,14 +368,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalInstructions: 0,
         eyeLevel: 0,
         positiveExpression: 0,
@@ -399,27 +388,28 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+        // Add to behavior types
+        results[siteIndex].eyeLevel += row.listening1;
+        results[siteIndex].positiveExpression += row.listening2;
+        results[siteIndex].repeats += row.listening3;
+        results[siteIndex].openEndedQuestions += row.listening4;
+        results[siteIndex].extendsPlay += row.listening5;
+        results[siteIndex].encouragesPeerTalk += row.listening6;
 
-      // Add to behavior types
-      results[teacherId].eyeLevel += row.listening1;
-      results[teacherId].positiveExpression += row.listening2;
-      results[teacherId].repeats += row.listening3;
-      results[teacherId].openEndedQuestions += row.listening4;
-      results[teacherId].extendsPlay += row.listening5;
-      results[teacherId].encouragesPeerTalk += row.listening6;
+        results[siteIndex].noBehaviors += row.listening7;
+        results[siteIndex].encouraging += row.count - row.listening7;
 
-      results[teacherId].noBehaviors += row.listening7;
-      results[teacherId].encouraging += row.count - row.listening7;
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
 
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
-
-      results[teacherId].totalObserved += row.count;
+        results[siteIndex].totalObserved += row.count;
+      }
     }
 
 
@@ -453,7 +443,7 @@ class AveragesData {
     /*
      * Sequential Activities
      */
-    calculateSequentialActivitiesAverages = (data, teachers) => {
+    calculateSequentialActivitiesAverages = (data, sites) => {
 
       // Initialize the array that will hold all the data
       var results = {};
@@ -461,13 +451,10 @@ class AveragesData {
       var totalIntervals = 0;
 
       // Add each teacher to the object
-      var tempName = "";
-      for(var teacherIndex in teachers)
+      for(var siteIndex in sites)
       {
 
-        tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-        results[teachers[teacherIndex].id] = {
+        results[siteIndex] = {
           name: tempName,
           totalInstructions: 0,
           sequentialActivities: 0,
@@ -482,24 +469,25 @@ class AveragesData {
       }
 
       // Get number of instances for each type of data
-      for(var rowIndex in data)
+      for(var siteIndex in sites)
       {
-        var row = data[rowIndex];
+        for(var rowIndex in data)
+        {
+          var row = data[rowIndex];
 
-        var teacherId = row.teacher.split("/")[2];
+          // Add to behavior types
+          results[siteIndex].sequentialActivities += row.sequentialActivities;
+          results[siteIndex].drawImages += row.drawImages;
+          results[siteIndex].actOut += row.actOut;
+          results[siteIndex].demonstrateSteps += row.demonstrateSteps;
 
-        // Add to behavior types
-        results[teacherId].sequentialActivities += row.sequentialActivities;
-        results[teacherId].drawImages += row.drawImages;
-        results[teacherId].actOut += row.actOut;
-        results[teacherId].demonstrateSteps += row.demonstrateSteps;
+          results[siteIndex].notAtCenter += row.notAtCenter;
+          results[siteIndex].support += row.support;
+          results[siteIndex].noSupport += row.noSupport;
 
-        results[teacherId].notAtCenter += row.notAtCenter;
-        results[teacherId].support += row.support;
-        results[teacherId].noSupport += row.noSupport;
-
-        // Calculate the total Number of instructions
-        results[teacherId].totalInstructions += row.noSupport + row.notAtCenter + row.support;
+          // Calculate the total Number of instructions
+          results[siteIndex].totalInstructions += row.noSupport + row.notAtCenter + row.support;
+        }
       }
 
       // Calculate the averages in percentages
@@ -530,7 +518,7 @@ class AveragesData {
   /*
   * Foundational Skills
   */
-  calculateFoundationalSkillsAverages = (data, teachers) => {
+  calculateFoundationalSkillsAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -538,14 +526,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[sites[siteIndex].id] = {
+        name: "",
         totalIntervals: 0,
         totalInstructions: 0,
         phonological: 0,
@@ -559,60 +544,52 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
+      for(var rowIndex in data)
+      {
+        var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+        // Add to total # of intervals
+        //results[siteIndex].totalIntervals += row.total;
+        results[siteIndex].totalIntervals++;
 
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
+        // Add to behavior types
 
-      // Add to behavior types
-      /*
-      results[teacherId].phonological += row.foundational1 + row.foundational2;
-      results[teacherId].alphabetic += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
-      results[teacherId].openEndedQuestions += row.foundational8;
-      results[teacherId].realisticReading += row.foundational9;
-      results[teacherId].multimodalInstruction += row.foundational10;
-      // THIS ONE ISN'T RIGHT FOR NOW
-      results[teacherId].foundationalSkills += row.foundational10;
-      */
+        // If this observation has a phonal answer.
+        if(row.foundational1 || row.foundational2)
+        {
+          results[siteIndex].phonological++;
+        }
+        // If this observation has a alphabetic answer
+        if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
+        {
+          results[siteIndex].alphabetic++;
+        }
+        // If this observation has a open ended question
+        if(row.foundational8)
+        {
+          results[siteIndex].openEndedQuestions++;
+        }
+        // If this observation has a realistic Reading
+        if(row.foundational9)
+        {
+          results[siteIndex].realisticReading++;
+        }
+        // If this observation has a Multi Modal
+        if(row.foundational10)
+        {
+          results[siteIndex].multimodalInstruction++;
+        }
+        // If this observation has anything
+        if(!row.foundational11)
+        {
+          results[siteIndex].foundationalSkills++;
+        }
 
-      // If this observation has a phonal answer.
-      if(row.foundational1 || row.foundational2)
-      {
-        results[teacherId].phonological++;
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
       }
-      // If this observation has a alphabetic answer
-      if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
-      {
-        results[teacherId].alphabetic++;
-      }
-      // If this observation has a open ended question
-      if(row.foundational8)
-      {
-        results[teacherId].openEndedQuestions++;
-      }
-      // If this observation has a realistic Reading
-      if(row.foundational9)
-      {
-        results[teacherId].realisticReading++;
-      }
-      // If this observation has a Multi Modal
-      if(row.foundational10)
-      {
-        results[teacherId].multimodalInstruction++;
-      }
-      // If this observation has anything
-      if(!row.foundational11)
-      {
-        results[teacherId].foundationalSkills++;
-      }
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
     }
 
     // Calculate the averages in percentages
@@ -643,7 +620,7 @@ class AveragesData {
   /*
   * Writing
   */
-  calculateWritingSkillsAverages = (data, teachers) => {
+  calculateWritingSkillsAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -651,14 +628,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalIntervals: 0,
         totalInstructions: 0,
         writingSkills: 0,
@@ -669,40 +643,39 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
-
-      // Add to behavior types
-      // results[teacherId].meaning += row.writing1 + row.writing2;
-      // results[teacherId].printProcesses += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
-
-      // Count each observation interval that has a meaning in it.
-      if(row.writing1 || row.writing2)
+      for(var rowIndex in data)
       {
-        results[teacherId].meaning++;
-      }
-      // Count each observation interval that has a Print Process in it
-      if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
-      {
-        results[teacherId].printProcesses++;
-      }
+        var row = data[rowIndex];
 
-      // Count each observation interval that has anything in it
-      if(!row.writing9)
-      {
-        results[teacherId].writingSkills++;
-      }
+        // Add to total # of intervals
+        //results[siteIndex].totalIntervals += row.total;
+        results[siteIndex].totalIntervals++;
 
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
+        // Add to behavior types
+        // Count each observation interval that has a meaning in it.
+        if(row.writing1 || row.writing2)
+        {
+          results[siteIndex].meaning++;
+        }
+        // Count each observation interval that has a Print Process in it
+        if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
+        {
+          results[siteIndex].printProcesses++;
+        }
+
+        // Count each observation interval that has anything in it
+        if(!row.writing9)
+        {
+          results[siteIndex].writingSkills++;
+        }
+
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
+      }
     }
+
 
     // Calculate the averages in percentages
     // Go through each teacher
@@ -729,7 +702,7 @@ class AveragesData {
   /*
    * Book Reading
    */
-  calculateBookReadingAverages = (data, teachers) => {
+  calculateBookReadingAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -737,14 +710,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[sites[siteIndex].id] = {
+        name: "",
         totalIntervals: 0,
         totalInstructions: 0,
         bookReading: 0,
@@ -758,59 +728,52 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
-
-      // Add to behavior types
-      /*
-      results[teacherId].vocabFocus += row.literacy1 + row.literacy2 + row.literacy3;
-      results[teacherId].languageConnections += row.literacy4 + row.literacy5;
-      results[teacherId].childrenSupport += row.literacy6 + row.literacy7 + row.literacy8;
-      results[teacherId].fairnessDiscussions += row.literacy9;
-      results[teacherId].multimodalInstruction += row.literacy10;
-
-      */
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
-
-      // If there were any vocabanswers in this observation
-      if( row.literacy1 || row.literacy2 || row.literacy3 )
+      for(var rowIndex in data)
       {
-        results[teacherId].vocabFocus++;
-      }
-      // If there were any Language Connection answers in this observation
-      if( row.literacy4 || row.literacy5 )
-      {
-        results[teacherId].languageConnections++;
-      }
-      // If there were any Children Support answers in this observation
-      if( row.literacy6 || row.literacy7 || row.literacy8 )
-      {
-        results[teacherId].childrenSupport++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy9 )
-      {
-        results[teacherId].fairnessDiscussions++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy10 )
-      {
-        results[teacherId].multimodalInstruction++;
-      }
-      // If there were any answers in this observation
-      if( !row.literacy11 )
-      {
-        results[teacherId].bookReading++;
-      }
+        var row = data[rowIndex];
 
+        // Add to total # of intervals
+        //results[siteIndex].totalIntervals += row.total;
+        results[siteIndex].totalIntervals++;
+
+        // Add to behavior types
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
+
+        // If there were any vocabanswers in this observation
+        if( row.literacy1 || row.literacy2 || row.literacy3 )
+        {
+          results[siteIndex].vocabFocus++;
+        }
+        // If there were any Language Connection answers in this observation
+        if( row.literacy4 || row.literacy5 )
+        {
+          results[siteIndex].languageConnections++;
+        }
+        // If there were any Children Support answers in this observation
+        if( row.literacy6 || row.literacy7 || row.literacy8 )
+        {
+          results[siteIndex].childrenSupport++;
+        }
+        // If there were any Fairness Discussion answers in this observation
+        if( row.literacy9 )
+        {
+          results[siteIndex].fairnessDiscussions++;
+        }
+        // If there were any Fairness Discussion answers in this observation
+        if( row.literacy10 )
+        {
+          results[siteIndex].multimodalInstruction++;
+        }
+        // If there were any answers in this observation
+        if( !row.literacy11 )
+        {
+          results[siteIndex].bookReading++;
+        }
+
+      }
     }
 
     // Calculate the averages in percentages
@@ -844,7 +807,7 @@ class AveragesData {
   /*
    * Language Environment
    */
-  calculateLanguageEnvironmentAverages = (data, teachers) => {
+  calculateLanguageEnvironmentAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -852,14 +815,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalIntervals: 0,
         totalInstructions: 0,
         languageEnvironment: 0,
@@ -871,43 +831,45 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
-
-      // Add to behavior types
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8;
-
-      // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
-      if( row.literacy1 || row.literacy2)
+      for(var rowIndex in data)
       {
-        results[teacherId].talk++;
-      }
-      // If there were any "Encourage Children to talk" answers in this observation
-      if( row.literacy3 || row.literacy4 || row.literacy5 )
-      {
-        results[teacherId].encourageChildren++;
-      }
-      // If there were any "Respond to children" answers in this observation
-      if( row.literacy6 || row.literacy7 || row.literacy8 )
-      {
-        results[teacherId].respondChildren++;
-      }
+        var row = data[rowIndex];
 
-      // If there were any answers in this observation
-      if( !row.literacy9 )
-      {
-        results[teacherId].languageEnvironment++;
-      }
 
+        // Add to total # of intervals
+        //results[siteIndex].totalIntervals += row.total;
+        results[siteIndex].totalIntervals++;
+
+        // Add to behavior types
+
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8;
+
+        // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
+        if( row.literacy1 || row.literacy2)
+        {
+          results[siteIndex].talk++;
+        }
+        // If there were any "Encourage Children to talk" answers in this observation
+        if( row.literacy3 || row.literacy4 || row.literacy5 )
+        {
+          results[siteIndex].encourageChildren++;
+        }
+        // If there were any "Respond to children" answers in this observation
+        if( row.literacy6 || row.literacy7 || row.literacy8 )
+        {
+          results[siteIndex].respondChildren++;
+        }
+
+        // If there were any answers in this observation
+        if( !row.literacy9 )
+        {
+          results[siteIndex].languageEnvironment++;
+        }
+
+      }
     }
 
     // Calculate the averages in percentages
@@ -938,7 +900,7 @@ class AveragesData {
   /*
    * Associative Cooperative
    */
-  calculateACAverages = (data, teachers) => {
+  calculateACAverages = (data, sites) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -946,14 +908,11 @@ class AveragesData {
     var totalIntervals = 0;
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
+      results[siteIndex] = {
+        name: "",
         totalIntervals: 0,
         totalInstructions: 0,
 
@@ -970,63 +929,62 @@ class AveragesData {
     }
 
     // Get number of instances for each type of data
-    for(var rowIndex in data)
+    for(var siteIndex in sites)
     {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
-
-      // Add to behavior types
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.teacher1 + row.teacher2 + row.teacher3 + row.teacher4;
-
-      // If there were any "Participating in children's play" in this observation
-      if( row.teacher1 )
+      for(var rowIndex in data)
       {
-        results[teacherId].childrensPlay++;
-      }
-      // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
-      if( row.teacher2 )
-      {
-        results[teacherId].askingQuestions++;
-      }
-      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-      if( row.teacher3 )
-      {
-        results[teacherId].encouragingChildren++;
-      }
-      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-      if( row.teacher4 )
-      {
-        results[teacherId].helpingChildren++;
-      }
+        var row = data[rowIndex];
 
-      // Check for act types
-      // If teacher was there
-      if(row.peopleType == 3)
-      {
-        // Check for support
-        if(row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4)
+        // Add to total # of intervals
+        results[siteIndex].totalIntervals++;
+
+        // Add to behavior types
+        // Calculate the total Number of instructions
+        results[siteIndex].totalInstructions += row.teacher1 + row.teacher2 + row.teacher3 + row.teacher4;
+
+        // If there were any "Participating in children's play" in this observation
+        if( row.teacher1 )
         {
-          results[teacherId].support++;
+          results[siteIndex].childrensPlay++;
         }
-        // If there was no support
+        // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
+        if( row.teacher2 )
+        {
+          results[siteIndex].askingQuestions++;
+        }
+        // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
+        if( row.teacher3 )
+        {
+          results[siteIndex].encouragingChildren++;
+        }
+        // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
+        if( row.teacher4 )
+        {
+          results[siteIndex].helpingChildren++;
+        }
+
+        // Check for act types
+        // If teacher was there
+        if(row.peopleType == 3)
+        {
+          // Check for support
+          if(row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4)
+          {
+            results[siteIndex].support++;
+          }
+          // If there was no support
+          else
+          {
+            results[siteIndex].noSupport++;
+          }
+        }
+        // Teacher not there
         else
         {
-          results[teacherId].noSupport++;
+          results[siteIndex].notAtCenter++;
         }
-      }
-      // Teacher not there
-      else
-      {
-        results[teacherId].notAtCenter++;
-      }
 
+      }
     }
 
     // Calculate the averages in percentages

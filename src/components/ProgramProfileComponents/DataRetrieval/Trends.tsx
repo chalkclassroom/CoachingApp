@@ -9,7 +9,7 @@ class TrendData {
   /*
    * Will return an object that holds data for all of the trends data for Book Reading
    */
-   calculateTransitionTrends = (data, teachers, startDate, endDate) => {
+   calculateTransitionTrends = (data, sites, startDate, endDate) => {
 
      // Initialize the array that will hold all the data
      var results = {};
@@ -23,12 +23,10 @@ class TrendData {
 
      // Add each teacher to the object
      var tempName = "";
-     for(var teacherIndex in teachers)
+     for(var siteIndex in sites)
      {
 
-       tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-       results[teachers[teacherIndex].id] = {
+       results[sites[siteIndex].id] = {
          name: tempName,
          line: new Array(12).fill(0),
          traveling: new Array(12).fill(0),
@@ -62,21 +60,19 @@ class TrendData {
      {
        var row = data[rowIndex];
 
-       var teacherId = row.teacher.split("/")[2];
-
        rowMonth = new Date(row.startDate.value).getMonth();
 
        // Add to behavior types
-       results[teacherId].line[rowMonth] +=  row.line;
+       results[siteIndex].line[rowMonth] +=  row.line;
 
-       results[teacherId].traveling[rowMonth] += row.traveling;
-       results[teacherId].waiting[rowMonth] += row.waiting;
-       results[teacherId].routines[rowMonth] += row.routines;
-       results[teacherId].behaviorManagement[rowMonth] += row.behaviorManagement;
-       results[teacherId].other[rowMonth] += row.other;
+       results[siteIndex].traveling[rowMonth] += row.traveling;
+       results[siteIndex].waiting[rowMonth] += row.waiting;
+       results[siteIndex].routines[rowMonth] += row.routines;
+       results[siteIndex].behaviorManagement[rowMonth] += row.behaviorManagement;
+       results[siteIndex].other[rowMonth] += row.other;
 
        // Calculate the total Number of instructions
-       results[teacherId].total[rowMonth] += row.total;
+       results[siteIndex].total[rowMonth] += row.total;
      }
 
      // Calculate the averages in percentages
@@ -107,7 +103,9 @@ class TrendData {
    /*
     * Classroom Climate
     */
-   calculateClimateTrends = (data, teachers, startDate, endDate) => {
+   calculateClimateTrends = (data, sites, startDate, endDate) => {
+
+     console.log("Trends started");
 
      // Initialize the array that will hold all the data
      var results = {};
@@ -121,12 +119,10 @@ class TrendData {
 
      // Add each teacher to the object
      var tempName = "";
-     for(var teacherIndex in teachers)
+     for(var siteIndex in sites)
      {
 
-       tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-       results[teachers[teacherIndex].id] = {
+       results[siteIndex] = {
          name: tempName,
          total: new Array(12).fill(0),
          nonspecificapproval: new Array(12).fill(0),
@@ -146,22 +142,33 @@ class TrendData {
      // Get number of instances for each type of data
      var prevMonth = 0, rowMonth = startMonth;
 
-     for(var rowIndex in data)
+     console.log("Sites for trends : " + sites);
+
+     for(var siteIndex in sites)
      {
-       var row = data[rowIndex];
 
-       var teacherId = row.teacher.split("/")[2];
+       console.log("Site for trend : " + siteIndex);
 
-       rowMonth = new Date(row.startDate.value).getMonth();
+       console.log("Data for trend : " + data);
 
-       // Add to behavior types
-       // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
-       if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
+       for(var rowIndex in sites[siteIndex])
        {
-         results[teacherId][row.behaviorResponse][rowMonth] +=  row.count;
-         results[teacherId].total[rowMonth] += row.count;
-       }
 
+         var row = sites[siteIndex][rowIndex];
+
+         rowMonth = new Date(row.startDate.value).getMonth();
+
+         console.log("Row value  : " + row.behaviorResponse);
+
+         // Add to behavior types
+         // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+         if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
+         {
+           results[siteIndex][row.behaviorResponse][rowMonth] +=  row.count;
+           results[siteIndex].total[rowMonth] += row.count;
+         }
+
+       }
      }
 
      // Calculate the averages in percentages
@@ -190,7 +197,7 @@ class TrendData {
    /*
     * MATH INSTRUCTIONS
     */
-  calculateMathTrends = (data, teachers, startDate, endDate) => {
+  calculateMathTrends = (data, sites, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -204,12 +211,12 @@ class TrendData {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+      tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
+      results[sites[siteIndex].id] = {
         name: tempName,
         totalInstructions: new Array(12).fill(0),
         mathVocabulary: new Array(12).fill(0),
@@ -242,22 +249,22 @@ class TrendData {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var siteIndex = row.teacher.split("/")[2];
 
       var rowMonth = new Date(row.timestamp).getMonth();
 
       // Add to total # of intervals
-      results[teacherId].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
+      results[siteIndex].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
 
       // Add to behavior types
-      results[teacherId].mathVocabulary[rowMonth] += row.mathVocabulary;
-      results[teacherId].askingQuestions[rowMonth] += row.askingQuestions;
-      results[teacherId].mathConcepts[rowMonth] += row.mathConcepts;
-      results[teacherId].helpingChildren[rowMonth] += row.helpingChildren;
+      results[siteIndex].mathVocabulary[rowMonth] += row.mathVocabulary;
+      results[siteIndex].askingQuestions[rowMonth] += row.askingQuestions;
+      results[siteIndex].mathConcepts[rowMonth] += row.mathConcepts;
+      results[siteIndex].helpingChildren[rowMonth] += row.helpingChildren;
 
-      results[teacherId].notAtCenter[rowMonth] += row.noOpportunity;
-      results[teacherId].support[rowMonth] += row.support;
-      results[teacherId].noSupport[rowMonth] += row.noSupport;
+      results[siteIndex].notAtCenter[rowMonth] += row.noOpportunity;
+      results[siteIndex].support[rowMonth] += row.support;
+      results[siteIndex].noSupport[rowMonth] += row.noSupport;
     }
 
     // Calculate the averages in percentages
@@ -290,7 +297,7 @@ class TrendData {
    /*
     * Level of Instructions
     */
-  calculateLevelInstructionTrends = (data, teachers, startDate, endDate) => {
+  calculateLevelInstructionTrends = (data, sites, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -304,12 +311,12 @@ class TrendData {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+      tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
+      results[sites[siteIndex].id] = {
         name: tempName,
         totalInstructions: new Array(12).fill(0),
         hlq: new Array(12).fill(0),
@@ -334,15 +341,15 @@ class TrendData {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var siteIndex = row.teacher.split("/")[2];
 
       var rowMonth = new Date(row.startDate.value).getMonth();
 
       // Add to total # of intervals
-      results[teacherId].totalInstructions[rowMonth] += row.count;
+      results[siteIndex].totalInstructions[rowMonth] += row.count;
 
       // Add to behavior types
-      results[teacherId][row.instructionType][rowMonth] += row.count;
+      results[siteIndex][row.instructionType][rowMonth] += row.count;
     }
 
     // Calculate the averages in percentages
@@ -371,7 +378,7 @@ class TrendData {
   /*
    * Student Engagement
    */
- calculateStudentEngagementTrends = (data, teachers, startDate, endDate) => {
+ calculateStudentEngagementTrends = (data, sites, startDate, endDate) => {
 
    // Initialize the array that will hold all the data
    var results = {};
@@ -385,12 +392,12 @@ class TrendData {
 
    // Add each teacher to the object
    var tempName = "";
-   for(var teacherIndex in teachers)
+   for(var siteIndex in sites)
    {
 
-     tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+     tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-     results[teachers[teacherIndex].id] = {
+     results[sites[siteIndex].id] = {
        name: tempName,
        totalInstructions: new Array(12).fill(0),
        offTask: new Array(12).fill(0),
@@ -415,26 +422,26 @@ class TrendData {
    {
      var row = data[rowIndex];
 
-     var teacherId = row.teacher.split("/")[2];
+     var siteIndex = row.teacher.split("/")[2];
 
      var rowMonth = new Date(row.startDate).getMonth();
 
      // Add to total # of intervals
-     results[teacherId].totalInstructions[rowMonth] += row.count;
+     results[siteIndex].totalInstructions[rowMonth] += row.count;
 
      // Add to behavior types
      switch (row.point) {
        case 0:
-         results[teacherId].offTask[rowMonth] += row.count;
+         results[siteIndex].offTask[rowMonth] += row.count;
          break;
        case 1:
-         results[teacherId].mildlyEngaged[rowMonth] += row.count;
+         results[siteIndex].mildlyEngaged[rowMonth] += row.count;
          break;
        case 2:
-         results[teacherId].engaged[rowMonth] += row.count;
+         results[siteIndex].engaged[rowMonth] += row.count;
          break;
        case 3:
-         results[teacherId].highlyEngaged[rowMonth] += row.count;
+         results[siteIndex].highlyEngaged[rowMonth] += row.count;
          break;
        default:
          break;
@@ -471,7 +478,7 @@ class TrendData {
   /*
    * Listening to Children
    */
- calculateListeningToChildrenTrends = (data, teachers, startDate, endDate) => {
+ calculateListeningToChildrenTrends = (data, sites, startDate, endDate) => {
 
    // Initialize the array that will hold all the data
    var results = {};
@@ -485,12 +492,12 @@ class TrendData {
 
    // Add each teacher to the object
    var tempName = "";
-   for(var teacherIndex in teachers)
+   for(var siteIndex in sites)
    {
 
-     tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+     tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-     results[teachers[teacherIndex].id] = {
+     results[sites[siteIndex].id] = {
        name: tempName,
        eyeLevel: new Array(12).fill(0),
        positiveExpression: new Array(12).fill(0),
@@ -531,26 +538,26 @@ class TrendData {
    {
      var row = data[rowIndex];
 
-     var teacherId = row.teacher.split("/")[2];
+     var siteIndex = row.teacher.split("/")[2];
 
      var rowMonth = new Date(row.startDate).getMonth();
 
      // Add to behavior types
-     results[teacherId].eyeLevel[rowMonth] += row.listening1;
-     results[teacherId].positiveExpression[rowMonth] += row.listening2;
-     results[teacherId].repeats[rowMonth] += row.listening3;
-     results[teacherId].openEndedQuestions[rowMonth] += row.listening4;
-     results[teacherId].extendsPlay[rowMonth] += row.listening5;
-     results[teacherId].encouragesPeerTalk[rowMonth] += row.listening6;
+     results[siteIndex].eyeLevel[rowMonth] += row.listening1;
+     results[siteIndex].positiveExpression[rowMonth] += row.listening2;
+     results[siteIndex].repeats[rowMonth] += row.listening3;
+     results[siteIndex].openEndedQuestions[rowMonth] += row.listening4;
+     results[siteIndex].extendsPlay[rowMonth] += row.listening5;
+     results[siteIndex].encouragesPeerTalk[rowMonth] += row.listening6;
 
-     results[teacherId].noBehaviors[rowMonth] += row.listening7;
-     results[teacherId].encouraging[rowMonth] += row.count - row.listening7;
+     results[siteIndex].noBehaviors[rowMonth] += row.listening7;
+     results[siteIndex].encouraging[rowMonth] += row.count - row.listening7;
 
      // Calculate the total Number of instructions
-     results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
+     results[siteIndex].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
 
      // Calculate total number of observations
-     results[teacherId].totalObserved[rowMonth] += row.count;
+     results[siteIndex].totalObserved[rowMonth] += row.count;
 
    }
 
@@ -588,7 +595,7 @@ class TrendData {
  /*
   * Sequential Activities
   */
-calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
+calculateSequentialActivitiesTrends = (data, sites, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
@@ -602,12 +609,12 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
 
   // Add each teacher to the object
   var tempName = "";
-  for(var teacherIndex in teachers)
+  for(var siteIndex in sites)
   {
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-    results[teachers[teacherIndex].id] = {
+    results[sites[siteIndex].id] = {
       name: tempName,
       totalInstructions: new Array(12).fill(0),
       sequentialActivities: new Array(12).fill(0),
@@ -640,22 +647,22 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var siteIndex = row.teacher.split("/")[2];
 
     var rowMonth = new Date(row.timestamp).getMonth();
 
     // Add to total # of intervals
-    results[teacherId].totalInstructions[rowMonth] += row.notAtCenter + row.support + row.noSupport;
+    results[siteIndex].totalInstructions[rowMonth] += row.notAtCenter + row.support + row.noSupport;
 
     // Add to behavior types
-    results[teacherId].sequentialActivities[rowMonth] += row.sequentialActivities;
-    results[teacherId].drawImages[rowMonth] += row.drawImages;
-    results[teacherId].demonstrateSteps[rowMonth] += row.demonstrateSteps;
-    results[teacherId].actOut[rowMonth] += row.actOut;
+    results[siteIndex].sequentialActivities[rowMonth] += row.sequentialActivities;
+    results[siteIndex].drawImages[rowMonth] += row.drawImages;
+    results[siteIndex].demonstrateSteps[rowMonth] += row.demonstrateSteps;
+    results[siteIndex].actOut[rowMonth] += row.actOut;
 
-    results[teacherId].notAtCenter[rowMonth] += row.notAtCenter;
-    results[teacherId].support[rowMonth] += row.support;
-    results[teacherId].noSupport[rowMonth] += row.noSupport;
+    results[siteIndex].notAtCenter[rowMonth] += row.notAtCenter;
+    results[siteIndex].support[rowMonth] += row.support;
+    results[siteIndex].noSupport[rowMonth] += row.noSupport;
   }
 
   // Calculate the averages in percentages
@@ -691,7 +698,7 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
 /*
  * Foundational Skills
  */
-calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
+calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
@@ -705,12 +712,12 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
 
   // Add each teacher to the object
   var tempName = "";
-  for(var teacherIndex in teachers)
+  for(var siteIndex in sites)
   {
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-    results[teachers[teacherIndex].id] = {
+    results[sites[siteIndex].id] = {
       name: tempName,
       totalIntervals: new Array(12).fill(0),
       totalInstructions: new Array(12).fill(0),
@@ -748,60 +755,60 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var siteIndex = row.teacher.split("/")[2];
 
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
     // Add to total # of intervals
-    // results[teacherId].totalIntervals[rowMonth] += row.total;
-    results[teacherId].totalIntervals[rowMonth]++;
+    // results[siteIndex].totalIntervals[rowMonth] += row.total;
+    results[siteIndex].totalIntervals[rowMonth]++;
 
     // Add to behavior types
     /*
-    results[teacherId].phonological[rowMonth] += row.foundational1 + row.foundational2;
-    results[teacherId].alphabetic[rowMonth] += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
-    results[teacherId].openEndedQuestions[rowMonth] += row.foundational8;
-    results[teacherId].realisticReading[rowMonth] += row.foundational9;
-    results[teacherId].multimodalInstruction[rowMonth] += row.foundational10;
+    results[siteIndex].phonological[rowMonth] += row.foundational1 + row.foundational2;
+    results[siteIndex].alphabetic[rowMonth] += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
+    results[siteIndex].openEndedQuestions[rowMonth] += row.foundational8;
+    results[siteIndex].realisticReading[rowMonth] += row.foundational9;
+    results[siteIndex].multimodalInstruction[rowMonth] += row.foundational10;
 
     // THIS ONE ISN'T RIGHT FOR NOW
-    results[teacherId].foundationalSkillsAverage[rowMonth] += row.foundational10;
+    results[siteIndex].foundationalSkillsAverage[rowMonth] += row.foundational10;
     */
 
     // If this observation has a phonal answer.
     if(row.foundational1 || row.foundational2)
     {
-      results[teacherId].phonological[rowMonth]++;
+      results[siteIndex].phonological[rowMonth]++;
     }
     // If this observation has a alphabetic answer
     if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
     {
-      results[teacherId].alphabetic[rowMonth]++;
+      results[siteIndex].alphabetic[rowMonth]++;
     }
     // If this observation has a open ended question
     if(row.foundational8)
     {
-      results[teacherId].openEndedQuestions[rowMonth]++;
+      results[siteIndex].openEndedQuestions[rowMonth]++;
     }
     // If this observation has a realistic Reading
     if(row.foundational9)
     {
-      results[teacherId].realisticReading[rowMonth]++;
+      results[siteIndex].realisticReading[rowMonth]++;
     }
     // If this observation has a Multi Modal
     if(row.foundational10)
     {
-      results[teacherId].multimodalInstruction[rowMonth]++;
+      results[siteIndex].multimodalInstruction[rowMonth]++;
     }
     // If this observation has anything
     if(!row.foundational11)
     {
-      results[teacherId].foundationalSkills[rowMonth]++;
+      results[siteIndex].foundationalSkills[rowMonth]++;
     }
 
 
     // Calculate the total Number of instructions
-    results[teacherId].totalInstructions[rowMonth] += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
+    results[siteIndex].totalInstructions[rowMonth] += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
   }
 
   // Calculate the averages in percentages
@@ -838,7 +845,7 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
 /*
  * Writing Skills
  */
-calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
+calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
@@ -852,12 +859,12 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
   // Add each teacher to the object
   var tempName = "";
-  for(var teacherIndex in teachers)
+  for(var siteIndex in sites)
   {
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-    results[teachers[teacherIndex].id] = {
+    results[sites[siteIndex].id] = {
       name: tempName,
       totalIntervals: new Array(12).fill(0),
       totalInstructions: new Array(12).fill(0),
@@ -891,42 +898,42 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var siteIndex = row.teacher.split("/")[2];
 
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
     // Add to total # of intervals
-    // results[teacherId].totalIntervals[rowMonth] += row.total;
-    results[teacherId].totalIntervals[rowMonth]++;
+    // results[siteIndex].totalIntervals[rowMonth] += row.total;
+    results[siteIndex].totalIntervals[rowMonth]++;
 
     // Add to behavior types
     /*
-    results[teacherId].meaning[rowMonth] += row.writing1 + row.writing2;
-    results[teacherId].printProcesses[rowMonth] += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
+    results[siteIndex].meaning[rowMonth] += row.writing1 + row.writing2;
+    results[siteIndex].printProcesses[rowMonth] += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
 
     // THIS ONE ISN'T RIGHT FOR NOW
-    results[teacherId].writingSkills[rowMonth] += row.writing1;
+    results[siteIndex].writingSkills[rowMonth] += row.writing1;
     */
 
     // Count each observation interval that has a meaning in it.
     if(row.writing1 || row.writing2)
     {
-      results[teacherId].meaning[rowMonth]++;
+      results[siteIndex].meaning[rowMonth]++;
     }
     // Count each observation interval that has a Print Process in it
     if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
     {
-      results[teacherId].printProcesses[rowMonth]++;
+      results[siteIndex].printProcesses[rowMonth]++;
     }
 
     // Count each observation interval that has anything in it
     if(!row.writing9)
     {
-      results[teacherId].writingSkills[rowMonth]++;
+      results[siteIndex].writingSkills[rowMonth]++;
     }
 
     // Calculate the total Number of instructions
-    results[teacherId].totalInstructions[rowMonth] += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
+    results[siteIndex].totalInstructions[rowMonth] += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
   }
 
   // Calculate the averages in percentages
@@ -959,7 +966,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Book Reading
    */
-  calculateBookReadingTrends = (data, teachers, startDate, endDate) => {
+  calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -973,12 +980,12 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+      tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
+      results[sites[siteIndex].id] = {
         name: tempName,
         totalIntervals: new Array(12).fill(0),
         totalInstructions: new Array(12).fill(0),
@@ -1016,55 +1023,55 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var siteIndex = row.teacher.split("/")[2];
 
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      //results[siteIndex].totalIntervals[rowMonth] += row.total;
+      results[siteIndex].totalIntervals[rowMonth]++;
 
       // Add to behavior types
       /*
-      results[teacherId].vocabFocus[rowMonth] +=  row.literacy1 + row.literacy2 + row.literacy3;
+      results[siteIndex].vocabFocus[rowMonth] +=  row.literacy1 + row.literacy2 + row.literacy3;
 
-      results[teacherId].languageConnections[rowMonth] += row.literacy4 + row.literacy5;
-      results[teacherId].childrenSupport[rowMonth] += row.literacy6 + row.literacy7 + row.literacy8;
-      results[teacherId].fairnessDiscussions[rowMonth] += row.literacy9;
-      results[teacherId].multimodalInstruction[rowMonth] += row.literacy10;
+      results[siteIndex].languageConnections[rowMonth] += row.literacy4 + row.literacy5;
+      results[siteIndex].childrenSupport[rowMonth] += row.literacy6 + row.literacy7 + row.literacy8;
+      results[siteIndex].fairnessDiscussions[rowMonth] += row.literacy9;
+      results[siteIndex].multimodalInstruction[rowMonth] += row.literacy10;
       */
       // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
+      results[siteIndex].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
 
       // If there were any vocabanswers in this observation
       if( row.literacy1 || row.literacy2 || row.literacy3 )
       {
-        results[teacherId].vocabFocus[rowMonth]++;
+        results[siteIndex].vocabFocus[rowMonth]++;
       }
       // If there were any Language Connection answers in this observation
       if( row.literacy4 || row.literacy5 )
       {
-        results[teacherId].languageConnections[rowMonth]++;
+        results[siteIndex].languageConnections[rowMonth]++;
       }
       // If there were any Children Support answers in this observation
       if( row.literacy6 || row.literacy7 || row.literacy8 )
       {
-        results[teacherId].childrenSupport[rowMonth]++;
+        results[siteIndex].childrenSupport[rowMonth]++;
       }
       // If there were any Fairness Discussion answers in this observation
       if( row.literacy9 )
       {
-        results[teacherId].fairnessDiscussions[rowMonth]++;
+        results[siteIndex].fairnessDiscussions[rowMonth]++;
       }
       // If there were any Fairness Discussion answers in this observation
       if( row.literacy10 )
       {
-        results[teacherId].multimodalInstruction[rowMonth]++;
+        results[siteIndex].multimodalInstruction[rowMonth]++;
       }
       // If there were any answers in this observation
       if( !row.literacy11 )
       {
-        results[teacherId].bookReading[rowMonth]++;
+        results[siteIndex].bookReading[rowMonth]++;
       }
 
     }
@@ -1101,7 +1108,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Language Environment
    */
-  calculateLanguageEnvironmentTrends = (data, teachers, startDate, endDate) => {
+  calculateLanguageEnvironmentTrends = (data, sites, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -1115,12 +1122,12 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+      tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
+      results[sites[siteIndex].id] = {
         name: tempName,
         totalIntervals: new Array(12).fill(0),
         totalInstructions: new Array(12).fill(0),
@@ -1156,40 +1163,40 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var siteIndex = row.teacher.split("/")[2];
 
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      //results[siteIndex].totalIntervals[rowMonth] += row.total;
+      results[siteIndex].totalIntervals[rowMonth]++;
 
       // Add to behavior types
 
       // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
+      results[siteIndex].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
 
 
       // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
       if( row.literacy1 || row.literacy2)
       {
-        results[teacherId].talk[rowMonth]++;
+        results[siteIndex].talk[rowMonth]++;
       }
       // If there were any "Encourage Children to talk" answers in this observation
       if( row.literacy3 || row.literacy4 || row.literacy5 )
       {
-        results[teacherId].encourageChildren[rowMonth]++;
+        results[siteIndex].encourageChildren[rowMonth]++;
       }
       // If there were any "Respond to children" answers in this observation
       if( row.literacy6 || row.literacy7 || row.literacy8 )
       {
-        results[teacherId].respondChildren[rowMonth]++;
+        results[siteIndex].respondChildren[rowMonth]++;
       }
 
       // If there were any answers in this observation
       if( !row.literacy9 )
       {
-        results[teacherId].languageEnvironment[rowMonth]++;
+        results[siteIndex].languageEnvironment[rowMonth]++;
       }
     }
 
@@ -1222,7 +1229,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Language Environment
    */
-  calculateACTrends = (data, teachers, startDate, endDate) => {
+  calculateACTrends = (data, sites, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -1234,12 +1241,12 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
+    for(var siteIndex in sites)
     {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+      tempName = sites[siteIndex].firstName + " " + sites[siteIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
+      results[sites[siteIndex].id] = {
         name: tempName,
         totalIntervals: new Array(12).fill(0),
         totalInstructions: new Array(12).fill(0),
@@ -1284,39 +1291,39 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var siteIndex = row.teacher.split("/")[2];
 
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      //results[siteIndex].totalIntervals[rowMonth] += row.total;
+      results[siteIndex].totalIntervals[rowMonth]++;
 
       // Add to behavior types
 
       // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
+      results[siteIndex].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
 
 
       // If there were any "Participating in children's play" in this observation
       if( row.teacher1 )
       {
-        results[teacherId].childrensPlay[rowMonth]++;
+        results[siteIndex].childrensPlay[rowMonth]++;
       }
       // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
       if( row.teacher2 )
       {
-        results[teacherId].askingQuestions[rowMonth]++;
+        results[siteIndex].askingQuestions[rowMonth]++;
       }
       // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
       if( row.teacher3 )
       {
-        results[teacherId].encouragingChildren[rowMonth]++;
+        results[siteIndex].encouragingChildren[rowMonth]++;
       }
       // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
       if( row.teacher4 )
       {
-        results[teacherId].helpingChildren[rowMonth]++;
+        results[siteIndex].helpingChildren[rowMonth]++;
       }
 
       // Check for act types
@@ -1326,18 +1333,18 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         // Check for support
         if(row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4)
         {
-          results[teacherId].support[rowMonth]++;
+          results[siteIndex].support[rowMonth]++;
         }
         // If there was no support
         else
         {
-          results[teacherId].noSupport[rowMonth]++;
+          results[siteIndex].noSupport[rowMonth]++;
         }
       }
       // Teacher not there
       else
       {
-        results[teacherId].notAtCenter[rowMonth]++;
+        results[siteIndex].notAtCenter[rowMonth]++;
       }
     }
 

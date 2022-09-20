@@ -230,82 +230,56 @@ class ProgramProfileResults extends React.Component {
 
     var siteIds = [];
 
-    var coaches = await firebase.fetchProgramTeachers({programId: this.props.selectedProgramId});
+    //var coaches = await firebase.fetchProgramTeachers({programId: this.props.selectedProgramId});
 
-    this.setState({test2: coaches});
+    // Get the teachers in this program
+    firebase.fetchProgramTeachers({programId: this.props.selectedProgramId}).then( data => {
+      this.setState({test2: data});
+
+      this.getResultsFromBQ(data);
+    });
 
     this.setState({sites: fullSitesList});
-
-    var siteNames = [];
-
-
-  }
-
-  /*
-   * Get the info of eache teacher in the site
-   */
-  getSitesTeachersInfo = async (coaches, siteId) => {
-      const firebase = this.context;
-
-      var coachIdsArr = coaches;
-      this.setState({siteCoaches: coachIdsArr});
-
-      // Gather information for each coach.
-      var teacherResults = this.state.teacherInfo;
-      teacherResults[siteId] = [];
-
-      var teacherNames = [];
-
-      // Go through each coach in the site
-      for(var coachIndex in coachIdsArr)
-      {
-        var coachId = coachIdsArr[coachIndex];
-
-        // Get the the coaches teacher
-        var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
-
-        // Go through each teacher the coach observes
-        for(var teacherIndex in teachersIdList)
-        {
-          var teacherId = teachersIdList[teacherIndex];
-
-          // Get all information of the teacher
-          var tempTeacher = await firebase.getUserProgramOrSite({userId: teacherId});
-
-          // Make sure it exists
-          if(tempTeacher)
-          {
-            // Save all information
-            teacherResults[siteId].push(tempTeacher);
-
-            // Save just the names
-            teacherNames.push(tempTeacher.firstName + " " + tempTeacher.lastName);
-          }
-
-        }
-
-
-      }
-
-      this.setState({teacherInfo: teacherResults});
-      this.setState({teacherNames: teacherNames});
-
-      this.getResultsFromBQ(teacherResults);
 
   }
 
   /*
    * Get all the Results data from each of the teachers between the two given dates
    */
-  getResultsFromBQ = (teachers) => {
+  getResultsFromBQ = async (sites) => {
     const firebase = this.context;
 
     // Grab results data
-    firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
-      .then( (data) => {
-        this.setState({BQData: data});
-        this.calculateResultsForCharts(data, teachers);
-      });
+
+    var averagesList = {};
+    var siteNames = {};
+
+    // Go through each site
+    for(var siteIndex in sites)
+    {
+      console.log("Site Id in list : " + siteIndex);
+
+      var teachers = sites[siteIndex];
+
+      // Just skip if there are no teachers here
+      if(teachers.length < 1)
+      {
+        continue;
+      }
+
+      // Get the averages for this site
+      averagesList[siteIndex] = await firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers});
+
+      // Set the site names
+      var siteData = await firebase.getUserProgramOrSite({siteId: siteIndex});
+
+      siteNames[siteData.id] = {name: siteData.name};
+
+    }
+
+    this.setState({BQData: averagesList});
+    this.setState({siteNames: siteNames});
+    this.calculateResultsForCharts(averagesList[siteIndex], averagesList);
 
   }
 
@@ -379,19 +353,20 @@ class ProgramProfileResults extends React.Component {
 
 
    // Set Line Graph data
-   setLineGraphData = (teachers, type) => {
+   setLineGraphData = (sites, type) => {
 
      var trends = this.state.trends;
 
      var tempDataSet = [];
      var lineColors = this.state.lineColors;
      var i = 0;
-     for(var teacherIndex in teachers)
+     for(var siteIndex in sites)
      {
-       var teacher = teachers[teacherIndex];
-       var fullName = teacher.firstName + " " + teacher.lastName;
+       var site = sites[siteIndex];
 
-       var chosenData = trends[teacher.id][type];
+       this.setState({test3: site});
+
+       var chosenData = trends[siteIndex][type];
 
        // Round off all the numbers
         chosenData = chosenData.map(function(each_element){
@@ -404,7 +379,7 @@ class ProgramProfileResults extends React.Component {
          lineColors[i] = this.randomRgbColor();
        }
        var tempData = {
-         label: fullName,
+         label: this.state.siteNames[siteIndex].name,
          data: chosenData,
          borderColor: lineColors[i],
        };
@@ -509,7 +484,7 @@ class ProgramProfileResults extends React.Component {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <h2>Site Profile</h2>
+                    <h2>Program Profile</h2>
                 </Grid>
 
                 {/*

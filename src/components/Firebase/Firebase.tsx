@@ -5195,8 +5195,6 @@ class Firebase {
 
    /**
     * Listening to Children cloud function
-    * gets counts of each listening behavior type
-    * @param {string} sessionId
     */
    fetchSiteProfileAverages = async (
      data: {
@@ -5208,6 +5206,8 @@ class Firebase {
    ): Promise<void> => {
 
      console.log("Running Firebase.");
+
+     console.log("Teacher Ids : " + data.teacherIds);
 
      const fetchSiteProfileAverages = this.functions.httpsCallable(
        'fetchSiteProfileAverages'
@@ -5233,12 +5233,58 @@ class Firebase {
        programId: string,
      }
    ): Promise<void> => {
+
+     // Initialize results object that'll hold all the sites and their teachersIdList
+     var results = {};
+
       console.log("PROGRAM ID : " + data.programId);
 
       var programInfo = await this.getUserProgramOrSite({programId: data.programId});
       console.log("PROGRAM NAME : " + programInfo.name);
 
+      // Go through all this sites in this program to get their coaches
+      for(var siteIndex in programInfo.sites)
+      {
+        var siteId = programInfo.sites[siteIndex];
+        var site = await this.getUserProgramOrSite({siteId: siteId});
 
+        var siteTeachers = [];
+
+        // Initialize this site in the results
+        results[siteId] = [];
+
+        // Go through all the coaches in this site to get the teachers
+        var siteCoaches = site.coaches;
+        for(var coachIndex in siteCoaches)
+        {
+          var coachId = siteCoaches[coachIndex];
+          // var coach = await this.getUserProgramOrSite({userId: coachId});
+
+          console.log("Coach in this site ID : " + coachId);
+          //console.log("Coach in this site name : " + coach.firstName);
+
+          // Get this coaches teachers and add it to the list
+           var teachers = await this.getTeacherListFromUser({userId: coachId});
+
+           console.log("Teachers for this coach " + teachers);
+
+          // If this site doesn't have any data in results object, add the whole array
+          results[siteId] = results[siteId].concat(teachers);
+
+        }
+
+
+
+
+        console.log("Site in program : " + site.name);
+
+        //results[site.id] = siteTeachers;
+      }
+
+      return results;
+
+
+      /*
        if(this.auth.currentUser) {
          return this.db
            .collection('users')
@@ -5260,9 +5306,12 @@ class Firebase {
                    {
                      var siteId = coachData.sites[siteIndex];
 
+                     console.log("Site ID : " + siteId);
+
                      // If this site isn't part of the program, just move on
                      if(!programInfo.sites.includes(siteId))
                      {
+                       console.log("Skipped");
                        continue;
                      }
 
@@ -5278,6 +5327,11 @@ class Firebase {
 
                    }
 
+                   console.log("Coach : " + coachData.firstName + " has teacher : " + teachers);
+                 }
+                 else
+                 {
+                   console.log("Coach : " + coachData.firstName + " doesn't have any teachers");
                  }
 
              });
@@ -5285,6 +5339,8 @@ class Firebase {
              return coachesArray;
            });
        }
+       */
+
      }
 
 

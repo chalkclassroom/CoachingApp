@@ -3,15 +3,14 @@ import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
-
-interface Props {
-  math1: number,
-  math2: number,
-  math3: number,
-  math4: number,
-  totalVisits: number,
-  completed?(): void,
-  title?: boolean
+// Set array so we can edit the label on top of the Chart based on type
+const chartTitleArr = {
+  bookReadingAverage: "Book Reading: Total Instruction",
+  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
+  languageConnectionsAverage: "Book Reading: Makes Connections",
+  childrenSupportAverage: "Book Reading: Support Children's Speaking",
+  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
+  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
 }
 
 /**
@@ -23,19 +22,59 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
+    this.state = {
+      siteNames: [],
+      chartTitle: "",
+      barColors: []
+    }
   }
 
-  static propTypes = {
-    math1: PropTypes.number.isRequired,
-    math2: PropTypes.number.isRequired,
-    math3: PropTypes.number.isRequired,
-    math4: PropTypes.number.isRequired,
-    totalVisits: PropTypes.number.isRequired,
-    completed: PropTypes.func,
-    title: PropTypes.bool
-  };
+  // What to do when the data is recieved
+  componentDidUpdate(nextProps) {
+    const { data, type } = this.props
+
+    if (nextProps.data !== data || nextProps.type !== type) {
+
+      var siteNames = [];
+      var graphData = [];
+      var barColors = this.state.barColors;
+      for(var siteId in data)
+      {
+
+        // Create Names to display as labels
+        var site = data[siteId];
+        siteNames.push(this.props.labels[siteId].name);
+
+
+        // Create bar graph data
+        var tempAvg = site[type];
+
+        // Round the number just in case there are trailing decimals (There were for some reason)
+        tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+        graphData.push(tempAvg);
+
+        // Set random bar colors
+        if(barColors.length < graphData.length)
+        {
+          barColors.push(this.randomRgbColor());
+        }
+      }
+
+      this.setState({siteNames: siteNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors });
+    }
+  }
+
+
+  randomRgbColor() {
+    return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
+  }
+
+  randomInteger(max) {
+      return Math.floor(Math.random()*(max + 1));
+  }
+
 
   /**
    * render function
@@ -44,12 +83,14 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const isCompleted = this.props.completed;
     const childBehaviorsData = {
-      labels: this.props.labels,
+      labels: this.state.siteNames,
       datasets: [
         {
-          data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
-          backgroundColor: [Constants.Colors.MI, Constants.Colors.MI, Constants.Colors.MI, Constants.Colors.MI],
-          hoverBackgroundColor: [Constants.Colors.MI, Constants.Colors.MI, Constants.Colors.MI, Constants.Colors.MI]
+          //data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
+          data: this.state.graphData,
+          backgroundColor: this.state.barColors,
+          hoverBackgroundColor: this.state.barColors,
+
         }
       ]
     };
@@ -68,15 +109,19 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: this.props.totalVisits,
-                  stepSize: 1,
+                  max: 100,
+                  stepSize: 10,
                   fixedStepSize: 1,
                   fontSize: 16,
-                  fontColor: 'black'
+                  fontColor: 'black',
+                  // Include a percent sign in the ticks
+                  callback: function(value, index, values) {
+                      return value + '%';
+                  }
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: 'Number of Times Observed',
+                  labelString: 'Average % of 1-Minute Intervals',
                   fontSize: 16,
                   fontColor: 'black'
                 }
@@ -96,8 +141,8 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
           },
           title: {
             display: this.props.title,
-            text: "Child Summary",
-            fontSize: 20,
+            text: this.state.chartTitle,
+            fontSize: 14,
             fontColor: 'black',
             fontFamily: 'Arimo',
             fontStyle: "bold"
@@ -107,12 +152,12 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
               display: 'auto',
               color: 'white',
               font: {
-                size: 16,
+                size: 14,
                 weight: 'bold'
               },
               formatter: function(value: number): number | null {
                 if (value > 0) {
-                  return value;
+                  return value + "%";
                 } else {
                   return null;
                 }
