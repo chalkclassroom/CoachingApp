@@ -103,13 +103,12 @@ function ToolIcons(props: Props): React.ReactElement {
             pathname: `/${tool}Training`,
           });
         }
-      } else {
-        setResultsTrainingModal(true);
-      }
-      if (type === 'Practice') {
+      } else if (type === 'Practice') {
         if (tool === 'LiteracyInstruction') {
+          localStorage.setItem('type', 'practice');
           setLiteracyTrainingModal(true)
         } else {
+          localStorage.setItem('type', 'practice');
           history.push({
             pathname: `/${tool}Training`,
           });
@@ -365,7 +364,7 @@ function ToolIcons(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         </Grid>
-        </>)};
+        </>)}
       </Grid>
       {selected === 'LiteracyInstruction' ? (
         <LiteracyModal
