@@ -932,11 +932,11 @@ class MyProgramsPage extends React.Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <FirebaseContext.Consumer>
+        {/* <FirebaseContext.Consumer>
           {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
+        </FirebaseContext.Consumer> */}
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
-          <h2 className={classes.title}>My Programs</h2>
+          {/* <h2 className={classes.title}>My Programs</h2> */}
           <Popover
             id={id}
             open={open}

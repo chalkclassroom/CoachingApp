@@ -275,7 +275,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                  * 'My Programs' Card
                  */
                 }
-                <Card
+                {/* <Card
                   className={classes.card}
                   onClick={(): void =>
                     this.props.history.push({
@@ -310,7 +310,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                 direction="row"
                 justify="space-around"
                 className={classes.buttonGrid}
-              >
+              > */}
 
                 {
                 /*
@@ -327,7 +327,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/LeadersUsers")}
                     >
                       <Grid item>
-                        <img src={UsersIcon} style={{ fill: "#094492", width: '7vw', height: '10vh' }} />
+                        <img src={UsersIcon} style={{ fill: "#094492", width: '7vw', paddingBottom:'1vh', paddingTop:'1vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -354,7 +354,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/Reports")}
                     >
                       <Grid item>
-                        <img src={ReportsIcon} style={{ fill: "#094492", width: '7vw', height: '10vh' }} />
+                        <img src={ReportsIcon} style={{ fill: "#094492", width: '7vw', paddingBottom:'1vh', paddingTop:'1vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -384,7 +384,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                   style={{width: '100%'}}
                 >
 
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Card
                       className={classes.card}
                       onClick={(): void =>
@@ -413,7 +413,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Card
                       className={classes.card}
                       onClick={(): void => this.showTeacherModal("Observe")}
@@ -438,7 +438,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                     </Card>
                   </Grid>
 
-                  <Grid item xs={4}>
+                  {/* <Grid item xs={4}>
                     <Card
                       className={classes.card}
                       onClick={(): void =>
@@ -466,15 +466,15 @@ class LeadersDashboard extends React.Component<Props, State> {
                         </Grid>
                       </CardContent>
                     </Card>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item xs={6}>
                     <Card
                       className={classes.card}
                       onClick={(): void =>
                         this.props.history.push({
-                          pathname: "/LeadingUsers",
-                          state: { type: "LeadingUsers" }
+                          pathname: "/LeadersUsers",
+                          state: { type: "LeadersUsers" }
                         })
                       }
                     >
@@ -486,7 +486,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={UsersIcon} style={{width: '12vw'}} />
+                            <img src={UsersIcon} style={{width: '12vw', paddingBottom:'2vh', paddingTop:'2vh'}} />
                           </Grid>
                           <Grid item>
                             <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -513,7 +513,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                           }
                         >
                           <Grid item>
-                            <img src={ReportsIcon} style={{width: '12vw'}} />
+                            <img src={ReportsIcon} style={{width: '12vw', paddingBottom:'2vh', paddingTop:'2vh'}} />
                           </Grid>
                           <Grid item>
                             <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
