@@ -86,7 +86,7 @@ import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
 import MyProgramsPage from './views/protected/LeadersViews/MyProgramsPage'
 import NewSitePage from './views/protected/LeadersViews/NewSitePage'
 import ReportsPage from './views/protected/ReportsViews/ReportsPage'
-import ChalkPracticePage from './views/protected/ChalkPracticeViews/chalkPracticePage'
+import ChalkPracticePage from './views/protected/ChalkPracticeViews/ChalkPracticePage'
 
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
