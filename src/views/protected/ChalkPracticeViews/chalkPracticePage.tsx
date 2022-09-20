@@ -10,9 +10,11 @@ import * as Types from '../../../constants/Types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
 import Firebase from '../../../components/Firebase'
-import { Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import TrainingIcon from "@material-ui/icons/School";
 import Typography from "@material-ui/core/Typography";
+import Practices from "./Practices";
+import ToolIcons from "../../../components/ToolIcons";
 
 
 const styles: object = {
@@ -158,8 +160,18 @@ class ChalkPracticePage extends React.Component<Props, State> {
                 </ul>
             </nav>
         <div style={{display: "flex"}}>
-          <Switch location={location} key={location.pathname}>
-          </Switch>
+          {/* <Switch location={location} key={location.pathname}>
+            <Route path="/LeadersClassroomPractices" component={Practices} />
+          </Switch> */}
+          <Grid container>
+            <Grid container>
+              {/* <Grid container justify={'center'} direction={'column'} alignItems={'center'} style={{width:"75%", height:"100%"}}> */}
+                <Grid item xs={12} style={{paddingTop:"1em"}}>
+                  <ToolIcons type={'Practice'} training={true} history={this.props.history} practice={true}/>
+                  </Grid>
+                {/* </Grid> */}
+            </Grid>
+        </Grid>
         </div>
       </div>
     );

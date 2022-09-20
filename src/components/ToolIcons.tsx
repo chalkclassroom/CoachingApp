@@ -40,6 +40,7 @@ interface Props {
   history: H.History,
   isTeacher: boolean,
   trainingLiteracy: Types.TrainingLiteracy
+  practice?: boolean
 }
 
 /**
@@ -48,7 +49,7 @@ interface Props {
  * @return {ReactElement}
  */
 function ToolIcons(props: Props): React.ReactElement {
-  const { history, type, training, unlocked, trainingLiteracy } = props;
+  const { history, type, training, unlocked, trainingLiteracy, practice } = props;
   const [selected, setSelected] = useState<Types.Selected>('none');
   const [resultsTrainingModal, setResultsTrainingModal] = useState(false);
   const [observeModal, setObserveModal] = useState(false);
@@ -105,6 +106,17 @@ function ToolIcons(props: Props): React.ReactElement {
       } else {
         setResultsTrainingModal(true);
       }
+      if (type === 'Practice') {
+        if (tool === 'LiteracyInstruction') {
+          setLiteracyTrainingModal(true)
+        } else {
+          history.push({
+            pathname: `/${tool}Training`,
+          });
+        }
+      } else {
+        setResultsTrainingModal(true);
+      }
     } else {
       if (unlocked) {
         if (type === 'Observe') {
@@ -121,6 +133,123 @@ function ToolIcons(props: Props): React.ReactElement {
   return (
     <div style={{width: '100%', height: '100%'}}>
       <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%', height: '100%', 'flex-wrap': 'nowrap'}}>
+      {practice ? (<>
+      <Grid item style={{width: '100%'}}>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
+            <Grid item>
+              <Magic8Card
+                title="TransitionTime"
+                icon={TransitionTimeIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <Magic8Card
+                title="ClassroomClimate"
+                icon={ClassroomClimateIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <Magic8Card
+                title="MathInstruction"
+                icon={MathIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item style={{width: '100%'}}>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
+            <Grid item>
+              <Magic8Card
+                title="LevelOfInstruction"
+                icon={InstructionIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <Magic8Card
+                title="StudentEngagement"
+                icon={EngagementIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <Magic8Card
+                title="ListeningToChildren"
+                icon={ListeningIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item style={{width: '100%'}}>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
+            <Grid item>
+              <Magic8Card
+                title="SequentialActivities"
+                icon={SequentialIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <LiteracyIconCard
+                title="LiteracyInstruction"
+                icon={LiteracyIconImage}
+                onClick={handleClick}
+                foundational={true}
+                writing={true}
+                reading={true}
+                language={true}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+            <Grid item>
+              <Magic8Card
+                title="AssociativeCooperativeInteractions"
+                icon={AssocCoopIconImage}
+                onClick={handleClick}
+                unlocked={true}
+                training={training}
+                isTeacher={props.isTeacher}
+                type={type}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </>) : (<>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
             <Grid item>
@@ -236,6 +365,7 @@ function ToolIcons(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         </Grid>
+        </>)};
       </Grid>
       {selected === 'LiteracyInstruction' ? (
         <LiteracyModal
@@ -311,6 +441,7 @@ function ToolIcons(props: Props): React.ReactElement {
     </div>
   );
 }
+
 
 ToolIcons.propTypes = {
   isTeacher: PropTypes.bool,
