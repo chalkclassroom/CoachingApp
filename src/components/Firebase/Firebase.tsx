@@ -4026,7 +4026,7 @@ class Firebase {
         .collection('sites')
         .get()
         .then((querySnapshot) => {
-          const sitesArray: Array<Types.Site> = []
+          let sitesArray: Array<Types.Site> = []
           querySnapshot.forEach((doc) => {
 
               sitesArray.push({
@@ -4038,8 +4038,12 @@ class Firebase {
 
           });
 
-          return sitesArray;
+          // Filter out cached items
+          return this.filterUserSiteProgramArray({dataList: sitesArray, dataType: "sites"}).then( (sites) => {
+            sitesArray = sites;
 
+            return sitesArray;
+          });
         })
         .catch((error: Error) =>
           console.error('Error retrieving list of site', error)
@@ -4056,7 +4060,7 @@ class Firebase {
         .collection('programs')
         .get()
         .then((querySnapshot) => {
-          const programsArray: Array<Types.Site> = []
+          let programsArray: Array<Types.Site> = []
           querySnapshot.forEach((doc) => {
 
               programsArray.push({
@@ -4067,7 +4071,12 @@ class Firebase {
 
           });
 
-          return programsArray;
+          // Filter out cached items
+          return this.filterUserSiteProgramArray({dataList: programsArray, dataType: "programs"}).then( (programs) => {
+            programsArray = programs;
+
+            return programsArray;
+          });
 
         })
         .catch((error: Error) =>
@@ -4174,11 +4183,12 @@ class Firebase {
       return this.db
       .collection('users')
       .where('role', '==', 'programLeader')
-      .get()
+      .get({ source: 'server' })
       .then((querySnapshot) => {
         const leadersArray: Array<Types.User> = []
         querySnapshot.forEach((doc) => {
-            console.log(doc.data());
+          console.log(doc.data());
+          console.log(doc);
 
 
             leadersArray.push({
@@ -4316,12 +4326,17 @@ class Firebase {
       return this.db
       .collection('users')
       .where('role', '==', 'siteLeader')
-      .get()
+      .get({ source: 'server' })
       .then((querySnapshot) => {
         const leadersArray: Array<Types.User> = []
         querySnapshot.forEach((doc) => {
             console.log(doc.data());
 
+
+            if (doc.metadata.fromCache) {
+                // Buyer beware, this could be stale...
+                console.log("CACHE!!!!!!!!!!! " + doc.metadata.fromCache);
+            }
 
             leadersArray.push({
               firstName: doc.data().firstName,
@@ -4348,11 +4363,12 @@ class Firebase {
        return this.db
        .collection('users')
        .where('role', '==', 'admin')
-       .get()
+       .get({ source: 'server' })
        .then((querySnapshot) => {
          let leadersArray: Array<Types.User> = []
          querySnapshot.forEach((doc) => {
-             console.log(doc.data());
+           console.log(doc.data());
+
 
              leadersArray.push({
                firstName: doc.data().firstName,
@@ -4364,27 +4380,33 @@ class Firebase {
              })
 
          });
+         // Filter out cached items
+         return this.filterUserSiteProgramArray({dataList: leadersArray, dataType: "users"}).then( (leaders) => {
+           leadersArray = leaders;
 
-         // Add program leaders
-         return this.getProgramLeaders().then((programLeaders) => {
-           leadersArray = leadersArray.concat(programLeaders);
+           // Add program leaders
+           return this.getProgramLeaders().then((programLeaders) => {
+             leadersArray = leadersArray.concat(programLeaders);
 
-           // Add site leaders
-           return this.getSiteLeaders().then((siteLeaders) => {
-             leadersArray = leadersArray.concat(siteLeaders);
+             // Add site leaders
+             return this.getSiteLeaders().then((siteLeaders) => {
+               leadersArray = leadersArray.concat(siteLeaders);
 
-             // Sort list by last name alphabetically
-             leadersArray = leadersArray.sort((a, b) => {
-                if (a.lastName < b.lastName) {
-                    return -1;
-                }
-                if (a.lastName > b.lastName) {
-                    return 1;
-                }
-                return 0;
-             });
+                 // Sort list by last name alphabetically
+                 leadersArray = leadersArray.sort((a, b) => {
+                    if (a.lastName < b.lastName) {
+                        return -1;
+                    }
+                    if (a.lastName > b.lastName) {
+                        return 1;
+                    }
+                    return 0;
+                 });
 
-             return leadersArray;
+                 return leadersArray;
+               });
+
+
            });
          });
 
@@ -4636,7 +4658,6 @@ class Firebase {
        docId = data.siteId;
        // Get the site's document
        documentToAddTo = this.db.collection('sites').doc(docId);
-       console.log("SITE ID : " + docId );
      }
 
      // If we're just adding to a program
@@ -5258,88 +5279,70 @@ class Firebase {
         for(var coachIndex in siteCoaches)
         {
           var coachId = siteCoaches[coachIndex];
-          // var coach = await this.getUserProgramOrSite({userId: coachId});
-
-          console.log("Coach in this site ID : " + coachId);
-          //console.log("Coach in this site name : " + coach.firstName);
 
           // Get this coaches teachers and add it to the list
            var teachers = await this.getTeacherListFromUser({userId: coachId});
-
-           console.log("Teachers for this coach " + teachers);
 
           // If this site doesn't have any data in results object, add the whole array
           results[siteId] = results[siteId].concat(teachers);
 
         }
 
-
-
-
-        console.log("Site in program : " + site.name);
-
-        //results[site.id] = siteTeachers;
       }
 
       return results;
 
 
-      /*
-       if(this.auth.currentUser) {
-         return this.db
-           .collection('users')
-           .where('programs', 'array-contains-any', [data.programId])
-           .get()
-           .then( async (querySnapshot) => {
-             let coachesArray = {};
+    }
 
-             querySnapshot.forEach( async (doc) => {
-                 var coachData = doc.data();
 
-                 // Make sure this user has teachers, if not, we don't need it.
-                 var teachers = await this.getTeacherListFromUser({userId: coachData.id});
 
-                 if(teachers.length > 0)
-                 {
-                   // Insert teachers into their site
-                   for(var siteIndex in coachData.sites)
-                   {
-                     var siteId = coachData.sites[siteIndex];
+   /**
+    * Removes any items from an array that is no longer in the firestore (We're having issues with this for some reason)
+    *
+    * @param dataList : the array of data to filter out
+    * @param dataType : the type of data (users, programs, or sites)
+    */
+   filterUserSiteProgramArray = async (
+     data: {
+       dataList: Array<Types.User>,
+       dataType: String
+     }
+   ): Promise<void> => {
 
-                     console.log("Site ID : " + siteId);
+     var results = [];
 
-                     // If this site isn't part of the program, just move on
-                     if(!programInfo.sites.includes(siteId))
-                     {
-                       console.log("Skipped");
-                       continue;
-                     }
+      for(var dataIndex in data.dataList)
+      {
+        // Get the id. The list is either a list of id's or a list of objects with ids
+        var dataId;
+        if(data.dataList[dataIndex].id)
+        {
+          dataId = data.dataList[dataIndex].id
+        }
+        else
+        {
+          dataId = data.dataList[dataIndex];
+        }
 
-                     // Check to see if the array exists yet
-                     if(coachesArray[siteId])
-                     {
-                       coachesArray[siteId].push(teachers);
-                     }
-                     else
-                     {
-                       coachesArray[siteId] = teachers
-                     }
+        // Fetch from firestore
+        var tempItem = await this.db.collection(data.dataType).doc(dataId).get()
+          .catch((error: Error) =>
+            console.error('Document doesnt exist', error)
+          )
 
-                   }
+        if(tempItem)
+        {
+          results.push(data.dataList[dataIndex]);
+        }
+        else
+        {
+          console.log("Removing cached item " + dataId + " from " + data.dataType);
+        }
 
-                   console.log("Coach : " + coachData.firstName + " has teacher : " + teachers);
-                 }
-                 else
-                 {
-                   console.log("Coach : " + coachData.firstName + " doesn't have any teachers");
-                 }
+      }
 
-             });
-
-             return coachesArray;
-           });
-       }
-       */
+      return results;
 
      }
 
