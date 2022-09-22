@@ -89,6 +89,8 @@ import ReportsPage from './views/protected/ReportsViews/ReportsPage'
 import ChalkPracticePage from './views/protected/ChalkPracticeViews/chalkPracticePage'
 import UsersPage from './views/protected/UsersViews/UsersPage'
 
+import CreateTable from './components/tempCustomFunction/CreateTable'
+
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
 
@@ -721,6 +723,7 @@ class App extends React.Component<Props, State> {
               exact={true}
               component={CoachingChalkCrosswalks}
             />
+<<<<<<< HEAD
 
             <PrivateRoute
                 auth={this.state.auth}
@@ -841,6 +844,14 @@ class App extends React.Component<Props, State> {
               }) : React.ReactElement=> <UsersPage {...props}/>}
             />
 
+=======
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CreateTable"
+              exact={true}
+              component={CreateTable}
+            />
+>>>>>>> d0a759a6ec0a998080808b7eff353a16b6748901
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>
