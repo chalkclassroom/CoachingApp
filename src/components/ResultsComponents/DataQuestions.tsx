@@ -13,6 +13,9 @@ import StarBorder from '@material-ui/icons/StarBorder'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { FirebaseContext } from '../Firebase'
+import TextField from '@material-ui/core/TextField'
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+
 
 const styles: object = {
     expansionPanel: {
@@ -53,7 +56,9 @@ interface Props {
 }
 
 interface State {
-    favouriteQuestions: array
+    favouriteQuestions: array,
+    questions: Array<string>,
+    addedQuestions: Array<string>,
 }
 
 /**
@@ -68,6 +73,8 @@ class DataQuestions extends React.Component<Props, State> {
         super(props)
         this.state = {
             user: {},
+            questions: [''],
+            addedQuestions: [],
         }
     }
 
@@ -103,6 +110,21 @@ class DataQuestions extends React.Component<Props, State> {
         await this.context.updateFavouriteQuestions(id)
         this.setState({ user: await this.context.getUserInformation() })
     }
+
+    handleAddQuestion = (): void => {
+        this.setState({
+          questions: [...this.state.questions, '']
+        })
+      }
+
+
+    handleChangeQuestions = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const newArray = [...this.state.questions];
+        newArray[number] = event.target.value;
+        this.setState({
+            questions: newArray,
+        });
+    }  
 
     /**
      * render function
@@ -214,6 +236,96 @@ class DataQuestions extends React.Component<Props, State> {
                                             </Grid>
                                         </Grid>
                                     ))}
+                                    {item.title === "FAQ" ? (<>
+                                    {this.state.questions.map((value, index) => {
+                                    return (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            alignItems="center"
+                                            key={index}
+                                            style={{marginTop:"0.5em", marginBottom:'0.5em'}}
+                                        >
+                                        <Grid item xs={10}>
+                                        <TextField
+                                            id={"questions" + index.toString()}
+                                            name={"questions" + index.toString()}
+                                            type="text"
+                                            placeholder={
+                                            !this.state.addedQuestions[0] && index===0
+                                                ? "Type your questions here and click the star to save!"
+                                                : "Type your question here!"
+                                            }
+                                            value={value}
+                                            onChange={this.handleChangeQuestions(index)}
+                                            margin="none"
+                                            variant="standard"
+                                            fullWidth
+                                            multiline
+                                            InputProps={{
+                                            disableUnderline: true,
+                                            // readOnly: this.props.readOnly,
+                                            style: {fontFamily: "Arimo", width: '98%', marginLeft: '2.4em'}
+                                            }}
+                                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                            // className={classes.textField}
+                                        />
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                                <Button
+                                                    onClick={this.props.handleAddToPlan.bind(
+                                                        this,
+                                                        item.name,
+                                                        index,
+                                                        value,
+                                                        this.props.sessionId,
+                                                        this.props.teacherId,
+                                                        this.props.magic8
+                                                    )}
+                                                >
+                                                    <AddIcon
+                                                        style={{
+                                                            fill: this.props
+                                                                .color,
+                                                        }}
+                                                    />
+                                                </Button>
+                                            </Grid>
+                                            <Grid item xs={1}>
+                                                <Button
+                                                    onClick={(): void => {
+                                                        this.toggleQuestion(index) //id
+                                                    }}
+                                                >
+                                                    {this.state.user?.favouriteQuestions?.includes(
+                                                        index //id
+                                                    ) ? (
+                                                        <Star
+                                                            style={{
+                                                                fill: this.props
+                                                                    .color,
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <StarBorder
+                                                            style={{
+                                                                fill: this.props
+                                                                    .color,
+                                                            }}
+                                                        />
+                                                    )}
+                                                </Button>
+                                            </Grid>
+                                    </Grid>
+                                    )})}
+                                    <Grid item>
+                                    <Grid container direction="row" justify="center">
+                                        <Button onClick={this.handleAddQuestion}>
+                                        <AddCircleIcon style={{fill: this.props.color}} />
+                                        </Button>
+                                    </Grid>
+                                    </Grid>
+                                    </>) : (<></>)}
                                 </Grid>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
