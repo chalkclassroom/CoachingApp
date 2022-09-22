@@ -308,7 +308,7 @@ class Firebase {
   }
 
   userIsAdmin = async () => {
-    let userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
+    const userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
     return userDocs.docs[0].get('role') === 'admin'
   }
 

@@ -2,6 +2,9 @@ import React, {FunctionComponent, useContext, useEffect, useState} from 'react';
 import {generateActionPlanXlsx} from "../../services/xlsxGenerator";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import moment from "moment";
 import Firebase, { FirebaseContext } from '../Firebase';
 import * as xlsx from 'xlsx'
 import {Select, MenuItem, FormControl, InputLabel, FormControlLabel, Typography} from "@material-ui/core";
@@ -39,6 +42,8 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
   const {classes, setLoading} = props
   const [coachId, setCoachId] = useState(ALL_COACH_VALUE)
   const [coachList, setCoachList] = useState<Coach[]>([])
+  const [from, setFrom] = useState(moment().add(-7, 'days'))
+  const [to, setTo] = useState(moment())
   const firebase = useContext(FirebaseContext)
 
   useEffect( () => {
@@ -49,7 +54,7 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
     }
   },[])
 
-  const handleExport = async (id: string) => {
+  const handleExport = async (id: string, from: string, to: string,) => {
     setLoading(true)
     let rows = await firebase.getActionPlansForExport(id !== ALL_COACH_VALUE ? id : undefined)
     let wb = generateActionPlanXlsx(rows)
@@ -68,8 +73,8 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
         Export action plans created by one or all coaches
       </Typography>
       </Grid>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid item xs={3}>
-
       <FormControl fullWidth>
         <InputLabel id={'coach-select-label'}>Select a Coach</InputLabel>
         <Select
@@ -84,13 +89,49 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
       </FormControl>
       </Grid>
       <Grid item xs={3}>
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={() => handleExport(coachId)}>
-      Export
-    </Button>
+          <FormControl fullWidth>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              label="Start"
+              margin="normal"
+              id="date-picker-inline"
+              autoOk={true} // closes date picker on selection
+              value={from.toDate()}
+              onChange={(date: Date | null): void => {
+                setFrom(moment(date))
+              }}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={3}>
+          <FormControl fullWidth>
+            <KeyboardDatePicker
+              disableToolbar
+              label="End"
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              autoOk={true} // closes date picker on selection
+              value={to.toDate()}
+              onChange={(date: Date | null): void => {
+                setTo(moment(date))
+              }}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={3}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleExport(coachId, from.format('yyyy-MM-DD'),
+          to.format('yyyy-MM-DD'),)}>
+          Export
+        </Button>
       </Grid>
+       </MuiPickersUtilsProvider>
     </Grid>
   );
 };

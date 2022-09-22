@@ -118,7 +118,7 @@ const ObservationsExport: FunctionComponent<Props> = (props) => {
   const {setLoading, classes} = props;
 
   return (
-    <Grid container alignItems={'center'} spacing={2} className={classes.container}>
+    <Grid container direction={'column'} spacing={2} className={classes.container}>
       <Grid item xs={12}>
         <Typography>
           Configure your export by selecting the tables to
@@ -126,8 +126,8 @@ const ObservationsExport: FunctionComponent<Props> = (props) => {
         </Typography>
       </Grid>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid item xs={12}>
-          <StyledFormControl className={classes.formControl}>
+        <Grid item xs={3}>
+          <FormControl fullWidth>
             <InputLabel id="demo-mutiple-name-label">
               Tables
             </InputLabel>
@@ -183,10 +183,10 @@ const ObservationsExport: FunctionComponent<Props> = (props) => {
                 Literacy - Writing Teacher
               </MenuItem>
             </Select>
-          </StyledFormControl>
+          </FormControl>
         </Grid>
         <Grid item xs={3}>
-          <StyledFormControl>
+          <FormControl fullWidth>
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
@@ -200,10 +200,10 @@ const ObservationsExport: FunctionComponent<Props> = (props) => {
                 setFrom(moment(date))
               }}
             />
-          </StyledFormControl>
+          </FormControl>
         </Grid>
         <Grid item xs={3}>
-          <StyledFormControl>
+          <FormControl fullWidth>
             <KeyboardDatePicker
               disableToolbar
               label="End"
@@ -217,10 +217,10 @@ const ObservationsExport: FunctionComponent<Props> = (props) => {
                 setTo(moment(date))
               }}
             />
-          </StyledFormControl>
+          </FormControl>
         </Grid>
-        <Grid item xs={6} />
-        <Grid item xs={2}>
+        <Grid/>
+        <Grid item xs={3}>
           <FirebaseContext.Consumer>
             {firebase => (
               <Button
