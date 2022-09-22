@@ -250,9 +250,11 @@ class Firebase {
           this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
             console.log("Site " + site + "added to user " + data.id);
           }).catch(e => console.error("error =>", e));
-          this.assignUserToSiteOrProgram({siteId: site, userId: data.id}).then(() => {
-            console.log("User added to site " + site);
-          }).catch(e => console.error("error => Site : " + site, e));
+          if (data.role !== "coach") {
+            this.assignUserToSiteOrProgram({siteId: site, userId: data.id}).then(() => {
+              console.log("User added to site " + site);
+            }).catch(e => console.error("error => Site : " + site, e));
+        }
         }
       }
     } catch (e) {
