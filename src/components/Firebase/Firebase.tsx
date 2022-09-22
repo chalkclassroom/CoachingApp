@@ -314,15 +314,32 @@ class Firebase {
     }
   }
 
-  // adds custom favorite questions
-  addFavoriteQuestion = async (question: string[]): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+  fetchCustomQuestions = async (magic8: string): Promise<Array<string> | void | undefined> => {
     if (this.auth.currentUser) {
       return this.db.collection('users').doc(this.auth.currentUser.uid).get()
       .then(user => {
         const favoriteQuestions = user.data().favoriteQuestions || []
-      const newFavoriteQuestions = favoriteQuestions.includes(question) ? favoriteQuestions.filter(
-        favoriteQuestions => favoriteQuestions !== question
-      ) : [question, ...favoriteQuestions]
+        const questionList: Array<string> = []
+          favoriteQuestions.forEach(question => {
+            if (question.includes(magic8 + ': ')) {
+              questionList.push(question.split(magic8 + ': ')[1])
+            }
+          })
+          console.log(questionList)
+          return questionList
+      })
+    }
+  }
+
+  // adds custom favorite questions
+  addFavoriteQuestion = async (question: string[], magic8: string): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+      const newFavoriteQuestions = favoriteQuestions.includes(magic8 + ': ' + question) ? favoriteQuestions.filter(
+        favoriteQuestions => favoriteQuestions !== magic8 + ': ' + question
+      ) : [magic8 + ': ' + question, ...favoriteQuestions]
       return this.db.collection('users').doc(this.auth.currentUser.uid).update({
         favoriteQuestions: newFavoriteQuestions,
       }).catch((error: Error) =>

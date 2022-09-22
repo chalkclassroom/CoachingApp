@@ -58,6 +58,7 @@ interface Props {
 interface State {
     favouriteQuestions: array,
     questions: Array<string>,
+    addedQuestions: Array<string>,
 }
 
 /**
@@ -73,6 +74,7 @@ class DataQuestions extends React.Component<Props, State> {
         this.state = {
             user: {},
             questions: [''],
+            addedQuestions: [''],
         }
     }
 
@@ -100,6 +102,7 @@ class DataQuestions extends React.Component<Props, State> {
     async componentDidMount(): void {
         this.setState({
             user: await this.context.getUserInformation(),
+            addedQuestions: await this.context.fetchCustomQuestions(this.props.magic8)
         })
     }
 
@@ -109,17 +112,16 @@ class DataQuestions extends React.Component<Props, State> {
         this.setState({ user: await this.context.getUserInformation() })
     }
 
-    async addQuestion(value) {
-        await this.context.addFavoriteQuestion(value)
-        this.setState({ user: await this.context.getUserInformation() })
-    }
-
-    handleAddQuestion = (): void => {
-        this.setState({
-          questions: [...this.state.questions, '']
+    async addQuestion(value, tool) {
+        if (value !== '') {
+        await this.context.addFavoriteQuestion(value, tool)
+        this.setState({ 
+            user: await this.context.getUserInformation(), 
+            addedQuestions: await this.context.fetchCustomQuestions(this.props.magic8),
+            questions: ['']
         })
-      }
-
+        }
+    }
 
     handleChangeQuestions = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
         const newArray = [...this.state.questions];
@@ -240,7 +242,7 @@ class DataQuestions extends React.Component<Props, State> {
                                         </Grid>
                                     ))}
                                     {item.title === "FAQ" ? (<>
-                                    {this.state.questions.map((value, index) => {
+                                    {this.state.addedQuestions[0] ? this.state.addedQuestions.map((value, index) => {
                                     return (
                                         <Grid
                                             container
@@ -254,24 +256,17 @@ class DataQuestions extends React.Component<Props, State> {
                                             id={"questions" + index.toString()}
                                             name={"questions" + index.toString()}
                                             type="text"
-                                            placeholder={
-                                            !this.state.questions[0] && index===0
-                                                ? "Type your questions here and click the star to save, or add them from the Questions tabs!"
-                                                : "Type your question here!"
-                                            }
                                             value={value}
-                                            onChange={this.handleChangeQuestions(index)}
                                             margin="none"
                                             variant="standard"
                                             fullWidth
                                             multiline
                                             InputProps={{
                                             disableUnderline: true,
-                                            // readOnly: this.props.readOnly,
+                                            readOnly: true,
                                             style: {fontFamily: "Arimo", width: '98%', marginLeft: '2.4em'}
                                             }}
                                             InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                                            // className={classes.textField}
                                         />
                                         </Grid>
                                         <Grid item xs={1}>
@@ -297,40 +292,63 @@ class DataQuestions extends React.Component<Props, State> {
                                             <Grid item xs={1}>
                                                 <Button
                                                     onClick={(): void => {
-                                                        this.addQuestion(value) //id
-                                                        console.log(item.name)
-                                                        console.log(index)
-                                                        console.log(value)
+                                                        this.addQuestion(value, this.props.magic8) //id
                                                     }}
                                                 >
-                                                    {this.state.user?.favouriteQuestions?.includes(
-                                                        index //id
-                                                    ) ? (
                                                         <Star
                                                             style={{
                                                                 fill: this.props
                                                                     .color,
                                                             }}
                                                         />
-                                                    ) : (
+                                                </Button>
+                                            </Grid>
+                                    </Grid>
+                                    )}): (<></>)}
+                                    {this.state.questions.map((value, index) => {
+                                    return (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            alignItems="center"
+                                            key={index}
+                                            style={{marginTop:"0.5em", marginBottom:'0.5em'}}
+                                        >
+                                        <Grid item xs={11}>
+                                        <TextField
+                                            id={"questions" + index.toString()}
+                                            name={"questions" + index.toString()}
+                                            type="text"
+                                            placeholder='Type your questions here and click the star to save, or add them from one of the category tabs!'
+                                            value={value}
+                                            onChange={this.handleChangeQuestions(index)}
+                                            margin="none"
+                                            variant="standard"
+                                            fullWidth
+                                            multiline
+                                            InputProps={{
+                                            disableUnderline: true,
+                                            style: {fontFamily: "Arimo", width: '98%', marginLeft: '2.4em'}
+                                            }}
+                                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                        />
+                                        </Grid>
+                                            <Grid item xs={1}>
+                                                <Button
+                                                    onClick={(): void => {
+                                                        this.addQuestion(value, this.props.magic8)
+                                                    }}
+                                                >
                                                         <StarBorder
                                                             style={{
                                                                 fill: this.props
                                                                     .color,
                                                             }}
                                                         />
-                                                    )}
                                                 </Button>
                                             </Grid>
                                     </Grid>
                                     )})}
-                                    <Grid item>
-                                    <Grid container direction="row" justify="center">
-                                        <Button onClick={this.handleAddQuestion}>
-                                        <AddCircleIcon style={{fill: this.props.color}} />
-                                        </Button>
-                                    </Grid>
-                                    </Grid>
                                     </>) : (<></>)}
                                 </Grid>
                             </ExpansionPanelDetails>
