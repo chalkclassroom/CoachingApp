@@ -257,7 +257,6 @@ class ProgramProfileResults extends React.Component {
     // Go through each site
     for(var siteIndex in sites)
     {
-      console.log("Site Id in list : " + siteIndex);
 
       var teachers = sites[siteIndex];
 
@@ -279,7 +278,7 @@ class ProgramProfileResults extends React.Component {
 
     this.setState({BQData: averagesList});
     this.setState({siteNames: siteNames});
-    this.calculateResultsForCharts(averagesList[siteIndex], averagesList);
+    this.calculateResultsForCharts(averagesList, averagesList);
 
   }
 
@@ -363,8 +362,7 @@ class ProgramProfileResults extends React.Component {
      for(var siteIndex in sites)
      {
        var site = sites[siteIndex];
-
-       this.setState({test3: site});
+       var siteName = site.name
 
        var chosenData = trends[siteIndex][type];
 
@@ -379,7 +377,7 @@ class ProgramProfileResults extends React.Component {
          lineColors[i] = this.randomRgbColor();
        }
        var tempData = {
-         label: this.state.siteNames[siteIndex].name,
+         label: siteName,
          data: chosenData,
          borderColor: lineColors[i],
        };
@@ -387,6 +385,8 @@ class ProgramProfileResults extends React.Component {
        tempDataSet.push(tempData);
        i++;
      }
+
+     this.setState({testtempDataSet: tempDataSet});
 
      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
      const lineData = {
@@ -449,7 +449,7 @@ class ProgramProfileResults extends React.Component {
   handleRadioChange = (event: SelectChangeEvent) => {
       this.setState({radioValue: event.target.value});
 
-      this.setLineGraphData(this.state.teacherInfo, event.target.value);
+      this.setLineGraphData(this.state.siteNames, event.target.value);
   };
 
   // When any of the date dropdowns are changed
@@ -491,7 +491,7 @@ class ProgramProfileResults extends React.Component {
                   Profile information section
                 */}
                 <Grid container item xs={12} style={startColumn}>
-                  <Grid style={startRow}>Site: {this.props.selectedSiteName}</Grid>
+                  <Grid style={startRow}>Program: {this.props.selectedProgramName}</Grid>
                   <Grid style={startRow}>CHALK Practice: {practicesArr[this.props.selectedPractices]}</Grid>
                   <Grid style={startRow}>Report Period: {this.props.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})} - {this.props.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})}</Grid>
                   <Grid style={startRow}>Generated on: {this.state.reportDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric", timeZone: 'UTC'})}</Grid>
