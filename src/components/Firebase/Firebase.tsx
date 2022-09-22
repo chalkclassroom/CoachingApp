@@ -314,6 +314,27 @@ class Firebase {
     }
   }
 
+  // adds custom favorite questions
+  addFavoriteQuestion = async (question: string[]): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+      const newFavoriteQuestions = favoriteQuestions.includes(question) ? favoriteQuestions.filter(
+        favoriteQuestions => favoriteQuestions !== question
+      ) : [question, ...favoriteQuestions]
+      return this.db.collection('users').doc(this.auth.currentUser.uid).update({
+        favoriteQuestions: newFavoriteQuestions,
+      }).catch((error: Error) =>
+      console.error('Error updating favorite questions list: ', error)
+    )
+      }).catch((error: Error) =>
+      console.error('Error getting favorite questions list: ', error)
+    )
+    }
+  }
+
+  // adds favorite questions from constants
   updateFavouriteQuestions = async (
     questionId: string[]
   ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {

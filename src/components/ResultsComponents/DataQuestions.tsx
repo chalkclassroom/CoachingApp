@@ -58,7 +58,6 @@ interface Props {
 interface State {
     favouriteQuestions: array,
     questions: Array<string>,
-    addedQuestions: Array<string>,
 }
 
 /**
@@ -74,7 +73,6 @@ class DataQuestions extends React.Component<Props, State> {
         this.state = {
             user: {},
             questions: [''],
-            addedQuestions: [],
         }
     }
 
@@ -108,6 +106,11 @@ class DataQuestions extends React.Component<Props, State> {
     // eslint-disable-next-line require-jsdoc
     async toggleQuestion(id) {
         await this.context.updateFavouriteQuestions(id)
+        this.setState({ user: await this.context.getUserInformation() })
+    }
+
+    async addQuestion(value) {
+        await this.context.addFavoriteQuestion(value)
         this.setState({ user: await this.context.getUserInformation() })
     }
 
@@ -252,8 +255,8 @@ class DataQuestions extends React.Component<Props, State> {
                                             name={"questions" + index.toString()}
                                             type="text"
                                             placeholder={
-                                            !this.state.addedQuestions[0] && index===0
-                                                ? "Type your questions here and click the star to save!"
+                                            !this.state.questions[0] && index===0
+                                                ? "Type your questions here and click the star to save, or add them from the Questions tabs!"
                                                 : "Type your question here!"
                                             }
                                             value={value}
@@ -294,7 +297,10 @@ class DataQuestions extends React.Component<Props, State> {
                                             <Grid item xs={1}>
                                                 <Button
                                                     onClick={(): void => {
-                                                        this.toggleQuestion(index) //id
+                                                        this.addQuestion(value) //id
+                                                        console.log(item.name)
+                                                        console.log(index)
+                                                        console.log(value)
                                                     }}
                                                 >
                                                     {this.state.user?.favouriteQuestions?.includes(
