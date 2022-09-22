@@ -24,6 +24,13 @@ type Coach = {
   id: string
 }
 
+/**
+ *
+ * @param from
+ * @param to
+ * @param setLoading
+ */
+
 const getCoaches = async (firebase:Firebase):Promise<Coach[]> => {
   const coaches = await firebase.getCoaches()
   return coaches.map(coach => {
@@ -52,7 +59,7 @@ const ConferencePlanExport: FunctionComponent<Props> = (props) => {
     }
   },[])
 
-  const handleExport = async (id: string, from: string, to: string,) => {
+  const handleExport = async (id: string, from: string, to: string, setLoading: Function,) => {
     setLoading(true)
     const rows = await firebase.getConferencePlansForExport(id !== ALL_COACH_VALUE ? id : undefined)
     const wb = generateConferencePlanXlsx(rows)
@@ -125,7 +132,7 @@ const ConferencePlanExport: FunctionComponent<Props> = (props) => {
           variant="contained"
           color="primary"
           onClick={() => handleExport(coachId, from.format('yyyy-MM-DD'),
-          to.format('yyyy-MM-DD'),)}>
+          to.format('yyyy-MM-DD'), setLoading,)}>
           Export
         </Button>
       </Grid>

@@ -125,14 +125,6 @@ const MenuProps = {
   },
 }
 
-
-const StyledFormControl = withStyles(() => ({
-  root: {
-    marginBottom: '1.3rem',
-  },
-}))(FormControl)
-
-
 const ObservationsExport: FunctionComponent<Props> = (props) => {
   const [selectedTables, setSelectedTables] = useState([])
   const [from, setFrom] = useState(moment().add(-7, 'days'))
