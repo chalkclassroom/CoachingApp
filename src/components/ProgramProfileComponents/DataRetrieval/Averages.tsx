@@ -48,9 +48,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
         results[siteIndex].line +=  row.line;
@@ -176,9 +176,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
         results[siteIndex].mathVocabulary += row.mathVocabulary;
@@ -249,9 +249,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
 
         // Add to total # of intervals
@@ -309,9 +309,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
         switch (row.point) {
@@ -390,9 +390,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
         results[siteIndex].eyeLevel += row.listening1;
@@ -455,7 +455,7 @@ class AveragesData {
       {
 
         results[siteIndex] = {
-          name: tempName,
+          name: "",
           totalInstructions: 0,
           sequentialActivities: 0,
           drawImages: 0,
@@ -471,9 +471,9 @@ class AveragesData {
       // Get number of instances for each type of data
       for(var siteIndex in sites)
       {
-        for(var rowIndex in data)
+        for(var rowIndex in sites[siteIndex])
         {
-          var row = data[rowIndex];
+          var row = sites[siteIndex][rowIndex];
 
           // Add to behavior types
           results[siteIndex].sequentialActivities += row.sequentialActivities;
@@ -529,7 +529,7 @@ class AveragesData {
     for(var siteIndex in sites)
     {
 
-      results[sites[siteIndex].id] = {
+      results[siteIndex] = {
         name: "",
         totalIntervals: 0,
         totalInstructions: 0,
@@ -546,9 +546,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to total # of intervals
         //results[siteIndex].totalIntervals += row.total;
@@ -645,9 +645,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to total # of intervals
         //results[siteIndex].totalIntervals += row.total;
@@ -713,7 +713,7 @@ class AveragesData {
     for(var siteIndex in sites)
     {
 
-      results[sites[siteIndex].id] = {
+      results[siteIndex] = {
         name: "",
         totalIntervals: 0,
         totalInstructions: 0,
@@ -730,9 +730,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to total # of intervals
         //results[siteIndex].totalIntervals += row.total;
@@ -833,9 +833,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
 
         // Add to total # of intervals
@@ -931,9 +931,9 @@ class AveragesData {
     // Get number of instances for each type of data
     for(var siteIndex in sites)
     {
-      for(var rowIndex in data)
+      for(var rowIndex in sites[siteIndex])
       {
-        var row = data[rowIndex];
+        var row = sites[siteIndex][rowIndex];
 
         // Add to total # of intervals
         results[siteIndex].totalIntervals++;
