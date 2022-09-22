@@ -81,9 +81,9 @@ class ProgramProfile extends React.Component {
           checkboxes: [],
           checked: [],
           error: false,
-          selectedProgram: "",
+          selectedProgramName: "",
           view: 1,
-          startDate: new Date('2-14-2022'),
+          startDate: new Date(),
           endDate: new Date(),
           radioValue: "",
           error: {
@@ -124,6 +124,12 @@ class ProgramProfile extends React.Component {
   // When the 'Program' dropdown is changed
   handleChangeDropdown = (event: SelectChangeEvent) => {
     this.setState({[event.target.name]: event.target.value});
+
+    // Get selected program name
+    var allPrograms = this.state.allPrograms;
+    var selectedProgram = allPrograms.find(a => a.id === event.target.value);
+    this.setState({selectedProgramName: selectedProgram.name});
+
 
     var error = this.state.error;
     var errorMessages = this.state.errorMessages;
@@ -288,7 +294,7 @@ class ProgramProfile extends React.Component {
         <>
         {/* Control what we see based on page number */}
         {this.state.view === 1 ? (
-        <Grid container style={{paddingLeft: '30px'}}>
+        <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
                     <h2>Program Profile</h2>

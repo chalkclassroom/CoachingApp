@@ -4333,11 +4333,6 @@ class Firebase {
             console.log(doc.data());
 
 
-            if (doc.metadata.fromCache) {
-                // Buyer beware, this could be stale...
-                console.log("CACHE!!!!!!!!!!! " + doc.metadata.fromCache);
-            }
-
             leadersArray.push({
               firstName: doc.data().firstName,
               lastName: doc.data().lastName,
@@ -4666,7 +4661,6 @@ class Firebase {
        docId = data.programId;
        // Get the programs's document
        documentToAddTo = this.db.collection('programs').doc(docId);
-       console.log("PROGRAM ID : " + docId );
 
      }
 
@@ -5226,10 +5220,6 @@ class Firebase {
      }
    ): Promise<void> => {
 
-     console.log("Running Firebase.");
-
-     console.log("Teacher Ids : " + data.teacherIds);
-
      const fetchSiteProfileAverages = this.functions.httpsCallable(
        'fetchSiteProfileAverages'
      )
@@ -5258,10 +5248,7 @@ class Firebase {
      // Initialize results object that'll hold all the sites and their teachersIdList
      var results = {};
 
-      console.log("PROGRAM ID : " + data.programId);
-
       var programInfo = await this.getUserProgramOrSite({programId: data.programId});
-      console.log("PROGRAM NAME : " + programInfo.name);
 
       // Go through all this sites in this program to get their coaches
       for(var siteIndex in programInfo.sites)
