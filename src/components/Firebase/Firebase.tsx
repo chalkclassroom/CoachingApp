@@ -2753,6 +2753,10 @@ class Firebase {
       )
   }
 
+  setActionPlanStatus = async ( actionPlanId: string ): Promise<void> => {
+    await firebase.firestore().collection('actionPlans').doc(actionPlanId).update({status: 'Maintenance'})
+  }
+
   /**
    * adds action plan entry to database
    * @param {string} teacherId
@@ -2760,7 +2764,8 @@ class Firebase {
    */
   createActionPlan = async (
     teacherId: string,
-    magic8: string
+    magic8: string,
+    planNumber: number
   ): Promise<string | void> => {
     const data = Object.assign(
       {},
@@ -2773,6 +2778,8 @@ class Firebase {
         goal: '',
         goalTimeline: '',
         benefit: '',
+        planNum: (planNumber > 0) ? planNumber+1 : 1 ,
+        status: "Active"
       }
     )
     const actionPlansRef = firebase
@@ -2841,6 +2848,7 @@ class Firebase {
     teacherFirstName: string
     teacherLastName: string
     achieveBy: firebase.firestore.Timestamp
+    status: string
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db
@@ -2858,6 +2866,7 @@ class Firebase {
             modified: number
             teacherLastName: string
             achieveBy: firebase.firestore.Timestamp
+            status: string
           }> = []
           querySnapshot.forEach(doc => {
               // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
@@ -2872,6 +2881,7 @@ class Firebase {
                 achieveBy: doc.data().goalTimeline
                   ? doc.data().goalTimeline
                   : firebase.firestore.Timestamp.fromDate(new Date()),
+                status: doc.data().status
               })
             }
           )
