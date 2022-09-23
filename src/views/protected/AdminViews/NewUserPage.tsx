@@ -81,7 +81,10 @@ interface State {
     programsList: Array<string>,
     sitesList: Array<string>,
     program: string,
-    site: string
+    site: string,
+    coach: string,
+    showCoach: boolean,
+    coachList: Array<string>,
 }
 
 /**
@@ -106,7 +109,10 @@ class NewUserPage extends React.Component<Props, State>{
             programsList: [],
             sitesList: [],
             program: "",
-            site: ""
+            site: "",
+            coach: "",
+            showCoach: false,
+            coachList: [],
         }
     }
 
@@ -132,7 +138,8 @@ class NewUserPage extends React.Component<Props, State>{
             lastName,
             role,
             site,
-            program
+            program,
+            coach
         } = this.state;
 
         if (!email || email === ""){
@@ -162,6 +169,13 @@ class NewUserPage extends React.Component<Props, State>{
             }
         }
 
+        if (this.state.showCoach) {
+            if (!coach || coach === "") {
+                alert("Please select a coach")
+                return;
+            }
+        }
+
         if (this.state.showProgram) {
             if (!program || program === "") {
                 alert("Please select a program")
@@ -170,28 +184,62 @@ class NewUserPage extends React.Component<Props, State>{
         }
 
         const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
+
+        if (role === Role.TEACHER) {
+            const teacherInfo = {
+                firstName: firstName,
+                lastName: lastName,
+                school: site,
+                email: email,
+                notes: '',
+                phone: ''
+            }
+            await firebase.addTeacherToCoach(teacherInfo, coach)
             .then(() => {
-              this.setState({
-                createdPassword: randomString
-              });
-              return randomString
-            }).catch(e => {
                 this.setState({
-                  createdPassword: undefined
+                  createdPassword: randomString
                 });
-                console.log(e)
-                alert('Unable to create user. Please try again')
-            }).finally(() => {
-                this.setState({ // Hold off setting new state until success has been determined
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  role: Role.ANONYMOUS,
-                  program: '',
-                  site: ''
+                return randomString
+              }).catch(e => {
+                  this.setState({
+                    createdPassword: undefined
+                  });
+                  console.log(e)
+                  alert('Unable to create user. Please try again')
+              }).finally(() => {
+                  this.setState({ // Hold off setting new state until success has been determined
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    role: Role.ANONYMOUS,
+                    program: '',
+                    site: ''
+                  });
+              });
+        } else {  
+            await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
+                .then(() => {
+                this.setState({
+                    createdPassword: randomString
                 });
-            });
+                return randomString
+                }).catch(e => {
+                    this.setState({
+                    createdPassword: undefined
+                    });
+                    console.log(e)
+                    alert('Unable to create user. Please try again')
+                }).finally(() => {
+                    this.setState({ // Hold off setting new state until success has been determined
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    role: Role.ANONYMOUS,
+                    program: '',
+                    site: ''
+                    });
+                });
+        }
 
 
 
@@ -206,9 +254,19 @@ class NewUserPage extends React.Component<Props, State>{
                 this.setState({showProgram: true});
                 break;
             case 2:
-                this.setState({showSite: true})
+                this.setState({showSite: true});
+                break;
         }
     }
+
+    handleChange = param => async () => {
+        this.setState({showCoach: false})
+        if(this.state.role == "teacher") {
+            const temp = await this.context.fetchSiteCoaches(param);
+            this.setState({coachList: temp, showCoach: true});
+        }
+    }
+
 
     /**
      * @return React.ReactNode
@@ -240,7 +298,8 @@ class NewUserPage extends React.Component<Props, State>{
             lastName,
             role,
             program,
-            site
+            site,
+            coach
         } = this.state
         return <div className={classes.root}>
             <FirebaseContext.Consumer>
@@ -295,7 +354,7 @@ class NewUserPage extends React.Component<Props, State>{
                                 onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                                     this.setState({role: event.target.value})}
                             >
-                                <MenuItem onClick={this.renderDropdown(0)} value="teacher">Teacher</MenuItem>
+                                <MenuItem onClick={this.renderDropdown(2)} value="teacher">Teacher</MenuItem>
                                 <MenuItem onClick={this.renderDropdown(2)} value="coach">Coach</MenuItem>
                                 {lowLevelCreate ? <MenuItem onClick={this.renderDropdown(2)} value="siteLeader">Site Leader</MenuItem> : <></>}
                                 {highLevelCreate ? <MenuItem onClick={this.renderDropdown(1)} value="programLeader">Program Leader</MenuItem> : <></>}
@@ -304,7 +363,8 @@ class NewUserPage extends React.Component<Props, State>{
                         </StyledFormControl>
                     </Grid>
                     <Grid item xs={8} spacing={8} className={classes.container}>
-                    {this.state.showSite && (<StyledFormControl className={classes.formControl}>
+                    {this.state.showSite && (
+                            <StyledFormControl className={classes.formControl}>
                             <InputLabel id="role-select-label">Site</InputLabel>
                             <Select
                                 labelId="role-select-label"
@@ -314,12 +374,13 @@ class NewUserPage extends React.Component<Props, State>{
                                     this.setState({site: event.target.value})}
                             >
                                 {this.state.sitesList.map((site, index) => {
-                                return <MenuItem key={site.id} value={site.id}>
+                                return <MenuItem onClick={this.handleChange(site.id)} key={site.id} value={role == "teacher" ? site.name : site.id}>
                                     {site.name}
                                 </MenuItem>})}
                                 
                             </Select>
-                        </StyledFormControl>)}
+                        </StyledFormControl>
+                        )}
                     {this.state.showProgram && (<StyledFormControl className={classes.formControl}>
                         <InputLabel id="role-select-label">Program</InputLabel>
                         <Select
@@ -336,6 +397,23 @@ class NewUserPage extends React.Component<Props, State>{
                         </Select>
                     </StyledFormControl>)}
                     </Grid>
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+                        {this.state.showCoach && role == "teacher" && (<StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Coach</InputLabel>
+                            <Select
+                                labelId="role-select-label"
+                                id="role-select"
+                                value={coach}
+                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                    this.setState({coach: event.target.value})}
+                            >
+                                {this.state.coachList.map((coach, index) => {
+                                    return <MenuItem key={coach.id} value={coach.id}>
+                                        {coach.name}
+                                    </MenuItem>})}
+                            </Select>
+                        </StyledFormControl>)}
+                        </Grid>
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FormHelperText>A password will be automatically generated for this user</FormHelperText>
                     </Grid>

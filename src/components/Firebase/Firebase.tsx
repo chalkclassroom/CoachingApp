@@ -5,6 +5,7 @@ import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
 import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
+import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -489,6 +490,43 @@ class Firebase {
         return this.db
           .collection('users')
           .doc(this.auth.currentUser ? this.auth.currentUser.uid : '')
+          .collection('partners')
+          .doc(id)
+          .set({})
+          .then(() => id)
+          .catch((error: Error) => {
+            console.error(
+              "Error occurred when adding teacher to coach's partner list: ",
+              error
+            )
+            // return "";
+          })
+      })
+      .catch((error: Error) => {
+        console.error('Error occurred when adding teacher to dB: ', error)
+        // return "";
+      })
+  }
+
+  addTeacherToCoach = async (teacherInfo: TeacherInfo, coachId: string): Promise<string | void> => {
+    const {firstName, lastName, school, email, notes, phone} = teacherInfo
+    const newTeacherRef = this.db.collection('users').doc() // auto-generated iD
+    return newTeacherRef
+      .set({
+        firstName: firstName,
+        lastName: lastName,
+        school: school,
+        email: email,
+        notes: notes,
+        role: 'teacher',
+        id: newTeacherRef.id,
+        phone: phone,
+      })
+      .then(() => {
+        const id = newTeacherRef.id // get new iD
+        return this.db
+          .collection('users')
+          .doc(coachId)
           .collection('partners')
           .doc(id)
           .set({})
@@ -4019,6 +4057,35 @@ class Firebase {
   }
 
 
+  fetchSiteCoaches = async (siteId: string) => {
+    this.query = this.db.collection('users').where('role', '==', 'coach').where('sites', 'array-contains', siteId);
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async doc => {
+      return {
+        name: doc.data().lastName + ', ' + doc.data().firstName,
+        id: doc.id
+      };
+    }));   
+  }
+
+  fetchSitesForCoach = async (coachId: string) => {
+    const document = await this.db.collection('users').doc(coachId).get();
+    const sites = document.data().sites;
+
+    this.query = this.db.collection('sites');
+    const collection = await this.query.get()
+
+    return Promise.all(collection.docs.map(async doc => {
+      if (sites.includes(doc.id)) {
+        return {
+          name: doc.data().name,
+          id: doc.id
+        }
+      }
+    }))
+  }
+
   /*
    * Get a all sites
    */
@@ -4030,15 +4097,14 @@ class Firebase {
         .then((querySnapshot) => {
           let sitesArray: Array<Types.Site> = []
           querySnapshot.forEach((doc) => {
-            /*
+
               sitesArray.push({
                 name: doc.data().name,
                 id: doc.data().id,
                 siteLeaderId: doc.data().siteLeaderId,
                 coaches: doc.data().coaches
               })
-              */
-              sitesArray.push(doc.data());
+
           });
 
           // Filter out cached items
@@ -4318,75 +4384,6 @@ class Firebase {
 
      }
    }
-
-
-
-   /*
-    * Gets multiple users, programs, or sites from an array that contains all IDs
-    */
-    getMultipleUserProgramOrSite = async (
-      data: {
-        userIds: string,
-        programIds: string,
-        siteIds: string
-      }
-    ): Promise<void> => {
-      if(this.auth.currentUser) {
-
-        var programDoc, docType, docIds;
-
-        // If we're getting a user
-        if(data.userIds)
-        {
-          console.log("ITS A USER!");
-
-          docType = "User";
-          docIds = data.userIds;
-          programDoc = this.db.collection('users');
-        }
-        // If we're getting a program
-        if(data.programIds)
-        {
-          docType = "Program";
-          docIds = data.programIds;
-          programDoc = this.db.collection('programs');
-        }
-        // If we're getting a program
-        if(data.siteIds)
-        {
-          docType = "Site";
-          docIds = data.siteIds;
-          programDoc = this.db.collection('sites');
-        }
-
-        var results = [];
-
-        return programDoc.where("id", "in", docIds).get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            console.log("DOC ", doc.data());
-
-            if (doc.exists)
-            {
-              results.push(doc.data());
-            }
-            else
-            {
-              console.error(docType + " documents with ID " + docIds + " does not exist");
-            }
-
-          });
-
-          return results;
-
-        }).catch((e) => {
-          console.error("There was an error retrieving the document.", e);
-        });
-
-
-
-      }
-    }
-
 
 
   /*
@@ -5296,34 +5293,6 @@ class Firebase {
        'fetchSiteProfileAverages'
      )
      return fetchSiteProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
-       .then(
-         (result) => {
-           console.log("Result: " + result.data[0][0]);
-           return result.data[0];
-         }
-       )
-       .catch((error: Error) =>
-         console.error('Error occurred getting site profile averages : ', error)
-       )
-   }
-
-
-   /**
-    * Grabs data for Coach profile
-    *
-    */
-   fetchCoachProfileData = async (
-     data: {
-       startDate: string,
-       endDate: string,
-       teacherIds: string
-     }
-   ): Promise<void> => {
-
-     const fetchCoachProfile = this.functions.httpsCallable(
-       'fetchCoachProfile'
-     )
-     return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
        .then(
          (result) => {
            console.log("Result: " + result.data[0][0]);
