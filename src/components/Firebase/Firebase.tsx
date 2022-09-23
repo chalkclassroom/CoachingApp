@@ -4030,14 +4030,15 @@ class Firebase {
         .then((querySnapshot) => {
           let sitesArray: Array<Types.Site> = []
           querySnapshot.forEach((doc) => {
-
+            /*
               sitesArray.push({
                 name: doc.data().name,
                 id: doc.data().id,
                 siteLeaderId: doc.data().siteLeaderId,
                 coaches: doc.data().coaches
               })
-
+              */
+              sitesArray.push(doc.data());
           });
 
           // Filter out cached items
@@ -4317,6 +4318,75 @@ class Firebase {
 
      }
    }
+
+
+
+   /*
+    * Gets multiple users, programs, or sites from an array that contains all IDs
+    */
+    getMultipleUserProgramOrSite = async (
+      data: {
+        userIds: string,
+        programIds: string,
+        siteIds: string
+      }
+    ): Promise<void> => {
+      if(this.auth.currentUser) {
+
+        var programDoc, docType, docIds;
+
+        // If we're getting a user
+        if(data.userIds)
+        {
+          console.log("ITS A USER!");
+
+          docType = "User";
+          docIds = data.userIds;
+          programDoc = this.db.collection('users');
+        }
+        // If we're getting a program
+        if(data.programIds)
+        {
+          docType = "Program";
+          docIds = data.programIds;
+          programDoc = this.db.collection('programs');
+        }
+        // If we're getting a program
+        if(data.siteIds)
+        {
+          docType = "Site";
+          docIds = data.siteIds;
+          programDoc = this.db.collection('sites');
+        }
+
+        var results = [];
+
+        return programDoc.where("id", "in", docIds).get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log("DOC ", doc.data());
+
+            if (doc.exists)
+            {
+              results.push(doc.data());
+            }
+            else
+            {
+              console.error(docType + " documents with ID " + docIds + " does not exist");
+            }
+
+          });
+
+          return results;
+
+        }).catch((e) => {
+          console.error("There was an error retrieving the document.", e);
+        });
+
+
+
+      }
+    }
+
 
 
   /*
@@ -5226,6 +5296,34 @@ class Firebase {
        'fetchSiteProfileAverages'
      )
      return fetchSiteProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+       .then(
+         (result) => {
+           console.log("Result: " + result.data[0][0]);
+           return result.data[0];
+         }
+       )
+       .catch((error: Error) =>
+         console.error('Error occurred getting site profile averages : ', error)
+       )
+   }
+
+
+   /**
+    * Grabs data for Coach profile
+    *
+    */
+   fetchCoachProfileData = async (
+     data: {
+       startDate: string,
+       endDate: string,
+       teacherIds: string
+     }
+   ): Promise<void> => {
+
+     const fetchCoachProfile = this.functions.httpsCallable(
+       'fetchCoachProfile'
+     )
+     return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
        .then(
          (result) => {
            console.log("Result: " + result.data[0][0]);
