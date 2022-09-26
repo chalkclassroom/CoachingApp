@@ -327,7 +327,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/LeadersUsers")}
                     >
                       <Grid item>
-                        <img src={UsersIcon} style={{ fill: "#094492", width: '7vw', paddingBottom:'1vh', paddingTop:'1vh' }} />
+                        <img src={UsersIcon} style={{ fill: "#094492", width: '6vw', minWidth: '85px', height: '10vh', paddingBottom:'1vh', paddingTop:'1vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
@@ -354,7 +354,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                       onClick={(): void => this.props.history.push("/Reports")}
                     >
                       <Grid item>
-                        <img src={ReportsIcon} style={{ fill: "#094492", width: '7vw', paddingBottom:'1vh', paddingTop:'1vh' }} />
+                        <img src={ReportsIcon} style={{ fill: "#094492", width: '6vw', minWidth: '85px', height: '10vh', paddingBottom:'1vh', paddingTop:'1vh' }} />
                       </Grid>
                       <Grid item>
                         <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
