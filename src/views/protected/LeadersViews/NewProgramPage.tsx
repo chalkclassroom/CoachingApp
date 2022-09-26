@@ -44,7 +44,7 @@ const styles:object = {
         marginLeft: '1em',
     },
     select: {
-        width: '15em',
+        width: '19em',
     },
 }
 
