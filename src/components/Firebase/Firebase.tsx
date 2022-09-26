@@ -4197,6 +4197,18 @@ class Firebase {
     }))
   }
 
+  getTeacherBySiteName = async (siteName: string) => {
+    this.query = this.db.collection('users').where('school', '==', siteName);
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async doc => {
+      return{
+      name: doc.data().lastName + ', ' + doc.data().firstName,
+      id: doc.id
+      }
+    }))
+  }
+
   /*
    * Get a all sites
    */
