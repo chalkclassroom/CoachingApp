@@ -89,6 +89,8 @@ import ReportsPage from './views/protected/ReportsViews/ReportsPage'
 import ChalkPracticePage from './views/protected/ChalkPracticeViews/chalkPracticePage'
 import UsersPage from './views/protected/UsersViews/UsersPage'
 
+import CreateTable from './components/tempCustomFunction/CreateTable'
+
 ReactGA3.initialize('UA-154034655-1');
 ReactGA3.pageview(window.location.pathname + window.location.search);
 
@@ -839,6 +841,13 @@ class App extends React.Component<Props, State> {
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/CreateTable"
+              exact={true}
+              component={CreateTable}
             />
 
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />

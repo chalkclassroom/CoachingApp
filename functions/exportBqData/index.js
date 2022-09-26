@@ -64,6 +64,20 @@ const tables = {
   'literacyLanguageTeacher': 'literacyLanguageTeacher',
   'literacyReadingTeacher': 'literacyReadingTeacher',
   'literacyWritingTeacher': 'literacyWritingTeacher',
+  'ac_results': 'ac_results',
+  'climate_results': 'climate_results',
+  'engagement_results': 'engagement_results',
+  'level_results': 'level_results',
+  'listening_results': 'listening_results',
+  'math_results': 'math_results',
+  'sequential_results': 'sequential_results',
+  'transition_results': 'transition_results',
+  'literacyFoundationalChild_results': 'literacyFoundationalChild_results',
+  'literacyWritingChild_results': 'literacyWritingChild_results',
+  'literacyFoundationalTeacher_results': 'literacyFoundationalTeacher_results',
+  'literacyLanguageTeacher_results': 'literacyLanguageTeacher_results',
+  'literacyReadingTeacher_results': 'literacyReadingTeacher_results',
+  'literacyWritingTeacher_results': 'literacyWritingTeacher_results',
 
 }
 

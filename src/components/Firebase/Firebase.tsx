@@ -152,6 +152,7 @@ class Firebase {
     this.sessionRef = this.db.collection('emailList').doc()
     this.sessionRef.set({
       email: email,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp().toString
     })
   }
 
@@ -327,6 +328,19 @@ class Firebase {
       .catch(error => error)
   }
 
+
+  sendMLE = async (email: string): Promise<void> => {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      'funcSendMLE'
+    )
+    return sendEmailFirebaseFunction(email)
+      .then(result => {
+        result
+        console.log('result is', result)
+      })
+      .catch(error => error)
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -378,6 +392,44 @@ class Firebase {
     }
   }
 
+  fetchCustomQuestions = async (magic8: string): Promise<Array<string> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+        const questionList: Array<string> = []
+          favoriteQuestions.forEach(question => {
+            if (question.includes(magic8 + ': ')) {
+              questionList.push(question.split(magic8 + ': ')[1])
+            }
+          })
+          console.log(questionList)
+          return questionList
+      })
+    }
+  }
+
+  // adds custom favorite questions
+  addFavoriteQuestion = async (question: string[], magic8: string): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+      const newFavoriteQuestions = favoriteQuestions.includes(magic8 + ': ' + question) ? favoriteQuestions.filter(
+        favoriteQuestions => favoriteQuestions !== magic8 + ': ' + question
+      ) : [magic8 + ': ' + question, ...favoriteQuestions]
+      return this.db.collection('users').doc(this.auth.currentUser.uid).update({
+        favoriteQuestions: newFavoriteQuestions,
+      }).catch((error: Error) =>
+      console.error('Error updating favorite questions list: ', error)
+    )
+      }).catch((error: Error) =>
+      console.error('Error getting favorite questions list: ', error)
+    )
+    }
+  }
+
+  // adds favorite questions from constants
   updateFavouriteQuestions = async (
     questionId: string[]
   ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
@@ -1654,6 +1706,11 @@ class Firebase {
     return exportBqFunction({tableName, from, to})
   }
 
+  createTables = async (): Promise<{} | void> => {
+    const createTables = this.functions.httpsCallable('createTables')
+    return createTables()
+  }
+
   /**
    * Associative Cooperative cloud function
    * gets counts of each type of child & teacher behaviors
@@ -2797,6 +2854,10 @@ class Firebase {
       )
   }
 
+  setActionPlanStatus = async ( actionPlanId: string ): Promise<void> => {
+    await firebase.firestore().collection('actionPlans').doc(actionPlanId).update({status: 'Maintenance'})
+  }
+
   /**
    * adds action plan entry to database
    * @param {string} teacherId
@@ -2804,7 +2865,8 @@ class Firebase {
    */
   createActionPlan = async (
     teacherId: string,
-    magic8: string
+    magic8: string,
+    planNumber: number
   ): Promise<string | void> => {
     const data = Object.assign(
       {},
@@ -2817,6 +2879,8 @@ class Firebase {
         goal: '',
         goalTimeline: '',
         benefit: '',
+        planNum: (planNumber > 0) ? planNumber+1 : 1 ,
+        status: "Active"
       }
     )
     const actionPlansRef = firebase
@@ -2885,6 +2949,7 @@ class Firebase {
     teacherFirstName: string
     teacherLastName: string
     achieveBy: firebase.firestore.Timestamp
+    status: string
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db
@@ -2902,6 +2967,7 @@ class Firebase {
             modified: number
             teacherLastName: string
             achieveBy: firebase.firestore.Timestamp
+            status: string
           }> = []
           querySnapshot.forEach(doc => {
               // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
@@ -2916,6 +2982,7 @@ class Firebase {
                 achieveBy: doc.data().goalTimeline
                   ? doc.data().goalTimeline
                   : firebase.firestore.Timestamp.fromDate(new Date()),
+                status: doc.data().status
               })
             }
           )
@@ -3035,6 +3102,50 @@ class Firebase {
           }
         })
       })
+  }
+
+  getNotesForExport = async () => {
+
+    let arr = []
+    this.query = this.db.collection('observations');
+    const collection = await this.query.get();
+
+    Promise.all(collection.docs.map(async (obs) => {
+      const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = obs.data();
+      const docId = obs.id;
+      this.query = this.db.collection('observations').doc(obs.id).collection('notes');
+      const subCollection = await this.query.get();
+      Promise.all(subCollection.docs.map(async (notes) => {
+        const { Note, Timestamp } = notes.data();
+        const noteId = notes.id;
+        arr.push({
+          observationId: docId,
+          coachId: observedBy,
+          teacherId: teacher,
+          dateModified: this.convertFirestoreTimestamp(start),
+          tool: type,
+          noteId: noteId,
+          timestamp: this.convertFirestoreTimestamp(Timestamp),
+          content: Note,
+        })
+      }))
+    }))
+
+    return await arr
+  }
+
+  getEmailForExport = async () =>  {
+    this.query = this.db.collection('emailList');
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async (doc) => {
+      const {email, timestamp} = doc.data()
+      return {
+        email: email,
+        timestamp: this.convertFirestoreTimestamp(timestamp),
+      }
+    }))
+
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {
