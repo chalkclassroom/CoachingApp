@@ -165,7 +165,7 @@ class CoachProfileResults extends React.Component {
     else
     {
       selectedTeacherIds = [this.props.teacherOptions.find(x => x.id === this.props.selectedTeacher).id];
-      selectedTeachers = [this.props.teacherOptions.find(x => x.id === this.props.selectedTeacher).id];
+      selectedTeachers = [this.props.teacherOptions.find(x => x.id === this.props.selectedTeacher)];
     }
 
     // Save the IDs

@@ -115,8 +115,6 @@ class DetailsTable extends React.Component<Props, {}> {
         // Find the data we're looking for
         var tempData = data.find(item => item.teacher === tempTeacher && item.type === observation);
 
-        console.log("TempDATA : ", tempData);
-
         var tempTd;
         if(tempData)
         {
@@ -129,7 +127,15 @@ class DetailsTable extends React.Component<Props, {}> {
         tempObservationData.push(tempTd);
       }
 
-      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}></td><td style={tdStyle}></td>{tempObservationData}</tr>);
+      if(this.props.selectedTeacher == "all")
+      {
+        teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}></td><td style={tdStyle}></td>{tempObservationData}</tr>);
+      }
+      else
+      {
+        teacherRows.push(<tr><td style={tdStyle}>{this.props.selectedCoachName}</td><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}></td>{tempObservationData}</tr>);
+
+      }
     });
 
     this.setState({teacherRows: teacherRows});
