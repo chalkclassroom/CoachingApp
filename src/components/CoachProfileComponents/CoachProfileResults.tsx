@@ -92,31 +92,7 @@ const practicesArr = {
   "associativeAndCooperative": "Associative and Cooperative",
 }
 
-// Array used to match the default radio value based on the type
-const radioValueArr = {
-  "transitionTime": "lineAverage",
-  "classroomClimate": "nonspecificapprovalAverage",
-  "mathInstruction": "mathVocabularyAverage",
-  "levelOfInstruction": "hlqAverage",
-  "studentEngagement": "offTaskAverage",
-  "listeningToChildren": "eyeLevelAverage",
-  "sequentialActivities": "sequentialActivitiesAverage",
-  "foundationSkills": "foundationalSkillsAverage",
-  "writing": "writingSkillsAverage",
-  "bookReading": "bookReadingAverage",
-  "languageEnvironment": "languageEnvironmentAverage",
-  "associativeAndCooperative": "childrensPlayAverage",
-}
 
-// Set array so we can edit the label on top of the Chart based on type
-const chartTitleArr = {
-  bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
-  childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
-}
 
 class CoachProfileResults extends React.Component {
 
@@ -129,7 +105,6 @@ class CoachProfileResults extends React.Component {
         siteCoaches: [],
         teacherInfo: [],
         teacherNames: [],
-        radioValue: radioValueArr[this.props.observationType],
         BQData: [],
 
         averages: [],
@@ -183,9 +158,6 @@ class CoachProfileResults extends React.Component {
    */
   getResultsFromBQ = (teachers) => {
     const firebase = this.context;
-
-    console.log("SOME TEACHERS : ", teachers);
-
 
     // Grab results data
     firebase.fetchCoachProfileData({startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
@@ -264,9 +236,11 @@ class CoachProfileResults extends React.Component {
                 <Grid container item xs={12} style={startColumn}>
                   <DetailsTable
                     selectedTeacher={this.props.selectedTeacher}
+                    selectedCoach={this.props.selectedCoach}
                     selectedCoachName={this.props.selectedCoachName}
                     dataSet={this.state.BQData}
                     selectedTeachers={this.state.selectedTeachers}
+                    firebase={this.context}
                     />
                 </Grid>
 

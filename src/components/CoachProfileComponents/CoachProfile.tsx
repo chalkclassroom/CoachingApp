@@ -213,7 +213,7 @@ class CoachProfile extends React.Component {
        // Grab the teacher ID's for the coaches
        let teacherIds = await firebase.getTeacherListFromUser({userId: coachId});
 
-       // Grab all the teacher info
+       // Grab all the teachers' info
        var teacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: teacherIds});
 
        // Set the names for the teachers (better to do it here than in the actual form, in case you were wondering)
@@ -464,7 +464,7 @@ class CoachProfile extends React.Component {
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
-                    <h2>Site Profile</h2>
+                    <h2>Coach Profile</h2>
                 </Grid>
 
                 {/*
@@ -684,6 +684,7 @@ class CoachProfile extends React.Component {
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}
           selectedSiteName={this.state.selectedSiteName}
+          selectedCoach={this.state.selectedCoach}
           selectedCoachName={this.state.selectedCoachName}
           selectedTeacherName={this.state.selectedTeacherName}
           selectedTeacher={this.state.selectedTeacher}

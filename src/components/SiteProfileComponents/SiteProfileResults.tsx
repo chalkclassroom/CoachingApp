@@ -256,6 +256,7 @@ class SiteProfileResults extends React.Component {
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
 
         // Go through each teacher the coach observes
+        /*
         for(var teacherIndex in teachersIdList)
         {
           var teacherId = teachersIdList[teacherIndex];
@@ -274,9 +275,25 @@ class SiteProfileResults extends React.Component {
           }
 
         }
+        */
+
+        // Get all information for all the teachers
+        var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
+
+        teacherResults = teacherResults.concat(teachersList);
+
+        // Remove any duplicates from the teachers
+        teacherResults = teacherResults.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
+
+        // Set teachers names
+        var tempTeacherNames = teachersList.map( (teacher, index) => {return teacher.firstName + " " + teacher.lastName});
+
+        teacherNames = teacherNames.concat(tempTeacherNames);
 
 
       }
+
+
 
       this.setState({teacherInfo: teacherResults});
       this.setState({teacherNames: teacherNames});

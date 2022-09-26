@@ -3159,7 +3159,7 @@ class Firebase {
     }
     const actionPlans = await this.query.get();
     return Promise.all(actionPlans.docs.map(async (doc) => {
-      const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool} = doc.data()
+      const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool, status} = doc.data()
       return {
         coachId: coach,
         teacherId: teacher,
@@ -3169,7 +3169,8 @@ class Firebase {
         dateModified: this.convertFirestoreTimestamp(dateModified),
         goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
         dateCreated: this.convertFirestoreTimestamp(dateCreated),
-        steps: await this.getActionStepsForExport(doc.id)
+        steps: await this.getActionStepsForExport(doc.id),
+        status: status
       }
     }))
   }
@@ -4533,8 +4534,6 @@ class Firebase {
           docIds = data.siteIds;
           programDoc = this.db.collection('sites');
         }
-
-        console.log("SWEEET " + docIds);
 
         var results = [];
 

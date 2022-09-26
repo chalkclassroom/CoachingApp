@@ -19,14 +19,15 @@ const practicesArr = {
 
 const tableStyle = {
   'border': 'solid 1px rgb(234, 234, 234)',
-  'border-collapse': 'collapse'
+  borderCollapse: 'collapse'
 }
 
 const tdStyle = {
   'border': 'solid 1px rgb(234, 234, 234)',
   padding: '8px',
   fontSize: '12px',
-  'text-align': 'left'
+  textAlign: 'left',
+  minWidth: '75px'
 }
 
 class DetailsTable extends React.Component<Props, {}> {
@@ -74,21 +75,46 @@ class DetailsTable extends React.Component<Props, {}> {
     }
   }
 
-  getTotalCount = (teachers, data, observations) => {
+  getTotalCount = async (teachers, data, observations) => {
     // Get total number of observations for each teacher
     var count = {};
 
     // Initialize count for each teacher
     teachers.forEach(item => {
-      count[item.id] = {total: 0};
+      count[item.id] = {total: 0, totalTimeMilliseconds: 0, avgTimeMinutes: 0, actionPlans: 0};
     });
 
-    // Build total count
+    // Build total count and time averages
     data.forEach(item => {
       var tempTeacher = item.teacher.split("/")[2];
 
       count[tempTeacher].total += item.count;
+      count[tempTeacher].totalTimeMilliseconds += item.totalTime;
+
     });
+
+    var actionPlans = await this.props.firebase.getActionPlansForExport(this.props.selectedCoach);
+
+    // Calculate averages and count action plans
+    //teachers.forEach(item => {
+    for(var itemIndex in teachers)
+    {
+      var item = teachers[itemIndex];
+
+      // Get all the action plans for this user
+      var actionPlansForThisUser = actionPlans.filter(x => x.teacherId === item.id && x.status === "Maintenance");
+      count[item.id].actionPlans = actionPlansForThisUser.length;
+      
+      // Calculate average time
+      if(count[item.id].total > 0 && count[item.id].totalTimeMilliseconds > 0)
+      {
+
+        // Calculate averages and convert from milliseconds to minutes
+        count[item.id].avgTimeMinutes = (count[item.id].totalTimeMilliseconds / 1000) / count[item.id].total / 60;
+        // Set to two decimal places
+        count[item.id].avgTimeMinutes = count[item.id].avgTimeMinutes.toFixed(2);
+      }
+    };
 
     this.setState({count: count});
 
@@ -97,15 +123,13 @@ class DetailsTable extends React.Component<Props, {}> {
   }
 
 
-  buildTeacherRows = (teachers, data, observations, count) => {
+  buildTeacherRows = async (teachers, data, observations, count) => {
 
     var teacherRows = [];
 
     teachers.forEach(teacher => {
       var tempRow;
-      console.log("TEACHER -> " + teacher.firstName);
 
-      //tempRow = <tr><td><h1>SWWEEEET</h1></td></tr>;
       var tempObservationData = [];
       for (var observationIndex in observations) {
         var observation = observations[observationIndex];
@@ -127,15 +151,9 @@ class DetailsTable extends React.Component<Props, {}> {
         tempObservationData.push(tempTd);
       }
 
-      if(this.props.selectedTeacher == "all")
-      {
-        teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}></td><td style={tdStyle}></td>{tempObservationData}</tr>);
-      }
-      else
-      {
-        teacherRows.push(<tr><td style={tdStyle}>{this.props.selectedCoachName}</td><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}></td>{tempObservationData}</tr>);
+      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlans}</td>{tempObservationData}</tr>);
 
-      }
+
     });
 
     this.setState({teacherRows: teacherRows});
@@ -147,14 +165,14 @@ class DetailsTable extends React.Component<Props, {}> {
   render(){
 
     // Create the header
-    var header1 = this.props.selectedTeacher == "all" ? <span>Coach: <b>{this.props.selectedCoachName}</b></span> : <span></span>;
-    var header2 = this.props.selectedTeacher == "all" ? <span><b>Observations by CHALK Classroom Practice</b></span> : <span>Focal Classroom Practice</span>;
+    var header1 = <span>Coach: <b>{this.props.selectedCoachName}</b></span>;
+    var header2 = <span><b>Observations by CHALK Classroom Practice</b></span>;
 
     // The first 4 tds in the second row
-    var header3 = this.props.selectedTeacher == "all" ? ["Teacher", "Number of Observations", "Average Duration of Observation", "Number of Goals Met"] : ["Coach", "Teacher", "Number of Observations", "Number of Action Plans"];
+    var header3 = ["Teacher", "Number of Observations", "Average Duration of Observation", "Number of Goals Met"];
 
     return (
-      <div style={{'overflow-x': 'auto', 'max-width': '80vw', paddingBottom: '20px'}}>
+      <div style={{overflowX: 'auto', maxWidth: '80vw', paddingBottom: '20px'}}>
         <table style={tableStyle}>
           <thead>
             <tr>
