@@ -140,7 +140,13 @@ class ReportsPage extends React.Component<Props, State> {
             <Route path="/ReportsList" component={ReportsList} />
             <Route path="/ReportImages" component={ReportImages} />
             <Route path="/ReportDesc" component={ReportDesc} />
-            <Route path="/TeacherProfile" component={TeacherProfile} />
+            <Route path="/TeacherProfile" render={(props) =>
+              <TeacherProfile
+                changePage={(pageName) => this.changePage(pageName)}
+                userRole={userRole}
+                location={this.props.location}
+                />
+            } />
             <Route path="/CoachProfile" render={(props) =>
               <CoachProfile
                 changePage={(pageName) => this.changePage(pageName)}
