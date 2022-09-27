@@ -114,9 +114,6 @@ class CoachProfile extends React.Component {
   }
 
   componentDidMount(): void {
-    // Sets sites for dropdown
-    //this.setPrograms();
-
     // Build all initial dropdown option
     this.setDropdownOptions();
   }
