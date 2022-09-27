@@ -105,54 +105,69 @@ class SiteProfile extends React.Component {
 
   componentDidMount(): void {
     // Sets sites for dropdown
-    this.setPrograms();
+    this.setDropdownOptions();
   }
 
-  /**
-   * Set the sites for the dropdown
+  /*
+   * Set dropdown items
+   *
+   * We're going to put every 'program' and 'site' option in each dropdown initially and filter it as we go through the choises to reduce firestore queries
    */
-   async setPrograms(){
-     const firebase = this.context;
-     firebase.getPrograms()
-      .then((data)=>{
+  setDropdownOptions = async () => {
+    const firebase = this.context;
 
-        // Sort array in alphabetical order
-        data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    // Set programs
+    firebase.getPrograms()
+     .then((data)=>{
+       // Sort array in alphabetical order
+       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+       this.setState({allPrograms: data});
 
-        this.setState({allPrograms: data});
-      });
-   }
+       // Reset selected site just in case we selected it then changed to a program that doesn't have that site
+       this.setState({selectedSite: "", selectedSiteName: ""});
+     });
 
+    // Set programs
+    firebase.getSites()
+     .then((data)=>{
+       // Sort array in alphabetical order
+       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+       this.setState({allSites: data});
+     });
+
+  }
+
+  /*
+   * Change the site options we can choose from once a program is chosen
+   */
    setSites = async (programId) => {
      const firebase = this.context;
 
      // Get the program information so we can see what sites it's affiliated with
-     firebase.getUserProgramOrSite({programId: programId})
-      .then( async data => {
-
-        const siteIds = data.sites;
-
-        let siteRes = [];
-
-        // Fetch each siteId and get the name for each
-        for(var tempIndex in siteIds)
-        {
-          var siteId = siteIds[tempIndex];
-
-          var siteData = await firebase.getUserProgramOrSite({siteId: siteId});
-
-          siteRes.push({id:siteId, name: siteData.name});
-
-        }
-
-        // Sort array in alphabetical order
-        siteRes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-
-        // Save site options to state
-        this.setState({siteOptions: siteRes});
-
+     let allPrograms = [...this.state.allPrograms];
+     var program = allPrograms.find(obj => {
+        return obj.id === programId
       });
+
+
+    const siteIds = program.sites;
+    let allSites = [...this.state.allSites];
+    // Filter the site options to only include the ones in our site
+    var siteOptions = allSites.filter(site => {
+      if(program.sites.includes(site.id))
+      {
+        return site;
+      }
+    });
+
+    // Sort array in alphabetical order
+    siteOptions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+
+    // Save site options to state
+    this.setState({siteOptions: siteOptions});
+
    }
+
 
 
   // When the 'Program' or 'Site' dropdown is changed
