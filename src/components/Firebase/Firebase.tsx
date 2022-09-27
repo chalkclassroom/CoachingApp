@@ -362,33 +362,44 @@ class Firebase {
     }
   }
 
-  getTeacherListFromUser = async (
-    data: {
-      userId: string,
-     }
- ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+  fetchCustomQuestions = async (magic8: string): Promise<Array<string> | void | undefined> => {
     if (this.auth.currentUser) {
-      return this.db
-        .collection('users')
-        .doc(data.userId)
-        .collection('partners')
-        .get()
-        .then( async (partners: firebase.firestore.QuerySnapshot) => {
-          const teacherList: Array<firebase.firestore.DocumentData> = [];
-
-          partners.forEach(partner => {
-              teacherList.push(partner.id.trim());
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+        const questionList: Array<string> = []
+          favoriteQuestions.forEach(question => {
+            if (question.includes(magic8 + ': ')) {
+              questionList.push(question.split(magic8 + ': ')[1])
             }
-          )
-
-          return teacherList;
-        })
-        .catch((error: Error) =>
-          console.error('Error getting partner list: ', error)
-        )
+          })
+          console.log(questionList)
+          return questionList
+      })
     }
   }
 
+  // adds custom favorite questions
+  addFavoriteQuestion = async (question: string[], magic8: string): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db.collection('users').doc(this.auth.currentUser.uid).get()
+      .then(user => {
+        const favoriteQuestions = user.data().favoriteQuestions || []
+      const newFavoriteQuestions = favoriteQuestions.includes(magic8 + ': ' + question) ? favoriteQuestions.filter(
+        favoriteQuestions => favoriteQuestions !== magic8 + ': ' + question
+      ) : [magic8 + ': ' + question, ...favoriteQuestions]
+      return this.db.collection('users').doc(this.auth.currentUser.uid).update({
+        favoriteQuestions: newFavoriteQuestions,
+      }).catch((error: Error) =>
+      console.error('Error updating favorite questions list: ', error)
+    )
+      }).catch((error: Error) =>
+      console.error('Error getting favorite questions list: ', error)
+    )
+    }
+  }
+
+  // adds favorite questions from constants
   updateFavouriteQuestions = async (
     questionId: string[]
   ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
@@ -2776,6 +2787,10 @@ class Firebase {
       )
   }
 
+  setActionPlanStatus = async ( actionPlanId: string ): Promise<void> => {
+    await firebase.firestore().collection('actionPlans').doc(actionPlanId).update({status: 'Maintenance'})
+  }
+
   /**
    * adds action plan entry to database
    * @param {string} teacherId
@@ -2783,7 +2798,8 @@ class Firebase {
    */
   createActionPlan = async (
     teacherId: string,
-    magic8: string
+    magic8: string,
+    planNumber: number
   ): Promise<string | void> => {
     const data = Object.assign(
       {},
@@ -2796,6 +2812,8 @@ class Firebase {
         goal: '',
         goalTimeline: '',
         benefit: '',
+        planNum: (planNumber > 0) ? planNumber+1 : 1 ,
+        status: "Active"
       }
     )
     const actionPlansRef = firebase
@@ -2864,6 +2882,7 @@ class Firebase {
     teacherFirstName: string
     teacherLastName: string
     achieveBy: firebase.firestore.Timestamp
+    status: string
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db
@@ -2881,6 +2900,7 @@ class Firebase {
             modified: number
             teacherLastName: string
             achieveBy: firebase.firestore.Timestamp
+            status: string
           }> = []
           querySnapshot.forEach(doc => {
               // Moved the logic for 'modified' here so it sorts correctly in the Action Plan List
@@ -2895,6 +2915,7 @@ class Firebase {
                 achieveBy: doc.data().goalTimeline
                   ? doc.data().goalTimeline
                   : firebase.firestore.Timestamp.fromDate(new Date()),
+                status: doc.data().status
               })
             }
           )
