@@ -54,6 +54,14 @@ const ConferencePlanExport: FunctionComponent<Props> = (props) => {
     }
   },[])
 
+  /**
+ *
+ * @param from
+ * @param to
+ * @param setLoading
+ * @param firebase
+ */
+
   const handleExport = async (id: string, from: string, to: string,) => {
     setLoading(true)
     const rows = await firebase.getConferencePlansForExport(id !== ALL_COACH_VALUE ? id : undefined)

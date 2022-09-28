@@ -54,6 +54,14 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
     }
   },[])
 
+    /**
+ *
+ * @param from
+ * @param to
+ * @param setLoading
+ * @param firebase
+ */
+
   const handleExport = async (id: string, from: string, to: string,) => {
     setLoading(true)
     let rows = await firebase.getActionPlansForExport(id !== ALL_COACH_VALUE ? id : undefined)

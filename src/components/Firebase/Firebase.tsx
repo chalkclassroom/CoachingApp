@@ -3047,14 +3047,26 @@ class Firebase {
 
   }
 
-  getActionPlansForExport = async (coachId: string | undefined = undefined) => {
+    /**
+   * @param {string} from
+   * @param {string} to
+   */
+
+  getActionPlansForExport = async (
+    coachId: string | undefined = undefined, 
+    from: string, 
+    to: string,
+  ) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
     this.query = this.db
       .collection('actionPlans').orderBy('dateModified', 'desc')
     if (coachId) {
-      this.query = this.query.where('coach', '==', coachId)
+      this.query = this.query
+      .where('coach', '==', coachId)
+      .where('dateModified', '>', from)
+      .where('dateModified', '<', to)
     }
     const actionPlans = await this.query.get();
     return Promise.all(actionPlans.docs.map(async (doc) => {
@@ -3073,7 +3085,16 @@ class Firebase {
     }))
   }
 
-  getConferencePlansForExport = async (coachId: string | undefined = undefined) => {
+    /**
+   * @param {string} from
+   * @param {string} to
+   */
+
+  getConferencePlansForExport = async (
+    coachId: string | undefined = undefined, 
+    from: string, 
+    to: string,
+  ) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
@@ -3081,7 +3102,10 @@ class Firebase {
     this.query = this.db
       .collection('conferencePlans').orderBy('dateModified', 'desc')
     if (coachId) {
-      this.query = this.query.where('coach', '==', coachId)
+      this.query = this.query
+      .where('coach', '==', coachId)
+      .where('dateModified', '>', from)
+      .where('dateModified', '<', to)
     }
     const conferencePlans = await this.query.get();
     return Promise.all(conferencePlans.docs.map(async (doc) => {
