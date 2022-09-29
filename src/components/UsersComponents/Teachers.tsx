@@ -2,9 +2,20 @@ import { Grid, TextField, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import ForwardIcon from '@material-ui/icons/Forward';
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import withStyles from '@material-ui/styles/withStyles';
 
+interface Props {
+  teacherData: Array<Object>
+}
+
 export default class Teachers extends Component {
+
+  constructor(props: Props) {
+    super(props)
+
+    }
+
   
   render() {
     return (<>
@@ -49,7 +60,7 @@ export default class Teachers extends Component {
             </Grid>
             <Grid item>
             <Grid container direction='row' justifyContent='flex-end'>
-              <Grid item style={{marginRight:'3vw'}}>
+              <Grid item style={{marginRight:'4vw'}}>
                 <TextField
                   style={{width:'160px'}}
                   id="teacher-search"
@@ -70,6 +81,7 @@ export default class Teachers extends Component {
           xs={11}
           style={{ width: '100%', height: '38vh', border: '2px solid #0988ec', borderRadius: '0.5em', marginTop: '100px' }}
         >
+          {this.props.teacherData ? (
           <table style={{borderCollapse: 'collapse', width: '100%' }}>
             <thead>
               <tr>
@@ -120,11 +132,56 @@ export default class Teachers extends Component {
               </tr>
             </thead>
             <tbody>
-              
+              {this.props.teacherData.map((value, index) => {
+                return (
+                <tr key={index}>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.teacherLastName}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.teacherFirstName}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.coachLastName}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.coachFirstName}  
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.siteName}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="h6" gutterBottom>
+                      {value.selectedProgramName}
+                    </Typography>
+                  </td>
+                </tr>
+              )})}
             </tbody>
 
 
           </table>
+          ) : (
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{height: "100%"}}
+            >
+              <img src={CHALKLogoGIF} alt="Loading" width="60%" style={{maxHeight: '100%'}} />
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>
