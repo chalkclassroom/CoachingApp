@@ -4210,6 +4210,31 @@ class Firebase {
     }))
   }
 
+  getTeacherData = async () => {
+    let arr = []
+    this.query = this.db.collection('users').where('role', '==', 'coach');
+    const collection = await this.query.get();
+
+    Promise.all(collection.docs.map(async (coach) => {
+      this.query = this.db.collection('users').doc(coach.id).collection('partners');
+      const subCollection = await this.query.get();
+      Promise.all(subCollection.docs.map(async (teacher) => {
+        const teacherResult = await this.db.collection('users').doc(teacher.id).get();
+        arr.push({
+          coachId: coach.id,
+          coachFirstName: coach.data().firstName,
+          coachLastName: coach.data().lastName,
+          siteName: await teacherResult.data().school,
+          teacherId: teacher.id,
+          teacherFirstName: await teacherResult.data().firstName,
+          teacherLastName: await teacherResult.data().lastName,
+        })
+      }))
+    }))
+
+    return await arr
+  }
+
   /*
    * Get a all sites
    */
