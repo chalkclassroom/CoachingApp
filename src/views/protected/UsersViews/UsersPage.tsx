@@ -11,9 +11,11 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
 import Firebase from '../../../components/Firebase'
 import { Switch, Route,} from "react-router-dom";
-import MyProgramsPage from "../LeadersViews/MyProgramsPage";
-import Typography from "@material-ui/core/Typography";
 import UsersIcon from '../../../assets/icons/UsersIcon.png';
+import Teachers from "../../../components/UsersComponents/Teachers";
+import Coaches from "../../../components/UsersComponents/Coaches";
+import Skeleton from "./Skeleton"
+import Archives from "../../../components/UsersComponents/Archives";
 
 
 const styles: object = {
@@ -55,7 +57,7 @@ const Styles = {
         listStyle: 'none',
         textAlign: 'center',
         width: '100vw',
-        justifyContent: 'space-evenly'
+        justifyContent: 'flex-start'
     },
 
     navLinks: is_current => ({
@@ -69,12 +71,8 @@ const Styles = {
 
 const MenuItems = [
     {
-        title: 'Programs and Sites',
-        url: '/LeadersUsers',
-    },
-    {
-        title: 'Administrators',
-        url: '/LeadersAdmin',
+        title: 'Sites',
+        url: '/LeadersSites',
     },
     {
         title: 'Coaches',
@@ -85,6 +83,7 @@ const MenuItems = [
         url: '/LeadersTeachers',
     },
 ]
+
 
 interface Style {
   root: string,
@@ -101,11 +100,11 @@ interface Props {
 interface State {
   teacherModal: boolean,
   type: string,
-  coachName: string
+  coachName: string,
 }
 
 function checkCurrent(item) {
-    if ( item.url === location.pathname )
+    if ( item === location.pathname )
         return true;
     return false;
 }
@@ -136,16 +135,56 @@ class UsersPage extends React.Component<Props, State> {
     });
   };
 
+  buildTeacherData = async () => {
+    let data = []
+    let teachersAndCoaches = await this.context.getTeacherData();
+    let sites = await this.context.getSites();
+    let programs = await this.context.getPrograms();
+
+    await teachersAndCoaches.map((doc) => {
+      let draft = {
+        coachId: doc.coachId,
+        coachFirstName: doc.coachFirstName,
+        coachLastName: doc.coachLastName,
+        siteName: doc.siteName,
+        teacherId: doc.teacherId,
+        teacherFirstName: doc.teacherFirstName,
+        teacherLastName: doc.teacherLastName,
+        selectedSiteId: "",
+        selectedProgramName: "",
+        selectedProgramId: "",
+      };
+      for (let i = 0; i < sites.length; i++) {
+        if (sites[i].name === doc.siteName) {
+          draft["selectedSiteId"] =  sites[i].id;
+          i = sites.length;
+        }
+      }
+      for (let i = 0; i < programs.length; i++) {
+        if (programs[i].sites.includes(draft["selectedSiteId"])) {
+          draft["selectedProgramName"] = programs[i].name;
+          draft["selectedProgramId"] =  programs[i].id;
+          i = programs.length
+        }
+      }
+      data.push(draft)
+    })
+    return data;
+  }
+
   /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
-    const firebase = this.context;
-    if (!this.props.coachName) {
-      firebase.getCoachFirstName().then((name: string): void => {
-        this.props.getCoach(name);
-      })
-    }
-    // firebase.handleFetchTrainingStatus();
-    // firebase.handleFetchQuestions("transition");
+  componentDidMount = async () => {
+    // const firebase = this.context;
+    // if (!this.props.coachName) {
+    //   firebase.getCoachFirstName().then((name: string): void => {
+    //     this.props.getCoach(name);
+    //   })
+    // }
+
+    this.setState({teacherData: await this.buildTeacherData()})
+    console.log(this.state.teacherData)
+    
+
   }
 
   static propTypes = {
@@ -185,23 +224,51 @@ class UsersPage extends React.Component<Props, State> {
                 <ul style={Styles.navMenu}>
                     {MenuItems.map((item, index) => {
                         return (
-                            <li key={index}>
-                                <a style={Styles.navLinks(checkCurrent(item))} onClick = {() => this.props.history.push(item.url)}>
+                            <li style={{float: 'left'}}key={index}>
+                                <a style={Styles.navLinks(checkCurrent(item.url))} onClick = {() => this.props.history.push(item.url)}>
                                 {item.title}
                                 </a>
                             </li>
                         )
                     })}
                 </ul>
+                <ul style={{listStyle: 'none'}}>
+                  <li style={{float: 'right', marginRight:'3vw'}}>
+                    <a style={Styles.navLinks(checkCurrent('/LeadersArchive'))} onClick = {() => this.props.history.push('/LeadersArchive')}>
+                    Archive
+                    </a>
+                  </li>
+                </ul>
             </nav>
         <div style={{display: "flex"}}>
           <Grid container>
             <Grid container>
                 <Grid item xs={12} style={{paddingTop:"1em"}}>
-                <Switch location={location} key={location.pathname}>
-                    <Route path="/LeadersUsers" component={MyProgramsPage} />
-                </Switch>
-                  </Grid>
+                  <Switch location={location} key={location.pathname}>
+                    <Route path="/LeadersUsers" component={Skeleton} />
+                    <Route path="/LeadersCoaches" render={(props) =>
+                      <Coaches
+                        changePage={(pageName) => this.changePage(pageName)}
+                        userRole={userRole}
+                        location={this.props.location}
+                        />
+                    } />
+                    <Route path="/LeadersTeachers" render={(props) =>
+                      <Teachers
+                        changePage={(pageName) => this.changePage(pageName)}
+                        userRole={userRole}
+                        location={this.props.location}
+                        />
+                    } />
+                    <Route path="/LeadersArchive" render={(props) =>
+                      <Archives
+                        changePage={(pageName) => this.changePage(pageName)}
+                        userRole={userRole}
+                        location={this.props.location}
+                        />
+                    } />
+                  </Switch>
+                </Grid>
             </Grid>
         </Grid>
         </div>

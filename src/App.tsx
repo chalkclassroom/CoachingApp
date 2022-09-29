@@ -844,6 +844,44 @@ class App extends React.Component<Props, State> {
             />
 
             <PrivateRoute
+              auth={auth}
+              path="/LeadersTeachers"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />  
+
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersCoaches"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />  
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersSites"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersArchive"
+              allowedRoles={[]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />    
+
+            <PrivateRoute
               auth={this.state.auth}
               path="/CreateTable"
               exact={true}
