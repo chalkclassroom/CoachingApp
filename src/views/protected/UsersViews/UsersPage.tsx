@@ -172,6 +172,44 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
+  buildCoachData = async (teachersAndCoaches) => {
+    let coaches = []
+    let programs = await this.context.getPrograms();
+    let data = []
+
+
+    await teachersAndCoaches.map(async (value) => {
+      if(!coaches.includes(value.coachId)) {
+        coaches.push(value.coachId);
+        let sites = await this.context.fetchSitesForCoach(value.coachId);
+        let siteList = []
+
+        console.log(sites)
+
+        await sites.map((site) => {
+          for (let i = 0; i < programs.length; i++) {
+            if (programs[i].sites.includes(site.id)) {
+              siteList.push({
+                siteName: site.name,
+                siteId: site.id,
+                programName: programs[i].id,
+                programId: programs[i].name
+              })
+            }
+          }
+        })
+        data.push({
+          firstName: value.coachFirstName,
+          lastName: value.coachLastName,
+          id:  value.coachId,
+          siteList: siteList
+        })
+      }
+    })
+
+    return data;
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
     // const firebase = this.context;
@@ -182,7 +220,8 @@ class UsersPage extends React.Component<Props, State> {
     // }
 
     this.setState({teacherData: await this.buildTeacherData()})
-    console.log(this.state.teacherData)
+    this.setState({coachData: await this.buildCoachData(await this.state.teacherData)})
+    console.log(this.state.coachData)
     
 
   }
@@ -258,6 +297,7 @@ class UsersPage extends React.Component<Props, State> {
                         changePage={(pageName) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
+                        teacherData = {this.state.teacherData}
                         />
                     } />
                     <Route path="/LeadersArchive" render={(props) =>
