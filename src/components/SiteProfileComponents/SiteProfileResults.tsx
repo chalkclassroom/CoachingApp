@@ -415,6 +415,8 @@ class SiteProfileResults extends React.Component {
          label: fullName,
          data: chosenData,
          borderColor: lineColors[i],
+         fill: false,
+         tension: 0.0
        };
 
        tempDataSet.push(tempData);
@@ -579,13 +581,6 @@ class SiteProfileResults extends React.Component {
                       />
                     </Grid>
                   ) : null)}
-
-                </Grid>
-
-                {/*
-                    The "averages" bar graph
-                */}
-                <Grid item xs={12} style={centerColumn}>
 
                 </Grid>
 

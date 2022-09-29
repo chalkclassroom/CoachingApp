@@ -5552,6 +5552,63 @@ class Firebase {
     }
 
 
+    /**
+     * Grabs data for teacher profile
+     */
+    fetchTeacherProfileData = async (
+      data: {
+        startDate: string,
+        endDate: string,
+        teacherIds: string
+      }
+    ): Promise<void> => {
+
+      const fetchTeacherProfileData = this.functions.httpsCallable(
+        'fetchTeacherProfileData'
+      )
+      return fetchTeacherProfileData({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+        .then(
+          (result) => {
+            console.log("Result: " + result.data[0][0]);
+            return result.data[0];
+          }
+        )
+        .catch((error: Error) =>
+          console.error('Error occurred getting teacher profile averages : ', error)
+        )
+    }
+
+
+
+
+       /**
+        * Get averages data for Teacher Profile
+        */
+       fetchTeacherProfileAverages = async (
+         data: {
+           type: string,
+           startDate: string,
+           endDate: string,
+           teacherId: string
+         }
+       ): Promise<void> => {
+
+         const fetchTeacherProfileAverages = this.functions.httpsCallable(
+           'fetchTeacherProfileAverages'
+         )
+         return fetchTeacherProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherId: data.teacherId})
+           .then(
+             (result) => {
+               console.log("Result: " + result.data[0][0]);
+               return result.data[0];
+             }
+           )
+           .catch((error: Error) =>
+             console.error('Error occurred getting site profile averages : ', error)
+           )
+       }
+
+
    /**
     * Returns list of Coaches that are associated with a program
     */

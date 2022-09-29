@@ -89,7 +89,7 @@ class TeacherProfile extends React.Component {
           selectedTeacher: "",
           selectedTeacherName: "",
           view: 1,
-          startDate: new Date(),
+          startDate: new Date('02-02-2022'),
           endDate: new Date(),
           radioValue: "",
           error: {
@@ -244,6 +244,7 @@ class TeacherProfile extends React.Component {
         teacherName = teacherName[1] + " " + teacherName[0];
 
         this.setState({selectedTeacherName: teacherName});
+
 
         // Reset Error
         error['teacher'] = false;
@@ -690,11 +691,13 @@ class TeacherProfile extends React.Component {
         <TeacherProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedTeacherName={this.state.selectedTeacherName}
+          selectedTeacherId={this.state.selectedTeacher}
           selectedSiteId={this.state.selectedSite}
           selectedPractices={this.state.radioValue}
           startDate={this.state.startDate}
           endDate={this.state.endDate}
           observationType={this.state.radioValue}
+          teacherOptions={this.state.teacherOptions}
          />
       ) : null)}
 

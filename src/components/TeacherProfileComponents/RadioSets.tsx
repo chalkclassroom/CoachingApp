@@ -502,17 +502,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Book Reading - Total Instruction"
-                  value="bookReadingAverage"
+                  value="bookReading"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Focus on vocabulary, concepts, or comprehension"
-                  value="vocabFocusAverage"
+                  value="vocabFocus"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Make connections to children's language, cultural backgrounds, and experiences"
-                  value="languageConnectionsAverage"
+                  value="languageConnections"
                 />
               </FormGroup>
             </FormControl>
@@ -523,17 +523,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Support children's speaking and listening skills"
-                  value="childrenSupportAverage"
+                  value="childrenSupport"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Facilitate discussions around equity and fairness"
-                  value="fairnessDiscussionsAverage"
+                  value="fairnessDiscussions"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Use Multimodal Instruction"
-                  value="multimodalInstructionAverage"
+                  value="multimodalInstruction"
                 />
 
               </FormGroup>

@@ -729,7 +729,7 @@ class AveragesData {
   /*
    * Book Reading
    */
-  calculateBookReadingAverages = (data, teachers) => {
+  calculateBookReadingAverages = (data, teacher) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -738,79 +738,77 @@ class AveragesData {
 
     // Add each teacher to the object
     var tempName = "";
-    for(var teacherIndex in teachers)
-    {
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    tempName = teacher.firstName + " " + teacher.lastName;
 
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalIntervals: 0,
-        totalInstructions: 0,
-        bookReading: 0,
-        vocabFocus: 0,
-        languageConnections: 0,
-        childrenSupport: 0,
-        fairnessDiscussions: 0,
-        multimodalInstruction: 0
-      };
-
-    }
+    results[teacher.id] = {
+      name: tempName,
+      totalIntervals: 0,
+      totalInstructions: 0,
+      bookReading: 0,
+      vocabFocus: 0,
+      languageConnections: 0,
+      childrenSupport: 0,
+      fairnessDiscussions: 0,
+      multimodalInstruction: 0
+    };
 
     // Get number of instances for each type of data
     for(var rowIndex in data)
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var teacherId = teacher.id;
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++;
+      results[teacherId].totalIntervals += row.total;
 
       // Add to behavior types
-      /*
-      results[teacherId].vocabFocus += row.literacy1 + row.literacy2 + row.literacy3;
-      results[teacherId].languageConnections += row.literacy4 + row.literacy5;
-      results[teacherId].childrenSupport += row.literacy6 + row.literacy7 + row.literacy8;
-      results[teacherId].fairnessDiscussions += row.literacy9;
-      results[teacherId].multimodalInstruction += row.literacy10;
-
-      */
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
 
       // If there were any vocabanswers in this observation
+      results[teacherId].vocabFocus += row.vocab;
+      results[teacherId].languageConnections += row.makeConnection;
+      results[teacherId].childrenSupport += row.support;
+      results[teacherId].fairnessDiscussions += row.discussions;
+      results[teacherId].multimodalInstruction += row.multimodal;
+      
+      results[teacherId].bookReading += row.total - row.literacy11;
+/*
       if( row.literacy1 || row.literacy2 || row.literacy3 )
       {
-        results[teacherId].vocabFocus++;
+        results[teacherId].vocabFocus += row.literacy1 + row.literacy2 + row.literacy3;
       }
       // If there were any Language Connection answers in this observation
       if( row.literacy4 || row.literacy5 )
       {
-        results[teacherId].languageConnections++;
+        results[teacherId].languageConnections += row.literacy4 + row.literacy5;
       }
       // If there were any Children Support answers in this observation
       if( row.literacy6 || row.literacy7 || row.literacy8 )
       {
-        results[teacherId].childrenSupport++;
+        results[teacherId].childrenSupport += row.literacy6 + row.literacy7 + row.literacy8;
       }
       // If there were any Fairness Discussion answers in this observation
       if( row.literacy9 )
       {
-        results[teacherId].fairnessDiscussions++;
+        results[teacherId].fairnessDiscussions += row.literacy9;
       }
       // If there were any Fairness Discussion answers in this observation
       if( row.literacy10 )
       {
-        results[teacherId].multimodalInstruction++;
+        results[teacherId].multimodalInstruction += row.literacy10;
       }
       // If there were any answers in this observation
-      if( !row.literacy11 )
+      if( row.literacy11 )
       {
-        results[teacherId].bookReading++;
-      }
+        console.log("results : ", row);
+        console.log("Reading : " + (row.total - row.literacy11));
 
+        results[teacherId].bookReading += row.total - row.literacy11;
+      }
+*/
     }
 
     // Calculate the averages in percentages

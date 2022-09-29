@@ -959,7 +959,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Book Reading
    */
-  calculateBookReadingTrends = (data, teachers, startDate, endDate) => {
+  calculateBookReadingTrends = (data, teacher, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -968,36 +968,31 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // Get start month and year
     const startMonth = startDate.getMonth();
-
     const endMonth = endDate.getMonth();
 
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
+    // Initialize Teacher data object
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    results[teacher.id] = {
+      name: tempName,
+      totalIntervals: new Array(12).fill(0),
+      totalInstructions: new Array(12).fill(0),
+      bookReading: new Array(12).fill(0),
+      vocabFocus: new Array(12).fill(0),
+      languageConnections: new Array(12).fill(0),
+      childrenSupport: new Array(12).fill(0),
+      fairnessDiscussions: new Array(12).fill(0),
+      multimodalInstruction: new Array(12).fill(0),
 
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalIntervals: new Array(12).fill(0),
-        totalInstructions: new Array(12).fill(0),
-        bookReading: new Array(12).fill(0),
-        vocabFocus: new Array(12).fill(0),
-        languageConnections: new Array(12).fill(0),
-        childrenSupport: new Array(12).fill(0),
-        fairnessDiscussions: new Array(12).fill(0),
-        multimodalInstruction: new Array(12).fill(0),
+      vocabFocusAverage: new Array(12).fill(0),
+      languageConnectionsAverage: new Array(12).fill(0),
+      childrenSupportAverage: new Array(12).fill(0),
+      fairnessDiscussionsAverage: new Array(12).fill(0),
+      multimodalInstructionAverage: new Array(12).fill(0),
+      bookReadingAverage: new Array(12).fill(0),
+    };
 
-        vocabFocusAverage: new Array(12).fill(0),
-        languageConnectionsAverage: new Array(12).fill(0),
-        childrenSupportAverage: new Array(12).fill(0),
-        fairnessDiscussionsAverage: new Array(12).fill(0),
-        multimodalInstructionAverage: new Array(12).fill(0),
-        bookReadingAverage: new Array(12).fill(0),
-      };
 
-    }
 
 
     // Sort by date just in case
@@ -1010,33 +1005,35 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     var tempIntervalData = 0;
     var prevMonth = 0, rowMonth = startMonth;
 
-
+    var teacherId = teacher.id;
 
     for(var rowIndex in data)
     {
       var row = data[rowIndex];
+      console.log("ROW DATA : ", row);
 
-      var teacherId = row.teacher.split("/")[2];
 
-      rowMonth = new Date(row.GroupDate.value).getMonth();
+      rowMonth = new Date(row.sessionStart.value).getMonth();
 
       // Add to total # of intervals
       //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      results[teacherId].totalIntervals[rowMonth] += row.total;
 
       // Add to behavior types
-      /*
-      results[teacherId].vocabFocus[rowMonth] +=  row.literacy1 + row.literacy2 + row.literacy3;
 
-      results[teacherId].languageConnections[rowMonth] += row.literacy4 + row.literacy5;
-      results[teacherId].childrenSupport[rowMonth] += row.literacy6 + row.literacy7 + row.literacy8;
-      results[teacherId].fairnessDiscussions[rowMonth] += row.literacy9;
-      results[teacherId].multimodalInstruction[rowMonth] += row.literacy10;
-      */
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
 
+      results[teacherId].vocabFocus[rowMonth] += row.vocab;
+      results[teacherId].languageConnections[rowMonth] += row.makeConnection;
+      results[teacherId].childrenSupport[rowMonth] += row.support;
+      results[teacherId].fairnessDiscussions[rowMonth] += row.discussions;
+      results[teacherId].multimodalInstruction[rowMonth] += row.multimodal;
+
+      results[teacherId].bookReading[rowMonth] += row.total - row.literacy11;
+
       // If there were any vocabanswers in this observation
+      /*
       if( row.literacy1 || row.literacy2 || row.literacy3 )
       {
         results[teacherId].vocabFocus[rowMonth]++;
@@ -1066,6 +1063,8 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       {
         results[teacherId].bookReading[rowMonth]++;
       }
+      */
+
 
     }
 

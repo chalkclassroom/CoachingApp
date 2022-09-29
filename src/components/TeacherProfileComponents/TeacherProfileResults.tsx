@@ -166,18 +166,18 @@ const practicesArr = {
 
 // Array used to match the default radio value based on the type
 const radioValueArr = {
-  "transitionTime": "lineAverage",
-  "classroomClimate": "nonspecificapprovalAverage",
-  "mathInstruction": "mathVocabularyAverage",
-  "levelOfInstruction": "hlqAverage",
-  "studentEngagement": "offTaskAverage",
-  "listeningToChildren": "eyeLevelAverage",
-  "sequentialActivities": "sequentialActivitiesAverage",
-  "foundationSkills": "foundationalSkillsAverage",
-  "writing": "writingSkillsAverage",
-  "bookReading": "bookReadingAverage",
-  "languageEnvironment": "languageEnvironmentAverage",
-  "associativeAndCooperative": "childrensPlayAverage",
+  "transitionTime": "line",
+  "classroomClimate": "nonspecificapproval",
+  "mathInstruction": "mathVocabulary",
+  "levelOfInstruction": "hlq",
+  "studentEngagement": "offTask",
+  "listeningToChildren": "eyeLevel",
+  "sequentialActivities": "sequentialActivities",
+  "foundationSkills": "foundationalSkills",
+  "writing": "writingSkills",
+  "bookReading": "bookReading",
+  "languageEnvironment": "languageEnvironment",
+  "associativeAndCooperative": "childrensPlay",
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -223,77 +223,28 @@ class TeacherProfileResults extends React.Component {
   componentDidMount(): void {
     const firebase = this.context;
 
-    // Get a list of the coaches for the chosen site.
-    firebase.getUserProgramOrSite({siteId: this.props.selectedSiteId}).then((data) => {
-
-      // Save the teachers' information to the state.
-      if(data.coaches)
-      {
-        this.getSitesTeachersInfo(data.coaches)
-      }
-
-    });
+    // Get data from BQ
+    this.getResultsFromBQ(this.props.selectedTeacherId);
 
   }
 
-  /*
-   * Get the info of eache teacher in the site
-   */
-  getSitesTeachersInfo = async (coaches) => {
-      const firebase = this.context;
 
-      var coachIdsArr = coaches;
-      this.setState({siteCoaches: coachIdsArr});
-
-      // Gather information for each coach.
-      var teacherResults = [];
-      var teacherNames = [];
-
-      // Go through each coach in the site
-      for(var coachIndex in coachIdsArr)
-      {
-        var coachId = coachIdsArr[coachIndex];
-
-        // Get the the coaches teacher
-        var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
-
-
-        // Get all information for all the teachers
-        var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
-
-        teacherResults = teacherResults.concat(teachersList);
-
-        // Remove any duplicates from the teachers
-        teacherResults = teacherResults.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
-
-        // Set teachers names
-        var tempTeacherNames = teachersList.map( (teacher, index) => {return teacher.firstName + " " + teacher.lastName});
-
-        teacherNames = teacherNames.concat(tempTeacherNames);
-
-
-      }
-
-
-
-      this.setState({teacherInfo: teacherResults});
-      this.setState({teacherNames: teacherNames});
-
-      this.getResultsFromBQ(teacherResults);
-
-  }
 
   /*
-   * Get all the Results data from each of the teachers between the two given dates
+   * Get all the Results data from this teacher between the two given dates
    */
-  getResultsFromBQ = (teachers) => {
+  getResultsFromBQ = (teacherId) => {
     const firebase = this.context;
 
+    console.log("Teachers 2022 : ", teacherId);
+
+
     // Grab results data
-    firebase.fetchTeacherProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
+    firebase.fetchTeacherProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherId: teacherId})
       .then( (data) => {
         this.setState({BQData: data});
-        this.calculateResultsForCharts(data, teachers);
+
+        this.calculateResultsForCharts(data, teacherId);
       });
 
   }
@@ -302,58 +253,63 @@ class TeacherProfileResults extends React.Component {
   /*
    * Calculate results for the charts using the rows of data from BQ results
    */
-   calculateResultsForCharts = (data, teachers) => {
+   calculateResultsForCharts = async (data, teacherId) => {
+     const firebase = this.context;
+
+     // Get all the info for the teacher
+     var teacher = await firebase.getUserProgramOrSite({userId: teacherId});
+     this.setState({teacherInfo: teacher});
 
      // Excute function based on observation type
      var averages, trends;
      switch (this.props.observationType) {
        case "transitionTime":
-         averages = this.state.averagesClass.calculateTransitionAverage(data, teachers);
-         trends = this.state.trendsClass.calculateTransitionTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateTransitionAverage(data, teacher);
+         trends = this.state.trendsClass.calculateTransitionTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "classroomClimate":
-         averages = this.state.averagesClass.calculateClimateAverage(data, teachers);
-         trends = this.state.trendsClass.calculateClimateTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateClimateAverage(data, teacher);
+         trends = this.state.trendsClass.calculateClimateTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "mathInstruction":
-         averages = this.state.averagesClass.calculateMathAverages(data, teachers);
-         trends = this.state.trendsClass.calculateMathTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateMathAverages(data, teacher);
+         trends = this.state.trendsClass.calculateMathTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "levelOfInstruction":
-         averages = this.state.averagesClass.calculateLevelInstructionAverages(data, teachers);
-         trends = this.state.trendsClass.calculateLevelInstructionTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateLevelInstructionAverages(data, teacher);
+         trends = this.state.trendsClass.calculateLevelInstructionTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "studentEngagement":
-         averages = this.state.averagesClass.calculateStudentEngagementAverages(data, teachers);
-         trends = this.state.trendsClass.calculateStudentEngagementTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateStudentEngagementAverages(data, teacher);
+         trends = this.state.trendsClass.calculateStudentEngagementTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "listeningToChildren":
-         averages = this.state.averagesClass.calculateListeningToChildrenAverages(data, teachers);
-         trends = this.state.trendsClass.calculateListeningToChildrenTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateListeningToChildrenAverages(data, teacher);
+         trends = this.state.trendsClass.calculateListeningToChildrenTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "sequentialActivities":
-         averages = this.state.averagesClass.calculateSequentialActivitiesAverages(data, teachers);
-         trends = this.state.trendsClass.calculateSequentialActivitiesTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateSequentialActivitiesAverages(data, teacher);
+         trends = this.state.trendsClass.calculateSequentialActivitiesTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "foundationSkills":
-         averages = this.state.averagesClass.calculateFoundationalSkillsAverages(data, teachers);
-         trends = this.state.trendsClass.calculateFoundationalSkillsTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateFoundationalSkillsAverages(data, teacher);
+         trends = this.state.trendsClass.calculateFoundationalSkillsTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "writing":
-         averages = this.state.averagesClass.calculateWritingSkillsAverages(data, teachers);
-         trends = this.state.trendsClass.calculateWritingSkillsTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateWritingSkillsAverages(data, teacher);
+         trends = this.state.trendsClass.calculateWritingSkillsTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "bookReading":
-         averages = this.state.averagesClass.calculateBookReadingAverages(data, teachers);
-         trends = this.state.trendsClass.calculateBookReadingTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateBookReadingAverages(data, teacher);
+         trends = this.state.trendsClass.calculateBookReadingTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "languageEnvironment":
-         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(data, teachers);
-         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(data, teacher);
+         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
        case "associativeAndCooperative":
-         averages = this.state.averagesClass.calculateACAverages(data, teachers);
-         trends = this.state.trendsClass.calculateACTrends(data, teachers, this.props.startDate, this.props.endDate);
+         averages = this.state.averagesClass.calculateACAverages(data, teacher);
+         trends = this.state.trendsClass.calculateACTrends(data, teacher, this.props.startDate, this.props.endDate);
          break;
 
        default:
@@ -362,45 +318,45 @@ class TeacherProfileResults extends React.Component {
      this.setState({averages: averages, trends: trends});
 
      // Build data for line graph
-     this.setLineGraphData(teachers, this.state.radioValue)
+     this.setLineGraphData(teacher, this.state.radioValue)
 
    }
 
 
    // Set Line Graph data
-   setLineGraphData = (teachers, type) => {
+   setLineGraphData = (teacher, type) => {
 
      var trends = this.state.trends;
 
      var tempDataSet = [];
      var lineColors = this.state.lineColors;
      var i = 0;
-     for(var teacherIndex in teachers)
+
+     var fullName = teacher.firstName + " " + teacher.lastName;
+
+     var chosenData = trends[teacher.id][type + "Average"];
+
+     // Round off all the numbers
+      chosenData = chosenData.map(function(each_element){
+       return Math.round((each_element + Number.EPSILON) * 100) / 100;
+      });
+
+     // If there isn't a color set for this teacher, set it
+     if(!lineColors[i])
      {
-       var teacher = teachers[teacherIndex];
-       var fullName = teacher.firstName + " " + teacher.lastName;
-
-       var chosenData = trends[teacher.id][type];
-
-       // Round off all the numbers
-        chosenData = chosenData.map(function(each_element){
-         return Math.round((each_element + Number.EPSILON) * 100) / 100;
-        });
-
-       // If there isn't a color set for this teacher, set it
-       if(!lineColors[i])
-       {
-         lineColors[i] = this.randomRgbColor();
-       }
-       var tempData = {
-         label: fullName,
-         data: chosenData,
-         borderColor: lineColors[i],
-       };
-
-       tempDataSet.push(tempData);
-       i++;
+       lineColors[i] = this.randomRgbColor();
      }
+     var tempData = {
+       label: fullName,
+       data: chosenData,
+       borderColor: lineColors[i],
+       fill: false,
+       tension: 0.0
+     };
+
+     tempDataSet.push(tempData);
+     i++;
+
 
      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
      const lineData = {
@@ -436,30 +392,15 @@ class TeacherProfileResults extends React.Component {
           const currDate = new Date();
 
 
-          pdf.save("Site_Profile_Results_" + currDate.getMonth() + '_' + currDate.getDate() + "_" + currDate.getFullYear() + ".pdf");
+          pdf.save("Site_Teacher_Results_" + currDate.getMonth() + '_' + currDate.getDate() + "_" + currDate.getFullYear() + ".pdf");
         });
    }
 
-  // When any of the checkboxes are checked or unchecked
-  handleCheckboxChange = (event: SelectChangeEvent) => {
-
-    // If we're checking it, add to array
-    if(event.target.checked)
-    {
-      this.setState({checked:[...this.state.checked, event.target.name]});
-    }
-    // If we're unchecking it, we need to take it out of the array.
-    else
-    {
-      this.setState({checked: this.state.checked.filter(function(item) {
-        return item !== event.target.name;
-      })});
-    }
-
-  };
 
 
-  // When any of the radio buttons are selected
+  /*
+   * When any of the radio buttons are selected
+   */
   handleRadioChange = (event: SelectChangeEvent) => {
       this.setState({radioValue: event.target.value});
 
@@ -540,32 +481,26 @@ class TeacherProfileResults extends React.Component {
                 */}
                 <Grid item xs={12} style={centerColumn}>
                   {this.state.tabState == 1 ? (
-                    <AveragesChart
-                      lowLevel={this.state.chosenAveragesData}
-                    />
+                    <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
+                      <Line
+                        data={this.state.lineGraphData}
+                        options={LineGraphOptions}
+                      />
+                    </Grid>
 
                   ) : (this.state.tabState == 0 ? (
 
                     <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
-                      <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
-
-                      <TeacherProfileBarDetails
-                        totalVisits={10}
-                        labels={this.state.teacherNames}
+                      <AveragesChart
                         data={this.state.averages}
                         type={this.state.radioValue}
+                        teacherId={this.props.selectedTeacherId}
                       />
                     </Grid>
                   ) : null)}
 
                 </Grid>
 
-                {/*
-                    The "averages" bar graph
-                */}
-                <Grid item xs={12} style={centerColumn}>
-
-                </Grid>
 
                 {/*
                   Download PDF button
