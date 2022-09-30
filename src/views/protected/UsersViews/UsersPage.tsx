@@ -172,7 +172,7 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
-  buildCoachData = async (teachersAndCoaches) => {
+  buildCoachData = async (teachersAndCoaches: Promise<Array<Object>>) => {
     let coaches = []
     let programs = await this.context.getPrograms();
     let data = []
@@ -181,10 +181,8 @@ class UsersPage extends React.Component<Props, State> {
     await teachersAndCoaches.map(async (value) => {
       if(!coaches.includes(value.coachId)) {
         coaches.push(value.coachId);
-        let sites = await this.context.fetchSitesForCoach(value.coachId);
+        let sites = await this.context.fetchSitesForCoach(await value.coachId);
         let siteList = []
-
-        console.log(sites)
 
         await sites.map((site) => {
           for (let i = 0; i < programs.length; i++) {
@@ -290,6 +288,8 @@ class UsersPage extends React.Component<Props, State> {
                         changePage={(pageName) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
+                        teacherData = {this.state.teacherData}
+                        coachData = {this.state.coachData}
                         />
                     } />
                     <Route path="/LeadersTeachers" render={(props) =>

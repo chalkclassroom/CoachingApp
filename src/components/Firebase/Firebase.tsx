@@ -6,6 +6,7 @@ import * as Types from '../../constants/Types'
 import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
 import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
+import { resultsAriaMessage } from 'react-select/src/accessibility'
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -4182,20 +4183,23 @@ class Firebase {
   }
 
   fetchSitesForCoach = async (coachId: string) => {
+    let result = []
     const document = await this.db.collection('users').doc(coachId).get();
     const sites = document.data().sites;
 
     this.query = this.db.collection('sites');
     const collection = await this.query.get()
 
-    return Promise.all(collection.docs.map(async doc => {
+    Promise.all(collection.docs.map(async doc => {
       if (sites.includes(doc.id)) {
-        return {
+        result.push({
           name: doc.data().name,
           id: doc.id
-        }
+        })
       }
     }))
+
+    return result;
   }
 
   getTeacherBySiteName = async (siteName: string) => {
@@ -4220,15 +4224,17 @@ class Firebase {
       const subCollection = await this.query.get();
       Promise.all(subCollection.docs.map(async (teacher) => {
         const teacherResult = await this.db.collection('users').doc(teacher.id).get();
-        arr.push({
-          coachId: coach.id,
-          coachFirstName: coach.data().firstName,
-          coachLastName: coach.data().lastName,
-          siteName: await teacherResult.data().school,
-          teacherId: teacher.id,
-          teacherFirstName: await teacherResult.data().firstName,
-          teacherLastName: await teacherResult.data().lastName,
-        })
+        if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6") {
+          arr.push({
+            coachId: coach.id,
+            coachFirstName: coach.data().firstName,
+            coachLastName: coach.data().lastName,
+            siteName: await teacherResult.data().school,
+            teacherId: teacher.id,
+            teacherFirstName: await teacherResult.data().firstName,
+            teacherLastName: await teacherResult.data().lastName,
+          })
+        }
       }))
     }))
 

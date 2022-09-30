@@ -23,8 +23,12 @@ const StyledSelect = withStyles({
 })(Select);
 
 export default class Coaches extends Component {
+  componentDidMount(): void {
+      console.log(this.props.coachData)
+  }
   render() {
     return (<>
+    {this.props.coachData ? (
       <Grid container direction='row'>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -74,12 +78,12 @@ export default class Coaches extends Component {
                       name="selectedCoach"
                       // disabled={!(this.state.coachOptions.length > 0) /* Disable if there are no site options */}
                     >
-                      {/* {this.state.coachOptions.map(
+                      {this.props.coachData.map(
                         (coach, index)=>{
-                          return <MenuItem value={coach.id} key={coach.id}>
+                          return <MenuItem value={coach.id} key={index}>
                                 {coach.lastName + ", " + coach.firstName}
                               </MenuItem>
-                          })} */}
+                          })}
                     </StyledSelect>
                     {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                   </FormControl>
@@ -136,6 +140,17 @@ export default class Coaches extends Component {
             </Grid>
           </Grid>
       </Grid>
+      ) : (
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          style={{height: "100%"}}
+        >
+          <img src={CHALKLogoGIF} alt="Loading" width="60%" style={{maxHeight: '100%'}} />
+        </Grid>
+      )}
     </>)
   }
 }
