@@ -186,9 +186,23 @@ class CoachProfile extends React.Component {
       const firebase = this.context;
 
       // Get a list of the coaches for the chosen site.
-      var siteCoaches = await firebase.fetchSiteCoaches(site.id);
-      
-      var siteCoachIds = siteCoaches.map( coach => {return coach.id});
+      // Get all coaches that has this site in their document
+      var siteCoachIds = [];
+      var tempCoaches = await firebase.fetchSiteCoaches(site.id);
+
+      if(tempCoaches)
+      {
+        siteCoachIds = tempCoaches.map(coach => {return coach.id});
+      }
+
+      // Add all the coaches this site has listed. (fetchSiteCoaches only grabs users with the role of 'coach'. This is a minor failsafe in case we need more than that)
+      if(site.coaches)
+      {
+        siteCoachIds = siteCoachIds.concat(site.coaches);
+      }
+
+      // Remove any duplicates
+      siteCoachIds = siteCoachIds.filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
 
       // Snag documents from firestore for each coach
       firebase.getMultipleUserProgramOrSite({userIds: siteCoachIds}).then( (data) => {
