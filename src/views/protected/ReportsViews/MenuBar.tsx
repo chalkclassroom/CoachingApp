@@ -6,10 +6,6 @@ const MenuItems = [
         title: 'Reports',
         url: '/Reports',
     },
-    {
-        title: 'Reports List',
-        url: '/ReportsList',
-    },
 ]
 
 const Styles = {
@@ -69,5 +65,5 @@ class Navbar extends Component {
         );
     }
 }
- 
+
 export default withRouter(Navbar);

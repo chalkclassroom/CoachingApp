@@ -21,14 +21,7 @@ const aStyle = {
 }
 
 const MenuItems = [
-    {
-        title: 'View Report Images',
-        url: '/ReportImages',
-    },
-    {
-        title: 'View Report Descriptions',
-        url: '/ReportDesc',
-    },
+
 ]
 
 const BackItems = [
