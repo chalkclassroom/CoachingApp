@@ -222,12 +222,11 @@ class SiteProfileResults extends React.Component {
     const firebase = this.context;
 
     // Get a list of the coaches for the chosen site.
-    firebase.getUserProgramOrSite({siteId: this.props.selectedSiteId}).then((data) => {
+    firebase.fetchSiteCoaches(this.props.selectedSiteId).then( (data) => {
 
-      // Save the teachers' information to the state.
-      if(data.coaches)
+      if(data)
       {
-        this.getSitesTeachersInfo(data.coaches)
+        this.getSitesTeachersInfo(data)
       }
 
     });
@@ -250,32 +249,11 @@ class SiteProfileResults extends React.Component {
       // Go through each coach in the site
       for(var coachIndex in coachIdsArr)
       {
-        var coachId = coachIdsArr[coachIndex];
+        var coachId = coachIdsArr[coachIndex].id;
+
 
         // Get the the coaches teacher
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
-
-        // Go through each teacher the coach observes
-        /*
-        for(var teacherIndex in teachersIdList)
-        {
-          var teacherId = teachersIdList[teacherIndex];
-
-          // Get all information of the teacher
-          var tempTeacher = await firebase.getUserProgramOrSite({userId: teacherId});
-
-          // Make sure it exists
-          if(tempTeacher)
-          {
-            // Save all information
-            teacherResults.push(tempTeacher);
-
-            // Save just the names
-            teacherNames.push(tempTeacher.firstName + " " + tempTeacher.lastName);
-          }
-
-        }
-        */
 
         // Get all information for all the teachers
         var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
