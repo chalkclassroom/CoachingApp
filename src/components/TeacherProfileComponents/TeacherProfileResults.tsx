@@ -216,6 +216,7 @@ class TeacherProfileResults extends React.Component {
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
+        usingTime: false,
         lineColors: [],
       }
   }
@@ -262,10 +263,12 @@ class TeacherProfileResults extends React.Component {
 
      // Excute function based on observation type
      var averages, trends;
+     var usingTime = false;
      switch (this.props.observationType) {
        case "transitionTime":
          averages = this.state.averagesClass.calculateTransitionAverage(data, teacher);
          trends = this.state.trendsClass.calculateTransitionTrends(data, teacher, this.props.startDate, this.props.endDate);
+         usingTime = true;
          break;
        case "classroomClimate":
          averages = this.state.averagesClass.calculateClimateAverage(data, teacher);
@@ -315,7 +318,7 @@ class TeacherProfileResults extends React.Component {
        default:
          break;
      }
-     this.setState({averages: averages, trends: trends});
+     this.setState({averages: averages, trends: trends, usingTime: usingTime});
 
      // Build data for line graph
      this.setLineGraphData(teacher, this.state.radioValue)
@@ -495,6 +498,7 @@ class TeacherProfileResults extends React.Component {
                         data={this.state.averages}
                         type={this.state.radioValue}
                         teacherId={this.props.selectedTeacherId}
+                        usingTime={this.state.usingTime}
                       />
                     </Grid>
                   ) : null)}

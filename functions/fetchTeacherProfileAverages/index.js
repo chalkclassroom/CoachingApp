@@ -86,7 +86,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                   	  SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
                       teacher
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY startDate, teacher
                       ORDER BY startDate ASC;`;
     }
@@ -101,7 +101,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       behaviorResponse, COUNT(behaviorResponse) AS count, teacher,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY behaviorResponse, teacher, startDate
                       ORDER BY startDate ASC;`;
     }
@@ -113,6 +113,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "math")
     {
       sqlQuery = `SELECT
+                      COUNT(id) as count,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -124,7 +125,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       peopletype,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY teacher, timestamp, peopletype
                       ORDER BY timestamp ASC;`;
     }
@@ -139,7 +140,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       instructionType, COUNT(instructionType) AS count, teacher,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY instructionType, startDate, teacher
                       ORDER BY startDate ASC;`;
     }
@@ -157,7 +158,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       FORMAT_DATE('%D', DATE(codedTime)) AS startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and codedTime <= '${endDate}' and codedTime >= '${startDate}'
+                      where teacher = '${teacherId}' and codedTime <= '${endDate}' and codedTime >= '${startDate}'
                       GROUP BY startDate, teacher, point
                       ORDER BY startDate ASC;`;
     }
@@ -182,7 +183,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       COUNT(timestamp) as count,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and timestamp <= '${endDate}' and timestamp >= '${startDate}'
+                      where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
                       GROUP BY startDate, teacher, GroupDate
                       ORDER BY startDate ASC;`;
     }
@@ -206,7 +207,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       peopletype,
                       COUNT (sessionStart) AS total,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY teacher, timestamp, peopletype
                       ORDER BY timestamp ASC;`;
     }
@@ -235,7 +236,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
@@ -261,7 +262,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
@@ -319,7 +320,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       time
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
     }
@@ -333,6 +334,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     {
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       DATE(sessionStart) as GroupDate,
+                      COUNT(id) as total,
                       COUNT(CASE WHEN (checklist.teacher1) THEN 'teacher1' ELSE NULL END) AS teacher1,
                       COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
                       COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
@@ -344,7 +346,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       peopleType,
                       teacher,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and timestamp <= '${endDate}' and timestamp >= '${startDate}'
+                      where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
                       GROUP BY timestamp, GroupDate, peopleType, startDate, teacher
                       ORDER BY GroupDate DESC;`;
     }
@@ -364,6 +366,6 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     const [job] = await bigquery.createQueryJob(options);
     console.log(`Job ${job.id} started.`);
     const rows = await job.getQueryResults();
-    console.log(rows);
+    //console.log(rows);
     return rows;
 });

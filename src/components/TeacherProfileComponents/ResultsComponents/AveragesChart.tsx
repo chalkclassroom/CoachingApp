@@ -13,12 +13,82 @@ interface Props {
 
 // Array used to match the name of a practice type to the labels
 const labelsArr = {
+  "line": ["Time Waiting in Line", "Not Waiting in Line"],
+  "traveling": ["Time Traveling", "Not Traveling"],
+  "waiting": ["Time Child Waiting", "Not Child Waiting"],
+  "routines": ["Routines", "No Routines"],
+  "behaviorManagement": ["Time Behavior Management", "No Behavior Management"],
+  "other": ["Time for Other Activities", "No Other Activities"],
+
+  "disapproval": ["Disapproval", "Not Disapproval"],
+  "redirection": ["Redirection", "Not Redirection"],
+  "specificapproval": ["Specific Approval", "Not Specific Approval"],
+  "nonspecificapproval": ["General Approval", "Not General Approval"],
+
+  "mathVocabulary": ["Using Math Vocabulary", "Not Using Math Vocabulary"],
+  "askingQuestions": ["Asking Questions", "Not Asking Questions"],
+  "mathConcepts": ["Demonstrating Math Concepts", "Not Demonstrating Math Concepts"],
+  "helpingChildren": ["Helping Children", "Not Helping Children"],
+  "notAtCenter": ["Teacher Not at Center", "Teacher at Center"],
+  "noSupport": ["Teacher Present, No Support", "Support"],
+  "support": ["Teacher Support", "No Teacher Support"],
+
+  "hlq": ["Teacher Asks High-Level Question", "Other"],
+  "hlqResponse": ["Child Answers High-Level Question", "Other"],
+  "llq": ["Teacher Asks High-Level Question", "Other"],
+  "llqResponse": ["Child Answers Low-Level Question", "Other"],
+
+  "offTask": ["Off Task", "Other"],
+  "mildlyEngaged": ["Mildly Engaged", "Other"],
+  "engaged": ["Engaged", "Other"],
+  "highlyEngaged": ["Highly Engaged", "Other"],
+
+  "eyeLevel": ["At Eye Level", "Other"],
+  "positiveExpression": ["Uses positive expression", "Other"],
+  "repeats": ["Repeats or clarifies", "Other"],
+  "openEndedQuestions": ["Asks open-ended questions", "Other"],
+  "extendsPlay": ["Expands on children's play or talk", "Other"],
+  "encouragesPeerTalk": ["Encourages peer talk", "Other"],
+  "encouraging": ["Listening/Encouraging", "Other"],
+  "noBehaviors": ["No Target Behaviors Observed", "Other"],
+
+  "sequentialActivities": ["Helping children do sequential activities", "Other"],
+  "drawImages": ["Supporting children as they draw", "Other"],
+  "demonstrateSteps": ["Demonstrating the steps to an activity or game", "Other"],
+  "actOut": ["Supporting children as they act", "Other"],
+
+
+  "foundationalSkills": ["Literacy Instruction - Total Instruction", "No Target Behaviors Observed"],
+  "phonological": ["Phonological awareness or the sounds of language", "Other"],
+  "alphabetic": ["The alphabetic principle and print concepts", "Other"],
+  "openEndedQuestions": ["Open-ended questions or prompts", "Other"],
+  "realisticReading": ["Realistic reading and writing", "Other"],
+
+
+
+  "writingSkills": ["Writing Instruction", "No Writing Instructions Observed"],
+  "meaning": ["Has content or meaning", "Other"],
+  "printProcesses": ["Print processes", "Other"],
+
+
   "bookReading": ["Book Reading Instruction", "No Target Behaviors Observed"],
   "vocabFocus": ["Focus on Vocabulary", "No Vocabulary Behaviors Observed"],
   "languageConnections": ["Make Connections to Children.", "No Connection Behaviors Observed"],
   "childrenSupport": ["Support Children's Speaking and Listening Skills", "No Support Behaviors Observed"],
   "fairnessDiscussions": ["Facilitates Discussions", "No Discussions Behaviors Observed"],
   "multimodalInstruction": ["Use Multimodal Instruction", "No Multimodal Behaviors Observed"],
+
+
+  "languageEnvironment": ["Language Environment Instruction", "No Target Behaviors Observed"],
+  "talk": ["Talk with children about vocabulary", "Other"],
+  "encourageChildren": ["Encourage children to talk", "Other"],
+  "respondChildren": ["Respond to children.", "Other"],
+
+
+  "childrensPlay": ["Participating in children's play", "Other"],
+  "encouragingChildren": ["Encouraging children to share", "Other"],
+  "encourageChildren": ["Encourage children to talk", "Other"],
+  "respondChildren": ["Respond to children.", "Other"],
 }
 
 
@@ -44,8 +114,24 @@ class AveragesPieChart extends React.Component<Props, {}> {
       // Get the values for the chart
       var firstValue = Math.round(this.props.data[this.props.teacherId][this.props.type]);
 
-      // Need to check if we should be using total interval
-      var secondValue = this.props.data[this.props.teacherId]["totalIntervals"] - firstValue;
+      // Need to check if we should be using total interval, total instruction, or total
+      var secondValue;
+
+
+
+      if(this.props.data[this.props.teacherId]["totalIntervals"])
+      {
+        secondValue = this.props.data[this.props.teacherId]["totalIntervals"] - firstValue;
+      }
+      else if(this.props.data[this.props.teacherId]["totalInstructions"])
+      {
+        secondValue = this.props.data[this.props.teacherId]["totalInstructions"] - firstValue;
+      }
+      else
+      {
+        secondValue = this.props.data[this.props.teacherId]["total"] - firstValue;
+      }
+
 
       this.setState({dataValues: [firstValue, secondValue], labels: labelsArr[this.props.type]});
 
@@ -55,6 +141,9 @@ class AveragesPieChart extends React.Component<Props, {}> {
   componentDidMount(): void {
 
   }
+
+
+
 
   static propTypes = {
     lowLevel: PropTypes.number.isRequired,
@@ -80,6 +169,14 @@ class AveragesPieChart extends React.Component<Props, {}> {
       ]
     };
     const total = this.state.dataValues[0] + this.state.dataValues[1];
+    const usingTime = this.props.usingTime;
+    function convertMillisecondsToMinutes(millis){
+      var minutes = Math.floor(millis / 60000);
+      var seconds = ((millis % 60000) / 1000).toFixed(0);
+      return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+      return minutes;
+    }
+
     return (
         <Pie
           data={instructionResponseData}
@@ -94,10 +191,11 @@ class AveragesPieChart extends React.Component<Props, {}> {
                 label: function(tooltipItem: { datasetIndex: number, index: number },
                   data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                   const dataset = data.datasets[tooltipItem.datasetIndex];
-                  const currentValue = dataset.data[tooltipItem.index];
+                  var currentValue = dataset.data[tooltipItem.index];
                   const percentage = parseFloat(
                     ((currentValue / total) * 100).toFixed(1)
                   );
+                  currentValue = usingTime ? convertMillisecondsToMinutes(currentValue) : currentValue;
                   return currentValue + " (" + percentage + "%)";
                 },
                 title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
@@ -133,6 +231,7 @@ class AveragesPieChart extends React.Component<Props, {}> {
                 },
                 formatter: function(value: number): number | null {
                   if (value > 0) {
+                    value = usingTime ? convertMillisecondsToMinutes(value) : value;
                     return value;
                   } else {
                     return null;

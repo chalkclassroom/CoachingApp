@@ -43,17 +43,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Waiting in Line"
-                  value="lineAverage"
+                  value="line"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Traveling"
-                  value="travelingAverage"
+                  value="traveling"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Children Waiting"
-                  value="waitingAverage"
+                  value="waiting"
                 />
               </FormGroup>
             </FormControl>
@@ -64,17 +64,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Classroom Routines"
-                  value="routinesAverage"
+                  value="routines"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Behavior Management"
-                  value="behaviorManagementAverage"
+                  value="behaviorManagement"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Other"
-                  value="otherAverage"
+                  value="other"
                 />
 
               </FormGroup>
@@ -95,12 +95,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Nonspecific Approval"
-                  value="nonspecificapprovalAverage"
+                  value="nonspecificapproval"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Specific Approval"
-                  value="specificapprovalAverage"
+                  value="specificapproval"
                 />
 
               </FormGroup>
@@ -112,12 +112,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Disapproval"
-                  value="disapprovalAverage"
+                  value="disapproval"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Redirection"
-                  value="redirectionAverage"
+                  value="redirection"
                 />
 
               </FormGroup>
@@ -139,22 +139,22 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Using Math Vocabulary"
-                  value="mathVocabularyAverage"
+                  value="mathVocabulary"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Asking Questions About Math Concepts"
-                  value="askingQuestionsAverage"
+                  value="askingQuestions"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Demonstrating Math Concepts"
-                  value="mathConceptsAverage"
+                  value="mathConcepts"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Helping Children Use Math to Problem Solve"
-                  value="helpingChildrenAverage"
+                  value="helpingChildren"
                 />
 
               </FormGroup>
@@ -166,17 +166,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Not at Center"
-                  value="notAtCenterAverage"
+                  value="notAtCenter"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="No Support"
-                  value="noSupportAverage"
+                  value="noSupport"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Support"
-                  value="supportAverage"
+                  value="support"
                 />
 
               </FormGroup>
@@ -198,12 +198,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Asks High-Level Question"
-                  value="hlqAverage"
+                  value="hlq"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Child Answers High-Level Question"
-                  value="hlqResponseAverage"
+                  value="hlqResponse"
                 />
 
 
@@ -216,12 +216,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Asks High-Level Question"
-                  value="llqAverage"
+                  value="llq"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Child Answers Low-Level Question"
-                  value="llqResponseAverage"
+                  value="llqResponse"
                 />
 
               </FormGroup>
@@ -243,12 +243,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Off Task"
-                  value="offTaskAverage"
+                  value="offTask"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Mildly Engaged"
-                  value="mildlyEngagedAverage"
+                  value="mildlyEngaged"
                 />
 
               </FormGroup>
@@ -260,12 +260,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Engaged"
-                  value="engagedAverage"
+                  value="engaged"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Highly Engaged"
-                  value="highlyEngagedAverage"
+                  value="highlyEngaged"
                 />
 
               </FormGroup>
@@ -287,22 +287,22 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="At Eye Level"
-                  value="eyeLevelAverage"
+                  value="eyeLevel"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Uses positive or interested expression to encourage child talk"
-                  value="positiveExpressionAverage"
+                  value="positiveExpression"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Repeats or clarifies"
-                  value="repeatsAverage"
+                  value="repeats"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Asks open-ended questions"
-                  value="openEndedQuestionsAverage"
+                  value="openEndedQuestions"
                 />
 
               </FormGroup>
@@ -315,22 +315,22 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Expands on children's play or talk"
-                  value="extendsPlayAverage"
+                  value="extendsPlay"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Encourages peer talk"
-                  value="encouragesPeerTalkAverage"
+                  value="encouragesPeerTalk"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Listening/Encouraging"
-                  value="encouragingAverage"
+                  value="encouraging"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="No Target Behaviors Observed"
-                  value="noBehaviorsAverage"
+                  value="noBehaviors"
                 />
 
               </FormGroup>
@@ -352,17 +352,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Helping children do sequential activities with manipulatives or toys"
-                  value="sequentialActivitiesAverage"
+                  value="sequentialActivities"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Supporting children as they draw images or write messages"
-                  value="drawImagesAverage"
+                  value="drawImages"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Demonstrating the steps to an activity or game"
-                  value="demonstrateStepsAverage"
+                  value="demonstrateSteps"
                 />
 
 
@@ -376,22 +376,22 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Supporting children as they act out a dramatic play scenario or book"
-                  value="actOutAverage"
+                  value="actOut"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Support for Sequential Activities"
-                  value="supportAverage"
+                  value="support"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Present, No Support"
-                  value="noSupportAverage"
+                  value="noSupport"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Not at Center"
-                  value="notAtCenterAverage"
+                  value="notAtCenter"
                 />
 
               </FormGroup>
@@ -413,17 +413,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Literacy Instruction - Total Instruction"
-                  value="foundationalSkillsAverage"
+                  value="foundationalSkills"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Phonological awareness or the sounds of language"
-                  value="phonologicalAverage"
+                  value="phonological"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="The alphabetic principle and print concepts"
-                  value="alphabeticAverage"
+                  value="alphabetic"
                 />
               </FormGroup>
             </FormControl>
@@ -434,17 +434,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Open-ended questions or prompts"
-                  value="openEndedQuestionsAverage"
+                  value="openEndedQuestions"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Realistic reading and writing"
-                  value="realisticReadingAverage"
+                  value="realisticReading"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Multimodal Instruction"
-                  value="multimodalInstructionAverage"
+                  value="multimodalInstruction"
                 />
 
               </FormGroup>
@@ -465,12 +465,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Writing Instruction - Total Instruction"
-                  value="writingSkillsAverage"
+                  value="writingSkills"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="The content or meaning of the writing"
-                  value="meaningAverage"
+                  value="meaning"
                 />
               </FormGroup>
             </FormControl>
@@ -481,7 +481,7 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Print processes (e.g., letter forms, demonstrations, sounds/spelling)"
-                  value="printProcessesAverage"
+                  value="printProcesses"
                 />
 
               </FormGroup>
@@ -556,12 +556,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Language Environment - Total Instruction"
-                  value="languageEnvironmentAverage"
+                  value="languageEnvironment"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Talk with children about vocabulary or social-emotional topics"
-                  value="talkAverage"
+                  value="talk"
                 />
 
               </FormGroup>
@@ -573,12 +573,12 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Encourage children to talk"
-                  value="encourageChildrenAverage"
+                  value="encourageChildren"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Respond to children"
-                  value="respondChildrenAverage"
+                  value="respondChildren"
                 />
 
               </FormGroup>
@@ -602,22 +602,22 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Participating in children's play"
-                  value="childrensPlayAverage"
+                  value="childrensPlay"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Asking questions to extend children's thinking about their shared activity"
-                  value="askingQuestionsAverage"
+                  value="askingQuestions"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Encouraging children to share, work, or interact with each other"
-                  value="encouragingChildrenAverage"
+                  value="encouragingChildren"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Helping children find the words to communicate"
-                  value="helpingChildrenAverage"
+                  value="helpingChildren"
                 />
 
 
@@ -631,17 +631,17 @@ class RadioSets extends React.Component<Props, {}> {
                 <FormControlLabel
                   control={<Radio />}
                   label="Supported children's associative and cooperative interactions."
-                  value="supportAverage"
+                  value="support"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Was present in the center but did not support associative and cooperative interactions."
-                  value="noSupportAverage"
+                  value="noSupport"
                 />
                 <FormControlLabel
                   control={<Radio />}
                   label="Was not present in the centers observed."
-                  value="notAtCenterAverage"
+                  value="notAtCenter"
                 />
 
               </FormGroup>

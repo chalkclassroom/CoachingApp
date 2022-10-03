@@ -9,7 +9,7 @@ class TrendData {
   /*
    * Will return an object that holds data for all of the trends data for Book Reading
    */
-   calculateTransitionTrends = (data, teachers, startDate, endDate) => {
+   calculateTransitionTrends = (data, teacher, startDate, endDate) => {
 
      // Initialize the array that will hold all the data
      var results = {};
@@ -23,30 +23,29 @@ class TrendData {
 
      // Add each teacher to the object
      var tempName = "";
-     for(var teacherIndex in teachers)
-     {
 
-       tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
 
-       results[teachers[teacherIndex].id] = {
-         name: tempName,
-         line: new Array(12).fill(0),
-         traveling: new Array(12).fill(0),
-         waiting: new Array(12).fill(0),
-         routines: new Array(12).fill(0),
-         behaviorManagement: new Array(12).fill(0),
-         other: new Array(12).fill(0),
-         total: new Array(12).fill(0),
+     tempName = teacher.firstName + " " + teacher.lastName;
 
-         lineAverage: new Array(12).fill(0),
-         travelingAverage: new Array(12).fill(0),
-         waitingAverage: new Array(12).fill(0),
-         routinesAverage: new Array(12).fill(0),
-         behaviorManagementAverage: new Array(12).fill(0),
-         otherAverage: new Array(12).fill(0),
-       };
+     results[teacher.id] = {
+       name: tempName,
+       line: new Array(12).fill(0),
+       traveling: new Array(12).fill(0),
+       waiting: new Array(12).fill(0),
+       routines: new Array(12).fill(0),
+       behaviorManagement: new Array(12).fill(0),
+       other: new Array(12).fill(0),
+       total: new Array(12).fill(0),
 
-     }
+       lineAverage: new Array(12).fill(0),
+       travelingAverage: new Array(12).fill(0),
+       waitingAverage: new Array(12).fill(0),
+       routinesAverage: new Array(12).fill(0),
+       behaviorManagementAverage: new Array(12).fill(0),
+       otherAverage: new Array(12).fill(0),
+     };
+
+
 
 
      // Sort by date just in case
@@ -57,12 +56,12 @@ class TrendData {
 
      // Get number of instances for each type of data
      var prevMonth = 0, rowMonth = startMonth;
+     var teacherId = teacher.id;
 
      for(var rowIndex in data)
      {
        var row = data[rowIndex];
 
-       var teacherId = row.teacher.split("/")[2];
 
        rowMonth = new Date(row.startDate.value).getMonth();
 
@@ -107,7 +106,7 @@ class TrendData {
    /*
     * Classroom Climate
     */
-   calculateClimateTrends = (data, teachers, startDate, endDate) => {
+   calculateClimateTrends = (data, teacher, startDate, endDate) => {
 
      // Initialize the array that will hold all the data
      var results = {};
@@ -121,26 +120,25 @@ class TrendData {
 
      // Add each teacher to the object
      var tempName = "";
-     for(var teacherIndex in teachers)
-     {
 
-       tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
 
-       results[teachers[teacherIndex].id] = {
-         name: tempName,
-         total: new Array(12).fill(0),
-         nonspecificapproval: new Array(12).fill(0),
-         specificapproval: new Array(12).fill(0),
-         disapproval: new Array(12).fill(0),
-         redirection: new Array(12).fill(0),
+     tempName = teacher.firstName + " " + teacher.lastName;
 
-         nonspecificapprovalAverage: new Array(12).fill(0),
-         specificapprovalAverage: new Array(12).fill(0),
-         disapprovalAverage: new Array(12).fill(0),
-         redirectionAverage: new Array(12).fill(0),
-       };
+     results[teacher.id] = {
+       name: tempName,
+       total: new Array(12).fill(0),
+       nonspecificapproval: new Array(12).fill(0),
+       specificapproval: new Array(12).fill(0),
+       disapproval: new Array(12).fill(0),
+       redirection: new Array(12).fill(0),
 
-     }
+       nonspecificapprovalAverage: new Array(12).fill(0),
+       specificapprovalAverage: new Array(12).fill(0),
+       disapprovalAverage: new Array(12).fill(0),
+       redirectionAverage: new Array(12).fill(0),
+     };
+
+
 
 
      // Get number of instances for each type of data
@@ -150,7 +148,7 @@ class TrendData {
      {
        var row = data[rowIndex];
 
-       var teacherId = row.teacher.split("/")[2];
+       var teacherId = teacher.id;
 
        rowMonth = new Date(row.startDate.value).getMonth();
 
@@ -190,7 +188,7 @@ class TrendData {
    /*
     * MATH INSTRUCTIONS
     */
-  calculateMathTrends = (data, teachers, startDate, endDate) => {
+  calculateMathTrends = (data, teacher, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -203,36 +201,32 @@ class TrendData {
     const endMonth = endDate.getMonth();
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    results[teacher.id] = {
+      name: tempName,
+      totalInstructions: new Array(12).fill(0),
+      mathVocabulary: new Array(12).fill(0),
+      askingQuestions: new Array(12).fill(0),
+      mathConcepts: new Array(12).fill(0),
+      helpingChildren: new Array(12).fill(0),
 
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalInstructions: new Array(12).fill(0),
-        mathVocabulary: new Array(12).fill(0),
-        askingQuestions: new Array(12).fill(0),
-        mathConcepts: new Array(12).fill(0),
-        helpingChildren: new Array(12).fill(0),
+      notAtCenter: new Array(12).fill(0),
+      noSupport: new Array(12).fill(0),
+      support: new Array(12).fill(0),
 
-        notAtCenter: new Array(12).fill(0),
-        noSupport: new Array(12).fill(0),
-        support: new Array(12).fill(0),
+      totalInstructionsAverage: new Array(12).fill(0),
+      mathVocabularyAverage: new Array(12).fill(0),
+      askingQuestionsAverage: new Array(12).fill(0),
+      mathConceptsAverage: new Array(12).fill(0),
+      helpingChildrenAverage: new Array(12).fill(0),
 
-        totalInstructionsAverage: new Array(12).fill(0),
-        mathVocabularyAverage: new Array(12).fill(0),
-        askingQuestionsAverage: new Array(12).fill(0),
-        mathConceptsAverage: new Array(12).fill(0),
-        helpingChildrenAverage: new Array(12).fill(0),
+      notAtCenterAverage: new Array(12).fill(0),
+      noSupportAverage: new Array(12).fill(0),
+      supportAverage: new Array(12).fill(0),
+    };
 
-        notAtCenterAverage: new Array(12).fill(0),
-        noSupportAverage: new Array(12).fill(0),
-        supportAverage: new Array(12).fill(0),
-      };
 
-    }
 
 
     // Get number of instances for each type of data
@@ -242,12 +236,13 @@ class TrendData {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var teacherId = teacher.id;
 
       var rowMonth = new Date(row.timestamp).getMonth();
 
       // Add to total # of intervals
-      results[teacherId].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
+      //results[teacherId].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
+      results[teacherId].totalInstructions[rowMonth] += row.count;
 
       // Add to behavior types
       results[teacherId].mathVocabulary[rowMonth] += row.mathVocabulary;
@@ -290,7 +285,7 @@ class TrendData {
    /*
     * Level of Instructions
     */
-  calculateLevelInstructionTrends = (data, teachers, startDate, endDate) => {
+  calculateLevelInstructionTrends = (data, teacher, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -303,29 +298,23 @@ class TrendData {
     const endMonth = endDate.getMonth();
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
 
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalInstructions: new Array(12).fill(0),
-        hlq: new Array(12).fill(0),
-        hlqResponse: new Array(12).fill(0),
-        llq: new Array(12).fill(0),
-        llqResponse: new Array(12).fill(0),
+    results[teacher.id] = {
+      name: tempName,
+      totalInstructions: new Array(12).fill(0),
+      hlq: new Array(12).fill(0),
+      hlqResponse: new Array(12).fill(0),
+      llq: new Array(12).fill(0),
+      llqResponse: new Array(12).fill(0),
 
-        hlqAverage: new Array(12).fill(0),
-        hlqResponseAverage: new Array(12).fill(0),
-        llqAverage: new Array(12).fill(0),
-        llqResponseAverage: new Array(12).fill(0),
+      hlqAverage: new Array(12).fill(0),
+      hlqResponseAverage: new Array(12).fill(0),
+      llqAverage: new Array(12).fill(0),
+      llqResponseAverage: new Array(12).fill(0),
 
-      };
-
-    }
-
+    };
 
     // Get number of instances for each type of data
     var tempIntervalData = 0;
@@ -334,7 +323,7 @@ class TrendData {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var teacherId = teacher.id;
 
       var rowMonth = new Date(row.startDate.value).getMonth();
 
@@ -371,7 +360,7 @@ class TrendData {
   /*
    * Student Engagement
    */
- calculateStudentEngagementTrends = (data, teachers, startDate, endDate) => {
+ calculateStudentEngagementTrends = (data, teacher, startDate, endDate) => {
 
    // Initialize the array that will hold all the data
    var results = {};
@@ -384,28 +373,24 @@ class TrendData {
    const endMonth = endDate.getMonth();
 
    // Add each teacher to the object
-   var tempName = "";
-   for(var teacherIndex in teachers)
-   {
+   var tempName = teacher.firstName + " " + teacher.lastName;
 
-     tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-     results[teachers[teacherIndex].id] = {
-       name: tempName,
-       totalInstructions: new Array(12).fill(0),
-       offTask: new Array(12).fill(0),
-       mildlyEngaged: new Array(12).fill(0),
-       engaged: new Array(12).fill(0),
-       highlyEngaged: new Array(12).fill(0),
+   results[teacher.id] = {
+     name: tempName,
+     totalInstructions: new Array(12).fill(0),
+     offTask: new Array(12).fill(0),
+     mildlyEngaged: new Array(12).fill(0),
+     engaged: new Array(12).fill(0),
+     highlyEngaged: new Array(12).fill(0),
 
 
-       offTaskAverage: new Array(12).fill(0),
-       mildlyEngagedAverage: new Array(12).fill(0),
-       engagedAverage: new Array(12).fill(0),
-       highlyEngagedAverage: new Array(12).fill(0),
-     };
+     offTaskAverage: new Array(12).fill(0),
+     mildlyEngagedAverage: new Array(12).fill(0),
+     engagedAverage: new Array(12).fill(0),
+     highlyEngagedAverage: new Array(12).fill(0),
+   };
 
-   }
+
 
 
    // Get number of instances for each type of data
@@ -415,7 +400,7 @@ class TrendData {
    {
      var row = data[rowIndex];
 
-     var teacherId = row.teacher.split("/")[2];
+     var teacherId = teacher.id;
 
      var rowMonth = new Date(row.startDate).getMonth();
 
@@ -471,7 +456,7 @@ class TrendData {
   /*
    * Listening to Children
    */
- calculateListeningToChildrenTrends = (data, teachers, startDate, endDate) => {
+ calculateListeningToChildrenTrends = (data, teacher, startDate, endDate) => {
 
    // Initialize the array that will hold all the data
    var results = {};
@@ -484,44 +469,40 @@ class TrendData {
    const endMonth = endDate.getMonth();
 
    // Add each teacher to the object
-   var tempName = "";
-   for(var teacherIndex in teachers)
-   {
+   var tempName = teacher.firstName + " " + teacher.lastName;
 
-     tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+   results[teacher.id] = {
+     name: tempName,
+     eyeLevel: new Array(12).fill(0),
+     positiveExpression: new Array(12).fill(0),
+     repeats: new Array(12).fill(0),
+     openEndedQuestions: new Array(12).fill(0),
+     extendsPlay: new Array(12).fill(0),
+     encouragesPeerTalk: new Array(12).fill(0),
 
-     results[teachers[teacherIndex].id] = {
-       name: tempName,
-       eyeLevel: new Array(12).fill(0),
-       positiveExpression: new Array(12).fill(0),
-       repeats: new Array(12).fill(0),
-       openEndedQuestions: new Array(12).fill(0),
-       extendsPlay: new Array(12).fill(0),
-       encouragesPeerTalk: new Array(12).fill(0),
+     encouraging: new Array(12).fill(0),
+     noBehaviors: new Array(12).fill(0),
 
-       encouraging: new Array(12).fill(0),
-       noBehaviors: new Array(12).fill(0),
-
-       totalInstructions: new Array(12).fill(0),
-       totalObserved: new Array(12).fill(0),
+     totalInstructions: new Array(12).fill(0),
+     totalObserved: new Array(12).fill(0),
 
 
-       eyeLevelAverage: new Array(12).fill(0),
-       positiveExpressionAverage: new Array(12).fill(0),
-       repeatsAverage: new Array(12).fill(0),
-       openEndedQuestionsAverage: new Array(12).fill(0),
-       extendsPlayAverage: new Array(12).fill(0),
-       encouragesPeerTalkAverage: new Array(12).fill(0),
+     eyeLevelAverage: new Array(12).fill(0),
+     positiveExpressionAverage: new Array(12).fill(0),
+     repeatsAverage: new Array(12).fill(0),
+     openEndedQuestionsAverage: new Array(12).fill(0),
+     extendsPlayAverage: new Array(12).fill(0),
+     encouragesPeerTalkAverage: new Array(12).fill(0),
 
-       encouragingAverage: new Array(12).fill(0),
-       noBehaviorsAverage: new Array(12).fill(0),
+     encouragingAverage: new Array(12).fill(0),
+     noBehaviorsAverage: new Array(12).fill(0),
 
-       totalInstructionsAverage: new Array(12).fill(0),
-       totalObservedAverage: new Array(12).fill(0),
+     totalInstructionsAverage: new Array(12).fill(0),
+     totalObservedAverage: new Array(12).fill(0),
 
-     };
+   };
 
-   }
+
 
 
    // Get number of instances for each type of data
@@ -531,7 +512,7 @@ class TrendData {
    {
      var row = data[rowIndex];
 
-     var teacherId = row.teacher.split("/")[2];
+     var teacherId = teacher.id;
 
      var rowMonth = new Date(row.startDate).getMonth();
 
@@ -547,9 +528,11 @@ class TrendData {
      results[teacherId].encouraging[rowMonth] += row.count - row.listening7;
 
      // Calculate the total Number of instructions
-     results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
+     //results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
+     results[teacherId].totalInstructions[rowMonth] += row.count;
 
      // Calculate total number of observations
+     results[teacherId].totalObserved[rowMonth] += row.count;
      results[teacherId].totalObserved[rowMonth] += row.count;
 
    }
@@ -588,7 +571,7 @@ class TrendData {
  /*
   * Sequential Activities
   */
-calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
+calculateSequentialActivitiesTrends = (data, teacher, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
@@ -601,36 +584,32 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
   const endMonth = endDate.getMonth();
 
   // Add each teacher to the object
-  var tempName = "";
-  for(var teacherIndex in teachers)
-  {
+  var tempName = teacher.firstName + " " + teacher.lastName;
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+  results[teacher.id] = {
+    name: tempName,
+    totalInstructions: new Array(12).fill(0),
+    sequentialActivities: new Array(12).fill(0),
+    drawImages: new Array(12).fill(0),
+    demonstrateSteps: new Array(12).fill(0),
+    actOut: new Array(12).fill(0),
 
-    results[teachers[teacherIndex].id] = {
-      name: tempName,
-      totalInstructions: new Array(12).fill(0),
-      sequentialActivities: new Array(12).fill(0),
-      drawImages: new Array(12).fill(0),
-      demonstrateSteps: new Array(12).fill(0),
-      actOut: new Array(12).fill(0),
+    notAtCenter: new Array(12).fill(0),
+    noSupport: new Array(12).fill(0),
+    support: new Array(12).fill(0),
 
-      notAtCenter: new Array(12).fill(0),
-      noSupport: new Array(12).fill(0),
-      support: new Array(12).fill(0),
+    totalInstructionsAverage: new Array(12).fill(0),
+    sequentialActivitiesAverage: new Array(12).fill(0),
+    drawImagesAverage: new Array(12).fill(0),
+    demonstrateStepsAverage: new Array(12).fill(0),
+    actOutAverage: new Array(12).fill(0),
 
-      totalInstructionsAverage: new Array(12).fill(0),
-      sequentialActivitiesAverage: new Array(12).fill(0),
-      drawImagesAverage: new Array(12).fill(0),
-      demonstrateStepsAverage: new Array(12).fill(0),
-      actOutAverage: new Array(12).fill(0),
+    notAtCenterAverage: new Array(12).fill(0),
+    noSupportAverage: new Array(12).fill(0),
+    supportAverage: new Array(12).fill(0),
+  };
 
-      notAtCenterAverage: new Array(12).fill(0),
-      noSupportAverage: new Array(12).fill(0),
-      supportAverage: new Array(12).fill(0),
-    };
 
-  }
 
 
   // Get number of instances for each type of data
@@ -640,7 +619,7 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var teacherId = teacher.id;
 
     var rowMonth = new Date(row.timestamp).getMonth();
 
@@ -691,7 +670,7 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
 /*
  * Foundational Skills
  */
-calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
+calculateFoundationalSkillsTrends = (data, teacher, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
@@ -704,32 +683,28 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
   const endMonth = endDate.getMonth();
 
   // Add each teacher to the object
-  var tempName = "";
-  for(var teacherIndex in teachers)
-  {
+  var tempName = teacher.firstName + " " + teacher.lastName;
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+  results[teacher.id] = {
+    name: tempName,
+    totalIntervals: new Array(12).fill(0),
+    totalInstructions: new Array(12).fill(0),
+    phonological: new Array(12).fill(0),
+    alphabetic: new Array(12).fill(0),
+    openEndedQuestions: new Array(12).fill(0),
+    realisticReading: new Array(12).fill(0),
+    multimodalInstruction: new Array(12).fill(0),
+    foundationalSkills: new Array(12).fill(0),
 
-    results[teachers[teacherIndex].id] = {
-      name: tempName,
-      totalIntervals: new Array(12).fill(0),
-      totalInstructions: new Array(12).fill(0),
-      phonological: new Array(12).fill(0),
-      alphabetic: new Array(12).fill(0),
-      openEndedQuestions: new Array(12).fill(0),
-      realisticReading: new Array(12).fill(0),
-      multimodalInstruction: new Array(12).fill(0),
-      foundationalSkills: new Array(12).fill(0),
+    phonologicalAverage: new Array(12).fill(0),
+    alphabeticAverage: new Array(12).fill(0),
+    openEndedQuestionsAverage: new Array(12).fill(0),
+    realisticReadingAverage: new Array(12).fill(0),
+    multimodalInstructionAverage: new Array(12).fill(0),
+    foundationalSkillsAverage: new Array(12).fill(0),
+  };
 
-      phonologicalAverage: new Array(12).fill(0),
-      alphabeticAverage: new Array(12).fill(0),
-      openEndedQuestionsAverage: new Array(12).fill(0),
-      realisticReadingAverage: new Array(12).fill(0),
-      multimodalInstructionAverage: new Array(12).fill(0),
-      foundationalSkillsAverage: new Array(12).fill(0),
-    };
 
-  }
 
 
   // Sort by date just in case
@@ -748,7 +723,7 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var teacherId = teacher.id;
 
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
@@ -757,17 +732,6 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
     results[teacherId].totalIntervals[rowMonth]++;
 
     // Add to behavior types
-    /*
-    results[teacherId].phonological[rowMonth] += row.foundational1 + row.foundational2;
-    results[teacherId].alphabetic[rowMonth] += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
-    results[teacherId].openEndedQuestions[rowMonth] += row.foundational8;
-    results[teacherId].realisticReading[rowMonth] += row.foundational9;
-    results[teacherId].multimodalInstruction[rowMonth] += row.foundational10;
-
-    // THIS ONE ISN'T RIGHT FOR NOW
-    results[teacherId].foundationalSkillsAverage[rowMonth] += row.foundational10;
-    */
-
     // If this observation has a phonal answer.
     if(row.foundational1 || row.foundational2)
     {
@@ -838,12 +802,11 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
 /*
  * Writing Skills
  */
-calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
+calculateWritingSkillsTrends = (data, teacher, startDate, endDate) => {
 
   // Initialize the array that will hold all the data
   var results = {};
 
-  var totalIntervals = 0;
 
   // Get start month and year
   const startMonth = startDate.getMonth();
@@ -851,28 +814,22 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   const endMonth = endDate.getMonth();
 
   // Add each teacher to the object
-  var tempName = "";
-  for(var teacherIndex in teachers)
-  {
+  var tempName = teacher.firstName + " " + teacher.lastName;
 
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-    results[teachers[teacherIndex].id] = {
-      name: tempName,
-      totalIntervals: new Array(12).fill(0),
-      totalInstructions: new Array(12).fill(0),
-      writingSkills: new Array(12).fill(0),
-      meaning: new Array(12).fill(0),
-      printProcesses: new Array(12).fill(0),
+  results[teacher.id] = {
+    name: tempName,
+    totalIntervals: new Array(12).fill(0),
+    writingSkills: new Array(12).fill(0),
+    meaning: new Array(12).fill(0),
+    printProcesses: new Array(12).fill(0),
 
 
-      writingSkillsAverage: new Array(12).fill(0),
-      meaningAverage: new Array(12).fill(0),
-      printProcessesAverage: new Array(12).fill(0),
+    writingSkillsAverage: new Array(12).fill(0),
+    meaningAverage: new Array(12).fill(0),
+    printProcessesAverage: new Array(12).fill(0),
 
-    };
+  };
 
-  }
 
 
   // Sort by date just in case
@@ -891,23 +848,14 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   {
     var row = data[rowIndex];
 
-    var teacherId = row.teacher.split("/")[2];
+    var teacherId = teacher.id;
 
     rowMonth = new Date(row.GroupDate.value).getMonth();
 
     // Add to total # of intervals
-    // results[teacherId].totalIntervals[rowMonth] += row.total;
     results[teacherId].totalIntervals[rowMonth]++;
 
     // Add to behavior types
-    /*
-    results[teacherId].meaning[rowMonth] += row.writing1 + row.writing2;
-    results[teacherId].printProcesses[rowMonth] += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
-
-    // THIS ONE ISN'T RIGHT FOR NOW
-    results[teacherId].writingSkills[rowMonth] += row.writing1;
-    */
-
     // Count each observation interval that has a meaning in it.
     if(row.writing1 || row.writing2)
     {
@@ -925,8 +873,6 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       results[teacherId].writingSkills[rowMonth]++;
     }
 
-    // Calculate the total Number of instructions
-    results[teacherId].totalInstructions[rowMonth] += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
   }
 
   // Calculate the averages in percentages
@@ -938,7 +884,6 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < 12; i++)
     {
-      var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
 
       result.meaningAverage[i] = result.meaning[i] > 0 ? (result.meaning[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
@@ -997,7 +942,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
     // Sort by date just in case
     data.sort(function(a,b){
-      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
+      return new Date(b.sessionStart.value) - new Date(a.sessionStart.value);
     });
 
 
@@ -1010,13 +955,10 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     for(var rowIndex in data)
     {
       var row = data[rowIndex];
-      console.log("ROW DATA : ", row);
-
 
       rowMonth = new Date(row.sessionStart.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
       results[teacherId].totalIntervals[rowMonth] += row.total;
 
       // Add to behavior types
@@ -1100,7 +1042,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Language Environment
    */
-  calculateLanguageEnvironmentTrends = (data, teachers, startDate, endDate) => {
+  calculateLanguageEnvironmentTrends = (data, teacher, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -1113,30 +1055,26 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     const endMonth = endDate.getMonth();
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalIntervals: new Array(12).fill(0),
-        totalInstructions: new Array(12).fill(0),
-        languageEnvironment: new Array(12).fill(0),
-        talk: new Array(12).fill(0),
-        encourageChildren: new Array(12).fill(0),
-        respondChildren: new Array(12).fill(0),
+    results[teacher.id] = {
+      name: tempName,
+      totalIntervals: new Array(12).fill(0),
+      totalInstructions: new Array(12).fill(0),
+      languageEnvironment: new Array(12).fill(0),
+      talk: new Array(12).fill(0),
+      encourageChildren: new Array(12).fill(0),
+      respondChildren: new Array(12).fill(0),
 
 
-        languageEnvironmentAverage: new Array(12).fill(0),
-        talkAverage: new Array(12).fill(0),
-        encourageChildrenAverage: new Array(12).fill(0),
-        respondChildrenAverage: new Array(12).fill(0),
+      languageEnvironmentAverage: new Array(12).fill(0),
+      talkAverage: new Array(12).fill(0),
+      encourageChildrenAverage: new Array(12).fill(0),
+      respondChildrenAverage: new Array(12).fill(0),
 
-      };
+    };
 
-    }
+
 
 
     // Sort by date just in case
@@ -1155,13 +1093,12 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var teacherId = teacher.id;
 
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      results[teacherId].totalIntervals[rowMonth] += row.total;
 
       // Add to behavior types
 
@@ -1221,7 +1158,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   /*
    * Language Environment
    */
-  calculateACTrends = (data, teachers, startDate, endDate) => {
+  calculateACTrends = (data, teacher, startDate, endDate) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -1232,39 +1169,35 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     const endMonth = endDate.getMonth();
 
     // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    results[teacher.id] = {
+      name: tempName,
+      totalIntervals: new Array(12).fill(0),
+      totalInstructions: new Array(12).fill(0),
 
-      results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalIntervals: new Array(12).fill(0),
-        totalInstructions: new Array(12).fill(0),
+      childrensPlay: new Array(12).fill(0),
+      askingQuestions: new Array(12).fill(0),
+      encouragingChildren: new Array(12).fill(0),
+      helpingChildren: new Array(12).fill(0),
 
-        childrensPlay: new Array(12).fill(0),
-        askingQuestions: new Array(12).fill(0),
-        encouragingChildren: new Array(12).fill(0),
-        helpingChildren: new Array(12).fill(0),
-
-        support: new Array(12).fill(0),
-        noSupport: new Array(12).fill(0),
-        notAtCenter: new Array(12).fill(0),
+      support: new Array(12).fill(0),
+      noSupport: new Array(12).fill(0),
+      notAtCenter: new Array(12).fill(0),
 
 
-        childrensPlayAverage: new Array(12).fill(0),
-        askingQuestionsAverage: new Array(12).fill(0),
-        encouragingChildrenAverage: new Array(12).fill(0),
-        helpingChildrenAverage: new Array(12).fill(0),
+      childrensPlayAverage: new Array(12).fill(0),
+      askingQuestionsAverage: new Array(12).fill(0),
+      encouragingChildrenAverage: new Array(12).fill(0),
+      helpingChildrenAverage: new Array(12).fill(0),
 
-        supportAverage: new Array(12).fill(0),
-        noSupportAverage: new Array(12).fill(0),
-        notAtCenterAverage: new Array(12).fill(0),
+      supportAverage: new Array(12).fill(0),
+      noSupportAverage: new Array(12).fill(0),
+      notAtCenterAverage: new Array(12).fill(0),
 
-      };
+    };
 
-    }
+
 
 
     // Sort by date just in case
@@ -1283,13 +1216,13 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     {
       var row = data[rowIndex];
 
-      var teacherId = row.teacher.split("/")[2];
+      var teacherId = teacher.id;
 
       rowMonth = new Date(row.GroupDate.value).getMonth();
 
       // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++;
+      results[teacherId].totalIntervals[rowMonth] += row.total;
+      //results[teacherId].totalIntervals[rowMonth]++;
 
       // Add to behavior types
 
