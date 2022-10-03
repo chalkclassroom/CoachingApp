@@ -191,8 +191,9 @@ class SiteProfile extends React.Component {
     if(event.target.name == "selectedSite")
     {
 
-        const siteName = this.state.siteOptions.find(x => x.id === event.target.value).name;
-        this.setState({selectedSiteName: siteName});
+        const site = this.state.siteOptions.find(x => x.id === event.target.value);
+        this.setState({selectedSiteName: site.name});
+        this.setState({selectedSiteInfo: site});
 
         // Reset Error
         error['site'] = false;
@@ -606,6 +607,7 @@ class SiteProfile extends React.Component {
           startDate={this.state.startDate}
           endDate={this.state.endDate}
           observationType={this.state.radioValue}
+          selectedSiteInfo={this.state.selectedSiteInfo}
          />
       ) : null)}
 

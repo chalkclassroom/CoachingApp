@@ -218,10 +218,32 @@ class SiteProfileResults extends React.Component {
       }
   }
 
-  componentDidMount(): void {
+  componentDidMount = async () => {
     const firebase = this.context;
 
     // Get a list of the coaches for the chosen site.
+    // Get all coaches that has this site in their document
+    var siteCoachIds = [];
+    var tempCoaches = await firebase.fetchSiteCoaches(this.props.selectedSiteId);
+
+    if(tempCoaches)
+    {
+      siteCoachIds = tempCoaches.map(coach => {return coach.id});
+    }
+
+    // Add all the coaches this site has listed. (fetchSiteCoaches only grabs users with the role of 'coach'. This is a minor failsafe in case we need more than that)
+    if(this.props.selectedSiteInfo.coaches)
+    {
+      siteCoachIds = siteCoachIds.concat(this.props.selectedSiteInfo.coaches);
+    }
+
+    // Remove any duplicates
+    siteCoachIds = siteCoachIds.filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
+
+    this.getSitesTeachersInfo(siteCoachIds);
+
+    // Get a list of the coaches for the chosen site.
+    /*
     firebase.fetchSiteCoaches(this.props.selectedSiteId).then( (data) => {
 
       if(data)
@@ -230,6 +252,7 @@ class SiteProfileResults extends React.Component {
       }
 
     });
+    */
 
   }
 
@@ -249,7 +272,7 @@ class SiteProfileResults extends React.Component {
       // Go through each coach in the site
       for(var coachIndex in coachIdsArr)
       {
-        var coachId = coachIdsArr[coachIndex].id;
+        var coachId = coachIdsArr[coachIndex];
 
 
         // Get the the coaches teacher
