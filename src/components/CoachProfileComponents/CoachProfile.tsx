@@ -182,13 +182,15 @@ class CoachProfile extends React.Component {
    /*
     * Change the coach options we can choose from once a site is chosen
     */
-    setCoaches = async (siteCoachIds) => {
+    setCoaches = async (site) => {
       const firebase = this.context;
 
+      // Get a list of the coaches for the chosen site.
+      var siteCoaches = await firebase.fetchSiteCoaches(site.id);
+      
+      var siteCoachIds = siteCoaches.map( coach => {return coach.id});
+
       // Snag documents from firestore for each coach
-      console.log("Site Coaches " + siteCoachIds);
-
-
       firebase.getMultipleUserProgramOrSite({userIds: siteCoachIds}).then( (data) => {
 
         console.log("DATA " + data);
@@ -264,7 +266,7 @@ class CoachProfile extends React.Component {
         errorMessages['site'] = "";
 
         // Set the coach options
-        this.setCoaches(site.coaches);
+        this.setCoaches(site);
     }
 
 

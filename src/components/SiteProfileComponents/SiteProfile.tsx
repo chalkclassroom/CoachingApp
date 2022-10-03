@@ -360,7 +360,7 @@ class SiteProfile extends React.Component {
         <>
         {/* Control what we see based on page number */}
         {this.state.view === 1 ? (
-        <Grid container style={{paddingLeft: '30px'}}>
+        <Grid container style={{paddingLeft: '30px', paddingBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
                     <h2>Site Profile</h2>
