@@ -215,6 +215,7 @@ class SiteProfileResults extends React.Component {
           },
         ],
         lineColors: [],
+
       }
   }
 
@@ -571,7 +572,7 @@ class SiteProfileResults extends React.Component {
 
                   ) : (this.state.tabState == 0 ? (
 
-                    <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
+                    <Grid container justify={"center"} direction={"column"} style={{width: '90%', height: 450, flexWrap: 'nowrap', padding: "30px 0px", paddingRight: '50px', position: 'relative'}}>
                       <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
 
                       <SiteProfileBarDetails
@@ -580,6 +581,7 @@ class SiteProfileResults extends React.Component {
                         data={this.state.averages}
                         type={this.state.radioValue}
                       />
+
                     </Grid>
                   ) : null)}
 

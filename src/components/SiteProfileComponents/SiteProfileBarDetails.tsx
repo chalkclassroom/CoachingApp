@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { HorizontalBar } from "react-chartjs-2";
+import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -12,6 +12,14 @@ const chartTitleArr = {
   fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
   multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
 }
+
+const averageLine = {
+    width: '80%',
+    marginRight: '15px',
+    borderBottom: 'dashed 8px #45818E'
+}
+
+
 
 /**
  * Horizontal Bar Graph for Math Child Behaviors
@@ -27,7 +35,18 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     this.state = {
       teacherNames: [],
       chartTitle: "",
-      barColors: []
+      barColors: [],
+      averageLineWrapStyle: {
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'flex-start',
+          marginBottom: 8,
+          height: '20px',
+          width: '96%',
+          position: 'absolute',
+          left: '95px',
+          top: '36px',
+      }
     }
   }
 
@@ -62,7 +81,36 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
         }
       }
 
-      this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors });
+      /*
+       * Set placement for the site average bar
+       */
+      var siteAverage = 0;
+      for(var i = 0; i < graphData.length; i++)
+      {
+        siteAverage += graphData[i];
+      }
+      siteAverage = (siteAverage / graphData.length) / 100;
+
+      const chartHeight = 342;
+      const chartTopPadding = 36;
+
+
+      var topPos = (chartTopPadding + chartHeight - (chartHeight * siteAverage));
+
+      var averageLineStyle = {
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'flex-start',
+          marginBottom: 8,
+          height: '20px',
+          width: '96%',
+          position: 'absolute',
+          left: '95px',
+          top: topPos + 'px',
+      };
+
+
+      this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors, averageLineWrapStyle: averageLineStyle });
     }
   }
 
@@ -96,77 +144,83 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <HorizontalBar
-        data={childBehaviorsData}
-        options={{
-          animation: {
-            onComplete: function(): void {
-              isCompleted ? isCompleted() : null
-            }
-          },
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  min: 0,
-                  max: 100,
-                  stepSize: 10,
-                  fixedStepSize: 1,
-                  fontSize: 16,
-                  fontColor: 'black',
-                  // Include a percent sign in the ticks
-                  callback: function(value, index, values) {
-                      return value + '%';
+      <>
+        <Bar
+          data={childBehaviorsData}
+          options={{
+            animation: {
+              onComplete: function(): void {
+                isCompleted ? isCompleted() : null
+              }
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    min: 0,
+                    max: 100,
+                    stepSize: 10,
+                    fixedStepSize: 1,
+                    fontSize: 16,
+                    fontColor: 'black',
+                    // Include a percent sign in the ticks
+                    callback: function(value, index, values) {
+                        return value + '%';
+                    }
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Average % of 1-Minute Intervals',
+                    fontSize: 16,
+                    fontColor: 'black'
                   }
+                }
+              ],
+              xAxes: [
+                {
+                  ticks: {
+                    fontSize: 16,
+                    fontColor: 'black',
+                  }
+                }
+              ]
+            },
+            legend: {
+              display: false
+            },
+            title: {
+              display: this.props.title,
+              text: this.state.chartTitle,
+              fontSize: 14,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
+              fontStyle: "bold"
+            },
+            plugins: {
+              datalabels: {
+                display: 'auto',
+                color: 'white',
+                font: {
+                  size: 14,
+                  weight: 'bold'
                 },
-                scaleLabel: {
-                  display: true,
-                  labelString: 'Average % of 1-Minute Intervals',
-                  fontSize: 16,
-                  fontColor: 'black'
+                formatter: function(value: number): number | null {
+                  if (value > 0) {
+                    return value + "%";
+                  } else {
+                    return null;
+                  }
                 }
               }
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  fontSize: 16,
-                  fontColor: 'black',
-                }
-              }
-            ]
-          },
-          legend: {
-            display: false
-          },
-          title: {
-            display: this.props.title,
-            text: this.state.chartTitle,
-            fontSize: 14,
-            fontColor: 'black',
-            fontFamily: 'Arimo',
-            fontStyle: "bold"
-          },
-          plugins: {
-            datalabels: {
-              display: 'auto',
-              color: 'white',
-              font: {
-                size: 14,
-                weight: 'bold'
-              },
-              formatter: function(value: number): number | null {
-                if (value > 0) {
-                  return value + "%";
-                } else {
-                  return null;
-                }
-              }
-            }
-          },
-          maintainAspectRatio: false
-        }}
-      />
+            },
+            maintainAspectRatio: false
+          }}
+        />
+        <div className={"averageLineWrap"} style={this.state.averageLineWrapStyle}>
+          <div className={"averageLine"} style={averageLine}></div>
+          <div className={"averageLineLabel"} style={{whiteSpace: 'nowrap', color: '#45818E'}}>Site Average</div>
+        </div>
+      </>
     );
   }
 }

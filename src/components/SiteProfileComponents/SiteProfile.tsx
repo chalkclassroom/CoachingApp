@@ -85,7 +85,7 @@ class SiteProfile extends React.Component {
           selectedProgram: "",
           selectedSite: "",
           view: 1,
-          startDate: new Date(),
+          startDate: new Date('2-2-2022'),
           endDate: new Date(),
           radioValue: "",
           error: {
