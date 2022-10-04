@@ -125,7 +125,7 @@ class Coaches extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px' }}
                               >
-                                Back to Coaches
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
@@ -160,7 +160,7 @@ class Coaches extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px',}}
                               >
-                                Back to Coaches
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
@@ -211,7 +211,7 @@ class Coaches extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px' }}
                               >
-                                Back to Coaches
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
