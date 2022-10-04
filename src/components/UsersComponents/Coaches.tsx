@@ -80,7 +80,7 @@ class Coaches extends React.Component<Props, State> {
     let result = []
     this.setState({selectedCoach: event.target.value})
     this.props.teacherData.map((doc) => {
-      if (doc.coachId === this.state.selectedCoach) {
+      if (doc.coachId === event.target.value) {
         result.push(doc)
       }
     })
