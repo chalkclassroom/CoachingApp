@@ -3047,15 +3047,28 @@ class Firebase {
 
   }
 
-  getActionPlansForExport = async (coachId: string | undefined = undefined) => {
+  getActionPlansForExport = async (coachId: string | undefined = undefined, from, to) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
+
+    var fromDate = new Date(from);
+    var toDate = new Date(to);
+
+    // Set the date objects to make it the very beginning of the day (12am)
+    fromDate = new Date( fromDate.getTime() - fromDate.getTimezoneOffset() * -60000 );
+    toDate = new Date( toDate.getTime() - toDate.getTimezoneOffset() * -60000 );
+
+    // Set the to date so it's the beginning of the next day (a.k.a end of current day)
+    toDate.setDate(toDate.getDate() + 1);
+
     this.query = this.db
       .collection('actionPlans').orderBy('dateModified', 'desc')
     if (coachId) {
       this.query = this.query.where('coach', '==', coachId)
     }
+    this.query = this.query.where('dateModified', '>', fromDate).where('dateModified', '<', toDate)
+
     const actionPlans = await this.query.get();
     return Promise.all(actionPlans.docs.map(async (doc) => {
       const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool} = doc.data()
@@ -3073,16 +3086,30 @@ class Firebase {
     }))
   }
 
-  getConferencePlansForExport = async (coachId: string | undefined = undefined) => {
+  getConferencePlansForExport = async (coachId: string | undefined = undefined, from, to) => {
     if (!await this.userIsAdmin()) {
       throw new Error('Not authorized to Perform this action')
     }
+
+    // Convert to date objects
+    var fromDate = new Date(from);
+    var toDate = new Date(to);
+
+    // Set the date objects to make it the very beginning of the day (12am)
+    fromDate = new Date( fromDate.getTime() - fromDate.getTimezoneOffset() * -60000 );
+    toDate = new Date( toDate.getTime() - toDate.getTimezoneOffset() * -60000 );
+
+    // Set the to date so it's the beginning of the next day (a.k.a end of current day)
+    toDate.setDate(toDate.getDate() + 1);
+
 
     this.query = this.db
       .collection('conferencePlans').orderBy('dateModified', 'desc')
     if (coachId) {
       this.query = this.query.where('coach', '==', coachId)
     }
+    this.query = this.query.where('dateModified', '>', fromDate).where('dateModified', '<', toDate)
+    
     const conferencePlans = await this.query.get();
     return Promise.all(conferencePlans.docs.map(async (doc) => {
       const {coach, dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool} = doc.data()
