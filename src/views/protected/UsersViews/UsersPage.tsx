@@ -100,6 +100,8 @@ interface Props {
 interface State {
   coachData: Array<Object>
   teacherData: Array<Object>
+  siteData: Array<Object>
+  programData: Array<Object>
   currentPage: string,
 }
 
@@ -123,15 +125,15 @@ class UsersPage extends React.Component<Props, State> {
     this.state = {
       currentPage: "",
       coachData: [],
-      teacherData: []
+      teacherData: [],
+      siteData: [],
+      ProgramData: []
     }
   }
 
   buildTeacherData = async (): Promise<Array<Object>> => {
     let data: Array<Object> = []
     let teachersAndCoaches = await this.context.getTeacherData();
-    let sites = await this.context.getSites();
-    let programs = await this.context.getPrograms();
 
     await teachersAndCoaches.map((doc) => {
       let draft = {
@@ -146,17 +148,17 @@ class UsersPage extends React.Component<Props, State> {
         selectedProgramName: "",
         selectedProgramId: "",
       };
-      for (let i = 0; i < sites.length; i++) {
-        if (sites[i].name === doc.siteName) {
-          draft["selectedSiteId"] =  sites[i].id;
-          i = sites.length;
+      for (let i = 0; i < this.state.siteData.length; i++) {
+        if (this.state.siteData[i].name === doc.siteName) {
+          draft["selectedSiteId"] =  this.state.siteData[i].id;
+          i = this.state.siteData.length;
         }
       }
-      for (let i = 0; i < programs.length; i++) {
-        if (programs[i].sites.includes(draft["selectedSiteId"])) {
-          draft["selectedProgramName"] = programs[i].name;
-          draft["selectedProgramId"] =  programs[i].id;
-          i = programs.length
+      for (let i = 0; i < this.state.programData.length; i++) {
+        if (this.state.programData[i].sites.includes(draft["selectedSiteId"])) {
+          draft["selectedProgramName"] = this.state.programData[i].name;
+          draft["selectedProgramId"] =  this.state.programData[i].id;
+          i = this.state.programData.length
         }
       }
       data.push(draft)
@@ -166,7 +168,6 @@ class UsersPage extends React.Component<Props, State> {
 
   buildCoachData = async (teacherData) => {
     let coaches: Array<string> = []
-    let programs = await this.context.getPrograms();
     let data: Array<Object> = []
 
 
@@ -177,13 +178,13 @@ class UsersPage extends React.Component<Props, State> {
         let siteList: Array<Object> = []
 
         await sites.map((site) => {
-          for (let i = 0; i < programs.length; i++) {
-            if (programs[i].sites.includes(site.id)) {
+          for (let i = 0; i < this.state.programData.length; i++) {
+            if (this.state.programData[i].sites.includes(site.id)) {
               siteList.push({
                 siteName: site.name,
                 siteId: site.id,
-                programName: programs[i].id,
-                programId: programs[i].name
+                programName: this.state.programData[i].id,
+                programId: this.state.programData[i].name
               })
             }
           }
@@ -200,8 +201,14 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
+  sitesAndPrograms = async () => {
+    this.setState({siteData: await this.context.getSites()})
+    this.setState({programData: await this.context.getPrograms()})
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
+    await this.sitesAndPrograms();
     this.setState({teacherData: await this.buildTeacherData()}, 
     async () => {this.setState({coachData: await this.buildCoachData(this.state.teacherData)})})
   }
@@ -280,6 +287,9 @@ class UsersPage extends React.Component<Props, State> {
                         userRole={userRole}
                         location={this.props.location}
                         teacherData = {this.state.teacherData}
+                        coachData = {this.state.coachData}
+                        siteData = {this.state.siteData}
+                        programData = {this.state.programData}
                         />
                     } />
                     <Route path="/LeadersArchive" render={(props) =>

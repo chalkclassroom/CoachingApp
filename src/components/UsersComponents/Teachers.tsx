@@ -8,6 +8,9 @@ import {
   Select,
   TextField,
   Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
 } from '@material-ui/core'
 import React from 'react'
 import AddIcon from '@material-ui/icons/Add'
@@ -15,7 +18,7 @@ import ForwardIcon from '@material-ui/icons/Forward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import FolderIcon from '@material-ui/icons/Folder'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
-import FirebaseContext from '../Firebase/FirebaseContext'
+import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 
@@ -46,11 +49,27 @@ interface Props {
   userRole: string
   location: string
   teacherData: Array<Object>
+  coachData: Array<Object>
+  siteData: Array<Object>
+  programData: Array<Object>
 }
 
 interface State {
   view: number
   saved: boolean
+  addTeacherFirstName: string
+  addTeacherLastName: string
+  addCoach: string
+  addCoachSites: Array<{
+    siteName: string,
+    siteId: string,
+    programName: string,
+    programId: string
+  }>
+  addSite: string
+  addProgram: string
+  saveModalOpen: boolean
+  awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -59,7 +78,22 @@ class Teachers extends React.Component<Props, State> {
 
     this.state = {
       view: 1,
-      saved: false
+      saved: true,
+      addTeacherFirstName: "",
+      addTeacherLastName: "",
+      addCoach: "",
+      addCoachSites: [
+        {
+          siteName: "",
+          siteId: "",
+          programName: "",
+          programId: ""
+        }
+      ],
+      addSite: "",
+      addProgram: "",
+      saveModalOpen: false,
+      awaitingConfirmationRef: null
     }
 
   }
@@ -83,8 +117,141 @@ class Teachers extends React.Component<Props, State> {
     }
   }
 
+  handleInputChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    if (name === 'firstName') {
+      this.setState({
+        addTeacherFirstName: event.target.value,
+        saved: false,
+      })
+    } else if (name === 'lastName') {
+      this.setState({
+        addTeacherLastName: event.target.value,
+        saved: false,
+      })
+    }
+  }
+
+  onSaveModalOpen =  (): Promise<boolean> => {
+    this.setState({saveModalOpen: true})
+    return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+      this.setState({awaitingConfirmationRef: {resolve}})
+    })
+  }
+
+  onSaveModalDiscard = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(true)
+    }
+      this.setState({
+          saveModalOpen: false,
+          view: 1,
+          saved: true,
+        awaitingConfirmationRef: null
+      })
+  }
+
+  onSaveModalClose = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(false)
+    }
+      this.setState({
+          saveModalOpen: false,
+        awaitingConfirmationRef: null
+      })
+  }
+
+  // handleActionPlanModal = async () => {
+  //   if(!(this.state.view === 'actionPlan') || this.state.actionPlanFormSaved) {
+  //     return Promise.resolve(true)
+  //   }
+  //   return this.onActionPlanModalOpen();
+  // }
+
+  async addTeacher(firebase:Firebase){
+
+    firebase
+    const {
+        addTeacherFirstName,
+        addTeacherLastName,
+        addCoach,
+        addSite,
+        addProgram
+    } = this.state;
+
+    if (!addTeacherFirstName || addTeacherFirstName === ""){
+        alert("First Name is required");
+        return
+    }
+
+    if (!addTeacherLastName || addTeacherLastName === ""){
+        alert("Last name is required");
+        return;
+    }
+
+    if (!addCoach || addCoach === ""){
+        alert("Coach is required");
+        return;
+    }
+
+    if (!addSite || addSite === ""){
+      alert("Site is required");
+      return;
+    }
+
+    if (!addProgram || addProgram === ""){
+      alert("Program is required");
+      return;
+    }
+
+    // check user role to make sure site leaders can't change programs
+    // if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
+    //     alert("Please select a role");
+    //     return;
+    // }
+
+    const randomString = Math.random().toString(36).slice(-8)
+    const teacherInfo = {
+        firstName: addTeacherFirstName,
+        lastName: addTeacherLastName,
+        school: addSite,
+        email: '',
+        notes: '',
+        phone: ''
+    }
+    await firebase.addTeacherToCoach(teacherInfo, addCoach)
+    .then(() => {
+        return randomString
+      }).catch(e => {
+          console.log(e)
+          alert('Unable to create user. Please try again')
+      }).finally(() => {
+          this.setState({ // Hold off setting new state until success has been determined
+            addTeacherFirstName: '',
+            addTeacherLastName: '',
+            addProgram: '',
+            addSite: ''
+          });
+      });
+  } 
+
   render() {
     return (<>
+    <Dialog open={this.state.saveModalOpen}>
+        <DialogTitle style={{ fontFamily: 'Arimo' }}>
+            You have unsaved changes to your entry.
+            Would you like to discard the entry?
+        </DialogTitle>
+        <DialogActions>
+            <Button onClick={this.onSaveModalClose}>
+                No, keep editing
+            </Button>
+            <Button onClick={this.onSaveModalDiscard}>
+                Yes, discard changes
+            </Button>
+        </DialogActions>
+    </Dialog>
       <Grid container direction='row'>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -101,7 +268,7 @@ class Teachers extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px' }}
                               >
-                                Back to Teachers
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
@@ -136,7 +303,7 @@ class Teachers extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px',}}
                               >
-                                Back to Teachers
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
@@ -187,7 +354,7 @@ class Teachers extends React.Component<Props, State> {
                               gutterBottom 
                               style={{marginTop:'20px' }}
                               >
-                                Back to Teachers
+                                Back
                             </Typography>
                         </Grid>
                     </Grid>
@@ -372,23 +539,25 @@ class Teachers extends React.Component<Props, State> {
                   <Grid item xs={6}>
                     <TextField
                     // style={{width:'160px'}}
-                    id="teacher-search"
+                    id="teacher-firstName"
                     label="First Name"
-                    type="search"
+                    type="text"
+                    value={this.state.addTeacherFirstName}
                     // className={classes.search}
                     variant="outlined"
-                    // onChange={onChangeText}
+                    onChange={this.handleInputChange('firstName')}
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
                     // style={{width:'160px'}}
-                    id="teacher-search"
+                    id="teacher-lastName"
                     label="Last Name"
-                    type="search"
+                    type="text"
+                    value={this.state.addTeacherLastName}
                     // className={classes.search}
                     variant="outlined"
-                    // onChange={onChangeText}
+                    onChange={this.handleInputChange('lastName')}
                     />
                   </Grid>
                 </Grid>
@@ -398,21 +567,23 @@ class Teachers extends React.Component<Props, State> {
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
+                    value={this.state.addCoach}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                      this.setState({addCoachInfo: this.props.coachData[this.props.coachData.map(object => object.id).indexOf(event.target.value)]})
+                      console.log(this.state.addCoachInfo)
+                      this.setState({addCoach: event.target.value})}}
+                    name="addCoach"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {/* {this.props.coachData.map(
+                    {this.props.coachData.map(
                       (coach, index)=>{
                         if(coach.id !== "") {
                         return (
                             <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
+                              {coach.firstName + ' ' + coach.lastName}
                             </MenuItem>
                         )}
-                        })} */}
+                        })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
@@ -422,21 +593,20 @@ class Teachers extends React.Component<Props, State> {
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
+                    value={this.state.addSite}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      this.setState({addSite: event.target.value})}
+                    name="addSite"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
+                    {this.props.siteData.map(
+                      (site, index)=>{
                         return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
+                            <MenuItem value={site.id} key={index}>
+                              {site.name}
                             </MenuItem>
-                        )}
-                        })} */}
+                        )
+                        })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
@@ -446,21 +616,20 @@ class Teachers extends React.Component<Props, State> {
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
+                    value={this.state.addProgram}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      this.setState({addProgram: event.target.value})}
+                    name="addProgram"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
+                    {this.props.programData.map(
+                      (program, index)=>{
                         return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
+                            <MenuItem value={program.id} key={index}>
+                              {program.name}
                             </MenuItem>
-                        )}
-                        })} */}
+                        )
+                        })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
@@ -471,27 +640,33 @@ class Teachers extends React.Component<Props, State> {
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
-                <Button >
-                  {this.state.saved ? (
-                    <img
-                      alt="Save"
-                      src={SaveGrayImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
-                  ) : (
-                    <img
-                      alt="Save"
-                      src={SaveImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button 
+                    onClick={(_)=>{this.addTeacher(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
                   )}
-                </Button>
+                </FirebaseContext.Consumer>
               </Grid>     
             </Grid>
     </>) : (this.state.view === 3 ? (<>
