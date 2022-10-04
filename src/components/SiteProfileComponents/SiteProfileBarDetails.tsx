@@ -103,7 +103,7 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
           justifyContent:'flex-start',
           marginBottom: 8,
           height: '20px',
-          width: '96%',
+          width: '105%',
           position: 'absolute',
           left: '95px',
           top: topPos + 'px',

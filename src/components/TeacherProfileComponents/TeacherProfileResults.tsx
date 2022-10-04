@@ -378,7 +378,7 @@ class TeacherProfileResults extends React.Component {
      i++;
 
 
-     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
      const lineData = {
        labels,
        datasets: tempDataSet

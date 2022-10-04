@@ -224,7 +224,8 @@ class ProgramProfileResults extends React.Component {
 
     // Get a list of sites for this program
 
-    var programInfo = await firebase.getUserProgramOrSite({programId: this.props.selectedProgramId});
+    //var programInfo = await firebase.getUserProgramOrSite({programId: this.props.selectedProgramId});
+    var programInfo = this.props.selectedProgramInfo;
 
     var fullSitesList = {};
 
@@ -233,9 +234,7 @@ class ProgramProfileResults extends React.Component {
     //var coaches = await firebase.fetchProgramTeachers({programId: this.props.selectedProgramId});
 
     // Get the teachers in this program
-    firebase.fetchProgramTeachers({programId: this.props.selectedProgramId}).then( data => {
-      this.setState({test2: data});
-
+    firebase.fetchProgramTeachers({programId: this.props.selectedProgramId, programInfo: programInfo}).then( data => {
       this.getResultsFromBQ(data);
     });
 
@@ -380,6 +379,8 @@ class ProgramProfileResults extends React.Component {
          label: siteName,
          data: chosenData,
          borderColor: lineColors[i],
+         fill: false,
+         tension: 0.0
        };
 
        tempDataSet.push(tempData);

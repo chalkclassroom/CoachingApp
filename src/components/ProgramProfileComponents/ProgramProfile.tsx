@@ -128,7 +128,7 @@ class ProgramProfile extends React.Component {
     // Get selected program name
     var allPrograms = this.state.allPrograms;
     var selectedProgram = allPrograms.find(a => a.id === event.target.value);
-    this.setState({selectedProgramName: selectedProgram.name});
+    this.setState({selectedProgramName: selectedProgram.name, selectedProgramInfo: selectedProgram});
 
 
     var error = this.state.error;
@@ -508,6 +508,7 @@ class ProgramProfile extends React.Component {
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}
           selectedProgramId={this.state.selectedProgram}
+          selectedProgramInfo={this.state.selectedProgramInfo}
           selectedPractices={this.state.radioValue}
           startDate={this.state.startDate}
           endDate={this.state.endDate}

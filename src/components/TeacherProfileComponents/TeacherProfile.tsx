@@ -184,9 +184,20 @@ class TeacherProfile extends React.Component {
 
       // Grab the teachers in this site
       let teacherOptions = await firebase.getTeacherBySiteName(siteName);
+      console.log("Teacher Option : ", teacherOptions);
 
       // Remove duplicates because that's apparently a problem now
       teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
+
+      // Set the names
+      for(var teacherIndex in teacherOptions)
+      {
+        var teacher = teacherOptions[teacherIndex];
+        if(!teacher.name)
+        {
+          teacher['name'] = teacher.lastName + ", " + teacher.firstName;
+        }
+      }
 
       // Sort the teachers by name
       teacherOptions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));

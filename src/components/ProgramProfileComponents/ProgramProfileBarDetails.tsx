@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { HorizontalBar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -96,7 +96,7 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <HorizontalBar
+      <Bar
         data={childBehaviorsData}
         options={{
           animation: {
@@ -105,7 +105,7 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
             }
           },
           scales: {
-            xAxes: [
+            yAxes: [
               {
                 ticks: {
                   min: 0,
@@ -127,7 +127,7 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
                 }
               }
             ],
-            yAxes: [
+            xAxes: [
               {
                 ticks: {
                   fontSize: 16,
