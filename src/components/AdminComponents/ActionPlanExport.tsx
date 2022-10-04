@@ -56,7 +56,7 @@ const ActionPlanExport: FunctionComponent<Props> = (props) => {
 
   const handleExport = async (id: string, from: string, to: string,) => {
     setLoading(true)
-    let rows = await firebase.getActionPlansForExport(id !== ALL_COACH_VALUE ? id : undefined)
+    let rows = await firebase.getActionPlansForExport(id !== ALL_COACH_VALUE ? id : undefined, from, to)
     let wb = generateActionPlanXlsx(rows)
     xlsx.writeFile(wb, 'Action_Plans.xlsx')
     setLoading(false)

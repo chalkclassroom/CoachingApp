@@ -61,7 +61,7 @@ const ConferencePlanExport: FunctionComponent<Props> = (props) => {
 
   const handleExport = async (id: string, from: string, to: string, setLoading: Function,) => {
     setLoading(true)
-    const rows = await firebase.getConferencePlansForExport(id !== ALL_COACH_VALUE ? id : undefined)
+    const rows = await firebase.getConferencePlansForExport(id !== ALL_COACH_VALUE ? id : undefined, from, to)
     const wb = generateConferencePlanXlsx(rows)
     xlsx.writeFile(wb, 'Conference_Plans.xlsx')
     setLoading(false)
