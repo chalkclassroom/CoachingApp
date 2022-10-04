@@ -287,7 +287,10 @@ class Teachers extends React.Component<Props, State> {
             <tbody>
               {this.props.teacherData.map((value, index) => {
                 return (
-                <tr key={index} onClick={() => this.handlePageChange(4)}>
+                <tr 
+                key={index} 
+                onClick={() => this.handlePageChange(4)}
+                >
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6" gutterBottom>
                       {value.teacherLastName}
