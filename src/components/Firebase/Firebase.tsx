@@ -4184,21 +4184,22 @@ class Firebase {
 
   fetchSitesForCoach = async (coachId: string) => {
     let result = []
-    const document = await this.db.collection('users').doc(coachId).get();
-    const sites = document.data().sites;
+    if(coachId) {
+      const document = await this.db.collection('users').doc(coachId).get();
+      const sites = document.data().sites;
 
-    this.query = this.db.collection('sites');
-    const collection = await this.query.get()
+      this.query = this.db.collection('sites');
+      const collection = await this.query.get()
 
-    Promise.all(collection.docs.map(async doc => {
-      if (sites.includes(doc.id)) {
-        result.push({
-          name: doc.data().name,
-          id: doc.id
-        })
-      }
-    }))
-
+      Promise.all(collection.docs.map(async doc => {
+        if (sites.includes(doc.id)) {
+          result.push({
+            name: doc.data().name,
+            id: doc.id
+          })
+        }
+      }))
+    }
     return result;
   }
 
@@ -4208,7 +4209,8 @@ class Firebase {
 
     return Promise.all(collection.docs.map(async doc => {
       return{
-      name: doc.data().lastName + ', ' + doc.data().firstName,
+      firstName: doc.data().firstName,
+      lastName: doc.data().lastName,
       id: doc.id
       }
     }))
@@ -4216,15 +4218,20 @@ class Firebase {
 
   getTeacherData = async () => {
     let arr = []
+    let seen = []
     this.query = this.db.collection('users').where('role', '==', 'coach');
     const collection = await this.query.get();
 
-    Promise.all(collection.docs.map(async (coach) => {
+    this.query = this.db.collection('users').where('role', '==', 'teacher');
+    const allTeachers = await this.query.get()
+
+    await Promise.all(collection.docs.map(async (coach) => {
       this.query = this.db.collection('users').doc(coach.id).collection('partners');
       const subCollection = await this.query.get();
-      Promise.all(subCollection.docs.map(async (teacher) => {
+      await Promise.all(subCollection.docs.map(async (teacher) => {
         const teacherResult = await this.db.collection('users').doc(teacher.id).get();
         if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6") {
+          seen.push(teacher.id)
           arr.push({
             coachId: coach.id,
             coachFirstName: coach.data().firstName,
@@ -4237,8 +4244,21 @@ class Firebase {
         }
       }))
     }))
-
-    return await arr
+    
+    Promise.all(allTeachers.docs.map(teacher => {
+      if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+        arr.push({
+          coachId: "",
+          coachFirstName: "",
+          coachLastName: "",
+          siteName: teacher.data().school,
+          teacherId: teacher.id,
+          teacherFirstName: teacher.data().firstName,
+          teacherLastName: teacher.data().lastName,
+        })
+      }
+    }))
+    return arr
   }
 
   /*

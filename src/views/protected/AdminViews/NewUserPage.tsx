@@ -169,12 +169,12 @@ class NewUserPage extends React.Component<Props, State>{
             }
         }
 
-        if (this.state.showCoach) {
-            if (!coach || coach === "") {
-                alert("Please select a coach")
-                return;
-            }
-        }
+        // if (this.state.showCoach) {
+        //     if (!coach || coach === "") {
+        //         alert("Please select a coach")
+        //         return;
+        //     }
+        // }
 
         if (this.state.showProgram) {
             if (!program || program === "") {
