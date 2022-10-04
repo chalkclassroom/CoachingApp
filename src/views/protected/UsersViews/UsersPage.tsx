@@ -92,18 +92,18 @@ interface Style {
 
 interface Props {
   classes: Style,
-  coachName: string,
-  getCoach(name: string): void,
-  history: H.History
+  history: H.History,
+  userRole: string,
+  location: string
 }
 
 interface State {
-  teacherModal: boolean,
-  type: string,
-  coachName: string,
+  coachData: Array<Object>
+  teacherData: Array<Object>
+  currentPage: string,
 }
 
-function checkCurrent(item) {
+function checkCurrent(item: string) {
     if ( item === location.pathname )
         return true;
     return false;
@@ -121,22 +121,14 @@ class UsersPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      teacherModal: false,
-      type: "",
-      coachName: "",
       currentPage: "",
+      coachData: [],
+      teacherData: []
     }
   }
 
-  handleClose = (): void => {
-    this.setState({
-      teacherModal: false,
-      type: ""
-    });
-  };
-
-  buildTeacherData = async () => {
-    let data = []
+  buildTeacherData = async (): Promise<Array<Object>> => {
+    let data: Array<Object> = []
     let teachersAndCoaches = await this.context.getTeacherData();
     let sites = await this.context.getSites();
     let programs = await this.context.getPrograms();
@@ -172,17 +164,17 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
-  buildCoachData = async (teachersAndCoaches: Promise<Array<Object>>) => {
-    let coaches = []
+  buildCoachData = async (teacherData) => {
+    let coaches: Array<string> = []
     let programs = await this.context.getPrograms();
-    let data = []
+    let data: Array<Object> = []
 
 
-    await teachersAndCoaches.map(async (value) => {
-      if(!coaches.includes(value.coachId)) {
+    await teacherData.map(async (value) => {
+      if(value.id !== "" && !coaches.includes(value.coachId)) {
         coaches.push(value.coachId);
         let sites = await this.context.fetchSitesForCoach(await value.coachId);
-        let siteList = []
+        let siteList: Array<Object> = []
 
         await sites.map((site) => {
           for (let i = 0; i < programs.length; i++) {
@@ -210,33 +202,23 @@ class UsersPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
-    // const firebase = this.context;
-    // if (!this.props.coachName) {
-    //   firebase.getCoachFirstName().then((name: string): void => {
-    //     this.props.getCoach(name);
-    //   })
-    // }
-
-    this.setState({teacherData: await this.buildTeacherData()})
-    this.setState({coachData: await this.buildCoachData(await this.state.teacherData)})
-    console.log(this.state.coachData)
-    
-
+    this.setState({teacherData: await this.buildTeacherData()}, 
+    async () => {this.setState({coachData: await this.buildCoachData(this.state.teacherData)})})
   }
+  
+
 
   static propTypes = {
     classes: PropTypes.exact({
       root: PropTypes.string,
       pictureBar: PropTypes.string,
     }).isRequired,
-    coachName: PropTypes.string.isRequired,
-    getCoach: PropTypes.func.isRequired,
     userRole: PropTypes.string,
     history: ReactRouterPropTypes.history
   }
 
 
-  changePage = (pageName) => {
+  changePage = (pageName: string) => {
     this.setState({currentPage: pageName});
   }
 
@@ -245,7 +227,7 @@ class UsersPage extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes, userRole, coachName } = this.props;
+    const { classes, userRole} = this.props;
 
     return (
       <div className={classes.root}>
@@ -285,7 +267,7 @@ class UsersPage extends React.Component<Props, State> {
                     <Route path="/LeadersUsers" component={Skeleton} />
                     <Route path="/LeadersCoaches" render={(props) =>
                       <Coaches
-                        changePage={(pageName) => this.changePage(pageName)}
+                        changePage={(pageName: string) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
                         teacherData = {this.state.teacherData}
@@ -294,7 +276,7 @@ class UsersPage extends React.Component<Props, State> {
                     } />
                     <Route path="/LeadersTeachers" render={(props) =>
                       <Teachers
-                        changePage={(pageName) => this.changePage(pageName)}
+                        changePage={(pageName: string) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
                         teacherData = {this.state.teacherData}
@@ -302,7 +284,7 @@ class UsersPage extends React.Component<Props, State> {
                     } />
                     <Route path="/LeadersArchive" render={(props) =>
                       <Archives
-                        changePage={(pageName) => this.changePage(pageName)}
+                        changePage={(pageName: string) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
                         />
