@@ -37,6 +37,7 @@ import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import BarChartLegend from '../LayoutComponents/GraphLayouts/BarChartLegend'
 
 import AveragesChart from './ResultsComponents/AveragesChart'
+import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -218,6 +219,8 @@ class TeacherProfileResults extends React.Component {
         ],
         usingTime: false,
         lineColors: [],
+        teacherTrends: [],
+        widenTable: false,
       }
   }
 
@@ -226,6 +229,20 @@ class TeacherProfileResults extends React.Component {
 
     // Get data from BQ
     this.getResultsFromBQ(this.props.selectedTeacherId);
+
+    if(this.props.observationType == "bookReading")
+    {
+      console.log("Book reading");
+
+      firebase.fetchTeacherProfileReadingTrend(this.props.selectedTeacherId, 'Teacher', this.props.startDate, this.props.endDate)
+      .then(trends => {
+
+        this.setState({
+          teacherTrends: trends
+        });
+
+      })
+    }
 
   }
 
@@ -373,6 +390,14 @@ class TeacherProfileResults extends React.Component {
    // Handle downloading the PDF
    downloadPDF = () => {
      console.log("Downloading!");
+
+     var tableWrap = document.getElementById('tableWrap');
+
+     if(tableWrap)
+     {
+       tableWrap.style.maxWidth = 'none';
+     }
+
      const input = document.getElementById('TeacherProfileResultsContainer');
       html2canvas(input)
         .then((canvas) => {
@@ -396,6 +421,11 @@ class TeacherProfileResults extends React.Component {
 
 
           pdf.save("Site_Teacher_Results_" + currDate.getMonth() + '_' + currDate.getDate() + "_" + currDate.getFullYear() + ".pdf");
+        }).then( () => {
+          if(tableWrap)
+          {
+            tableWrap.style.maxWidth = '75vw';
+          }
         });
    }
 
@@ -483,12 +513,18 @@ class TeacherProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {this.state.tabState == 1 ? (
+                  {this.state.tabState == 1 && this.props.observationType !== "bookReading" ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
                         options={LineGraphOptions}
                       />
+                    </Grid>
+
+                  ) : this.state.tabState == 1 && this.props.observationType == "bookReading" ? (
+
+                    <Grid container justify={"center"} direction={"column"} style={{flexWrap: 'nowrap', padding: "30px 0px"}}>
+                      <ReadingTrendsTable data={this.state.teacherTrends} who={'Teacher'} widenTable={this.state.widenTable} />
                     </Grid>
 
                   ) : (this.state.tabState == 0 ? (
@@ -501,7 +537,8 @@ class TeacherProfileResults extends React.Component {
                         usingTime={this.state.usingTime}
                       />
                     </Grid>
-                  ) : null)}
+                  ) : null)
+                }
 
                 </Grid>
 

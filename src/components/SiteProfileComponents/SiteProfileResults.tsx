@@ -215,45 +215,22 @@ class SiteProfileResults extends React.Component {
           },
         ],
         lineColors: [],
-
       }
   }
 
-  componentDidMount = async () => {
+  componentDidMount(): void {
     const firebase = this.context;
 
     // Get a list of the coaches for the chosen site.
-    // Get all coaches that has this site in their document
-    var siteCoachIds = [];
-    var tempCoaches = await firebase.fetchSiteCoaches(this.props.selectedSiteId);
+    firebase.getUserProgramOrSite({siteId: this.props.selectedSiteId}).then((data) => {
 
-    if(tempCoaches)
-    {
-      siteCoachIds = tempCoaches.map(coach => {return coach.id});
-    }
-
-    // Add all the coaches this site has listed. (fetchSiteCoaches only grabs users with the role of 'coach'. This is a minor failsafe in case we need more than that)
-    if(this.props.selectedSiteInfo.coaches)
-    {
-      siteCoachIds = siteCoachIds.concat(this.props.selectedSiteInfo.coaches);
-    }
-
-    // Remove any duplicates
-    siteCoachIds = siteCoachIds.filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
-
-    this.getSitesTeachersInfo(siteCoachIds);
-
-    // Get a list of the coaches for the chosen site.
-    /*
-    firebase.fetchSiteCoaches(this.props.selectedSiteId).then( (data) => {
-
-      if(data)
+      // Save the teachers' information to the state.
+      if(data.coaches)
       {
-        this.getSitesTeachersInfo(data)
+        this.getSitesTeachersInfo(data.coaches)
       }
 
     });
-    */
 
   }
 
@@ -275,27 +252,31 @@ class SiteProfileResults extends React.Component {
       {
         var coachId = coachIdsArr[coachIndex];
 
-
         // Get the the coaches teacher
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
 
-        // Get all information for all the teachers
-        var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
+        // Go through each teacher the coach observes
+        for(var teacherIndex in teachersIdList)
+        {
+          var teacherId = teachersIdList[teacherIndex];
 
-        teacherResults = teacherResults.concat(teachersList);
+          // Get all information of the teacher
+          var tempTeacher = await firebase.getUserProgramOrSite({userId: teacherId});
 
-        // Remove any duplicates from the teachers
-        teacherResults = teacherResults.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
+          // Make sure it exists
+          if(tempTeacher)
+          {
+            // Save all information
+            teacherResults.push(tempTeacher);
 
-        // Set teachers names
-        var tempTeacherNames = teachersList.map( (teacher, index) => {return teacher.firstName + " " + teacher.lastName});
+            // Save just the names
+            teacherNames.push(tempTeacher.firstName + " " + tempTeacher.lastName);
+          }
 
-        teacherNames = teacherNames.concat(tempTeacherNames);
+        }
 
 
       }
-
-
 
       this.setState({teacherInfo: teacherResults});
       this.setState({teacherNames: teacherNames});
@@ -417,8 +398,6 @@ class SiteProfileResults extends React.Component {
          label: fullName,
          data: chosenData,
          borderColor: lineColors[i],
-         fill: false,
-         tension: 0.0
        };
 
        tempDataSet.push(tempData);
@@ -572,7 +551,7 @@ class SiteProfileResults extends React.Component {
 
                   ) : (this.state.tabState == 0 ? (
 
-                    <Grid container justify={"center"} direction={"column"} style={{width: '90%', height: 450, flexWrap: 'nowrap', padding: "30px 0px", paddingRight: '50px', position: 'relative'}}>
+                    <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
                       <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
 
                       <SiteProfileBarDetails
@@ -581,9 +560,15 @@ class SiteProfileResults extends React.Component {
                         data={this.state.averages}
                         type={this.state.radioValue}
                       />
-
                     </Grid>
                   ) : null)}
+
+                </Grid>
+
+                {/*
+                    The "averages" bar graph
+                */}
+                <Grid item xs={12} style={centerColumn}>
 
                 </Grid>
 

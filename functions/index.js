@@ -40,6 +40,7 @@ exports.fetchTransitionLog = require('./fetchTransitionLog').fetchTransitionLog;
 exports.fetchTransitionsTrend = require('./fetchTransitionsTrend').fetchTransitionsTrend;
 exports.fetchSiteProfileAverages = require('./fetchSiteProfileAverages').fetchSiteProfileAverages;
 exports.fetchTeacherProfileAverages = require('./fetchTeacherProfileAverages').fetchTeacherProfileAverages;
+exports.fetchTeacherProfileReadingTrend = require('./fetchTeacherProfileReadingTrend').fetchTeacherProfileReadingTrend;
 exports.fetchCoachProfile = require('./fetchCoachProfile').fetchCoachProfile;
 
 exports.funcACDetails = require('./funcACDetails').funcACDetails;
