@@ -110,7 +110,9 @@ function LiteracyResultsDialog(props: Props): React.ReactElement {
                                 color="primary"
                                 variant="contained"
                                 style={{ fontFamily: 'Arimo' }}
-                                onClick={(): void => {
+                                onClick={async () => {
+                                    const delay = ms => new Promise(res => setTimeout(res, ms));
+                                    await delay(3000);
                                     history.push(`/LiteracyInstructionResults`, {type: getLiteracyType(literacyType)})
                                     clearLiteracyCount()
                                 }}

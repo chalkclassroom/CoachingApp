@@ -175,7 +175,8 @@ type Props = RouteComponentProps & {
   checklistType?: string
   startTime?: string
   forceComplete?: boolean
-  showLiteracyActivity?:boolean
+  showLiteracyActivity?:boolean,
+  // handleNext?(): void
 }
 
 interface State {
@@ -520,7 +521,9 @@ class Dashboard extends React.Component<Props, State> {
                             "Are you sure you want to complete this observation?"
                           }
                           shouldOpen={true}
-                          onAccept={(): void => {
+                          onAccept={async () => {
+                            const delay = ms => new Promise(res => setTimeout(res, ms));
+                            await delay(1500);
                             this.setState({displayResultsDialog: true});
                             let timedOut = !this.props.showLiteracyActivity && this.props.forceComplete
                               firebase.updateCurrentObservation({timedOut})
@@ -530,6 +533,9 @@ class Dashboard extends React.Component<Props, State> {
                             if (this.props.stopTimer) {
                               this.props.stopTimer()
                             }
+                            // if (this.props.handleNext) {
+                            //   this.props.handleNext();
+                            // }
                             if (this.props.type === "TT") {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);
