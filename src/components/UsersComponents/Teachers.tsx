@@ -265,10 +265,14 @@ class Teachers extends React.Component<Props, State> {
           this.setState({ // Hold off setting new state until success has been determined
             addTeacherFirstName: '',
             addTeacherLastName: '',
-            
+            addCoachSites: [],
+            addSiteName: '',
+            addCoach: '',
+            addCoachPrograms: [],
             addProgram: '',
             addSite: ''
           });
+          window.location.reload()
       });
   } 
 
@@ -597,24 +601,20 @@ class Teachers extends React.Component<Props, State> {
                 <Grid container direction='row' justifyContent='center' spacing={3}>
                   <Grid item xs={6}>
                     <TextField
-                    // style={{width:'160px'}}
                     id="teacher-firstName"
                     label="First Name"
                     type="text"
                     value={this.state.addTeacherFirstName}
-                    // className={classes.search}
                     variant="outlined"
                     onChange={this.handleInputChange('firstName')}
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                    // style={{width:'160px'}}
                     id="teacher-lastName"
                     label="Last Name"
                     type="text"
                     value={this.state.addTeacherLastName}
-                    // className={classes.search}
                     variant="outlined"
                     onChange={this.handleInputChange('lastName')}
                     />
@@ -627,13 +627,8 @@ class Teachers extends React.Component<Props, State> {
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.addCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                    //   this.setState({addCoachSites: this.props.coachData[this.props.coachData.map(object => object.id).indexOf(event.target.value)].siteList})
-                    //   console.log(addCoachSites)
-                    //   this.setState({addCoach: event.target.value})}}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateSite(event)}
                     name="addCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
                     {this.props.coachData.map(
                       (coach, index)=>{
@@ -645,7 +640,6 @@ class Teachers extends React.Component<Props, State> {
                         )}
                         })}
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
               <Grid item>
@@ -654,11 +648,8 @@ class Teachers extends React.Component<Props, State> {
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.addSite}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({addSite: event.target.value})}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateProgram(event)}
                     name="addSite"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
                       {this.state.addCoachSites.map((site, index) => {
                         return (
@@ -668,7 +659,6 @@ class Teachers extends React.Component<Props, State> {
                         )
                       })}
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
               <Grid item>
@@ -680,7 +670,6 @@ class Teachers extends React.Component<Props, State> {
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                       this.setState({addProgram: event.target.value})}
                     name="addProgram"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
                     {this.state.addCoachPrograms.map((program, index) => {
                       return (
@@ -691,7 +680,6 @@ class Teachers extends React.Component<Props, State> {
                       })
                     }
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
             </Grid>
