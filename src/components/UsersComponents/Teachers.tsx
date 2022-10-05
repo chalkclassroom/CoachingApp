@@ -92,21 +92,43 @@ class Teachers extends React.Component<Props, State> {
   }
 
   handlePageChange = (pageNumber: number) => {
-    this.setState({view: pageNumber});
-
     switch (pageNumber) {
       default : case 1:
-        this.props.changePage("Teachers");
-        break;
+        if (!this.state.saved) {
+          this.onSaveModalOpen();
+          break;
+        } else {
+          this.setState({view: pageNumber});
+          this.props.changePage("Teachers");
+          break;
+        }
       case 2:
-        this.props.changePage("TeachersAdd");
-        break;
+        if (!this.state.saved) {
+          this.onSaveModalOpen();
+          break;
+        } else {
+          this.setState({view: pageNumber});
+          this.props.changePage("TeachersAdd");
+          break;
+        }
       case 3:
-        this.props.changePage("TeachersTransfer");
-        break;
+        if (!this.state.saved) {
+          this.onSaveModalOpen();
+          break;
+        } else {
+          this.setState({view: pageNumber});
+          this.props.changePage("TeachersTransfer");
+          break;
+        }
       case 4:
-        this.props.changePage("TeachersEdit");
-        break;
+        if (!this.state.saved) {
+          this.onSaveModalOpen();
+          break;
+        } else {
+          this.setState({view: pageNumber});
+          this.props.changePage("TeachersEdit");
+          break;
+        }
     }
   }
 
@@ -114,15 +136,27 @@ class Teachers extends React.Component<Props, State> {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
+      if (event.target.value === "") {
+        this.setState({
+          addTeacherFirstName: event.target.value,
+          saved: true,
+        })
+      } else {
       this.setState({
         addTeacherFirstName: event.target.value,
         saved: false,
-      })
-    } else if (name === 'lastName') {
+      })}
+    }
+    if (name === 'lastName') {
+      if (event.target.value === "") {
+        this.setState({
+          addTeacherLastName: event.target.value,
+          saved: true,
+        })} else {
       this.setState({
         addTeacherLastName: event.target.value,
         saved: false,
-      })
+      })}
     }
   }
 
@@ -138,10 +172,18 @@ class Teachers extends React.Component<Props, State> {
       this.state.awaitingConfirmationRef.resolve(true)
     }
       this.setState({
-          saveModalOpen: false,
-          view: 1,
-          saved: true,
-        awaitingConfirmationRef: null
+        saveModalOpen: false,
+        view: 1,
+        saved: true,
+        awaitingConfirmationRef: null,
+        addTeacherFirstName: "",
+        addTeacherLastName: "",
+        addCoach: "",
+        addCoachSites: [],
+        addSiteName: "",
+        addSite: "",
+        addCoachPrograms: [],
+        addProgram: "",
       })
   }
 
@@ -231,14 +273,13 @@ class Teachers extends React.Component<Props, State> {
   } 
 
   handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({addCoach: event.target.value})
+    this.setState({addCoach: event.target.value, saved: false})
     const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
     this.setState({addCoachSites: selectedSites})
-    console.log(selectedSites)
   }
 
   handlePopulateProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({addSite: event.target.value})
+    this.setState({addSite: event.target.value, saved: false})
     let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
     this.setState({addSiteName: site})
     console.log(site)
@@ -250,7 +291,6 @@ class Teachers extends React.Component<Props, State> {
       }
     })
     this.setState({addCoachPrograms: programs})
-    console.log(programs)
   }
 
   render() {
