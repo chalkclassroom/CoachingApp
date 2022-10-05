@@ -21,6 +21,7 @@ import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
+import { is } from 'date-fns/locale';
 
 const StyledSelect = withStyles({
   root: {
@@ -60,13 +61,10 @@ interface State {
   addTeacherFirstName: string
   addTeacherLastName: string
   addCoach: string
-  addCoachSites: Array<{
-    siteName: string,
-    siteId: string,
-    programName: string,
-    programId: string
-  }>
+  addCoachSites: Array<Object>
+  addSiteName: string
   addSite: string
+  addCoachPrograms: Array<Object>
   addProgram: string
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
@@ -82,15 +80,10 @@ class Teachers extends React.Component<Props, State> {
       addTeacherFirstName: "",
       addTeacherLastName: "",
       addCoach: "",
-      addCoachSites: [
-        {
-          siteName: "",
-          siteId: "",
-          programName: "",
-          programId: ""
-        }
-      ],
+      addCoachSites: [],
+      addSiteName: "",
       addSite: "",
+      addCoachPrograms: [],
       addProgram: "",
       saveModalOpen: false,
       awaitingConfirmationRef: null
@@ -176,7 +169,7 @@ class Teachers extends React.Component<Props, State> {
         addTeacherFirstName,
         addTeacherLastName,
         addCoach,
-        addSite,
+        addSiteName,
         addProgram
     } = this.state;
 
@@ -195,7 +188,7 @@ class Teachers extends React.Component<Props, State> {
         return;
     }
 
-    if (!addSite || addSite === ""){
+    if (!addSiteName || addSiteName === ""){
       alert("Site is required");
       return;
     }
@@ -215,7 +208,7 @@ class Teachers extends React.Component<Props, State> {
     const teacherInfo = {
         firstName: addTeacherFirstName,
         lastName: addTeacherLastName,
-        school: addSite,
+        school: addSiteName,
         email: '',
         notes: '',
         phone: ''
@@ -230,13 +223,39 @@ class Teachers extends React.Component<Props, State> {
           this.setState({ // Hold off setting new state until success has been determined
             addTeacherFirstName: '',
             addTeacherLastName: '',
+            
             addProgram: '',
             addSite: ''
           });
       });
   } 
 
+  handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({addCoach: event.target.value})
+    const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    this.setState({addCoachSites: selectedSites})
+    console.log(selectedSites)
+  }
+
+  handlePopulateProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({addSite: event.target.value})
+    let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
+    this.setState({addSiteName: site})
+    console.log(site)
+    const sites = this.props.coachData.filter((doc) => {return doc.id === this.state.addCoach})[0].siteList
+    let programs = []
+    sites.map((doc) => {
+      if (doc.siteId === event.target.value) {
+        programs.push({programId: doc.programId, programName: doc.programName})
+      }
+    })
+    this.setState({addCoachPrograms: programs})
+    console.log(programs)
+  }
+
   render() {
+
+
     return (<>
     <Dialog open={this.state.saveModalOpen}>
         <DialogTitle style={{ fontFamily: 'Arimo' }}>
@@ -568,10 +587,11 @@ class Teachers extends React.Component<Props, State> {
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.addCoach}
-                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                      this.setState({addCoachInfo: this.props.coachData[this.props.coachData.map(object => object.id).indexOf(event.target.value)]})
-                      console.log(this.state.addCoachInfo)
-                      this.setState({addCoach: event.target.value})}}
+                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                    //   this.setState({addCoachSites: this.props.coachData[this.props.coachData.map(object => object.id).indexOf(event.target.value)].siteList})
+                    //   console.log(addCoachSites)
+                    //   this.setState({addCoach: event.target.value})}}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateSite(event)}
                     name="addCoach"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
@@ -594,19 +614,19 @@ class Teachers extends React.Component<Props, State> {
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.addSite}
-                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                      this.setState({addSite: event.target.value})}
+                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                    //   this.setState({addSite: event.target.value})}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateProgram(event)}
                     name="addSite"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {this.props.siteData.map(
-                      (site, index)=>{
+                      {this.state.addCoachSites.map((site, index) => {
                         return (
-                            <MenuItem value={site.id} key={index}>
-                              {site.name}
-                            </MenuItem>
+                          <MenuItem value={site.siteId} key={index}>
+                            {site.siteName}
+                          </MenuItem>
                         )
-                        })}
+                      })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
@@ -622,14 +642,14 @@ class Teachers extends React.Component<Props, State> {
                     name="addProgram"
                     // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {this.props.programData.map(
-                      (program, index)=>{
-                        return (
-                            <MenuItem value={program.id} key={index}>
-                              {program.name}
-                            </MenuItem>
-                        )
-                        })}
+                    {this.state.addCoachPrograms.map((program, index) => {
+                      return (
+                        <MenuItem value={program.programId} key={index}>
+                          {program.programName}
+                        </MenuItem>
+                      )
+                      })
+                    }
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>

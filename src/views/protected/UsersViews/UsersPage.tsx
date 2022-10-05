@@ -183,8 +183,8 @@ class UsersPage extends React.Component<Props, State> {
               siteList.push({
                 siteName: site.name,
                 siteId: site.id,
-                programName: this.state.programData[i].id,
-                programId: this.state.programData[i].name
+                programName: this.state.programData[i].name,
+                programId: this.state.programData[i].id
               })
             }
           }
