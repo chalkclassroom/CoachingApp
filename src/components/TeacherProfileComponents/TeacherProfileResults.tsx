@@ -221,6 +221,7 @@ class TeacherProfileResults extends React.Component {
         lineColors: [],
         teacherTrends: [],
         widenTable: false,
+        observationTime: ""
       }
   }
 
@@ -335,6 +336,13 @@ class TeacherProfileResults extends React.Component {
        default:
          break;
      }
+
+     if(averages[teacherId].totalTime)
+     {
+       var observationTime = this.convertMillisecondsToMinutes(averages[teacherId].totalTime);
+       this.setState({observationTime: observationTime});
+     }
+
      this.setState({averages: averages, trends: trends, usingTime: usingTime});
 
      // Build data for line graph
@@ -427,6 +435,12 @@ class TeacherProfileResults extends React.Component {
             tableWrap.style.maxWidth = '75vw';
           }
         });
+   }
+
+   convertMillisecondsToMinutes(millis){
+     var minutes = Math.floor(millis / 60000);
+     var seconds = ((millis % 60000) / 1000).toFixed(0);
+     return minutes + "m " + (seconds < 10 ? '0' : '') + seconds + "s";
    }
 
 
@@ -541,6 +555,17 @@ class TeacherProfileResults extends React.Component {
                 }
 
                 </Grid>
+
+
+                {/*
+                  Total Length of Observation
+                */}
+                <Grid item xs={12} style={centerColumn}>
+                  {this.state.observationTime !== "" ? (
+                    <span style={{fontSize: '24px', marginBottom: '20px'}}>Total Length of Observation: {this.state.observationTime}</span>
+                  ) : null}
+                </Grid>
+
 
 
                 {/*

@@ -4244,7 +4244,7 @@ class Firebase {
         }
       }))
     }))
-    
+
     Promise.all(allTeachers.docs.map(teacher => {
       if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
         arr.push({
@@ -5605,6 +5605,61 @@ class Firebase {
     }
 
 
+    /**
+     * Get data for the teacher profile page
+     */
+    fetchTeacherProfileReadingTrend = async (
+      teacherId,
+      who,
+      startDate,
+      endDate
+    ): Promise<Array<{
+      startDate: { value: string }
+      literacy1: number
+      literacy2: number
+      literacy3: number
+      literacy4: number
+      literacy5: number
+      literacy6: number
+      literacy7: number
+      literacy8: number
+      literacy9: number
+      literacy10: number
+      total: number
+      activitySetting: string
+    }> | void> => {
+      const fetchTeacherProfileReadingTrendFirebaseFunction = this.functions.httpsCallable(
+        'fetchTeacherProfileReadingTrend'
+      )
+      return fetchTeacherProfileReadingTrendFirebaseFunction({
+        teacherId: teacherId,
+        who: who,
+        startDate: startDate,
+        endDate: endDate,
+      })
+        .then(
+          (result: {
+            data: Array<Array<{
+              startDate: { value: string }
+              literacy1: number
+              literacy2: number
+              literacy3: number
+              literacy4: number
+              literacy5: number
+              literacy6: number
+              literacy7: number
+              literacy8: number
+              literacy9: number
+              literacy10: number
+              total: number
+              activitySetting: string
+            }>>
+          }) => result.data[0]
+        )
+        .catch((error: Error) =>
+          console.error('Error occurred getting listening trend: ', error)
+        )
+    }
 
 
        /**
@@ -5641,13 +5696,25 @@ class Firebase {
    fetchProgramTeachers = async (
      data: {
        programId: string,
+       programInfo: string
      }
    ): Promise<void> => {
 
      // Initialize results object that'll hold all the sites and their teachersIdList
      var results = {};
 
-      var programInfo = await this.getUserProgramOrSite({programId: data.programId});
+      var programInfo;
+      if(data.programInfo)
+      {
+        programInfo = data.programInfo;
+      }
+      else
+      {
+        programInfo = await this.getUserProgramOrSite({programId: data.programId});
+      }
+
+      console.log("Program INFO : ", programInfo);
+
 
       // Go through all this sites in this program to get their coaches
       for(var siteIndex in programInfo.sites)
@@ -5655,13 +5722,27 @@ class Firebase {
         var siteId = programInfo.sites[siteIndex];
         var site = await this.getUserProgramOrSite({siteId: siteId});
 
+        // If site doesn't exist, just move on
+        if(!site)
+        {
+          continue;
+        }
+
+        console.log("site : ", site);
+
+
         var siteTeachers = [];
 
         // Initialize this site in the results
         results[siteId] = [];
 
         // Go through all the coaches in this site to get the teachers
-        var siteCoaches = site.coaches;
+        var siteCoaches = [];
+        if(site.coaches)
+        {
+          siteCoaches = site.coaches;
+        }
+
         for(var coachIndex in siteCoaches)
         {
           var coachId = siteCoaches[coachIndex];
@@ -5673,6 +5754,13 @@ class Firebase {
           results[siteId] = results[siteId].concat(teachers);
 
         }
+
+        // Let's get all the teachers by the site name as well just in case we missed any
+        var teachers2 = await this.getTeacherBySiteName(site.name);
+        results[siteId] = results[siteId].concat(teachers2);
+
+        // Remove all duplicates
+        results[siteId] = results[siteId].filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
 
       }
 

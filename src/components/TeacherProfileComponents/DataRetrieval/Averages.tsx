@@ -40,6 +40,7 @@ class AveragesData {
       routines: 0,
       behaviorManagement: 0,
       other: 0,
+      totalTime: 0
     };
 
 
@@ -60,7 +61,9 @@ class AveragesData {
       results[teacherId].other += row.other;
 
       // Calculate the total Number of instructions
-      results[teacherId].total += row.total;
+      //results[teacherId].total += row.total;
+      results[teacherId].total += row.observationTotalTime;
+      results[teacherId].totalTime += row.observationTotalTime;
     }
 
     // Calculate the averages in percentages
@@ -77,6 +80,7 @@ class AveragesData {
       result.routinesAverage = result.routines > 0 ? (result.routines / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.behaviorManagementAverage = result.behaviorManagement > 0 ? (result.behaviorManagement / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.otherAverage = result.other > 0 ? (result.other / tempTotalInstructions).toFixed(2) * 100 : 0;
+
     }
 
     return results;
@@ -692,7 +696,8 @@ class AveragesData {
       languageConnections: 0,
       childrenSupport: 0,
       fairnessDiscussions: 0,
-      multimodalInstruction: 0
+      multimodalInstruction: 0,
+      totalTime: 0
     };
 
     // Get number of instances for each type of data
@@ -717,6 +722,8 @@ class AveragesData {
       results[teacherId].multimodalInstruction += row.multimodal;
 
       results[teacherId].bookReading += row.total - row.literacy11;
+
+      results[teacherId].totalTime += row.observationTotalTime;
 
     }
 

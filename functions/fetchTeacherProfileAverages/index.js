@@ -84,10 +84,11 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       SUM(CASE WHEN type = 'behavior management disruption' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS behaviorManagement,
                       SUM(CASE WHEN type = 'other' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS other,
                   	  SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
+                      TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond) AS observationTotalTime,
                       teacher
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY startDate, teacher
+                      GROUP BY startDate, teacher, observationTotalTime
                       ORDER BY startDate ASC;`;
     }
 
@@ -292,11 +293,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.item10) THEN 'literacy10' ELSE NULL END) AS literacy10,
                       COUNT(CASE WHEN (checklist.item11) THEN 'literacy11' ELSE NULL END) AS literacy11,
                       COUNT (id) AS total,
+                      TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond) AS observationTotalTime,
                       teacher,
                       sessionStart
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY id, teacher, sessionStart
+                      GROUP BY id, teacher, sessionStart, observationTotalTime
                       ORDER BY sessionStart desc;`;
     }
 
