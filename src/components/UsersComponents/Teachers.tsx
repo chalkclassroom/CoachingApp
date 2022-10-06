@@ -66,11 +66,16 @@ interface State {
   addSite: string
   addCoachPrograms: Array<Object>
   addProgram: string
+  editTeacherId: string
   editTeacherFirstName: string
   editTeacherLastName: string
   editCoach: string
   editSite: string
   editProgram: string
+  transferTeacherId: string
+  transferCoachName: string
+  transferSiteName: string
+  transferProgramName: string
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
@@ -90,11 +95,16 @@ class Teachers extends React.Component<Props, State> {
       addSite: "",
       addCoachPrograms: [],
       addProgram: "",
+      editTeacherId: "",
       editTeacherFirstName: "",
       editTeacherLastName: "",
       editCoach: "",
       editSite: "",
       editProgram: "",
+      transferTeacherId: "",
+      transferCoachName: "",
+      transferSiteName: "",
+      transferProgramName: "",
       saveModalOpen: false,
       awaitingConfirmationRef: null
     }
@@ -306,11 +316,12 @@ class Teachers extends React.Component<Props, State> {
   handleEditClick = (value) => {
     console.log(value)
     this.setState({
-    editTeacherFirstName: value.teacherFirstName,
-    editTeacherLastName: value.teacherLastName,
-    editCoach: value.coachFirstName + ' ' + value.coachLastName,
-    editSite: value.siteName,
-    editProgram: value.selectedProgramName
+      editTeacherId: value.teacherId,
+      editTeacherFirstName: value.teacherFirstName,
+      editTeacherLastName: value.teacherLastName,
+      editCoach: value.coachFirstName + ' ' + value.coachLastName,
+      editSite: value.siteName,
+      editProgram: value.selectedProgramName
     })
     this.handlePageChange(4)
   }
@@ -337,6 +348,12 @@ class Teachers extends React.Component<Props, State> {
     })
     this.setState({addCoachPrograms: programs})
   }
+
+  // handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   this.setState({addCoach: event.target.value, saved: false})
+  //   const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+  //   this.setState({addCoachSites: selectedSites})
+  // }
 
   render() {
 
@@ -793,96 +810,56 @@ class Teachers extends React.Component<Props, State> {
                   <StyledSelectTransfer
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
+                    value={this.state.transferTeacherId}
+                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateTeacherInfo(event)}
                     name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
+                    {this.props.teacherData.map(
+                      (teacher, index)=>{
                         return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
+                            <MenuItem value={teacher.teacherId} key={index}>
+                              {teacher.teacherLastName + ", " + teacher.teacherFirstName}
                             </MenuItem>
-                        )}
-                        })} */}
+                        )
+                        })}
                   </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
+                <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="teacher-Coach"
+                    type="text"
+                    value={this.state.transferCoachName}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="outlined"
+                  />
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
+                <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="teacher-Coach"
+                    type="text"
+                    value={this.state.transferSiteName}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="outlined"
+                  />
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
+                <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="teacher-Coach"
+                    type="text"
+                    value={this.state.transferProgramName}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="outlined"
+                  />
               </Grid>
             </Grid>
             </Grid>
