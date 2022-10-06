@@ -66,6 +66,11 @@ interface State {
   addSite: string
   addCoachPrograms: Array<Object>
   addProgram: string
+  editTeacherFirstName: string
+  editTeacherLastName: string
+  editCoach: string
+  editSite: string
+  editProgram: string
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
@@ -85,6 +90,11 @@ class Teachers extends React.Component<Props, State> {
       addSite: "",
       addCoachPrograms: [],
       addProgram: "",
+      editTeacherFirstName: "",
+      editTeacherLastName: "",
+      editCoach: "",
+      editSite: "",
+      editProgram: "",
       saveModalOpen: false,
       awaitingConfirmationRef: null
     }
@@ -132,7 +142,7 @@ class Teachers extends React.Component<Props, State> {
     }
   }
 
-  handleInputChange = (name: string) => (
+  handleAddInputChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
@@ -157,6 +167,23 @@ class Teachers extends React.Component<Props, State> {
         addTeacherLastName: event.target.value,
         saved: false,
       })}
+    }
+  }
+
+  handleEditInputChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    if (name === 'firstName') {
+      this.setState({
+        editTeacherFirstName: event.target.value,
+        saved: false,
+      })
+    }
+    if (name === 'lastName') {
+      this.setState({
+        editTeacherLastName: event.target.value,
+        saved: false,
+      })
     }
   }
 
@@ -275,6 +302,20 @@ class Teachers extends React.Component<Props, State> {
           window.location.reload()
       });
   } 
+
+  handleEditClick = (value) => {
+    console.log(value)
+    this.setState({
+    editTeacherFirstName: value.teacherFirstName,
+    editTeacherLastName: value.teacherLastName,
+    editCoach: value.coachFirstName + ' ' + value.coachLastName,
+    editSite: value.siteName,
+    editProgram: value.selectedProgramName
+    })
+    this.handlePageChange(4)
+  }
+
+
 
   handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({addCoach: event.target.value, saved: false})
@@ -519,7 +560,7 @@ class Teachers extends React.Component<Props, State> {
                 return (
                 <tr 
                 key={index} 
-                onClick={() => this.handlePageChange(4)}
+                onClick={() => {this.handleEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6" gutterBottom>
@@ -606,7 +647,7 @@ class Teachers extends React.Component<Props, State> {
                     type="text"
                     value={this.state.addTeacherFirstName}
                     variant="outlined"
-                    onChange={this.handleInputChange('firstName')}
+                    onChange={this.handleAddInputChange('firstName')}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -616,7 +657,7 @@ class Teachers extends React.Component<Props, State> {
                     type="text"
                     value={this.state.addTeacherLastName}
                     variant="outlined"
-                    onChange={this.handleInputChange('lastName')}
+                    onChange={this.handleAddInputChange('lastName')}
                     />
                   </Grid>
                 </Grid>
@@ -973,158 +1014,133 @@ class Teachers extends React.Component<Props, State> {
       </Grid>
     </>) : (this.state.view === 4 ? (<>
       <Grid item xs={1} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                  Teacher
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                  Coach
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                  Site
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
+                  Program
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
 
-        <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
-              Teacher
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'0px'}}>
-              Coach
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
-              Site
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
-              Program
-            </Typography>
-          </Grid>
-        </Grid>
-        </Grid>
-
-        <Grid item xs={5} style={{marginTop: '45px'}}>
-        <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-        </Grid>
-        </Grid>
-
-        <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
-        <Grid item xs={1}/>
-          <Grid item xs={1}>
-            <Button >
-              {this.state.saved ? (
-                <img
-                  alt="Save"
-                  src={SaveGrayImage}
-                  style={{
-                    width: '80%',
-                    minWidth:'70px'
+          <Grid item xs={5} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+              <Grid item>
+                <Grid container direction='row' justifyContent='center' spacing={3}>
+                  <Grid item xs={6}>
+                    <TextField
+                    id="teacher-firstName"
+                    label="First Name"
+                    type="text"
+                    value={this.state.editTeacherFirstName}
+                    InputProps={{
+                      readOnly: false
+                    }}
+                    variant="outlined"
+                    onChange={this.handleEditInputChange('firstName')}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                    id="teacher-lastName"
+                    label="Last Name"
+                    type="text"
+                    value={this.state.editTeacherLastName}
+                    InputProps={{
+                      readOnly: false
+                    }}
+                    variant="outlined"
+                    onChange={this.handleEditInputChange('lastName')}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Coach"
+                  type="text"
+                  value={this.state.editCoach}
+                  InputProps={{
+                    readOnly: true
                   }}
-                />
-              ) : (
-                <img
-                  alt="Save"
-                  src={SaveImage}
-                  style={{
-                    width: '80%',
-                    minWidth:'70px'
+                  variant="outlined"
+                  />
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Site"
+                  type="text"
+                  value={this.state.editSite}
+                  InputProps={{
+                    readOnly: true
                   }}
+                  variant="outlined"
                 />
-              )}
-            </Button>
-          </Grid>     
-        </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Program"
+                  type="text"
+                  value={this.state.editProgram}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+     
+            <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
+            <Grid item xs={1}/>
+              <Grid item xs={1}>
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button 
+                    onClick={(_)=>{this.addTeacher(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
+                  )}
+                </FirebaseContext.Consumer>
+              </Grid>     
+            </Grid>
     </>) : (null))))}
     </Grid>
     </>)
