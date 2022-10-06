@@ -171,13 +171,22 @@ class UsersPage extends React.Component<Props, State> {
     let data: Array<Object> = []
 
 
-    await teacherData.map(async (value) => {
-      if(value.id !== "" && !coaches.includes(value.coachId)) {
+    //teacherData.map(async (value) => {
+    for(var teacherIndex in teacherData)
+    {
+      var value = teacherData[teacherIndex];
+
+      if(value.coachId !== "" && !coaches.includes(value.coachId)) {
         coaches.push(value.coachId);
         let sites = await this.context.fetchSitesForCoach(await value.coachId);
         let siteList: Array<Object> = []
 
-        await sites.map((site) => {
+        //sites.map((site) => {
+        for(var siteIndex in sites)
+        {
+
+          var site = sites[siteIndex];
+
           for (let i = 0; i < this.state.programData.length; i++) {
             if (this.state.programData[i].sites.includes(site.id)) {
               siteList.push({
@@ -188,15 +197,17 @@ class UsersPage extends React.Component<Props, State> {
               })
             }
           }
-        })
+        }
+
         data.push({
           firstName: value.coachFirstName,
           lastName: value.coachLastName,
           id:  value.coachId,
           siteList: siteList
         })
+
       }
-    })
+    }
 
     return data;
   }
@@ -209,10 +220,21 @@ class UsersPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
     await this.sitesAndPrograms();
-    this.setState({teacherData: await this.buildTeacherData()}, 
-    async () => {this.setState({coachData: await this.buildCoachData(this.state.teacherData)})})
+
+    var teacherData = await this.buildTeacherData();
+
+    this.setState({teacherData: teacherData});
+
+    var coachData = await this.buildCoachData(teacherData);
+    console.log("teacher data : ", teacherData);
+    console.log("coach data : ", coachData);
+    console.log("coach data 2 : ", typeof coachData);
+
+    this.setState({coachData: coachData});
+
+
   }
-  
+
 
 
   static propTypes = {
@@ -243,7 +265,7 @@ class UsersPage extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <Grid container className={classes.pictureBar}>
             <Grid item xs={1} style={{padding: '1em 0 1em 0'}}>
-                <img src={UsersIcon} style={{fill: '#6f39c4', height: '100px', width: '100px', minHeight: '2em', maxHeight: '100px', minWidth: '2em', paddingLeft: '2.4em'}} />            
+                <img src={UsersIcon} style={{fill: '#6f39c4', height: '100px', width: '100px', minHeight: '2em', maxHeight: '100px', minWidth: '2em', paddingLeft: '2.4em'}} />
             </Grid>
         </Grid>
         <nav style={Styles.navItems}>

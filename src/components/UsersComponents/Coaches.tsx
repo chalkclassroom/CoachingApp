@@ -67,13 +67,67 @@ class Coaches extends React.Component<Props, State> {
       coachList: [],
       coachesTeachers: [],
       view: 1,
-      saved: false
+      saved: false,
+      sortType: "lastName"
     }
-  
+
   }
 
-  componentDidMount(): void {
-    this.setState({coachList: this.props.coachData})
+  componentDidMount() {
+
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.coachData !== this.props.coachData) {
+
+    }
+  }
+
+  sortTeachers = (sortType) => {
+    var teachersList = this.state.coachesTeachers;
+
+    this.setState({sortType: sortType});
+
+    // Sort the teachers list
+    switch (sortType) {
+      case "lastName":
+        teachersList.sort((a,b) => (a.teacherLastName > b.teacherLastName) ? 1 : ((b.teacherLastName > a.teacherLastName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "lastNameReverse":
+        teachersList.sort((a,b) => (b.teacherLastName > a.teacherLastName) ? 1 : ((a.teacherLastName > b.teacherLastName) ? -1 : 0));
+        console.log("reverse last name");
+      case "firstName":
+        teachersList.sort((a,b) => (a.teacherFirstName > b.teacherFirstName) ? 1 : ((b.teacherFirstName > a.teacherFirstName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "firstNameReverse":
+        teachersList.sort((a,b) => (b.teacherFirstName > a.teacherFirstName) ? 1 : ((a.teacherFirstName > b.teacherFirstName) ? -1 : 0));
+        console.log("reverse last name");
+        break;
+      case "siteName":
+        teachersList.sort((a,b) => (a.siteName > b.siteName) ? 1 : ((b.siteName > a.siteName) ? -1 : 0));
+        console.log("site name");
+        break;
+      case "siteNameReverse":
+        teachersList.sort((a,b) => (b.siteName > a.siteName) ? 1 : ((a.siteName > b.siteName) ? -1 : 0));
+        console.log("reverse site name");
+        break;
+      case "program":
+        teachersList.sort((a,b) => (a.selectedProgramName > b.selectedProgramName) ? 1 : ((b.selectedProgramName > a.selectedProgramName) ? -1 : 0));
+        console.log("program name");
+        break;
+      case "programReverse":
+        teachersList.sort((a,b) => (b.selectedProgramName > a.selectedProgramName) ? 1 : ((a.selectedProgramName > b.selectedProgramName) ? -1 : 0));
+        console.log("reverse program name");
+        break;
+
+      default:
+        break;
+    }
+
+    this.setState({coachesTeachers: teachersList});
+
   }
 
   handlePopulateTable = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -84,10 +138,16 @@ class Coaches extends React.Component<Props, State> {
         result.push(doc)
       }
     })
-    this.setState({coachesTeachers: result})
+    this.setState({coachesTeachers: result},
+      // Sort the data
+      function(){
+        console.log("Sorting teachers");
+
+          this.sortTeachers("lastName");
+      })
     console.log(result)
   }
-  
+
   handlePageChange = (pageNumber: number) => {
     this.setState({view: pageNumber});
 
@@ -106,7 +166,7 @@ class Coaches extends React.Component<Props, State> {
         break;
     }
   }
-  
+
   render() {
     return (<>
       <Grid container direction='row'>
@@ -120,9 +180,9 @@ class Coaches extends React.Component<Props, State> {
                             <ArrowBackIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -137,9 +197,9 @@ class Coaches extends React.Component<Props, State> {
                             <AddIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Add
@@ -156,8 +216,8 @@ class Coaches extends React.Component<Props, State> {
                         </Grid>
                         <Grid item>
                             <Typography
-                              variant="h6" 
-                              gutterBottom 
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px',}}
                               >
                                 Back
@@ -173,8 +233,8 @@ class Coaches extends React.Component<Props, State> {
                         </Grid>
                         <Grid item>
                             <Typography
-                              variant="h6" 
-                              gutterBottom 
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px',}}
                               >
                                 Transfer
@@ -190,9 +250,9 @@ class Coaches extends React.Component<Props, State> {
                             <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Archive
@@ -206,9 +266,9 @@ class Coaches extends React.Component<Props, State> {
                             <ArrowBackIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -243,8 +303,10 @@ class Coaches extends React.Component<Props, State> {
                       name="selectedCoach"
                       // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                     >
-                      {this.state.coachList.map(
+                      {this.props.coachData.map(
                         (coach, index)=>{
+                          console.log("Coach ID: ", coach.id);
+
                           if(coach.id !== "") {
                           return (
                               <MenuItem value={coach.id} key={index}>
@@ -263,11 +325,11 @@ class Coaches extends React.Component<Props, State> {
             <Grid
             item
             xs={8}
-            style={{ 
-              width: '100%', 
-              height: '38vh', 
-              // border: '2px solid #0988ec', 
-              // borderRadius: '0.5em', 
+            style={{
+              width: '100%',
+              height: '38vh',
+              // border: '2px solid #0988ec',
+              // borderRadius: '0.5em',
               marginTop:'60px' }}
             >
             <table style={{borderCollapse: 'collapse', width: '100%' }}>
@@ -290,12 +352,38 @@ class Coaches extends React.Component<Props, State> {
                   </th>
                 </tr>
                 <tr>
-                  <th>
+                  <th
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "lastName")
+                        {
+                          this.sortTeachers("lastNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("lastName")
+                        }
+                      }
+                    }
+                  >
                     <Typography variant="h6" gutterBottom>
                       Last Name
                     </Typography>
                   </th>
-                  <th>
+                  <th
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "firstName")
+                        {
+                          this.sortTeachers("firstNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("firstName")
+                        }
+                      }
+                    }
+                  >
                     <Typography variant="h6" gutterBottom>
                       First Name
                     </Typography>
@@ -479,7 +567,7 @@ class Coaches extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-     
+
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
@@ -504,7 +592,7 @@ class Coaches extends React.Component<Props, State> {
                     />
                   )}
                 </Button>
-              </Grid>     
+              </Grid>
             </Grid>
     </>) : (this.state.view === 3 ? (<>
       <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop: '60px'}}>
@@ -645,7 +733,7 @@ class Coaches extends React.Component<Props, State> {
                     />
                   )}
                 </Button>
-              </Grid>     
+              </Grid>
             </Grid>
       </Grid>
     </>) : (this.state.view === 4 ? (<>
@@ -800,9 +888,9 @@ class Coaches extends React.Component<Props, State> {
                 />
               )}
             </Button>
-          </Grid>     
+          </Grid>
         </Grid>
-    </>) : (null))))} 
+    </>) : (null))))}
       </Grid>
     </>)
   }

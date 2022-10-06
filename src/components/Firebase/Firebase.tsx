@@ -4230,13 +4230,13 @@ class Firebase {
       const subCollection = await this.query.get();
       await Promise.all(subCollection.docs.map(async (teacher) => {
         const teacherResult = await this.db.collection('users').doc(teacher.id).get();
-        if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6") {
+        if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6" && teacherResult.data()) {
           seen.push(teacher.id)
           arr.push({
             coachId: coach.id,
             coachFirstName: coach.data().firstName,
             coachLastName: coach.data().lastName,
-            siteName: await teacherResult.data().school,
+            siteName: teacherResult.data().school ? teacherResult.data().school : "",
             teacherId: teacher.id,
             teacherFirstName: await teacherResult.data().firstName,
             teacherLastName: await teacherResult.data().lastName,
@@ -5713,9 +5713,6 @@ class Firebase {
         programInfo = await this.getUserProgramOrSite({programId: data.programId});
       }
 
-      console.log("Program INFO : ", programInfo);
-
-
       // Go through all this sites in this program to get their coaches
       for(var siteIndex in programInfo.sites)
       {
@@ -5727,8 +5724,6 @@ class Firebase {
         {
           continue;
         }
-
-        console.log("site : ", site);
 
 
         var siteTeachers = [];
