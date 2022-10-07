@@ -73,9 +73,18 @@ interface State {
   editSite: string
   editProgram: string
   transferTeacherId: string
+  transferCoachSites: Array<Object>
+  transferCoachPrograms: Array<Object>
   transferCoachName: string
   transferSiteName: string
   transferProgramName: string
+  originalCoachId: string
+  // originalSiteId: string
+  originalProgramId: string
+  changeCoachId: string
+  changeSiteName: string
+  changeSiteId: string
+  changeProgramId: string
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
 }
@@ -102,9 +111,18 @@ class Teachers extends React.Component<Props, State> {
       editSite: "",
       editProgram: "",
       transferTeacherId: "",
+      transferCoachSites: [],
+      transferCoachPrograms: [],
       transferCoachName: "",
       transferSiteName: "",
       transferProgramName: "",
+      originalCoachId: "",
+      // originalSiteId: "",
+      originalProgramId: "",
+      changeCoachId: "",
+      changeSiteName: "",
+      changeSiteId: "",
+      changeProgramId: "",
       saveModalOpen: false,
       awaitingConfirmationRef: null
     }
@@ -221,6 +239,25 @@ class Teachers extends React.Component<Props, State> {
         addSite: "",
         addCoachPrograms: [],
         addProgram: "",
+        editTeacherId: "",
+        editTeacherFirstName: "",
+        editTeacherLastName: "",
+        editCoach: "",
+        editSite: "",
+        editProgram: "",
+        transferTeacherId: "",
+        transferCoachSites: [],
+        transferCoachPrograms: [],
+        transferCoachName: "",
+        transferSiteName: "",
+        transferProgramName: "",
+        originalCoachId: "",
+        // originalSiteId: "",
+        originalProgramId: "",
+        changeCoachId: "",
+        changeSiteName: "",
+        changeSiteId: "",
+        changeProgramId: "",
       })
   }
 
@@ -233,13 +270,6 @@ class Teachers extends React.Component<Props, State> {
         awaitingConfirmationRef: null
       })
   }
-
-  // handleActionPlanModal = async () => {
-  //   if(!(this.state.view === 'actionPlan') || this.state.actionPlanFormSaved) {
-  //     return Promise.resolve(true)
-  //   }
-  //   return this.onActionPlanModalOpen();
-  // }
 
   async addTeacher(firebase:Firebase){
 
@@ -338,7 +368,6 @@ class Teachers extends React.Component<Props, State> {
     this.setState({addSite: event.target.value, saved: false})
     let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
     this.setState({addSiteName: site})
-    console.log(site)
     const sites = this.props.coachData.filter((doc) => {return doc.id === this.state.addCoach})[0].siteList
     let programs = []
     sites.map((doc) => {
@@ -349,11 +378,39 @@ class Teachers extends React.Component<Props, State> {
     this.setState({addCoachPrograms: programs})
   }
 
-  // handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   this.setState({addCoach: event.target.value, saved: false})
-  //   const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
-  //   this.setState({addCoachSites: selectedSites})
-  // }
+  handlePopulateTeacherInfo = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({transferTeacherId: event.target.value, saved: false})
+    const selectedTeacher = this.props.teacherData.filter((doc) => {return doc.teacherId === event.target.value})[0]
+    this.setState({
+      transferCoachName: selectedTeacher.coachFirstName + ' ' + selectedTeacher.coachLastName,
+      originalCoachId: selectedTeacher.coachId,
+      transferProgramName: selectedTeacher.selectedProgramName,
+      originalProgramId: selectedTeacher.selectedProgramId,
+      transferSiteName: selectedTeacher.siteName  
+    })
+
+  }
+
+  handleTransferSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({changeCoachId: event.target.value, saved: false})
+    const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    this.setState({transferCoachSites: selectedSites})
+  }
+
+  handleTransferProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({changeSiteId: event.target.value, saved: false})
+    let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
+    this.setState({changeSiteName: site})
+    console.log(site)
+    const sites = this.props.coachData.filter((doc) => {return doc.id === this.state.changeCoachId})[0].siteList
+    let programs = []
+    sites.map((doc) => {
+      if (doc.siteId === event.target.value) {
+        programs.push({programId: doc.programId, programName: doc.programName})
+      }
+    })
+    this.setState({transferCoachPrograms: programs})
+  }
 
   render() {
 
@@ -416,7 +473,7 @@ class Teachers extends React.Component<Props, State> {
                 <Grid item xs={6}>
                   <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
                         <Grid item>
-                            <ArrowBackIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px',}}/>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
                         <Grid item>
                             <Typography
@@ -433,7 +490,7 @@ class Teachers extends React.Component<Props, State> {
                 <Grid item xs={6}>
                 <Grid container direction='row' onClick={() => this.handlePageChange(3)}>
                         <Grid item>
-                            <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px',}}/>
+                            <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
                         <Grid item>
                             <Typography
@@ -467,7 +524,7 @@ class Teachers extends React.Component<Props, State> {
                 <Grid item xs={6}>
                     <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
                         <Grid item>
-                            <ArrowBackIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px'}}/>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
                             <Typography 
@@ -777,7 +834,7 @@ class Teachers extends React.Component<Props, State> {
             </Grid>
     </>) : (this.state.view === 3 ? (<>
       <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop: '60px'}}>
-          <Grid item xs={1} style={{marginTop: '45px'}}>
+          <Grid item xs={1} style={{marginTop: '30px'}}>
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
@@ -791,12 +848,12 @@ class Teachers extends React.Component<Props, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
+                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
+                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
                   Program
                 </Typography>
               </Grid>
@@ -811,7 +868,7 @@ class Teachers extends React.Component<Props, State> {
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.transferTeacherId}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateTeacherInfo(event)}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateTeacherInfo(event)}
                     name="selectedCoach"
                   >
                     {this.props.teacherData.map(
@@ -827,7 +884,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
-                    style={{width:'42vw', maxWidth: '470px'}}
+                    style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
                     value={this.state.transferCoachName}
@@ -839,7 +896,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
-                    style={{width:'42vw', maxWidth: '470px'}}
+                    style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
                     value={this.state.transferSiteName}
@@ -851,7 +908,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
-                    style={{width:'42vw', maxWidth: '470px'}}
+                    style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
                     value={this.state.transferProgramName}
@@ -868,37 +925,35 @@ class Teachers extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
-                <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
+                <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'5px',}}/>
               </Grid>
               <Grid item>
-                <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'4px',}}/>
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px',}}/>
               </Grid>
               <Grid item>
-                <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'0px',  marginBottom:'0px',}}/> 
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'10px'}}/> 
               </Grid>
               <Grid item>
-                <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'0px', marginBottom:'1px',}}/>
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'10px'}}/>
               </Grid>
             </Grid>
             </Grid>
 
-            <Grid item xs={4} style={{marginTop: '45px'}}>
+            <Grid item xs={4} style={{marginTop: '40px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
                 <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{marginTop:'7px'}}>
                   <StyledSelectTransfer
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
+                    value={this.state.changeCoachId}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handleTransferSite(event)}
                     name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                   >
-                    {/* {this.props.coachData.map(
+                    {this.props.coachData.map(
                       (coach, index)=>{
                         if(coach.id !== "") {
                         return (
@@ -906,57 +961,48 @@ class Teachers extends React.Component<Props, State> {
                               {coach.lastName + ", " + coach.firstName}
                             </MenuItem>
                         )}
-                        })} */}
+                        })}
                   </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{marginTop:'13px'}}>
                   <StyledSelectTransfer
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    value={this.state.changeSiteId}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handleTransferProgram(event)}
+                    name="selectedSite"
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
+                    {this.state.transferCoachSites.map((site, index) => {
                         return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
+                          <MenuItem value={site.siteId} key={index}>
+                            {site.siteName}
+                          </MenuItem>
+                        )
+                      })}
                   </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{marginTop:'13px'}}>
                   <StyledSelectTransfer
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    value={this.state.changeProgramId}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      this.setState({changeProgramId: event.target.value})}
+                    name="selectedProgram"
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
+                    {this.state.transferCoachPrograms.map((program, index) => {
+                      return (
+                        <MenuItem value={program.programId} key={index}>
+                          {program.programName}
+                        </MenuItem>
+                      )
+                      })
+                    }
                   </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
             </Grid>
