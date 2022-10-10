@@ -166,24 +166,17 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
-  buildCoachData = async (teacherData) => {
-    let coaches: Array<string> = []
-    let data: Array<Object> = []
+  buildCoachData = async () => {
+    const coachData = await this.context.getCoaches();
+    let data = []
 
-
-    //teacherData.map(async (value) => {
-    for(var teacherIndex in teacherData)
-    {
-      var value = teacherData[teacherIndex];
-
-      if(value.coachId !== "" && !coaches.includes(value.coachId)) {
-        coaches.push(value.coachId);
-        let sites = await this.context.fetchSitesForCoach(await value.coachId);
+    for(let coachIndex in coachData) {
+      let value = coachData[coachIndex];
+      if (value.role === "coach") {
+        let sites = await this.context.fetchSitesForCoach(await value.id);
         let siteList: Array<Object> = []
 
-        //sites.map((site) => {
-        for(var siteIndex in sites)
-        {
+        for(let siteIndex in sites) {
 
           var site = sites[siteIndex];
 
@@ -200,15 +193,14 @@ class UsersPage extends React.Component<Props, State> {
         }
 
         data.push({
-          firstName: value.coachFirstName,
-          lastName: value.coachLastName,
-          id:  value.coachId,
+          firstName: value.firstName,
+          lastName: value.lastName,
+          id:  value.id,
           siteList: siteList
         })
-
       }
     }
-
+    console.log(data)
     return data;
   }
 

@@ -4261,6 +4261,33 @@ class Firebase {
     return arr
   }
 
+  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string) => {
+    this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast})
+    .catch((error: Error) => {
+      console.error(
+        "Error occurred when editing teacher: ",
+        error
+      )
+    })
+  }
+
+  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
+    this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+    })
+    this.db.collection("users").doc(teacherId).update({school: siteName})
+    .catch((error: Error) => {
+      console.error("Error occurred when updating teacher school: ", error)
+    })
+    return this.db.collection("users").doc(newCoach).collection("partners").doc(teacherId).set({})
+    .then(() => teacherId)
+    .catch((error: Error) => {
+      console.error("Error occurred when adding teacher to coach's partner list: ", error)
+    })
+
+    }
+
   /*
    * Get a all sites
    */

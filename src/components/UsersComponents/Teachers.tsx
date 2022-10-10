@@ -271,6 +271,90 @@ class Teachers extends React.Component<Props, State> {
       })
   }
 
+  async transferTeacher(firebase:Firebase) {
+    firebase
+    const {
+      transferTeacherId,
+      originalCoachId,
+      changeCoachId,
+      changeSiteName,
+      changeProgramId
+    } = this.state
+
+    if (!changeCoachId || changeCoachId === ""){
+      alert("Coach is required");
+      return
+    }
+
+    if (!changeSiteName || changeSiteName === ""){
+      alert("Site is required");
+      return;
+    }
+
+    if (!changeProgramId || changeProgramId === ""){
+      alert("Program is required");
+      return;
+    }
+
+    await firebase.transferTeacher(transferTeacherId, originalCoachId, changeCoachId, changeSiteName)
+    .catch(e => {
+      console.log(e)
+      alert('Unable to transfer teacher. Please try again')
+    }).finally(() => {
+        this.setState({ // Hold off setting new state until success has been determined
+          transferTeacherId: "",
+          transferCoachSites: [],
+          transferCoachPrograms: [],
+          transferCoachName: "",
+          transferSiteName: "",
+          transferProgramName: "",
+          originalCoachId: "",
+          // originalSiteId: "",
+          originalProgramId: "",
+          changeCoachId: "",
+          changeSiteName: "",
+          changeSiteId: "",
+          changeProgramId: "",
+        });
+        window.location.reload()
+    });
+  }
+
+  async editTeacher(firebase:Firebase) {
+    firebase
+    const {
+      editTeacherId,
+      editTeacherFirstName,
+      editTeacherLastName
+    } = this.state
+
+    if (!editTeacherFirstName || editTeacherFirstName === ""){
+      alert("First Name is required");
+      return
+    }
+
+    if (!editTeacherLastName || editTeacherLastName === ""){
+      alert("Last name is required");
+      return;
+    }
+
+    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName).
+      catch(e => {
+        console.log(e)
+        alert('Unable to edit teacher. Please try again')
+      }).finally(() => {
+          this.setState({ // Hold off setting new state until success has been determined
+            editTeacherId: "",
+            editTeacherFirstName: "",
+            editTeacherLastName: "",
+            editCoach: "",
+            editSite: "",
+            editProgram: "",
+          });
+          window.location.reload()
+      });
+  }
+
   async addTeacher(firebase:Firebase){
 
     firebase
@@ -361,7 +445,13 @@ class Teachers extends React.Component<Props, State> {
   handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({addCoach: event.target.value, saved: false})
     const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
-    this.setState({addCoachSites: selectedSites})
+    this.setState({
+      addCoachSites: selectedSites,
+      addSiteName: "",
+      addSite: "",
+      addCoachPrograms: [],
+      addProgram: "",
+    })
   }
 
   handlePopulateProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -394,7 +484,13 @@ class Teachers extends React.Component<Props, State> {
   handleTransferSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({changeCoachId: event.target.value, saved: false})
     const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
-    this.setState({transferCoachSites: selectedSites})
+    this.setState({
+      transferCoachSites: selectedSites,
+      transferCoachPrograms: [],
+      changeSiteName: "",
+      changeSiteId: "",
+      changeProgramId: "",
+    })
   }
 
   handleTransferProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -806,7 +902,7 @@ class Teachers extends React.Component<Props, State> {
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
                     <Button 
-                    onClick={(_)=>{this.addTeacher(firebase)}}
+                    // onClick={(_)=>{this.addTeacher(firebase)}}
                     >
                       {this.state.saved ? (
                         <img
@@ -875,7 +971,7 @@ class Teachers extends React.Component<Props, State> {
                       (teacher, index)=>{
                         return (
                             <MenuItem value={teacher.teacherId} key={index}>
-                              {teacher.teacherLastName + ", " + teacher.teacherFirstName}
+                              {teacher.teacherFirstName + " " + teacher.teacherLastName}
                             </MenuItem>
                         )
                         })}
@@ -958,7 +1054,7 @@ class Teachers extends React.Component<Props, State> {
                         if(coach.id !== "") {
                         return (
                             <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
+                              {coach.firstName + " " + coach.lastName}
                             </MenuItem>
                         )}
                         })}
@@ -1011,27 +1107,33 @@ class Teachers extends React.Component<Props, State> {
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
-                <Button >
-                  {this.state.saved ? (
-                    <img
-                      alt="Save"
-                      src={SaveGrayImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
-                  ) : (
-                    <img
-                      alt="Save"
-                      src={SaveImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button 
+                    onClick={(_)=>{this.transferTeacher(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
                   )}
-                </Button>
+                </FirebaseContext.Consumer>
               </Grid>     
             </Grid>
       </Grid>
@@ -1138,7 +1240,7 @@ class Teachers extends React.Component<Props, State> {
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
                     <Button 
-                    onClick={(_)=>{this.addTeacher(firebase)}}
+                    onClick={(_)=>{this.editTeacher(firebase)}}
                     >
                       {this.state.saved ? (
                         <img
