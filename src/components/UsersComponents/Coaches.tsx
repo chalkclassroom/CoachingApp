@@ -12,13 +12,15 @@ import {
   Select,
   TextField,
   Button,
+  Input,
+
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import FirebaseContext from '../Firebase/FirebaseContext'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-
+import { Alert } from '@material-ui/lab'
 
 const StyledSelect = withStyles({
   root: {
@@ -78,6 +80,12 @@ class Coaches extends React.Component<Props, State> {
       sortType: "lastName",
       newCoachFirstName: "",
       newCoachLastName: "",
+      newCoachEmail: "",
+      newCoachSiteIds: [],
+      newCoachProgramId: "",
+      siteOptions: [],
+      siteData: [],
+      programData: []
     }
 
   }
@@ -87,7 +95,7 @@ class Coaches extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.coachData !== this.props.coachData) {
+    if (!prevProps.siteData !== this.props.siteData) {
 
     }
   }
@@ -101,34 +109,26 @@ class Coaches extends React.Component<Props, State> {
     switch (sortType) {
       case "lastName":
         teachersList.sort((a,b) => (a.teacherLastName > b.teacherLastName) ? 1 : ((b.teacherLastName > a.teacherLastName) ? -1 : 0));
-        console.log("last name");
         break;
       case "lastNameReverse":
         teachersList.sort((a,b) => (b.teacherLastName > a.teacherLastName) ? 1 : ((a.teacherLastName > b.teacherLastName) ? -1 : 0));
-        console.log("reverse last name");
       case "firstName":
         teachersList.sort((a,b) => (a.teacherFirstName > b.teacherFirstName) ? 1 : ((b.teacherFirstName > a.teacherFirstName) ? -1 : 0));
-        console.log("last name");
         break;
       case "firstNameReverse":
         teachersList.sort((a,b) => (b.teacherFirstName > a.teacherFirstName) ? 1 : ((a.teacherFirstName > b.teacherFirstName) ? -1 : 0));
-        console.log("reverse last name");
         break;
       case "siteName":
         teachersList.sort((a,b) => (a.siteName > b.siteName) ? 1 : ((b.siteName > a.siteName) ? -1 : 0));
-        console.log("site name");
         break;
       case "siteNameReverse":
         teachersList.sort((a,b) => (b.siteName > a.siteName) ? 1 : ((a.siteName > b.siteName) ? -1 : 0));
-        console.log("reverse site name");
         break;
       case "program":
         teachersList.sort((a,b) => (a.selectedProgramName > b.selectedProgramName) ? 1 : ((b.selectedProgramName > a.selectedProgramName) ? -1 : 0));
-        console.log("program name");
         break;
       case "programReverse":
         teachersList.sort((a,b) => (b.selectedProgramName > a.selectedProgramName) ? 1 : ((a.selectedProgramName > b.selectedProgramName) ? -1 : 0));
-        console.log("reverse program name");
         break;
 
       default:
@@ -175,7 +175,10 @@ class Coaches extends React.Component<Props, State> {
   }
 
 
-  handleCoachInput = (name) => {
+  /*
+   * Handles any changes that are made for text input on new coach page
+   */
+  handleNewCoachInput = (name) => {
 
     if (name === 'firstName') {
       this.setState({
@@ -189,6 +192,57 @@ class Coaches extends React.Component<Props, State> {
         saved: false,
       })
     }
+    if (name === 'email') {
+      this.setState({
+        newCoachEmail: event.target.value,
+        saved: false,
+      })
+    }
+
+  }
+
+  /*
+   * Handles any changes that are made  for program dropdown on new coach page
+   */
+  handleNewCoachProgramDropdown = (programId) => {
+
+
+      // Generate site options for the site dropdown
+      var programInfo = this.props.programData.find(o => o.id === programId);
+
+      var siteOptionIds = [];
+      if(programInfo.sites)
+      {
+        siteOptionIds  = programInfo.sites;
+      }
+
+      var siteOptions = [];
+      for(var siteIndex in siteOptionIds)
+      {
+        var siteId = siteOptionIds[siteIndex];
+        var siteInfo = this.props.siteData.find(o => o.id === siteId);
+        siteOptions.push(siteInfo);
+      }
+
+
+      this.setState({
+        newCoachProgramId: programId,
+        siteOptions: siteOptions,
+        saved: false,
+      })
+
+  }
+
+  /*
+   * Handles any changes that are made  for site dropdown on new coach page
+   */
+  handleNewCoachSiteDropdown = (siteIds) => {
+
+      this.setState({
+        newCoachSiteIds: siteIds,
+        saved: false,
+      })
+
   }
 
 
@@ -248,59 +302,69 @@ class Coaches extends React.Component<Props, State> {
   }
 
 
-  async addNewCoach(){
-
-    firebase
+  async addNewCoach(firebase){
     const {
-        editTeacherFirstName,
-        editTeacherLastName,
-        selectedCoach,
+        newCoachFirstName,
+        newCoachLastName,
+        newCoachEmail,
+        newCoachSites,
+        newCoachPrograms,
     } = this.state;
 
-    if (!editTeacherFirstName || editTeacherLastName === ""){
+    if (!newCoachFirstName || newCoachFirstName === ""){
         alert("First Name is required");
         return
     }
 
-    if (!editTeacherLastName || editTeacherLastName === ""){
+    if (!newCoachLastName || newCoachLastName === ""){
         alert("Last name is required");
         return;
     }
 
-
-    // check user role to make sure site leaders can't change programs
-    // if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
-    //     alert("Please select a role");
-    //     return;
-    // }
+    if (!newCoachEmail || newCoachEmail === ""){
+        alert("Email is required");
+        return;
+    }
 
     const randomString = Math.random().toString(36).slice(-8)
-    const teacherInfo = {
-        firstName: editTeacherFirstName,
-        lastName: editTeacherLastName,
+    const coachInfo = {
+        firstName: newCoachFirstName,
+        lastName: newCoachLastName,
         email: '',
         notes: '',
         phone: ''
     }
-    await firebase.addTeacherToCoach(teacherInfo, selectedCoach)
-    .then(() => {
+
+    var hasProgram = false;
+    if(this.state.newCoachProgramId !== "")
+    {
+      hasProgram = true;
+    }
+    var hasSite = false;
+
+    // Note: we're setting sites to
+    await firebase.firebaseEmailSignUp({ email: newCoachEmail, password: randomString, firstName: newCoachFirstName, lastName: newCoachLastName }, 'coach', hasProgram, this.state.newCoachProgramId, hasSite, this.state.newCoachSiteIds)
+        .then(() => {
+        this.setState({
+            createdPassword: randomString
+        });
         return randomString
-      }).catch(e => {
-          console.log(e)
-          alert('Unable to create user. Please try again')
-      }).finally(() => {
-          this.setState({ // Hold off setting new state until success has been determined
-            addTeacherFirstName: '',
-            addTeacherLastName: '',
-            addCoachSites: [],
-            addSiteName: '',
-            addCoach: '',
-            addCoachPrograms: [],
-            addProgram: '',
-            addSite: ''
-          });
-          window.location.reload()
-      });
+        }).catch(e => {
+            this.setState({
+              createdPassword: undefined
+            });
+            console.log(e)
+            alert('Unable to create user. Please try again')
+        }).finally(() => {
+            this.setState({ // Hold off setting new state until success has been determined
+            newCoachFirstName: '',
+            newCoachLastName: '',
+            newCoachEmail: '',
+            newCoachProgramId: '',
+            newCoachSiteIds: []
+            });
+        });
+
   }
 
   handlePopulateTable = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -314,9 +378,7 @@ class Coaches extends React.Component<Props, State> {
     this.setState({coachesTeachers: result},
       // Sort the data
       function(){
-        console.log("Sorting teachers");
-
-          this.sortTeachers("lastName");
+        this.sortTeachers("lastName");
       })
     console.log(result)
   }
@@ -342,6 +404,9 @@ class Coaches extends React.Component<Props, State> {
 
   render() {
     return (<>
+      {this.state.createdPassword  &&
+        <Alert severity={'success'}>User has been created with password {this.state.createdPassword}</Alert>
+      }
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -478,8 +543,6 @@ class Coaches extends React.Component<Props, State> {
                     >
                       {this.props.coachData.map(
                         (coach, index)=>{
-                          console.log("Coach ID: ", coach.id);
-
                           if(coach.id !== "") {
                           return (
                               <MenuItem value={coach.id} key={index}>
@@ -621,13 +684,18 @@ class Coaches extends React.Component<Props, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
-                  Site
+                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                  Email
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
                   Program
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
+                  Sites
                 </Typography>
               </Grid>
             </Grid>
@@ -643,7 +711,7 @@ class Coaches extends React.Component<Props, State> {
                       label="First Name"
                       type="search"
                       variant="outlined"
-                      onChange={() => this.handleCoachInput('firstName')}
+                      onChange={() => this.handleNewCoachInput('firstName')}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -652,55 +720,75 @@ class Coaches extends React.Component<Props, State> {
                       label="Last Name"
                       type="search"
                       variant="outlined"
-                      onChange={() => this.handleCoachInput('firstName')}
+                      onChange={() => this.handleNewCoachInput('lastName')}
                     />
                   </Grid>
                 </Grid>
               </Grid>
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction='row' justifyContent='flex-start' spacing={12}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="teacher-search"
+                      label="Email"
+                      type="search"
+                      variant="outlined"
+                      onChange={() => this.handleNewCoachInput('email')}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {/*
+                Programs dropdown
+                */}
               <Grid item>
                 <FormControl variant="outlined">
                   <StyledSelect
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    labelId="demo-mutiple-name-label"
+                    id="demo-mutiple-name"
+                    autoWidth={true}
+                    value={this.state.newCoachSelectedProgram}
+                    onChange={(event) => this.handleNewCoachProgramDropdown(event.target.value)}
+                    input={<Input />}
+                    autoWidth={true}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
+                    {this.props.programData.map(
+                      (option, index)=>{
+
+                        return <MenuItem value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
+
+              {/*
+                Sites dropdown
+                */}
               <Grid item>
                 <FormControl variant="outlined">
                   <StyledSelect
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    labelId="demo-mutiple-name-label"
+                    id="demo-mutiple-name"
+                    multiple
+                    autoWidth={true}
+                    value={this.state.newCoachSiteIds}
+                    onChange={(event) => this.handleNewCoachSiteDropdown(event.target.value)}
+                    input={<Input />}
+                    autoWidth={true}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
+                    {this.state.siteOptions.map(
+                      (option, index)=>{
+
+                        return <MenuItem value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>

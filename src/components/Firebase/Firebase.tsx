@@ -179,7 +179,7 @@ class Firebase {
     hasProgram: boolean,
     program: string,
     hasSite: boolean,
-    site: string
+    site
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
@@ -250,14 +250,27 @@ class Firebase {
         }
 
         if ( hasSite ) {
-          this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
-            console.log("Site " + site + "added to user " + data.id);
-          }).catch(e => console.error("error =>", e));
+
+          // Check to see if it's a string or array
+          var assignSite;
+          if(typeof site == "string")
+          {
+            assignSite = this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
+              console.log("Sites " + site + " added to user " + data.id);
+            }).catch(e => console.error("error =>", e));
+          }
+          else
+          {
+            assignSite = this.assignSiteToUser({userId: data.id, bulkSiteIds: site}).then(() => {
+              console.log("Site " + site + " added to user " + data.id);
+            }).catch(e => console.error("error =>", e));
+          }
+
           if (data.role !== "coach") {
             this.assignUserToSiteOrProgram({siteId: site, userId: data.id}).then(() => {
               console.log("User added to site " + site);
             }).catch(e => console.error("error => Site : " + site, e));
-        }
+          }
         }
       }
     } catch (e) {

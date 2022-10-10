@@ -127,7 +127,7 @@ class UsersPage extends React.Component<Props, State> {
       coachData: [],
       teacherData: [],
       siteData: [],
-      ProgramData: []
+      programData: []
     }
   }
 
