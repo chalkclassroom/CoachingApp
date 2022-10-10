@@ -293,6 +293,8 @@ class UsersPage extends React.Component<Props, State> {
                         location={this.props.location}
                         teacherData = {this.state.teacherData}
                         coachData = {this.state.coachData}
+                        siteData = {this.state.siteData}
+                        programData = {this.state.programData}
                         />
                     } />
                     <Route path="/LeadersTeachers" render={(props) =>

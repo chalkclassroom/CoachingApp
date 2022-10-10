@@ -63,12 +63,21 @@ class Coaches extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      addTeacherFirstName: "",
+      addTeacherLastName: "",
       selectedCoach: "",
       coachList: [],
       coachesTeachers: [],
+      editTeacherFirstName: "",
+      editTeacherLastName: "",
+      editCoach: "",
+      editSite: "",
+      editProgram: "",
       view: 1,
       saved: false,
-      sortType: "lastName"
+      sortType: "lastName",
+      newCoachFirstName: "",
+      newCoachLastName: "",
     }
 
   }
@@ -128,6 +137,170 @@ class Coaches extends React.Component<Props, State> {
 
     this.setState({coachesTeachers: teachersList});
 
+  }
+
+
+  handleEditClick = (value) => {
+    console.log(value)
+    this.setState({
+      editTeacherId: value.teacherId,
+      editTeacherFirstName: value.teacherFirstName,
+      editTeacherLastName: value.teacherLastName,
+      editCoach: value.coachFirstName + ' ' + value.coachLastName,
+      editSite: value.siteName,
+      editProgram: value.selectedProgramName
+    })
+    this.handlePageChange(4)
+  }
+
+
+
+  handleEditInputChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+
+
+    if (name === 'firstName') {
+      this.setState({
+        editTeacherFirstName: event.target.value,
+        saved: false,
+      })
+    }
+    if (name === 'lastName') {
+      this.setState({
+        editTeacherLastName: event.target.value,
+        saved: false,
+      })
+    }
+  }
+
+
+  handleCoachInput = (name) => {
+
+    if (name === 'firstName') {
+      this.setState({
+        newCoachFirstName: event.target.value,
+        saved: false,
+      })
+    }
+    if (name === 'lastName') {
+      this.setState({
+        newCoachLastName: event.target.value,
+        saved: false,
+      })
+    }
+  }
+
+
+  async addTeacher(firebase:Firebase){
+
+    firebase
+    const {
+        editTeacherFirstName,
+        editTeacherLastName,
+        selectedCoach,
+    } = this.state;
+
+    if (!editTeacherFirstName || editTeacherLastName === ""){
+        alert("First Name is required");
+        return
+    }
+
+    if (!editTeacherLastName || editTeacherLastName === ""){
+        alert("Last name is required");
+        return;
+    }
+
+
+    // check user role to make sure site leaders can't change programs
+    // if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
+    //     alert("Please select a role");
+    //     return;
+    // }
+
+    const randomString = Math.random().toString(36).slice(-8)
+    const teacherInfo = {
+        firstName: editTeacherFirstName,
+        lastName: editTeacherLastName,
+        email: '',
+        notes: '',
+        phone: ''
+    }
+    await firebase.addTeacherToCoach(teacherInfo, selectedCoach)
+    .then(() => {
+        return randomString
+      }).catch(e => {
+          console.log(e)
+          alert('Unable to create user. Please try again')
+      }).finally(() => {
+          this.setState({ // Hold off setting new state until success has been determined
+            addTeacherFirstName: '',
+            addTeacherLastName: '',
+            addCoachSites: [],
+            addSiteName: '',
+            addCoach: '',
+            addCoachPrograms: [],
+            addProgram: '',
+            addSite: ''
+          });
+          window.location.reload()
+      });
+  }
+
+
+  async addNewCoach(){
+
+    firebase
+    const {
+        editTeacherFirstName,
+        editTeacherLastName,
+        selectedCoach,
+    } = this.state;
+
+    if (!editTeacherFirstName || editTeacherLastName === ""){
+        alert("First Name is required");
+        return
+    }
+
+    if (!editTeacherLastName || editTeacherLastName === ""){
+        alert("Last name is required");
+        return;
+    }
+
+
+    // check user role to make sure site leaders can't change programs
+    // if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
+    //     alert("Please select a role");
+    //     return;
+    // }
+
+    const randomString = Math.random().toString(36).slice(-8)
+    const teacherInfo = {
+        firstName: editTeacherFirstName,
+        lastName: editTeacherLastName,
+        email: '',
+        notes: '',
+        phone: ''
+    }
+    await firebase.addTeacherToCoach(teacherInfo, selectedCoach)
+    .then(() => {
+        return randomString
+      }).catch(e => {
+          console.log(e)
+          alert('Unable to create user. Please try again')
+      }).finally(() => {
+          this.setState({ // Hold off setting new state until success has been determined
+            addTeacherFirstName: '',
+            addTeacherLastName: '',
+            addCoachSites: [],
+            addSiteName: '',
+            addCoach: '',
+            addCoachPrograms: [],
+            addProgram: '',
+            addSite: ''
+          });
+          window.location.reload()
+      });
   }
 
   handlePopulateTable = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -396,7 +569,7 @@ class Coaches extends React.Component<Props, State> {
                 {this.state.selectedCoach !== "" ? (<>
                 {this.state.coachesTeachers.map((value, index) => {
                   return(
-                  <tr key={index} onClick={() => this.handlePageChange(4)}>
+                  <tr key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
                     <td style={{textAlign:'center'}}>
                       <Typography variant="h6" gutterBottom>
                         {value.teacherLastName}
@@ -444,11 +617,6 @@ class Coaches extends React.Component<Props, State> {
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
                 <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
-                  Teacher
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
                   Coach
                 </Typography>
               </Grid>
@@ -471,51 +639,23 @@ class Coaches extends React.Component<Props, State> {
                 <Grid container direction='row' justifyContent='center' spacing={3}>
                   <Grid item xs={6}>
                     <TextField
-                    // style={{width:'160px'}}
-                    id="teacher-search"
-                    label="First Name"
-                    type="search"
-                    // className={classes.search}
-                    variant="outlined"
-                    // onChange={onChangeText}
+                      id="teacher-search"
+                      label="First Name"
+                      type="search"
+                      variant="outlined"
+                      onChange={() => this.handleCoachInput('firstName')}
                     />
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                    // style={{width:'160px'}}
-                    id="teacher-search"
-                    label="Last Name"
-                    type="search"
-                    // className={classes.search}
-                    variant="outlined"
-                    // onChange={onChangeText}
+                      id="teacher-search"
+                      label="Last Name"
+                      type="search"
+                      variant="outlined"
+                      onChange={() => this.handleCoachInput('firstName')}
                     />
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelect
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
               </Grid>
               <Grid item>
                 <FormControl variant="outlined">
@@ -571,27 +711,33 @@ class Coaches extends React.Component<Props, State> {
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
-                <Button >
-                  {this.state.saved ? (
-                    <img
-                      alt="Save"
-                      src={SaveGrayImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
-                  ) : (
-                    <img
-                      alt="Save"
-                      src={SaveImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button
+                    onClick={(_)=>{this.addNewCoach(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
                   )}
-                </Button>
+                </FirebaseContext.Consumer>
               </Grid>
             </Grid>
     </>) : (this.state.view === 3 ? (<>
@@ -738,158 +884,133 @@ class Coaches extends React.Component<Props, State> {
       </Grid>
     </>) : (this.state.view === 4 ? (<>
       <Grid item xs={1} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                  Teacher
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                  Coach
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                  Site
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
+                  Program
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
 
-        <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
-              Teacher
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'0px'}}>
-              Coach
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
-              Site
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
-              Program
-            </Typography>
-          </Grid>
-        </Grid>
-        </Grid>
-
-        <Grid item xs={5} style={{marginTop: '45px'}}>
-        <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl variant="outlined">
-              <StyledSelect
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                // value={this.state.selectedCoach}
-                // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                //   this.setState({selectedCoach: event.target.value})}
-                name="selectedCoach"
-                // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-              >
-                {/* {this.props.coachData.map(
-                  (coach, index)=>{
-                    if(coach.id !== "") {
-                    return (
-                        <MenuItem value={coach.id} key={index}>
-                          {coach.lastName + ", " + coach.firstName}
-                        </MenuItem>
-                    )}
-                    })} */}
-              </StyledSelect>
-            {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-            </FormControl>
-          </Grid>
-        </Grid>
-        </Grid>
-
-        <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
-        <Grid item xs={1}/>
-          <Grid item xs={1}>
-            <Button >
-              {this.state.saved ? (
-                <img
-                  alt="Save"
-                  src={SaveGrayImage}
-                  style={{
-                    width: '80%',
-                    minWidth:'70px'
+          <Grid item xs={5} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+              <Grid item>
+                <Grid container direction='row' justifyContent='center' spacing={3}>
+                  <Grid item xs={6}>
+                    <TextField
+                    id="teacher-firstName"
+                    label="First Name"
+                    type="text"
+                    value={this.state.editTeacherFirstName}
+                    InputProps={{
+                      readOnly: false
+                    }}
+                    variant="outlined"
+                    onChange={this.handleEditInputChange('firstName')}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                    id="teacher-lastName"
+                    label="Last Name"
+                    type="text"
+                    value={this.state.editTeacherLastName}
+                    InputProps={{
+                      readOnly: false
+                    }}
+                    variant="outlined"
+                    onChange={this.handleEditInputChange('lastName')}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Coach"
+                  type="text"
+                  value={this.state.editCoach}
+                  InputProps={{
+                    readOnly: true
                   }}
-                />
-              ) : (
-                <img
-                  alt="Save"
-                  src={SaveImage}
-                  style={{
-                    width: '80%',
-                    minWidth:'70px'
+                  variant="outlined"
+                  />
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Site"
+                  type="text"
+                  value={this.state.editSite}
+                  InputProps={{
+                    readOnly: true
                   }}
+                  variant="outlined"
                 />
-              )}
-            </Button>
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-Program"
+                  type="text"
+                  value={this.state.editProgram}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
+
+            <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
+            <Grid item xs={1}/>
+              <Grid item xs={1}>
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button
+                    onClick={(_)=>{this.editTeacher(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
+                  )}
+                </FirebaseContext.Consumer>
+              </Grid>
+            </Grid>
     </>) : (null))))}
       </Grid>
     </>)
