@@ -86,6 +86,7 @@ interface State {
   editTeacherFirstName: string
   editTeacherLastName: string
   editCoach: string
+  editCoachId: string
   editSite: string
   editProgram: string
   transferTeacherId: string
@@ -127,6 +128,7 @@ class Teachers extends React.Component<Props, State> {
       editTeacherFirstName: "",
       editTeacherLastName: "",
       editCoach: "",
+      editCoachId: "",
       editSite: "",
       editProgram: "",
       transferTeacherId: "",
@@ -333,6 +335,7 @@ class Teachers extends React.Component<Props, State> {
         editTeacherFirstName: "",
         editTeacherLastName: "",
         editCoach: "",
+        editCoachId: "",
         editSite: "",
         editProgram: "",
         transferTeacherId: "",
@@ -359,6 +362,34 @@ class Teachers extends React.Component<Props, State> {
           saveModalOpen: false,
         awaitingConfirmationRef: null
       })
+  }
+
+  async archiveTeacher(firebase:Firebase) {
+    firebase
+    const {
+      editTeacherId,
+      editCoach,
+      editTeacherFirstName,
+      editTeacherLastName,
+      editSite,
+      editProgram
+    } = this.state
+
+    await firebase.archiveTeacher(editTeacherId, editCoach, editTeacherFirstName, editTeacherLastName, editSite, editProgram)
+    .catch(e => {
+      console.log(e)
+      alert('Unable to archive teacher. Please try again')})
+    .finally(() => {
+      this.setState({ // Hold off setting new state until success has been determined
+        editTeacherId: "",
+        editCoach: "",
+        editTeacherFirstName: "",
+        editTeacherLastName: "",
+        editSite: "",
+        editProgram: ""
+      });
+      window.location.reload()
+    });
   }
 
   async transferTeacher(firebase:Firebase) {
@@ -438,6 +469,7 @@ class Teachers extends React.Component<Props, State> {
             editTeacherFirstName: "",
             editTeacherLastName: "",
             editCoach: "",
+            editCoachId: "",
             editSite: "",
             editProgram: "",
           });
@@ -524,6 +556,7 @@ class Teachers extends React.Component<Props, State> {
       editTeacherFirstName: value.teacherFirstName,
       editTeacherLastName: value.teacherLastName,
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
+      editCoachId: value.coachId,
       editSite: value.siteName,
       editProgram: value.selectedProgramName
     })
@@ -692,20 +725,24 @@ class Teachers extends React.Component<Props, State> {
                 </>)}
                 </>) : (<>
                   <Grid item xs={6}>
-                    <Grid container direction='row' style={{cursor: 'default'}}>
-                        <Grid item>
-                            <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
+                    <FirebaseContext.Consumer>
+                      {(firebase: Firebase) => (
+                        <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.archiveTeacher(firebase)}}>
+                            <Grid item>
+                                <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
+                            </Grid>
+                            <Grid item>
+                                <Typography 
+                                  variant="h6" 
+                                  gutterBottom 
+                                  style={{marginTop:'20px' }}
+                                  >
+                                    Archive
+                                </Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
-                              style={{marginTop:'20px' }}
-                              >
-                                Archive
-                            </Typography>
-                        </Grid>
-                    </Grid>
+                      )}
+                    </FirebaseContext.Consumer>
                 </Grid>
                 <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
@@ -1086,7 +1123,7 @@ class Teachers extends React.Component<Props, State> {
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
                     <Button 
-                    // onClick={(_)=>{this.addTeacher(firebase)}}
+                    onClick={(_)=>{this.addTeacher(firebase)}}
                     >
                       {this.state.saved ? (
                         <img

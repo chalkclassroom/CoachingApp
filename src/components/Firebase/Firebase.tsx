@@ -4309,7 +4309,52 @@ class Firebase {
       console.error("Error occurred when adding teacher to coach's partner list: ", error)
     })
 
-    }
+  }
+
+  archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string) => {
+    this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+    })
+    this.db.collection("users").doc(teacherId).update({archived: true})
+    .catch((error: Error) => {
+      console.error(
+        "Error occurred when setting archive on teacher: ",
+        error
+      )
+    })
+    return this.db.collection("archives").doc(teacherId).set({
+      firstName: firstName,
+      lastName: lastName,
+      role: "Teacher",
+      site: siteName,
+      program: programName,
+      coach: coachId
+    })
+    .catch((error: Error) => {
+      console.error("Error occurred when adding teacher to coach's partner list: ", error)
+    })
+
+  }
+
+  unarchiveTeacher = async (teacherId: string, coachId: string) => {
+    this.db.collection("archives").doc(teacherId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+    })
+    this.db.collection("users").doc(teacherId).update({archived: false})
+    .catch((error: Error) => {
+      console.error(
+        "Error occurred when setting archive on teacher: ",
+        error
+      )
+    })
+    return this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).set({})
+    .then(() => teacherId)
+    .catch((error: Error) => {
+      console.error("Error occurred when adding teacher to coach's partner list: ", error)
+    })
+  }
 
   /*
    * Get a all sites
