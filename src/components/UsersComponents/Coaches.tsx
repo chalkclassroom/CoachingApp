@@ -492,13 +492,30 @@ class Coaches extends React.Component<Props, State> {
       const coachId = this.state.selectedTransferCoach;
 
       // Remove the sites from the user's document in firestore
+      var teachersToRemove = [];
       for(var removedSiteIndex in removedSites)
       {
         var tempSiteId = removedSites[removedSiteIndex];
 
         await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
+
+        // Get teachers to remove from Coach's partner collection
+        var teacherToRemoveData = this.props.teacherData.filter(x => x.selectedSiteId === tempSiteId);
+
+        teacherToRemoveData.forEach(element => {
+          teachersToRemove.push(element.teacherId);
+        });
+        //teachersToRemove = teachersToRemove.concat(teachersToRemove);
       }
 
+      // Remove the teachers within those sites from the coach's collection
+      // Remove any duplicates first
+      console.log("Teacher to Remove 1 :", teachersToRemove);
+
+      teachersToRemove = [...new Set(teachersToRemove)];
+      //await firebase.removeTeacherFromCoach({coachId: coachId, bulkTeacherIds: teachersToRemove});
+
+      console.log("Teacher to Remove 2 :", teachersToRemove);
 
       // Gather info so we can update the coach list given to us in props
       var coaches = this.props.coachData;

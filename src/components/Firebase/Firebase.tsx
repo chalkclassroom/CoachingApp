@@ -5476,6 +5476,47 @@ class Firebase {
    }
 
 
+   /*
+    * Removes a teacher from a coach's collection
+    */
+
+    removeTeacherFromCoach = async (
+      data: {
+        coachId: string,
+
+        teacherId: string,
+        bulkTeacherIds: Array<string>
+      }
+    ) => {
+
+      // If we're only deleting a single teacher
+      if(data.teacherId)
+      {
+        this.db.collection("users").doc(data.coachId).collection("partners").doc(data.teacherId).delete()
+        .catch((error: Error) => {
+          console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+        })
+      }
+
+      // If we're deleting in bulk
+      if(data.bulkTeacherIds)
+      {
+        var batch = this.db.batch();
+
+        for (var idIndex in data.bulkTeacherIds) {
+            var id = data.bulkTeacherIds[idIndex];
+
+            var ref = this.db.collection("users").doc(data.coachId).collection("partners").document(id);
+            batch.delete(ref);
+        }
+
+        batch.commit();
+      }
+
+
+    }
+
+
 
 
    /*
