@@ -247,12 +247,16 @@ class Firebase {
           this.assignUserToSiteOrProgram({programId: program, userId: data.id}).then(() => {
             console.log("User added to program " + program);
           }).catch(e => console.error("error => Program : " + program, e));
+
+          data.program = program;
         }
 
         if ( hasSite ) {
 
           // Check to see if it's a string or array
           var assignSite;
+          console.log("SITE : ", site);
+
           if(typeof site == "string")
           {
             assignSite = this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
@@ -271,7 +275,13 @@ class Firebase {
               console.log("User added to site " + site);
             }).catch(e => console.error("error => Site : " + site, e));
           }
+
+          data.sites = site;
         }
+
+        return data;
+
+
       }
     } catch (e) {
       console.log("An Error occurred when creating the user:")

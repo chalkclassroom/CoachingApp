@@ -13,6 +13,9 @@ import {
   TextField,
   Button,
   Input,
+  OutlinedInput,
+  Box,
+  Chip
 
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
@@ -85,7 +88,11 @@ class Coaches extends React.Component<Props, State> {
       newCoachProgramId: "",
       siteOptions: [],
       siteData: [],
-      programData: []
+      programData: [],
+
+      selectedTransferCoach: "",
+      transferCoachCurrentSiteIds: [],
+      transferCoachNewSiteIds: [],
     }
 
   }
@@ -233,6 +240,7 @@ class Coaches extends React.Component<Props, State> {
 
   }
 
+
   /*
    * Handles any changes that are made  for site dropdown on new coach page
    */
@@ -340,11 +348,43 @@ class Coaches extends React.Component<Props, State> {
     {
       hasProgram = true;
     }
-    var hasSite = false;
+    var hasSite = true;
 
     // Note: we're setting sites to
     await firebase.firebaseEmailSignUp({ email: newCoachEmail, password: randomString, firstName: newCoachFirstName, lastName: newCoachLastName }, 'coach', hasProgram, this.state.newCoachProgramId, hasSite, this.state.newCoachSiteIds)
-        .then(() => {
+        .then(async (data) => {
+          console.log("New user data ", data);
+
+          // Add new user to the coach data that we got from props
+          var newCoachSiteList = [];
+          for(var siteIndex in data.sites)
+          {
+              var siteId = data.sites[siteIndex];
+              var programId = data.sites[siteIndex];
+
+              // Get the site associated with it
+              var siteData = await this.props.siteData.find(o => o.id === siteId);
+
+              // Get program that has this site
+              var programData = await this.props.programData.find(o => o.sites.includes(programId) );
+
+              newCoachSiteList.push({
+                programId: data.program,
+                programName: programData.name,
+                siteId: siteId,
+                siteName: siteData.name,
+              });
+          }
+
+          var newCoachInfo = {
+            id: data.id,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            siteList: newCoachSiteList,
+          };
+
+          this.props.coachData.push(newCoachInfo);
+
         this.setState({
             createdPassword: randomString
         });
@@ -381,7 +421,124 @@ class Coaches extends React.Component<Props, State> {
         this.sortTeachers("lastName");
       })
     console.log(result)
+
+    // Set the coach so the transfer page is already set for this user
+    this.handleTransferCoachSelect(event.target.value);
   }
+
+
+  /*
+   * Handle what happens when a coach is selected on the transfer page
+   */
+  handleTransferCoachSelect = async (coachId) => {
+
+    // Get the selected coaches info
+    var coachInfo = await this.props.coachData.find(o => o.id === coachId);
+
+
+    // Get the site ids
+    var siteIds = [];
+    if(coachInfo.siteList)
+    {
+      var siteList = coachInfo.siteList;
+      for(var siteIndex in siteList)
+      {
+        if(siteList[siteIndex].siteId && siteList[siteIndex].siteId !== "")
+          siteIds.push(siteList[siteIndex].siteId);
+      }
+    }
+
+    // Remove duplicates
+    siteIds = [...new Set(siteIds)];
+
+    // Set the value for coach dropdown, from sites dropdown, and initial values of to sites dropdown
+    this.setState({
+      selectedTransferCoach: coachId,
+      transferCoachCurrentSiteIds: siteIds,
+      transferCoachNewSiteIds: siteIds});
+  }
+
+
+
+    /*
+     * Handles any changes that are made  for site dropdown on new coach page
+     */
+    handleTransferCoachSiteDropdown = (siteIds) => {
+
+        this.setState({
+          transferCoachNewSiteIds: siteIds,
+          saved: false,
+        })
+
+    }
+
+    /*
+     * Handle what happens when transfer coach is saved
+     */
+    updateCoachSites = async (firebase) => {
+
+      // Add any sites that were added
+      firebase.assignSiteToUser({userId: this.state.selectedTransferCoach, bulkSiteIds: this.state.transferCoachNewSiteIds})
+        .then( data => {
+          console.log("Coach sites updated ", data);
+        });
+
+      // Remove any sites that were removed
+      var previousSites = this.state.transferCoachCurrentSiteIds;
+      var newSites = this.state.transferCoachNewSiteIds;
+
+      // Get sites that are in the old sites but not the new one
+      var removedSites = previousSites.filter(function(obj) { return newSites.indexOf(obj) == -1; });
+      const coachId = this.state.selectedTransferCoach;
+
+      // Remove the sites from the user's document in firestore
+      for(var removedSiteIndex in removedSites)
+      {
+        var tempSiteId = removedSites[removedSiteIndex];
+
+        await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
+      }
+
+
+      // Gather info so we can update the coach list given to us in props
+      var coaches = this.props.coachData;
+
+      var coachInfo = await coaches.find(o => o.id === coachId);
+
+      // Go through each of the site in the user's site list and remove anything that isn't in the new site
+      var newCoachSiteList = [];
+      // Go through each newly selected site ids
+      for(var newSiteIndex in newSites)
+      {
+        var newSiteId = newSites[newSiteIndex];
+
+        // Get the site associated with it
+        var newSiteData = await this.props.siteData.find(o => o.id === newSiteId);
+
+        // Get program that has this site
+        var newSitesProgramData = await this.props.programData.find(o => o.sites.includes(newSiteId) );
+
+        newCoachSiteList.push({
+          siteId: newSiteData.id,
+          siteName: newSiteData.name,
+          programName: newSitesProgramData.name,
+          programId: newSitesProgramData.id});
+      }
+
+      coachInfo.siteList = newCoachSiteList;
+
+      // Update sites, set this teacher as selected, and go back to last page
+      this.setState({
+        transferCoachCurrentSiteIds: newSites,
+        selectedCoach: coachId,
+        view: 1
+      });
+
+
+
+
+    }
+
 
   handlePageChange = (pageNumber: number) => {
     this.setState({view: pageNumber});
@@ -745,18 +902,18 @@ class Coaches extends React.Component<Props, State> {
               <Grid item>
                 <FormControl variant="outlined">
                   <StyledSelect
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
                     autoWidth={true}
                     value={this.state.newCoachSelectedProgram}
                     onChange={(event) => this.handleNewCoachProgramDropdown(event.target.value)}
-                    input={<Input />}
+                    input={<OutlinedInput  />}
                     autoWidth={true}
                   >
                     {this.props.programData.map(
                       (option, index)=>{
 
-                        return <MenuItem value={option.id}>
+                        return <MenuItem key={option.id} value={option.id}>
                           {option.name}
                         </MenuItem>
 
@@ -772,19 +929,19 @@ class Coaches extends React.Component<Props, State> {
               <Grid item>
                 <FormControl variant="outlined">
                   <StyledSelect
-                    labelId="demo-mutiple-name-label"
-                    id="demo-mutiple-name"
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
                     multiple
                     autoWidth={true}
                     value={this.state.newCoachSiteIds}
                     onChange={(event) => this.handleNewCoachSiteDropdown(event.target.value)}
-                    input={<Input />}
+                    input={<OutlinedInput />}
                     autoWidth={true}
                   >
                     {this.state.siteOptions.map(
                       (option, index)=>{
 
-                        return <MenuItem value={option.id}>
+                        return <MenuItem key={option.id} value={option.id}>
                           {option.name}
                         </MenuItem>
 
@@ -844,62 +1001,73 @@ class Coaches extends React.Component<Props, State> {
                 </Typography>
               </Grid>
             </Grid>
-            </Grid>
+          </Grid>
 
-            <Grid item xs={4} style={{marginTop: '45px'}}>
+          <Grid item xs={4} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <FormControl variant="outlined">
-                  <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
-                  >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
-                  </StyledSelectTransfer>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
-                </FormControl>
-              </Grid>
-            </Grid>
-            </Grid>
 
-            <Grid item xs={1} style={{marginTop: '45px'}}>
+                {/*
+                  Select coach dropdown
+                */}
+                <FormControl variant="outlined">
+                  <StyledSelectTransfer
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={this.state.selectedTransferCoach}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      this.handleTransferCoachSelect(event.target.value)
+                    }
+                    name="selectedCoach"
+                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                  >
+                    {this.props.coachData.map(
+                      (coach, index)=>{
+                        if(coach.id !== "") {
+                        return (
+                            <MenuItem value={coach.id} key={index}>
+                              {coach.lastName + ", " + coach.firstName}
+                            </MenuItem>
+                        )}
+                        })}
+                  </StyledSelectTransfer>
+                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                </FormControl>
+              </Grid>
+
+              {/*
+                From site dropdown
+              */}
+              <Grid item>
+                <FormControl variant="outlined" disabled>
+                  <StyledSelectTransfer
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    multiple
+                    autoWidth={true}
+                    value={this.state.transferCoachCurrentSiteIds}
+                    input={<OutlinedInput />}
+                    autoWidth={true}
+                  >
+                    {this.props.siteData.map(
+                      (option, index)=>{
+
+                        return <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
+                  </StyledSelectTransfer>
+                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/*
+            Arrow
+          */}
+          <Grid item xs={1} style={{marginTop: '45px'}}>
 
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
@@ -909,9 +1077,12 @@ class Coaches extends React.Component<Props, State> {
                 <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'4px',}}/>
               </Grid>
             </Grid>
-            </Grid>
+          </Grid>
 
-            <Grid item xs={4} style={{marginTop: '45px'}}>
+          {/*
+            To Site options
+          */}
+          <Grid item xs={4} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
                 <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
@@ -919,54 +1090,60 @@ class Coaches extends React.Component<Props, State> {
               <Grid item>
                 <FormControl variant="outlined">
                   <StyledSelectTransfer
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    // value={this.state.selectedCoach}
-                    // onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                    //   this.setState({selectedCoach: event.target.value})}
-                    name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    labelId="demo-simple-select-disabled-label"
+                    id="demo-simple-select-disabled"
+                    multiple
+                    autoWidth={true}
+                    value={this.state.transferCoachNewSiteIds}
+                    onChange={(event) => this.handleTransferCoachSiteDropdown(event.target.value)}
+                    input={<OutlinedInput />}
+                    autoWidth={true}
                   >
-                    {/* {this.props.coachData.map(
-                      (coach, index)=>{
-                        if(coach.id !== "") {
-                        return (
-                            <MenuItem value={coach.id} key={index}>
-                              {coach.lastName + ", " + coach.firstName}
-                            </MenuItem>
-                        )}
-                        })} */}
+                    {this.props.siteData.map(
+                      (option, index)=>{
+
+                        return <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
                   </StyledSelectTransfer>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
             </Grid>
-            </Grid>
+          </Grid>
 
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
-                <Button >
-                  {this.state.saved ? (
-                    <img
-                      alt="Save"
-                      src={SaveGrayImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
-                  ) : (
-                    <img
-                      alt="Save"
-                      src={SaveImage}
-                      style={{
-                        width: '80%',
-                        minWidth:'70px'
-                      }}
-                    />
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button
+                    onClick={(_)=>{this.updateCoachSites(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
                   )}
-                </Button>
+                </FirebaseContext.Consumer>
               </Grid>
             </Grid>
       </Grid>
