@@ -21,7 +21,7 @@ import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
-import { is } from 'date-fns/locale';
+import styled from 'styled-components'
 
 const StyledSelect = withStyles({
   root: {
@@ -42,8 +42,22 @@ const StyledSelectTransfer = withStyles({
   },
   disabled: {
     opacity: 0.3
-  }
+  },
 })(Select);
+
+const TableRow = styled.tr`
+background-color: white;
+&:hover {
+  background-color: rgb(9, 136, 236, .4);
+  cursor: pointer;
+}
+`
+
+const TableHeader = styled.th`
+&:hover {
+  cursor: pointer;
+}
+`
 
 interface Props {
   changePage(pageName: string): void
@@ -57,7 +71,6 @@ interface Props {
 
 interface State {
   teachersList: Array<Object>
-  loaded: boolean
   sortType: string
   view: number
   saved: boolean
@@ -90,6 +103,7 @@ interface State {
   changeProgramId: string
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
+  searchInput: string
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -97,7 +111,7 @@ class Teachers extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      teachersList: [],
+      teachersList: props.teacherData,
       sortType: "",
       view: 1,
       saved: true,
@@ -129,13 +143,37 @@ class Teachers extends React.Component<Props, State> {
       changeSiteId: "",
       changeProgramId: "",
       saveModalOpen: false,
-      awaitingConfirmationRef: null
+      awaitingConfirmationRef: null,
+      searchInput: ""
     }
 
   }
 
+  handleSearch = (event) => {
+    this.setState({searchInput: event.target.value})
+    let searched = this.props.teacherData.filter((item) => { 
+      return (item.teacherFirstName.toLowerCase().includes(event.target.value.toLowerCase())
+      || item.teacherLastName.toLowerCase().includes(event.target.value.toLowerCase())
+      || (item.teacherFirstName.toLowerCase() + ' ' + item.teacherLastName.toLowerCase()).includes(event.target.value.toLowerCase())
+      || item.coachFirstName.toLowerCase().includes(event.target.value.toLowerCase())
+      || item.coachLastName.toLowerCase().includes(event.target.value.toLowerCase())
+      || (item.coachFirstName.toLowerCase() + ' ' + item.coachLastName.toLowerCase()).includes(event.target.value.toLowerCase())
+      || item.siteName.toLowerCase().includes(event.target.value.toLowerCase())
+      || item.selectedProgramName.toLowerCase().includes(event.target.value.toLowerCase())
+      )
+    })
+
+    console.log(searched)
+    this.setState({teachersList: searched})
+
+  }
+
   sortTeachers = (sortType) => {
-    var teachersList = this.props.teacherData;
+    if(!this.state.searchInput) {
+      var teachersList = this.props.teacherData;
+    } else {
+      var teachersList = this.state.teachersList;
+    }
 
     this.setState({sortType: sortType});
 
@@ -584,7 +622,7 @@ class Teachers extends React.Component<Props, State> {
               {this.state.view !== 4 ? (<>
               {this.state.view === 2 ? (<>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
                             <ArrowBackIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -601,7 +639,7 @@ class Teachers extends React.Component<Props, State> {
                 </Grid>
               </>) : (<>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(2)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(2)}>
                         <Grid item>
                             <AddIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -619,7 +657,7 @@ class Teachers extends React.Component<Props, State> {
                 </>)}
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
-                  <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                  <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
                             <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
@@ -636,7 +674,7 @@ class Teachers extends React.Component<Props, State> {
                 </Grid>
                 </>) : (<>
                 <Grid item xs={6}>
-                <Grid container direction='row' onClick={() => this.handlePageChange(3)}>
+                <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(3)}>
                         <Grid item>
                             <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
@@ -654,7 +692,7 @@ class Teachers extends React.Component<Props, State> {
                 </>)}
                 </>) : (<>
                   <Grid item xs={6}>
-                    <Grid container direction='row'>
+                    <Grid container direction='row' style={{cursor: 'default'}}>
                         <Grid item>
                             <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -670,7 +708,7 @@ class Teachers extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
                             <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -707,9 +745,10 @@ class Teachers extends React.Component<Props, State> {
                   id="teacher-search"
                   label="Search"
                   type="search"
+                  value={this.state.searchInput}
                   // className={classes.search}
                   variant="outlined"
-                  // onChange={onChangeText}
+                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handleSearch(event)}
                 />
               </Grid>
             </Grid>
@@ -741,7 +780,7 @@ class Teachers extends React.Component<Props, State> {
                     <strong>Instructional Coach</strong>
                   </Typography>
                 </th>
-                <th colSpan={1}
+                <TableHeader colSpan={1}
                   onClick={
                     () =>{
                       if(this.state.sortType == "siteName")
@@ -758,8 +797,8 @@ class Teachers extends React.Component<Props, State> {
                   <Typography variant="h6" gutterBottom>
                     <strong>Site</strong>
                   </Typography>
-                </th>
-                <th colSpan={1}
+                </TableHeader>
+                <TableHeader colSpan={1}
                   onClick={
                     () =>{
                       if(this.state.sortType == "program")
@@ -776,10 +815,10 @@ class Teachers extends React.Component<Props, State> {
                   <Typography variant="h6" gutterBottom>
                     <strong>Program</strong>
                   </Typography>
-                </th>
+                </TableHeader>
               </tr>
               <tr>
-                <th
+                <TableHeader
                   onClick={
                     () =>{
                       if(this.state.sortType == "lastName")
@@ -796,8 +835,8 @@ class Teachers extends React.Component<Props, State> {
                   <Typography variant="h6" gutterBottom>
                     Last Name
                   </Typography>
-                </th>
-                <th
+                </TableHeader>
+                <TableHeader
                   onClick={
                     () =>{
                       if(this.state.sortType == "firstName")
@@ -814,7 +853,7 @@ class Teachers extends React.Component<Props, State> {
                   <Typography variant="h6" gutterBottom>
                     First Name
                   </Typography>
-                </th>
+                </TableHeader>
                 <th>
                   <Typography variant="h6" gutterBottom>
                     Last Name
@@ -830,10 +869,10 @@ class Teachers extends React.Component<Props, State> {
               </tr>
             </thead>
             <tbody>
-              {this.state.sortType === "" ? (<>
+              {!this.state.searchInput && !this.state.sortType ? (<>
               {this.props.teacherData.map((value, index) => {
                 return (
-                <tr 
+                <TableRow 
                 key={index} 
                 onClick={() => {this.handleEditClick(value)}}
                 >
@@ -867,7 +906,7 @@ class Teachers extends React.Component<Props, State> {
                       {value.selectedProgramName}
                     </Typography>
                   </td>
-                </tr>
+                </TableRow>
               )})}
               </>) : (<>
                 {this.state.teachersList.map((value, index) => {
