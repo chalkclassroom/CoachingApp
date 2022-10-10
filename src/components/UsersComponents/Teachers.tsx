@@ -56,6 +56,9 @@ interface Props {
 }
 
 interface State {
+  teachersList: Array<Object>
+  loaded: boolean
+  sortType: string
   view: number
   saved: boolean
   addTeacherFirstName: string
@@ -94,6 +97,8 @@ class Teachers extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      teachersList: [],
+      sortType: "",
       view: 1,
       saved: true,
       addTeacherFirstName: "",
@@ -126,6 +131,53 @@ class Teachers extends React.Component<Props, State> {
       saveModalOpen: false,
       awaitingConfirmationRef: null
     }
+
+  }
+
+  sortTeachers = (sortType) => {
+    var teachersList = this.props.teacherData;
+
+    this.setState({sortType: sortType});
+
+    // Sort the teachers list
+    switch (sortType) {
+      case "lastName":
+        teachersList.sort((a,b) => (a.teacherLastName > b.teacherLastName) ? 1 : ((b.teacherLastName > a.teacherLastName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "lastNameReverse":
+        teachersList.sort((a,b) => (b.teacherLastName > a.teacherLastName) ? 1 : ((a.teacherLastName > b.teacherLastName) ? -1 : 0));
+        console.log("reverse last name");
+      case "firstName":
+        teachersList.sort((a,b) => (a.teacherFirstName > b.teacherFirstName) ? 1 : ((b.teacherFirstName > a.teacherFirstName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "firstNameReverse":
+        teachersList.sort((a,b) => (b.teacherFirstName > a.teacherFirstName) ? 1 : ((a.teacherFirstName > b.teacherFirstName) ? -1 : 0));
+        console.log("reverse last name");
+        break;
+      case "siteName":
+        teachersList.sort((a,b) => (a.siteName > b.siteName) ? 1 : ((b.siteName > a.siteName) ? -1 : 0));
+        console.log("site name");
+        break;
+      case "siteNameReverse":
+        teachersList.sort((a,b) => (b.siteName > a.siteName) ? 1 : ((a.siteName > b.siteName) ? -1 : 0));
+        console.log("reverse site name");
+        break;
+      case "program":
+        teachersList.sort((a,b) => (a.selectedProgramName > b.selectedProgramName) ? 1 : ((b.selectedProgramName > a.selectedProgramName) ? -1 : 0));
+        console.log("program name");
+        break;
+      case "programReverse":
+        teachersList.sort((a,b) => (b.selectedProgramName > a.selectedProgramName) ? 1 : ((a.selectedProgramName > b.selectedProgramName) ? -1 : 0));
+        console.log("reverse program name");
+        break;
+
+      default:
+        break;
+    }
+
+    this.setState({teachersList: teachersList});
 
   }
 
@@ -689,24 +741,76 @@ class Teachers extends React.Component<Props, State> {
                     <strong>Instructional Coach</strong>
                   </Typography>
                 </th>
-                <th colSpan={1}>
+                <th colSpan={1}
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "siteName")
+                      {
+                        this.sortTeachers("siteNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("siteName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     <strong>Site</strong>
                   </Typography>
                 </th>
-                <th colSpan={1}>
+                <th colSpan={1}
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "program")
+                      {
+                        this.sortTeachers("programReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("program")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     <strong>Program</strong>
                   </Typography>
                 </th>
               </tr>
               <tr>
-                <th>
+                <th
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "lastName")
+                      {
+                        this.sortTeachers("lastNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("lastName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     Last Name
                   </Typography>
                 </th>
-                <th>
+                <th
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "firstName")
+                      {
+                        this.sortTeachers("firstNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("firstName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     First Name
                   </Typography>
@@ -726,6 +830,7 @@ class Teachers extends React.Component<Props, State> {
               </tr>
             </thead>
             <tbody>
+              {this.state.sortType === "" ? (<>
               {this.props.teacherData.map((value, index) => {
                 return (
                 <tr 
@@ -764,6 +869,46 @@ class Teachers extends React.Component<Props, State> {
                   </td>
                 </tr>
               )})}
+              </>) : (<>
+                {this.state.teachersList.map((value, index) => {
+                return (
+                <tr 
+                key={index} 
+                onClick={() => {this.handleEditClick(value)}}
+                >
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.teacherLastName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.teacherFirstName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.coachLastName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.coachFirstName}  
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.siteName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.selectedProgramName}
+                    </Typography>
+                  </td>
+                </tr>
+              )})}
+              </>)}
             </tbody>
           </table>
           ) : (
