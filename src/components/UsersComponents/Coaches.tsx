@@ -15,8 +15,10 @@ import {
   Input,
   OutlinedInput,
   Box,
-  Chip
-
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogTitle,
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import FirebaseContext from '../Firebase/FirebaseContext'
@@ -93,6 +95,10 @@ class Coaches extends React.Component<Props, State> {
       selectedTransferCoach: "",
       transferCoachCurrentSiteIds: [],
       transferCoachNewSiteIds: [],
+
+      successModalOpen: false,
+
+      successEditTeacherModalOpen: false,
     }
 
   }
@@ -154,7 +160,7 @@ class Coaches extends React.Component<Props, State> {
       editTeacherLastName: value.teacherLastName,
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
       editSite: value.siteName,
-      editProgram: value.selectedProgramName
+      editProgram: value.selectedProgramName,
     })
     this.handlePageChange(4)
   }
@@ -179,6 +185,65 @@ class Coaches extends React.Component<Props, State> {
       })
     }
   }
+
+  /*
+   * When user saves 'edit teacher'
+   */
+   async editTeacher(firebase:Firebase) {
+     firebase
+     const {
+       editTeacherId,
+       editTeacherFirstName,
+       editTeacherLastName
+     } = this.state
+
+     this.setState({success: true})
+
+     if (!editTeacherFirstName || editTeacherFirstName === ""){
+       alert("First Name is required");
+       return
+     }
+
+     if (!editTeacherLastName || editTeacherLastName === ""){
+       alert("Last name is required");
+       return;
+     }
+
+     await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName).
+       catch(e => {
+         console.log(e)
+         alert('Unable to edit teacher. Please try again')
+         this.setState({success: false})
+       }).finally(() => {
+
+            // Update coaches teachers in this state
+            var coachesTeachers = this.state.coachesTeachers;
+            // get the teacher data
+            var teacherData = coachesTeachers.find(o => o.teacherId === editTeacherId);
+            console.log("teacher data : ", teacherData);
+
+            var teacherDataIndex = coachesTeachers.indexOf(teacherData);
+            console.log("teacherDataIndex : ", teacherDataIndex);
+            coachesTeachers[teacherDataIndex].teacherFirstName = editTeacherFirstName;
+            coachesTeachers[teacherDataIndex].teacherLastName = editTeacherLastName;
+
+            this.setState({coachesTeachers: coachesTeachers});
+
+
+
+           this.setState({ // Hold off setting new state until success has been determined
+             editTeacherId: "",
+             editTeacherFirstName: "",
+             editTeacherLastName: "",
+             editCoach: "",
+             editCoachId: "",
+             editSite: "",
+             editProgram: "",
+             successEditTeacherModalOpen: this.state.success ? true : false
+           });
+           // window.location.reload()
+       });
+   }
 
 
   /*
@@ -555,12 +620,34 @@ class Coaches extends React.Component<Props, State> {
       this.setState({
         transferCoachCurrentSiteIds: newSites,
         selectedCoach: coachId,
-        view: 1
+        successModalOpen: true,
+
       });
 
 
 
 
+    }
+
+
+    /*
+     * Close the confirmation modal that shows after transfer
+     */
+    successModalClose = () => {
+      this.setState({
+        successModalOpen: false,
+        view: 1,
+      });
+    }
+
+    /*
+     * Close the confirmation modal that shows after edit teacher
+     */
+    successEditTeacherModalClose = () => {
+      this.setState({
+        successEditTeacherModalOpen: false,
+        view: 1,
+      });
     }
 
 
@@ -588,6 +675,29 @@ class Coaches extends React.Component<Props, State> {
       {this.state.createdPassword  &&
         <Alert severity={'success'}>User has been created with password {this.state.createdPassword}</Alert>
       }
+
+      <Dialog open={this.state.successModalOpen}>
+        <DialogTitle style={{ fontFamily: 'Arimo' }}>
+            Site Transfer Has Been Completed Successfully
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={this.successModalClose}>
+              Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={this.state.successEditTeacherModalOpen}>
+        <DialogTitle style={{ fontFamily: 'Arimo' }}>
+            Teacher has been successfully saved.
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={this.successEditTeacherModalClose}>
+              Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
