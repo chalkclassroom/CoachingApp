@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 import { Alert } from '@material-ui/lab'
 import { Role } from '../../../state/actions/coach'
 import { RouteComponentProps } from 'react-router-dom'
-import * as H from 'history' 
+import * as H from 'history'
 import * as Types from '../constants/Types';
 
 
@@ -139,7 +139,8 @@ class NewUserPage extends React.Component<Props, State>{
             role,
             site,
             program,
-            coach
+            coach,
+            sitesList
         } = this.state;
 
         if (!email || email === ""){
@@ -186,13 +187,22 @@ class NewUserPage extends React.Component<Props, State>{
         const randomString = Math.random().toString(36).slice(-8)
 
         if (role === Role.TEACHER) {
+
+            // Get the site ID
+            var siteData = await sitesList.find(o => o.name == site);
+            var siteId = siteData.id;
+            console.log("SiteData: ", siteData);
+            console.log("siteId: ", siteId);
+
+
             const teacherInfo = {
                 firstName: firstName,
                 lastName: lastName,
                 school: site,
                 email: email,
                 notes: '',
-                phone: ''
+                phone: '',
+                sites: [siteId]
             }
             await firebase.addTeacherToCoach(teacherInfo, coach)
             .then(() => {
@@ -216,7 +226,7 @@ class NewUserPage extends React.Component<Props, State>{
                     site: ''
                   });
               });
-        } else {  
+        } else {
             await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
                 .then(() => {
                 this.setState({
@@ -244,7 +254,7 @@ class NewUserPage extends React.Component<Props, State>{
 
 
     }
-   
+
     renderDropdown = param => () => {
         this.setState({showProgram: false, showSite: false});
         switch(param) {
@@ -377,7 +387,7 @@ class NewUserPage extends React.Component<Props, State>{
                                 return <MenuItem onClick={this.handleChange(site.id)} key={site.id} value={role == "teacher" ? site.name : site.id}>
                                     {site.name}
                                 </MenuItem>})}
-                                
+
                             </Select>
                         </StyledFormControl>
                         )}

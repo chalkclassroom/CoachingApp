@@ -585,7 +585,7 @@ class Firebase {
   }
 
   addTeacherToCoach = async (teacherInfo: TeacherInfo, coachId: string): Promise<string | void> => {
-    const {firstName, lastName, school, email, notes, phone} = teacherInfo
+    const {firstName, lastName, school, email, notes, phone, sites} = teacherInfo
     const newTeacherRef = this.db.collection('users').doc() // auto-generated iD
     return newTeacherRef
       .set({
@@ -597,6 +597,7 @@ class Firebase {
         role: 'teacher',
         id: newTeacherRef.id,
         phone: phone,
+        sites: sites,
       })
       .then(() => {
         const id = newTeacherRef.id // get new iD
@@ -4263,7 +4264,7 @@ class Firebase {
             teacherId: teacher.id,
             teacherFirstName: await teacherResult.data().firstName,
             teacherLastName: await teacherResult.data().lastName,
-            archived: await teacherResult.data().archived ? await teacherResult.data().archived : false 
+            archived: await teacherResult.data().archived ? await teacherResult.data().archived : false
           })
         }
       }))
