@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
 import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
 import { resultsAriaMessage } from 'react-select/src/accessibility'
+import ProgramProfileBarDetails from '../ProgramProfileComponents/ProgramProfileBarDetails'
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -667,6 +668,7 @@ class Firebase {
   }
 
   getCoaches = async () => {
+    //////
     // if (!await this.userIsAdmin()) {
     //   throw new Error('User is not authorized for this action')
     // }
@@ -4351,7 +4353,7 @@ class Firebase {
     })
   }
 
-  archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string) => {
+  archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string, siteId: string, programId: string) => {
     if (coachId !== "") {
       this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
       .catch((error: Error) => {
@@ -4370,7 +4372,9 @@ class Firebase {
       lastName: lastName,
       role: "teacher",
       site: siteName,
+      siteId: siteId,
       program: programName,
+      programId: programId,
       coach: coachId,
       id: teacherId
     })

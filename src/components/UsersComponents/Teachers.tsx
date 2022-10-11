@@ -91,6 +91,8 @@ interface State {
   editCoachId: string
   editSite: string
   editProgram: string
+  editSiteId: string
+  editProgramId: string
   transferTeacherId: string
   transferCoachSites: Array<Object>
   transferCoachPrograms: Array<Object>
@@ -136,6 +138,8 @@ class Teachers extends React.Component<Props, State> {
       editCoachId: "",
       editSite: "",
       editProgram: "",
+      editSiteId: "",
+      editProgramId: "",
       transferTeacherId: "",
       transferCoachSites: [],
       transferCoachPrograms: [],
@@ -346,6 +350,8 @@ class Teachers extends React.Component<Props, State> {
         editCoachId: "",
         editSite: "",
         editProgram: "",
+        editSiteId: "",
+        editProgramId: "",
         transferTeacherId: "",
         transferCoachSites: [],
         transferCoachPrograms: [],
@@ -380,11 +386,13 @@ class Teachers extends React.Component<Props, State> {
       editTeacherFirstName,
       editTeacherLastName,
       editSite,
-      editProgram
+      editProgram,
+      editSiteId,
+      editProgramId
     } = this.state
     this.setState({success: true})
 
-    await firebase.archiveTeacher(editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram)
+    await firebase.archiveTeacher(editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, editProgramId)
     .catch(e => {
       console.log(e)
       alert('Unable to archive teacher. Please try again')
@@ -398,6 +406,8 @@ class Teachers extends React.Component<Props, State> {
         editTeacherLastName: "",
         editSite: "",
         editProgram: "",
+        editSiteId: "",
+        editProgramId: "",
         archiveModalOpen: false,
         successModalOpen: this.state.success ? true : false
       });
@@ -492,6 +502,8 @@ class Teachers extends React.Component<Props, State> {
             editCoachId: "",
             editSite: "",
             editProgram: "",
+            editSiteId: "",
+            editProgramId: "",
             successModalOpen: this.state.success ? true : false
           });
           // window.location.reload()
@@ -583,7 +595,9 @@ class Teachers extends React.Component<Props, State> {
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
       editCoachId: value.coachId,
       editSite: value.siteName,
-      editProgram: value.selectedProgramName
+      editSiteId: value.selectedSiteId,
+      editProgram: value.selectedProgramName,
+      editProgramId: value.selectedProgramId
     })
     this.handlePageChange(4)
   }
@@ -677,6 +691,8 @@ class Teachers extends React.Component<Props, State> {
         editCoachId: "",
         editSite: "",
         editProgram: "",
+        editSiteId: "",
+        editProgramId: ""
       })
   }
 
@@ -701,6 +717,8 @@ class Teachers extends React.Component<Props, State> {
           editCoachId: "",
           editSite: "",
           editProgram: "",
+          editSiteId: "",
+          editProgramId: "",
           transferTeacherId: "",
           transferCoachSites: [],
           transferCoachPrograms: [],

@@ -34,6 +34,7 @@ interface Props {
   location: string
   teacherData: Array<Object>
   coachData: Array<Object>
+  filter?: Array<string>
 }
 
 interface State {
@@ -70,7 +71,17 @@ class Archives extends React.Component<Props, State> {
 
   componentDidMount = async () => {
     let archived = await this.context.getArchives();
+
+    if (this.props.userRole === "programLeader") {
+      archived = archived.filter((item) => {return this.props.filter.includes(item.programId)})
+    }
+
+    if (this.props.userRole === "siteLeader") {
+      archived = archived.filter((item) => {return this.props.filter.includes(item.siteId)})
+    }
+
     this.setState({archivedData: archived})
+    console.log(this.props.userRole)
   }
 
   async unarchiveTeacher(firebase:Firebase) {
