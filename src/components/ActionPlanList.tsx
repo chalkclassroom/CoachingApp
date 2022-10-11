@@ -663,8 +663,7 @@ class ActionPlanList extends React.Component<Props, State> {
      * @param index
      */
     renderActionPlanRow(row: ActionPlanRow, index: number): React.ReactNode {
-        console.log(row.status)
-        let status = row.status
+        let status = row.status ? row.status : ''
         let achieveBy = row.achieveBy
         if (row.achieveBy && typeof row.achieveBy !== 'string') {
             // achieveBy is a string in legacy storage
