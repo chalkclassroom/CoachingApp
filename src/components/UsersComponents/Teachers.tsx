@@ -105,6 +105,8 @@ interface State {
   saveModalOpen: boolean
   awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
   searchInput: string
+  successModalOpen: boolean
+  archiveModalOpen: boolean
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -146,7 +148,9 @@ class Teachers extends React.Component<Props, State> {
       changeProgramId: "",
       saveModalOpen: false,
       awaitingConfirmationRef: null,
-      searchInput: ""
+      searchInput: "",
+      successModalOpen: false,
+      archiveModalOpen: false
     }
 
   }
@@ -386,9 +390,10 @@ class Teachers extends React.Component<Props, State> {
         editTeacherFirstName: "",
         editTeacherLastName: "",
         editSite: "",
-        editProgram: ""
+        editProgram: "",
+        successModalOpen: true
       });
-      window.location.reload()
+      // window.location.reload()
     });
   }
 
@@ -436,8 +441,10 @@ class Teachers extends React.Component<Props, State> {
           changeSiteName: "",
           changeSiteId: "",
           changeProgramId: "",
+          archiveModalOpen: false,
+          successModalOpen: true
         });
-        window.location.reload()
+        // window.location.reload()
     });
   }
 
@@ -472,8 +479,9 @@ class Teachers extends React.Component<Props, State> {
             editCoachId: "",
             editSite: "",
             editProgram: "",
+            successModalOpen: true
           });
-          window.location.reload()
+          // window.location.reload()
       });
   }
 
@@ -543,9 +551,10 @@ class Teachers extends React.Component<Props, State> {
             addCoach: '',
             addCoachPrograms: [],
             addProgram: '',
-            addSite: ''
+            addSite: '',
+            successModalOpen: true
           });
-          window.location.reload()
+          // window.location.reload()
       });
   } 
 
@@ -631,10 +640,99 @@ class Teachers extends React.Component<Props, State> {
     this.setState({transferCoachPrograms: programs})
   }
 
+  archiveModalOpen =  (): Promise<boolean> => {
+    this.setState({archiveModalOpen: true})
+    return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+      this.setState({awaitingConfirmationRef: {resolve}})
+    })
+  }
+
+  archiveModalDiscard = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(true)
+    }
+      this.setState({
+        archiveModalOpen: false,
+        awaitingConfirmationRef: null,
+        editTeacherId: "",
+        editTeacherFirstName: "",
+        editTeacherLastName: "",
+        editCoach: "",
+        editCoachId: "",
+        editSite: "",
+        editProgram: "",
+      })
+  }
+
+  successModalClose = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(false)
+    }
+      this.setState({
+          awaitingConfirmationRef: null,
+          addTeacherFirstName: "",
+          addTeacherLastName: "",
+          addCoach: "",
+          addCoachSites: [],
+          addSiteName: "",
+          addSite: "",
+          addCoachPrograms: [],
+          addProgram: "",
+          editTeacherId: "",
+          editTeacherFirstName: "",
+          editTeacherLastName: "",
+          editCoach: "",
+          editCoachId: "",
+          editSite: "",
+          editProgram: "",
+          transferTeacherId: "",
+          transferCoachSites: [],
+          transferCoachPrograms: [],
+          transferCoachName: "",
+          transferSiteName: "",
+          transferProgramName: "",
+          originalCoachId: "",
+          originalProgramId: "",
+          changeCoachId: "",
+          changeSiteName: "",
+          changeSiteId: "",
+          changeProgramId: "",
+          successModalOpen: false,
+      })
+    window.location.reload()
+  }
+
   render() {
 
 
     return (<>
+    <Dialog open={this.state.successModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          The action was completed successfully.
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.successModalClose}>
+            Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+    <Dialog open={this.state.archiveModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          Are you sure you would like to move this user to archives?
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.archiveModalDiscard}>
+            No, go back
+        </Button>
+        <FirebaseContext.Consumer>
+          {(firebase: Firebase) => (
+            <Button onClick={(_) => {this.archiveTeacher(firebase)}}>
+                Yes, I am sure
+            </Button>
+          )}
+        </FirebaseContext.Consumer>
+      </DialogActions>
+    </Dialog>
     <Dialog open={this.state.saveModalOpen}>
         <DialogTitle style={{ fontFamily: 'Arimo' }}>
             You have unsaved changes to your entry.
@@ -725,24 +823,20 @@ class Teachers extends React.Component<Props, State> {
                 </>)}
                 </>) : (<>
                   <Grid item xs={6}>
-                    <FirebaseContext.Consumer>
-                      {(firebase: Firebase) => (
-                        <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.archiveTeacher(firebase)}}>
-                            <Grid item>
-                                <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
-                            </Grid>
-                            <Grid item>
-                                <Typography 
-                                  variant="h6" 
-                                  gutterBottom 
-                                  style={{marginTop:'20px' }}
-                                  >
-                                    Archive
-                                </Typography>
-                            </Grid>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
+                        <Grid item>
+                            <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
-                      )}
-                    </FirebaseContext.Consumer>
+                        <Grid item>
+                            <Typography 
+                              variant="h6" 
+                              gutterBottom 
+                              style={{marginTop:'20px' }}
+                              >
+                                Archive
+                            </Typography>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>

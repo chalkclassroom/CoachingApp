@@ -183,7 +183,7 @@ class Archives extends React.Component<Props, State> {
       </Dialog>
       <Dialog open={this.state.archiveModalOpen}>
           <DialogTitle style={{ fontFamily: 'Arimo' }}>
-              Are you sure you would like to remove this user from archived?
+              Are you sure you would like to remove this user from archives?
           </DialogTitle>
           <DialogActions>
             <Button onClick={this.archiveModalDiscard}>

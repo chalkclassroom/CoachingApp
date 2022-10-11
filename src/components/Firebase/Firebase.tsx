@@ -23,6 +23,7 @@ interface TeacherInfo {
   email: string
   phone: string
   notes: string
+  sites?: Array<string>
 }
 
 export interface UserDocument {
@@ -597,7 +598,7 @@ class Firebase {
         role: 'teacher',
         id: newTeacherRef.id,
         phone: phone,
-        sites: sites,
+        sites: sites ? sites : [],
       })
       .then(() => {
         const id = newTeacherRef.id // get new iD
