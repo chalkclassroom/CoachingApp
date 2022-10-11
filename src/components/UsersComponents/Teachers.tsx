@@ -22,6 +22,7 @@ import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import styled from 'styled-components'
+import { isThisQuarter } from 'date-fns';
 
 const StyledSelect = withStyles({
   root: {
@@ -55,6 +56,7 @@ background-color: white;
 
 const TableHeader = styled.th`
 &:hover {
+  background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
 }
 `
@@ -107,6 +109,7 @@ interface State {
   searchInput: string
   successModalOpen: boolean
   archiveModalOpen: boolean
+  success: boolean
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -114,7 +117,7 @@ class Teachers extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      teachersList: props.teacherData,
+      teachersList: this.props.teacherData,
       sortType: "",
       view: 1,
       saved: true,
@@ -150,7 +153,8 @@ class Teachers extends React.Component<Props, State> {
       awaitingConfirmationRef: null,
       searchInput: "",
       successModalOpen: false,
-      archiveModalOpen: false
+      archiveModalOpen: false,
+      success: true
     }
 
   }
@@ -378,11 +382,14 @@ class Teachers extends React.Component<Props, State> {
       editSite,
       editProgram
     } = this.state
+    this.setState({success: true})
 
     await firebase.archiveTeacher(editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram)
     .catch(e => {
       console.log(e)
-      alert('Unable to archive teacher. Please try again')})
+      alert('Unable to archive teacher. Please try again')
+      this.setState({success: false})
+    })
     .finally(() => {
       this.setState({ // Hold off setting new state until success has been determined
         editTeacherId: "",
@@ -391,7 +398,8 @@ class Teachers extends React.Component<Props, State> {
         editTeacherLastName: "",
         editSite: "",
         editProgram: "",
-        successModalOpen: true
+        archiveModalOpen: false,
+        successModalOpen: this.state.success ? true : false
       });
       // window.location.reload()
     });
@@ -406,6 +414,8 @@ class Teachers extends React.Component<Props, State> {
       changeSiteName,
       changeProgramId
     } = this.state
+
+    this.setState({success: true})
 
     if (!changeCoachId || changeCoachId === ""){
       alert("Coach is required");
@@ -426,6 +436,7 @@ class Teachers extends React.Component<Props, State> {
     .catch(e => {
       console.log(e)
       alert('Unable to transfer teacher. Please try again')
+      this.setState({success: false})
     }).finally(() => {
         this.setState({ // Hold off setting new state until success has been determined
           transferTeacherId: "",
@@ -441,8 +452,7 @@ class Teachers extends React.Component<Props, State> {
           changeSiteName: "",
           changeSiteId: "",
           changeProgramId: "",
-          archiveModalOpen: false,
-          successModalOpen: true
+          successModalOpen: this.state.success ? true : false
         });
         // window.location.reload()
     });
@@ -455,6 +465,8 @@ class Teachers extends React.Component<Props, State> {
       editTeacherFirstName,
       editTeacherLastName
     } = this.state
+
+    this.setState({success: true})
 
     if (!editTeacherFirstName || editTeacherFirstName === ""){
       alert("First Name is required");
@@ -470,6 +482,7 @@ class Teachers extends React.Component<Props, State> {
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')
+        this.setState({success: false})
       }).finally(() => {
           this.setState({ // Hold off setting new state until success has been determined
             editTeacherId: "",
@@ -479,7 +492,7 @@ class Teachers extends React.Component<Props, State> {
             editCoachId: "",
             editSite: "",
             editProgram: "",
-            successModalOpen: true
+            successModalOpen: this.state.success ? true : false
           });
           // window.location.reload()
       });
@@ -495,6 +508,8 @@ class Teachers extends React.Component<Props, State> {
         addSiteName,
         addProgram
     } = this.state;
+
+    this.setState({success: true})
 
     if (!addTeacherFirstName || addTeacherFirstName === ""){
         alert("First Name is required");
@@ -542,6 +557,7 @@ class Teachers extends React.Component<Props, State> {
       }).catch(e => {
           console.log(e)
           alert('Unable to create user. Please try again')
+          this.setState({success: false})
       }).finally(() => {
           this.setState({ // Hold off setting new state until success has been determined
             addTeacherFirstName: '',
@@ -552,7 +568,7 @@ class Teachers extends React.Component<Props, State> {
             addCoachPrograms: [],
             addProgram: '',
             addSite: '',
-            successModalOpen: true
+            successModalOpen: this.state.success ? true : false
           });
           // window.location.reload()
       });
@@ -1042,7 +1058,7 @@ class Teachers extends React.Component<Props, State> {
               </>) : (<>
                 {this.state.teachersList.map((value, index) => {
                 return (
-                <tr 
+                <TableRow 
                 key={index} 
                 onClick={() => {this.handleEditClick(value)}}
                 >
@@ -1076,7 +1092,7 @@ class Teachers extends React.Component<Props, State> {
                       {value.selectedProgramName}
                     </Typography>
                   </td>
-                </tr>
+                </TableRow>
               )})}
               </>)}
             </tbody>
@@ -1127,6 +1143,7 @@ class Teachers extends React.Component<Props, State> {
                 <Grid container direction='row' justifyContent='center' spacing={3}>
                   <Grid item xs={6}>
                     <TextField
+                    size="small"
                     id="teacher-firstName"
                     label="First Name"
                     type="text"

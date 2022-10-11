@@ -23,6 +23,7 @@ background-color: white;
 
 const TableHeader = styled.th`
 &:hover {
+  background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
 }
 `
@@ -43,7 +44,9 @@ interface State {
   archiveCoachId: string
   archivedData: Array<Object>
   successModalOpen: boolean
-  type: string
+  archiveType: string
+  sortType: string
+  archivesList: Array<Object>
 }
 
 class Archives extends React.Component<Props, State> {
@@ -58,7 +61,9 @@ class Archives extends React.Component<Props, State> {
       archiveCoachId: "",
       archivedData: [],
       successModalOpen: false,
-      type: "",
+      archiveType: "",
+      sortType: "",
+      archivesList: []
     }
 
   }
@@ -85,7 +90,7 @@ class Archives extends React.Component<Props, State> {
         archiveTeacherCoach: "",
         archiveModalOpen: false,
         successModalOpen: true,
-        type: ""
+        archiveType: ""
 
       });
       // window.location.reload()
@@ -109,7 +114,7 @@ class Archives extends React.Component<Props, State> {
         archiveTeacherCoach: "",
         archiveModalOpen: false,
         successModalOpen: true,
-        type: ""
+        archiveType: ""
       });
       // window.location.reload()
       
@@ -133,7 +138,7 @@ class Archives extends React.Component<Props, State> {
         archiveTeacherId: "",
         archiveTeacherCoach: "",
         archiveCoachId: "",
-        type: ""
+        archiveType: ""
       })
   }
 
@@ -147,7 +152,7 @@ class Archives extends React.Component<Props, State> {
           archiveTeacherCoach: "",
           archiveCoachId: "",
           successModalOpen: false,
-          type: ""
+          archiveType: ""
       })
     window.location.reload()
   }
@@ -155,9 +160,9 @@ class Archives extends React.Component<Props, State> {
   handleTeacherArchiveClick = (item) => {
     this.archiveModalOpen();
     this.setState({
-      archiveTeacherId: item.teacherId,
-      archiveTeacherCoach: item.coachId,
-      type: "teacher"
+      archiveTeacherId: item.id,
+      archiveTeacherCoach: item.coach,
+      archiveType: "teacher"
     })
   }
 
@@ -165,8 +170,62 @@ class Archives extends React.Component<Props, State> {
     this.archiveModalOpen();
     this.setState({
       archiveCoachId: item.coachId,
-      type: "coach"
+      archiveType: "coach"
     })
+  }
+
+  sortTeachers = (sortType) => {
+    this.setState({sortType: sortType});
+    var archivesList = this.state.archivedData;
+
+    // Sort the teachers list
+    switch (sortType) {
+      case "lastName":
+        archivesList.sort((a,b) => (a.lastName > b.lastName) ? 1 : ((b.lastName > a.lastName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "lastNameReverse":
+        archivesList.sort((a,b) => (b.lastName > a.lastName) ? 1 : ((a.lastName > b.lastName) ? -1 : 0));
+        console.log("reverse last name");
+      case "firstName":
+        archivesList.sort((a,b) => (a.firstName > b.firstName) ? 1 : ((b.firstName > a.firstName) ? -1 : 0));
+        console.log("last name");
+        break;
+      case "firstNameReverse":
+        archivesList.sort((a,b) => (b.firstName > a.firstName) ? 1 : ((a.firstName > b.firstName) ? -1 : 0));
+        console.log("reverse last name");
+        break;
+      case "siteName":
+        archivesList.sort((a,b) => (a.site > b.site) ? 1 : ((b.site > a.site) ? -1 : 0));
+        console.log("site name");
+        break;
+      case "siteNameReverse":
+        archivesList.sort((a,b) => (b.site > a.site) ? 1 : ((a.site > b.site) ? -1 : 0));
+        console.log("reverse site name");
+        break;
+      case "program":
+        archivesList.sort((a,b) => (a.program > b.program) ? 1 : ((b.program > a.program) ? -1 : 0));
+        console.log("program name");
+        break;
+      case "programReverse":
+        archivesList.sort((a,b) => (b.program > a.program) ? 1 : ((a.program > b.program) ? -1 : 0));
+        console.log("reverse program name");
+        break;
+      case "role":
+        archivesList.sort((a,b) => (a.role > b.role) ? 1 : ((b.role > a.role) ? -1 : 0));
+        console.log("role");
+        break;
+      case "roleReverse":
+        archivesList.sort((a,b) => (b.role > a.role) ? 1 : ((a.role > b.role) ? -1 : 0));
+        console.log("reverse role");
+        break;
+
+      default:
+        break;
+    }
+
+    this.setState({archivesList: archivesList});
+
   }
   
   render() {
@@ -191,7 +250,7 @@ class Archives extends React.Component<Props, State> {
             </Button>
             <FirebaseContext.Consumer>
               {(firebase: Firebase) => (
-                <Button onClick={(_) => {this.state.type === "teacher" ? this.unarchiveTeacher(firebase) : this.unarchiveCoach(firebase)}}>
+                <Button onClick={(_) => {this.state.archiveType === "teacher" ? this.unarchiveTeacher(firebase) : this.unarchiveCoach(firebase)}}>
                     Yes, I am sure
                 </Button>
               )}
@@ -210,40 +269,140 @@ class Archives extends React.Component<Props, State> {
             // borderRadius: '0.5em', 
             marginTop: '130px' }}
         >
-          {this.props.teacherData.length > 0 ? (
+          {this.state.archivedData ? (
           <table style={{borderCollapse: 'collapse', width: '100%' }}>
             <thead style={{borderBottom:'2px solid #0988ec'}}>
               <tr>
-                <th>
+                <TableHeader
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "lastName")
+                      {
+                        this.sortTeachers("lastNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("lastName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     Last Name
                   </Typography>
-                </th>
-                <th>
+                </TableHeader>
+                <TableHeader
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "lastName")
+                      {
+                        this.sortTeachers("lastNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("lastName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     First Name
                   </Typography>
-                </th>
-                <th>
+                </TableHeader>
+                <TableHeader
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "role")
+                      {
+                        this.sortTeachers("roleReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("role")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     Role
                   </Typography>
-                </th>
-                <th>
+                </TableHeader>
+                <TableHeader
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "siteName")
+                      {
+                        this.sortTeachers("siteNameReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("siteName")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     Site
                   </Typography>
-                </th>
-                <th>
+                </TableHeader>
+                <TableHeader
+                  onClick={
+                    () =>{
+                      if(this.state.sortType == "program")
+                      {
+                        this.sortTeachers("programReverse")
+                      }
+                      else
+                      {
+                        this.sortTeachers("program")
+                      }
+                    }
+                  }
+                >
                   <Typography variant="h6" gutterBottom>
                     Program
                   </Typography>
-                </th>
+                </TableHeader>
               </tr>
             </thead>
             <tbody>
 
-            {this.props.teacherData.map((value, index) => {
+              {this.state.archivedData.map((value, index) => {
+                return (
+                  <TableRow 
+                key={index} 
+                onClick={() => {value.role === "teacher" ? this.handleTeacherArchiveClick(value) : this.handleCoachArchiveClick(value)}}
+                >
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.lastName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.firstName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.role[0].toUpperCase() + value.role.substring(1)}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.site}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6" gutterBottom>
+                      {value.program}
+                    </Typography>
+                  </td>
+                </TableRow>
+                )
+              })}
+
+            {/* {this.props.teacherData.map((value, index) => {
                 return (
                 <TableRow 
                 key={index} 
@@ -325,7 +484,7 @@ class Archives extends React.Component<Props, State> {
                     </Typography>
                   </td>
                 </TableRow>
-              )})}
+              )})} */}
               
             </tbody>
 

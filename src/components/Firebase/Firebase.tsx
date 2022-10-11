@@ -667,9 +667,9 @@ class Firebase {
   }
 
   getCoaches = async () => {
-    if (!await this.userIsAdmin()) {
-      throw new Error('User is not authorized for this action')
-    }
+    // if (!await this.userIsAdmin()) {
+    //   throw new Error('User is not authorized for this action')
+    // }
 
     let coaches = await this.db.collection('users')
       .where('role', "in", ['coach', 'admin'])
@@ -4299,10 +4299,12 @@ class Firebase {
   }
 
   transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
-    this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
-    .catch((error: Error) => {
-      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
-    })
+    if(originalCoach !== "") {
+      this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
+      .catch((error: Error) => {
+        console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+      })
+    }
     this.db.collection("users").doc(teacherId).update({school: siteName})
     .catch((error: Error) => {
       console.error("Error occurred when updating teacher school: ", error)
@@ -4350,10 +4352,12 @@ class Firebase {
   }
 
   archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string) => {
-    this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
-    .catch((error: Error) => {
-      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
-    })
+    if (coachId !== "") {
+      this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
+      .catch((error: Error) => {
+        console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+      })
+    }
     this.db.collection("users").doc(teacherId).update({archived: true})
     .catch((error: Error) => {
       console.error(
@@ -4388,11 +4392,13 @@ class Firebase {
         error
       )
     })
-    return this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).set({})
-    .then(() => teacherId)
-    .catch((error: Error) => {
-      console.error("Error occurred when adding teacher to coach's partner list: ", error)
-    })
+    if(coachId !== "") {
+      return this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).set({})
+      .then(() => teacherId)
+      .catch((error: Error) => {
+        console.error("Error occurred when adding teacher to coach's partner list: ", error)
+      })
+    }
   }
 
   getArchives = async () => {
