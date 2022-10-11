@@ -171,14 +171,54 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
-  buildCoachData = async () => {
+  buildCoachData = async (siteData, programData) => {
     const coachData = await this.context.getCoaches();
+
     let data = []
 
     for(let coachIndex in coachData) {
       let value = coachData[coachIndex];
       if (value.role === "coach") {
+
+
+
+        // Get all the site data for each site a coach is in
+        let coachesSites = [];
+
+        // Go through each of the coaches sites
+        for(var coachesSiteIndex in value.sites)
+        {
+          // Get the site's data
+          var tempSite = await siteData.find(o => o.id === value.sites[coachesSiteIndex]);
+
+          // Get the programs that have this site in it
+          var programsList = await programData.filter( x => x.sites.includes(value.sites[coachesSiteIndex]) );
+
+          // Go through each program
+          for(var programIndex in programsList)
+          {
+            var tempProgram = programsList[programIndex];
+            coachesSites.push({
+              siteName: tempSite.name,
+              siteId: tempSite.id,
+              programName: tempProgram.name,
+              programId: tempProgram.id
+            });
+          }
+        }
+
+        data.push({
+          firstName: value.firstName,
+          lastName: value.lastName,
+          id:  value.id,
+          siteList: coachesSites,
+          archived: value.archived ? value.archived : false
+        })
+
+        /////////////////////////////////////////////////////////
+        /*
         let sites = await this.context.fetchSitesForCoach(await value.id);
+
         let siteList: Array<Object> = []
 
         for(let siteIndex in sites) {
@@ -195,6 +235,7 @@ class UsersPage extends React.Component<Props, State> {
               })
             }
           }
+
         }
 
         data.push({
@@ -204,26 +245,43 @@ class UsersPage extends React.Component<Props, State> {
           siteList: siteList,
           archived: value.archived ? value.archived : false
         })
+        */
       }
     }
 
     // Sort coaches by last name
     data.sort((a, b) => a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase()))
 
-    console.log(data)
+    console.log("Coach Data :", data)
     return data;
   }
 
-  sitesAndPrograms = async () => {
-    this.setState({siteData: await this.context.getSites()})
-    this.setState({programData: await this.context.getPrograms()})
+  setSites = async () => {
+    var siteData = await this.context.getSites();
+    this.setState({siteData: siteData});
+    return siteData;
+  }
+
+  setPrograms = async () => {
+    var programData = await this.context.getPrograms();
+    this.setState({programData: programData});
+    return programData;
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
-    await this.sitesAndPrograms();
+    //await this.sitesAndPrograms();
+    var siteData = await this.setSites();
+    console.log("Site Data Done...");
+
+    var programData = await this.setPrograms();
+    console.log("Program Data Done...");
+
     var teacherData = await this.buildTeacherData();
-    var coachData = await this.buildCoachData();
+    console.log("Teacher Data Done...");
+
+    var coachData = await this.buildCoachData(siteData, programData);
+    console.log("Coach Data Done...");
 
     let archivedTeacherData = teacherData.filter((item) => {return item.archived === true})
     let archivedCoachData = coachData.filter((item) => {return item.archived === true})
@@ -234,14 +292,16 @@ class UsersPage extends React.Component<Props, State> {
     let filteredTeacherData = teacherData.filter((item) => {return item.archived === false})
     this.setState({teacherData: filteredTeacherData});
 
-    console.log("teacher data : ", teacherData);
-    console.log("coach data : ", coachData);
-    console.log("coach data 2 : ", typeof coachData);
 
     let filteredCoachData = coachData.filter((item) => {return item.archived === false})
     this.setState({coachData: filteredCoachData});
 
 
+  }
+
+  // So we can update teacher data in coaches
+  updateTeacherData = (teacherData) => {
+    this.setState({teacherData: teacherData});
   }
 
 
@@ -312,6 +372,7 @@ class UsersPage extends React.Component<Props, State> {
                         coachData = {this.state.coachData}
                         siteData = {this.state.siteData}
                         programData = {this.state.programData}
+                        updateTeacherData={(data) => this.updateTeacherData(data)}
                         />
                     } />
                     <Route path="/LeadersTeachers" render={(props) =>

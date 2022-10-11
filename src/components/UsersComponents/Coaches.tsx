@@ -148,7 +148,6 @@ class Coaches extends React.Component<Props, State> {
 
 
   handleEditClick = (value) => {
-    console.log(value)
     this.setState({
       editTeacherId: value.teacherId,
       editTeacherFirstName: value.teacherFirstName,
@@ -353,7 +352,6 @@ class Coaches extends React.Component<Props, State> {
     // Note: we're setting sites to
     await firebase.firebaseEmailSignUp({ email: newCoachEmail, password: randomString, firstName: newCoachFirstName, lastName: newCoachLastName }, 'coach', hasProgram, this.state.newCoachProgramId, hasSite, this.state.newCoachSiteIds)
         .then(async (data) => {
-          console.log("New user data ", data);
 
           // Add new user to the coach data that we got from props
           var newCoachSiteList = [];
@@ -505,17 +503,26 @@ class Coaches extends React.Component<Props, State> {
         teacherToRemoveData.forEach(element => {
           teachersToRemove.push(element.teacherId);
         });
-        //teachersToRemove = teachersToRemove.concat(teachersToRemove);
+        teachersToRemove = teachersToRemove.concat(teachersToRemove);
       }
 
       // Remove the teachers within those sites from the coach's collection
       // Remove any duplicates first
-      console.log("Teacher to Remove 1 :", teachersToRemove);
-
       teachersToRemove = [...new Set(teachersToRemove)];
-      //await firebase.removeTeacherFromCoach({coachId: coachId, bulkTeacherIds: teachersToRemove});
 
-      console.log("Teacher to Remove 2 :", teachersToRemove);
+      // Remove teachers from Firestore
+      await firebase.removeTeacherFromCoach({coachId: coachId, bulkTeacherIds: teachersToRemove});
+
+      // Remove teachers from coachesTeachers in state to update table
+      var coachesTeachers = this.state.coachesTeachers;
+      coachesTeachers = coachesTeachers.filter(o => !teachersToRemove.includes(o.teacherId) );
+      this.setState({coachesTeachers: coachesTeachers});
+
+      // Remove the teacher from the teacherData that we get from props
+      var teacherData = this.props.teacherData;
+      teacherData = await teacherData.filter(o => ( o.coachId === coachId && !teachersToRemove.includes(o.teacherId) ) ||  o.coachId !== coachId );
+      this.props.updateTeacherData(teacherData);
+
 
       // Gather info so we can update the coach list given to us in props
       var coaches = this.props.coachData;

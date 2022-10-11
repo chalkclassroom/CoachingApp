@@ -5554,7 +5554,7 @@ class Firebase {
         for (var idIndex in data.bulkTeacherIds) {
             var id = data.bulkTeacherIds[idIndex];
 
-            var ref = this.db.collection("users").doc(data.coachId).collection("partners").document(id);
+            var ref = this.db.collection("users").doc(data.coachId).collection("partners").doc(id);
             batch.delete(ref);
         }
 
