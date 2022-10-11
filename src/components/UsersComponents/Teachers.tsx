@@ -368,21 +368,21 @@ class Teachers extends React.Component<Props, State> {
     firebase
     const {
       editTeacherId,
-      editCoach,
+      editCoachId,
       editTeacherFirstName,
       editTeacherLastName,
       editSite,
       editProgram
     } = this.state
 
-    await firebase.archiveTeacher(editTeacherId, editCoach, editTeacherFirstName, editTeacherLastName, editSite, editProgram)
+    await firebase.archiveTeacher(editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram)
     .catch(e => {
       console.log(e)
       alert('Unable to archive teacher. Please try again')})
     .finally(() => {
       this.setState({ // Hold off setting new state until success has been determined
         editTeacherId: "",
-        editCoach: "",
+        editCoachId: "",
         editTeacherFirstName: "",
         editTeacherLastName: "",
         editSite: "",

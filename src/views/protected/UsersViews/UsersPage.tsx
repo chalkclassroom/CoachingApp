@@ -102,6 +102,8 @@ interface State {
   teacherData: Array<Object>
   siteData: Array<Object>
   programData: Array<Object>
+  archivedTeachers: Array<Object>
+  archivedCoaches: Array<Object>
   currentPage: string,
 }
 
@@ -127,7 +129,9 @@ class UsersPage extends React.Component<Props, State> {
       coachData: [],
       teacherData: [],
       siteData: [],
-      programData: []
+      programData: [],
+      archivedTeachers: [],
+      archivedCoaches: []
     }
   }
 
@@ -147,6 +151,7 @@ class UsersPage extends React.Component<Props, State> {
         selectedSiteId: "",
         selectedProgramName: "",
         selectedProgramId: "",
+        archived: doc.archived
       };
       for (let i = 0; i < this.state.siteData.length; i++) {
         if (this.state.siteData[i].name === doc.siteName) {
@@ -196,7 +201,8 @@ class UsersPage extends React.Component<Props, State> {
           firstName: value.firstName,
           lastName: value.lastName,
           id:  value.id,
-          siteList: siteList
+          siteList: siteList,
+          archived: value.archived ? value.archived : false
         })
       }
     }
@@ -216,17 +222,24 @@ class UsersPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
     await this.sitesAndPrograms();
-
     var teacherData = await this.buildTeacherData();
+    var coachData = await this.buildCoachData();
 
-    this.setState({teacherData: teacherData});
+    let archivedTeacherData = teacherData.filter((item) => {return item.archived === true})
+    let archivedCoachData = coachData.filter((item) => {return item.archived === true})
 
-    var coachData = await this.buildCoachData(teacherData);
+    this.setState({archivedTeachers: archivedTeacherData, archivedCoaches: archivedCoachData})
+
+
+    let filteredTeacherData = teacherData.filter((item) => {return item.archived === false})
+    this.setState({teacherData: filteredTeacherData});
+
     console.log("teacher data : ", teacherData);
     console.log("coach data : ", coachData);
     console.log("coach data 2 : ", typeof coachData);
 
-    this.setState({coachData: coachData});
+    let filteredCoachData = coachData.filter((item) => {return item.archived === false})
+    this.setState({coachData: filteredCoachData});
 
 
   }
@@ -317,6 +330,8 @@ class UsersPage extends React.Component<Props, State> {
                         changePage={(pageName: string) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
+                        teacherData = {this.state.archivedTeachers}
+                        coachData = {this.state.archivedCoaches}
                         />
                     } />
                   </Switch>
