@@ -1115,22 +1115,22 @@ class Teachers extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6" gutterBottom>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
+                <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
+                <Typography variant="h6" gutterBottom>
                   Program
                 </Typography>
               </Grid>
@@ -1154,6 +1154,7 @@ class Teachers extends React.Component<Props, State> {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                    size="small"
                     id="teacher-lastName"
                     label="Last Name"
                     type="text"
@@ -1262,26 +1263,26 @@ class Teachers extends React.Component<Props, State> {
             </Grid>
     </>) : (this.state.view === 3 ? (<>
       <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop: '60px'}}>
-          <Grid item xs={1} style={{marginTop: '30px'}}>
+          <Grid item xs={1} style={{marginTop: '45px'}}>
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6" gutterBottom >
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6" >
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                <Typography variant="h6" gutterBottom style={{marginTop: '5px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
+                <Typography variant="h6" >
                   Program
                 </Typography>
               </Grid>
@@ -1312,6 +1313,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
+                    size='small'
                     style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
@@ -1324,6 +1326,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
+                    size='small'
                     style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
@@ -1336,6 +1339,7 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <TextField
+                    size='small'
                     style={{width:'30vw', maxWidth: '470px'}}
                     id="teacher-Coach"
                     type="text"
@@ -1349,32 +1353,32 @@ class Teachers extends React.Component<Props, State> {
             </Grid>
             </Grid>
 
-            <Grid item xs={1} style={{marginTop: '45px'}}>
+            <Grid item xs={1} style={{marginTop: '70px'}}>
 
-            <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-              <Grid item>
-                <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'5px',}}/>
-              </Grid>
-              <Grid item>
-                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px',}}/>
-              </Grid>
-              <Grid item>
-                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'10px'}}/> 
-              </Grid>
-              <Grid item>
-                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'10px'}}/>
-              </Grid>
-            </Grid>
-            </Grid>
-
-            <Grid item xs={4} style={{marginTop: '40px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
                 <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined" style={{marginTop:'7px'}}>
-                  <StyledSelectTransfer
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px',}}/>
+              </Grid>
+              <Grid item>
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px'}}/> 
+              </Grid>
+              <Grid item>
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginBottom:'20px'}}/>
+              </Grid>
+            </Grid>
+            </Grid>
+
+            <Grid item xs={4} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+              <Grid item>
+                <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
+              </Grid>
+              <Grid item>
+                <FormControl variant="outlined" >
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.changeCoachId}
@@ -1390,12 +1394,12 @@ class Teachers extends React.Component<Props, State> {
                             </MenuItem>
                         )}
                         })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined" style={{marginTop:'13px'}}>
-                  <StyledSelectTransfer
+                <FormControl variant="outlined">
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.changeSiteId}
@@ -1409,12 +1413,12 @@ class Teachers extends React.Component<Props, State> {
                           </MenuItem>
                         )
                       })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 </FormControl>
               </Grid>
               <Grid item>
-                <FormControl variant="outlined" style={{marginTop:'13px'}}>
-                  <StyledSelectTransfer
+                <FormControl variant="outlined">
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.changeProgramId}
@@ -1430,7 +1434,7 @@ class Teachers extends React.Component<Props, State> {
                       )
                       })
                     }
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 </FormControl>
               </Grid>
             </Grid>
