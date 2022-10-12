@@ -273,6 +273,7 @@ class UsersPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
     //await this.sitesAndPrograms();
+    
     var siteData = await this.setSites();
     console.log("Site Data Done...");
 

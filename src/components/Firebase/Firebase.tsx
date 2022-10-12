@@ -4256,6 +4256,8 @@ class Firebase {
       this.query = this.db.collection('users').doc(coach.id).collection('partners');
       const subCollection = await this.query.get();
       await Promise.all(subCollection.docs.map(async (teacher) => {
+        let docSnapshot = await this.db.collection('users').doc(teacher.id).get()
+        if (docSnapshot.exists) {
         const teacherResult = await this.db.collection('users').doc(teacher.id).get();
         if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6" && teacherResult.data()) {
           seen.push(teacher.id)
@@ -4270,10 +4272,12 @@ class Firebase {
             archived: await teacherResult.data().archived ? await teacherResult.data().archived : false
           })
         }
-      }))
+      }}))
     }))
 
-    Promise.all(allTeachers.docs.map(teacher => {
+    Promise.all(allTeachers.docs.map(async teacher => {
+      // let docSnapshot = await this.db.collection('users').doc(teacher.id).get()
+      // if(docSnapshot.exists) {
       if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
         arr.push({
           coachId: "",
@@ -4286,6 +4290,7 @@ class Firebase {
           archived: teacher.data().archived ? teacher.data().archived : false
         })
       }
+    // }
     }))
     return arr
   }
@@ -4417,69 +4422,98 @@ class Firebase {
   /*
    * Get a all sites
    */
-  getSites = async (): Promise<void> => {
-    if(this.auth.currentUser) {
-      return this.db
-        .collection('sites')
-        .get()
-        .then((querySnapshot) => {
-          let sitesArray: Array<Types.Site> = []
-          querySnapshot.forEach((doc) => {
-
-              sitesArray.push({
-                name: doc.data().name,
-                id: doc.data().id,
-                siteLeaderId: doc.data().siteLeaderId,
-                coaches: doc.data().coaches
-              })
-
-          });
-
-          // Filter out cached items
-          return this.filterUserSiteProgramArray({dataList: sitesArray, dataType: "sites"}).then( (sites) => {
-            sitesArray = sites;
-
-            return sitesArray;
-          });
-        })
-        .catch((error: Error) =>
-          console.error('Error retrieving list of site', error)
-        )
+  getSites = async () => {
+    if (this.auth.currentUser) {
+      const collection = await this.db.collection('sites').get()
+      return Promise.all(collection.docs.map(async (doc) => {
+        let docSnapshot = await this.db.collection('sites').doc(doc.id).get()
+        if (docSnapshot.exists) {
+          return {
+            name: doc.data().name,
+            id: doc.data().id,
+            siteLeaderId: doc.data().siteLeaderId,
+            coaches: doc.data().coaches
+          }
+        }
+      }))
     }
+
+    // if(this.auth.currentUser) {
+    //   return this.db
+    //     .collection('sites')
+    //     .get()
+    //     .then((querySnapshot) => {
+    //       let sitesArray: Array<Types.Site> = []
+    //       querySnapshot.forEach((doc) => {
+
+    //           sitesArray.push({
+    //             name: doc.data().name,
+    //             id: doc.data().id,
+    //             siteLeaderId: doc.data().siteLeaderId,
+    //             coaches: doc.data().coaches
+    //           })
+
+    //       });
+
+    //       // Filter out cached items
+    //       return this.filterUserSiteProgramArray({dataList: sitesArray, dataType: "sites"}).then( (sites) => {
+    //         sitesArray = sites;
+
+    //         return sitesArray;
+    //       });
+    //     })
+    //     .catch((error: Error) =>
+    //       console.error('Error retrieving list of site', error)
+    //     )
+    // }
   }
 
   /*
    * Get all programs
    */
-  getPrograms = async (): Promise<void> => {
-    if(this.auth.currentUser) {
-      return this.db
-        .collection('programs')
-        .get()
-        .then((querySnapshot) => {
-          let programsArray: Array<Types.Site> = []
-          querySnapshot.forEach((doc) => {
-
-              programsArray.push({
-                name: doc.data().name,
-                id: doc.data().id,
-                sites: doc.data().sites,
-              })
-
-          });
-
-          // Filter out cached items
-          return this.filterUserSiteProgramArray({dataList: programsArray, dataType: "programs"}).then( (programs) => {
-            programsArray = programs;
-
-            return programsArray;
-          });
-
-        })
-        .catch((error: Error) =>
-          console.error('Error retrieving list of programs', error)
-        )
+  getPrograms = async () => {
+    if (this.auth.currentUser) {
+      const collection = await this.db.collection('programs').get()
+      return Promise.all(collection.docs.map(async (doc) => {
+        let docSnapshot = await this.db.collection('programs').doc(doc.id).get()
+        if (docSnapshot.exists) {
+          return {
+            name: doc.data().name,
+            id: doc.data().id,
+            sites: doc.data().sites,
+          }
+        }
+      }))
     }
+
+    // if(this.auth.currentUser) {
+    //   return this.db
+    //     .collection('programs')
+    //     .get()
+    //     .then((querySnapshot) => {
+    //       let programsArray: Array<Types.Site> = []
+    //       querySnapshot.forEach((doc) => {
+
+    //           programsArray.push({
+    //             name: doc.data().name,
+    //             id: doc.data().id,
+    //             sites: doc.data().sites,
+    //           })
+
+    //       });
+
+    //       // Filter out cached items
+    //       return this.filterUserSiteProgramArray({dataList: programsArray, dataType: "programs"}).then( (programs) => {
+    //         programsArray = programs;
+
+    //         return programsArray;
+    //       });
+
+    //     })
+    //     .catch((error: Error) =>
+    //       console.error('Error retrieving list of programs', error)
+    //     )
+    // }
   }
 
   /*
