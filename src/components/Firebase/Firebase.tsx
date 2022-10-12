@@ -668,10 +668,9 @@ class Firebase {
   }
 
   getCoaches = async () => {
-    //////
-    // if (!await this.userIsAdmin()) {
-    //   throw new Error('User is not authorized for this action')
-    // }
+    if (!await this.userIsAdmin()) {
+      throw new Error('User is not authorized for this action')
+    }
 
     let coaches = await this.db.collection('users')
       .where('role', "in", ['coach', 'admin'])
@@ -4243,14 +4242,61 @@ class Firebase {
     }))
   }
 
+  getAllCoachesPartners = async () => {
+    let result = []
+    this.query = this.db.collection('users').where('role', '==', 'coach');
+    const collection = await this.query.get();
+
+    await Promise.all(collection.docs.map(async coach => {
+      const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
+      let draft = {
+        id: coach.id,
+        firstName: coach.data().firstName,
+        lastName: coach.data().lastName,
+        archived: coach.data().archived ? coach.data().archived : false,
+        sites: coach.data().sites,
+        teachers: []
+      }
+      await Promise.all(subCollection.docs.map(async teachers => {
+        if (teachers.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+        draft['teachers'].push(teachers.id)
+        }
+      }))
+      result.push(draft)
+    }))
+    return result
+  }
+
+  getAllTeachers = async () => {
+    let result = []
+    this.query = this.db.collection('users').where('role', '==', 'teacher');
+    const allTeachers = await this.query.get()
+
+    await Promise.all(allTeachers.docs.map(async teacher => {
+      if (teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+        result.push({
+          site: teacher.data().school,
+          id: teacher.id,
+          firstName: teacher.data().firstName,
+          lastName: teacher.data().lastName,
+          archived: teacher.data().archived ? teacher.data().archived : false
+        })
+      }
+    }))
+    return result
+  }
+
   getTeacherData = async () => {
     let arr = []
     let seen = []
+
     this.query = this.db.collection('users').where('role', '==', 'coach');
     const collection = await this.query.get();
 
     this.query = this.db.collection('users').where('role', '==', 'teacher');
     const allTeachers = await this.query.get()
+
+
 
     await Promise.all(collection.docs.map(async (coach) => {
       this.query = this.db.collection('users').doc(coach.id).collection('partners');
@@ -4276,8 +4322,6 @@ class Firebase {
     }))
 
     Promise.all(allTeachers.docs.map(async teacher => {
-      // let docSnapshot = await this.db.collection('users').doc(teacher.id).get()
-      // if(docSnapshot.exists) {
       if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
         arr.push({
           coachId: "",
@@ -4290,7 +4334,6 @@ class Firebase {
           archived: teacher.data().archived ? teacher.data().archived : false
         })
       }
-    // }
     }))
     return arr
   }

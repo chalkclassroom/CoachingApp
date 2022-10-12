@@ -137,50 +137,100 @@ class UsersPage extends React.Component<Props, State> {
     }
   }
 
-  buildTeacherData = async (): Promise<Array<Object>> => {
-    let data: Array<Object> = []
-    let teachersAndCoaches = await this.context.getTeacherData();
+  buildTeacherData = async (sites, programs, teachers, coaches) => {
+    let result = []
+    let seen = []
 
-    await teachersAndCoaches.map((doc) => {
-      let draft = {
-        coachId: doc.coachId,
-        coachFirstName: doc.coachFirstName,
-        coachLastName: doc.coachLastName,
-        siteName: doc.siteName,
-        teacherId: doc.teacherId,
-        teacherFirstName: doc.teacherFirstName,
-        teacherLastName: doc.teacherLastName,
-        selectedSiteId: "",
-        selectedProgramName: "",
-        selectedProgramId: "",
-        archived: doc.archived
-      };
-      for (let i = 0; i < this.state.siteData.length; i++) {
-        if (this.state.siteData[i].name === doc.siteName) {
-          draft["selectedSiteId"] =  this.state.siteData[i].id;
-          i = this.state.siteData.length;
+    coaches.map(coach => {
+      for (let i = 0; i < coach.teachers.length; i++) {
+        let teacher = teachers.find(o => o.id === coach.teachers[i]);
+        let site = sites.find(o => o.name === teacher.site);
+        let program = programs.find(o => o.sites.includes(site.id))
+
+        let draft = {
+          coachId: coach.id,
+          coachFirstName: coach.firstName,
+          coachLastName: coach.lastName,
+          siteName: site.name,
+          teacherId: teacher.id,
+          teacherFirstName: teacher.firstName,
+          teacherLastName: teacher.lastName,
+          selectedSiteId: site.id,
+          selectedProgramName: program.name,
+          selectedProgramId: program.id,
+          archived: teacher.archived
         }
+        seen.push(teacher.id)
+        result.push(draft)
       }
-      for (let i = 0; i < this.state.programData.length; i++) {
-        if (this.state.programData[i].sites.includes(draft["selectedSiteId"])) {
-          draft["selectedProgramName"] = this.state.programData[i].name;
-          draft["selectedProgramId"] =  this.state.programData[i].id;
-          i = this.state.programData.length
-        }
-      }
-      data.push(draft)
     })
-    return data;
+
+    for (let i = 0; i < teachers.length; i++) {
+      if (!seen.includes(teachers[i].id)) {
+        let site = sites.find(o => o.name === teachers[i].site);
+        let program = programs.find(o => o.sites.includes(site.id))
+        let draft = {
+          coachId: "",
+          coachFirstName: "",
+          coachLastName: "",
+          siteName: site.name,
+          teacherId: teachers[i].id,
+          teacherFirstName: teachers[i].firstName,
+          teacherLastName: teachers[i].lastName,
+          selectedSiteId: site.id,
+          selectedProgramName: program.name,
+          selectedProgramId: program.id,
+          archived: teachers[i].archived
+        }
+        seen.push(teachers[i].id)
+        result.push(draft)
+      }
+    }
+
+    return result
+
+    // let data: Array<Object> = []
+    // let teachersAndCoaches = await this.context.getTeacherData();
+
+    // await teachersAndCoaches.map((doc) => {
+    //   let draft = {
+    //     coachId: doc.coachId,
+    //     coachFirstName: doc.coachFirstName,
+    //     coachLastName: doc.coachLastName,
+    //     siteName: doc.siteName,
+    //     teacherId: doc.teacherId,
+    //     teacherFirstName: doc.teacherFirstName,
+    //     teacherLastName: doc.teacherLastName,
+    //     selectedSiteId: "",
+    //     selectedProgramName: "",
+    //     selectedProgramId: "",
+    //     archived: doc.archived
+    //   };
+    //   for (let i = 0; i < this.state.siteData.length; i++) {
+    //     if (this.state.siteData[i].name === doc.siteName) {
+    //       draft["selectedSiteId"] =  this.state.siteData[i].id;
+    //       i = this.state.siteData.length;
+    //     }
+    //   }
+    //   for (let i = 0; i < this.state.programData.length; i++) {
+    //     if (this.state.programData[i].sites.includes(draft["selectedSiteId"])) {
+    //       draft["selectedProgramName"] = this.state.programData[i].name;
+    //       draft["selectedProgramId"] =  this.state.programData[i].id;
+    //       i = this.state.programData.length
+    //     }
+    //   }
+    //   data.push(draft)
+    // })
+    // return data;
   }
 
-  buildCoachData = async (siteData, programData) => {
-    const coachData = await this.context.getCoaches();
+  buildCoachData = async (siteData, programData, coachData) => {
+    // const coachData = await this.context.getCoaches();
 
     let data = []
 
     for(let coachIndex in coachData) {
       let value = coachData[coachIndex];
-      if (value.role === "coach") {
 
 
 
@@ -248,7 +298,6 @@ class UsersPage extends React.Component<Props, State> {
           archived: value.archived ? value.archived : false
         })
         */
-      }
     }
 
     // Sort coaches by last name
@@ -270,9 +319,25 @@ class UsersPage extends React.Component<Props, State> {
     return programData;
   }
 
+  getTeachers = async () => {
+    const teachers = await this.context.getAllTeachers();
+    return teachers;
+  }
+
+  getCoaches = async () => {
+    const coaches = await this.context.getAllCoachesPartners();
+    return coaches;
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
     //await this.sitesAndPrograms();
+
+    var teachers = await this.getTeachers();
+    console.log("Teachers fetched...")
+
+    var coaches = await this.getCoaches();
+    console.log("Coaches fetched...")
     
     var siteData = await this.setSites();
     console.log("Site Data Done...");
@@ -280,10 +345,10 @@ class UsersPage extends React.Component<Props, State> {
     var programData = await this.setPrograms();
     console.log("Program Data Done...");
 
-    var teacherData = await this.buildTeacherData();
+    var teacherData = await this.buildTeacherData(siteData, programData, teachers, coaches);
     console.log("Teacher Data Done...");
 
-    var coachData = await this.buildCoachData(siteData, programData);
+    var coachData = await this.buildCoachData(siteData, programData, coaches);
     console.log("Coach Data Done...");
 
     if (this.props.userRole === "programLeader") {
