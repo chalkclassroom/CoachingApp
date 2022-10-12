@@ -19,6 +19,7 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  TableSortLabel,
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import FirebaseContext from '../Firebase/FirebaseContext'
@@ -81,7 +82,7 @@ class Coaches extends React.Component<Props, State> {
       editSite: "",
       editProgram: "",
       view: 1,
-      saved: false,
+      saved: true,
       sortType: "lastName",
       newCoachFirstName: "",
       newCoachLastName: "",
@@ -99,6 +100,8 @@ class Coaches extends React.Component<Props, State> {
       successModalOpen: false,
 
       successEditTeacherModalOpen: false,
+
+      saveModalOpen: false,
     }
 
   }
@@ -125,6 +128,7 @@ class Coaches extends React.Component<Props, State> {
         break;
       case "lastNameReverse":
         teachersList.sort((a,b) => (b.teacherLastName > a.teacherLastName) ? 1 : ((a.teacherLastName > b.teacherLastName) ? -1 : 0));
+        break;
       case "firstName":
         teachersList.sort((a,b) => (a.teacherFirstName > b.teacherFirstName) ? 1 : ((b.teacherFirstName > a.teacherFirstName) ? -1 : 0));
         break;
@@ -621,6 +625,7 @@ class Coaches extends React.Component<Props, State> {
         transferCoachCurrentSiteIds: newSites,
         selectedCoach: coachId,
         successModalOpen: true,
+        saved: true,
 
       });
 
@@ -652,6 +657,13 @@ class Coaches extends React.Component<Props, State> {
 
 
   handlePageChange = (pageNumber: number) => {
+
+    if(!this.state.saved)
+    {
+        this.setState({saveModalOpen: true, pageToChangeTo: pageNumber})
+        return;
+    }
+
     this.setState({view: pageNumber});
 
     switch (pageNumber) {
@@ -668,6 +680,22 @@ class Coaches extends React.Component<Props, State> {
         this.props.changePage("TeachersEdit");
         break;
     }
+  }
+
+  /*
+   * When buttons on the unsaved changes modal are clicked
+   */
+  onSaveModalClose = () => {
+      this.setState({
+        saveModalOpen: false,
+      });
+  }
+
+  onSaveModalDiscard = () => {
+    this.setState({saved: true, saveModalOpen: false}, () => {
+      this.handlePageChange(this.state.pageToChangeTo);
+    });
+
   }
 
   render() {
@@ -698,6 +726,24 @@ class Coaches extends React.Component<Props, State> {
         </DialogActions>
       </Dialog>
 
+      {/*
+          popup - leaving page with unsaved changes
+      */}
+      <Dialog open={this.state.saveModalOpen}>
+          <DialogTitle style={{ fontFamily: 'Arimo' }}>
+              You have unsaved changes to your entry.
+              Would you like to discard the entry?
+          </DialogTitle>
+          <DialogActions>
+              <Button onClick={this.onSaveModalClose}>
+                  No, keep editing
+              </Button>
+              <Button onClick={this.onSaveModalDiscard}>
+                  Yes, discard changes
+              </Button>
+          </DialogActions>
+      </Dialog>
+
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -711,7 +757,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -728,7 +774,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px' }}
                               >
                                 Add
@@ -746,7 +792,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px',}}
                               >
                                 Back
@@ -763,7 +809,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px',}}
                               >
                                 Transfer
@@ -781,7 +827,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px' }}
                               >
                                 Archive
@@ -797,7 +843,7 @@ class Coaches extends React.Component<Props, State> {
                         <Grid item>
                             <Typography
                               variant="h6"
-                              gutterBottom
+
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -816,7 +862,7 @@ class Coaches extends React.Component<Props, State> {
               <Grid container direction='row'>
                 <Grid item xs={1}><span></span></Grid>
                 <Grid item xs={2}>
-                  <Typography variant="h6" gutterBottom style={{marginTop:'5px',}}>
+                  <Typography variant="h6"   style={{marginTop:'5px',}}>
                     Coach
                   </Typography>
                 </Grid>
@@ -863,19 +909,57 @@ class Coaches extends React.Component<Props, State> {
               <thead style={{borderBottom:'2px solid #0988ec'}}>
                 <tr>
                   <th colSpan={2}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6"  >
                       <strong>Teachers Coached</strong>
                     </Typography>
                   </th>
-                  <th colSpan={1}>
-                    <Typography variant="h6" gutterBottom>
-                      <strong>Site</strong>
-                    </Typography>
+                  <th
+                    colSpan={1}
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "siteName")
+                        {
+                          this.sortTeachers("siteNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("siteName")
+                        }
+                      }
+                    }
+                  >
+                  <TableSortLabel
+                    direction = {this.state.sortType === "siteName" ? 'desc' : 'asc'}
+                    active = {['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false}
+                    >
+                      <Typography variant="h6">
+                        <strong>Site</strong>
+                      </Typography>
+                  </TableSortLabel>
                   </th>
-                  <th colSpan={1}>
-                    <Typography variant="h6" gutterBottom>
-                      <strong>Program</strong>
-                    </Typography>
+                  <th
+                    colSpan={1}
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "program")
+                        {
+                          this.sortTeachers("programReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("program")
+                        }
+                      }
+                    }
+                  >
+                    <TableSortLabel
+                      direction = {this.state.sortType === "program" ? 'desc' : 'asc'}
+                      active = {['program', 'programReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        <strong>Program</strong>
+                      </Typography>
+                    </TableSortLabel>
                   </th>
                 </tr>
                 <tr>
@@ -893,9 +977,14 @@ class Coaches extends React.Component<Props, State> {
                       }
                     }
                   >
-                    <Typography variant="h6" gutterBottom>
-                      Last Name
-                    </Typography>
+                    <TableSortLabel
+                      direction = {this.state.sortType === "lastName" ? 'desc' : 'asc'}
+                      active = {['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        Last Name
+                      </Typography>
+                    </TableSortLabel>
                   </th>
                   <th
                     onClick={
@@ -911,9 +1000,14 @@ class Coaches extends React.Component<Props, State> {
                       }
                     }
                   >
-                    <Typography variant="h6" gutterBottom>
-                      First Name
-                    </Typography>
+                    <TableSortLabel
+                      direction = {this.state.sortType === "firstName" ? 'desc' : 'asc'}
+                      active = {['firstName', 'firstNameReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        First Name
+                      </Typography>
+                    </TableSortLabel>
                   </th>
                   <th></th>
                   <th></th>
@@ -925,22 +1019,22 @@ class Coaches extends React.Component<Props, State> {
                   return(
                   <tr key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
                     <td style={{textAlign:'center'}}>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6"  >
                         {value.teacherLastName}
                       </Typography>
                     </td>
                     <td style={{textAlign:'center'}}>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6"  >
                         {value.teacherFirstName}
                       </Typography>
                     </td>
                     <td style={{textAlign:'center'}}>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6"  >
                         {value.siteName}
                       </Typography>
                     </td>
                     <td style={{textAlign:'center'}}>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6"  >
                         {value.selectedProgramName}
                       </Typography>
                     </td>
@@ -970,22 +1064,22 @@ class Coaches extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Email
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'2px'}}>
+                <Typography variant="h6"   style={{marginTop:'2px'}}>
                   Program
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'3px'}}>
+                <Typography variant="h6"   style={{marginTop:'3px'}}>
                   Sites
                 </Typography>
               </Grid>
@@ -1125,12 +1219,12 @@ class Coaches extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Site
                 </Typography>
               </Grid>
@@ -1285,22 +1379,22 @@ class Coaches extends React.Component<Props, State> {
       <Grid item xs={1} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                <Typography variant="h6"   style={{marginTop:'20px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                <Typography variant="h6"   style={{marginTop:'20px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
+                <Typography variant="h6"   style={{marginTop:'15px'}}>
                   Program
                 </Typography>
               </Grid>
