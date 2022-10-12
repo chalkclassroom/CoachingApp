@@ -1103,32 +1103,32 @@ class Teachers extends React.Component<Props, State> {
                 onClick={() => {this.handleEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.coachFirstName}  
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>
                   </td>
