@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  TableSortLabel,
 } from '@material-ui/core'
 import React from 'react'
 import AddIcon from '@material-ui/icons/Add'
@@ -200,6 +201,7 @@ class Teachers extends React.Component<Props, State> {
       case "lastNameReverse":
         teachersList.sort((a,b) => (b.teacherLastName > a.teacherLastName) ? 1 : ((a.teacherLastName > b.teacherLastName) ? -1 : 0));
         console.log("reverse last name");
+        break;
       case "firstName":
         teachersList.sort((a,b) => (a.teacherFirstName > b.teacherFirstName) ? 1 : ((b.teacherFirstName > a.teacherFirstName) ? -1 : 0));
         console.log("last name");
@@ -936,16 +938,16 @@ class Teachers extends React.Component<Props, State> {
             <thead style={{borderBottom:'2px solid #0988ec'}}>
               <tr>
                 <th colSpan={2}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6">
                     <strong>Teacher</strong>
                   </Typography>
                 </th>
                 <th colSpan={2}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6">
                     <strong>Instructional Coach</strong>
                   </Typography>
                 </th>
-                <TableHeader colSpan={1}
+                <th colSpan={1}
                   onClick={
                     () =>{
                       if(this.state.sortType == "siteName")
@@ -959,11 +961,16 @@ class Teachers extends React.Component<Props, State> {
                     }
                   }
                 >
-                  <Typography variant="h6" gutterBottom>
-                    <strong>Site</strong>
-                  </Typography>
-                </TableHeader>
-                <TableHeader colSpan={1}
+                  <TableSortLabel
+                  direction = {this.state.sortType === "siteName" ? 'desc' : 'asc'}
+                  active = {['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false}
+                  >
+                    <Typography variant="h6">
+                      <strong>Site</strong>
+                    </Typography>
+                  </TableSortLabel>
+                </th>
+                <th colSpan={1}
                   onClick={
                     () =>{
                       if(this.state.sortType == "program")
@@ -977,13 +984,18 @@ class Teachers extends React.Component<Props, State> {
                     }
                   }
                 >
-                  <Typography variant="h6" gutterBottom>
+                  <TableSortLabel
+                  direction = {this.state.sortType === "program" ? 'desc' : 'asc'}
+                  active = {['program', 'programReverse'].includes(this.state.sortType) ? true : false}
+                  >
+                  <Typography variant="h6">
                     <strong>Program</strong>
                   </Typography>
-                </TableHeader>
+                  </TableSortLabel>
+                </th>
               </tr>
               <tr>
-                <TableHeader
+                <th
                   onClick={
                     () =>{
                       if(this.state.sortType == "lastName")
@@ -997,11 +1009,16 @@ class Teachers extends React.Component<Props, State> {
                     }
                   }
                 >
-                  <Typography variant="h6" gutterBottom>
+                  <TableSortLabel
+                  direction = {this.state.sortType === "lastName" ? 'desc' : 'asc'}
+                  active = {['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false}
+                  >
+                  <Typography variant="h6">
                     Last Name
                   </Typography>
-                </TableHeader>
-                <TableHeader
+                  </TableSortLabel>
+                </th>
+                <th
                   onClick={
                     () =>{
                       if(this.state.sortType == "firstName")
@@ -1015,17 +1032,22 @@ class Teachers extends React.Component<Props, State> {
                     }
                   }
                 >
-                  <Typography variant="h6" gutterBottom>
+                  <TableSortLabel
+                  direction = {this.state.sortType === "firstName" ? 'desc' : 'asc'}
+                  active = {['firstName', 'firstNameReverse'].includes(this.state.sortType) ? true : false}
+                  >
+                  <Typography variant="h6">
                     First Name
                   </Typography>
-                </TableHeader>
+                  </TableSortLabel>
+                </th>
                 <th>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6">
                     Last Name
                   </Typography>
                 </th>
                 <th>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6">
                     First Name
                   </Typography>
                 </th>
@@ -1042,32 +1064,32 @@ class Teachers extends React.Component<Props, State> {
                 onClick={() => {this.handleEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.coachFirstName}  
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>
                   </td>
