@@ -40,6 +40,8 @@ import {  } from '../ResultsComponents/ChartWrappers'
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
 import TabBarWrapper from '../LayoutComponents/TabBarWrapper'
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
+
 
 import AveragesData from './DataRetrieval/Averages';
 import TrendData from './DataRetrieval/Trends';
@@ -226,6 +228,7 @@ class SiteProfileResults extends React.Component {
     // Get all coaches that has this site in their document
     var siteCoachIds = [];
     var tempCoaches = await firebase.fetchSiteCoaches(this.props.selectedSiteId);
+    console.log("tempCoaches Done... ", tempCoaches);
 
     if(tempCoaches)
     {
@@ -278,9 +281,13 @@ class SiteProfileResults extends React.Component {
 
         // Get the the coaches teacher
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
+        console.log("teachersIdList done...", teachersIdList);
+
 
         // Get all information for all the teachers
         var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
+        console.log("teachersList done... ", teachersList);
+
 
         teacherResults = teacherResults.concat(teachersList);
 
@@ -315,6 +322,8 @@ class SiteProfileResults extends React.Component {
       .then( (data) => {
         this.setState({BQData: data});
         this.calculateResultsForCharts(data, teachers);
+        console.log("fetchSiteProfileAverages done...", data);
+
       });
 
   }
@@ -586,7 +595,8 @@ class SiteProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {this.state.tabState == 1 ? (
+                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {(this.state.tabState == 1 && Object.keys(this.state.averages).length > 0) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
@@ -594,7 +604,7 @@ class SiteProfileResults extends React.Component {
                       />
                     </Grid>
 
-                  ) : (this.state.tabState == 0 ? (
+                  ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0)? (
 
                     <Grid container justify={"center"} direction={"column"} style={{width: '85%', height: 450, flexWrap: 'nowrap', padding: "30px 0px", paddingRight: '50px', position: 'relative'}}>
                       <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
@@ -604,6 +614,7 @@ class SiteProfileResults extends React.Component {
                         labels={this.state.teacherNames}
                         data={this.state.averages}
                         type={this.state.radioValue}
+                        barColors={this.state.lineColors}
                       />
 
                     </Grid>

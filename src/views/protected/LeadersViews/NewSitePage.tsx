@@ -261,9 +261,12 @@ class NewSitePage extends React.Component<Props, State>{
                             >
                               {this.state.programsList.map(
                                 (site, index)=>{
-                                  return <MenuItem value={site.id}>
+                                  if(site)
+                                  {
+                                    return <MenuItem value={site.id}>
                                     {site.name}
-                                  </MenuItem>
+                                    </MenuItem>
+                                  }
                               })}
                             </Select>
                         </StyledFormControl>

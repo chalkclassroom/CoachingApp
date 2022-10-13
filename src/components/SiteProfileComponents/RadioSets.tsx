@@ -94,7 +94,7 @@ class RadioSets extends React.Component<Props, {}> {
 
                 <FormControlLabel
                   control={<Radio />}
-                  label="Nonspecific Approval"
+                  label="General Approval"
                   value="nonspecificapprovalAverage"
                 />
                 <FormControlLabel
