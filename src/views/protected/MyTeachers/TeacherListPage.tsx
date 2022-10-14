@@ -1236,7 +1236,7 @@ class TeacherListPage extends React.Component<Props, State> {
           <Modal open={newEventModal}>
             <div style={getModalStyle()} className={classes.paper}>
               <Grid container direction="column" style={{height: '100%', overflowY: 'auto'}}>
-                <Grid item style={{height: '20%'}}>
+                <Grid item style={{height: '15%'}}>
                   <Grid container direction="row" style={{height: '100%'}}>
                     <Grid item xs={1} />
                     <Grid item xs={10}>
@@ -1255,7 +1255,7 @@ class TeacherListPage extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item style={{height: '80%'}}>
+                <Grid item style={{height: '85%'}}>
                   <NewEventStepper
                     id={clickedEvent ? clickedEvent.id : undefined}
                     date={newEventDate}
