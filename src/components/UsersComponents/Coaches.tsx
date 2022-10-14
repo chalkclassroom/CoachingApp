@@ -554,9 +554,14 @@ class Coaches extends React.Component<Props, State> {
       var previousSites = this.state.transferCoachCurrentSiteIds;
       var newSites = this.state.transferCoachNewSiteIds;
 
+
       // Get sites that are in the old sites but not the new one
       var removedSites = previousSites.filter(function(obj) { return newSites.indexOf(obj) == -1; });
       const coachId = this.state.selectedTransferCoach;
+
+
+      // Set the sites in firestore
+      firebase.replaceSitesForUser({siteIds: newSites, userId: coachId});
 
       // Remove the sites from the user's document in firestore
       var teachersToRemove = [];
@@ -564,7 +569,7 @@ class Coaches extends React.Component<Props, State> {
       {
         var tempSiteId = removedSites[removedSiteIndex];
 
-        await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
+        //await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
 
         // Get teachers to remove from Coach's partner collection
         var teacherToRemoveData = this.props.teacherData.filter(x => x.selectedSiteId === tempSiteId);

@@ -55,63 +55,68 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     const { data, type } = this.props
 
     if (nextProps.data !== data || nextProps.type !== type) {
-
-      var teacherNames = [];
-      var graphData = [];
-      var barColors = this.state.barColors;
-      for(var teacherIndex in data)
-      {
-
-        // Create Names to display as labels
-        var teacher = data[teacherIndex];
-        teacherNames.push(teacher.name);
-
-
-        // Create bar graph data
-        var tempAvg = teacher[type];
-
-        // Round the number just in case there are trailing decimals (There were for some reason)
-        tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-        graphData.push(tempAvg);
-
-        // Set random bar colors
-        if(barColors.length < graphData.length)
-        {
-          barColors.push(this.randomRgbColor());
-        }
-      }
-
-      /*
-       * Set placement for the site average bar
-       */
-      var siteAverage = 0;
-      for(var i = 0; i < graphData.length; i++)
-      {
-        siteAverage += graphData[i];
-      }
-      siteAverage = (siteAverage / graphData.length) / 100;
-
-      const chartHeight = 342;
-      const chartTopPadding = 36;
-
-
-      var topPos = (chartTopPadding + chartHeight - (chartHeight * siteAverage));
-
-      var averageLineStyle = {
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'flex-start',
-          marginBottom: 8,
-          height: '20px',
-          width: '105%',
-          position: 'absolute',
-          left: '95px',
-          top: topPos + 'px',
-      };
-
-
-      this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors, averageLineWrapStyle: averageLineStyle });
+      this.setData();
     }
+  }
+
+  componentDidMount = () => {
+    this.setData();
+  }
+
+  setData = () => {
+    const { data, type } = this.props
+    console.log("what");
+
+    var teacherNames = [];
+    var graphData = [];
+    for(var teacherIndex in data)
+    {
+
+      // Create Names to display as labels
+      var teacher = data[teacherIndex];
+      teacherNames.push(teacher.name);
+
+
+      // Create bar graph data
+      var tempAvg = teacher[type];
+
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      graphData.push(tempAvg);
+
+    }
+
+    /*
+     * Set placement for the site average bar
+     */
+    var siteAverage = 0;
+    for(var i = 0; i < graphData.length; i++)
+    {
+      siteAverage += graphData[i];
+    }
+    siteAverage = (siteAverage / graphData.length) / 100;
+
+    const chartHeight = 342;
+    const chartTopPadding = 36;
+
+
+    var topPos = (chartTopPadding + chartHeight - (chartHeight * siteAverage));
+
+    var averageLineStyle = {
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'flex-start',
+        marginBottom: 8,
+        height: '20px',
+        width: '105%',
+        position: 'absolute',
+        left: '95px',
+        top: topPos + 'px',
+    };
+
+
+    this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: this.props.barColors, averageLineWrapStyle: averageLineStyle });
+
   }
 
 

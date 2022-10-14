@@ -4830,9 +4830,37 @@ class Firebase {
 
         var results = [];
 
+
+        // don't run if there aren't any ids or a path for the collection
+        if (!docIds || !docIds.length) return [];
+
+        //const collectionPath = db.collection(path);
+        const batches = [];
+
+        while (docIds.length) {
+          // firestore limits batches to 10
+          const batch = docIds.splice(0, 10);
+
+          // add the batch request to to a queue
+          batches.push(
+            programDoc
+              .where(
+                firebase.firestore.FieldPath.documentId(),
+                'in',
+                [...batch]
+              )
+              .get()
+              .then(results => results.docs.map(result => ({ /* id: result.id, */ ...result.data() }) ))
+          )
+        }
+
+        // after all of the data is fetched, return it
+        return Promise.all(batches)
+          .then(content => content.flat());
+
+        /*
         return programDoc.where("id", "in", docIds).get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            console.log("DOC " + doc.data());
 
             if (doc.exists)
             {
@@ -4850,7 +4878,7 @@ class Firebase {
         }).catch((e) => {
           console.error("There was an error retrieving the document.", e);
         });
-
+        */
 
 
       }
@@ -5132,6 +5160,45 @@ class Firebase {
          // Push programs array to the document
          var addIdToDoc = userDoc.set({
            sites: sitesArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
+
+   }
+
+
+   /*
+    * Completely replace all sites in a User's firestore document.
+    */
+   replaceSitesForUser = async (
+     data: {
+      siteIds: Array<string>,
+      userId: string,
+     }
+   ): Promise<void> => {
+     var userId = data.userId;
+     var siteIds = data.siteIds;
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           sites: siteIds
          }, {merge: true})
          .then(() => {
              console.log("Site successfully written to user!");
