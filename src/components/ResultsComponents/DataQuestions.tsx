@@ -241,7 +241,7 @@ class DataQuestions extends React.Component<Props, State> {
                                             </Grid>
                                         </Grid>
                                     ))}
-                                    {item.title === "FAQ" ? (<>
+                                    {item.title === "FAQ" || item.title === "Favorite Questions" ? (<>
                                     {this.state.addedQuestions[0] ? this.state.addedQuestions.map((value, index) => {
                                     return (
                                         <Grid

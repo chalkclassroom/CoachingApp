@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
 
         grid_wrapper_lg: {
             position: 'relative', 
-            height: '53vh', 
+            height: '45vh', 
             width: '85vw'
         },
     
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     
         line_wrapper: {
             position: 'relative', 
-            height: '53vh', 
+            height: '45vh', 
             width: '85vw'
         }
     }
