@@ -283,6 +283,12 @@ class SiteProfileResults extends React.Component {
         var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
         console.log("teachersIdList done...", teachersIdList);
 
+        // Remove practice teacher
+        var practiceTeacherIndex = teachersIdList.indexOf("rJxNhJmzjRZP7xg29Ko6");
+        if( practiceTeacherIndex > -1 )
+        {
+          teachersIdList.splice(practiceTeacherIndex, 1);
+        }
 
         // Get all information for all the teachers
         var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});

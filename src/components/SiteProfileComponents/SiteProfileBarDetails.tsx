@@ -16,7 +16,7 @@ const chartTitleArr = {
 const averageLine = {
     width: '80%',
     marginRight: '15px',
-    borderBottom: 'dashed 8px #45818E'
+    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
 }
 
 

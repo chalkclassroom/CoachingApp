@@ -117,11 +117,11 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       SUM(CASE WHEN type = 'classroom routines' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS routines,
                       SUM(CASE WHEN type = 'behavior management disruption' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS behaviorManagement,
                       SUM(CASE WHEN type = 'other' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS other,
-                  	  SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
+                  	  TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond) AS total,
                       teacher
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY startDate, teacher
+                      GROUP BY startDate, teacher, total
                       ORDER BY startDate ASC;`;
     }
 

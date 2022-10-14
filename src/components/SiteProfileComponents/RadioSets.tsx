@@ -215,7 +215,7 @@ class RadioSets extends React.Component<Props, {}> {
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Teacher Asks High-Level Question"
+                  label="Teacher Asks Low-Level Question"
                   value="llqAverage"
                 />
                 <FormControlLabel
