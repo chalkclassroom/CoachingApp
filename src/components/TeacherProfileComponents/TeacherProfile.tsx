@@ -75,6 +75,9 @@ class TeacherProfile extends React.Component {
 
   constructor(props){
       super(props);
+      const date = new Date();
+      date.setMonth(date.getMonth()-1)
+
       this.state = {
           selectedProgram: "",
           allPrograms: [],
@@ -89,7 +92,7 @@ class TeacherProfile extends React.Component {
           selectedTeacher: "",
           selectedTeacherName: "",
           view: 1,
-          startDate: new Date('02-02-2022'),
+          startDate: date,
           endDate: new Date(),
           radioValue: "",
           error: {

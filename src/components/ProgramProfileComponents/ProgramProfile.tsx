@@ -75,6 +75,8 @@ class ProgramProfile extends React.Component {
 
   constructor(props){
       super(props);
+      const date = new Date();
+      date.setMonth(date.getMonth()-1)
       this.state = {
           selectedProgram: "",
           allPrograms: [],
@@ -83,7 +85,7 @@ class ProgramProfile extends React.Component {
           error: false,
           selectedProgramName: "",
           view: 1,
-          startDate: new Date(),
+          startDate: date,
           endDate: new Date(),
           radioValue: "",
           error: {
