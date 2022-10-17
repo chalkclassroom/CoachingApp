@@ -143,8 +143,20 @@ class UsersPage extends React.Component<Props, State> {
 
     coaches.map(coach => {
       for (let i = 0; i < coach.teachers.length; i++) {
+        if(!coach.teachers[i])
+        {
+          continue;
+        }
         let teacher = teachers.find(o => o.id === coach.teachers[i]);
+        if(!teacher)
+        {
+          continue;
+        }
         let site = sites.find(o => o.name === teacher.site);
+        if(!site)
+        {
+          continue;
+        }
         let program = programs.find(o => o.sites.includes(site.id))
 
         let draft = {
@@ -168,6 +180,10 @@ class UsersPage extends React.Component<Props, State> {
     for (let i = 0; i < teachers.length; i++) {
       if (!seen.includes(teachers[i].id)) {
         let site = sites.find(o => o.name === teachers[i].site);
+        if(!site)
+        {
+          continue;
+        }
         let program = programs.find(o => o.sites.includes(site.id))
         let draft = {
           coachId: "",
@@ -337,8 +353,8 @@ class UsersPage extends React.Component<Props, State> {
     console.log("Teachers fetched...")
 
     var coaches = await this.getCoaches();
-    console.log("Coaches fetched...")
-    
+    console.log("Coaches fetched...", coaches)
+
     var siteData = await this.setSites();
     console.log("Site Data Done...");
 

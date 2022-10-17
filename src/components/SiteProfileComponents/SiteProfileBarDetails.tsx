@@ -65,7 +65,6 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
 
   setData = () => {
     const { data, type } = this.props
-    console.log("what");
 
     var teacherNames = [];
     var graphData = [];

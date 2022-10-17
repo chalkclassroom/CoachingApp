@@ -4248,21 +4248,25 @@ class Firebase {
     const collection = await this.query.get();
 
     await Promise.all(collection.docs.map(async coach => {
-      const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
-      let draft = {
-        id: coach.id,
-        firstName: coach.data().firstName,
-        lastName: coach.data().lastName,
-        archived: coach.data().archived ? coach.data().archived : false,
-        sites: coach.data().sites,
-        teachers: []
-      }
-      await Promise.all(subCollection.docs.map(async teachers => {
-        if (teachers.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
-        draft['teachers'].push(teachers.id)
+      let docSnapshot = await this.db.collection('users').doc(coach.id).get()
+      if(docSnapshot.exists)
+      {
+        const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
+        let draft = {
+          id: coach.id,
+          firstName: coach.data().firstName,
+          lastName: coach.data().lastName,
+          archived: coach.data().archived ? coach.data().archived : false,
+          sites: coach.data().sites,
+          teachers: []
         }
-      }))
-      result.push(draft)
+        await Promise.all(subCollection.docs.map(async teachers => {
+          if (teachers.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+          draft['teachers'].push(teachers.id)
+          }
+        }))
+        result.push(draft)
+      }
     }))
     return result
   }
@@ -4273,7 +4277,10 @@ class Firebase {
     const allTeachers = await this.query.get()
 
     await Promise.all(allTeachers.docs.map(async teacher => {
-      if (teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+      let docSnapshot = await this.db.collection('users').doc(teacher.id).get();
+      console.log("docSnapshot Data: ", docSnapshot.data());
+
+      if (teacher.id === "rJxNhJmzjRZP7xg29Ko6" && docSnapshot.exists) {} else {
         result.push({
           site: teacher.data().school,
           id: teacher.id,
@@ -4283,6 +4290,7 @@ class Firebase {
         })
       }
     }))
+
     return result
   }
 
@@ -4658,23 +4666,27 @@ class Firebase {
       .collection('users')
       .where('role', '==', 'programLeader')
       .get({ source: 'server' })
-      .then((querySnapshot) => {
-        const leadersArray: Array<Types.User> = []
-        querySnapshot.forEach((doc) => {
-          console.log(doc.data());
-          console.log(doc);
+      .then(async (querySnapshot) => {
+        let docSnapshot = await this.db.collection('users').doc(querySnapshot.data().id).get()
+        if(docSnapshot.exists)
+        {
+          const leadersArray = []
+          querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+            console.log(doc);
 
 
-            leadersArray.push({
-              firstName: doc.data().firstName,
-              lastName: doc.data().lastName,
-              id: doc.data().id,
-              role: doc.data().role,
-              programs: doc.data().programs,
-              sites: doc.data().sites
-            })
+              leadersArray.push({
+                firstName: doc.data().firstName,
+                lastName: doc.data().lastName,
+                id: doc.data().id,
+                role: doc.data().role,
+                programs: doc.data().programs,
+                sites: doc.data().sites
+              })
 
-        });
+          });
+        }
 
         return leadersArray;
       });
@@ -4898,7 +4910,10 @@ class Firebase {
       .get({ source: 'server' })
       .then((querySnapshot) => {
         const leadersArray: Array<Types.User> = []
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
+          let docSnapshot = await this.db.collection('users').doc(doc.data().id).get()
+          if(docSnapshot.exists)
+          {
             console.log(doc.data());
 
 
@@ -4910,7 +4925,7 @@ class Firebase {
               programs: doc.data().programs,
               sites: doc.data().sites
             })
-
+          }
         });
 
         return leadersArray;

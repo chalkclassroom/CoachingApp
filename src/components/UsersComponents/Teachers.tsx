@@ -166,7 +166,7 @@ class Teachers extends React.Component<Props, State> {
 
   handleSearch = (event) => {
     this.setState({searchInput: event.target.value})
-    let searched = this.props.teacherData.filter((item) => { 
+    let searched = this.props.teacherData.filter((item) => {
       return (item.teacherFirstName.toLowerCase().includes(event.target.value.toLowerCase())
       || item.teacherLastName.toLowerCase().includes(event.target.value.toLowerCase())
       || (item.teacherFirstName.toLowerCase() + ' ' + item.teacherLastName.toLowerCase()).includes(event.target.value.toLowerCase())
@@ -586,7 +586,7 @@ class Teachers extends React.Component<Props, State> {
           });
           // window.location.reload()
       });
-  } 
+  }
 
   handleEditClick = (value) => {
     console.log(value)
@@ -640,7 +640,7 @@ class Teachers extends React.Component<Props, State> {
       originalCoachId: selectedTeacher.coachId,
       transferProgramName: selectedTeacher.selectedProgramName,
       originalProgramId: selectedTeacher.selectedProgramId,
-      transferSiteName: selectedTeacher.siteName  
+      transferSiteName: selectedTeacher.siteName
     })
 
   }
@@ -783,7 +783,7 @@ class Teachers extends React.Component<Props, State> {
             </Button>
         </DialogActions>
     </Dialog>
-      <Grid container direction='row'>
+      <Grid container direction='row' style={{paddingBottom: '30px'}}>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
               {this.state.view !== 4 ? (<>
@@ -794,9 +794,9 @@ class Teachers extends React.Component<Props, State> {
                             <ArrowBackIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -811,9 +811,9 @@ class Teachers extends React.Component<Props, State> {
                             <AddIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Add
@@ -830,8 +830,8 @@ class Teachers extends React.Component<Props, State> {
                         </Grid>
                         <Grid item>
                             <Typography
-                              variant="h6" 
-                              gutterBottom 
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px',}}
                               >
                                 Back
@@ -847,8 +847,8 @@ class Teachers extends React.Component<Props, State> {
                         </Grid>
                         <Grid item>
                             <Typography
-                              variant="h6" 
-                              gutterBottom 
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px',}}
                               >
                                 Transfer
@@ -864,9 +864,9 @@ class Teachers extends React.Component<Props, State> {
                             <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Archive
@@ -880,9 +880,9 @@ class Teachers extends React.Component<Props, State> {
                             <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
-                            <Typography 
-                              variant="h6" 
-                              gutterBottom 
+                            <Typography
+                              variant="h6"
+                              gutterBottom
                               style={{marginTop:'20px' }}
                               >
                                 Back
@@ -922,15 +922,15 @@ class Teachers extends React.Component<Props, State> {
           </Grid>
       </Grid>
       </Grid>
-      <Grid container direction='row' justifyContent='center' alignItems='center'>
+      <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginBottom: '40px'}}>
         <Grid
           item
           xs={11}
-          style={{ 
-            width: '100%', 
-            // height: '38vh', 
-            // border: '2px solid #0988ec', 
-            // borderRadius: '0.5em', 
+          style={{
+            width: '100%',
+            // height: '38vh',
+            // border: '2px solid #0988ec',
+            // borderRadius: '0.5em',
             marginTop: '100px' }}
         >
           {this.props.teacherData.length > 0 ? (
@@ -1059,8 +1059,8 @@ class Teachers extends React.Component<Props, State> {
               {!this.state.searchInput && !this.state.sortType ? (<>
               {this.props.teacherData.map((value, index) => {
                 return (
-                <TableRow 
-                key={index} 
+                <TableRow
+                key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
@@ -1080,7 +1080,7 @@ class Teachers extends React.Component<Props, State> {
                   </td>
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6">
-                      {value.coachFirstName}  
+                      {value.coachFirstName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
@@ -1098,8 +1098,8 @@ class Teachers extends React.Component<Props, State> {
               </>) : (<>
                 {this.state.teachersList.map((value, index) => {
                 return (
-                <TableRow 
-                key={index} 
+                <TableRow
+                key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
@@ -1119,7 +1119,7 @@ class Teachers extends React.Component<Props, State> {
                   </td>
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6">
-                      {value.coachFirstName}  
+                      {value.coachFirstName}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>
@@ -1268,13 +1268,13 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-     
+
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
-                    <Button 
+                    <Button
                     onClick={(_)=>{this.addTeacher(firebase)}}
                     >
                       {this.state.saved ? (
@@ -1299,7 +1299,7 @@ class Teachers extends React.Component<Props, State> {
                     </Button>
                   )}
                 </FirebaseContext.Consumer>
-              </Grid>     
+              </Grid>
             </Grid>
     </>) : (this.state.view === 3 ? (<>
       <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop: '60px'}}>
@@ -1403,7 +1403,7 @@ class Teachers extends React.Component<Props, State> {
                 <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px',}}/>
               </Grid>
               <Grid item>
-                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px'}}/> 
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'0px'}}/>
               </Grid>
               <Grid item>
                 <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginBottom:'20px'}}/>
@@ -1485,7 +1485,7 @@ class Teachers extends React.Component<Props, State> {
               <Grid item xs={1}>
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
-                    <Button 
+                    <Button
                     onClick={(_)=>{this.transferTeacher(firebase)}}
                     >
                       {this.state.saved ? (
@@ -1510,7 +1510,7 @@ class Teachers extends React.Component<Props, State> {
                     </Button>
                   )}
                 </FirebaseContext.Consumer>
-              </Grid>     
+              </Grid>
             </Grid>
       </Grid>
     </>) : (this.state.view === 4 ? (<>
@@ -1609,13 +1609,13 @@ class Teachers extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-     
+
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
               <Grid item xs={1}>
                 <FirebaseContext.Consumer>
                   {(firebase: Firebase) => (
-                    <Button 
+                    <Button
                     onClick={(_)=>{this.editTeacher(firebase)}}
                     >
                       {this.state.saved ? (
@@ -1640,7 +1640,7 @@ class Teachers extends React.Component<Props, State> {
                     </Button>
                   )}
                 </FirebaseContext.Consumer>
-              </Grid>     
+              </Grid>
             </Grid>
     </>) : (null))))}
     </Grid>

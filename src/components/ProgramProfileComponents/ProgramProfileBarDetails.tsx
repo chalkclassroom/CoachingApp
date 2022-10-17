@@ -36,34 +36,43 @@ class ProgramProfileBarDetails extends React.Component<Props, {}> {
     const { data, type } = this.props
 
     if (nextProps.data !== data || nextProps.type !== type) {
-
-      var siteNames = [];
-      var graphData = [];
-      var barColors = this.state.barColors;
-      for(var siteId in data)
-      {
-
-        // Create Names to display as labels
-        var site = data[siteId];
-        siteNames.push(this.props.labels[siteId].name);
-
-
-        // Create bar graph data
-        var tempAvg = site[type];
-
-        // Round the number just in case there are trailing decimals (There were for some reason)
-        tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-        graphData.push(tempAvg);
-
-        // Set random bar colors
-        if(barColors.length < graphData.length)
-        {
-          barColors.push(this.randomRgbColor());
-        }
-      }
-
-      this.setState({siteNames: siteNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors });
+      this.setData();
     }
+  }
+
+  componentDidMount = () => {
+    this.setData();
+  }
+
+  setData = () => {
+    const { data, type } = this.props
+    var siteNames = [];
+    var graphData = [];
+    var barColors = this.state.barColors;
+    for(var siteId in data)
+    {
+
+      // Create Names to display as labels
+      var site = data[siteId];
+      siteNames.push(this.props.labels[siteId].name);
+
+
+      // Create bar graph data
+      var tempAvg = site[type];
+
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      graphData.push(tempAvg);
+
+      // Set random bar colors
+      if(barColors.length < graphData.length)
+      {
+        barColors.push(this.randomRgbColor());
+      }
+    }
+
+    this.setState({siteNames: siteNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: this.props.barColors });
+
   }
 
 

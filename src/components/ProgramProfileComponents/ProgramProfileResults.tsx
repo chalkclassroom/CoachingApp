@@ -40,6 +40,7 @@ import {  } from '../ResultsComponents/ChartWrappers'
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
 import TabBarWrapper from '../LayoutComponents/TabBarWrapper'
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 
 import AveragesData from './DataRetrieval/Averages';
 import TrendData from './DataRetrieval/Trends';
@@ -361,7 +362,8 @@ class ProgramProfileResults extends React.Component {
      for(var siteIndex in sites)
      {
        var site = sites[siteIndex];
-       var siteName = site.name
+       //var siteName = site.name
+       var siteName = this.state.siteNames[siteIndex].name;
 
        var chosenData = trends[siteIndex][type];
 
@@ -386,8 +388,6 @@ class ProgramProfileResults extends React.Component {
        tempDataSet.push(tempData);
        i++;
      }
-
-     this.setState({testtempDataSet: tempDataSet});
 
      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
      const lineData = {
@@ -526,7 +526,8 @@ class ProgramProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {this.state.tabState == 1 ? (
+                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {(this.state.tabState == 1 && Object.keys(this.state.averages).length > 0) == 1 ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
@@ -534,7 +535,7 @@ class ProgramProfileResults extends React.Component {
                       />
                     </Grid>
 
-                  ) : (this.state.tabState == 0 ? (
+                  ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0) ? (
 
                     <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
                       <GraphHeader graphTitle={chartTitleArr[this.state.radioValue]} />
@@ -544,6 +545,7 @@ class ProgramProfileResults extends React.Component {
                         labels={this.state.siteNames}
                         data={this.state.averages}
                         type={this.state.radioValue}
+                        barColors={this.state.lineColors}
                       />
                     </Grid>
                   ) : null)}
