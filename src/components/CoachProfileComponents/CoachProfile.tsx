@@ -209,7 +209,7 @@ class CoachProfile extends React.Component {
       // Snag documents from firestore for each coach
       firebase.getMultipleUserProgramOrSite({userIds: siteCoachIds}).then( (data) => {
 
-        console.log("DATA " + data);
+        console.log("DATA ", data);
 
         data.sort((a, b) => a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase()));
 
@@ -244,6 +244,9 @@ class CoachProfile extends React.Component {
 
        // Add the "All teachers" selection
        teacherOptions.unshift({id: "all", name: "All Teachers"});
+
+       // Remove Practice teacher
+       teacherOptions = teacherOptions.filter( o => o.id !== "rJxNhJmzjRZP7xg29Ko6" );
 
        this.setState({teacherOptions: teacherOptions});
      }

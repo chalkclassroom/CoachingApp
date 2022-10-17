@@ -111,38 +111,50 @@ class AveragesPieChart extends React.Component<Props, {}> {
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data || prevProps.type !== this.props.type ) {
 
-      // Get the values for the chart
-      var firstValue = Math.round(this.props.data[this.props.teacherId][this.props.type]);
-
-      // Need to check if we should be using total interval, total instruction, or total
-      var secondValue;
-
-
-
-      if(this.props.data[this.props.teacherId]["totalIntervals"])
-      {
-        secondValue = this.props.data[this.props.teacherId]["totalIntervals"] - firstValue;
-      }
-      else if(this.props.data[this.props.teacherId]["totalInstructions"])
-      {
-        secondValue = this.props.data[this.props.teacherId]["totalInstructions"] - firstValue;
-      }
-      else
-      {
-        secondValue = this.props.data[this.props.teacherId]["total"] - firstValue;
-      }
-
-
-      this.setState({dataValues: [firstValue, secondValue], labels: labelsArr[this.props.type]});
-
+      this.setData();
     }
   }
 
   componentDidMount(): void {
-
+    this.setData();
   }
 
 
+  setData = () => {
+
+    // Make sure the data is there
+    if( !(this.props.data) || Object.keys(this.props.data).length <= 0 || !(this.props.teacherId) || this.props.teacherId == "" || !(this.props.type) || this.props.type == "" )
+    {
+      return;
+    }
+
+
+    // Get the values for the chart
+    var firstValue = Math.round(this.props.data[this.props.teacherId][this.props.type]);
+
+    // Need to check if we should be using total interval, total instruction, or total
+    var secondValue;
+
+
+
+    if(this.props.data[this.props.teacherId]["totalIntervals"])
+    {
+      secondValue = this.props.data[this.props.teacherId]["totalIntervals"] - firstValue;
+    }
+    else if(this.props.data[this.props.teacherId]["totalInstructions"])
+    {
+      secondValue = this.props.data[this.props.teacherId]["totalInstructions"] - firstValue;
+    }
+    else
+    {
+      secondValue = this.props.data[this.props.teacherId]["total"] - firstValue;
+    }
+
+
+
+    this.setState({dataValues: [firstValue, secondValue], labels: labelsArr[this.props.type]});
+
+  }
 
 
   static propTypes = {

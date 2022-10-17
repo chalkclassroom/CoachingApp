@@ -35,7 +35,7 @@ import { jsPDF } from 'jspdf';
 import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import { Line } from 'react-chartjs-2'
 import DetailsTable from './DetailsTable';
-
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 
 
 
@@ -130,12 +130,8 @@ class CoachProfileResults extends React.Component {
     if(this.props.selectedTeacher === "all")
     {
       // Save the ID's of all the teachers
-      selectedTeacherIds = this.props.teacherOptions.map(teacher => teacher.id );
-      selectedTeachers = this.props.teacherOptions;
-
-      // Remove the 'all' selection
-      selectedTeacherIds.splice( selectedTeacherIds.indexOf("all"), 1);
-      selectedTeachers.splice( selectedTeachers.indexOf(selectedTeachers.find(x => x.id === "all") ), 1);
+      selectedTeacherIds = this.props.teacherOptions.map(teacher => { if(teacher.id !== "all"){return teacher.id} } );
+      selectedTeachers = this.props.teacherOptions.filter(teacher => teacher.id !== "all" );
     }
     else
     {
@@ -234,6 +230,7 @@ class CoachProfileResults extends React.Component {
                   Table
                 */}
                 <Grid container item xs={12} style={startColumn}>
+
                   <DetailsTable
                     selectedTeacher={this.props.selectedTeacher}
                     selectedCoach={this.props.selectedCoach}

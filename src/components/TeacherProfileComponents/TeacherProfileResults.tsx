@@ -42,6 +42,7 @@ import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
 import TabBarWrapper from '../LayoutComponents/TabBarWrapper'
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 
 import AveragesData from './DataRetrieval/Averages';
 import TrendData from './DataRetrieval/Trends';
@@ -233,7 +234,6 @@ class TeacherProfileResults extends React.Component {
 
     if(this.props.observationType == "bookReading")
     {
-      console.log("Book reading");
 
       firebase.fetchTeacherProfileReadingTrend(this.props.selectedTeacherId, 'Teacher', this.props.startDate, this.props.endDate)
       .then(trends => {
@@ -254,9 +254,6 @@ class TeacherProfileResults extends React.Component {
    */
   getResultsFromBQ = (teacherId) => {
     const firebase = this.context;
-
-    console.log("Teachers 2022 : ", teacherId);
-
 
     // Grab results data
     firebase.fetchTeacherProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherId: teacherId})
@@ -527,7 +524,9 @@ class TeacherProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {this.state.tabState == 1 && this.props.observationType !== "bookReading" ? (
+                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+
+                  {(this.state.tabState == 1 && this.props.observationType !== "bookReading" && Object.keys(this.state.averages).length > 0) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
@@ -535,13 +534,13 @@ class TeacherProfileResults extends React.Component {
                       />
                     </Grid>
 
-                  ) : this.state.tabState == 1 && this.props.observationType == "bookReading" ? (
+                  ) : (this.state.tabState == 1 && this.props.observationType && Object.keys(this.state.averages).length > 0) == "bookReading" ? (
 
                     <Grid container justify={"center"} direction={"column"} style={{flexWrap: 'nowrap', padding: "30px 0px"}}>
                       <ReadingTrendsTable data={this.state.teacherTrends} who={'Teacher'} widenTable={this.state.widenTable} />
                     </Grid>
 
-                  ) : (this.state.tabState == 0 ? (
+                  ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0) ? (
 
                     <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
                       <AveragesChart

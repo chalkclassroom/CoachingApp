@@ -1,4 +1,5 @@
 import * as React from "react";
+import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 
 const practicesArr = {
   "transition": "Transition Time",
@@ -104,7 +105,7 @@ class DetailsTable extends React.Component<Props, {}> {
       // Get all the action plans for this user
       var actionPlansForThisUser = actionPlans.filter(x => x.teacherId === item.id && x.status === "Maintenance");
       count[item.id].actionPlans = actionPlansForThisUser.length;
-      
+
       // Calculate average time
       if(count[item.id].total > 0 && count[item.id].totalTimeMilliseconds > 0)
       {
@@ -129,6 +130,12 @@ class DetailsTable extends React.Component<Props, {}> {
 
     teachers.forEach(teacher => {
       var tempRow;
+
+      // Skip practice teacher
+      if(teacher.id == "rJxNhJmzjRZP7xg29Ko6")
+      {
+          return;
+      }
 
       var tempObservationData = [];
       for (var observationIndex in observations) {
@@ -173,6 +180,7 @@ class DetailsTable extends React.Component<Props, {}> {
 
     return (
       <div style={{overflowX: 'auto', maxWidth: '80vw', paddingBottom: '20px'}}>
+        {this.state.teacherRows.length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : (
         <table style={tableStyle}>
           <thead>
             <tr>
@@ -192,6 +200,7 @@ class DetailsTable extends React.Component<Props, {}> {
           </tbody>
 
         </table>
+        )}
       </div>
     )
   }
