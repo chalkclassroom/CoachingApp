@@ -22,10 +22,11 @@ import {
   TableSortLabel,
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
-import FirebaseContext from '../Firebase/FirebaseContext'
+import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import styled from 'styled-components'
 import { Alert } from '@material-ui/lab'
 
 const StyledSelect = withStyles({
@@ -50,6 +51,14 @@ const StyledSelectTransfer = withStyles({
   }
 })(Select);
 
+const TableRow = styled.tr`
+background-color: white;
+&:hover {
+  background-color: rgb(9, 136, 236, .4);
+  cursor: pointer;
+}
+`
+
 interface Props {
   changePage(pageName: string): void
   userRole: string
@@ -64,6 +73,8 @@ interface State {
   selectedCoach: string
   view: number
   saved: boolean
+  archiveModalOpen: boolean
+  successOpen: boolean
 }
 
 class Coaches extends React.Component<Props, State> {
@@ -102,6 +113,8 @@ class Coaches extends React.Component<Props, State> {
       successEditTeacherModalOpen: false,
 
       saveModalOpen: false,
+      archiveModalOpen: false,
+      successOpen: false
     }
 
   }
@@ -163,8 +176,11 @@ class Coaches extends React.Component<Props, State> {
       editTeacherFirstName: value.teacherFirstName,
       editTeacherLastName: value.teacherLastName,
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
+      editCoachId: value.coachId,
       editSite: value.siteName,
+      editSiteId: value.selectedSiteId,
       editProgram: value.selectedProgramName,
+      editProgramId: value.selectedProgramId
     })
     this.handlePageChange(4)
   }
@@ -248,6 +264,23 @@ class Coaches extends React.Component<Props, State> {
            // window.location.reload()
        });
    }
+
+   archiveModalOpen =  (): Promise<boolean> => {
+    this.setState({archiveModalOpen: true})
+    return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+      this.setState({awaitingConfirmationRef: {resolve}})
+    })
+  }
+
+  archiveModalDiscard = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(true)
+    }
+      this.setState({
+        archiveModalOpen: false,
+        awaitingConfirmationRef: null,
+      })
+  }
 
 
   /*
@@ -703,6 +736,83 @@ class Coaches extends React.Component<Props, State> {
 
   }
 
+  async archiveTeacher(firebase:Firebase) {
+    firebase
+    const {
+      editTeacherId,
+      editCoachId,
+      editTeacherFirstName,
+      editTeacherLastName,
+      editSite,
+      editProgram,
+      editSiteId,
+      editProgramId
+    } = this.state
+    this.setState({success: true})
+
+    await firebase.archiveTeacher(editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, editProgramId)
+    .catch(e => {
+      console.log(e)
+      alert('Unable to archive teacher. Please try again')
+      this.setState({success: false})
+    })
+    .finally(() => {
+      this.setState({ // Hold off setting new state until success has been determined
+        editTeacherId: "",
+        editCoachId: "",
+        editTeacherFirstName: "",
+        editTeacherLastName: "",
+        editSite: "",
+        editProgram: "",
+        editSiteId: "",
+        editProgramId: "",
+        archiveModalOpen: false,
+        successOpen: this.state.success ? true : false
+      });
+      // window.location.reload()
+    });
+  }
+
+  successModalClose = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(false)
+    }
+      this.setState({
+          awaitingConfirmationRef: null,
+          addTeacherFirstName: "",
+          addTeacherLastName: "",
+          addCoach: "",
+          addCoachSites: [],
+          addSiteName: "",
+          addSite: "",
+          addCoachPrograms: [],
+          addProgram: "",
+          editTeacherId: "",
+          editTeacherFirstName: "",
+          editTeacherLastName: "",
+          editCoach: "",
+          editCoachId: "",
+          editSite: "",
+          editProgram: "",
+          editSiteId: "",
+          editProgramId: "",
+          transferTeacherId: "",
+          transferCoachSites: [],
+          transferCoachPrograms: [],
+          transferCoachName: "",
+          transferSiteName: "",
+          transferProgramName: "",
+          originalCoachId: "",
+          originalProgramId: "",
+          changeCoachId: "",
+          changeSiteName: "",
+          changeSiteId: "",
+          changeProgramId: "",
+          successOpen: false,
+      })
+    window.location.reload()
+  }
+
   render() {
     return (<>
       {this.state.createdPassword  &&
@@ -731,6 +841,35 @@ class Coaches extends React.Component<Props, State> {
         </DialogActions>
       </Dialog>
 
+      <Dialog open={this.state.successOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          The action was completed successfully.
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.successModalClose}>
+            Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+
+      <Dialog open={this.state.archiveModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          Are you sure you would like to move this user to archives?
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.archiveModalDiscard}>
+            No, go back
+        </Button>
+        <FirebaseContext.Consumer>
+          {(firebase: Firebase) => (
+            <Button onClick={(_) => {this.archiveTeacher(firebase)}}>
+                Yes, I am sure
+            </Button>
+          )}
+        </FirebaseContext.Consumer>
+      </DialogActions>
+    </Dialog>
+
       {/*
           popup - leaving page with unsaved changes
       */}
@@ -755,7 +894,7 @@ class Coaches extends React.Component<Props, State> {
         {this.state.view !== 4 ? (<>
               {this.state.view === 2 ? (<>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
                             <ArrowBackIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -772,7 +911,7 @@ class Coaches extends React.Component<Props, State> {
                 </Grid>
               </>) : (<>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(2)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(2)}>
                         <Grid item>
                             <AddIcon style={{fill: 'green', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -790,9 +929,9 @@ class Coaches extends React.Component<Props, State> {
                 </>)}
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
-                  <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                  <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
-                            <ArrowBackIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px',}}/>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
                         <Grid item>
                             <Typography
@@ -807,9 +946,9 @@ class Coaches extends React.Component<Props, State> {
                 </Grid>
                 </>) : (<>
                 <Grid item xs={6}>
-                <Grid container direction='row' onClick={() => this.handlePageChange(3)}>
+                <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(3)}>
                         <Grid item>
-                            <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px',}}/>
+                            <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
                         <Grid item>
                             <Typography
@@ -825,7 +964,7 @@ class Coaches extends React.Component<Props, State> {
                 </>)}
                 </>) : (<>
                   <Grid item xs={6}>
-                    <Grid container direction='row'>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
                         <Grid item>
                             <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
@@ -841,9 +980,9 @@ class Coaches extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 <Grid item xs={6}>
-                    <Grid container direction='row' onClick={() => this.handlePageChange(1)}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
                         <Grid item>
-                            <ArrowBackIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px'}}/>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px'}}/>
                         </Grid>
                         <Grid item>
                             <Typography
@@ -1022,7 +1161,7 @@ class Coaches extends React.Component<Props, State> {
                 {this.state.selectedCoach !== "" ? (<>
                 {this.state.coachesTeachers.map((value, index) => {
                   return(
-                  <tr key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
+                  <TableRow key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
                     <td style={{textAlign:'center'}}>
                       <Typography variant="h6"  >
                         {value.teacherLastName}
@@ -1043,7 +1182,7 @@ class Coaches extends React.Component<Props, State> {
                         {value.selectedProgramName}
                       </Typography>
                     </td>
-                  </tr>
+                  </TableRow>
                   )
                 })}
                 </>) : (<></>)}
@@ -1307,7 +1446,7 @@ class Coaches extends React.Component<Props, State> {
                 <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
               </Grid>
               <Grid item>
-                <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'4px',}}/>
+                <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
               </Grid>
             </Grid>
           </Grid>
