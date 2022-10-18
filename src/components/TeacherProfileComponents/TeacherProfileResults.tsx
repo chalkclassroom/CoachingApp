@@ -534,7 +534,7 @@ class TeacherProfileResults extends React.Component {
                       />
                     </Grid>
 
-                  ) : (this.state.tabState == 1 && this.props.observationType && Object.keys(this.state.averages).length > 0) == "bookReading" ? (
+                  ) : (this.state.tabState == 1 && Object.keys(this.state.averages).length > 0 && this.props.observationType == "bookReading") ? (
 
                     <Grid container justify={"center"} direction={"column"} style={{flexWrap: 'nowrap', padding: "30px 0px"}}>
                       <ReadingTrendsTable data={this.state.teacherTrends} who={'Teacher'} widenTable={this.state.widenTable} />
