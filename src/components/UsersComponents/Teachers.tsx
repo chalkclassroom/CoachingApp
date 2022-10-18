@@ -582,7 +582,7 @@ class Teachers extends React.Component<Props, State> {
             addCoachPrograms: [],
             addProgram: '',
             addSite: '',
-            // successModalOpen: this.state.success ? true : false
+            successModalOpen: this.state.success ? true : false
           });
           // window.location.reload()
       });
