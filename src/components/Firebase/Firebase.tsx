@@ -4437,7 +4437,7 @@ class Firebase {
     return arr
   }
 
-  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string) => {
+  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string, archives?: boolean) => {
     this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast})
     .catch((error: Error) => {
       console.error(
@@ -4445,6 +4445,16 @@ class Firebase {
         error
       )
     })
+
+    if (archives) {
+      this.db.collection("archives").doc(teacherId).update({firstName: changeFirst, lastName: changeLast})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing teacher archive: ",
+          error
+        )
+      })
+    }
   }
 
   transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
