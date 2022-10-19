@@ -401,10 +401,10 @@ class UsersPage extends React.Component<Props, State> {
       this.setState({propFilter: sites})
     }
 
-    // let archivedTeacherData = teacherData.filter((item) => {return item.archived === true})
-    // let archivedCoachData = coachData.filter((item) => {return item.archived === true})
+    let archivedTeacherData = teacherData;
+    let archivedCoachData = coachData;
 
-    // this.setState({archivedTeachers: archivedTeacherData, archivedCoaches: archivedCoachData})
+    this.setState({archivedTeachers: archivedTeacherData, archivedCoaches: archivedCoachData})
 
 
     let filteredTeacherData = teacherData.filter((item) => {return item.archived === false})
@@ -512,6 +512,7 @@ class UsersPage extends React.Component<Props, State> {
                         teacherData = {this.state.archivedTeachers}
                         coachData = {this.state.archivedCoaches}
                         filter  = {this.state.propFilter}
+                        updateTeacherData={(data) => this.updateTeacherData(data)}
                         />
                     } />
                   </Switch>

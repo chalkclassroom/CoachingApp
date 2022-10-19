@@ -820,6 +820,7 @@ class Coaches extends React.Component<Props, State> {
           changeSiteId: "",
           changeProgramId: "",
           successOpen: false,
+          successModalOpen: false,
       })
       this.handlePageChange(1)
   }

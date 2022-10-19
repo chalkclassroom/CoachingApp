@@ -36,6 +36,7 @@ interface Props {
   teacherData: Array<Object>
   coachData: Array<Object>
   filter?: Array<string>
+  updateTeacherData(data): void 
 }
 
 interface State {
@@ -48,7 +49,6 @@ interface State {
   successModalOpen: boolean
   archiveType: string
   sortType: string
-  archivesList: Array<Object>
 }
 
 class Archives extends React.Component<Props, State> {
@@ -65,7 +65,6 @@ class Archives extends React.Component<Props, State> {
       successModalOpen: false,
       archiveType: "",
       sortType: "",
-      archivesList: []
     }
 
   }
@@ -97,7 +96,22 @@ class Archives extends React.Component<Props, State> {
       console.log(e)
       alert('Unable to unarchive teacher. Please try again')})
     .finally(() => {
+
+      let update = this.props.teacherData;
+      let teacherData = update.find(o => o.teacherId === archiveTeacherId);
+      let teacherIndex = update.indexOf(teacherData);
+      update[teacherIndex].archived = false;
+      update = update.filter((item) => {return item.archived === false})
+      this.props.updateTeacherData(update);
+
+      update =  this.state.archivedData;
+      teacherData = update.find(o => o.id === archiveTeacherId);
+      teacherIndex = update.indexOf(teacherData);
+      update.splice(teacherIndex, 1);
+
+
       this.setState({ // Hold off setting new state until success has been determined
+        archivedData: update,
         archiveTeacherId: "",
         archiveTeacherCoach: "",
         archiveModalOpen: false,
@@ -166,7 +180,7 @@ class Archives extends React.Component<Props, State> {
           successModalOpen: false,
           archiveType: ""
       })
-    window.location.reload()
+    // window.location.reload()
   }
 
   handleTeacherArchiveClick = (item) => {
@@ -237,7 +251,7 @@ class Archives extends React.Component<Props, State> {
         break;
     }
 
-    this.setState({archivesList: archivesList});
+    this.setState({archivedData: archivesList});
 
   }
   
