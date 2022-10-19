@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   Grid,
   Typography,
   withStyles,
@@ -23,7 +22,6 @@ import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import styled from 'styled-components'
-import { isThisQuarter } from 'date-fns';
 
 const StyledSelect = withStyles({
   root: {
@@ -49,13 +47,6 @@ const StyledSelectTransfer = withStyles({
 
 const TableRow = styled.tr`
 background-color: white;
-&:hover {
-  background-color: rgb(9, 136, 236, .4);
-  cursor: pointer;
-}
-`
-
-const TableHeader = styled.th`
 &:hover {
   background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
@@ -101,7 +92,6 @@ interface State {
   transferSiteName: string
   transferProgramName: string
   originalCoachId: string
-  // originalSiteId: string
   originalProgramId: string
   changeCoachId: string
   changeSiteName: string
@@ -113,6 +103,7 @@ interface State {
   successModalOpen: boolean
   archiveModalOpen: boolean
   success: boolean
+  archiveList: Array<Object>
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -120,7 +111,7 @@ class Teachers extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      teachersList: this.props.teacherData,
+      teachersList: [],
       sortType: "",
       view: 1,
       saved: true,
@@ -148,7 +139,6 @@ class Teachers extends React.Component<Props, State> {
       transferSiteName: "",
       transferProgramName: "",
       originalCoachId: "",
-      // originalSiteId: "",
       originalProgramId: "",
       changeCoachId: "",
       changeSiteName: "",
@@ -159,12 +149,20 @@ class Teachers extends React.Component<Props, State> {
       searchInput: "",
       successModalOpen: false,
       archiveModalOpen: false,
-      success: true
+      success: true,
+      archiveList: []
     }
 
   }
 
-  handleSearch = (event) => {
+  componentDidUpdate = () => {
+    if (this.state.teachersList !== this.props.teacherData) {
+      this.setState({teachersList: this.props.teacherData})
+    }
+  }
+
+
+  handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({searchInput: event.target.value})
     let searched = this.props.teacherData.filter((item) => {
       return (item.teacherFirstName.toLowerCase().includes(event.target.value.toLowerCase())
@@ -177,8 +175,6 @@ class Teachers extends React.Component<Props, State> {
       || item.selectedProgramName.toLowerCase().includes(event.target.value.toLowerCase())
       )
     })
-
-    console.log(searched)
     this.setState({teachersList: searched})
 
   }
@@ -361,7 +357,6 @@ class Teachers extends React.Component<Props, State> {
         transferSiteName: "",
         transferProgramName: "",
         originalCoachId: "",
-        // originalSiteId: "",
         originalProgramId: "",
         changeCoachId: "",
         changeSiteName: "",
@@ -401,7 +396,16 @@ class Teachers extends React.Component<Props, State> {
       this.setState({success: false})
     })
     .finally(() => {
+
+      let update = this.state.teachersList;
+      let teacherData = update.find(o => o.teacherId === editTeacherId);
+      let teacherIndex = update.indexOf(teacherData);
+      update[teacherIndex].archived = true;
+      update.splice(teacherIndex, 1);
+
       this.setState({ // Hold off setting new state until success has been determined
+        teacherList: update,
+        archiveList: [...this.state.archiveList, teacherData],
         editTeacherId: "",
         editCoachId: "",
         editTeacherFirstName: "",
@@ -413,7 +417,8 @@ class Teachers extends React.Component<Props, State> {
         archiveModalOpen: false,
         successModalOpen: this.state.success ? true : false
       });
-      // window.location.reload()
+
+      console.log(this.state.archiveList)
     });
   }
 
@@ -450,6 +455,22 @@ class Teachers extends React.Component<Props, State> {
       alert('Unable to transfer teacher. Please try again')
       this.setState({success: false})
     }).finally(() => {
+
+        let update =  this.state.teachersList;
+        let coachData = this.props.coachData.find(o => o.id === changeCoachId);
+        let siteData = this.props.siteData.find(o => o.name === changeSiteName);
+        let programData = this.props.programData.find(o => o.id === changeProgramId);
+        let teacherData = this.props.teacherData.find(o => o.teacherId ===  transferTeacherId);
+        let teacherIndex = update.indexOf(teacherData)
+
+        update[teacherIndex].coachId = coachData.id;
+        update[teacherIndex].coachFirstName = coachData.firstName;
+        update[teacherIndex].coachLastName = coachData.lastName;
+        update[teacherIndex].siteName = siteData.name;
+        update[teacherIndex].selectedSiteId = siteData.id;
+        update[teacherIndex].selectedProgramName = programData.name;
+        update[teacherIndex].selectedProgramId = programData.id;
+
         this.setState({ // Hold off setting new state until success has been determined
           transferTeacherId: "",
           transferCoachSites: [],
@@ -464,9 +485,9 @@ class Teachers extends React.Component<Props, State> {
           changeSiteName: "",
           changeSiteId: "",
           changeProgramId: "",
-          successModalOpen: this.state.success ? true : false
+          successModalOpen: this.state.success ? true : false,
+          saved: true
         });
-        // window.location.reload()
     });
   }
 
@@ -496,7 +517,13 @@ class Teachers extends React.Component<Props, State> {
         alert('Unable to edit teacher. Please try again')
         this.setState({success: false})
       }).finally(() => {
+          let update = this.state.teachersList;
+          let teacherData = update.find(o => o.teacherId === editTeacherId);
+          let teacherDataIndex = update.indexOf(teacherData);
+          update[teacherDataIndex].teacherFirstName = editTeacherFirstName;
+          update[teacherDataIndex].teacherLastName = editTeacherLastName;
           this.setState({ // Hold off setting new state until success has been determined
+            teachersList: update.find,
             editTeacherId: "",
             editTeacherFirstName: "",
             editTeacherLastName: "",
@@ -506,9 +533,9 @@ class Teachers extends React.Component<Props, State> {
             editProgram: "",
             editSiteId: "",
             editProgramId: "",
-            successModalOpen: this.state.success ? true : false
+            successModalOpen: this.state.success ? true : false,
+            saved: true
           });
-          // window.location.reload()
       });
   }
 
@@ -572,8 +599,28 @@ class Teachers extends React.Component<Props, State> {
           console.log(e)
           alert('Unable to create user. Please try again')
           this.setState({success: false})
-      }).finally(() => {
+      }).finally(async () => {
+
+          let update = this.state.teachersList
+          let coachData = this.props.coachData.find(o => o.id === addCoach)
+          let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
+          let programData = this.props.programData.find(o => o.id  === addProgram)
+
+          update.push({
+            coachId: coachData.id,
+            coachFirstName: coachData.firstName,
+            coachLastName: coachData.lastName,
+            siteName: siteData.name,
+            teacherId: await this.context.getTeacherId(addTeacherFirstName, addTeacherLastName, ''),
+            teacherFirstName: addTeacherFirstName,
+            teacherLastName: addTeacherLastName,
+            selectedSiteId: siteData.id,
+            selectedProgramName: programData.name,
+            selectedProgramId: programData.id,
+            archived: false
+          })
           this.setState({ // Hold off setting new state until success has been determined
+            teachersList: update,
             addTeacherFirstName: '',
             addTeacherLastName: '',
             addCoachSites: [],
@@ -582,9 +629,9 @@ class Teachers extends React.Component<Props, State> {
             addCoachPrograms: [],
             addProgram: '',
             addSite: '',
-            successModalOpen: this.state.success ? true : false
+            successModalOpen: this.state.success ? true : false,
+            saved: true
           });
-          // window.location.reload()
       });
   }
 
@@ -725,8 +772,10 @@ class Teachers extends React.Component<Props, State> {
           changeSiteId: "",
           changeProgramId: "",
           successModalOpen: false,
+          saved: true
       })
-    window.location.reload()
+    // window.location.reload()
+    this.handlePageChange(1)
   }
 
   render() {

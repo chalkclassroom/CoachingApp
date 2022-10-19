@@ -501,7 +501,9 @@ class Coaches extends React.Component<Props, State> {
             newCoachLastName: '',
             newCoachEmail: '',
             newCoachProgramId: '',
-            newCoachSiteIds: []
+            newCoachSiteIds: [],
+            saved: true,
+            successOpen: true
             });
         });
 
@@ -757,7 +759,16 @@ class Coaches extends React.Component<Props, State> {
       this.setState({success: false})
     })
     .finally(() => {
+      
+      let update = this.props.teacherData;
+      let teacherData = update.find(o => o.teacherId === editTeacherId);
+      let teacherIndex = update.indexOf(teacherData);
+      update[teacherIndex].archived = true;
+      update.splice(teacherIndex, 1);
+      this.props.updateTeacherData(update);
+
       this.setState({ // Hold off setting new state until success has been determined
+        selectedCoach: "",
         editTeacherId: "",
         editCoachId: "",
         editTeacherFirstName: "",
@@ -810,7 +821,7 @@ class Coaches extends React.Component<Props, State> {
           changeProgramId: "",
           successOpen: false,
       })
-    window.location.reload()
+      this.handlePageChange(1)
   }
 
   render() {

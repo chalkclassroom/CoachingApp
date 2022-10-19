@@ -391,6 +391,13 @@ class Firebase {
     }
   }
 
+  getTeacherId = async (firstName: string, lastName: string, email: string) => {
+    this.query = this.db.collection('users').where("firstName", "==", firstName).where("lastName", "==", lastName).where("email", "==", email );
+    let document = await this.query.get();
+
+    return document.docs[0].id;
+  }
+
   getTeacherListFromUser = async (
     data: {
       userId: string,
