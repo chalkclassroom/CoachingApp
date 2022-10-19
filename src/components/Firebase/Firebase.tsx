@@ -631,6 +631,90 @@ class Firebase {
       })
   }
 
+
+  addTeacherIdToCoach = async (data: {
+    teacherId: string,
+    coachId: string,
+  }) => {
+
+    var coachId = !(data.coachId) ?  this.auth.currentUser.uid : data.coachId;
+
+    return this.db
+      .collection('users')
+      .doc(coachId)
+      .collection('partners')
+      .doc(data.teacherId)
+      .set({})
+      .then(() => id)
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when adding teacher to coach's partner list: ",
+          error
+        )
+        // return "";
+      })
+  }
+
+
+  /*
+   * Get's a teacher by the email
+   */
+  getTeacherByEmail = async (
+    data: {
+      email: string,
+    }
+  ) => {
+    var email = data.email;
+
+    var snapshot = await this.db.collection('users').where('email', '==', email).get().catch((e) => {console.log("Error getting user ", e);});
+
+    if(!snapshot.empty) {
+      var results;
+      snapshot.forEach(doc => {
+        results = doc.data();
+      });
+
+      return results;
+    }
+    else
+    {
+      console.log("A user with the email " + email + " does not exist.");
+    }
+  }
+
+
+
+  /*
+   * Get's a teacher by the full name
+   */
+  getTeacherByFullName = async (
+    data: {
+      firstName: string,
+      lastName: string,
+    }
+  ) => {
+    var firstName = data.firstName;
+    var lastName = data.lastName;
+
+    var snapshot = await this.db.collection('users').where('firstName', '==', firstName).where('lastName', '==', lastName).get().catch((e) => {console.log("Error getting user ", e);
+    });
+
+    if(!snapshot.empty) {
+      var results;
+      snapshot.forEach(doc => {
+        results = doc.data();
+      });
+
+      return results;
+    }
+    else
+    {
+      console.log("A user with the name " + firstName + " " + lastName + " does not exist.");
+    }
+  }
+
+
+
   /**
    * removes partner from the user's partners subcollection
    * @param {string} partnerID
