@@ -523,7 +523,7 @@ class Teachers extends React.Component<Props, State> {
           update[teacherDataIndex].teacherFirstName = editTeacherFirstName;
           update[teacherDataIndex].teacherLastName = editTeacherLastName;
           this.setState({ // Hold off setting new state until success has been determined
-            teachersList: update.find,
+            teachersList: update,
             editTeacherId: "",
             editTeacherFirstName: "",
             editTeacherLastName: "",
