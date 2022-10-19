@@ -717,14 +717,16 @@ class TeacherListPage extends React.Component<Props, State> {
             existingTeacherEmail: existingTeacherEmail,
             existingTeacherInfo: existingUser,
           });
+
+          return;
         }
 
-        return;
+
       }
 
 
       // Just create teacher if we pass the checks
-      addNewTeacher(newTeacherInfo);
+      this.addNewTeacher(newTeacherInfo);
 
 
     }
