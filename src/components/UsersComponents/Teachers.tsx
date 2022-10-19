@@ -79,6 +79,7 @@ interface State {
   editTeacherId: string
   editTeacherFirstName: string
   editTeacherLastName: string
+  editEmail: string
   editCoach: string
   editCoachId: string
   editSite: string
@@ -126,6 +127,7 @@ class Teachers extends React.Component<Props, State> {
       editTeacherId: "",
       editTeacherFirstName: "",
       editTeacherLastName: "",
+      editEmail: "",
       editCoach: "",
       editCoachId: "",
       editSite: "",
@@ -315,6 +317,12 @@ class Teachers extends React.Component<Props, State> {
         saved: false,
       })
     }
+    if (name === 'email') {
+      this.setState({
+        editEmail: event.target.value,
+        saved: false,
+      })
+    }
   }
 
   onSaveModalOpen =  (): Promise<boolean> => {
@@ -344,6 +352,7 @@ class Teachers extends React.Component<Props, State> {
         editTeacherId: "",
         editTeacherFirstName: "",
         editTeacherLastName: "",
+        editEmail: "",
         editCoach: "",
         editCoachId: "",
         editSite: "",
@@ -410,6 +419,7 @@ class Teachers extends React.Component<Props, State> {
         editCoachId: "",
         editTeacherFirstName: "",
         editTeacherLastName: "",
+        editEmail: "",
         editSite: "",
         editProgram: "",
         editSiteId: "",
@@ -491,12 +501,18 @@ class Teachers extends React.Component<Props, State> {
     });
   }
 
-  async editTeacher(firebase:Firebase) {
+  validateEmail = (email: string): boolean => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+editTeacher = async (firebase:Firebase) => {
     firebase
     const {
       editTeacherId,
       editTeacherFirstName,
-      editTeacherLastName
+      editTeacherLastName,
+      editEmail
     } = this.state
 
     this.setState({success: true})
@@ -511,7 +527,12 @@ class Teachers extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName).
+    if (editEmail !== "" && !this.validateEmail(editEmail)) {
+      alert("No email or valid email is required");
+      return;
+    }
+
+    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail).
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')
@@ -522,11 +543,13 @@ class Teachers extends React.Component<Props, State> {
           let teacherDataIndex = update.indexOf(teacherData);
           update[teacherDataIndex].teacherFirstName = editTeacherFirstName;
           update[teacherDataIndex].teacherLastName = editTeacherLastName;
+          update[teacherDataIndex].email = editEmail;
           this.setState({ // Hold off setting new state until success has been determined
             teachersList: update,
             editTeacherId: "",
             editTeacherFirstName: "",
             editTeacherLastName: "",
+            editEmail: "",
             editCoach: "",
             editCoachId: "",
             editSite: "",
@@ -641,6 +664,7 @@ class Teachers extends React.Component<Props, State> {
       editTeacherId: value.teacherId,
       editTeacherFirstName: value.teacherFirstName,
       editTeacherLastName: value.teacherLastName,
+      editEmail: value.email,
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
       editCoachId: value.coachId,
       editSite: value.siteName,
@@ -753,6 +777,7 @@ class Teachers extends React.Component<Props, State> {
           editTeacherId: "",
           editTeacherFirstName: "",
           editTeacherLastName: "",
+          editEmail: "",
           editCoach: "",
           editCoachId: "",
           editSite: "",
@@ -1557,22 +1582,27 @@ class Teachers extends React.Component<Props, State> {
       <Grid item xs={1} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
+                <Typography variant="h6" style={{marginTop:'15px'}}>
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                <Typography variant="h6" style={{marginTop:'20px'}}>
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Program
                 </Typography>
               </Grid>
@@ -1611,6 +1641,20 @@ class Teachers extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
+              <Grid item>
+                    <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="teacher-lastName"
+                    label="Email"
+                    type="text"
+                    value={this.state.editEmail}
+                    InputProps={{
+                      readOnly: false
+                    }}
+                    variant="outlined"
+                    onChange={this.handleEditInputChange('email')}
+                    />
+                  </Grid>
               <Grid item>
                 <TextField
                   style={{width:'42vw', maxWidth: '470px'}}

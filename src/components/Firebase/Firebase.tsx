@@ -4377,7 +4377,8 @@ class Firebase {
           id: teacher.id,
           firstName: teacher.data().firstName,
           lastName: teacher.data().lastName,
-          archived: teacher.data().archived ? teacher.data().archived : false
+          archived: teacher.data().archived ? teacher.data().archived : false,
+          email: teacher.data().email
         })
       }
     }))
@@ -4437,8 +4438,8 @@ class Firebase {
     return arr
   }
 
-  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string, archives?: boolean) => {
-    this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast})
+  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string, changeEmail: string, archives?: boolean) => {
+    this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
     .catch((error: Error) => {
       console.error(
         "Error occurred when editing teacher: ",

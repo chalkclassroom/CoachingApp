@@ -55,6 +55,7 @@ interface State {
   view: number
   saved: boolean
   editTeacherId: string
+  editEmail: string
   editTeacherFirstName: string
   editTeacherLastName: string
   editCoach: string
@@ -85,6 +86,7 @@ class Archives extends React.Component<Props, State> {
       view: 1,
       saved: true,
       editTeacherId: "",
+      editEmail: "",
       editTeacherFirstName: "",
       editTeacherLastName: "",
       editCoach: "",
@@ -130,7 +132,13 @@ class Archives extends React.Component<Props, State> {
 
       let update = this.props.teacherData;
       let teacherData = update.find(o => o.teacherId === archiveTeacherId);
+      let current = this.state.archivedData;
+      let isChange = current.find(o => o.id === archiveTeacherId);
       let teacherIndex = update.indexOf(teacherData);
+      if (update[teacherIndex].teacherFirstName !== isChange.firstName || update[teacherIndex].teacherLastName !== isChange.lastName) {
+        update[teacherIndex].teacherFirstName = isChange.firstName;
+        update[teacherIndex].teacherLastName = isChange.lastName;
+      }
       update[teacherIndex].archived = false;
       update = update.filter((item) => {return item.archived === false})
       this.props.updateTeacherData(update);
@@ -202,6 +210,7 @@ class Archives extends React.Component<Props, State> {
       this.setState({
           awaitingConfirmationRef: null,
           editTeacherId: "",
+          editEmail: "",
           editTeacherFirstName: "",
           editTeacherLastName: "",
           editCoach: "",
@@ -321,14 +330,26 @@ class Archives extends React.Component<Props, State> {
         saved: false,
       })
     }
+    if (name === 'email') {
+      this.setState({
+        editEmail: event.target.value,
+        saved: false,
+      })
+    }
   }
+
+  validateEmail = (email: string): boolean => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
   async editTeacher(firebase:Firebase) {
     firebase
     const {
       editTeacherId,
       editTeacherFirstName,
-      editTeacherLastName
+      editTeacherLastName,
+      editEmail
     } = this.state
 
     this.setState({success: true})
@@ -343,7 +364,12 @@ class Archives extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName, true).
+    if (editEmail !== "" && !this.validateEmail(editEmail)) {
+      alert("No email or valid email is required");
+      return;
+    }
+
+    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, true).
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')
@@ -360,12 +386,14 @@ class Archives extends React.Component<Props, State> {
           teacherDataIndex = sendBack.indexOf(teacherData);
           sendBack[teacherDataIndex].firstName = editTeacherFirstName;
           sendBack[teacherDataIndex].lastName = editTeacherLastName;
+          sendBack[teacherDataIndex].email = editEmail;
           sendBack = sendBack.filter((item) => {return item.archived === false})
           this.props.updateTeacherData(sendBack);
 
           this.setState({ // Hold off setting new state until success has been determined
             archivedData: update,
             editTeacherId: "",
+            editEmail: "",
             editTeacherFirstName: "",
             editTeacherLastName: "",
             editCoach: "",
@@ -384,14 +412,23 @@ class Archives extends React.Component<Props, State> {
   }
 
   handleTeacherEditClick = (value) => {
-    let get = this.props.coachData
-    let coachData = get.find(o => o.id === value.coach)
-    let coachIndex = get.indexOf(coachData)
-    let coachName = get[coachIndex].firstName + ' ' + get[coachIndex].lastName
+    let get, coachData, coachIndex, coachName = ""
+    if (value.coach) {
+      get = this.props.coachData
+      coachData = get.find(o => o.id === value.coach)
+      coachIndex = get.indexOf(coachData)
+      coachName = get[coachIndex].firstName + ' ' + get[coachIndex].lastName
+    }
+
+    get = this.props.teacherData
+    let teacherData = get.find(o => o.teacherId === value.id)
+    let teacherIndex = get.indexOf(teacherData)
+    let teacherEmail = get[teacherIndex].email
 
     
     this.setState({
       editTeacherId: value.id,
+      editEmail: teacherEmail,
       editTeacherFirstName: value.firstName,
       editTeacherLastName: value.lastName,
       editCoach: coachName,
@@ -424,6 +461,7 @@ class Archives extends React.Component<Props, State> {
         saved: true,
         awaitingConfirmationRef: null,
         editTeacherId: "",
+        editEmail: "",
         editTeacherFirstName: "",
         editTeacherLastName: "",
         editCoach: "",
@@ -530,28 +568,33 @@ class Archives extends React.Component<Props, State> {
 
               <Grid item xs={1} style={{marginTop: '45px'}}>
               <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom style={{marginTop:'10px'}}>
-                    Teacher
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
-                    Coach
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom style={{marginTop:'20px'}}>
-                    Site
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom style={{marginTop:'15px'}}>
-                    Program
-                  </Typography>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'15px'}}>
+                      Teacher
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'20px'}}>
+                      Email
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'25px'}}>
+                      Coach
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'25px'}}>
+                      Site
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'25px'}}>
+                      Program
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
 
             <Grid item xs={5} style={{marginTop: '45px'}}>
               <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
@@ -584,6 +627,20 @@ class Archives extends React.Component<Props, State> {
                       />
                     </Grid>
                   </Grid>
+                </Grid>
+                <Grid item>
+                  <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-email"
+                  label="Email"
+                  type="text"
+                  value={this.state.editEmail}
+                  InputProps={{
+                    readOnly: false
+                  }}
+                  variant="outlined"
+                  onChange={this.handleEditInputChange('email')}
+                  />
                 </Grid>
                 <Grid item>
                   <TextField

@@ -170,7 +170,8 @@ class UsersPage extends React.Component<Props, State> {
           selectedSiteId: site.id,
           selectedProgramName: program.name,
           selectedProgramId: program.id,
-          archived: teacher.archived
+          archived: teacher.archived,
+          email: teacher.email
         }
         seen.push(teacher.id)
         result.push(draft)
@@ -196,7 +197,8 @@ class UsersPage extends React.Component<Props, State> {
           selectedSiteId: site.id,
           selectedProgramName: program.name,
           selectedProgramId: program.id,
-          archived: teachers[i].archived
+          archived: teachers[i].archived,
+          email: teachers[i].email
         }
         seen.push(teachers[i].id)
         result.push(draft)
