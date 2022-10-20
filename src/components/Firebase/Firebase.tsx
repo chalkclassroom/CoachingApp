@@ -342,6 +342,11 @@ class Firebase {
     return userDocs.docs[0].get('role') === 'admin'
   }
 
+  userIsLeader= async () => {
+    let userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
+    return userDocs.docs[0].get('role') === 'admin' || userDocs.docs[0].get('role') === 'programLeader' || userDocs.docs[0].get('role') === 'siteLeader'
+  }
+
   sendEmail = async (msg: string): Promise<void> => {
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       'funcSendEmail'
@@ -3267,7 +3272,7 @@ class Firebase {
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined) => {
-    if (!await this.userIsAdmin()) {
+    if ( !await this.userIsLeader() ) {
       throw new Error('Not authorized to Perform this action')
     }
     this.query = this.db
