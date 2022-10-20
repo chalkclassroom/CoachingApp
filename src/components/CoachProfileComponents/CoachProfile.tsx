@@ -178,6 +178,8 @@ class CoachProfile extends React.Component {
     // Save site options to state
     this.setState({siteOptions: siteOptions});
 
+    return siteOptions;
+
    }
 
 
@@ -207,14 +209,13 @@ class CoachProfile extends React.Component {
       siteCoachIds = siteCoachIds.filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
 
       // Snag documents from firestore for each coach
-      firebase.getMultipleUserProgramOrSite({userIds: siteCoachIds}).then( (data) => {
-
-        console.log("DATA ", data);
+      return firebase.getMultipleUserProgramOrSite({userIds: siteCoachIds}).then( (data) => {
 
         data.sort((a, b) => a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase()));
 
         this.setState({coachOptions: data});
 
+        return data;
       });
 
     }
@@ -230,6 +231,15 @@ class CoachProfile extends React.Component {
 
        // Grab all the teachers' info
        var teacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: teacherIds});
+
+       // Grab all the users from the archives
+       let allArchivedUsers = await firebase.getArchives();
+
+       // Filter out teachers that are affiliated with this user
+       var archivedTeachersForThisCoach = allArchivedUsers.filter(o => o.coach === coachId);
+
+       // Add archives to list of teachers
+       teacherOptions = teacherOptions.concat(archivedTeachersForThisCoach);
 
        // Set the names for the teachers (better to do it here than in the actual form, in case you were wondering)
        teacherOptions.forEach((value, index) => {
@@ -249,11 +259,13 @@ class CoachProfile extends React.Component {
        teacherOptions = teacherOptions.filter( o => o.id !== "rJxNhJmzjRZP7xg29Ko6" );
 
        this.setState({teacherOptions: teacherOptions});
+
+       return teacherOptions;
      }
 
 
   // When the 'Program', 'Site', 'Coach', or 'Teacher' dropdown is changed
-  handleChangeDropdown = (event: SelectChangeEvent) => {
+  handleChangeDropdown = async (event: SelectChangeEvent) => {
     this.setState({[event.target.name]: event.target.value});
 
     var error = this.state.error;
@@ -266,11 +278,19 @@ class CoachProfile extends React.Component {
       this.setState({selectedProgramName: program.name});
 
 
-      this.setSites(event.target.value);
+      var siteOptions = await this.setSites(event.target.value);
 
       // Reset Error
       error['program'] = false;
       errorMessages['program'] = "";
+
+      // Set errors if there are no sites in this program
+      if(siteOptions.length <= 0)
+      {
+        error['program'] = true;
+        errorMessages['program'] = "There are no sites in this program!";
+      }
+
     }
 
     // If it's a site, we need to save the site name to pass to the results page
@@ -280,12 +300,20 @@ class CoachProfile extends React.Component {
         const site = this.state.siteOptions.find(x => x.id === event.target.value);
         this.setState({selectedSiteName: site.name});
 
+        // Set the coach options
+        var coachOptions = await this.setCoaches(site);
+
         // Reset Error
         error['site'] = false;
         errorMessages['site'] = "";
 
-        // Set the coach options
-        this.setCoaches(site);
+        // Set errors if there are no coaches in this program
+        if(coachOptions.length <= 0)
+        {
+          error['site'] = true;
+          errorMessages['site'] = "There are no coaches in this site!";
+        }
+
     }
 
 
@@ -303,7 +331,16 @@ class CoachProfile extends React.Component {
         errorMessages['coach'] = "";
 
         // Set the teacher options
-        this.setTeachers(event.target.value);
+        var teacherOptions = await this.setTeachers(event.target.value);
+
+        // Set errors if there are no coaches in this program
+        console.log("teacher options : ", teacherOptions);
+
+        if(teacherOptions.length <= 1)
+        {
+          error['coach'] = true;
+          errorMessages['coach'] = "This coach doesn't have any teachers!";
+        }
     }
 
 

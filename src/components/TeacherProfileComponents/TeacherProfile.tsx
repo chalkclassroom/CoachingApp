@@ -101,6 +101,7 @@ class TeacherProfile extends React.Component {
             teacher: false,
             startDate: false,
             endDate: false,
+            observationType: false,
           },
           errorMessages: {
             program: "",
@@ -108,7 +109,7 @@ class TeacherProfile extends React.Component {
             teacher: "",
             startDate: "",
             endDate: "",
-          }
+          },
       }
   }
 
@@ -175,6 +176,8 @@ class TeacherProfile extends React.Component {
     // Save site options to state
     this.setState({siteOptions: siteOptions});
 
+    return siteOptions;
+
    }
 
 
@@ -205,6 +208,16 @@ class TeacherProfile extends React.Component {
       // Sort the teachers by name
       teacherOptions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
+      // If there are no teachers in this site, let them know
+      if(teacherOptions.length <= 0)
+      {
+        var error = this.state.error;
+        var errorMessages = this.state.errorMessages;
+        error['site'] = true;
+        errorMessages['site'] = "There are no teachers in this site!";
+        this.setState({error: error, errorMessages: errorMessages});
+      }
+
       this.setState({teacherOptions: teacherOptions});
     }
 
@@ -212,7 +225,7 @@ class TeacherProfile extends React.Component {
 
 
   // When the 'Program' or 'Site' dropdown is changed
-  handleChangeDropdown = (event: SelectChangeEvent) => {
+  handleChangeDropdown = async (event: SelectChangeEvent) => {
     this.setState({[event.target.name]: event.target.value});
 
     var error = this.state.error;
@@ -225,11 +238,19 @@ class TeacherProfile extends React.Component {
       this.setState({selectedProgramName: program.name});
 
       // Set the options for the site dropdowns
-      this.setSites(event.target.value);
+      var siteOptions = await this.setSites(event.target.value);
 
-      // Reset Error
+      // Reset errors
       error['program'] = false;
       errorMessages['program'] = "";
+
+      // Set errors if there are no sites in this program
+      if(siteOptions.length <= 0)
+      {
+        error['program'] = true;
+        errorMessages['program'] = "There are no sites in this program!";
+      }
+
     }
 
     // If it's a site, we need to save the site name to pass to the results page
@@ -394,6 +415,7 @@ class TeacherProfile extends React.Component {
     }
     if(this.state.radioValue == "")
     {
+      error['observationType'] = true;
       alert("Please select a practice.")
     }
 

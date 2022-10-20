@@ -92,6 +92,7 @@ class ProgramProfile extends React.Component {
             program: false,
             startDate: false,
             endDate: false,
+            observationType: false
           },
           errorMessages: {
             program: "",
@@ -259,6 +260,7 @@ class ProgramProfile extends React.Component {
     }
     if(this.state.radioValue == "")
     {
+      error['observationType'] = true;
       alert("Please select a practice.")
     }
 

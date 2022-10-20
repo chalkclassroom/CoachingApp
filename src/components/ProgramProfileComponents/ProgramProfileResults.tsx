@@ -217,6 +217,9 @@ class ProgramProfileResults extends React.Component {
           },
         ],
         lineColors: [],
+
+        showErrorMessage: false,
+        errorMessage: "",
       }
   }
 
@@ -278,6 +281,19 @@ class ProgramProfileResults extends React.Component {
 
     this.setState({BQData: averagesList});
     this.setState({siteNames: siteNames});
+
+    console.log("Site Names : ", siteNames);
+    console.log("Site Names 2 : ", Object.values(siteNames).length);
+
+    // If there are no sites in this program, we have to let them know
+    if( Object.values(siteNames).length <= 0 )
+    {
+      this.setState({
+        showErrorMessage: true,
+        errorMessage: "There are no sites in this Program!"
+      });
+    }
+
     this.calculateResultsForCharts(averagesList, averagesList);
 
   }
@@ -389,7 +405,7 @@ class ProgramProfileResults extends React.Component {
        i++;
      }
 
-     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
      const lineData = {
        labels,
        datasets: tempDataSet
@@ -526,7 +542,8 @@ class ProgramProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {( Object.keys(this.state.averages).length <= 0 && !(this.state.showErrorMessage) ) ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {(this.state.showErrorMessage) ? (<h1>{this.state.errorMessage}</h1>) : null}
                   {(this.state.tabState == 1 && Object.keys(this.state.averages).length > 0) == 1 ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
@@ -567,6 +584,7 @@ class ProgramProfileResults extends React.Component {
                     variant="contained"
                     color="primary"
                     onClick={() => this.downloadPDF()}
+                    disabled={(Object.keys(this.state.siteNames).length <= 0 ) ? true : false}
                     >
                     Download as PDF
                   </Button>

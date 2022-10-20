@@ -218,6 +218,9 @@ class SiteProfileResults extends React.Component {
         ],
         lineColors: [],
 
+        showErrorMessage: false,
+        errorMessage: "",
+
       }
   }
 
@@ -270,10 +273,14 @@ class SiteProfileResults extends React.Component {
       this.setState({siteCoaches: coachIdsArr});
 
       // Gather information for each coach.
-      var teacherResults = [];
-      var teacherNames = [];
+      //var teacherResults = [];
+      //var teacherNames = [];
+
+      var teacherResults = await firebase.getTeacherBySiteName(this.props.selectedSiteName);
+      var teacherNames = teacherResults.map( teacher => {return teacher.firstName + " " + teacher.lastName} );
 
       // Go through each coach in the site
+      /*
       for(var coachIndex in coachIdsArr)
       {
         var coachId = coachIdsArr[coachIndex];
@@ -307,13 +314,25 @@ class SiteProfileResults extends React.Component {
 
 
       }
+      */
 
 
 
       this.setState({teacherInfo: teacherResults});
       this.setState({teacherNames: teacherNames});
 
-      this.getResultsFromBQ(teacherResults);
+      // If there are no teachers in this site, notify the user
+      if(teacherResults.length > 0)
+      {
+        this.getResultsFromBQ(teacherResults);
+      }
+      else
+      {
+        this.setState({
+          showErrorMessage: true,
+          errorMessage: "There are no teachers in this site!",
+        });
+      }
 
   }
 
@@ -601,7 +620,8 @@ class SiteProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {(Object.keys(this.state.averages).length <= 0 && !(this.state.showErrorMessage) ) ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {(this.state.showErrorMessage) ? (<h1>{this.state.errorMessage}</h1>) : null}
                   {(this.state.tabState == 1 && Object.keys(this.state.averages).length > 0) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
@@ -636,6 +656,7 @@ class SiteProfileResults extends React.Component {
                     variant="contained"
                     color="primary"
                     onClick={() => this.downloadPDF()}
+                    disabled={(Object.keys(this.state.teacherNames).length <= 0 ) ? true : false}
                     >
                     Download as PDF
                   </Button>

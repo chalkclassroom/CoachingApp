@@ -95,12 +95,14 @@ class SiteProfile extends React.Component {
             site: false,
             startDate: false,
             endDate: false,
+            observationType: false,
           },
           errorMessages: {
             program: "",
             site: "",
             startDate: "",
             endDate: "",
+            observationType: "",
           }
       }
   }
@@ -168,12 +170,14 @@ class SiteProfile extends React.Component {
     // Save site options to state
     this.setState({siteOptions: siteOptions});
 
+    return siteOptions;
+
    }
 
 
 
   // When the 'Program' or 'Site' dropdown is changed
-  handleChangeDropdown = (event: SelectChangeEvent) => {
+  handleChangeDropdown = async (event: SelectChangeEvent) => {
     this.setState({[event.target.name]: event.target.value});
 
     var error = this.state.error;
@@ -182,11 +186,17 @@ class SiteProfile extends React.Component {
     // If program was selected, we need to generate options to put in site dropdown
     if(event.target.name == "selectedProgram")
     {
-      this.setSites(event.target.value);
+      var siteOptions = await this.setSites(event.target.value);
 
       // Reset Error
       error['program'] = false;
       errorMessages['program'] = "";
+
+      if(siteOptions.length <= 0)
+      {
+        error['program'] = true;
+        errorMessages['program'] = "This program does not have any sites!"
+      }
     }
 
     // If it's a site, we need to save the site name to pass to the results page
@@ -326,6 +336,7 @@ class SiteProfile extends React.Component {
     }
     if(this.state.radioValue == "")
     {
+      error['observationType'] = true;
       alert("Please select a practice.")
     }
 

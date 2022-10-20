@@ -222,7 +222,11 @@ class TeacherProfileResults extends React.Component {
         lineColors: [],
         teacherTrends: [],
         widenTable: false,
-        observationTime: ""
+        observationTime: "",
+
+        showErrorMessage: false,
+        errorMessage: "",
+
       }
   }
 
@@ -260,7 +264,21 @@ class TeacherProfileResults extends React.Component {
       .then( (data) => {
         this.setState({BQData: data});
 
-        this.calculateResultsForCharts(data, teacherId);
+        // Check if there is data, need to show message if not
+        if(data.length <= 0)
+        {
+          this.setState({
+            showErrorMessage: true,
+            errorMessage: "This teacher has no observations!",
+          });
+        }
+        else
+        {
+          this.calculateResultsForCharts(data, teacherId);
+        }
+        console.log("DATA => ", data);
+
+
       });
 
   }
@@ -524,9 +542,14 @@ class TeacherProfileResults extends React.Component {
                   The "averages" bar graph and "trends" line graph
                 */}
                 <Grid item xs={12} style={centerColumn}>
-                  {Object.keys(this.state.averages).length <= 0 ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
+                  {/* Show loading logo */}
+                  {(Object.keys(this.state.averages).length <= 0  && !(this.state.showErrorMessage) ) ? (<img src={CHALKLogoGIF} alt="Loading" width="60%" />) : null}
 
-                  {(this.state.tabState == 1 && this.props.observationType !== "bookReading" && Object.keys(this.state.averages).length > 0) ? (
+                  {/* Show message if there are no observation data */}
+                  { (Object.keys(this.state.averages).length >= 0 && this.state.showErrorMessage) ? (<h1>{this.state.errorMessage}</h1>) : null}
+
+                  {/* Show trends line graph if trends tab is clicked and it's not book reading type */}
+                  {(this.state.tabState == 1 && this.props.observationType !== "bookReading" && Object.keys(this.state.averages).length > 0 && !(this.state.showErrorMessage) ) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 500}} >
                       <Line
                         data={this.state.lineGraphData}
@@ -534,15 +557,17 @@ class TeacherProfileResults extends React.Component {
                       />
                     </Grid>
 
-                  ) : (this.state.tabState == 1 && Object.keys(this.state.averages).length > 0 && this.props.observationType == "bookReading") ? (
 
+                  ) : (this.state.tabState == 1 && Object.keys(this.state.averages).length > 0 && this.props.observationType == "bookReading" && !(this.state.showErrorMessage) ) ? (
                     <Grid container justify={"center"} direction={"column"} style={{flexWrap: 'nowrap', padding: "30px 0px"}}>
+                      {/* Show trends line graph if trends tab is clicked and it IS not book reading type */}
                       <ReadingTrendsTable data={this.state.teacherTrends} who={'Teacher'} widenTable={this.state.widenTable} />
                     </Grid>
 
-                  ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0) ? (
 
+                  ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0 && !(this.state.showErrorMessage) ) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
+                      {/* Show averages pie chart */}
                       <AveragesChart
                         data={this.state.averages}
                         type={this.state.radioValue}
@@ -575,6 +600,7 @@ class TeacherProfileResults extends React.Component {
                     variant="contained"
                     color="primary"
                     onClick={() => this.downloadPDF()}
+                    disabled={( this.state.showErrorMessage && Object.keys(this.state.averages).length <= 0 && this.state.BQData <= 0) ? true : false}
                     >
                     Download as PDF
                   </Button>
