@@ -526,7 +526,7 @@ class Archives extends React.Component<Props, State> {
             </FirebaseContext.Consumer>
           </DialogActions>
       </Dialog>
-
+      {this.props.teacherData.length > 0 ? (<>
       {this.state.view === 2 ? (<>
         <Grid container direction='row' style={{paddingBottom: '30px'}}>
           <Grid item xs={3}>
@@ -728,7 +728,6 @@ class Archives extends React.Component<Props, State> {
             // borderRadius: '0.5em', 
             marginTop: '130px' }}
         >
-          {this.state.archivedData ? (
           <table style={{borderCollapse: 'collapse', width: '100%' }}>
             <thead style={{borderBottom:'2px solid #0988ec'}}>
               <tr>
@@ -973,21 +972,21 @@ class Archives extends React.Component<Props, State> {
             </tbody>
 
           </table>
-          ) : (
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{height: "100%"}}
-            >
-              <img src={CHALKLogoGIF} alt="Loading" width="60%" />
-            </Grid>
-          )}
         </Grid>
       </Grid>
     </Grid>
     </>)}
+    </>) : (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100%", marginTop: '8vh'}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+      </Grid>
+    )}
     </>)
   }
 }

@@ -32,19 +32,8 @@ import { Alert } from '@material-ui/lab'
 const StyledSelect = withStyles({
   root: {
     padding: '11px 14px',
-    width: '37vw',
-    maxWidth: '430px'
-  },
-  disabled: {
-    opacity: 0.3
-  }
-})(Select);
-
-const StyledSelectTransfer = withStyles({
-  root: {
-    padding: '11px 14px',
-    width: '25vw',
-    // maxWidth: '430px'
+    width: '25.5vw',
+    maxWidth: '425px'
   },
   disabled: {
     opacity: 0.3
@@ -75,6 +64,7 @@ interface State {
   saved: boolean
   archiveModalOpen: boolean
   successOpen: boolean
+  editEmail: string
 }
 
 class Coaches extends React.Component<Props, State> {
@@ -89,6 +79,7 @@ class Coaches extends React.Component<Props, State> {
       coachesTeachers: [],
       editTeacherFirstName: "",
       editTeacherLastName: "",
+      editEmail: "",
       editCoach: "",
       editSite: "",
       editProgram: "",
@@ -175,6 +166,7 @@ class Coaches extends React.Component<Props, State> {
       editTeacherId: value.teacherId,
       editTeacherFirstName: value.teacherFirstName,
       editTeacherLastName: value.teacherLastName,
+      editEmail: value.email,
       editCoach: value.coachFirstName + ' ' + value.coachLastName,
       editCoachId: value.coachId,
       editSite: value.siteName,
@@ -204,7 +196,18 @@ class Coaches extends React.Component<Props, State> {
         saved: false,
       })
     }
+    if (name === 'email') {
+      this.setState({
+        editEmail: event.target.value,
+        saved: false,
+      })
+    }
   }
+
+  validateEmail = (email: string): boolean => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
   /*
    * When user saves 'edit teacher'
@@ -214,7 +217,8 @@ class Coaches extends React.Component<Props, State> {
      const {
        editTeacherId,
        editTeacherFirstName,
-       editTeacherLastName
+       editTeacherLastName,
+       editEmail
      } = this.state
 
      this.setState({success: true})
@@ -229,7 +233,12 @@ class Coaches extends React.Component<Props, State> {
        return;
      }
 
-     await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName).
+     if (editEmail !== "" && !this.validateEmail(editEmail)) {
+      alert("No email or valid email is required");
+      return;
+    }
+
+     await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail).
        catch(e => {
          console.log(e)
          alert('Unable to edit teacher. Please try again')
@@ -246,6 +255,7 @@ class Coaches extends React.Component<Props, State> {
             console.log("teacherDataIndex : ", teacherDataIndex);
             coachesTeachers[teacherDataIndex].teacherFirstName = editTeacherFirstName;
             coachesTeachers[teacherDataIndex].teacherLastName = editTeacherLastName;
+            coachesTeachers[teacherDataIndex].email = editEmail;
 
             this.setState({coachesTeachers: coachesTeachers});
 
@@ -255,11 +265,13 @@ class Coaches extends React.Component<Props, State> {
              editTeacherId: "",
              editTeacherFirstName: "",
              editTeacherLastName: "",
+             editEmail: "",
              editCoach: "",
              editCoachId: "",
              editSite: "",
              editProgram: "",
-             successEditTeacherModalOpen: this.state.success ? true : false
+             successEditTeacherModalOpen: this.state.success ? true : false,
+             saved: true
            });
            // window.location.reload()
        });
@@ -802,6 +814,7 @@ class Coaches extends React.Component<Props, State> {
           editTeacherFirstName: "",
           editTeacherLastName: "",
           editCoach: "",
+          editEmail: "",
           editCoachId: "",
           editSite: "",
           editProgram: "",
@@ -899,7 +912,8 @@ class Coaches extends React.Component<Props, State> {
               </Button>
           </DialogActions>
       </Dialog>
-
+      
+      {this.props.teacherData.length > 0 ? (<>
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -1011,7 +1025,6 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
-        {this.props.teacherData.length > 0 ? (<>
           <Grid container direction='column'>
             <Grid item xs={12}><span></span></Grid>
             <Grid item xs={12}>
@@ -1204,17 +1217,6 @@ class Coaches extends React.Component<Props, State> {
             </table>
             </Grid>
           </Grid>
-      </>) : (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%"}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="60%" style={{maxHeight: '100%'}} />
-      </Grid>
-      )}
       </>) : (this.state.view === 2 ? (<>
           <Grid item xs={1} style={{marginTop: '45px'}}>
 
@@ -1248,6 +1250,8 @@ class Coaches extends React.Component<Props, State> {
                 <Grid container direction='row' justifyContent='center' spacing={3}>
                   <Grid item xs={6}>
                     <TextField
+                      style={{width:'13.5vw', maxWidth: '225px'}}
+                      size="small"
                       id="teacher-search"
                       label="First Name"
                       type="search"
@@ -1257,6 +1261,8 @@ class Coaches extends React.Component<Props, State> {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      style={{width:'13.5vw', maxWidth: '225px'}}
+                      size="small"
                       id="teacher-search"
                       label="Last Name"
                       type="search"
@@ -1266,18 +1272,16 @@ class Coaches extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item style={{width: '100%'}}>
-                <Grid container direction='row' justifyContent='flex-start' spacing={12}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="teacher-search"
-                      label="Email"
-                      type="search"
-                      variant="outlined"
-                      onChange={() => this.handleNewCoachInput('email')}
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item>
+                <TextField
+                  size="small"
+                  style={{width:'29.5vw', maxWidth: '470px'}}
+                  id="teacher-search"
+                  label="Email"
+                  type="search"
+                  variant="outlined"
+                  onChange={() => this.handleNewCoachInput('email')}
+                />
               </Grid>
 
               {/*
@@ -1395,7 +1399,7 @@ class Coaches extends React.Component<Props, State> {
                   Select coach dropdown
                 */}
                 <FormControl variant="outlined">
-                  <StyledSelectTransfer
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.selectedTransferCoach}
@@ -1414,7 +1418,7 @@ class Coaches extends React.Component<Props, State> {
                             </MenuItem>
                         )}
                         })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
@@ -1424,7 +1428,7 @@ class Coaches extends React.Component<Props, State> {
               */}
               <Grid item>
                 <FormControl variant="outlined" disabled>
-                  <StyledSelectTransfer
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     multiple
@@ -1441,7 +1445,7 @@ class Coaches extends React.Component<Props, State> {
                         </MenuItem>
 
                     })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
@@ -1473,7 +1477,7 @@ class Coaches extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <FormControl variant="outlined">
-                  <StyledSelectTransfer
+                  <StyledSelect
                     labelId="demo-simple-select-disabled-label"
                     id="demo-simple-select-disabled"
                     multiple
@@ -1491,7 +1495,7 @@ class Coaches extends React.Component<Props, State> {
                         </MenuItem>
 
                     })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
@@ -1535,22 +1539,27 @@ class Coaches extends React.Component<Props, State> {
       <Grid item xs={1} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'10px'}}>
+                <Typography variant="h6" style={{marginTop:'15px'}}>
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'20px'}}>
+                <Typography variant="h6" style={{marginTop:'20px'}}>
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'20px'}}>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'15px'}}>
+                <Typography variant="h6" style={{marginTop:'25px'}}>
                   Program
                 </Typography>
               </Grid>
@@ -1588,6 +1597,20 @@ class Coaches extends React.Component<Props, State> {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-email"
+                  label="Email"
+                  type="text"
+                  value={this.state.editEmail}
+                  InputProps={{
+                    readOnly: false
+                  }}
+                  variant="outlined"
+                  onChange={this.handleEditInputChange('email')}
+                />
               </Grid>
               <Grid item>
                 <TextField
@@ -1662,6 +1685,17 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
     </>) : (null))))}
       </Grid>
+      </>) : (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100%", marginTop:'8vh'}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
+      </Grid>
+      )}
     </>)
   }
 }

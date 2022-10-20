@@ -26,23 +26,12 @@ import styled from 'styled-components'
 const StyledSelect = withStyles({
   root: {
     padding: '11px 14px',
-    width: '37vw',
-    maxWidth: '430px'
+    width: '25.5vw',
+    maxWidth: '425px'
   },
   disabled: {
     opacity: 0.3
   }
-})(Select);
-
-const StyledSelectTransfer = withStyles({
-  root: {
-    padding: '11px 14px',
-    width: '25vw',
-    // maxWidth: '430px'
-  },
-  disabled: {
-    opacity: 0.3
-  },
 })(Select);
 
 const TableRow = styled.tr`
@@ -848,6 +837,7 @@ editTeacher = async (firebase:Firebase) => {
             </Button>
         </DialogActions>
     </Dialog>
+    {this.props.teacherData.length > 0 ? (
       <Grid container direction='row' style={{paddingBottom: '30px'}}>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -998,7 +988,6 @@ editTeacher = async (firebase:Firebase) => {
             // borderRadius: '0.5em',
             marginTop: '100px' }}
         >
-          {this.props.teacherData.length > 0 ? (
           <table style={{borderCollapse: 'collapse', width: '100%' }}>
             <thead style={{borderBottom:'2px solid #0988ec'}}>
               <tr>
@@ -1202,17 +1191,6 @@ editTeacher = async (firebase:Firebase) => {
               </>)}
             </tbody>
           </table>
-          ) : (
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{height: "100%"}}
-            >
-              <img src={CHALKLogoGIF} alt="Loading" width="60%" />
-            </Grid>
-          )}
         </Grid>
       </Grid>
     </>) : (this.state.view === 2 ? (<>
@@ -1248,6 +1226,7 @@ editTeacher = async (firebase:Firebase) => {
                 <Grid container direction='row' justifyContent='center' spacing={3}>
                   <Grid item xs={6}>
                     <TextField
+                    style={{width:'13.5vw', maxWidth: '225px'}}
                     size="small"
                     id="teacher-firstName"
                     label="First Name"
@@ -1259,6 +1238,7 @@ editTeacher = async (firebase:Firebase) => {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                    style={{width:'13.5vw', maxWidth: '225px'}}
                     size="small"
                     id="teacher-lastName"
                     label="Last Name"
@@ -1398,7 +1378,7 @@ editTeacher = async (firebase:Firebase) => {
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
                 <FormControl variant="outlined">
-                  <StyledSelectTransfer
+                  <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={this.state.transferTeacherId}
@@ -1413,7 +1393,7 @@ editTeacher = async (firebase:Firebase) => {
                             </MenuItem>
                         )
                         })}
-                  </StyledSelectTransfer>
+                  </StyledSelect>
                 </FormControl>
               </Grid>
               <Grid item>
@@ -1642,19 +1622,19 @@ editTeacher = async (firebase:Firebase) => {
                 </Grid>
               </Grid>
               <Grid item>
-                    <TextField
-                    style={{width:'42vw', maxWidth: '470px'}}
-                    id="teacher-lastName"
-                    label="Email"
-                    type="text"
-                    value={this.state.editEmail}
-                    InputProps={{
-                      readOnly: false
-                    }}
-                    variant="outlined"
-                    onChange={this.handleEditInputChange('email')}
-                    />
-                  </Grid>
+                <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="teacher-email"
+                  label="Email"
+                  type="text"
+                  value={this.state.editEmail}
+                  InputProps={{
+                    readOnly: false
+                  }}
+                  variant="outlined"
+                  onChange={this.handleEditInputChange('email')}
+                />
+              </Grid>
               <Grid item>
                 <TextField
                   style={{width:'42vw', maxWidth: '470px'}}
@@ -1728,6 +1708,17 @@ editTeacher = async (firebase:Firebase) => {
             </Grid>
     </>) : (null))))}
     </Grid>
+    ) : (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100%", marginTop:'8vh'}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+      </Grid>
+    )}
     </>)
   }
 }
