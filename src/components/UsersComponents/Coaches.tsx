@@ -249,10 +249,8 @@ class Coaches extends React.Component<Props, State> {
             var coachesTeachers = this.state.coachesTeachers;
             // get the teacher data
             var teacherData = coachesTeachers.find(o => o.teacherId === editTeacherId);
-            console.log("teacher data : ", teacherData);
 
             var teacherDataIndex = coachesTeachers.indexOf(teacherData);
-            console.log("teacherDataIndex : ", teacherDataIndex);
             coachesTeachers[teacherDataIndex].teacherFirstName = editTeacherFirstName;
             coachesTeachers[teacherDataIndex].teacherLastName = editTeacherLastName;
             coachesTeachers[teacherDataIndex].email = editEmail;
@@ -771,7 +769,7 @@ class Coaches extends React.Component<Props, State> {
       this.setState({success: false})
     })
     .finally(() => {
-      
+
       let update = this.props.teacherData;
       let teacherData = update.find(o => o.teacherId === editTeacherId);
       let teacherIndex = update.indexOf(teacherData);
@@ -912,7 +910,7 @@ class Coaches extends React.Component<Props, State> {
               </Button>
           </DialogActions>
       </Dialog>
-      
+
       {this.props.teacherData.length > 0 ? (<>
       <Grid container direction='row'>
         <Grid item xs={3}>

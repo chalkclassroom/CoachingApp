@@ -190,7 +190,6 @@ class TeacherProfile extends React.Component {
 
       // Grab the teachers in this site
       let teacherOptions = await firebase.getTeacherBySiteName(siteName);
-      console.log("Teacher Option : ", teacherOptions);
 
       // Remove duplicates because that's apparently a problem now
       teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)

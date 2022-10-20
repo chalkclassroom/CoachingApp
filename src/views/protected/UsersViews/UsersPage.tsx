@@ -321,7 +321,6 @@ class UsersPage extends React.Component<Props, State> {
     // Sort coaches by last name
     data.sort((a, b) => a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase()))
 
-    console.log("Coach Data :", data)
     return data;
   }
 

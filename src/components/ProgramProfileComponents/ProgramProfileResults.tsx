@@ -282,9 +282,6 @@ class ProgramProfileResults extends React.Component {
     this.setState({BQData: averagesList});
     this.setState({siteNames: siteNames});
 
-    console.log("Site Names : ", siteNames);
-    console.log("Site Names 2 : ", Object.values(siteNames).length);
-
     // If there are no sites in this program, we have to let them know
     if( Object.values(siteNames).length <= 0 )
     {

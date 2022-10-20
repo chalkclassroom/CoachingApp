@@ -334,8 +334,6 @@ class CoachProfile extends React.Component {
         var teacherOptions = await this.setTeachers(event.target.value);
 
         // Set errors if there are no coaches in this program
-        console.log("teacher options : ", teacherOptions);
-
         if(teacherOptions.length <= 1)
         {
           error['coach'] = true;

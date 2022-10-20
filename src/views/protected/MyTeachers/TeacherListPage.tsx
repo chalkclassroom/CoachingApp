@@ -689,7 +689,6 @@ class TeacherListPage extends React.Component<Props, State> {
 
       // Check to see if teacher with email already exist
       var existingUser = await firebase.getTeacherByEmail({email: inputEmail});
-      console.log("existingUser :", existingUser);
 
       if(existingUser)
       {
