@@ -236,7 +236,10 @@ class CoachProfile extends React.Component {
        let allArchivedUsers = await firebase.getArchives();
 
        // Filter out teachers that are affiliated with this user
-       var archivedTeachersForThisCoach = allArchivedUsers.filter(o => o.coach === coachId);
+       if(allArchivedUsers)
+       {
+         var archivedTeachersForThisCoach = allArchivedUsers.filter(o => o.coach === coachId);
+       }
 
        // Add archives to list of teachers
        teacherOptions = teacherOptions.concat(archivedTeachersForThisCoach);

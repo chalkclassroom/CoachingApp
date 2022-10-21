@@ -184,12 +184,88 @@ const radioValueArr = {
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
+  lineAverage: "Waiting in Line",
+  travelingAverage: "Traveling",
+  waitingAverage: "Children Waiting",
+  routinesAverage: "Classroom Routines",
+  behaviorManagementAverage: "Behavior Management",
+  otherAverage: "Traveling",
+  travelingAverage: "Other",
+
+  nonspecificapprovalAverage: "General Approval",
+  specificapprovalAverage: "Specific Approval",
+  disapprovalAverage: "Disapproval",
+  redirectionAverage: "Redirection",
+
+  mathVocabularyAverage: "Using Math Vocabulary",
+  askingQuestionsAverage: "Asking Questions About Math Concepts",
+  mathConceptsAverage: "Demonstrating Math Concepts",
+  helpingChildrenAverage: "Helping Children Use Math to Problem Solve",
+  notAtCenterAverage: "Teacher Not at Center",
+  noSupportAverage: "No Support",
+  supportAverage: "Teacher Support",
+  totalInstructionsAverage: "Total Instruction",
+
+  hlqAverage: "Teacher Asks High-Level Question",
+  hlqResponseAverage: "Child Answers High-Level Question",
+  llqAverage: "Teacher Asks Low-Level Question",
+  llqResponseAverage: "Child Answers Low-Level Question",
+
+  offTaskAverage: "Off Task",
+  mildlyEngagedAverage: "Mildly Engaged",
+  engagedAverage: "Engaged",
+  highlyEngagedAverage: "Highly Engaged",
+
+  eyeLevelAverage: "At Eye Level",
+  positiveExpressionAverage: "Uses positive or interested expression to encourage child talk",
+  repeatsAverage: "Repeats or clarifies",
+  openEndedQuestionsAverage: "Asks open-ended questions",
+  extendsPlayAverage: "Expands on children's play or talk",
+  encouragesPeerTalkAverage: "Encourages peer talk",
+  encouragingAverage: "Listening/Encouraging",
+  noBehaviorsAverage: "No Target Behaviors Observed",
+
+  sequentialActivitiesAverage: "Helping children do sequential activities with manipulatives or toys",
+  drawImagesAverage: "Supporting children as they draw images or write messages",
+  demonstrateStepsAverage: "Demonstrating the steps to an activity or game",
+  actOutAverage: "Supporting children as they act out a dramatic play scenario or book",
+  supportAverage: "Teacher Support for Sequential Activities",
+  noSupportAverage: "Teacher Present, No Support",
+  notAtCenterAverage: "Teacher Not at Center",
+
+
+  foundationalSkillsAverage: "Literacy Instruction - Total Instruction",
+  phonologicalAverage: "Phonological awareness or the sounds of language",
+  alphabeticAverage: "The alphabetic principle and print concepts",
+  openEndedQuestionsAverage: "Open-ended questions or prompts",
+  realisticReadingAverage: "Realistic reading and writing",
+  multimodalInstructionAverage: "Multimodal Instruction",
+
+  writingSkillsAverage: "Writing Instruction - Total Instruction",
+  meaningAverage: "The content or meaning of the writing",
+  printProcessesAverage: "Print processes",
+
   bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
-  childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
+  vocabFocusAverage: "Focuses on Vocabulary",
+  languageConnectionsAverage: "Reading: Makes Connections",
+  childrenSupportAverage: "Support Children's Speaking",
+  fairnessDiscussionsAverage: "Facilitate Discussions",
+  multimodalInstructionAverage: "Use Multimodal Instruction",
+
+  languageEnvironmentAverage: "Language Environment - Total Instruction",
+  talkAverage: "Talk with children about vocabulary or social-emotional topics",
+  encourageChildrenAverage: "Encourage children to talk",
+  respondChildrenAverage: "Respond to children",
+
+
+  childrensPlayAverage: "Participating in children's play",
+  askingQuestionsAverage: "Asking questions to extend children's thinking",
+  encouragingChildrenAverage: "Encouraging children to share",
+  helpingChildrenAverage: "Helping children find the words to communicate",
+  supportAverage: "Supported children's associative and cooperative interactions",
+  noSupportAverage: "Was present in the center but did not support associative and cooperative interactions",
+  notAtCenterAverage: "Was not present in the centers observed",
+
 }
 
 class TeacherProfileResults extends React.Component {
@@ -375,30 +451,46 @@ class TeacherProfileResults extends React.Component {
      var lineColors = this.state.lineColors;
      var i = 0;
 
-     var fullName = teacher.firstName + " " + teacher.lastName;
+     // Go through each trends and save the averages in the dataset so there's a line for each answer type
+     var teachersTrends = trends[teacher.id];
 
-     var chosenData = trends[teacher.id][type + "Average"];
-
-     // Round off all the numbers
-      chosenData = chosenData.map(function(each_element){
-       return Math.round((each_element + Number.EPSILON) * 100) / 100;
-      });
-
-     // If there isn't a color set for this teacher, set it
-     if(!lineColors[i])
+     for(var trendIndex in teachersTrends)
      {
-       lineColors[i] = this.randomRgbColor();
-     }
-     var tempData = {
-       label: fullName,
-       data: chosenData,
-       borderColor: lineColors[i],
-       fill: false,
-       tension: 0.0
-     };
+       // Make sure we're only grabbing the averages, also not the data that was used for calculations
+       if( !(trendIndex.includes("Average")) || trendIndex === "totalObservedAverage" || trendIndex === "totalInstructionsAverage")
+       {
+         continue;
+       }
 
-     tempDataSet.push(tempData);
-     i++;
+       var trendData = trends[teacher.id][trendIndex];
+
+       // Round off all the numbers
+        trendData = trendData.map(function(each_element){
+         return Math.round((each_element + Number.EPSILON) * 100) / 100;
+        });
+
+        var trendLabel = (chartTitleArr[trendIndex]) ? chartTitleArr[trendIndex] : trendIndex;
+
+        // If there isn't a color set for this teacher, set it
+        if(!lineColors[i])
+        {
+          lineColors[i] = this.randomRgbColor();
+        }
+        var tempData = {
+          label: trendLabel,
+          data: trendData,
+          borderColor: lineColors[i],
+          fill: false,
+          tension: 0.0
+        };
+
+        tempDataSet.push(tempData);
+        i++;
+     }
+
+
+
+
 
 
      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -406,6 +498,9 @@ class TeacherProfileResults extends React.Component {
        labels,
        datasets: tempDataSet
      };
+
+     console.log("Line Data => ", lineData);
+
 
      this.setState({lineGraphData: lineData, lineColors: lineColors});
    }
