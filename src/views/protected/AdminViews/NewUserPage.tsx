@@ -206,10 +206,6 @@ class NewUserPage extends React.Component<Props, State>{
             }
             await firebase.addTeacherToCoach(teacherInfo, coach)
             .then(() => {
-                this.setState({
-                  createdPassword: randomString
-                });
-                return randomString
               }).catch(e => {
                   this.setState({
                     createdPassword: undefined

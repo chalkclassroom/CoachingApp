@@ -146,14 +146,7 @@ class Teachers extends React.Component<Props, State> {
 
   }
 
-  componentDidUpdate = () => {
-    if (this.state.teachersList !== this.props.teacherData) {
-      this.setState({teachersList: this.props.teacherData})
-    }
-  }
-
-
-  handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  handleSearch = (event) => {
     this.setState({searchInput: event.target.value})
     let searched = this.props.teacherData.filter((item) => {
       return (item.teacherFirstName.toLowerCase().includes(event.target.value.toLowerCase())
@@ -166,6 +159,7 @@ class Teachers extends React.Component<Props, State> {
       || item.selectedProgramName.toLowerCase().includes(event.target.value.toLowerCase())
       )
     })
+    console.log(searched)
     this.setState({teachersList: searched})
 
   }

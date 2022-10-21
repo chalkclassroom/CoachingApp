@@ -526,7 +526,7 @@ class Archives extends React.Component<Props, State> {
             </FirebaseContext.Consumer>
           </DialogActions>
       </Dialog>
-      {this.props.teacherData.length > 0 ? (<>
+      {this.state.archivedData ? (<>
       {this.state.view === 2 ? (<>
         <Grid container direction='row' style={{paddingBottom: '30px'}}>
           <Grid item xs={3}>
@@ -868,7 +868,7 @@ class Archives extends React.Component<Props, State> {
                   </td>
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6">
-                      {value.role[0].toUpperCase() + value.role.substring(1)}
+                      {value.role !== "" ? value.role[0].toUpperCase() + value.role.substring(1) : value.role}
                     </Typography>
                   </td>
                   <td style={{textAlign:'center'}}>

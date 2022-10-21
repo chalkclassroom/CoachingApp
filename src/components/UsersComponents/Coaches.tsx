@@ -911,7 +911,7 @@ class Coaches extends React.Component<Props, State> {
           </DialogActions>
       </Dialog>
 
-      {this.props.teacherData.length > 0 ? (<>
+      {this.props.coachData.length > 0 ? (<>
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>

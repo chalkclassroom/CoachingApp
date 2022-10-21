@@ -16,6 +16,7 @@ import Teachers from "../../../components/UsersComponents/Teachers";
 import Coaches from "../../../components/UsersComponents/Coaches";
 import Skeleton from "./Skeleton"
 import Archives from "../../../components/UsersComponents/Archives";
+import Sites from "../../../components/UsersComponents/Sites";
 
 
 const styles: object = {
@@ -514,6 +515,14 @@ class UsersPage extends React.Component<Props, State> {
                         coachData = {this.state.archivedCoaches}
                         filter  = {this.state.propFilter}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
+                        />
+                    } />
+                    <Route path="/LeadersSites" render={(props) => 
+                      <Sites
+                        changePage={(pageName: string) => this.changePage(pageName)}
+                        userRole={userRole}
+                        location={this.props.location}
+                        coachData = {this.state.archivedCoaches}
                         />
                     } />
                   </Switch>

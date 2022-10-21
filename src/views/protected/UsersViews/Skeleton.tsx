@@ -25,7 +25,7 @@ export default class Skeleton extends Component {
                 <Grid item xs={6}>
                 <Grid container direction='row'>
                         <Grid item>
-                            <ForwardIcon style={{fill: 'blue', fontSize:'40', marginTop:'15px',}}/>
+                            <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
                         </Grid>
                         <Grid item>
                             <Typography variant="h6" gutterBottom style={{marginTop:'20px',}}>

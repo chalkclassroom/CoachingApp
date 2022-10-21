@@ -4572,9 +4572,23 @@ class Firebase {
     let archives = await this.db.collection('archives').get();
 
     if(archives.docs.length > 0) {
-    return archives.docs.map(doc => doc.data());
+    return Promise.all(archives.docs.map(async doc => {
+      let docSnapshot = await this.db.collection('archives').doc(doc.id).get()
+      if (docSnapshot.exists)  
+        return doc.data()
+    }));
     }
-    else return [];
+    else return [{
+      coach: "",
+      firstName: "",
+      id: "",
+      lastName: "", 
+      program: "",
+      ProgramId: "",
+      role: "",
+      site: "",
+      siteId: "",
+    }];
   }
 
   /*
@@ -6313,6 +6327,297 @@ class Firebase {
 
 
   }
+
+  //REMOVE AFTER DEVELOPMENT
+
+  populateFirebase = async () => {
+    const secondFirebase = firebase.initializeApp(config, 'secondary')
+    // Added emulators for local testing
+    if (process.env.USE_LOCAL_AUTH) {
+      console.log('using local Auth');
+      secondFirebase.auth().useEmulator("http://localhost:9099");
+    }
+    if (process.env.use_LOCAL_FIRESTORE) {
+      secondFirebase.firestore().settings({
+        host: 'localhost:8080',
+        ssl: false,
+      });
+    }
+
+    //Create authenticated users
+    const authEmail: Array<string> = [
+      "bundy@program1.com",             //Beginning of programLeaders
+      "carter@program2.com",            
+      "gein@site1.com",                 //Beginning of siteLeaders
+      "lee@site2.com",
+      "lopez@site3.com",                
+      "dahmer@coach1.com",              //Beginning of coaches
+      "brown@coach2.com",
+      "james@coach3.com",
+      "swift@coach4.com"         
+    ];
+    const password: Array<string> = Array(authEmail.length).fill("password");
+    const authFirstName: Array<string> = [
+      "Theodore",                       //Beginning of programLeaders
+      "Jimmy",                          
+      "Edward",                         //Beginning of siteLeaders
+      "Yan", 
+      "Jennifer",                       
+      "Jeffrey",                        //Beginning of coaches
+      "James", 
+      "Richard", 
+      "Taylor"                          
+    ];
+    const authLastName: Array<string> = [
+      "Bundy",                          //Beginning of programLeaders
+      "Carter",                           
+      "Gein",                           //Beginning of siteLeaders
+      "Lee", 
+      "Lopez",                          
+      "Dahmer",                         //Beginning of coaches
+      "Brown", 
+      "James", 
+      "Swift"                           
+    ];
+    const programLeadersNumber: number = 2;
+    const siteLeadersNumber: number = 3;
+    const coachNumber: number = 4;
+    let authRole: Array<string> = Array(programLeadersNumber).fill("programLeader");
+    authRole.push(...Array(siteLeadersNumber).fill("siteLeader"));
+    authRole.push(...Array(coachNumber).fill("coach"));
+
+    let coaches: Array<Object> = [];
+    let leaders: Array<Object> = [];
+    
+    for (let i = 0; i < authEmail.length; i++) {
+      const userInfo = await secondFirebase.auth().createUserWithEmailAndPassword(authEmail[i], password[i]);
+      if (userInfo.user) {
+        let userData: Record<string, any> = {
+          email:  authEmail[i],
+          firstName: authFirstName[i],
+          lastName: authLastName[i],
+          role: authRole[i],
+          id: userInfo ? userInfo.user.uid : ""
+        };
+        if (userData.email.includes("coach")) {
+          if (userData.email.includes("coach1")) {
+            userData.sites =  ["site1"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("bathory").set({});
+              docRef.collection("partners").doc("gacy").set({});
+              docRef.collection("partners").doc("manson").set({});
+            })
+          }else if (userData.email.includes("coach2")) {
+            userData.sites =  ["site2"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("monroe").set({});
+              docRef.collection("partners").doc("bellucci").set({});
+            })
+          }else if (userData.email.includes("coach3")) {
+            userData.sites =  ["site3"]
+            userData.unlocked = [2]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("hewitt").set({});
+            })
+          } else {
+            userData.sites =  []
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }
+          coaches.push({
+            email: userData.email,
+            id: userData.id
+          });
+        } else {
+          if (userData.email.includes("program1")) {
+            userData.programs = ["program1"]
+          }else if (userData.email.includes("program2")) {
+            userData.programs = ["program2"]
+          }else if (userData.email.includes("site1")) {
+            userData.sites = ["site1"]
+          }else if (userData.email.includes("site2")) {
+            userData.sites = ["site2"]
+          }else if (userData.email.includes("site3")) {
+            userData.sites = ["site3"]
+          } else {}
+          await firebase.firestore().collection("users").doc(userInfo.user.uid).set(userData);
+          leaders.push({
+            email: userData.email,
+            id: userData.id
+          });
+        }
+      }
+    }
+
+    //Create Teachers
+    const teacherFirstName: Array<string> = [
+      "Elizabeth", 
+      "Jonathan", 
+      "Charles", 
+      "Marilyn", 
+      "Monica", 
+      "Bubba",
+      "Practice"
+    ];
+    const teacherLastName: Array<string> = [
+      "Bathory", 
+      "Gacy", 
+      "Manson", 
+      "Monroe", 
+      "Bellucci", 
+      "Hewitt",
+      "Teacher"
+    ];
+    const teacherSchool: Array<string> = [
+      "Ecsed", 
+      "Ecsed", 
+      "Ecsed", 
+      "Wichita", 
+      "Leeds", 
+      "Leeds",
+      "Elum Entaree School"
+    ];
+    const teacherEmail: Array<string> = [
+      "bathory@email.com", 
+      "gacy@email.com", 
+      "manson@email.com", 
+      "monroe@email.com", 
+      "bellucci@email.com", 
+      "hewitt@email.com",
+      "practice@teacher.edu"
+    ];
+    const teacherId: Array<string> = [
+      "bathory", 
+      "gacy", 
+      "manson", 
+      "monroe", 
+      "bellucci", 
+      "hewitt",
+      "rJxNhJmzjRZP7xg29Ko6"
+    ];
+    const teacherSites: Array<Array<string>> = [
+      ["site1"], 
+      ["site1"], 
+      ["site1"],
+      ["site2"], 
+      ["site3"], 
+      ["site3"],
+      ["Elum Entaree School"]
+    ];
+
+    for (let i = 0; i < teacherFirstName.length; i++) {
+      let teacherInfo = {
+        firstName: teacherFirstName[i],
+        lastName: teacherLastName[i],
+        school: teacherSchool[i],
+        email: teacherEmail[i],
+        notes: "",
+        phone: "",
+        id: teacherId[i],
+        role: "teacher",
+        sites: teacherSites[i]
+      };
+      await firebase.firestore().collection("users").doc(teacherInfo.id).set(teacherInfo);
+    }
+
+    //Create Programs
+    const programId: Array<string> = ["program1", "program2"];
+    const pLeaders: Array<Array<string>> =  [
+      [leaders.filter(leader => {return leader.email.includes("program1")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("program2")})[0].id] 
+    ];
+    const programName: Array<string> = ["Read For Success", "Writer's Vision"];
+    const sites: Array<Array<string>> = [["site1"], ["site2", "site3"]];
+
+    for (let i = 0; i < programId.length; i++) {
+      let programInfo: Record<string, any> = {
+        id: programId[i],
+        leaders: pLeaders[i],
+        name: programName[i],
+        sites: sites[i]
+      };
+      await firebase.firestore().collection("programs").doc(programInfo.id).set(programInfo);
+    }
+
+    //Create Sites
+    const siteId: Array<string> = ["site1", "site2", "site3"];
+    const sLeaders: Array<Array<string>> =  [
+      [leaders.filter(leader => {return leader.email.includes("site1")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("site2")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("site3")})[0].id],
+    ];
+    const siteName: Array<string> = ["Ecsed", "Wichita", "Leeds"];
+    const siteProgram: Array<string> = ["program1", "program2", "program2"];
+
+    for (let i = 0; i < siteId.length; i++) {
+      let programInfo: Record<string, any> = {
+        id: siteId[i],
+        leaders: sLeaders[i],
+        name: siteName[i],
+        programs: siteProgram[i]
+      };
+     await firebase.firestore().collection("sites").doc(programInfo.id).set(programInfo);
+   }
+
+  //Create KnowledgeChecks
+  const answeredBy: string = coaches.filter(coach => {return coach.email.includes("coach3")})[0].id;
+  const answerIndex: Array<number> = [0, 3, 1, 2, 4];
+  for (let i = 0; i < 5; i++) {
+    await firebase.firestore().collection("knowledgeChecks").doc().set({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      type: "climate",
+      isCorrect: true,
+      answeredBy: answeredBy,
+      questionIndex: i,
+      answerIndex: answerIndex[i]
+    });
+  }
+
+  //Create Observations
+  const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
+
+  const documents: number = 2;
+  for (let i = 0; i < documents; i++) {
+    const date = new Date();
+    date.setMonth(date.getMonth()-1)
+    const entryNumber: number = Math.floor(Math.random() * 8);
+    const observationInfo = {
+        // start: firebase.firestore.FieldValue.serverTimestamp(),
+        // end: firebase.firestore.FieldValue.serverTimestamp(),
+        start: firebase.firestore.Timestamp.fromDate(date),
+        end: firebase.firestore.Timestamp.fromDate(date),
+        type: "climate",
+        activitySetting: null,
+        checklist: null,
+        completed: true,
+        observedBy: "/user/" + answeredBy,
+        teacher: "/user/hewitt",
+        timezone: "America/New_York"
+      };
+
+    this.sessionRef = this.db.collection('observations').doc();
+    let entryCollection = this.sessionRef.collection('entries')
+    for (let i = 0; i < entryNumber; i++) {
+      await entryCollection.add({
+        Timestamp: firebase.firestore.Timestamp.fromDate(date),
+        Type: "climate",
+        BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+      });
+    }
+    await this.sessionRef.set(observationInfo)
+    this.sessionRef = null;
+    await this.sleep(2000)
+  }
+
+   secondFirebase.delete() // Frees resources for any subsequent users created
+  }
+
+
 }
 
 export default Firebase
