@@ -107,6 +107,7 @@ interface State {
   archivedCoaches: Array<Object>
   currentPage: string
   propFilter: Array<string>
+  sendToSites: Array<Object>
 }
 
 function checkCurrent(item: string) {
@@ -134,7 +135,8 @@ class UsersPage extends React.Component<Props, State> {
       programData: [],
       archivedTeachers: [],
       archivedCoaches: [],
-      propFilter: []
+      propFilter: [],
+      sendToSites: []
     }
   }
 
@@ -325,6 +327,45 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
+  buildSiteData = (coachData, siteData, programData, filter?) => {
+    let seen = [];
+    let data = [];
+    coachData.map(coach => {
+      coach.siteList.map(value => {
+        if ((this.props.userRole === "siteLeader") ? filter.includes(value.siteId) : (this.props.userRole === "programleader") ? filter.includes(value.programId) : true){
+        data.push({
+          siteName: value.siteName,
+          siteId: value.siteId,
+          programName: value.programName,
+          programId: value.programId,
+          firstName: coach.firstName,
+          lastName: coach.lastName,
+          id: coach.id,
+          archived: coach.archived
+        })
+        seen.push(value.siteId)
+      }
+      })
+    })
+    siteData.map(site => {
+      if (!seen.includes(site.id)) {
+        let programId = programData.find(o => o.name === site.programs).id
+        data.push({
+          siteName: site.name,
+          siteId: site.id,
+          programName: site.programs,
+          programId: programId,
+          firstName: "",
+          lastName: "",
+          id: "",
+          archived: false
+        })
+        seen.push(site.id)
+      }
+    })
+    return data;
+  }
+
   setSites = async () => {
     var siteData = await this.context.getSites();
     this.setState({siteData: siteData});
@@ -360,7 +401,7 @@ class UsersPage extends React.Component<Props, State> {
     var siteData = await this.setSites();
     console.log("Site Data Done...");
 
-    var programData = await this.setPrograms();
+    var programData = await this.setPrograms()
     console.log("Program Data Done...");
 
     var teacherData = await this.buildTeacherData(siteData, programData, teachers, coaches);
@@ -369,6 +410,7 @@ class UsersPage extends React.Component<Props, State> {
     var coachData = await this.buildCoachData(siteData, programData, coaches);
     console.log("Coach Data Done...");
 
+    let filter;
     if (this.props.userRole === "programLeader") {
       const {programs} = await this.context.getUserInformation()
       let temp = []
@@ -382,8 +424,11 @@ class UsersPage extends React.Component<Props, State> {
           }
         }
       }
+      siteData = siteData.filter(item => {return programs.includes(item.programs)})
+      programData = programData.filter(item => {return programs.includes(item.id)})
       coachData = temp;
-      this.setState({propFilter: programs})
+      this.setState({propFilter: programs, siteData: siteData, programData: programData})
+      filter = programs;
     }
 
     if (this.props.userRole === "siteLeader") {
@@ -400,7 +445,10 @@ class UsersPage extends React.Component<Props, State> {
         }
       }
       coachData = temp;
-      this.setState({propFilter: sites})
+      siteData = siteData.filter(item => {return sites.includes(item.id)})
+      programData = programData.filter(item => {return item.sites.some(value => sites.includes(value))})
+      this.setState({propFilter: sites, siteData: siteData, programData: programData})
+      filter = sites;
     }
 
     let archivedTeacherData = teacherData;
@@ -415,6 +463,9 @@ class UsersPage extends React.Component<Props, State> {
 
     let filteredCoachData = coachData.filter((item) => {return item.archived === false})
     this.setState({coachData: filteredCoachData});
+
+    let sendToSites = this.buildSiteData(coachData, siteData, programData, filter ? filter : []);
+    this.setState({sendToSites: sendToSites});
 
 
   }
@@ -523,6 +574,8 @@ class UsersPage extends React.Component<Props, State> {
                         userRole={userRole}
                         location={this.props.location}
                         coachData = {this.state.archivedCoaches}
+                        siteData = {this.state.siteData}
+                        sitesList = {this.state.sendToSites}
                         />
                     } />
                   </Switch>

@@ -1220,7 +1220,7 @@ class Coaches extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'5px'}}>
                   Coach
                 </Typography>
               </Grid>
@@ -1230,12 +1230,12 @@ class Coaches extends React.Component<Props, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'2px'}}>
+                <Typography variant="h6"   style={{marginTop:'5px'}}>
                   Program
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'3px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Sites
                 </Typography>
               </Grid>
@@ -1326,11 +1326,12 @@ class Coaches extends React.Component<Props, State> {
                   >
                     {this.state.siteOptions.map(
                       (option, index)=>{
-
-                        return <MenuItem key={option.id} value={option.id}>
+                        if (option) {
+                        return (<MenuItem key={option.id} value={option.id}>
                           {option.name}
                         </MenuItem>
-
+                        )
+                        }
                     })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}

@@ -22,6 +22,7 @@ import Firebase, { FirebaseContext } from '../Firebase'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import styled from 'styled-components'
+import { isThisISOWeek } from 'date-fns';
 
 const StyledSelect = withStyles({
   root: {
@@ -56,9 +57,11 @@ interface State {
   teachersList: Array<Object>
   sortType: string
   view: number
+  pendingView: number
   saved: boolean
   addTeacherFirstName: string
   addTeacherLastName: string
+  addTeacherEmail: string
   addCoach: string
   addCoachSites: Array<Object>
   addSiteName: string
@@ -104,9 +107,11 @@ class Teachers extends React.Component<Props, State> {
       teachersList: [],
       sortType: "",
       view: 1,
+      pendingView: 1,
       saved: true,
       addTeacherFirstName: "",
       addTeacherLastName: "",
+      addTeacherEmail: "",
       addCoach: "",
       addCoachSites: [],
       addSiteName: "",
@@ -217,6 +222,7 @@ class Teachers extends React.Component<Props, State> {
   }
 
   handlePageChange = (pageNumber: number) => {
+    this.setState({pendingView: pageNumber})
     switch (pageNumber) {
       default : case 1:
         if (!this.state.saved) {
@@ -261,7 +267,9 @@ class Teachers extends React.Component<Props, State> {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
-      if (event.target.value === "") {
+      if (event.target.value === "" && this.state.addTeacherLastName === "" 
+      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherFirstName: event.target.value,
           saved: true,
@@ -273,13 +281,28 @@ class Teachers extends React.Component<Props, State> {
       })}
     }
     if (name === 'lastName') {
-      if (event.target.value === "") {
+      if (event.target.value === "" && this.state.addTeacherFirstName === "" 
+      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherLastName: event.target.value,
           saved: true,
         })} else {
       this.setState({
         addTeacherLastName: event.target.value,
+        saved: false,
+      })}
+    }
+    if (name === 'email') {
+      if (event.target.value === "" && this.state.addTeacherLastName === "" 
+      && this.state.addTeacherFirstName === "" && this.state.addCoach === "" 
+      && this.state.addSite === "" && this.state.addProgram === "") {
+        this.setState({
+          addTeacherEmail: event.target.value,
+          saved: true,
+        })} else {
+      this.setState({
+        addTeacherEmail: event.target.value,
         saved: false,
       })}
     }
@@ -319,9 +342,10 @@ class Teachers extends React.Component<Props, State> {
     if(this.state.awaitingConfirmationRef) {
       this.state.awaitingConfirmationRef.resolve(true)
     }
+      let view = this.state.pendingView;
       this.setState({
         saveModalOpen: false,
-        view: 1,
+        view: view,
         saved: true,
         awaitingConfirmationRef: null,
         addTeacherFirstName: "",
@@ -389,7 +413,8 @@ class Teachers extends React.Component<Props, State> {
     })
     .finally(() => {
 
-      let update = this.state.teachersList;
+      // let update = this.state.teachersList;
+      let update = this.props.teacherData;
       let teacherData = update.find(o => o.teacherId === editTeacherId);
       let teacherIndex = update.indexOf(teacherData);
       update[teacherIndex].archived = true;
@@ -521,7 +546,7 @@ editTeacher = async (firebase:Firebase) => {
         alert('Unable to edit teacher. Please try again')
         this.setState({success: false})
       }).finally(() => {
-          let update = this.state.teachersList;
+          let update = this.props.teacherData;
           let teacherData = update.find(o => o.teacherId === editTeacherId);
           let teacherDataIndex = update.indexOf(teacherData);
           update[teacherDataIndex].teacherFirstName = editTeacherFirstName;
@@ -553,7 +578,8 @@ editTeacher = async (firebase:Firebase) => {
         addTeacherLastName,
         addCoach,
         addSiteName,
-        addProgram
+        addProgram,
+        addTeacherEmail
     } = this.state;
 
     this.setState({success: true})
@@ -583,6 +609,11 @@ editTeacher = async (firebase:Firebase) => {
       return;
     }
 
+    if (addTeacherEmail !== "" && !this.validateEmail(addTeacherEmail)) {
+      alert("No email or valid email is required");
+      return;
+    }
+
     // check user role to make sure site leaders can't change programs
     // if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
     //     alert("Please select a role");
@@ -594,51 +625,50 @@ editTeacher = async (firebase:Firebase) => {
         firstName: addTeacherFirstName,
         lastName: addTeacherLastName,
         school: addSiteName,
-        email: '',
+        email: addTeacherEmail,
         notes: '',
         phone: ''
     }
-    await firebase.addTeacherToCoach(teacherInfo, addCoach)
-    .then(() => {
-        return randomString
-      }).catch(e => {
-          console.log(e)
-          alert('Unable to create user. Please try again')
-          this.setState({success: false})
-      }).finally(async () => {
+    const newTeacherRef = await firebase.addTeacherToCoach(teacherInfo, addCoach).catch(e => {
+        console.log(e)
+        alert('Unable to create user. Please try again')
+        this.setState({success: false})
+      })
 
-          let update = this.state.teachersList
-          let coachData = this.props.coachData.find(o => o.id === addCoach)
-          let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
-          let programData = this.props.programData.find(o => o.id  === addProgram)
+    let update = this.props.teacherData
+    let coachData = this.props.coachData.find(o => o.id === addCoach)
+    let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
+    let programData = this.props.programData.find(o => o.id  === addProgram)
 
-          update.push({
-            coachId: coachData.id,
-            coachFirstName: coachData.firstName,
-            coachLastName: coachData.lastName,
-            siteName: siteData.name,
-            teacherId: await this.context.getTeacherId(addTeacherFirstName, addTeacherLastName, ''),
-            teacherFirstName: addTeacherFirstName,
-            teacherLastName: addTeacherLastName,
-            selectedSiteId: siteData.id,
-            selectedProgramName: programData.name,
-            selectedProgramId: programData.id,
-            archived: false
-          })
-          this.setState({ // Hold off setting new state until success has been determined
-            teachersList: update,
-            addTeacherFirstName: '',
-            addTeacherLastName: '',
-            addCoachSites: [],
-            addSiteName: '',
-            addCoach: '',
-            addCoachPrograms: [],
-            addProgram: '',
-            addSite: '',
-            successModalOpen: this.state.success ? true : false,
-            saved: true
-          });
-      });
+    update.push({
+      coachId: coachData.id,
+      coachFirstName: coachData.firstName,
+      coachLastName: coachData.lastName,
+      siteName: siteData.name,
+      // teacherId: await this.context.getTeacherId(addTeacherFirstName, addTeacherLastName, addTeacherEmail),
+      teacherId: newTeacherRef,
+      teacherFirstName: addTeacherFirstName,
+      teacherLastName: addTeacherLastName,
+      selectedSiteId: siteData.id,
+      selectedProgramName: programData.name,
+      selectedProgramId: programData.id,
+      archived: false,
+      email: addTeacherEmail
+    })
+    this.setState({ // Hold off setting new state until success has been determined
+      teachersList: update,
+      addTeacherFirstName: '',
+      addTeacherLastName: '',
+      addTeacherEmail: '',
+      addCoachSites: [],
+      addSiteName: '',
+      addCoach: '',
+      addCoachPrograms: [],
+      addProgram: '',
+      addSite: '',
+      successModalOpen: this.state.success ? true : false,
+      saved: true
+    });
   }
 
   handleEditClick = (value) => {
@@ -662,7 +692,9 @@ editTeacher = async (firebase:Firebase) => {
 
   handlePopulateSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({addCoach: event.target.value, saved: false})
-    const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    const sites = this.props.siteData.map(item => {return item.id})
+    let selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    selectedSites = selectedSites.filter(item => {return sites.includes(item.siteId)})
     this.setState({
       addCoachSites: selectedSites,
       addSiteName: "",
@@ -677,9 +709,10 @@ editTeacher = async (firebase:Firebase) => {
     let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
     this.setState({addSiteName: site})
     const sites = this.props.coachData.filter((doc) => {return doc.id === this.state.addCoach})[0].siteList
+    const filter = this.props.programData.map(item => {return item.id})
     let programs = []
     sites.map((doc) => {
-      if (doc.siteId === event.target.value) {
+      if (doc.siteId === event.target.value && filter.includes(doc.programId)) {
         programs.push({programId: doc.programId, programName: doc.programName})
       }
     })
@@ -701,7 +734,9 @@ editTeacher = async (firebase:Firebase) => {
 
   handleTransferSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({changeCoachId: event.target.value, saved: false})
-    const selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    const sites = this.props.siteData.map(item => {return item.id})
+    let selectedSites = this.props.coachData.filter((doc) => {return doc.id === event.target.value})[0].siteList
+    selectedSites = selectedSites.filter(item => {return sites.includes(item.siteId)})
     this.setState({
       transferCoachSites: selectedSites,
       transferCoachPrograms: [],
@@ -717,9 +752,10 @@ editTeacher = async (firebase:Firebase) => {
     this.setState({changeSiteName: site})
     console.log(site)
     const sites = this.props.coachData.filter((doc) => {return doc.id === this.state.changeCoachId})[0].siteList
+    const filter = this.props.programData.map(item => {return item.id})
     let programs = []
     sites.map((doc) => {
-      if (doc.siteId === event.target.value) {
+      if (doc.siteId === event.target.value && filter.includes(doc.programId)) {
         programs.push({programId: doc.programId, programName: doc.programName})
       }
     })
@@ -1192,22 +1228,27 @@ editTeacher = async (firebase:Firebase) => {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
+                <Typography variant="h6" style={{marginTop:'5px'}}>
                   Teacher
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" style={{marginTop:'8px'}}>
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" style={{marginTop:'7px'}}>
                   Coach
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom style={{marginTop:'5px'}}>
+                <Typography variant="h6" style={{marginTop:'8px'}}>
                   Site
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" style={{marginTop:'10px'}}>
                   Program
                 </Typography>
               </Grid>
@@ -1243,6 +1284,18 @@ editTeacher = async (firebase:Firebase) => {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  size="small"
+                  style={{width:'29.7vw', maxWidth: '470px'}}
+                  id="teacher-email"
+                  label="Email"
+                  type="text"
+                  value={this.state.addTeacherEmail}
+                  variant="outlined"
+                  onChange={this.handleAddInputChange('email')}
+                />
               </Grid>
               <Grid item>
                 <FormControl variant="outlined">

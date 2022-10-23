@@ -207,6 +207,7 @@ class Firebase {
           lastName: userData.lastName,
           role: role,
           id: userInfo.user ? userInfo.user.uid : '',
+          archived: false
         }
 
         // Create the Practice Teacher if it does not currently exist
@@ -574,6 +575,7 @@ class Firebase {
         role: 'teacher',
         id: newTeacherRef.id,
         phone: phone,
+        archived: false
       })
       .then(() => {
         const id = newTeacherRef.id // get new iD
@@ -612,6 +614,7 @@ class Firebase {
         id: newTeacherRef.id,
         phone: phone,
         sites: sites ? sites : [],
+        archived: false
       })
       .then(() => {
         const id = newTeacherRef.id // get new iD
