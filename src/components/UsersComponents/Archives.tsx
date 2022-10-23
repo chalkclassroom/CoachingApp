@@ -369,7 +369,7 @@ class Archives extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.editTeacherName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, true).
+    await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, true).
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')

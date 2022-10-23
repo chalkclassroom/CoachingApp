@@ -40,8 +40,10 @@ interface Props {
   userRole: string
   location: string
   coachData: Array<Object>
-  siteData: Array<Object>
+  teacherData: Array<Object>
   sitesList: Array<Object>
+  updateCoachData(data): void 
+  updateTeacherData(data): void 
 }
 
 interface State {
@@ -49,6 +51,20 @@ interface State {
     saved: boolean
     currentSites: Array<Object>
     sortType: string
+    editCoachFirstName: string
+    editCoachLastName: string
+    editCoachEmail: string
+    editCoachSiteName: string
+    editCoachProgramName: string
+    editCoachId: string
+    editCoachSiteId: string
+    editCoachProgramId: string
+    successModalOpen: boolean
+    success: boolean
+    saveModalOpen: boolean
+    pendingView: number
+    awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
+
 }
 
 class Sites extends React.Component<Props, State> {
@@ -59,19 +75,36 @@ class Sites extends React.Component<Props, State> {
     view: 1,
     saved: true,
     currentSites: [],
-    sortType: ""
+    sortType: "",
+    editCoachFirstName: "",
+    editCoachLastName: "",
+    editCoachEmail: "",
+    editCoachSiteName: "",
+    editCoachProgramName: "",
+    editCoachId: "",
+    editCoachSiteId: "",
+    editCoachProgramId: "",
+    successModalOpen: false,
+    success: true,
+    saveModalOpen: false,
+    pendingView: 1,
+    awaitingConfirmationRef: null
+
   }
   
   }
 
   componentDidMount = async () => {
+    const temp = this.props.sitesList;
+    this.setState({currentSites: temp})
   }
 
   handlePageChange = (pageNumber: number) => {
+    this.setState({pendingView: pageNumber})
     switch (pageNumber) {
       default : case 1:
         if (!this.state.saved) {
-          // this.onSaveModalOpen();
+          this.onSaveModalOpen();
           break;
         } else {
           this.setState({view: pageNumber});
@@ -80,7 +113,7 @@ class Sites extends React.Component<Props, State> {
         }
       case 2:
         if (!this.state.saved) {
-          // this.onSaveModalOpen();
+          this.onSaveModalOpen();
           break;
         } else {
           this.setState({view: pageNumber});
@@ -89,7 +122,7 @@ class Sites extends React.Component<Props, State> {
         }
       case 3:
         if (!this.state.saved) {
-          // this.onSaveModalOpen();
+          this.onSaveModalOpen();
           break;
         } else {
           this.setState({view: pageNumber});
@@ -139,12 +172,213 @@ class Sites extends React.Component<Props, State> {
 
   }
 
+  validateEmail = (email: string): boolean => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  editCoach = async (firebase:Firebase) => {
+      firebase
+      const {
+        editCoachId,
+        editCoachFirstName,
+        editCoachLastName,
+        editCoachEmail
+      } = this.state
+
+      this.setState({success: true})
+
+      if (!editCoachFirstName || editCoachFirstName === ""){
+        alert("First Name is required");
+        return
+      }
+
+      if (!editCoachLastName || editCoachLastName === ""){
+        alert("Last name is required");
+        return;
+      }
+
+      if (editCoachEmail !== "" && !this.validateEmail(editCoachEmail)) {
+        alert("No email or valid email is required");
+        return;
+      }
+
+      await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail).
+        catch(e => {
+          console.log(e)
+          alert('Unable to edit Coach. Please try again')
+          this.setState({success: false})
+        }).finally(() => {
+            let update = this.props.coachData;
+            let coachData = update.find(o => o.id === editCoachId);
+            let coachDataIndex = update.indexOf(coachData);
+            update[coachDataIndex].firstName = editCoachFirstName;
+            update[coachDataIndex].lastName = editCoachLastName;
+            update[coachDataIndex].email = editCoachEmail;
+
+            this.props.updateCoachData(update)
+
+            update = this.props.teacherData;
+            coachData = update.filter(o => {return o.coachId === editCoachId});
+            coachData.map(value => {
+              coachDataIndex = update.indexOf(value);
+              update[coachDataIndex].coachFirstName = editCoachFirstName;
+              update[coachDataIndex].coachLastName = editCoachLastName;
+            })
+            this.props.updateTeacherData(update)
+
+            update = this.props.sitesList;
+            coachData = update.filter(o => {return o.id === editCoachId})
+            coachData.map(value => {
+              coachDataIndex = update.indexOf(value)
+              update[coachDataIndex].firstName = editCoachFirstName;
+              update[coachDataIndex].lastName = editCoachLastName;
+              update[coachDataIndex].email = editCoachEmail;
+            })
+            
+
+            this.setState({ // Hold off setting new state until success has been determined
+              editCoachId: "",
+              editCoachFirstName: "",
+              editCoachLastName: "",
+              editCoachEmail: "",
+              editCoachSiteName: "",
+              editCoachProgramName: "",
+              editCoachSiteId: "",
+              editCoachProgramId: "",
+              successModalOpen: this.state.success ? true : false,
+              saved: true
+            });
+        });
+  }
+
+  handleEditInputChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    if (name === 'firstName') {
+      this.setState({
+        editCoachFirstName: event.target.value,
+        saved: false,
+      })
+    }
+    if (name === 'lastName') {
+      this.setState({
+        editCoachLastName: event.target.value,
+        saved: false,
+      })
+    }
+    if (name === 'email') {
+      this.setState({
+        editCoachEmail: event.target.value,
+        saved: false,
+      })
+    }
+  }
+
+  handleEditClick = (value) => {
+    console.log(value)
+    this.setState({
+      editCoachId: value.id,
+      editCoachFirstName: value.firstName,
+      editCoachLastName: value.lastName,
+      editCoachEmail: value.email,
+      editCoachSiteName: value.siteName,
+      editCoachSiteId: value.siteId,
+      editCoachProgramName: value.programName,
+      editCoachProgramId: value.programId
+    })
+    this.handlePageChange(3)
+  }
+
+  onSaveModalOpen =  (): Promise<boolean> => {
+    this.setState({saveModalOpen: true})
+    return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+      this.setState({awaitingConfirmationRef: {resolve}})
+    })
+  }
+
+  onSaveModalDiscard = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(true)
+    }
+      let view = this.state.pendingView;
+      this.setState({
+        saveModalOpen: false,
+        view: view,
+        saved: true,
+        awaitingConfirmationRef: null,
+        editCoachFirstName: "",
+        editCoachLastName: "",
+        editCoachEmail: "",
+        editCoachSiteName: "",
+        editCoachProgramName: "",
+        editCoachId: "",
+        editCoachSiteId: "",
+        editCoachProgramId: "",
+      })
+  }
+
+  onSaveModalClose = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(false)
+    }
+      this.setState({
+          saveModalOpen: false,
+        awaitingConfirmationRef: null
+      })
+  }
+
+  successModalClose = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(false)
+    }
+      this.setState({
+          awaitingConfirmationRef: null,
+          successModalOpen: false,
+          saved: true,
+          editCoachFirstName: "",
+          editCoachLastName: "",
+          editCoachEmail: "",
+          editCoachSiteName: "",
+          editCoachProgramName: "",
+          editCoachId: "",
+          editCoachSiteId: "",
+          editCoachProgramId: "",
+      })
+    this.handlePageChange(1)
+  }
+
   render() {
     
     return (<>
     <Button
     onClick={() => {this.context.populateFirebase()}}
     >Click Me</Button>
+
+    <Dialog open={this.state.successModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          The action was completed successfully.
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.successModalClose}>
+            Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+    <Dialog open={this.state.saveModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          You have unsaved changes to your entry.
+          Would you like to discard the entry?
+      </DialogTitle>
+      <DialogActions>
+          <Button onClick={this.onSaveModalClose}>
+              No, keep editing
+          </Button>
+          <Button onClick={this.onSaveModalDiscard}>
+              Yes, discard changes
+          </Button>
+      </DialogActions>
+    </Dialog>
   {this.props.sitesList.length > 0 ? (<>
     <Grid container direction='row'>
   {this.state.view === 1 ? (<>
@@ -325,7 +559,7 @@ class Sites extends React.Component<Props, State> {
         <tbody>
           {this.props.sitesList.map((site) => {
             return (<>
-            <TableRow key={site.id} onClick={() => {this.handlePageChange(3)}}>
+            <TableRow key={site.id} onClick={() => {this.handleEditClick(site)}}>
               <td style={{textAlign:'center'}}>
                 <Typography variant="h6"  >
                   {site.siteName}
@@ -385,12 +619,12 @@ class Sites extends React.Component<Props, State> {
                 id="teacher-firstName"
                 label="First Name"
                 type="text"
-                // value={this.state.editTeacherFirstName}
+                value={this.state.editCoachFirstName}
                 InputProps={{
                   readOnly: false
                 }}
                 variant="outlined"
-                // onChange={this.handleEditInputChange('firstName')}
+                onChange={this.handleEditInputChange('firstName')}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -398,12 +632,12 @@ class Sites extends React.Component<Props, State> {
                 id="teacher-lastName"
                 label="Last Name"
                 type="text"
-                // value={this.state.editTeacherLastName}
+                value={this.state.editCoachLastName}
                 InputProps={{
                   readOnly: false
                 }}
                 variant="outlined"
-                // onChange={this.handleEditInputChange('lastName')}
+                onChange={this.handleEditInputChange('lastName')}
                 />
               </Grid>
             </Grid>
@@ -414,12 +648,12 @@ class Sites extends React.Component<Props, State> {
               id="teacher-email"
               label="Email"
               type="text"
-              // value={this.state.editEmail}
+              value={this.state.editCoachEmail}
               InputProps={{
                 readOnly: false
               }}
               variant="outlined"
-              // onChange={this.handleEditInputChange('email')}
+              onChange={this.handleEditInputChange('email')}
             />
           </Grid>
           <Grid item>
@@ -427,7 +661,7 @@ class Sites extends React.Component<Props, State> {
               style={{width:'42vw', maxWidth: '470px'}}
               id="teacher-Coach"
               type="text"
-              // value={this.state.editCoach}
+              value={this.state.editCoachSiteName}
               InputProps={{
                 readOnly: true
               }}
@@ -439,7 +673,7 @@ class Sites extends React.Component<Props, State> {
               style={{width:'42vw', maxWidth: '470px'}}
               id="teacher-Site"
               type="text"
-              // value={this.state.editSite}
+              value={this.state.editCoachProgramName}
               InputProps={{
                 readOnly: true
               }}
@@ -455,7 +689,7 @@ class Sites extends React.Component<Props, State> {
             <FirebaseContext.Consumer>
               {(firebase: Firebase) => (
                 <Button
-                // onClick={(_)=>{this.editTeacher(firebase)}}
+                onClick={(_)=>{this.editCoach(firebase)}}
                 >
                   {this.state.saved ? (
                     <img

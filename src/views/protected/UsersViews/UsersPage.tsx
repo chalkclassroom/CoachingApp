@@ -285,7 +285,8 @@ class UsersPage extends React.Component<Props, State> {
           lastName: value.lastName,
           id:  value.id,
           siteList: coachesSites,
-          archived: value.archived ? value.archived : false
+          archived: value.archived ? value.archived : false,
+          email: value.email
         })
 
         /////////////////////////////////////////////////////////
@@ -341,7 +342,8 @@ class UsersPage extends React.Component<Props, State> {
           firstName: coach.firstName,
           lastName: coach.lastName,
           id: coach.id,
-          archived: coach.archived
+          archived: coach.archived,
+          email: coach.email
         })
         seen.push(value.siteId)
       }
@@ -349,7 +351,9 @@ class UsersPage extends React.Component<Props, State> {
     })
     siteData.map(site => {
       if (!seen.includes(site.id)) {
-        let programId = programData.find(o => o.name === site.programs).id
+        let programId = programData.find(o => o.sites.includes(site.id)).id
+        console.log(siteData)
+        console.log(programData)
         data.push({
           siteName: site.name,
           siteId: site.id,
@@ -358,7 +362,8 @@ class UsersPage extends React.Component<Props, State> {
           firstName: "",
           lastName: "",
           id: "",
-          archived: false
+          archived: false,
+          email: ""
         })
         seen.push(site.id)
       }
@@ -475,6 +480,10 @@ class UsersPage extends React.Component<Props, State> {
     this.setState({teacherData: teacherData});
   }
 
+  updateCoachData = (coachData) => {
+    this.setState({coachData: coachData})
+  }
+
 
 
   static propTypes = {
@@ -573,9 +582,11 @@ class UsersPage extends React.Component<Props, State> {
                         changePage={(pageName: string) => this.changePage(pageName)}
                         userRole={userRole}
                         location={this.props.location}
-                        coachData = {this.state.archivedCoaches}
-                        siteData = {this.state.siteData}
+                        coachData = {this.state.coachData}
+                        teacherData = {this.state.teacherData}
                         sitesList = {this.state.sendToSites}
+                        updateCoachData = {(data) => this.updateCoachData(data)}
+                        updateTeacherData={(data) => this.updateTeacherData(data)}
                         />
                     } />
                   </Switch>

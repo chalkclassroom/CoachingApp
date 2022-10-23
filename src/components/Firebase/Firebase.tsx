@@ -4357,7 +4357,8 @@ class Firebase {
           lastName: coach.data().lastName,
           archived: coach.data().archived ? coach.data().archived : false,
           sites: coach.data().sites,
-          teachers: []
+          teachers: [],
+          email: coach.data().email
         }
         await Promise.all(subCollection.docs.map(async teachers => {
           if (teachers.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
@@ -4446,20 +4447,20 @@ class Firebase {
     return arr
   }
 
-  editTeacherName = async (teacherId: string, changeFirst: string, changeLast: string, changeEmail: string, archives?: boolean) => {
+  editUserName = async (teacherId: string, changeFirst: string, changeLast: string, changeEmail: string, archives?: boolean) => {
     this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
     .catch((error: Error) => {
       console.error(
-        "Error occurred when editing teacher: ",
+        "Error occurred when editing user: ",
         error
       )
     })
 
     if (archives) {
-      this.db.collection("archives").doc(teacherId).update({firstName: changeFirst, lastName: changeLast})
+      this.db.collection("archives").doc(teacherId).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
       .catch((error: Error) => {
         console.error(
-          "Error occurred when editing teacher archive: ",
+          "Error occurred when editing user archive: ",
           error
         )
       })
@@ -6353,12 +6354,17 @@ class Firebase {
       "carter@program2.com",            
       "gein@site1.com",                 //Beginning of siteLeaders
       "lee@site2.com",
-      "lopez@site3.com",                
-      "dahmer@coach1.com",              //Beginning of coaches
+      "lopez@site3.com", 
+      "lawrence@site4.com",
+      "columbus@site5.com",               
+      "mann@coach1.com",              //Beginning of coaches
       "brown@coach2.com",
       "james@coach3.com",
-      "swift@coach4.com"         
+      "swift@coach4.com",
+      "anthony@coach5.com",
+      'neutron@coach6.com'
     ];
+
     const password: Array<string> = Array(authEmail.length).fill("password");
     const authFirstName: Array<string> = [
       "Theodore",                       //Beginning of programLeaders
@@ -6366,10 +6372,14 @@ class Firebase {
       "Edward",                         //Beginning of siteLeaders
       "Yan", 
       "Jennifer",                       
-      "Jeffrey",                        //Beginning of coaches
+      "Martin",
+      "Christopher",
+      "Tiffany",                        //Beginning of coaches
       "James", 
       "Richard", 
-      "Taylor"                          
+      "Taylor",
+      "Susan",
+      "James"                          
     ];
     const authLastName: Array<string> = [
       "Bundy",                          //Beginning of programLeaders
@@ -6377,14 +6387,18 @@ class Firebase {
       "Gein",                           //Beginning of siteLeaders
       "Lee", 
       "Lopez",                          
-      "Dahmer",                         //Beginning of coaches
+      "Lawrence",
+      "Columbus",
+      "Mann",                         //Beginning of coaches
       "Brown", 
       "James", 
-      "Swift"                           
+      "Swift",
+      "Anthony",
+      "Neutron"                           
     ];
     const programLeadersNumber: number = 2;
-    const siteLeadersNumber: number = 3;
-    const coachNumber: number = 4;
+    const siteLeadersNumber: number = 5;
+    const coachNumber: number = 6;
     let authRole: Array<string> = Array(programLeadersNumber).fill("programLeader");
     authRole.push(...Array(siteLeadersNumber).fill("siteLeader"));
     authRole.push(...Array(coachNumber).fill("coach"));
@@ -6404,26 +6418,56 @@ class Firebase {
         };
         if (userData.email.includes("coach")) {
           if (userData.email.includes("coach1")) {
-            userData.sites =  ["site1"]
+            userData.sites =  ["site1", "site2"]
+            userData.unlocked = [2]
             const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
             await docRef.set(userData).then(() => {
               docRef.collection("partners").doc("bathory").set({});
               docRef.collection("partners").doc("gacy").set({});
               docRef.collection("partners").doc("manson").set({});
+              docRef.collection("partners").doc("monroe").set({});
+              docRef.collection("partners").doc("bellucci").set({});
+              docRef.collection("partners").doc("hewitt").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
             })
           }else if (userData.email.includes("coach2")) {
+            userData.sites =  ["site1"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }else if (userData.email.includes("coach3")) {
             userData.sites =  ["site2"]
             const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
             await docRef.set(userData).then(() => {
-              docRef.collection("partners").doc("monroe").set({});
-              docRef.collection("partners").doc("bellucci").set({});
+              docRef.collection("partners").doc("flinstone").set({});
+              docRef.collection("partners").doc("rubble").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
             })
-          }else if (userData.email.includes("coach3")) {
+          }else if (userData.email.includes("coach4")) {
             userData.sites =  ["site3"]
-            userData.unlocked = [2]
             const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
             await docRef.set(userData).then(() => {
-              docRef.collection("partners").doc("hewitt").set({});
+              docRef.collection("partners").doc("potter").set({});
+              docRef.collection("partners").doc("bozeman").set({});
+              docRef.collection("partners").doc("slaughter").set({});
+              docRef.collection("partners").doc("darlas").set({});
+              docRef.collection("partners").doc("davis").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }else if (userData.email.includes("coach5")) {
+            userData.sites =  ["site1"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("laframboise").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }else if (userData.email.includes("coach6")) {
+            userData.sites =  ["site1"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("sawyer").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
             })
           } else {
             userData.sites =  []
@@ -6447,6 +6491,10 @@ class Firebase {
             userData.sites = ["site2"]
           }else if (userData.email.includes("site3")) {
             userData.sites = ["site3"]
+          }else if (userData.email.includes("site4")) {
+            userData.sites = ["site4"]
+          }else if (userData.email.includes("site5")) {
+            userData.sites = ["site5"]
           } else {}
           await firebase.firestore().collection("users").doc(userInfo.user.uid).set(userData);
           leaders.push({
@@ -6465,6 +6513,17 @@ class Firebase {
       "Marilyn", 
       "Monica", 
       "Bubba",
+      "Fred",
+      "Barney",
+      "Harry",
+      "Phillip",
+      "Chelsea",
+      "Kimberly",
+      "Mariah",
+      "Ashley",
+      "Bernadette",
+      "Babatunde",
+      "Isabella",
       "Practice"
     ];
     const teacherLastName: Array<string> = [
@@ -6474,15 +6533,37 @@ class Firebase {
       "Monroe", 
       "Bellucci", 
       "Hewitt",
+      "Flinstone",
+      "Rubble",
+      "Potter",
+      "Bozeman",
+      "Slaughter",
+      "Darlas",
+      "Davis",
+      "Laframboise",
+      "Sawyer",
+      "Olatunji",
+      "Perez",
       "Teacher"
     ];
     const teacherSchool: Array<string> = [
-      "Ecsed", 
-      "Ecsed", 
-      "Ecsed", 
-      "Wichita", 
-      "Leeds", 
-      "Leeds",
+      "Ecsed Horizons", 
+      "Ecsed Horizons", 
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Ecsed Horizons", 
+      "Wichita Stars",
+      "Wichita Stars",
+      "Wichita Stars", 
+      "Leeds Learning", 
+      "Leeds Learning",
+      "Leeds Learning",
+      "Leeds Learning",
+      "Leeds Learning",
+      "First Steps",
+      "Little Learners",
+      "",
+      "",
       "Elum Entaree School"
     ];
     const teacherEmail: Array<string> = [
@@ -6492,6 +6573,17 @@ class Firebase {
       "monroe@email.com", 
       "bellucci@email.com", 
       "hewitt@email.com",
+      "flinstone@email.com",
+      "rubble@email.com",
+      "potter@email.com",
+      "bozeman@email.com",
+      "slaughter@email.com",
+      "darlas@email.com",
+      "davis@email.com",
+      "laframboise@email.com",
+      "sawyer@email.com",
+      "olatunji@email.com",
+      "perez@email.com",
       "practice@teacher.edu"
     ];
     const teacherId: Array<string> = [
@@ -6501,15 +6593,37 @@ class Firebase {
       "monroe", 
       "bellucci", 
       "hewitt",
+      "flinstone",
+      "rubble",
+      "potter",
+      "bozeman",
+      "slaughter",
+      "darlas",
+      "davis",
+      "laframboise",
+      "sawyer",
+      "olatunji",
+      "perez",
       "rJxNhJmzjRZP7xg29Ko6"
     ];
     const teacherSites: Array<Array<string>> = [
       ["site1"], 
       ["site1"], 
       ["site1"],
+      ["site1"],
+      ["site1"],
+      ["site2"], 
+      ["site2"], 
       ["site2"], 
       ["site3"], 
+      ["site3"], 
+      ["site3"], 
+      ["site3"], 
       ["site3"],
+      ["site4"],
+      ["site5"], 
+      [],
+      [],
       ["Elum Entaree School"]
     ];
 
@@ -6534,8 +6648,8 @@ class Firebase {
       [leaders.filter(leader => {return leader.email.includes("program1")})[0].id], 
       [leaders.filter(leader => {return leader.email.includes("program2")})[0].id] 
     ];
-    const programName: Array<string> = ["Read For Success", "Writer's Vision"];
-    const sites: Array<Array<string>> = [["site1"], ["site2", "site3"]];
+    const programName: Array<string> = ["Reading For Success", "Writing Rainbows"];
+    const sites: Array<Array<string>> = [["site1", "site2", "site3"], ["site4", "site5"]];
 
     for (let i = 0; i < programId.length; i++) {
       let programInfo: Record<string, any> = {
@@ -6548,14 +6662,17 @@ class Firebase {
     }
 
     //Create Sites
-    const siteId: Array<string> = ["site1", "site2", "site3"];
+    const siteId: Array<string> = ["site1", "site2", "site3", "site4", "site5", "site6"];
     const sLeaders: Array<Array<string>> =  [
       [leaders.filter(leader => {return leader.email.includes("site1")})[0].id], 
       [leaders.filter(leader => {return leader.email.includes("site2")})[0].id], 
       [leaders.filter(leader => {return leader.email.includes("site3")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site4")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
     ];
-    const siteName: Array<string> = ["Ecsed", "Wichita", "Leeds"];
-    const siteProgram: Array<string> = ["program1", "program2", "program2"];
+    const siteName: Array<string> = ["Ecsed Horizons", "Wichita Stars", "Leeds Learning", "First Steps", "Little Learners", "Fairlawn"];
+    const siteProgram: Array<string> = ["program1", "program1", "program1", "program2", "program2", "program2"];
 
     for (let i = 0; i < siteId.length; i++) {
       let programInfo: Record<string, any> = {
@@ -6583,39 +6700,75 @@ class Firebase {
 
   //Create Observations
   const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
-
   const documents: number = 2;
-  for (let i = 0; i < documents; i++) {
-    const date = new Date();
-    date.setMonth(date.getMonth()-1)
-    const entryNumber: number = Math.floor(Math.random() * 8);
-    const observationInfo = {
-        // start: firebase.firestore.FieldValue.serverTimestamp(),
-        // end: firebase.firestore.FieldValue.serverTimestamp(),
-        start: firebase.firestore.Timestamp.fromDate(date),
-        end: firebase.firestore.Timestamp.fromDate(date),
-        type: "climate",
-        activitySetting: null,
-        checklist: null,
-        completed: true,
-        observedBy: "/user/" + answeredBy,
-        teacher: "/user/hewitt",
-        timezone: "America/New_York"
-      };
 
-    this.sessionRef = this.db.collection('observations').doc();
-    let entryCollection = this.sessionRef.collection('entries')
-    for (let i = 0; i < entryNumber; i++) {
-      await entryCollection.add({
-        Timestamp: firebase.firestore.Timestamp.fromDate(date),
-        Type: "climate",
-        BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
-      });
+  
+  for (let m = 0; m < 2; m++) {
+    for (let i = 0; i < documents; i++) {
+      const date = new Date();
+      date.setMonth(date.getMonth()-m)
+      const entryNumber: number = Math.floor(Math.random() * 8);
+      const observationInfo = {
+          start: firebase.firestore.Timestamp.fromDate(date),
+          end: firebase.firestore.Timestamp.fromDate(date),
+          type: "climate",
+          activitySetting: null,
+          checklist: null,
+          completed: true,
+          observedBy: "/user/" + answeredBy,
+          teacher: "/user/hewitt",
+          timezone: "America/New_York"
+        };
+
+      this.sessionRef = this.db.collection('observations').doc();
+      let entryCollection = this.sessionRef.collection('entries')
+      for (let i = 0; i < entryNumber; i++) {
+        await entryCollection.add({
+          Timestamp: firebase.firestore.Timestamp.fromDate(date),
+          Type: "climate",
+          BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+        });
+      }
+      await this.sessionRef.set(observationInfo)
+      this.sessionRef = null;
+      await this.sleep(2000)
     }
-    await this.sessionRef.set(observationInfo)
-    this.sessionRef = null;
-    await this.sleep(2000)
   }
+
+  for (let m = 5; m < 10; m++) {
+    for (let i = 0; i < documents; i++) {
+      const date = new Date();
+      date.setMonth(date.getMonth()-m)
+      const entryNumber: number = Math.floor(Math.random() * 8);
+      const observationInfo = {
+          // start: firebase.firestore.FieldValue.serverTimestamp(),
+          // end: firebase.firestore.FieldValue.serverTimestamp(),
+          start: firebase.firestore.Timestamp.fromDate(date),
+          end: firebase.firestore.Timestamp.fromDate(date),
+          type: "climate",
+          activitySetting: null,
+          checklist: null,
+          completed: true,
+          observedBy: "/user/" + answeredBy,
+          teacher: "/user/hewitt",
+          timezone: "America/New_York"
+        };
+
+      this.sessionRef = this.db.collection('observations').doc();
+      let entryCollection = this.sessionRef.collection('entries')
+      for (let i = 0; i < entryNumber; i++) {
+        await entryCollection.add({
+          Timestamp: firebase.firestore.Timestamp.fromDate(date),
+          Type: "climate",
+          BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+        });
+      }
+      await this.sessionRef.set(observationInfo)
+      this.sessionRef = null;
+      await this.sleep(2000)
+    }
+  }
+  
 
    secondFirebase.delete() // Frees resources for any subsequent users created
   }
