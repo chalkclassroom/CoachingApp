@@ -386,22 +386,7 @@ class ProgramProfile extends React.Component {
                   </Grid>
                 </Grid>
 
-                {/*
-                  Calendar icons
-                */}
-                <Grid item xs={12}>
-                  <Grid container xs={12} style={centerRow}>
 
-                    <Grid container xs={3} style={endRow}>
-                    </Grid>
-
-                    <Grid container xs={6} style={startRow}>
-                      <img src={CalendarIcon} className="card-icon" style={{width: '135px', marginRight: 20}} />
-                      <img src={CalendarIcon} className="card-icon" style={{width: '135px'}} />
-                    </Grid>
-
-                  </Grid>
-                </Grid>
                 <Grid item xs={12} style={centerRow}>
                     <h2>CHALK Practice</h2>
                 </Grid>
