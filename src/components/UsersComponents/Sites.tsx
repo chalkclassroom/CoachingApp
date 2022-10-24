@@ -95,8 +95,16 @@ class Sites extends React.Component<Props, State> {
   }
 
   componentDidMount = async () => {
-    const temp = this.props.sitesList;
-    this.setState({currentSites: temp})
+    const maxLen: number = Math.floor(Math.random() * 10)
+    let choices: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let checked: Array<number> = maxLen === 0 ? [11] : []
+
+    for(let choice = 0; choice < maxLen; choice++) {
+      let num: number = choices[Math.floor(Math.random() * choices.length)];
+      checked.push(num)
+      choices.splice(choices.indexOf(num), 1)
+    }
+    console.log(checked)
   }
 
   handlePageChange = (pageNumber: number) => {
