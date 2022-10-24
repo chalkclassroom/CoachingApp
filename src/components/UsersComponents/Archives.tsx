@@ -40,6 +40,7 @@ interface Props {
   coachData: Array<Object>
   filter?: Array<string>
   updateTeacherData(data): void 
+  updateCoachData(data): void 
 }
 
 interface State {

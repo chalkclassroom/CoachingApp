@@ -48,9 +48,11 @@ interface Props {
   userRole: string
   location: string
   teacherData: Array<Object>
+  archivedData: Array<Object>
   coachData: Array<Object>
   siteData: Array<Object>
   programData: Array<Object>
+  updateArchivedData(data, type): void 
 }
 
 interface State {
@@ -635,7 +637,8 @@ editTeacher = async (firebase:Firebase) => {
         this.setState({success: false})
       })
 
-    let update = this.props.teacherData
+    
+    let update = this.props.archivedData
     let coachData = this.props.coachData.find(o => o.id === addCoach)
     let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
     let programData = this.props.programData.find(o => o.id  === addProgram)
@@ -655,6 +658,30 @@ editTeacher = async (firebase:Firebase) => {
       archived: false,
       email: addTeacherEmail
     })
+
+    this.props.updateArchivedData(update, "teacher")
+
+    update = this.props.teacherData
+    coachData = this.props.coachData.find(o => o.id === addCoach)
+    siteData = this.props.siteData.find(o => o.name ===  addSiteName)
+    programData = this.props.programData.find(o => o.id  === addProgram)
+
+    update.push({
+      coachId: coachData.id,
+      coachFirstName: coachData.firstName,
+      coachLastName: coachData.lastName,
+      siteName: siteData.name,
+      // teacherId: await this.context.getTeacherId(addTeacherFirstName, addTeacherLastName, addTeacherEmail),
+      teacherId: newTeacherRef,
+      teacherFirstName: addTeacherFirstName,
+      teacherLastName: addTeacherLastName,
+      selectedSiteId: siteData.id,
+      selectedProgramName: programData.name,
+      selectedProgramId: programData.id,
+      archived: false,
+      email: addTeacherEmail
+    })
+
     this.setState({ // Hold off setting new state until success has been determined
       teachersList: update,
       addTeacherFirstName: '',

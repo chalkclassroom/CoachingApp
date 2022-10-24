@@ -484,6 +484,15 @@ class UsersPage extends React.Component<Props, State> {
     this.setState({coachData: coachData})
   }
 
+  updateArchivedData = (data, type) => {
+    if (type === "teacher") {
+      this.setState({archivedTeachers: data})
+    }
+    if (type === "coach") {
+      this.setState({archivedCoaches: data})
+    }
+    
+  }
 
 
   static propTypes = {
@@ -564,6 +573,8 @@ class UsersPage extends React.Component<Props, State> {
                         coachData = {this.state.coachData}
                         siteData = {this.state.siteData}
                         programData = {this.state.programData}
+                        archivedData = {this.state.archivedTeachers}
+                        updateArchivedData={(data, type) => this.updateArchivedData(data, type)}
                         />
                     } />
                     <Route path="/LeadersArchive" render={(props) =>
@@ -575,6 +586,7 @@ class UsersPage extends React.Component<Props, State> {
                         coachData = {this.state.archivedCoaches}
                         filter  = {this.state.propFilter}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
+                        updateCoachData = {(data) => this.updateCoachData(data)}
                         />
                     } />
                     <Route path="/LeadersSites" render={(props) => 
