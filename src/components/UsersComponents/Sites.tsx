@@ -361,7 +361,11 @@ class Sites extends React.Component<Props, State> {
     return (<>
     <Button
     onClick={() => {this.context.populateFirebase()}}
-    >Click Me</Button>
+    >Button 1</Button>
+    <Button
+    onClick={() => {this.context.populateUser()}}
+    >Button 2</Button>
+
 
     <Dialog open={this.state.successModalOpen}>
       <DialogTitle style={{ fontFamily: 'Arimo' }}>

@@ -9,6 +9,8 @@ import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
 import { resultsAriaMessage } from 'react-select/src/accessibility'
 import ProgramProfileBarDetails from '../ProgramProfileComponents/ProgramProfileBarDetails'
 import ActivitySettingButtons from '../StudentEngagementComponents/ActivitySettingButtons'
+import da from 'date-fns/esm/locale/da/index.js'
+import { add } from 'date-fns'
 
 const config = process.env.FIREBASE_CONFIG
 
@@ -6335,6 +6337,128 @@ class Firebase {
 
   //REMOVE AFTER DEVELOPMENT
 
+  populateUser = async () => {
+    const user = this.auth.currentUser ? this.auth.currentUser.uid : '';
+    //Create KnowledgeChecks
+    const answerIndex: Array<number> = [0, 3, 1, 2, 4];
+    console.log(`Completing knowledge check for ${user}...`)
+    for (let i = 0; i < 5; i++) {
+      await firebase.firestore().collection("knowledgeChecks").doc().set({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        type: "climate",
+        isCorrect: true,
+        answeredBy: user,
+        questionIndex: i,
+        answerIndex: answerIndex[i]
+      });
+    }
+    await this.db.collection('users').doc(user).update({unlocked: [2]})
+
+    //for testing begin
+    // let teacherInfo = {
+    //   firstName: "Elizabeth",
+    //   lastName: "Bathory",
+    //   school: "Wichita Stars",
+    //   email: "bathory@email.com",
+    //   notes: "",
+    //   phone: "",
+    //   id: "bathory",
+    //   role: "teacher",
+    //   // sites: teacherSites[i]
+    // };
+    // await firebase.firestore().collection("users").doc(teacherInfo.id).set(teacherInfo);
+    //for testing end
+
+
+    console.log("Adding partner...")
+    await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({});
+    console.log(`Creating Classroom Climate observation for ${user} observing bathory...`)
+    const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"]; 
+    const entryNumber: number = Math.floor(Math.random() * 10);
+    const observationInfo = {
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: "climate",
+        activitySetting: null,
+        checklist: null,
+        completed: true,
+        observedBy: "/user/" + user,
+        teacher: "/user/bathory",
+        timezone: "America/New_York"
+      };
+    this.sessionRef = this.db.collection('observations').doc('demo');
+    let entryCollection = this.sessionRef.collection('entries')
+    for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+      entryCollection.add({
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        Type: "climate",
+        BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+      });
+    }
+    this.sessionRef.set(observationInfo)
+    this.sessionRef = null;
+
+    //Create ActionPlan
+    console.log("Creating Action Plan...")
+    let date = new Date();
+    date.setMonth(date.getMonth()+3)
+    let actionPlanInfo = {
+      benefit: "A positive classroom climate feels safe, respectful, welcoming, and supportive of student learning.",
+      coach: user,
+      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+      goal: "Improve the intellectual, social, emotional, and physical environments in which our students learn.",
+      goalTimeline: date,
+      planNum: 1,
+      status: "Active",
+      teacher: "bathory",
+      tool: "Classroom Climate"
+    }
+    this.sessionRef = this.db.collection('actionPlans').doc();
+    let actionSteps = this.sessionRef.collection('actionSteps');
+    date.setMonth(date.getMonth()-2)
+    actionSteps.add({
+      person: "Elizabeth Bathory",
+      step: "Increase the sense of responsibility of students for what happens in the classroom.",
+      timeline: date
+    })
+    date.setMonth(date.getMonth()+1)
+    actionSteps.add({
+      person: "Elizabeth Bathory",
+      step: "Provide opportunities for students to assume leadership roles",
+      timeline: date
+    })
+    await this.sessionRef.set(actionPlanInfo)
+    this.sessionRef = null
+
+    //Add Favorite Questions
+    console.log("Adding favorite questions...")
+    await this.db.collection('users').doc(user).update({favoriteQuestions: [
+      "Classroom Climate: Does the room feel safe and comforting?",
+      "Classroom Climate: How is the room divided?",
+      "Classroom Climate: Do the materials and activities encourage learning?"
+    ]})
+    
+    //Create Conference Plan
+    console.log("Creating Conference Plan...")
+    let conferencePlanInfo = {
+      addedQuestions: ["Does the room feel safe and comforting?", "Are there any redirections you give to children that you feel are repetitive?"],
+      coach: user,
+      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+      feedback: ["Great at redirecting children into learning activities."],
+      notes: ["Elizabeth gives unsettling disapprovals but they are usually followed by appropriate redirections."],
+      questions: ["Do you use downtime, snack time, before, and after school to ask questions and play quick games with the children to break the ice?"],
+      sessionId: "demo",
+      teacher: "bathory",
+      tool: "Classroom Climate"
+    }
+    await this.db.collection('conferencePlans').doc().set(conferencePlanInfo).then(() =>
+      window.location.reload()
+    )
+
+  }
+
   populateFirebase = async () => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
@@ -6432,7 +6556,7 @@ class Firebase {
               docRef.collection("partners").doc("hewitt").set({});
               docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
             })
-            partners.push("bathory", "gacy", "manson", "monroe", "bellucci", "hewitt");
+            partners.push("bathory", "gacy", "bundy", "monroe", "bellucci", "hewitt");
           }else if (userData.email.includes("coach2")) {
             userData.sites =  ["site1"]
             const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
@@ -6450,7 +6574,6 @@ class Firebase {
             partners.push("flinstone", "rubble");
           }else if (userData.email.includes("coach4")) {
             userData.sites =  ["site3"]
-            userData.unlocked = [2]
             const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
             await docRef.set(userData).then(() => {
               docRef.collection("partners").doc("potter").set({});
@@ -6704,21 +6827,6 @@ class Firebase {
      await firebase.firestore().collection("sites").doc(programInfo.id).set(programInfo);
    }
 
-  //Create KnowledgeChecks
-  const answeredBy: string = coaches.filter(coach => {return coach.email.includes("coach4")})[0].id;
-  const answerIndex: Array<number> = [0, 3, 1, 2, 4];
-  console.log(`Completing knowledge check for ${answeredBy}...`)
-  for (let i = 0; i < 5; i++) {
-    await firebase.firestore().collection("knowledgeChecks").doc().set({
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      type: "climate",
-      isCorrect: true,
-      answeredBy: answeredBy,
-      questionIndex: i,
-      answerIndex: answerIndex[i]
-    });
-  }
-  
   console.log("Creating LI: Book Reading and Classroom Climate observations...")
   //Create Observations
   const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
@@ -6739,7 +6847,7 @@ class Firebase {
     for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
       for (let month = 0; month < 10; month++) {
         if (![2, 3, 4].includes(month)) {
-          const documents: number = Math.floor(Math.random() * 5);;
+          const documents: number = Math.floor(Math.random() * 3);;
           for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
             let date = new Date();
             date.setMonth(date.getMonth()-month)
@@ -6774,7 +6882,7 @@ class Firebase {
     for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
       for (let month = 0; month < 10; month++) {
         if (![2, 3, 4].includes(month)) {
-          const documents: number = Math.floor(Math.random() * 5);;
+          const documents: number = Math.floor(Math.random() * 3);;
           for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
             let date = new Date();
             date.setMonth(date.getMonth()-month)
