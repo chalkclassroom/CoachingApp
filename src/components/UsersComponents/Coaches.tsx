@@ -2,6 +2,7 @@ import React from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import ForwardIcon from '@material-ui/icons/Forward';
 import FolderIcon from '@material-ui/icons/Folder'
+import { makeStyles } from "@material-ui/core/styles/index";
 import {
   FormControl,
   FormHelperText,
@@ -20,6 +21,7 @@ import {
   DialogActions,
   DialogTitle,
   TableSortLabel,
+  Fab,
 } from '@material-ui/core'
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import Firebase, { FirebaseContext } from '../Firebase'
@@ -28,6 +30,8 @@ import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import styled from 'styled-components'
 import { Alert } from '@material-ui/lab'
+
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const StyledSelect = withStyles({
   root: {
@@ -98,6 +102,7 @@ class Coaches extends React.Component<Props, State> {
       selectedTransferCoach: "",
       transferCoachCurrentSiteIds: [],
       transferCoachNewSiteIds: [],
+      siteToAdd: "",
 
       successModalOpen: false,
 
@@ -105,7 +110,8 @@ class Coaches extends React.Component<Props, State> {
 
       saveModalOpen: false,
       archiveModalOpen: false,
-      successOpen: false
+      successOpen: false,
+
     }
 
   }
@@ -532,7 +538,6 @@ class Coaches extends React.Component<Props, State> {
       function(){
         this.sortTeachers("lastName");
       })
-    console.log(result)
 
     // Set the coach so the transfer page is already set for this user
     this.handleTransferCoachSelect(event.target.value);
@@ -575,10 +580,29 @@ class Coaches extends React.Component<Props, State> {
     /*
      * Handles any changes that are made  for site dropdown on new coach page
      */
-    handleTransferCoachSiteDropdown = (siteIds) => {
+    handleTransferCoachSiteDropdown = (siteId, indexToUpdate) => {
+
+        var newSiteIds = [...this.state.transferCoachNewSiteIds];
+        var currentSiteIds = [...this.state.transferCoachCurrentSiteIds];
+
+        // Find the index of the site we're change
+        //var indexOfSite = transferCoachCurrentSiteIds.indexOf(siteId);
+
+        // Replace the previous ID with the new one
+        // If we're choosing a new site
+        if(indexToUpdate === -1)
+        {
+          newSiteIds.push(siteId);
+          currentSiteIds.push(siteId);
+        }
+        else
+        {
+          newSiteIds[indexToUpdate] = siteId;
+        }
 
         this.setState({
-          transferCoachNewSiteIds: siteIds,
+          transferCoachNewSiteIds: newSiteIds,
+          transferCoachCurrentSiteIds: currentSiteIds,
           saved: false,
         })
 
@@ -596,14 +620,16 @@ class Coaches extends React.Component<Props, State> {
         });
 
       // Remove any sites that were removed
-      var previousSites = this.state.transferCoachCurrentSiteIds;
-      var newSites = this.state.transferCoachNewSiteIds;
+      var previousSites = [...this.state.transferCoachCurrentSiteIds];
+      var newSites = [...this.state.transferCoachNewSiteIds];
 
 
       // Get sites that are in the old sites but not the new one
       var removedSites = previousSites.filter(function(obj) { return newSites.indexOf(obj) == -1; });
       const coachId = this.state.selectedTransferCoach;
 
+      // Remove empty strings (if they are getting removed from site )
+      newSites = newSites.filter(o => o !== "");
 
       // Set the sites in firestore
       firebase.replaceSitesForUser({siteIds: newSites, userId: coachId});
@@ -673,6 +699,7 @@ class Coaches extends React.Component<Props, State> {
       // Update sites, set this teacher as selected, and go back to last page
       this.setState({
         transferCoachCurrentSiteIds: newSites,
+        transferCoachNewSiteIds: newSites,
         selectedCoach: coachId,
         successModalOpen: true,
         saved: true,
@@ -1220,7 +1247,7 @@ class Coaches extends React.Component<Props, State> {
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'5px'}}>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
                   Coach
                 </Typography>
               </Grid>
@@ -1230,12 +1257,12 @@ class Coaches extends React.Component<Props, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'5px'}}>
+                <Typography variant="h6"   style={{marginTop:'2px'}}>
                   Program
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6"   style={{marginTop:'10px'}}>
+                <Typography variant="h6"   style={{marginTop:'3px'}}>
                   Sites
                 </Typography>
               </Grid>
@@ -1326,12 +1353,11 @@ class Coaches extends React.Component<Props, State> {
                   >
                     {this.state.siteOptions.map(
                       (option, index)=>{
-                        if (option) {
-                        return (<MenuItem key={option.id} value={option.id}>
+
+                        return <MenuItem key={option.id} value={option.id}>
                           {option.name}
                         </MenuItem>
-                        )
-                        }
+
                     })}
                   </StyledSelect>
                 {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
@@ -1372,9 +1398,10 @@ class Coaches extends React.Component<Props, State> {
                 </FirebaseContext.Consumer>
               </Grid>
             </Grid>
-    </>) : (this.state.view === 3 ? (<>
-      <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop: '60px'}}>
-          <Grid item xs={1} style={{marginTop: '45px'}}>
+    </>) : (this.state.view === 3 ? (
+      <>
+      <Grid container direction='row' justifyContent='center' alignItems='flex-start' style={{marginTop: '60px', marginBottom: '60px'}}>
+          <Grid item xs={1} style={{}}>
 
             <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
               <Grid item>
@@ -1387,16 +1414,209 @@ class Coaches extends React.Component<Props, State> {
                   Site
                 </Typography>
               </Grid>
+              {this.state.transferCoachCurrentSiteIds.map(
+                (siteId, index)=>{
+                  return <Grid item style={{height: '66px'}}>
+                          <Typography variant="h6"   style={{marginTop:'10px'}}>
+                          </Typography>
+                        </Grid>
+                }
+              )}
             </Grid>
           </Grid>
 
+          <Grid item xs={8} style={{}}>
+            <Grid item className="select-coach-wrap" container direction='row' justifyContent='space-between' alignItems='center' style={{'margin-bottom': '33px'}}>
+              {/*
+                Select coach dropdown
+              */}
+              <FormControl variant="outlined">
+                <StyledSelect
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={this.state.selectedTransferCoach}
+                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                    this.handleTransferCoachSelect(event.target.value)
+                  }
+                  name="selectedCoach"
+                  // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                >
+                  {this.props.coachData.map(
+                    (coach, index)=>{
+                      if(coach.id !== "") {
+
+                      return (
+                          <MenuItem value={coach.id} key={index}>
+                            {coach.lastName + ", " + coach.firstName}
+                          </MenuItem>
+                      )}
+                      })}
+                </StyledSelect>
+              {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+              </FormControl>
+            </Grid>
+
+            {/*
+              Each site row
+            */}
+            {
+              this.state.transferCoachNewSiteIds.map(
+                (siteId, index)=>{
+                    // Get the current site from state
+                    var currentSites = [...this.state.transferCoachCurrentSiteIds];
+                    var currentSiteId = currentSites[index];
+
+                    // Get the info for this item
+                    var siteData = this.props.siteData.find(o => o.id === currentSiteId);
+
+                    return <div
+                            style={{'display': 'flex', 'flex-wrap': 'no-wrap', 'justify-content': 'space-between', 'margin-bottom': '20px'}}
+                            >
+
+                              <Grid item>
+                                <FormControl variant="outlined" disabled>
+                                  <StyledSelect
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    autoWidth={true}
+                                    value={siteData.id}
+                                    input={<OutlinedInput />}
+                                    autoWidth={true}
+                                  >
+
+
+                                        <MenuItem key={siteData.id} value={siteData.id}>
+                                          {siteData.name}
+                                        </MenuItem>
+
+
+                                  </StyledSelect>
+                                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                                </FormControl>
+                              </Grid>
+
+                              {/* ARROW */}
+                              <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+                                <Grid item>
+                                  <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
+                                </Grid>
+                              </Grid>
+
+                              {/* TO SITE DROPDOWN */}
+                              <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+
+                                <Grid item>
+                                  <FormControl variant="outlined">
+                                    <StyledSelect
+                                      labelId="demo-simple-select-disabled-label"
+                                      id="demo-simple-select-disabled"
+                                      autoWidth={true}
+                                      value={this.state.transferCoachNewSiteIds[index]}
+                                      onChange={(event) => this.handleTransferCoachSiteDropdown(event.target.value, index)}
+                                      input={<OutlinedInput />}
+                                      autoWidth={true}
+                                    >
+                                      <MenuItem key={"nosite"} value={""}>
+                                        (None)
+                                      </MenuItem>
+                                      {this.props.siteData.map(
+                                        (option, index)=>{
+
+                                          if(this.state.transferCoachNewSiteIds.indexOf(option.id) < 0 || siteId === option.id)
+                                          {
+                                            return <MenuItem key={option.id} value={option.id}>
+                                            {option.name}
+                                            </MenuItem>
+                                          }
+
+                                      })}
+                                    </StyledSelect>
+                                  {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                                  </FormControl>
+                                </Grid>
+                              </Grid>
+
+                          </div>
+              })}
+
+            {/*
+              Need a row for adding new sites
+            */}
+
+            <div style={{'display': 'flex', 'flex-wrap': 'no-wrap', 'justify-content': 'space-between', 'margin-bottom': '20px'}}>
+
+                <Grid item>
+                  <FormControl variant="outlined" disabled>
+                    <StyledSelect
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      autoWidth={true}
+                      //value={this.state.transferCoachCurrentSiteIds}
+                      input={<OutlinedInput />}
+                      onChange={(event) => this.handleTransferCoachSiteDropdown(event.target.value, -1)}
+                      autoWidth={true}
+                    >
+
+
+                          <MenuItem>
+                          </MenuItem>
+
+
+                    </StyledSelect>
+                  {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                  </FormControl>
+                </Grid>
+
+                {/* ARROW */}
+                <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+                  <Grid item>
+                    <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
+                  </Grid>
+                </Grid>
+
+                {/* TO SITE DROPDOWN */}
+                <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+
+                  <Grid item>
+                    <FormControl variant="outlined">
+                      <StyledSelect
+                        labelId="demo-simple-select-disabled-label"
+                        id="demo-simple-select-disabled"
+                        autoWidth={true}
+                        value={this.state.siteToAdd}
+                        onChange={(event) => this.handleTransferCoachSiteDropdown(event.target.value, -1)}
+                        input={<OutlinedInput />}
+                        autoWidth={true}
+                      >
+                        {this.props.siteData.map(
+                          (option, index)=>{
+
+                            return <MenuItem key={option.id} value={option.id}>
+                              {option.name}
+                            </MenuItem>
+
+                        })}
+                      </StyledSelect>
+                    {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                    </FormControl>
+                  </Grid>
+                </Grid>
+
+            </div>
+
+          </Grid>
+
+
+
+          {/*
+            Select coach dropdown
+          */}
+          {/*
           <Grid item xs={4} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
 
-                {/*
-                  Select coach dropdown
-                */}
+
                 <FormControl variant="outlined">
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
@@ -1406,7 +1626,7 @@ class Coaches extends React.Component<Props, State> {
                       this.handleTransferCoachSelect(event.target.value)
                     }
                     name="selectedCoach"
-                    // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    // disabled={!(this.props.coachData.length > 0)
                   >
                     {this.props.coachData.map(
                       (coach, index)=>{
@@ -1418,57 +1638,124 @@ class Coaches extends React.Component<Props, State> {
                         )}
                         })}
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
+              */}
+
+
+
+
+
+
+
+
+
 
               {/*
                 From site dropdown
               */}
+              {/*
+              {this.state.transferCoachCurrentSiteIds.map(
+                (siteId, index)=>{
+                    // Get the info for this item
+                    var siteData = this.props.siteData.find(o => o.id === siteId);
+
+                    return <Grid item>
+                              <FormControl variant="outlined" disabled>
+                                <StyledSelect
+                                  labelId="demo-simple-select-outlined-label"
+                                  id="demo-simple-select-outlined"
+                                  multiple
+                                  autoWidth={true}
+                                  value={this.state.transferCoachCurrentSiteIds}
+                                  input={<OutlinedInput />}
+                                  autoWidth={true}
+                                >
+
+
+                                      <MenuItem key={siteData.id} value={siteData.id}>
+                                        {siteData.name}
+                                      </MenuItem>
+
+
+                                </StyledSelect>
+                              </FormControl>
+                            </Grid>
+              })}
+              */}
+              {/*
+                Need an extra row for new sites
+              */}
+              {/*
               <Grid item>
                 <FormControl variant="outlined" disabled>
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    multiple
                     autoWidth={true}
                     value={this.state.transferCoachCurrentSiteIds}
                     input={<OutlinedInput />}
                     autoWidth={true}
                   >
-                    {this.props.siteData.map(
-                      (option, index)=>{
 
-                        return <MenuItem key={option.id} value={option.id}>
-                          {option.name}
+
+                        <MenuItem>
+
                         </MenuItem>
 
-                    })}
+
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
+
+
             </Grid>
           </Grid>
+          */}
 
           {/*
             Arrow
           */}
+          {/*}
           <Grid item xs={1} style={{marginTop: '45px'}}>
+            <Grid item>
+              <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
+            </Grid>
+            {this.state.transferCoachCurrentSiteIds.map(
+              (siteId, index)=>{
+                return <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+
+                          <Grid item>
+                            <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
+                          </Grid>
+                        </Grid>
+              }
+            )}
 
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-              <Grid item>
-                <ForwardIcon style={{fill: 'white', fontSize:'40', marginTop:'0px',}}/>
-              </Grid>
+
               <Grid item>
                 <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
               </Grid>
             </Grid>
-          </Grid>
 
+          </Grid>
+          */}
           {/*
             To Site options
           */}
+
+
+
+
+
+
+
+
+
+
+
+          {/*
           <Grid item xs={4} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
@@ -1479,7 +1766,6 @@ class Coaches extends React.Component<Props, State> {
                   <StyledSelect
                     labelId="demo-simple-select-disabled-label"
                     id="demo-simple-select-disabled"
-                    multiple
                     autoWidth={true}
                     value={this.state.transferCoachNewSiteIds}
                     onChange={(event) => this.handleTransferCoachSiteDropdown(event.target.value)}
@@ -1495,11 +1781,13 @@ class Coaches extends React.Component<Props, State> {
 
                     })}
                   </StyledSelect>
-                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
                 </FormControl>
               </Grid>
             </Grid>
+
           </Grid>
+          */}
+
 
             <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
             <Grid item xs={1}/>
