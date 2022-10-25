@@ -5243,7 +5243,7 @@ class Firebase {
      data: {
        userId: string,
        siteId: string,
-       bulkSiteIds: Array<string>
+       bulkSiteIds?: Array<string>
       }
    ): Promise<void> => {
 

@@ -599,6 +599,7 @@ class UsersPage extends React.Component<Props, State> {
                         sitesList = {this.state.sendToSites}
                         updateCoachData = {(data) => this.updateCoachData(data)}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
+                        programData = {this.state.programData}
                         />
                     } />
                   </Switch>

@@ -35,6 +35,17 @@ background-color: white;
 
 `
 
+const StyledSelect = withStyles({
+  root: {
+    padding: '11px 14px',
+    width: '25.5vw',
+    // maxWidth: '425px'
+  },
+  disabled: {
+    opacity: 0.3
+  }
+})(Select);
+
 interface Props {
   changePage(pageName: string): void
   userRole: string
@@ -44,6 +55,7 @@ interface Props {
   sitesList: Array<Object>
   updateCoachData(data): void 
   updateTeacherData(data): void 
+  programData: Array<Object>
 }
 
 interface State {
@@ -64,6 +76,12 @@ interface State {
     saveModalOpen: boolean
     pendingView: number
     awaitingConfirmationRef: { resolve: (discard: boolean) => void  } | null
+    addSiteName: string
+    addProgramId: string
+    addSiteLeaderList: Array<Object>
+    addSiteLeader: string
+    originalSiteLeaders: Array<Object>
+
 
 }
 
@@ -88,23 +106,20 @@ class Sites extends React.Component<Props, State> {
     success: true,
     saveModalOpen: false,
     pendingView: 1,
-    awaitingConfirmationRef: null
+    awaitingConfirmationRef: null,
+    addSiteName: "",
+    addProgramId: "",
+    addSiteLeaderList: [],
+    addSiteLeader: "",
+    originalSiteLeaders: []
 
   }
   
   }
 
   componentDidMount = async () => {
-    const maxLen: number = Math.floor(Math.random() * 10)
-    let choices: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    let checked: Array<number> = maxLen === 0 ? [11] : []
-
-    for(let choice = 0; choice < maxLen; choice++) {
-      let num: number = choices[Math.floor(Math.random() * choices.length)];
-      checked.push(num)
-      choices.splice(choices.indexOf(num), 1)
-    }
-    console.log(checked)
+    const siteLeaders = await this.context.getSiteLeaders()
+    this.setState({originalSiteLeaders: siteLeaders});
   }
 
   handlePageChange = (pageNumber: number) => {
@@ -260,7 +275,7 @@ class Sites extends React.Component<Props, State> {
         });
   }
 
-  handleEditInputChange = (name: string) => (
+  handleInputChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
@@ -281,10 +296,17 @@ class Sites extends React.Component<Props, State> {
         saved: false,
       })
     }
+    if (name === 'site') {
+      this.setState({
+        addSiteName: event.target.value,
+        saved: false,
+      })
+    }
   }
 
   handleEditClick = (value) => {
     console.log(value)
+    if (value.id !== "") {
     this.setState({
       editCoachId: value.id,
       editCoachFirstName: value.firstName,
@@ -296,6 +318,9 @@ class Sites extends React.Component<Props, State> {
       editCoachProgramId: value.programId
     })
     this.handlePageChange(3)
+    } else {
+      alert("This site has no coach to edit.");
+    }
   }
 
   onSaveModalOpen =  (): Promise<boolean> => {
@@ -355,6 +380,79 @@ class Sites extends React.Component<Props, State> {
       })
     this.handlePageChange(1)
   }
+
+  handlePopulateSiteLeaders = (event) => {
+    this.setState({addProgramId: event.target.value, saved: false})
+    let leaders = this.state.originalSiteLeaders
+    let program = this.props.programData.find(o => o.id === event.target.value)
+    leaders = leaders.filter(leader => {return leader.sites.some(site => program.sites.includes(site))})
+    this.setState({addSiteLeaderList: leaders})
+  }
+
+  async createSite(firebase:Firebase){
+
+    const {
+      addSiteName,
+      addProgramId,
+      addSiteLeader
+    } = this.state;
+
+    this.setState({success: true})
+
+
+    if (!addSiteName || addSiteName === ""){
+        alert("Site name is required");
+        return;
+    }
+
+    if (!addProgramId || addProgramId === ""){
+      alert("Program is required");
+      return;
+    }
+
+    if (!addSiteLeader || addSiteLeader === ""){
+      alert("Site Leader is required");
+      return;
+    }
+
+    let siteInfo = {
+      siteName: addSiteName,
+      selectedProgram: addProgramId
+    }
+
+    await firebase.createSite(siteInfo)
+        .then((data) => {
+          console.log("Site Created");
+
+            // Add new program to users
+            firebase.assignProgramToUser({userId: addSiteLeader, programId: addProgramId}).then((res) => {
+              console.log("Program " + addProgramId + "added to user " + addSiteLeader);
+            }).catch(e => console.error("error => ", e));
+
+            firebase.assignSiteToUser({userId: addSiteLeader, siteId: data.id}).then((res) => {
+              console.log("Sites added to user " + addSiteLeader);
+            }).catch(e => console.error("error => ", e));
+
+            firebase.assignUserToSiteOrProgram({siteId: data.id, userId: addSiteLeader}).then((res) => {
+                console.log(addSiteLeader + " Users added to site " + data.id);
+              }).catch(e => console.error("error => site : " + data.id, e));
+
+
+        }).catch(e => {
+            this.setState({success: false})
+            console.log(e)
+            alert('Unable to create Site. Please try again')
+        }).finally(() => {
+            this.setState({ // Hold off setting new state until success has been determined
+              addSiteName: "",
+              addProgramId: "",
+              addSiteLeader: "",
+              addSiteLeaderList: [],
+              successModalOpen: this.state.success ? true : false,
+              saved: true
+            });
+        });
+}
 
   render() {
     
@@ -595,7 +693,114 @@ class Sites extends React.Component<Props, State> {
       </Grid>
     </Grid>
     </>) : (this.state.view === 2 ? (<>
-    
+    <Grid item xs={1} style={{marginTop: '45px'}}>
+      <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
+        <Grid item>
+          <Typography variant="h6" style={{marginTop:'5px'}}>
+            Name
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h6" style={{marginTop:'8px'}}>
+            Program
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h6" style={{marginTop:'7px'}}>
+            Leaders
+          </Typography>
+        </Grid>
+      </Grid>
+      </Grid>
+
+      <Grid item xs={5} style={{marginTop: '45px'}}>
+      <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+        <Grid item>
+          <TextField
+            size="small"
+            style={{width:'30vw', maxWidth: '440px'}}
+            id="site-name"
+            label="Site Name"
+            type="text"
+            value={this.state.addSiteName} 
+            variant="outlined"
+            onChange={this.handleInputChange('site')}
+          />
+        </Grid>
+        <Grid item>
+          <FormControl variant="outlined">
+            <StyledSelect
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={this.state.addProgramId}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.handlePopulateSiteLeaders(event)}
+              name="siteProgram"
+            >
+              {this.props.programData.map((program, index) => {
+                return (
+                  <MenuItem key={index} value={program.id}>
+                    {program.name}
+                  </MenuItem>
+                )
+              })}
+            </StyledSelect>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl variant="outlined">
+            <StyledSelect
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={this.state.addSiteLeader}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => this.setState({addSiteLeader: event.target.value})}
+              name="siteLeaders"
+              disabled={this.state.addProgramId !== "" ? false : true}
+            >
+              {this.state.addSiteLeaderList.map((leader, index) => {
+                return (
+                  <MenuItem value={leader.id} key={index}>
+                      {`${leader.lastName}, ${leader.firstName}`}
+                  </MenuItem>
+                )
+              })}
+            </StyledSelect>
+          </FormControl>
+        </Grid>
+      </Grid>
+      </Grid>
+
+      <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
+      <Grid item xs={1}/>
+        <Grid item xs={1}>
+          <FirebaseContext.Consumer>
+            {(firebase: Firebase) => (
+              <Button
+              onClick={(_)=>{this.createSite(firebase)}}
+              >
+                {this.state.saved ? (
+                  <img
+                    alt="Save"
+                    src={SaveGrayImage}
+                    style={{
+                      width: '80%',
+                      minWidth:'70px'
+                    }}
+                  />
+                ) : (
+                  <img
+                    alt="Save"
+                    src={SaveImage}
+                    style={{
+                      width: '80%',
+                      minWidth:'70px'
+                    }}
+                  />
+                )}
+              </Button>
+            )}
+          </FirebaseContext.Consumer>
+        </Grid>
+      </Grid>
     </>) : (this.state.view === 3 ? (<>
       <Grid item xs={1} style={{marginTop: '45px'}}>
         <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
@@ -636,7 +841,7 @@ class Sites extends React.Component<Props, State> {
                   readOnly: false
                 }}
                 variant="outlined"
-                onChange={this.handleEditInputChange('firstName')}
+                onChange={this.handleInputChange('firstName')}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -649,7 +854,7 @@ class Sites extends React.Component<Props, State> {
                   readOnly: false
                 }}
                 variant="outlined"
-                onChange={this.handleEditInputChange('lastName')}
+                onChange={this.handleInputChange('lastName')}
                 />
               </Grid>
             </Grid>
@@ -665,7 +870,7 @@ class Sites extends React.Component<Props, State> {
                 readOnly: false
               }}
               variant="outlined"
-              onChange={this.handleEditInputChange('email')}
+              onChange={this.handleInputChange('email')}
             />
           </Grid>
           <Grid item>
