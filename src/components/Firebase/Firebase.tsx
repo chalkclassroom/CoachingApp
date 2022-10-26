@@ -4517,7 +4517,7 @@ class Firebase {
       sites: userSites,
       archived: true
     };
-    
+
     const docRef = firebase.firestore().collection("users").doc("archived" + coachId);
     await docRef.set(userData).then(() => {
       for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
@@ -4546,7 +4546,7 @@ class Firebase {
         error
       )
     })
-   
+
     //Delete original document
     await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
       console.error(
@@ -4656,7 +4656,7 @@ class Firebase {
     if(archives.docs.length > 0) {
     return Promise.all(archives.docs.map(async doc => {
       let docSnapshot = await this.db.collection('archives').doc(doc.id).get()
-      if (docSnapshot.exists)  
+      if (docSnapshot.exists)
         return doc.data()
     }));
     }
@@ -4664,7 +4664,7 @@ class Firebase {
       coach: "",
       firstName: "",
       id: "",
-      lastName: "", 
+      lastName: "",
       program: "",
       ProgramId: "",
       role: "",
@@ -6372,6 +6372,31 @@ class Firebase {
      }
 
 
+     /*
+      * Send a 'reset password' link to newly created coaches
+      */
+    sendEmailToNewUser = async (email) => {
+      const secondFirebase = firebase.initializeApp(config, 'secondary');
+
+      if (process.env.USE_LOCAL_AUTH) {
+        console.log('using local Auth');
+        secondFirebase.auth().useEmulator("http://localhost:9099");
+      }
+
+      secondFirebase.auth().sendPasswordResetEmail(email)
+        .then((res) => {
+          // Password reset email sent!
+          // ..
+          console.log("email sent to " + email, res);
+
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // ..
+        });
+
+    }
 
 
   /**
@@ -6448,7 +6473,7 @@ class Firebase {
     console.log("Adding partner...")
     await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({});
     console.log(`Creating Classroom Climate observation for ${user} observing bathory...`)
-    const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"]; 
+    const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
     const entryNumber: number = Math.floor(Math.random() * 10);
     const observationInfo = {
         start: firebase.firestore.FieldValue.serverTimestamp(),
@@ -6513,7 +6538,7 @@ class Firebase {
       "Classroom Climate: How is the room divided?",
       "Classroom Climate: Do the materials and activities encourage learning?"
     ]})
-    
+
     //Create Conference Plan
     console.log("Creating Conference Plan...")
     let conferencePlanInfo = {
@@ -6552,12 +6577,12 @@ class Firebase {
     //Create authenticated users
     const authEmail: Array<string> = [
       "manson@program1.com",             //Beginning of programLeaders
-      "carter@program2.com",            
+      "carter@program2.com",
       "gein@site1.com",                 //Beginning of siteLeaders
       "lee@site2.com",
-      "lopez@site3.com", 
+      "lopez@site3.com",
       "lawrence@site4.com",
-      "columbus@site5.com",               
+      "columbus@site5.com",
       "mann@coach1.com",              //Beginning of coaches
       "brown@coach2.com",
       "james@coach3.com",
@@ -6569,33 +6594,33 @@ class Firebase {
     const password: Array<string> = Array(authEmail.length).fill("password");
     const authFirstName: Array<string> = [
       "Charles",                       //Beginning of programLeaders
-      "Jimmy",                          
+      "Jimmy",
       "Edward",                         //Beginning of siteLeaders
-      "Yan", 
-      "Jennifer",                       
+      "Yan",
+      "Jennifer",
       "Martin",
       "Christopher",
       "Tiffany",                        //Beginning of coaches
-      "James", 
-      "Richard", 
+      "James",
+      "Richard",
       "Taylor",
       "Susan",
-      "James"                          
+      "James"
     ];
     const authLastName: Array<string> = [
       "Manson",                          //Beginning of programLeaders
-      "Carter",                           
+      "Carter",
       "Gein",                           //Beginning of siteLeaders
-      "Lee", 
-      "Lopez",                          
+      "Lee",
+      "Lopez",
       "Lawrence",
       "Columbus",
       "Mann",                         //Beginning of coaches
-      "Brown", 
-      "James", 
+      "Brown",
+      "James",
       "Swift",
       "Anthony",
-      "Neutron"                           
+      "Neutron"
     ];
     const programLeadersNumber: number = 2;
     const siteLeadersNumber: number = 5;
@@ -6606,7 +6631,7 @@ class Firebase {
 
     let coaches: Array<Object> = [];
     let leaders: Array<Object> = [];
-    
+
     for (let i = 0; i < authEmail.length; i++) {
       const userInfo = await secondFirebase.auth().createUserWithEmailAndPassword(authEmail[i], password[i]);
       if (userInfo.user) {
@@ -6719,15 +6744,15 @@ class Firebase {
         }
       }
     }
-    
+
     console.log("Creating teachers...")
     //Create Teachers
     const teacherFirstName: Array<string> = [
-      "Elizabeth", 
-      "Jonathan", 
-      "Theodore", 
-      "Marilyn", 
-      "Monica", 
+      "Elizabeth",
+      "Jonathan",
+      "Theodore",
+      "Marilyn",
+      "Monica",
       "Bubba",
       "Fred",
       "Barney",
@@ -6743,11 +6768,11 @@ class Firebase {
       "Practice"
     ];
     const teacherLastName: Array<string> = [
-      "Bathory", 
-      "Gacy", 
-      "Bundy", 
-      "Monroe", 
-      "Bellucci", 
+      "Bathory",
+      "Gacy",
+      "Bundy",
+      "Monroe",
+      "Bellucci",
       "Hewitt",
       "Flinstone",
       "Rubble",
@@ -6763,15 +6788,15 @@ class Firebase {
       "Teacher"
     ];
     const teacherSchool: Array<string> = [
-      "Ecsed Horizons", 
-      "Ecsed Horizons", 
       "Ecsed Horizons",
       "Ecsed Horizons",
-      "Ecsed Horizons", 
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Ecsed Horizons",
       "Wichita Stars",
       "Wichita Stars",
-      "Wichita Stars", 
-      "Leeds Learning", 
+      "Wichita Stars",
+      "Leeds Learning",
       "Leeds Learning",
       "Leeds Learning",
       "Leeds Learning",
@@ -6783,11 +6808,11 @@ class Firebase {
       "Elum Entaree School"
     ];
     const teacherEmail: Array<string> = [
-      "bathory@email.com", 
-      "gacy@email.com", 
-      "bundy@email.com", 
-      "monroe@email.com", 
-      "bellucci@email.com", 
+      "bathory@email.com",
+      "gacy@email.com",
+      "bundy@email.com",
+      "monroe@email.com",
+      "bellucci@email.com",
       "hewitt@email.com",
       "flinstone@email.com",
       "rubble@email.com",
@@ -6803,11 +6828,11 @@ class Firebase {
       "practice@teacher.edu"
     ];
     const teacherId: Array<string> = [
-      "bathory", 
-      "gacy", 
-      "bundy", 
-      "monroe", 
-      "bellucci", 
+      "bathory",
+      "gacy",
+      "bundy",
+      "monroe",
+      "bellucci",
       "hewitt",
       "flinstone",
       "rubble",
@@ -6823,21 +6848,21 @@ class Firebase {
       "rJxNhJmzjRZP7xg29Ko6"
     ];
     const teacherSites: Array<Array<string>> = [
-      ["site1"], 
-      ["site1"], 
       ["site1"],
       ["site1"],
       ["site1"],
-      ["site2"], 
-      ["site2"], 
-      ["site2"], 
-      ["site3"], 
-      ["site3"], 
-      ["site3"], 
-      ["site3"], 
+      ["site1"],
+      ["site1"],
+      ["site2"],
+      ["site2"],
+      ["site2"],
+      ["site3"],
+      ["site3"],
+      ["site3"],
+      ["site3"],
       ["site3"],
       ["site4"],
-      ["site5"], 
+      ["site5"],
       ["site4"],
       ["site5"],
       ["Elum Entaree School"]
@@ -6862,8 +6887,8 @@ class Firebase {
     //Create Programs
     const programId: Array<string> = ["program1", "program2"];
     const pLeaders: Array<Array<string>> =  [
-      [leaders.filter(leader => {return leader.email.includes("program1")})[0].id], 
-      [leaders.filter(leader => {return leader.email.includes("program2")})[0].id] 
+      [leaders.filter(leader => {return leader.email.includes("program1")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("program2")})[0].id]
     ];
     const programName: Array<string> = ["Reading For Success", "Writing Rainbows"];
     const sites: Array<Array<string>> = [["site1", "site2", "site3"], ["site4", "site5"]];
@@ -6882,10 +6907,10 @@ class Firebase {
     //Create Sites
     const siteId: Array<string> = ["site1", "site2", "site3", "site4", "site5", "site6"];
     const sLeaders: Array<Array<string>> =  [
-      [leaders.filter(leader => {return leader.email.includes("site1")})[0].id], 
-      [leaders.filter(leader => {return leader.email.includes("site2")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("site1")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site2")})[0].id],
       [leaders.filter(leader => {return leader.email.includes("site3")})[0].id],
-      [leaders.filter(leader => {return leader.email.includes("site4")})[0].id], 
+      [leaders.filter(leader => {return leader.email.includes("site4")})[0].id],
       [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
       [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
     ];
@@ -6949,7 +6974,7 @@ class Firebase {
             }
             this.sessionRef.set(observationInfo)
             this.sessionRef = null;
-            
+
           }
         }
       }
@@ -6992,15 +7017,15 @@ class Firebase {
             }
             this.sessionRef.set(observationInfo)
             this.sessionRef = null;
-            
+
           }
         }
       }
-    
+
     }
   }
   }
-  
+
 
     secondFirebase.delete() // Frees resources for any subsequent users created
   }

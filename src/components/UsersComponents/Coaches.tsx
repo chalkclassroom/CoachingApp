@@ -345,7 +345,11 @@ class Coaches extends React.Component<Props, State> {
       {
         var siteId = siteOptionIds[siteIndex];
         var siteInfo = this.props.siteData.find(o => o.id === siteId);
-        siteOptions.push(siteInfo);
+
+        if(siteInfo)
+        {
+          siteOptions.push(siteInfo);
+        }
       }
 
 
@@ -451,6 +455,11 @@ class Coaches extends React.Component<Props, State> {
         return;
     }
 
+    if (!this.validateEmail(newCoachEmail) ){
+        alert("Please enter a valid email");
+        return;
+    }
+
     const randomString = Math.random().toString(36).slice(-8)
     const coachInfo = {
         firstName: newCoachFirstName,
@@ -501,9 +510,13 @@ class Coaches extends React.Component<Props, State> {
 
           this.props.coachData.push(newCoachInfo);
 
-        this.setState({
-            createdPassword: randomString
-        });
+          var fullName = data.firstName + " " + data.lastName;
+          await firebase.sendEmailToNewUser(newCoachEmail);
+
+          this.setState({
+              createdCoachEmail: newCoachEmail,
+              createdCoachPassword: randomString
+          });
         return randomString
         }).catch(e => {
             this.setState({
@@ -865,8 +878,18 @@ class Coaches extends React.Component<Props, State> {
 
   render() {
     return (<>
-      {this.state.createdPassword  &&
-        <Alert severity={'success'}>User has been created with password {this.state.createdPassword}</Alert>
+      {this.state.createdCoachEmail  &&
+        <Alert severity={'success'} style={{width: '100%'}}>
+          <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '90vw', alignItems: 'center'}}>
+              <div style={{paddingRight: '20px'}}>
+                New Coach has been created with the password {this.state.createdCoachPassword} <br/>
+                An email has been sent to {this.state.createdCoachEmail} to reset their password.
+              </div>
+              <div onClick={() => { this.setState({createdCoachEmail: undefined, createdCoachPassword: ""}) }}>
+                Close
+              </div>
+          </div>
+        </Alert>
       }
 
       <Dialog open={this.state.successModalOpen}>
