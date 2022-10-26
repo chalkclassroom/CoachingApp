@@ -1614,9 +1614,12 @@ class Coaches extends React.Component<Props, State> {
                         {this.props.siteData.map(
                           (option, index)=>{
 
-                            return <MenuItem key={option.id} value={option.id}>
+                            if(this.state.transferCoachNewSiteIds.indexOf(option.id) < 0)
+                            {
+                              return <MenuItem key={option.id} value={option.id}>
                               {option.name}
-                            </MenuItem>
+                              </MenuItem>
+                            }
 
                         })}
                       </StyledSelect>
