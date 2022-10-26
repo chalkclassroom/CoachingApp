@@ -4450,17 +4450,28 @@ class Firebase {
     return arr
   }
 
-  editUserName = async (teacherId: string, changeFirst: string, changeLast: string, changeEmail: string, archives?: boolean) => {
-    this.db.collection("users").doc(teacherId).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
-    .catch((error: Error) => {
-      console.error(
-        "Error occurred when editing user: ",
-        error
-      )
-    })
+  editUserName = async (id: string, changeFirst: string, changeLast: string, changeEmail: string, role: string, archives?: boolean) => {
+    if (role === "teacher" || (role === "coach" && archives === false)) {
+      this.db.collection("users").doc(id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing user: ",
+          error
+        )
+      })
+    }
+    if (role === "coach" && archives === true) {
+      this.db.collection("users").doc("archived" + id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing user: ",
+          error
+        )
+      })
+    }
 
     if (archives) {
-      this.db.collection("archives").doc(teacherId).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      this.db.collection("archives").doc(id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
       .catch((error: Error) => {
         console.error(
           "Error occurred when editing user archive: ",
@@ -4489,38 +4500,102 @@ class Firebase {
 
   }
 
-  archiveCoach = async (coachId: string, firstName: string, lastName: string, siteName: string, programName: string) => {
-    this.db.collection("users").doc(coachId).update({archived: true})
-    .catch((error: Error) => {
-      console.error(
-        "Error occurred when setting archive on coach: ",
-        error
-      )})
-    return this.db.collection("archives").doc(coachId).set({
+  archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
+    const collection = await this.db.collection('users').doc(coachId).collection('partners').get()
+    let partners: Array<string> = []
+
+    collection.docs.map(item => {
+      partners.push(item.id)
+    })
+
+    let userData: Record<string, any> = {
+      email:  email,
       firstName: firstName,
       lastName: lastName,
       role: "coach",
-      site: siteName,
-      program: programName,
+      id:  coachId,
+      sites: userSites,
+      archived: true
+    };
+    
+    const docRef = firebase.firestore().collection("users").doc("archived" + coachId);
+    await docRef.set(userData).then(() => {
+      for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
+        docRef.collection("partners").doc(partners[partnerIndex]).set({});
+      }
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating archived coach doc: ",
+        error
+      )
+    })
+
+    //Create archive
+    await this.db.collection('archives').doc(coachId).set({
+      firstName: firstName,
+      lastName: lastName,
+      role: "coach",
+      sites: archiveSites,
+      programName: programName,
+      programId: programId,
       id: coachId,
+      email: email
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating coach in archives: ",
+        error
+      )
     })
-    .catch((error: Error) => {
-      console.error("Error occurred when adding coach to coach's partner list: ", error)
+   
+    //Delete original document
+    await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
+      console.error(
+        "Error occurred when deleting original coach doc: ",
+        error
+      )
     })
+
   }
 
   unarchiveCoach = async (coachId: string) => {
     this.db.collection("archives").doc(coachId).delete()
     .catch((error: Error) => {
-      console.error("Error occurred when deleting coach from coach's partner list: ", error)
+      console.error("Error occurred when deleting coach from archives: ", error)
     })
-    this.db.collection("users").doc(coachId).update({archived: false})
-    .catch((error: Error) => {
+    const document = await this.db.collection('users').doc("archived" + coachId).get()
+    const {email, firstName, lastName, id, sites} = document.data()
+    let userData: Record<string, any> = {
+      email:  email,
+      firstName: firstName,
+      lastName: lastName,
+      role: "coach",
+      id:  id,
+      sites: sites,
+      archived: false
+    };
+    const collection = await this.db.collection('users').doc("archived" + coachId).collection('partners').get()
+    let partners: Array<string> = []
+
+    collection.docs.map(item => {
+      partners.push(item.id)
+    })
+
+    const docRef = firebase.firestore().collection("users").doc(userData.id);
+    await docRef.set(userData).then(() => {
+      for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
+        docRef.collection("partners").doc(partners[partnerIndex]).set({});
+      }
+    }).catch((error: Error) => {
       console.error(
-        "Error occurred when setting archive on coach: ",
+        "Error occurred when creating archived coach doc: ",
         error
       )
     })
+    this.db.collection("users").doc("archived" + coachId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting coach: ", error)
+    })
+
   }
 
   archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string, siteId: string, programId: string) => {

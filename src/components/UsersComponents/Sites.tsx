@@ -81,6 +81,8 @@ interface State {
     addSiteLeaderList: Array<Object>
     addSiteLeader: string
     originalSiteLeaders: Array<Object>
+    archiveModalOpen: boolean
+    archiveList: Array<Object>
 
 
 }
@@ -90,30 +92,32 @@ class Sites extends React.Component<Props, State> {
     super(props);
   
       this.state = {
-    view: 1,
-    saved: true,
-    currentSites: [],
-    sortType: "",
-    editCoachFirstName: "",
-    editCoachLastName: "",
-    editCoachEmail: "",
-    editCoachSiteName: "",
-    editCoachProgramName: "",
-    editCoachId: "",
-    editCoachSiteId: "",
-    editCoachProgramId: "",
-    successModalOpen: false,
-    success: true,
-    saveModalOpen: false,
-    pendingView: 1,
-    awaitingConfirmationRef: null,
-    addSiteName: "",
-    addProgramId: "",
-    addSiteLeaderList: [],
-    addSiteLeader: "",
-    originalSiteLeaders: []
+      view: 1,
+      saved: true,
+      currentSites: [],
+      sortType: "",
+      editCoachFirstName: "",
+      editCoachLastName: "",
+      editCoachEmail: "",
+      editCoachSiteName: "",
+      editCoachProgramName: "",
+      editCoachId: "",
+      editCoachSiteId: "",
+      editCoachProgramId: "",
+      successModalOpen: false,
+      success: true,
+      saveModalOpen: false,
+      pendingView: 1,
+      awaitingConfirmationRef: null,
+      addSiteName: "",
+      addProgramId: "",
+      addSiteLeaderList: [],
+      addSiteLeader: "",
+      originalSiteLeaders: [],
+      archiveModalOpen: false,
+      archiveList: []
 
-  }
+    }
   
   }
 
@@ -226,7 +230,7 @@ class Sites extends React.Component<Props, State> {
         return;
       }
 
-      await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail).
+      await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail, "coach").
         catch(e => {
           console.log(e)
           alert('Unable to edit Coach. Please try again')
@@ -452,7 +456,70 @@ class Sites extends React.Component<Props, State> {
               saved: true
             });
         });
-}
+  }
+
+  archiveModalOpen =  (): Promise<boolean> => {
+    this.setState({archiveModalOpen: true})
+    return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
+      this.setState({awaitingConfirmationRef: {resolve}})
+    })
+  }
+
+  archiveModalDiscard = (): void => {
+    if(this.state.awaitingConfirmationRef) {
+      this.state.awaitingConfirmationRef.resolve(true)
+    }
+      this.setState({
+        archiveModalOpen: false,
+        awaitingConfirmationRef: null,
+      })
+  }
+
+  async archiveCoach(firebase:Firebase) {
+    firebase
+    const {
+      editCoachId,
+      editCoachFirstName,
+      editCoachLastName,
+      editCoachProgramName,
+      editCoachProgramId,
+      editCoachEmail,
+
+    } = this.state
+
+    let userSites = []
+    let archiveSites = []
+    let search = this.props.coachData
+    let coach = search.filter(o => {return o.id === editCoachId})[0]
+    for (let i = 0; i < coach.siteList.length; i++) {
+      userSites.push(coach.siteList[i].siteId)
+      archiveSites.push({
+        siteId: coach.siteList[i].siteId,
+        siteName: coach.siteList[i].siteName
+      })
+    }
+
+
+    firebase.archiveCoach(editCoachId, editCoachFirstName, editCoachLastName, editCoachProgramName, editCoachProgramId, editCoachEmail, userSites, archiveSites)
+    .catch(e => {
+      this.setState({success: false})
+      console.log(e)
+      alert('Unable to archive coach please try again')
+  }).finally(() => {
+      this.setState({ // Hold off setting new state until success has been determined
+        editCoachEmail: "",
+        editCoachFirstName: "",
+        editCoachLastName: "",
+        editCoachSiteName: "",
+        editCoachProgramName: "",
+        editCoachId: "",
+        editCoachSiteId: "",
+        editCoachProgramId: "",
+        successModalOpen: this.state.success ? true : false,
+        saved: true
+      });
+  });
+  }
 
   render() {
     
@@ -464,7 +531,23 @@ class Sites extends React.Component<Props, State> {
     onClick={() => {this.context.populateUser()}}
     >Button 2</Button>
 
-
+    <Dialog open={this.state.archiveModalOpen}>
+      <DialogTitle style={{ fontFamily: 'Arimo' }}>
+          Are you sure you would like to move this user to archives?
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={this.archiveModalDiscard}>
+            No, go back
+        </Button>
+        <FirebaseContext.Consumer>
+          {(firebase: Firebase) => (
+            <Button onClick={(_) => {this.archiveCoach(firebase)}}>
+                Yes, I am sure
+            </Button>
+          )}
+        </FirebaseContext.Consumer>
+      </DialogActions>
+    </Dialog>
     <Dialog open={this.state.successModalOpen}>
       <DialogTitle style={{ fontFamily: 'Arimo' }}>
           The action was completed successfully.
@@ -537,7 +620,7 @@ class Sites extends React.Component<Props, State> {
     <Grid item xs={3}>
       <Grid container direction='column' style={{ marginLeft:'30px'}}>
         <Grid item xs={6}>
-            <Grid container direction='row' style={{cursor: 'default'}} >
+            <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
                 <Grid item>
                     <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
                 </Grid>

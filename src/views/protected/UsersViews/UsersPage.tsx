@@ -351,14 +351,14 @@ class UsersPage extends React.Component<Props, State> {
     })
     siteData.map(site => {
       if (!seen.includes(site.id)) {
-        // let programId = programData.find(o => o.sites.includes(site.id)).id
+        let programId = (programData.find(o => o.sites.includes(site.id)) ? programData.find(o => o.sites.includes(site.id)).id : "")
         console.log(siteData)
         console.log(programData)
         data.push({
           siteName: site.name,
           siteId: site.id,
           programName: site.programs,
-          // programId: programId,
+          programId: programId,
           firstName: "",
           lastName: "",
           id: "",

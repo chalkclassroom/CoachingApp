@@ -542,7 +542,7 @@ editTeacher = async (firebase:Firebase) => {
       return;
     }
 
-    await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail).
+    await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, "teacher").
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')

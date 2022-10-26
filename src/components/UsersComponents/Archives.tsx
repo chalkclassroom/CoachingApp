@@ -16,6 +16,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import FolderIcon from '@material-ui/icons/Folder'
 import SaveImage from '../../assets/images/SaveImage.svg'
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg'
+import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults';
 
 const TableRow = styled.tr`
 background-color: white;
@@ -67,6 +68,12 @@ interface State {
   editProgramId: string
   success: boolean
   saveModalOpen: boolean
+  editCoachFirstName: string
+  editCoachLastName: string
+  editCoachEmail: string
+  editCoachSites: string
+  editCoachProgramName: string,
+  editCoachProgramId: string
 
 }
 
@@ -97,8 +104,13 @@ class Archives extends React.Component<Props, State> {
       editSiteId: "",
       editProgramId: "",
       success: true,
-      saveModalOpen: false
-
+      saveModalOpen: false,
+      editCoachFirstName: "",
+      editCoachLastName: "",
+      editCoachEmail: "",
+      editCoachSites: "",
+      editCoachProgramName: "",
+      editCoachProgramId: ""
     }
 
   }
@@ -156,7 +168,17 @@ class Archives extends React.Component<Props, State> {
         archiveTeacherCoach: "",
         archiveModalOpen: false,
         successModalOpen: true,
-        archiveType: ""
+        archiveType: "",
+        editTeacherId: "",
+        editEmail: "",
+        editTeacherFirstName: "",
+        editTeacherLastName: "",
+        editCoach: "",
+        editCoachId: "",
+        editSite: "",
+        editProgram: "",
+        editSiteId: "",
+        editProgramId: "",
 
       });
       // window.location.reload()
@@ -167,20 +189,46 @@ class Archives extends React.Component<Props, State> {
   async unarchiveCoach(firebase:Firebase) {
     firebase
     const {
-      archiveCoachId,
+      editCoachId,
     } = this.state
 
-    await firebase.unarchiveCoach(archiveCoachId)
+    await firebase.unarchiveCoach(editCoachId)
     .catch(e => {
       console.log(e)
       alert('Unable to unarchive teacher. Please try again')})
     .finally(() => {
+
+      let update = this.props.coachData;
+      let coachData = update.find(o => o.id === editCoachId);
+      let current = this.state.archivedData;
+      let isChange = current.find(o => o.id === editCoachId);
+      let coachIndex = update.indexOf(coachData);
+      if (update[coachIndex].firstName !== isChange.firstName || update[coachIndex].lastName !== isChange.lastName) {
+        update[coachIndex].firstName = isChange.firstName;
+        update[coachIndex].lastName = isChange.lastName;
+      }
+      update[coachIndex].archived = false;
+      update = update.filter((item) => {return item.archived === false})
+      this.props.updateCoachData(update);
+
+      update =  this.state.archivedData;
+      coachData = update.find(o => o.id === editCoachId);
+      coachIndex = update.indexOf(coachData);
+      update.splice(coachIndex, 1);
+
       this.setState({ // Hold off setting new state until success has been determined
         archiveTeacherId: "",
         archiveTeacherCoach: "",
         archiveModalOpen: false,
         successModalOpen: true,
-        archiveType: ""
+        archiveType: "",
+        editCoachId: "",
+        editCoachFirstName: "",
+        editCoachLastName: "",
+        editCoachEmail: "",
+        editCoachSites: "",
+        editCoachProgramName: "",
+        editCoachProgramId: "",
       });
       // window.location.reload()
       
@@ -319,23 +367,45 @@ class Archives extends React.Component<Props, State> {
   handleEditInputChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    if (name === 'firstName') {
-      this.setState({
-        editTeacherFirstName: event.target.value,
-        saved: false,
-      })
+    if (this.state.archiveType === "teacher") {
+      if (name === 'firstName') {
+        this.setState({
+          editTeacherFirstName: event.target.value,
+          saved: false,
+        })
+      }
+      if (name === 'lastName') {
+        this.setState({
+          editTeacherLastName: event.target.value,
+          saved: false,
+        })
+      }
+      if (name === 'email') {
+        this.setState({
+          editEmail: event.target.value,
+          saved: false,
+        })
+      }
     }
-    if (name === 'lastName') {
-      this.setState({
-        editTeacherLastName: event.target.value,
-        saved: false,
-      })
-    }
-    if (name === 'email') {
-      this.setState({
-        editEmail: event.target.value,
-        saved: false,
-      })
+    if (this.state.archiveType === "coach") {
+      if (name === 'firstName') {
+        this.setState({
+          editCoachFirstName: event.target.value,
+          saved: false,
+        })
+      }
+      if (name === 'lastName') {
+        this.setState({
+          editCoachLastName: event.target.value,
+          saved: false,
+        })
+      }
+      if (name === 'email') {
+        this.setState({
+          editCoachEmail: event.target.value,
+          saved: false,
+        })
+      }
     }
   }
 
@@ -370,7 +440,7 @@ class Archives extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, true).
+    await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, "teacher", true).
       catch(e => {
         console.log(e)
         alert('Unable to edit teacher. Please try again')
@@ -445,6 +515,27 @@ class Archives extends React.Component<Props, State> {
     this.handlePageChange(2)
   }
 
+  handleCoachEditClick = (value) => {
+    let sites = ""
+    for (let i = 0; i < value.sites.length; i++) {
+      sites = sites + value.sites[i].siteName + ","
+    }
+
+    sites = sites.slice(0, sites.length-1)
+
+    this.setState({
+      editCoachId: value.id,
+      editCoachFirstName: value.firstName,
+      editCoachLastName: value.lastName,
+      editCoachEmail: value.email,
+      editCoachSites: sites,
+      editCoachProgramName: value.programName,
+      editCoachProgramId: value.programId,
+      archiveType: "coach"
+    })
+    this.handlePageChange(2)
+  }
+
   onSaveModalOpen =  (): Promise<boolean> => {
     this.setState({saveModalOpen: true})
     return new Promise<boolean>((resolve: (discard: boolean) => void, reject): void => {
@@ -483,6 +574,79 @@ class Archives extends React.Component<Props, State> {
         awaitingConfirmationRef: null
       })
   }
+
+  editCoach = async (firebase:Firebase) => {
+    firebase
+    const {
+      editCoachId,
+      editCoachFirstName,
+      editCoachLastName,
+      editCoachEmail
+    } = this.state
+
+    this.setState({success: true})
+
+    if (!editCoachFirstName || editCoachFirstName === ""){
+      alert("First Name is required");
+      return
+    }
+
+    if (!editCoachLastName || editCoachLastName === ""){
+      alert("Last name is required");
+      return;
+    }
+
+    if (editCoachEmail !== "" && !this.validateEmail(editCoachEmail)) {
+      alert("No email or valid email is required");
+      return;
+    }
+
+    await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail, "coach", true).
+      catch(e => {
+        console.log(e)
+        alert('Unable to edit Coach. Please try again')
+        this.setState({success: false})
+      }).finally(() => {
+          let update = this.props.coachData;
+          console.log(update)
+          let coachData = update.find(o => o.id === "archived" + editCoachId);
+          let coachDataIndex = update.indexOf(coachData);
+          update[coachDataIndex].firstName = editCoachFirstName;
+          update[coachDataIndex].lastName = editCoachLastName;
+          update[coachDataIndex].email = editCoachEmail;
+
+          this.props.updateCoachData(update)
+
+          update = this.props.teacherData;
+          console.log(update)
+          coachData = update.filter(o => {return o.coachId === editCoachId});
+          coachData.map(value => {
+            coachDataIndex = update.indexOf(value);
+            update[coachDataIndex].coachFirstName = editCoachFirstName;
+            update[coachDataIndex].coachLastName = editCoachLastName;
+          })
+          this.props.updateTeacherData(update)
+
+          update = this.state.archivedData;
+          coachData = update.find(o => o.id === editCoachId);
+          coachDataIndex = update.indexOf(coachData);
+          update[coachDataIndex].firstName = editCoachFirstName;
+          update[coachDataIndex].lastName = editCoachLastName;
+          
+
+          this.setState({ // Hold off setting new state until success has been determined
+            archivedData: update,
+            editCoachId: "",
+            editCoachFirstName: "",
+            editCoachLastName: "",
+            editCoachEmail: "",
+            editCoachSites: "",
+            editCoachProgramName: "",
+            successModalOpen: this.state.success ? true : false,
+            saved: true
+          });
+      });
+}
   
   render() {
     return (<>
@@ -566,7 +730,7 @@ class Archives extends React.Component<Props, State> {
                 </Grid>
                 </Grid>
                 </Grid>         
-
+              {this.state.archiveType === "teacher" ? (<>
               <Grid item xs={1} style={{marginTop: '45px'}}>
               <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
                   <Grid item>
@@ -681,14 +845,112 @@ class Archives extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
+            </>) : (<>
+              <Grid item xs={1} style={{marginTop: '45px'}}>
+              <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'15px'}}>
+                      Teacher
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'20px'}}>
+                      Email
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'25px'}}>
+                      Sites
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" style={{marginTop:'25px'}}>
+                      Program
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
 
+            <Grid item xs={5} style={{marginTop: '45px'}}>
+              <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+                <Grid item>
+                  <Grid container direction='row' justifyContent='center' spacing={3}>
+                    <Grid item xs={6}>
+                      <TextField
+                      id="coach-firstName"
+                      label="First Name"
+                      type="text"
+                      value={this.state.editCoachFirstName}
+                      InputProps={{
+                        readOnly: false
+                      }}
+                      variant="outlined"
+                      onChange={this.handleEditInputChange('firstName')}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                      id="coach-lastName"
+                      label="Last Name"
+                      type="text"
+                      value={this.state.editCoachLastName}
+                      InputProps={{
+                        readOnly: false
+                      }}
+                      variant="outlined"
+                      onChange={this.handleEditInputChange('lastName')}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <TextField
+                  style={{width:'42vw', maxWidth: '470px'}}
+                  id="coach-email"
+                  label="Email"
+                  type="text"
+                  value={this.state.editCoachEmail}
+                  InputProps={{
+                    readOnly: false
+                  }}
+                  variant="outlined"
+                  onChange={this.handleEditInputChange('email')}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="teacher-Coach"
+                    type="text"
+                    value={this.state.editCoachSites}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="outlined"
+                    />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    style={{width:'42vw', maxWidth: '470px'}}
+                    id="coach-program"
+                    type="text"
+                    value={this.state.editCoachProgramName}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="outlined"
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            </>)}
               <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
               <Grid item xs={1}/>
                 <Grid item xs={1}>
                   <FirebaseContext.Consumer>
                     {(firebase: Firebase) => (
                       <Button
-                      onClick={(_)=>{this.editTeacher(firebase)}}
+                      onClick={(_)=>{this.state.archiveType === "teacher" ? this.editTeacher(firebase) : this.editCoach(firebase)}}
                       >
                         {this.state.saved ? (
                           <img
@@ -852,10 +1114,11 @@ class Archives extends React.Component<Props, State> {
             <tbody>
 
               {this.state.archivedData.map((value, index) => {
+                if (value.role === "teacher") {
                 return (
                   <TableRow 
                 key={index} 
-                onClick={() => {value.role === "teacher" ? this.handleTeacherEditClick(value) : this.handleCoachArchiveClick(value)}}
+                onClick={() => { this.handleTeacherEditClick(value)}}
                 >
                   <td style={{textAlign:'center'}}>
                     <Typography variant="h6">
@@ -883,7 +1146,48 @@ class Archives extends React.Component<Props, State> {
                     </Typography>
                   </td>
                 </TableRow>
-                )
+                )}
+                if (value.role === "coach") {
+                  return (
+                  <TableRow 
+                key={index} 
+                onClick={() => {this.handleCoachEditClick(value)}}
+                >
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6">
+                      {value.lastName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6">
+                      {value.firstName}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6">
+                      {value.role !== "" ? value.role[0].toUpperCase() + value.role.substring(1) : value.role}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6">
+                      {value.sites.map(item => {
+                        return (
+                          <li style={{ listStyleType: 'none', padding: '0', margin: '0'}}>
+                            <Typography variant="h6">
+                              {item.siteName}
+                            </Typography>
+                          </li>
+                        )
+                      })}
+                    </Typography>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    <Typography variant="h6">
+                      {value.programName}
+                    </Typography>
+                  </td>
+                </TableRow>
+              )}
               })}
             </tbody>
 
