@@ -4548,6 +4548,9 @@ class Firebase {
     })
    
     //Delete original document
+    for (let i = 0; i < partners.length; i++) {
+      await this.db.collection('users').doc(coachId).collection('partners').doc(partners[i]).delete()
+    }
     await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
       console.error(
         "Error occurred when deleting original coach doc: ",
@@ -4580,18 +4583,21 @@ class Firebase {
       partners.push(item.id)
     })
 
-    const docRef = firebase.firestore().collection("users").doc(userData.id);
+    let docRef = firebase.firestore().collection("users").doc(userData.id);
     await docRef.set(userData).then(() => {
-      for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
-        docRef.collection("partners").doc(partners[partnerIndex]).set({});
-      }
+      // for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
+      //   docRef.collection("partners").doc(partners[partnerIndex]).set({});
+      // }
     }).catch((error: Error) => {
       console.error(
         "Error occurred when creating archived coach doc: ",
         error
       )
     })
-    this.db.collection("users").doc("archived" + coachId).delete()
+    for (let i = 0; i < partners.length; i++) {
+      await this.db.collection('users').doc("archived" + coachId).collection('partners').doc(partners[i]).delete()
+    }
+    await this.db.collection("users").doc("archived" + coachId).delete()
     .catch((error: Error) => {
       console.error("Error occurred when deleting coach: ", error)
     })

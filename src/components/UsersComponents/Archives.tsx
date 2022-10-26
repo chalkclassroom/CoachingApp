@@ -42,6 +42,8 @@ interface Props {
   filter?: Array<string>
   updateTeacherData(data): void 
   updateCoachData(data): void 
+  updateSendToSitesData(data): void
+  sitesList: Array<Object>
 }
 
 interface State {
@@ -211,12 +213,36 @@ class Archives extends React.Component<Props, State> {
       update = update.filter((item) => {return item.archived === false})
       this.props.updateCoachData(update);
 
+
+      let sendToSites = this.props.sitesList;
+      let coaches = this.props.coachData;
+      let coach = coaches.find(o => o.id === editCoachId)
+      console.log(sendToSites)
+
+      coach.siteList.map(value => {
+        sendToSites.push({
+          siteName: value.siteName,
+          siteId: value.siteId,
+          programName: value.programName,
+          programId: value.programId,
+          firstName: coach.firstName,
+          lastName: coach.lastName,
+          id: coach.id,
+          archived: coach.archived,
+          email: coach.email
+        })
+      })
+
+      console.log(sendToSites)
+      this.props.updateSendToSitesData(sendToSites)
+
       update =  this.state.archivedData;
       coachData = update.find(o => o.id === editCoachId);
       coachIndex = update.indexOf(coachData);
       update.splice(coachIndex, 1);
 
       this.setState({ // Hold off setting new state until success has been determined
+        archivedData: update,
         archiveTeacherId: "",
         archiveTeacherCoach: "",
         archiveModalOpen: false,
@@ -609,7 +635,7 @@ class Archives extends React.Component<Props, State> {
       }).finally(() => {
           let update = this.props.coachData;
           console.log(update)
-          let coachData = update.find(o => o.id === "archived" + editCoachId);
+          let coachData = update.find(o => o.id === editCoachId);
           let coachDataIndex = update.indexOf(coachData);
           update[coachDataIndex].firstName = editCoachFirstName;
           update[coachDataIndex].lastName = editCoachLastName;
@@ -632,6 +658,8 @@ class Archives extends React.Component<Props, State> {
           coachDataIndex = update.indexOf(coachData);
           update[coachDataIndex].firstName = editCoachFirstName;
           update[coachDataIndex].lastName = editCoachLastName;
+          update[coachDataIndex].email = editCoachEmail;
+
           
 
           this.setState({ // Hold off setting new state until success has been determined

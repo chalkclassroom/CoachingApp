@@ -423,7 +423,7 @@ class Teachers extends React.Component<Props, State> {
       update.splice(teacherIndex, 1);
 
       this.setState({ // Hold off setting new state until success has been determined
-        teacherList: update,
+        teachersList: update,
         archiveList: [...this.state.archiveList, teacherData],
         editTeacherId: "",
         editCoachId: "",
@@ -476,12 +476,14 @@ class Teachers extends React.Component<Props, State> {
       this.setState({success: false})
     }).finally(() => {
 
-        let update =  this.state.teachersList;
+        let update =  this.props.teacherData;
         let coachData = this.props.coachData.find(o => o.id === changeCoachId);
         let siteData = this.props.siteData.find(o => o.name === changeSiteName);
         let programData = this.props.programData.find(o => o.id === changeProgramId);
         let teacherData = this.props.teacherData.find(o => o.teacherId ===  transferTeacherId);
         let teacherIndex = update.indexOf(teacherData)
+
+        console.log(update, transferTeacherId)
 
         update[teacherIndex].coachId = coachData.id;
         update[teacherIndex].coachFirstName = coachData.firstName;

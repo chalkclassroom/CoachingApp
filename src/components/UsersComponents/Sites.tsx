@@ -56,6 +56,7 @@ interface Props {
   updateCoachData(data): void 
   updateTeacherData(data): void 
   programData: Array<Object>
+  updateSendToSitesData(data): void 
 }
 
 interface State {
@@ -506,6 +507,37 @@ class Sites extends React.Component<Props, State> {
       console.log(e)
       alert('Unable to archive coach please try again')
   }).finally(() => {
+
+      // let update = this.state.teachersList;
+      let update = this.props.coachData;
+      let coachData = update.find(o => o.id === editCoachId);
+      let coachIndex = update.indexOf(coachData);
+      update[coachIndex].archived = true;
+      update.splice(coachIndex, 1);
+
+      this.props.updateCoachData(update)
+
+      update = this.props.teacherData
+      let teacherData = update.filter(o => {return o.coachId === editCoachId})
+      teacherData.map(o => {
+        let teacherIndex = update.indexOf(o)
+        update[teacherIndex].coachId = ""
+        update[teacherIndex].coachFirstName = ""
+        update[teacherIndex].coachLastName = ""
+      })
+
+      this.props.updateTeacherData(update)
+
+      update = this.props.sitesList;
+      let coaches = update.filter(item => {return item.id === editCoachId})
+      coaches.map(o => {
+        coachIndex = update.indexOf(o)
+        update.splice(coachIndex, 1)
+      })
+
+      this.props.updateSendToSitesData(update)
+
+
       this.setState({ // Hold off setting new state until success has been determined
         editCoachEmail: "",
         editCoachFirstName: "",
@@ -516,6 +548,7 @@ class Sites extends React.Component<Props, State> {
         editCoachSiteId: "",
         editCoachProgramId: "",
         successModalOpen: this.state.success ? true : false,
+        archiveModalOpen: false,
         saved: true
       });
   });
@@ -524,13 +557,6 @@ class Sites extends React.Component<Props, State> {
   render() {
     
     return (<>
-    <Button
-    onClick={() => {this.context.populateFirebase()}}
-    >Button 1</Button>
-    <Button
-    onClick={() => {this.context.populateUser()}}
-    >Button 2</Button>
-
     <Dialog open={this.state.archiveModalOpen}>
       <DialogTitle style={{ fontFamily: 'Arimo' }}>
           Are you sure you would like to move this user to archives?

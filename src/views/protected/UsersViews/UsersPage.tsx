@@ -401,6 +401,11 @@ class UsersPage extends React.Component<Props, State> {
     console.log("Teachers fetched...")
 
     var coaches = await this.getCoaches();
+    coaches.map(item => {
+      if (item.id.includes("archived")) {
+        item.id = item.id.slice(8)
+      }
+    })
     console.log("Coaches fetched...", coaches)
 
     var siteData = await this.setSites();
@@ -492,6 +497,10 @@ class UsersPage extends React.Component<Props, State> {
       this.setState({archivedCoaches: data})
     }
     
+  }
+
+  updateSendToSites = (data) => {
+    this.setState({SendToSites: data})
   }
 
 
@@ -587,6 +596,8 @@ class UsersPage extends React.Component<Props, State> {
                         filter  = {this.state.propFilter}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
                         updateCoachData = {(data) => this.updateCoachData(data)}
+                        updateSendToSitesData = {(data) => this.updateSendToSites(data)}
+                        sitesList = {this.state.sendToSites}
                         />
                     } />
                     <Route path="/LeadersSites" render={(props) => 
@@ -600,6 +611,7 @@ class UsersPage extends React.Component<Props, State> {
                         updateCoachData = {(data) => this.updateCoachData(data)}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
                         programData = {this.state.programData}
+                        updateSendToSitesData = {(data) => this.updateSendToSites(data)}
                         />
                     } />
                   </Switch>
