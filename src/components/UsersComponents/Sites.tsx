@@ -403,6 +403,7 @@ class Sites extends React.Component<Props, State> {
     } = this.state;
 
     this.setState({success: true})
+    let siteId = "";
 
 
     if (!addSiteName || addSiteName === ""){
@@ -428,6 +429,7 @@ class Sites extends React.Component<Props, State> {
     await firebase.createSite(siteInfo)
         .then((data) => {
           console.log("Site Created");
+          siteId = data.id
 
             // Add new program to users
             firebase.assignProgramToUser({userId: addSiteLeader, programId: addProgramId}).then((res) => {
@@ -448,6 +450,23 @@ class Sites extends React.Component<Props, State> {
             console.log(e)
             alert('Unable to create Site. Please try again')
         }).finally(() => {
+
+            let update = this.props.sitesList
+            update.push({
+              siteName: addSiteName,
+              siteId: siteId,
+              programName: "",
+              programId: addProgramId,
+              firstName: "",
+              lastName: "",
+              id: "",
+              archived: false,
+              email: ""
+            })
+
+            this.props.updateSendToSitesData(update)
+
+
             this.setState({ // Hold off setting new state until success has been determined
               addSiteName: "",
               addProgramId: "",

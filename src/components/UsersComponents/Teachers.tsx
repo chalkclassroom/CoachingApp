@@ -435,7 +435,8 @@ class Teachers extends React.Component<Props, State> {
         editSiteId: "",
         editProgramId: "",
         archiveModalOpen: false,
-        successModalOpen: this.state.success ? true : false
+        successModalOpen: this.state.success ? true : false,
+        saved: true
       });
 
       console.log(this.state.archiveList)
