@@ -1268,7 +1268,7 @@ exports.observationsToBQ = functions.firestore
                                         id: context.params.observationID,
                                         sessionStart: Math.floor(session.start.toDate() / 1000),
                                         sessionEnd: Math.floor(session.end.toDate() / 1000),
-                                        teacherId: session.teacher,
+                                        teacher: session.teacher,
                                         observedBy: session.observedBy,
                                         activitySetting: session.activitySetting,
                                         checklist: {

@@ -146,7 +146,8 @@ interface Props {
   demonstrationClick(): void,
   knowledgeCheckClick(): void,
   colorTheme: Theme,
-  literacyType: Constants.LiteracyTypes
+  literacyType: Constants.LiteracyTypes,
+  type: string
 }
 
 /**
@@ -165,8 +166,12 @@ function TrainingDashboard(props: Props): React.ReactElement {
     demonstrationClick,
     knowledgeCheckClick,
     colorTheme,
-    literacyType
+    literacyType,
+    type
   } = props;
+
+  const practice = type;
+  localStorage.removeItem('type');
   return (
     <div className={classes.container}>
       <Card className={classes.card}>
@@ -210,6 +215,7 @@ function TrainingDashboard(props: Props): React.ReactElement {
               </Button>
             </MuiThemeProvider>
           </ListItem>
+          {practice === 'practice' ? (<></>) : (<>
           <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
@@ -238,6 +244,7 @@ function TrainingDashboard(props: Props): React.ReactElement {
               </Button>
             </MuiThemeProvider>
           </ListItem>
+          </>)}
         </div>
       </Card>
     </div>

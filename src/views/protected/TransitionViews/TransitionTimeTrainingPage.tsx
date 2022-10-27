@@ -9,6 +9,7 @@ import * as Constants from '../../../constants/Constants';
  * @return {ReactElement}
  */
 export default function TransitionTimeTrainingPage(): React.ReactElement {
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={TransitionTimeIconImage}
@@ -17,6 +18,7 @@ export default function TransitionTimeTrainingPage(): React.ReactElement {
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20TT%20(CC).mp4?alt=media&token=de9a9784-fccd-457c-bd44-3a3c1e006d54'
       definitions={<TransitionHelpCard />}
       section='transition'
+      type={type ? type : ''}
     />
   );
 }

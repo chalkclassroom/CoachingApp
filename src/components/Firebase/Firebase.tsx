@@ -5,8 +5,20 @@ import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
 import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
+import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
+import { resultsAriaMessage } from 'react-select/src/accessibility'
+import ProgramProfileBarDetails from '../ProgramProfileComponents/ProgramProfileBarDetails'
+import ActivitySettingButtons from '../StudentEngagementComponents/ActivitySettingButtons'
+import da from 'date-fns/esm/locale/da/index.js'
+import { add } from 'date-fns'
 
 const config = process.env.FIREBASE_CONFIG
+
+interface ProgramInfo {
+  name: string
+  leaders: Array<string>
+  sites: Array<string>
+}
 
 interface TeacherInfo {
   firstName: string
@@ -15,6 +27,7 @@ interface TeacherInfo {
   email: string
   phone: string
   notes: string
+  sites?: Array<string>
 }
 
 export interface UserDocument {
@@ -149,6 +162,12 @@ class Firebase {
     })
   }
 
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   /**
    * creates account for user, makes entry in users collection, adds practice teacher if role===coach
    * @param {object} userData
@@ -161,7 +180,11 @@ class Firebase {
       firstName: string
       lastName: string
     },
-    role: string
+    role: string,
+    hasProgram: boolean,
+    program: string,
+    hasSite: boolean,
+    site
   ): Promise<void> => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
     // Added emulators for local testing
@@ -187,7 +210,9 @@ class Firebase {
           lastName: userData.lastName,
           role: role,
           id: userInfo.user ? userInfo.user.uid : '',
+          archived: false
         }
+
         // Create the Practice Teacher if it does not currently exist
         let practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
         if (!practiceTeacher.exists) {
@@ -221,6 +246,48 @@ class Firebase {
               )
             )
         })
+        if( hasProgram ) {
+          this.assignProgramToUser({userId: data.id, programId: program }).then(() => {
+            console.log("Program " + program + "added to user " + data.id);
+          }).catch(e => console.error("error =>", e));
+          this.assignUserToSiteOrProgram({programId: program, userId: data.id}).then(() => {
+            console.log("User added to program " + program);
+          }).catch(e => console.error("error => Program : " + program, e));
+
+          data.program = program;
+        }
+
+        if ( hasSite ) {
+
+          // Check to see if it's a string or array
+          var assignSite;
+          console.log("SITE : ", site);
+
+          if(typeof site == "string")
+          {
+            assignSite = this.assignSiteToUser({userId: data.id, siteId: site , bulkSiteIds: []}).then(() => {
+              console.log("Sites " + site + " added to user " + data.id);
+            }).catch(e => console.error("error =>", e));
+          }
+          else
+          {
+            assignSite = this.assignSiteToUser({userId: data.id, bulkSiteIds: site}).then(() => {
+              console.log("Site " + site + " added to user " + data.id);
+            }).catch(e => console.error("error =>", e));
+          }
+
+          if (data.role !== "coach") {
+            this.assignUserToSiteOrProgram({siteId: site, userId: data.id}).then(() => {
+              console.log("User added to site " + site);
+            }).catch(e => console.error("error => Site : " + site, e));
+          }
+
+          data.sites = site;
+        }
+
+        return data;
+
+
       }
     } catch (e) {
       console.log("An Error occurred when creating the user:")
@@ -279,6 +346,11 @@ class Firebase {
     return userDocs.docs[0].get('role') === 'admin'
   }
 
+  userIsLeader= async () => {
+    let userDocs = await this.db.collection('users').where('id', '==', this.auth.currentUser.uid).get();
+    return userDocs.docs[0].get('role') === 'admin' || userDocs.docs[0].get('role') === 'programLeader' || userDocs.docs[0].get('role') === 'siteLeader'
+  }
+
   sendEmail = async (msg: string): Promise<void> => {
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       'funcSendEmail'
@@ -321,6 +393,40 @@ class Firebase {
           )
           console.log('teacher list', teacherList)
           return teacherList
+        })
+        .catch((error: Error) =>
+          console.error('Error getting partner list: ', error)
+        )
+    }
+  }
+
+  getTeacherId = async (firstName: string, lastName: string, email: string) => {
+    this.query = this.db.collection('users').where("firstName", "==", firstName).where("lastName", "==", lastName).where("email", "==", email );
+    let document = await this.query.get();
+
+    return document.docs[0].id;
+  }
+
+  getTeacherListFromUser = async (
+    data: {
+      userId: string,
+     }
+ ): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db
+        .collection('users')
+        .doc(data.userId)
+        .collection('partners')
+        .get()
+        .then( async (partners: firebase.firestore.QuerySnapshot) => {
+          const teacherList: Array<firebase.firestore.DocumentData> = [];
+
+          partners.forEach(partner => {
+              teacherList.push(partner.id.trim());
+            }
+          )
+
+          return teacherList;
         })
         .catch((error: Error) =>
           console.error('Error getting partner list: ', error)
@@ -472,6 +578,7 @@ class Firebase {
         role: 'teacher',
         id: newTeacherRef.id,
         phone: phone,
+        archived: false
       })
       .then(() => {
         const id = newTeacherRef.id // get new iD
@@ -495,6 +602,129 @@ class Firebase {
         // return "";
       })
   }
+
+  addTeacherToCoach = async (teacherInfo: TeacherInfo, coachId: string): Promise<string | void> => {
+    const {firstName, lastName, school, email, notes, phone, sites} = teacherInfo
+    const newTeacherRef = this.db.collection('users').doc() // auto-generated iD
+    return newTeacherRef
+      .set({
+        firstName: firstName,
+        lastName: lastName,
+        school: school,
+        email: email,
+        notes: notes,
+        role: 'teacher',
+        id: newTeacherRef.id,
+        phone: phone,
+        sites: sites ? sites : [],
+        archived: false
+      })
+      .then(() => {
+        const id = newTeacherRef.id // get new iD
+        return this.db
+          .collection('users')
+          .doc(coachId)
+          .collection('partners')
+          .doc(id)
+          .set({})
+          .then(() => id)
+          .catch((error: Error) => {
+            console.error(
+              "Error occurred when adding teacher to coach's partner list: ",
+              error
+            )
+            // return "";
+          })
+      })
+      .catch((error: Error) => {
+        console.error('Error occurred when adding teacher to dB: ', error)
+        // return "";
+      })
+  }
+
+
+  addTeacherIdToCoach = async (data: {
+    teacherId: string,
+    coachId: string,
+  }) => {
+
+    var coachId = !(data.coachId) ?  this.auth.currentUser.uid : data.coachId;
+
+    return this.db
+      .collection('users')
+      .doc(coachId)
+      .collection('partners')
+      .doc(data.teacherId)
+      .set({})
+      .then(() => id)
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when adding teacher to coach's partner list: ",
+          error
+        )
+        // return "";
+      })
+  }
+
+
+  /*
+   * Get's a teacher by the email
+   */
+  getTeacherByEmail = async (
+    data: {
+      email: string,
+    }
+  ) => {
+    var email = data.email;
+
+    var snapshot = await this.db.collection('users').where('email', '==', email).get().catch((e) => {console.log("Error getting user ", e);});
+
+    if(!snapshot.empty) {
+      var results;
+      snapshot.forEach(doc => {
+        results = doc.data();
+      });
+
+      return results;
+    }
+    else
+    {
+      console.log("A user with the email " + email + " does not exist.");
+    }
+  }
+
+
+
+  /*
+   * Get's a teacher by the full name
+   */
+  getTeacherByFullName = async (
+    data: {
+      firstName: string,
+      lastName: string,
+    }
+  ) => {
+    var firstName = data.firstName;
+    var lastName = data.lastName;
+
+    var snapshot = await this.db.collection('users').where('firstName', '==', firstName).where('lastName', '==', lastName).get().catch((e) => {console.log("Error getting user ", e);
+    });
+
+    if(!snapshot.empty) {
+      var results;
+      snapshot.forEach(doc => {
+        results = doc.data();
+      });
+
+      return results;
+    }
+    else
+    {
+      console.log("A user with the name " + firstName + " " + lastName + " does not exist.");
+    }
+  }
+
+
 
   /**
    * removes partner from the user's partners subcollection
@@ -3048,7 +3278,7 @@ class Firebase {
   }
 
   getActionPlansForExport = async (coachId: string | undefined = undefined, from, to) => {
-    if (!await this.userIsAdmin()) {
+    if (!await this.userIsLeader()) {
       throw new Error('Not authorized to Perform this action')
     }
 
@@ -4094,6 +4324,2113 @@ class Firebase {
   }
 
 
+  fetchSiteCoaches = async (siteId: string) => {
+    this.query = this.db.collection('users').where('role', '==', 'coach').where('sites', 'array-contains', siteId);
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async doc => {
+      return {
+        name: doc.data().lastName + ', ' + doc.data().firstName,
+        id: doc.id
+      };
+    }));
+  }
+
+  fetchSitesForCoach = async (coachId: string) => {
+    let result = []
+    if(coachId) {
+      const document = await this.db.collection('users').doc(coachId).get();
+      const sites = document.data().sites;
+
+      this.query = this.db.collection('sites');
+      const collection = await this.query.get()
+
+      Promise.all(collection.docs.map(async doc => {
+        if (sites.includes(doc.id)) {
+          result.push({
+            name: doc.data().name,
+            id: doc.id
+          })
+        }
+      }))
+    }
+    return result;
+  }
+
+  getTeacherBySiteName = async (siteName: string) => {
+    this.query = this.db.collection('users').where('school', '==', siteName);
+    const collection = await this.query.get();
+
+    return Promise.all(collection.docs.map(async doc => {
+      return{
+      firstName: doc.data().firstName,
+      lastName: doc.data().lastName,
+      id: doc.id
+      }
+    }))
+  }
+
+  getAllCoachesPartners = async () => {
+    let result = []
+    this.query = this.db.collection('users').where('role', '==', 'coach');
+    const collection = await this.query.get();
+
+    await Promise.all(collection.docs.map(async coach => {
+      let docSnapshot = await this.db.collection('users').doc(coach.id).get()
+      if(docSnapshot.exists)
+      {
+        const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
+        let draft = {
+          id: coach.id,
+          firstName: coach.data().firstName,
+          lastName: coach.data().lastName,
+          archived: coach.data().archived ? coach.data().archived : false,
+          sites: coach.data().sites,
+          teachers: [],
+          email: coach.data().email
+        }
+        await Promise.all(subCollection.docs.map(async teachers => {
+          if (teachers.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+          draft['teachers'].push(teachers.id)
+          }
+        }))
+        result.push(draft)
+      }
+    }))
+    return result
+  }
+
+  getAllTeachers = async () => {
+    let result = []
+    this.query = this.db.collection('users').where('role', '==', 'teacher');
+    const allTeachers = await this.query.get()
+
+    await Promise.all(allTeachers.docs.map(async teacher => {
+      let docSnapshot = await this.db.collection('users').doc(teacher.id).get();
+      console.log("docSnapshot Data: ", docSnapshot.data());
+
+      if (teacher.id === "rJxNhJmzjRZP7xg29Ko6" && docSnapshot.exists) {} else {
+        result.push({
+          site: teacher.data().school,
+          id: teacher.id,
+          firstName: teacher.data().firstName,
+          lastName: teacher.data().lastName,
+          archived: teacher.data().archived ? teacher.data().archived : false,
+          email: teacher.data().email
+        })
+      }
+    }))
+
+    return result
+  }
+
+  getTeacherData = async () => {
+    let arr = []
+    let seen = []
+
+    this.query = this.db.collection('users').where('role', '==', 'coach');
+    const collection = await this.query.get();
+
+    this.query = this.db.collection('users').where('role', '==', 'teacher');
+    const allTeachers = await this.query.get()
+
+
+
+    await Promise.all(collection.docs.map(async (coach) => {
+      this.query = this.db.collection('users').doc(coach.id).collection('partners');
+      const subCollection = await this.query.get();
+      await Promise.all(subCollection.docs.map(async (teacher) => {
+        let docSnapshot = await this.db.collection('users').doc(teacher.id).get()
+        if (docSnapshot.exists) {
+        const teacherResult = await this.db.collection('users').doc(teacher.id).get();
+        if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6" && teacherResult.data()) {
+          seen.push(teacher.id)
+          arr.push({
+            coachId: coach.id,
+            coachFirstName: coach.data().firstName,
+            coachLastName: coach.data().lastName,
+            siteName: teacherResult.data().school ? teacherResult.data().school : "",
+            teacherId: teacher.id,
+            teacherFirstName: await teacherResult.data().firstName,
+            teacherLastName: await teacherResult.data().lastName,
+            archived: await teacherResult.data().archived ? await teacherResult.data().archived : false
+          })
+        }
+      }}))
+    }))
+
+    Promise.all(allTeachers.docs.map(async teacher => {
+      if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
+        arr.push({
+          coachId: "",
+          coachFirstName: "",
+          coachLastName: "",
+          siteName: teacher.data().school,
+          teacherId: teacher.id,
+          teacherFirstName: teacher.data().firstName,
+          teacherLastName: teacher.data().lastName,
+          archived: teacher.data().archived ? teacher.data().archived : false
+        })
+      }
+    }))
+    return arr
+  }
+
+  editUserName = async (id: string, changeFirst: string, changeLast: string, changeEmail: string, role: string, archives?: boolean) => {
+    if (role === "teacher" || (role === "coach" && archives === false)) {
+      this.db.collection("users").doc(id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing user: ",
+          error
+        )
+      })
+    }
+    if (role === "coach" && archives === true) {
+      this.db.collection("users").doc("archived" + id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing user: ",
+          error
+        )
+      })
+    }
+
+    if (archives) {
+      this.db.collection("archives").doc(id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
+      .catch((error: Error) => {
+        console.error(
+          "Error occurred when editing user archive: ",
+          error
+        )
+      })
+    }
+  }
+
+  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
+    if(originalCoach !== "") {
+      this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
+      .catch((error: Error) => {
+        console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+      })
+    }
+    this.db.collection("users").doc(teacherId).update({school: siteName})
+    .catch((error: Error) => {
+      console.error("Error occurred when updating teacher school: ", error)
+    })
+    return this.db.collection("users").doc(newCoach).collection("partners").doc(teacherId).set({})
+    .then(() => teacherId)
+    .catch((error: Error) => {
+      console.error("Error occurred when adding teacher to coach's partner list: ", error)
+    })
+
+  }
+
+  archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
+    const collection = await this.db.collection('users').doc(coachId).collection('partners').get()
+    let partners: Array<string> = []
+
+    collection.docs.map(item => {
+      partners.push(item.id)
+    })
+
+    let userData: Record<string, any> = {
+      email:  email,
+      firstName: firstName,
+      lastName: lastName,
+      role: "coach",
+      id:  coachId,
+      sites: userSites,
+      archived: true
+    };
+
+    const docRef = firebase.firestore().collection("users").doc("archived" + coachId);
+    await docRef.set(userData).then(() => {
+      for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
+        docRef.collection("partners").doc(partners[partnerIndex]).set({});
+      }
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating archived coach doc: ",
+        error
+      )
+    })
+
+    //Create archive
+    await this.db.collection('archives').doc(coachId).set({
+      firstName: firstName,
+      lastName: lastName,
+      role: "coach",
+      sites: archiveSites,
+      programName: programName,
+      programId: programId,
+      id: coachId,
+      email: email
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating coach in archives: ",
+        error
+      )
+    })
+
+    //Delete original document
+    for (let i = 0; i < partners.length; i++) {
+      await this.db.collection('users').doc(coachId).collection('partners').doc(partners[i]).delete()
+    }
+    await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
+      console.error(
+        "Error occurred when deleting original coach doc: ",
+        error
+      )
+    })
+
+  }
+
+  unarchiveCoach = async (coachId: string) => {
+    this.db.collection("archives").doc(coachId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting coach from archives: ", error)
+    })
+    const document = await this.db.collection('users').doc("archived" + coachId).get()
+    const {email, firstName, lastName, id, sites} = document.data()
+    let userData: Record<string, any> = {
+      email:  email,
+      firstName: firstName,
+      lastName: lastName,
+      role: "coach",
+      id:  id,
+      sites: sites,
+      archived: false
+    };
+    const collection = await this.db.collection('users').doc("archived" + coachId).collection('partners').get()
+    let partners: Array<string> = []
+
+    collection.docs.map(item => {
+      partners.push(item.id)
+    })
+
+    let docRef = firebase.firestore().collection("users").doc(userData.id);
+    await docRef.set(userData).then(() => {
+      // for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
+      //   docRef.collection("partners").doc(partners[partnerIndex]).set({});
+      // }
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating archived coach doc: ",
+        error
+      )
+    })
+    for (let i = 0; i < partners.length; i++) {
+      await this.db.collection('users').doc("archived" + coachId).collection('partners').doc(partners[i]).delete()
+    }
+    await this.db.collection("users").doc("archived" + coachId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting coach: ", error)
+    })
+
+  }
+
+  archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string, siteId: string, programId: string) => {
+    if (coachId !== "") {
+      this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
+      .catch((error: Error) => {
+        console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+      })
+    }
+    this.db.collection("users").doc(teacherId).update({archived: true})
+    .catch((error: Error) => {
+      console.error(
+        "Error occurred when setting archive on teacher: ",
+        error
+      )
+    })
+    return this.db.collection("archives").doc(teacherId).set({
+      firstName: firstName,
+      lastName: lastName,
+      role: "teacher",
+      site: siteName,
+      siteId: siteId,
+      program: programName,
+      programId: programId,
+      coach: coachId,
+      id: teacherId
+    })
+    .catch((error: Error) => {
+      console.error("Error occurred when adding teacher to coach's partner list: ", error)
+    })
+
+  }
+
+  unarchiveTeacher = async (teacherId: string, coachId: string) => {
+    this.db.collection("archives").doc(teacherId).delete()
+    .catch((error: Error) => {
+      console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+    })
+    this.db.collection("users").doc(teacherId).update({archived: false})
+    .catch((error: Error) => {
+      console.error(
+        "Error occurred when setting archive on teacher: ",
+        error
+      )
+    })
+    if(coachId !== "") {
+      return this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).set({})
+      .then(() => teacherId)
+      .catch((error: Error) => {
+        console.error("Error occurred when adding teacher to coach's partner list: ", error)
+      })
+    }
+  }
+
+  getArchives = async () => {
+    let archives = await this.db.collection('archives').get();
+
+    if(archives.docs.length > 0) {
+    return Promise.all(archives.docs.map(async doc => {
+      let docSnapshot = await this.db.collection('archives').doc(doc.id).get()
+      if (docSnapshot.exists)
+        return doc.data()
+    }));
+    }
+    else return [{
+      coach: "",
+      firstName: "",
+      id: "",
+      lastName: "",
+      program: "",
+      ProgramId: "",
+      role: "",
+      site: "",
+      siteId: "",
+    }];
+  }
+
+  /*
+   * Get a all sites
+   */
+  getSites = async () => {
+    if (this.auth.currentUser) {
+      const collection = await this.db.collection('sites').get()
+      return Promise.all(collection.docs.map(async (doc) => {
+        let docSnapshot = await this.db.collection('sites').doc(doc.id).get()
+        if (docSnapshot.exists) {
+          return {
+            name: doc.data().name,
+            id: doc.data().id,
+            siteLeaderId: doc.data().siteLeaderId,
+            coaches: doc.data().coaches
+          }
+        }
+      }))
+    }
+
+    // if(this.auth.currentUser) {
+    //   return this.db
+    //     .collection('sites')
+    //     .get()
+    //     .then((querySnapshot) => {
+    //       let sitesArray: Array<Types.Site> = []
+    //       querySnapshot.forEach((doc) => {
+
+    //           sitesArray.push({
+    //             name: doc.data().name,
+    //             id: doc.data().id,
+    //             siteLeaderId: doc.data().siteLeaderId,
+    //             coaches: doc.data().coaches
+    //           })
+
+    //       });
+
+    //       // Filter out cached items
+    //       return this.filterUserSiteProgramArray({dataList: sitesArray, dataType: "sites"}).then( (sites) => {
+    //         sitesArray = sites;
+
+    //         return sitesArray;
+    //       });
+    //     })
+    //     .catch((error: Error) =>
+    //       console.error('Error retrieving list of site', error)
+    //     )
+    // }
+  }
+
+  /*
+   * Get all programs
+   */
+  getPrograms = async () => {
+    if (this.auth.currentUser) {
+      const collection = await this.db.collection('programs').get()
+      return Promise.all(collection.docs.map(async (doc) => {
+        let docSnapshot = await this.db.collection('programs').doc(doc.id).get()
+        if (docSnapshot.exists) {
+          return {
+            name: doc.data().name,
+            id: doc.data().id,
+            sites: doc.data().sites,
+          }
+        }
+      }))
+    }
+
+    // if(this.auth.currentUser) {
+    //   return this.db
+    //     .collection('programs')
+    //     .get()
+    //     .then((querySnapshot) => {
+    //       let programsArray: Array<Types.Site> = []
+    //       querySnapshot.forEach((doc) => {
+
+    //           programsArray.push({
+    //             name: doc.data().name,
+    //             id: doc.data().id,
+    //             sites: doc.data().sites,
+    //           })
+
+    //       });
+
+    //       // Filter out cached items
+    //       return this.filterUserSiteProgramArray({dataList: programsArray, dataType: "programs"}).then( (programs) => {
+    //         programsArray = programs;
+
+    //         return programsArray;
+    //       });
+
+    //     })
+    //     .catch((error: Error) =>
+    //       console.error('Error retrieving list of programs', error)
+    //     )
+    // }
+  }
+
+  /*
+   * Get one program
+   */
+  getProgram = async (
+    data: {
+      programId: string
+    }
+  ): Promise<void> => {
+
+    if(this.auth.currentUser) {
+      var programDoc = this.db.collection('programs').doc(data.programId);
+
+      return programDoc.get().then((doc) => {
+        if (doc.exists)
+        {
+          return doc.data();
+        }
+      }).catch((e) => {
+        console.error("Can't find document!")
+      });
+    }
+  }
+
+  /*
+   * Get all programs for a specific user
+   *
+   * If user is set to "user" then return programs of current user.
+   */
+  getProgramsForUser = async (
+    data: {
+      userId: string
+    }
+  ): Promise<void> => {
+
+    if(this.auth.currentUser) {
+      var userId = data.userId;
+
+      // If user id is set to "user" we want to use the current user
+      if(userId == "user")
+      {
+        userId = this.auth.currentUser.uid;
+      }
+
+      // Grab the user's document
+      var userDoc = this.db.collection('users').doc(userId);
+
+      // Grab the data from the user's document
+      return userDoc.get().then( async (doc) => {
+
+        // Initialize the list of program's to return
+        var programRes = [];
+
+        // Make sure the document exists
+        if (doc.exists)
+        {
+          var docData = doc.data();
+
+          // Make sure this user has an array of program ids
+          if(docData.programs)
+          {
+            var programIds = docData.programs;
+
+            // Go through each program ID in the list
+            for(let programId of programIds)
+            {
+              // Get the program for this program ID
+              var tempProgram = await this.getProgram({programId: programId});
+
+              // There's a problem with the array being filled with deleted information,
+              //  so we have to check to make sure the data is there
+              //  The problem is most likely a local firestore issue but it couldn't hurt
+              if (tempProgram.id && tempProgram.id !== "")
+              {
+                // Add the program data to the list to return
+                programRes.push(tempProgram);
+              }
+
+            };
+          }
+        }
+
+        return programRes;
+      }).catch((e) => {
+        console.error("There was a problem getting the user's document!", e);
+      });
+
+    }
+  }
+
+  /*
+   * Get all users with role 'programLeader'
+   */
+  getProgramLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+
+      return this.db
+      .collection('users')
+      .where('role', '==', 'programLeader')
+      .get({ source: 'server' })
+      .then(async (querySnapshot) => {
+        let docSnapshot = await this.db.collection('users').doc(querySnapshot.data().id).get()
+        if(docSnapshot.exists)
+        {
+          const leadersArray = []
+          querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+            console.log(doc);
+
+
+              leadersArray.push({
+                firstName: doc.data().firstName,
+                lastName: doc.data().lastName,
+                id: doc.data().id,
+                role: doc.data().role,
+                programs: doc.data().programs,
+                sites: doc.data().sites
+              })
+
+          });
+        }
+
+        return leadersArray;
+      });
+    }
+  }
+
+
+  /*
+   * Gets all users that are leaders of a particular program
+   */
+   getLeadersFromProgram = async (
+     data: {
+       programId: string
+     }
+   ): Promise<void> => {
+     if(this.auth.currentUser) {
+
+       const programId = data.programId;
+
+       // Get the program's document
+       var programDoc = this.db.collection('programs').doc(programId);
+
+       // Fetch data from the program's document
+       return programDoc.get().then( async (doc) => {
+         if (doc.exists)
+         {
+           const docData = doc.data();
+
+           // Get the leaders that are saved in the document
+           const leaderIds = docData.leaders;
+           let leadersResults = [];
+
+           // Go through each leader in the list
+           for(var leader in leaderIds)
+           {
+             let leaderId = leaderIds[leader];
+
+             // Get the user's information from their id
+             let tempLeader;
+             tempLeader = await this.getUserProgramOrSite({userId: leaderId}).then((user) => {
+               return user;
+             });
+
+             // Put that info in the results list
+             leadersResults.push(tempLeader);
+           }
+
+           return leadersResults;
+
+         }
+         else
+         {
+           console.error("Program with ID " + programId + " does not exist");
+         }
+       }).catch((e) => {
+         console.error("There was an error retrieving the program.", e);
+       });
+
+     }
+   }
+
+  /*
+   * Gets a user from their ID
+   */
+   getUserProgramOrSite = async (
+     data: {
+       userId: string,
+       programId: string,
+       siteId: string
+     }
+   ): Promise<void> => {
+     if(this.auth.currentUser) {
+
+       var programDoc, docType, docId;
+
+       // If we're getting a user
+       if(data.userId)
+       {
+         docType = "User";
+         docId = data.userId;
+         programDoc = this.db.collection('users').doc(data.userId);
+       }
+       // If we're getting a program
+       if(data.programId)
+       {
+         docType = "Program";
+         docId = data.programId;
+         programDoc = this.db.collection('programs').doc(data.programId);
+       }
+       // If we're getting a program
+       if(data.siteId)
+       {
+         docType = "Site";
+         docId = data.siteId;
+         programDoc = this.db.collection('sites').doc(data.siteId);
+       }
+
+
+       return programDoc.get().then((doc) => {
+         if (doc.exists)
+         {
+           const docData = doc.data();
+           return docData;
+         }
+         else
+         {
+           console.error(docType + " document with ID " + docId + " does not exist");
+         }
+       }).catch((e) => {
+         console.error("There was an error retrieving the user.", e);
+       });
+
+     }
+   }
+
+
+
+   /*
+    * Gets multiple users, programs, or sites from an array that contains all IDs
+    */
+    getMultipleUserProgramOrSite = async (
+      data: {
+        userIds: string,
+        programIds: string,
+        siteIds: string
+      }
+    ): Promise<void> => {
+      if(this.auth.currentUser) {
+
+        var programDoc, docType, docIds;
+
+        // If we're getting a user
+        if(data.userIds)
+        {
+          docType = "User";
+          docIds = data.userIds;
+          programDoc = this.db.collection('users');
+        }
+        // If we're getting a program
+        if(data.programIds)
+        {
+          docType = "Program";
+          docIds = data.programIds;
+          programDoc = this.db.collection('programs');
+        }
+        // If we're getting a program
+        if(data.siteIds)
+        {
+          docType = "Site";
+          docIds = data.siteIds;
+          programDoc = this.db.collection('sites');
+        }
+
+        var results = [];
+
+
+        // don't run if there aren't any ids or a path for the collection
+        if (!docIds || !docIds.length) return [];
+
+        //const collectionPath = db.collection(path);
+        const batches = [];
+
+        while (docIds.length) {
+          // firestore limits batches to 10
+          const batch = docIds.splice(0, 10);
+
+          // add the batch request to to a queue
+          batches.push(
+            programDoc
+              .where(
+                firebase.firestore.FieldPath.documentId(),
+                'in',
+                [...batch]
+              )
+              .get()
+              .then(results => results.docs.map(result => ({ /* id: result.id, */ ...result.data() }) ))
+          )
+        }
+
+        // after all of the data is fetched, return it
+        return Promise.all(batches)
+          .then(content => content.flat());
+
+        /*
+        return programDoc.where("id", "in", docIds).get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+
+            if (doc.exists)
+            {
+              results.push(doc.data());
+            }
+            else
+            {
+              console.error(docType + " documents with ID " + docIds + " does not exist");
+            }
+
+          });
+
+          return results;
+
+        }).catch((e) => {
+          console.error("There was an error retrieving the document.", e);
+        });
+        */
+
+
+      }
+    }
+
+
+
+  /*
+   * Get all users with role 'siteLeader'
+   */
+  getSiteLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+
+      return this.db
+      .collection('users')
+      .where('role', '==', 'siteLeader')
+      .get({ source: 'server' })
+      .then((querySnapshot) => {
+        const leadersArray: Array<Types.User> = []
+        querySnapshot.forEach(async (doc) => {
+          let docSnapshot = await this.db.collection('users').doc(doc.data().id).get()
+          if(docSnapshot.exists)
+          {
+            console.log(doc.data());
+
+
+            leadersArray.push({
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              id: doc.data().id,
+              role: doc.data().role,
+              programs: doc.data().programs,
+              sites: doc.data().sites
+            })
+          }
+        });
+
+        return leadersArray;
+      });
+    }
+  }
+
+
+  /*
+   * Get all leaders (users with role 'programLeader' or 'siteLeader' or 'admin')
+   */
+   getAllLeaders = async (): Promise<void> => {
+     if(this.auth.currentUser) {
+       return this.db
+       .collection('users')
+       .where('role', '==', 'admin')
+       .get({ source: 'server' })
+       .then((querySnapshot) => {
+         let leadersArray: Array<Types.User> = []
+         querySnapshot.forEach((doc) => {
+           console.log(doc.data());
+
+
+             leadersArray.push({
+               firstName: doc.data().firstName,
+               lastName: doc.data().lastName,
+               id: doc.data().id,
+               role: doc.data().role,
+               programs: doc.data().programs,
+               sites: doc.data().sites
+             })
+
+         });
+         // Filter out cached items
+         return this.filterUserSiteProgramArray({dataList: leadersArray, dataType: "users"}).then( (leaders) => {
+           leadersArray = leaders;
+
+           // Add program leaders
+           return this.getProgramLeaders().then((programLeaders) => {
+             leadersArray = leadersArray.concat(programLeaders);
+
+             // Add site leaders
+             return this.getSiteLeaders().then((siteLeaders) => {
+               leadersArray = leadersArray.concat(siteLeaders);
+
+                 // Sort list by last name alphabetically
+                 leadersArray = leadersArray.sort((a, b) => {
+                    if (a.lastName < b.lastName) {
+                        return -1;
+                    }
+                    if (a.lastName > b.lastName) {
+                        return 1;
+                    }
+                    return 0;
+                 });
+
+                 return leadersArray;
+               });
+
+
+           });
+         });
+
+
+
+       });
+     }
+   }
+
+
+
+
+  /*
+   * Save New Program
+   */
+   createProgram = async (
+
+     programData: {
+       programName: string,
+       selectedSites: Array<string>
+     }
+   ): Promise<void> => {
+     // Create New document for program
+     return this.db.collection('programs').add({
+        name: programData.programName,
+        sites: programData.selectedSites,
+      })
+        .then( (data) => {
+          console.log("Successfully written document " + data.id);
+
+          // Add the id to list of user's programs
+          this.assignProgramToUser({ userId: "user", programId: data.id})
+
+          // Add the id to the document
+          var programDoc = this.db.collection('programs').doc(data.id);
+          var addIdToDoc = programDoc.set({
+            id: data.id,
+            leaders: [this.auth.currentUser.uid]
+          }, {merge: true})
+          .then(() => {
+              console.log("ID successfully written!");
+          })
+          .catch((error) => {
+              console.error("Error writing document: ", error);
+          });
+
+          return data;
+        });
+
+   }
+
+   /*
+    * Assign a program to a user
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    */
+   assignProgramToUser = async (
+     data: {
+       userId: string,
+       programId: string
+      }
+   ): Promise<void> => {
+
+     var userId = data.userId;
+     var programId = data.programId;
+
+     // If the userId is set to "user" we want to use the current user
+     if(userId == "user")
+     {
+       userId = this.auth.currentUser.uid;
+     }
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var programsArr = [];
+
+         // Check if list of programs already exist
+         if(docData.programs)
+         {
+           programsArr = docData.programs;
+         }
+
+         // Add program id if it's not already in there
+         if(!programsArr.includes(programId))
+         {
+           programsArr.push(programId);
+         }
+
+         // Remove any duplicates
+         programsArr = programsArr.filter((item,index)=>{
+            return (programsArr.indexOf(item) == index)
+         })
+
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           programs: programsArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Program successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
+
+   }
+
+
+   /*
+    * Assign a site to a user
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkSiteIds: an array of site ID's in case we want to add a bunch of sites together
+    */
+   assignSiteToUser = async (
+     data: {
+       userId: string,
+       siteId: string,
+       bulkSiteIds?: Array<string>
+      }
+   ): Promise<void> => {
+
+     var userId = data.userId;
+
+     // If we're just adding one site
+     var siteId;
+     if(data.siteId)
+     {
+       siteId = data.siteId;
+     }
+
+     // If we're adding multiple sites at once
+     var bulkSiteIds = [];
+     if(data.bulkSiteIds)
+     {
+       bulkSiteIds = data.bulkSiteIds;
+     }
+
+     // If the userId is set to "user" we want to use the current user
+     if(userId == "user")
+     {
+       userId = this.auth.currentUser.uid;
+     }
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var sitesArr = [];
+
+         // Check if list of programs already exist
+         if(docData.sites)
+         {
+           sitesArr = docData.sites;
+         }
+
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkSiteIds.length > 0)
+         {
+           sitesArr = sitesArr.concat(bulkSiteIds);
+         }
+         else
+         {
+           sitesArr.push(siteId);
+         }
+
+         // Remove any duplicates
+         sitesArr = sitesArr.filter((item,index)=>{
+            return (sitesArr.indexOf(item) == index)
+         })
+
+
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           sites: sitesArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
+
+   }
+
+
+   /*
+    * Completely replace all sites in a User's firestore document.
+    */
+   replaceSitesForUser = async (
+     data: {
+      siteIds: Array<string>,
+      userId: string,
+     }
+   ): Promise<void> => {
+     var userId = data.userId;
+     var siteIds = data.siteIds;
+
+     // Get the user's document
+     var userDoc = this.db.collection('users').doc(userId);
+
+     userDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         // Push programs array to the document
+         var addIdToDoc = userDoc.set({
+           sites: siteIds
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully written to user!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("User's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting user document:", error);
+      });
+
+   }
+
+
+   /*
+    * Assign a user to a site or program
+    *
+    * @param userId: set to "user" that you want to add the program or site to this user
+    * @param bulkUserIds: an array of user ID's in case we want to add a bunch of users to the site or program all at once
+    */
+   assignUserToSiteOrProgram = async (
+     data: {
+       siteId?: string,
+       programId?: string,
+       userId?: string,
+       bulkUserIds?: Array<string>
+      }
+   ): Promise<void> => {
+
+
+     // If we're just adding one user
+     var userId;
+     if(data.userId)
+     {
+       var userId = data.userId;
+
+       // If the userId is set to "user" we want to use the current user
+       if(userId == "user")
+       {
+         userId = this.auth.currentUser.uid;
+       }
+     }
+
+     // If we're adding multiple users at once
+     var bulkUserIds = [];
+     if(data.bulkUserIds)
+     {
+       bulkUserIds = data.bulkUserIds;
+     }
+
+     var documentToAddTo;
+     // If we're just adding to a site
+     var docId;
+     if(data.siteId)
+     {
+       docId = data.siteId;
+       // Get the site's document
+       documentToAddTo = this.db.collection('sites').doc(docId);
+     }
+
+     // If we're just adding to a program
+     if(data.programId)
+     {
+       docId = data.programId;
+       // Get the programs's document
+       documentToAddTo = this.db.collection('programs').doc(docId);
+
+     }
+
+
+
+     documentToAddTo.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var leadersArr = [];
+
+         // Check if list of programs already exist
+         if(docData.leaders)
+         {
+           leadersArr = docData.leaders;
+         }
+
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkUserIds.length > 0)
+         {
+           leadersArr = leadersArr.concat(bulkUserIds);
+         }
+         else
+         {
+           leadersArr.push(userId);
+         }
+
+         // Remove any duplicates
+         leadersArr = leadersArr.filter((item,index)=>{
+            return (leadersArr.indexOf(item) == index)
+         })
+
+
+         // Push programs array to the document
+         var addIdToDoc = documentToAddTo.set({
+           leaders: leadersArr
+         }, {merge: true})
+         .then(() => {
+             console.log("User(s) successfully added.");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("Site and/or Program " + docId + "document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting Site and/or Program document:", error);
+      });
+
+   }
+
+   /*
+    * Assign a site to a program
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkSiteIds: an array of site ID's in case we want to add a bunch of sites together
+    */
+   assignSiteToProgram = async (
+     data: {
+       programId: string,
+       siteId: string,
+       bulkSiteIds: Array<string>
+      }
+   ): Promise<void> => {
+
+     var programId = data.programId;
+
+     // If we're just adding one site
+     var siteId;
+     if(data.siteId)
+     {
+       siteId = data.siteId;
+     }
+
+     // If we're adding multiple sites at once
+     var bulkSiteIds = [];
+     if(data.bulkSiteIds)
+     {
+       bulkSiteIds = data.bulkSiteIds;
+     }
+
+
+     // Get the user's document
+     var programDoc = this.db.collection('programs').doc(programId);
+
+     programDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var sitesArr = [];
+
+         // Check if list of programs already exist
+         if(docData.sites)
+         {
+           sitesArr = docData.sites;
+         }
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkSiteIds.length > 0)
+         {
+           sitesArr = sitesArr.concat(bulkSiteIds);
+         }
+         else
+         {
+           sitesArr.push(siteId);
+         }
+         // Remove any duplicates
+         sitesArr = sitesArr.filter((item,index)=>{
+            return (sitesArr.indexOf(item) == index)
+         })
+
+         // Push programs array to the document
+         var addIdToDoc = programDoc.set({
+           sites: sitesArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Site successfully saved to program!");
+         })
+         .catch((error) => {
+             console.error("Error writing document: ", error);
+         });
+      }
+      else {
+        console.log("Program's document doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting program document:", error);
+      });
+
+   }
+
+   /*
+    * Assign a program to a site
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkProgramIds: an array of program ID's in case we want to add a bunch of programs together
+    */
+   assignProgramToSite = async (
+     data: {
+       siteId: string,
+       programId: string,
+       bulkProgramIds: Array<string>
+      }
+   ): Promise<void> => {
+
+     var siteId = data.siteId;
+
+     // If we're just adding one site
+     var programId;
+     if(data.programId)
+     {
+       programId = data.programId;
+     }
+
+     // If we're adding multiple sites at once
+     var bulkProgramIds = [];
+     if(data.bulkProgramIds)
+     {
+       bulkProgramIds = data.bulkProgramIds;
+     }
+
+
+     // Get the user's document
+     var siteDoc = this.db.collection('sites').doc(siteId);
+
+     siteDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var programsArr = [];
+
+         // Check if list of programs already exist
+         if(docData.programs)
+         {
+           programsArr = docData.programs;
+         }
+         // If we're adding in bulk, then we just merge the arrays
+         if(bulkProgramIds.length > 0)
+         {
+           programsArr = programsArr.concat(bulkProgramIds);
+         }
+         else
+         {
+           programsArr.push(programId);
+         }
+         // Remove any duplicates
+         programsArr = programsArr.filter((item,index)=>{
+            return (programsArr.indexOf(item) == index)
+         })
+
+         // Push programs array to the document
+         var addIdToDoc = siteDoc.set({
+           programs: programsArr
+         }, {merge: true})
+         .then(() => {
+             console.log("Program successfully saved to site : " + siteId);
+         })
+         .catch((error) => {
+             console.error("Error writing document: " + siteId, error);
+         });
+      }
+      else {
+        console.log("Site document " + siteId + " doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting site document: " + siteId, error);
+      });
+
+   }
+
+  /*
+   * Save New Site
+   */
+   createSite = async (
+
+     siteData: {
+       siteName: string,
+       selectedProgram: string
+     }
+   ): Promise<void> => {
+     // Create New document for program
+     return this.db.collection('sites').add({
+        name: siteData.siteName,
+        programs: siteData.selectedProgram,
+      })
+        .then( (data) => {
+          console.log("Successfully written site document " + data.id);
+
+          // Add site to program
+          this.assignSiteToProgram({ programId: siteData.selectedProgram, siteId: data.id}).then(data => {console.log("Site added to program " + siteData.selectedProgram);});
+
+          var siteDoc = this.db.collection('sites').doc(data.id);
+          var addIdToDoc = siteDoc.set({
+            id: data.id
+          }, {merge: true})
+          .then(() => {
+              console.log("ID successfully written!");
+          })
+          .catch((error) => {
+              console.error("Error writing site document: ", error);
+          });
+
+          return data;
+        });
+
+   }
+
+
+
+   setProgram = async (
+     programId: string,
+     edits: ProgramInfo
+   ): Promise<void> => {
+
+     const {name, leaders, sites} = edits
+
+     // Remove program from user documents that were deselected
+     // First get the user documents that currently have this program saved
+     this.db
+       .collection('users')
+       .where('programs', 'array-contains-any', [programId])
+       .get()
+       .then( async (querySnapshot) => {
+         let coachesArray = {};
+
+         querySnapshot.forEach( async (doc) => {
+           // If this user isn't in the selected list of program leaders, remove the program
+           if( !leaders.includes(doc.data().id) )
+           {
+             this.removeItemFromArray({programToRemove: programId, userToRemoveFrom: doc.data().id});
+           }
+         });
+
+         return coachesArray;
+       });
+
+     // If they are selected for the program, add the program to their doc
+     for(var userIndex in leaders)
+     {
+       this.assignProgramToUser({userId: leaders[userIndex], programId: programId});
+     }
+
+
+     // Save program document
+     return this.db
+       .collection('programs')
+       .doc(programId)
+       .set(
+         {
+           name: name,
+           leaders: leaders,
+           sites: sites
+         },
+         {merge: true}
+       )
+       .catch((error: Error) =>
+         console.error('Error occurred when writing document:', error)
+       )
+
+   }
+
+
+
+   /**
+    * Remove site or progrm
+    */
+   removeSiteOrProgram = async (
+     data: {
+       siteId: string,
+       programId: string
+     }): Promise<void> => {
+
+       var document, itemType, itemId;
+
+       // If we're deleting a site
+       if(data.siteId)
+       {
+         itemType = "Site";
+         itemId = data.siteId;
+         document =  this.db.collection('sites').doc(data.siteId);
+       }
+
+       // If we're deleting a program
+       if(data.programId)
+       {
+
+         itemType = "Program";
+         itemId = data.programId;
+         document = this.db.collection('programs').doc(data.programId);
+       }
+
+       if (this.auth.currentUser) {
+
+
+         // Need to remove this program/site from all programs/sites/users that hold this.
+         await document.get().then( async doc => {
+           if (doc.exists)
+           {
+             var docData = doc.data();
+
+             var tempArray = [];
+             // If it has programs
+             if(docData.programs)
+             {
+               tempArray = docData.programs;
+
+               // Go through each program and remove this site from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 await this.removeItemFromArray({siteToRemove: itemId, programToRemoveFrom: tempItemId})
+               }
+
+             }
+
+             // If it has sites
+             if(docData.sites)
+             {
+               tempArray = docData.sites;
+
+               // Go through each site and remove this program from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 await this.removeItemFromArray({programToRemove: itemId, siteToRemoveFrom: tempItemId})
+               }
+             }
+
+             // If it has leaders
+             if(docData.leaders)
+             {
+               tempArray = docData.leaders;
+
+               // Go through each leader and remove this program from its list
+               for(var tempItemIndex in tempArray )
+               {
+                 var tempItemId = tempArray[tempItemIndex];
+                 if(itemType == "Program")
+                 {
+                   await this.removeItemFromArray({programToRemove: itemId, userToRemoveFrom: tempItemId})
+                 }
+                 if(itemType == "Site")
+                 {
+                   await this.removeItemFromArray({siteToRemove: itemId, userToRemoveFrom: tempItemId})
+                 }
+               }
+             }
+
+           }
+         });
+
+         // Actually delete the document
+         return document
+           .delete()
+           .then(() =>
+             console.log(itemType + ' with id, ' + itemId + ', successfully removed!')
+           )
+           .catch((error: Error) =>
+             console.error(
+               'There was a problem removing ' + itemType + ' with id, ' + itemId,
+               error
+             )
+           )
+
+     }
+   }
+
+
+   /*
+    * Removes a teacher from a coach's collection
+    */
+
+    removeTeacherFromCoach = async (
+      data: {
+        coachId: string,
+
+        teacherId: string,
+        bulkTeacherIds: Array<string>
+      }
+    ) => {
+
+      // If we're only deleting a single teacher
+      if(data.teacherId)
+      {
+        this.db.collection("users").doc(data.coachId).collection("partners").doc(data.teacherId).delete()
+        .catch((error: Error) => {
+          console.error("Error occurred when deleting teacher from coach's partner list: ", error)
+        })
+      }
+
+      // If we're deleting in bulk
+      if(data.bulkTeacherIds)
+      {
+        var batch = this.db.batch();
+
+        for (var idIndex in data.bulkTeacherIds) {
+            var id = data.bulkTeacherIds[idIndex];
+
+            var ref = this.db.collection("users").doc(data.coachId).collection("partners").doc(id);
+            batch.delete(ref);
+        }
+
+        batch.commit();
+      }
+
+
+    }
+
+
+
+
+   /*
+    * Removes a User, Program, or Site from a User, Program, or Site
+    *
+    * @param userId: set to "user" to assign the program to the current user
+    * @param bulkProgramIds: an array of program ID's in case we want to add a bunch of programs together
+    */
+   removeItemFromArray = async (
+     data: {
+       userToRemove: string,
+       siteToRemove: string,
+       programToRemove: string,
+
+       userToRemoveFrom: string,
+       siteToRemoveFrom: string,
+       programToRemoveFrom: string,
+      }
+   ): Promise<void> => {
+
+     var siteId = data.siteId;
+
+     // Decide what we are removing
+     var toRemove, toRemoveType;
+     if(data.userToRemove)
+     {
+       toRemove = data.userToRemove;
+       toRemoveType = "users";
+     }
+     else if(data.siteToRemove)
+     {
+       toRemove = data.siteToRemove;
+       toRemoveType = "sites";
+     }
+     else if(data.programToRemove)
+     {
+       toRemove = data.programToRemove;
+       toRemoveType = "programs";
+     }
+
+     // Decide where we are removing from
+     var removeFrom, toRemoveFromType;
+     if(data.userToRemoveFrom)
+     {
+       removeFrom = data.userToRemoveFrom;
+       toRemoveFromType = "users";
+     }
+     else if(data.siteToRemoveFrom)
+     {
+       removeFrom = data.siteToRemoveFrom;
+       toRemoveFromType = "sites";
+     }
+     else if(data.programToRemoveFrom)
+     {
+       removeFrom = data.programToRemoveFrom;
+       toRemoveFromType = "programs";
+     }
+
+
+     // Get the document to delete from
+     var removeFromDoc = this.db.collection(toRemoveFromType).doc(removeFrom);
+
+     removeFromDoc.get().then((doc) => {
+       if (doc.exists)
+       {
+         var docData = doc.data();
+         var tempArray = [];
+
+         // Get the list to remove from if it already exists
+         switch(toRemoveType){
+          case "users":
+            tempArray = docData.leaders;
+            break;
+          case "sites":
+            tempArray = docData.sites;
+            break;
+          case "programs":
+            tempArray = docData.programs;
+            break;
+         }
+
+
+          // Remove Item from array
+          var indexToRemove = tempArray.indexOf(toRemove);
+          tempArray.splice(indexToRemove, 1);
+
+
+         // Push new array to the document
+         var removeResults;
+         switch(toRemoveType){
+          case "users":
+            removeResults = removeFromDoc.set({
+              leaders: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+          case "sites":
+            removeResults = removeFromDoc.set({
+              sites: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+          case "programs":
+            removeResults = removeFromDoc.set({
+              programs: tempArray
+            }, {merge: true})
+            .then(() => {
+                console.log("Program successfully saved to site : " + siteId);
+            })
+            .catch((error) => {
+                console.error("Error writing document: " + siteId, error);
+            });
+            break;
+         }
+
+
+
+      }
+      else {
+        console.log("Site document " + siteId + " doesn't exist!");
+      }
+     }).catch((error) => {
+          console.log("Error getting site document: " + siteId, error);
+      });
+
+   }
+
+
+   /**
+    * Listening to Children cloud function
+    */
+   fetchSiteProfileAverages = async (
+     data: {
+       type: string,
+       startDate: string,
+       endDate: string,
+       teacherIds: string
+     }
+   ): Promise<void> => {
+
+     const fetchSiteProfileAverages = this.functions.httpsCallable(
+       'fetchSiteProfileAverages'
+     )
+     return fetchSiteProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+       .then(
+         (result) => {
+           console.log("Result: " + result.data[0][0]);
+           return result.data[0];
+         }
+       )
+       .catch((error: Error) =>
+         console.error('Error occurred getting site profile averages : ', error)
+       )
+   }
+
+
+
+
+
+    /**
+     * Grabs data for Coach profile
+     *
+     */
+    fetchCoachProfileData = async (
+      data: {
+        startDate: string,
+        endDate: string,
+        teacherIds: string
+      }
+    ): Promise<void> => {
+
+      const fetchCoachProfile = this.functions.httpsCallable(
+        'fetchCoachProfile'
+      )
+      return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+        .then(
+          (result) => {
+            console.log("Result: " + result.data[0][0]);
+            return result.data[0];
+          }
+        )
+        .catch((error: Error) =>
+          console.error('Error occurred getting site profile averages : ', error)
+        )
+    }
+
+
+    /**
+     * Grabs data for teacher profile
+     */
+    fetchTeacherProfileData = async (
+      data: {
+        startDate: string,
+        endDate: string,
+        teacherIds: string
+      }
+    ): Promise<void> => {
+
+      const fetchTeacherProfileData = this.functions.httpsCallable(
+        'fetchTeacherProfileData'
+      )
+      return fetchTeacherProfileData({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+        .then(
+          (result) => {
+            console.log("Result: " + result.data[0][0]);
+            return result.data[0];
+          }
+        )
+        .catch((error: Error) =>
+          console.error('Error occurred getting teacher profile averages : ', error)
+        )
+    }
+
+
+    /**
+     * Get data for the teacher profile page
+     */
+    fetchTeacherProfileReadingTrend = async (
+      teacherId,
+      who,
+      startDate,
+      endDate
+    ): Promise<Array<{
+      startDate: { value: string }
+      literacy1: number
+      literacy2: number
+      literacy3: number
+      literacy4: number
+      literacy5: number
+      literacy6: number
+      literacy7: number
+      literacy8: number
+      literacy9: number
+      literacy10: number
+      total: number
+      activitySetting: string
+    }> | void> => {
+      const fetchTeacherProfileReadingTrendFirebaseFunction = this.functions.httpsCallable(
+        'fetchTeacherProfileReadingTrend'
+      )
+      return fetchTeacherProfileReadingTrendFirebaseFunction({
+        teacherId: teacherId,
+        who: who,
+        startDate: startDate,
+        endDate: endDate,
+      })
+        .then(
+          (result: {
+            data: Array<Array<{
+              startDate: { value: string }
+              literacy1: number
+              literacy2: number
+              literacy3: number
+              literacy4: number
+              literacy5: number
+              literacy6: number
+              literacy7: number
+              literacy8: number
+              literacy9: number
+              literacy10: number
+              total: number
+              activitySetting: string
+            }>>
+          }) => result.data[0]
+        )
+        .catch((error: Error) =>
+          console.error('Error occurred getting listening trend: ', error)
+        )
+    }
+
+
+       /**
+        * Get averages data for Teacher Profile
+        */
+       fetchTeacherProfileAverages = async (
+         data: {
+           type: string,
+           startDate: string,
+           endDate: string,
+           teacherId: string
+         }
+       ): Promise<void> => {
+
+         const fetchTeacherProfileAverages = this.functions.httpsCallable(
+           'fetchTeacherProfileAverages'
+         )
+         return fetchTeacherProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherId: data.teacherId})
+           .then(
+             (result) => {
+               console.log("Result: " + result.data[0][0]);
+               return result.data[0];
+             }
+           )
+           .catch((error: Error) =>
+             console.error('Error occurred getting site profile averages : ', error)
+           )
+       }
+
+
+   /**
+    * Returns list of Coaches that are associated with a program
+    */
+   fetchProgramTeachers = async (
+     data: {
+       programId: string,
+       programInfo: string
+     }
+   ): Promise<void> => {
+
+     // Initialize results object that'll hold all the sites and their teachersIdList
+     var results = {};
+
+      var programInfo;
+      if(data.programInfo)
+      {
+        programInfo = data.programInfo;
+      }
+      else
+      {
+        programInfo = await this.getUserProgramOrSite({programId: data.programId});
+      }
+
+      // Go through all this sites in this program to get their coaches
+      for(var siteIndex in programInfo.sites)
+      {
+        var siteId = programInfo.sites[siteIndex];
+        var site = await this.getUserProgramOrSite({siteId: siteId});
+
+        // If site doesn't exist, just move on
+        if(!site)
+        {
+          continue;
+        }
+
+
+        var siteTeachers = [];
+
+        // Initialize this site in the results
+        results[siteId] = [];
+
+        // Go through all the coaches in this site to get the teachers
+        var siteCoaches = [];
+        if(site.coaches)
+        {
+          siteCoaches = site.coaches;
+        }
+
+        for(var coachIndex in siteCoaches)
+        {
+          var coachId = siteCoaches[coachIndex];
+
+          // Get this coaches teachers and add it to the list
+           var teachers = await this.getTeacherListFromUser({userId: coachId});
+
+          // If this site doesn't have any data in results object, add the whole array
+          results[siteId] = results[siteId].concat(teachers);
+
+        }
+
+        // Let's get all the teachers by the site name as well just in case we missed any
+        var teachers2 = await this.getTeacherBySiteName(site.name);
+        results[siteId] = results[siteId].concat(teachers2);
+
+        // Remove all duplicates
+        results[siteId] = results[siteId].filter((v,i,a)=>a.findIndex(v2=>(v2 === v ))===i)
+
+      }
+
+      return results;
+
+
+    }
+
+
+
+   /**
+    * Removes any items from an array that is no longer in the firestore (We're having issues with this for some reason)
+    *
+    * @param dataList : the array of data to filter out
+    * @param dataType : the type of data (users, programs, or sites)
+    */
+   filterUserSiteProgramArray = async (
+     data: {
+       dataList: Array<Types.User>,
+       dataType: String
+     }
+   ): Promise<void> => {
+
+     var results = [];
+
+      for(var dataIndex in data.dataList)
+      {
+        // Get the id. The list is either a list of id's or a list of objects with ids
+        var dataId;
+        if(data.dataList[dataIndex].id)
+        {
+          dataId = data.dataList[dataIndex].id
+        }
+        else
+        {
+          dataId = data.dataList[dataIndex];
+        }
+
+        // Fetch from firestore
+        var tempItem = await this.db.collection(data.dataType).doc(dataId).get()
+          .catch((error: Error) =>
+            console.error('Document doesnt exist', error)
+          )
+
+        if(tempItem)
+        {
+          results.push(data.dataList[dataIndex]);
+        }
+        else
+        {
+          console.log("Removing cached item " + dataId + " from " + data.dataType);
+        }
+
+      }
+
+      return results;
+
+     }
+
+
+     /*
+      * Send a 'reset password' link to newly created coaches
+      */
+    sendEmailToNewUser = async (email) => {
+      const secondFirebase = firebase.initializeApp(config, 'secondary');
+
+      if (process.env.USE_LOCAL_AUTH) {
+        console.log('using local Auth');
+        secondFirebase.auth().useEmulator("http://localhost:9099");
+      }
+
+      secondFirebase.auth().sendPasswordResetEmail(email)
+        .then((res) => {
+          // Password reset email sent!
+          // ..
+          console.log("email sent to " + email, res);
+
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // ..
+        });
+
+    }
+
+
   /**
    * Updates played training videos URL list
    */
@@ -4126,7 +6463,606 @@ class Firebase {
           console.error('Error updating played videos list', error)
         )
     }
+
+
   }
+
+  //REMOVE AFTER DEVELOPMENT
+
+  populateUser = async () => {
+    const user = this.auth.currentUser ? this.auth.currentUser.uid : '';
+    //Create KnowledgeChecks
+    const answerIndex: Array<number> = [0, 3, 1, 2, 4];
+    console.log(`Completing knowledge check for ${user}...`)
+    for (let i = 0; i < 5; i++) {
+      await firebase.firestore().collection("knowledgeChecks").doc().set({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        type: "climate",
+        isCorrect: true,
+        answeredBy: user,
+        questionIndex: i,
+        answerIndex: answerIndex[i]
+      });
+    }
+    await this.db.collection('users').doc(user).update({unlocked: [2]})
+
+    //for testing begin
+    // let teacherInfo = {
+    //   firstName: "Elizabeth",
+    //   lastName: "Bathory",
+    //   school: "Wichita Stars",
+    //   email: "bathory@email.com",
+    //   notes: "",
+    //   phone: "",
+    //   id: "bathory",
+    //   role: "teacher",
+    //   // sites: teacherSites[i]
+    // };
+    // await firebase.firestore().collection("users").doc(teacherInfo.id).set(teacherInfo);
+    //for testing end
+
+
+    console.log("Adding partner...")
+    await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({});
+    console.log(`Creating Classroom Climate observation for ${user} observing bathory...`)
+    const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
+    const entryNumber: number = Math.floor(Math.random() * 10);
+    const observationInfo = {
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: "climate",
+        activitySetting: null,
+        checklist: null,
+        completed: true,
+        observedBy: "/user/" + user,
+        teacher: "/user/bathory",
+        timezone: "America/New_York"
+      };
+    this.sessionRef = this.db.collection('observations').doc('demo');
+    let entryCollection = this.sessionRef.collection('entries')
+    for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+      entryCollection.add({
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        Type: "climate",
+        BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+      });
+    }
+    this.sessionRef.set(observationInfo)
+    this.sessionRef = null;
+
+    //Create ActionPlan
+    console.log("Creating Action Plan...")
+    let date = new Date();
+    date.setMonth(date.getMonth()+3)
+    let actionPlanInfo = {
+      benefit: "A positive classroom climate feels safe, respectful, welcoming, and supportive of student learning.",
+      coach: user,
+      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+      goal: "Improve the intellectual, social, emotional, and physical environments in which our students learn.",
+      goalTimeline: date,
+      planNum: 1,
+      status: "Active",
+      teacher: "bathory",
+      tool: "Classroom Climate"
+    }
+    this.sessionRef = this.db.collection('actionPlans').doc();
+    let actionSteps = this.sessionRef.collection('actionSteps');
+    date.setMonth(date.getMonth()-2)
+    actionSteps.add({
+      person: "Elizabeth Bathory",
+      step: "Increase the sense of responsibility of students for what happens in the classroom.",
+      timeline: date
+    })
+    date.setMonth(date.getMonth()+1)
+    actionSteps.add({
+      person: "Elizabeth Bathory",
+      step: "Provide opportunities for students to assume leadership roles",
+      timeline: date
+    })
+    await this.sessionRef.set(actionPlanInfo)
+    this.sessionRef = null
+
+    //Add Favorite Questions
+    console.log("Adding favorite questions...")
+    await this.db.collection('users').doc(user).update({favoriteQuestions: [
+      "Classroom Climate: Does the room feel safe and comforting?",
+      "Classroom Climate: How is the room divided?",
+      "Classroom Climate: Do the materials and activities encourage learning?"
+    ]})
+
+    //Create Conference Plan
+    console.log("Creating Conference Plan...")
+    let conferencePlanInfo = {
+      addedQuestions: ["Does the room feel safe and comforting?", "Are there any redirections you give to children that you feel are repetitive?"],
+      coach: user,
+      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+      feedback: ["Great at redirecting children into learning activities."],
+      notes: ["Elizabeth gives unsettling disapprovals but they are usually followed by appropriate redirections."],
+      questions: ["Do you use downtime, snack time, before, and after school to ask questions and play quick games with the children to break the ice?"],
+      sessionId: "demo",
+      teacher: "bathory",
+      tool: "Classroom Climate"
+    }
+    await this.db.collection('conferencePlans').doc().set(conferencePlanInfo).then(() =>
+      window.location.reload()
+    )
+
+  }
+
+  populateFirebase = async () => {
+    const secondFirebase = firebase.initializeApp(config, 'secondary')
+    // Added emulators for local testing
+    if (process.env.USE_LOCAL_AUTH) {
+      console.log('using local Auth');
+      secondFirebase.auth().useEmulator("http://localhost:9099");
+    }
+    if (process.env.use_LOCAL_FIRESTORE) {
+      secondFirebase.firestore().settings({
+        host: 'localhost:8080',
+        ssl: false,
+      });
+    }
+
+    console.log("Creating authorized users...")
+    //Create authenticated users
+    const authEmail: Array<string> = [
+      "manson@program1.com",             //Beginning of programLeaders
+      "carter@program2.com",
+      "gein@site1.com",                 //Beginning of siteLeaders
+      "lee@site2.com",
+      "lopez@site3.com",
+      "lawrence@site4.com",
+      "columbus@site5.com",
+      "mann@coach1.com",              //Beginning of coaches
+      "brown@coach2.com",
+      "james@coach3.com",
+      "swift@coach4.com",
+      "anthony@coach5.com",
+      'neutron@coach6.com'
+    ];
+
+    const password: Array<string> = Array(authEmail.length).fill("password");
+    const authFirstName: Array<string> = [
+      "Charles",                       //Beginning of programLeaders
+      "Jimmy",
+      "Edward",                         //Beginning of siteLeaders
+      "Yan",
+      "Jennifer",
+      "Martin",
+      "Christopher",
+      "Tiffany",                        //Beginning of coaches
+      "James",
+      "Richard",
+      "Taylor",
+      "Susan",
+      "James"
+    ];
+    const authLastName: Array<string> = [
+      "Manson",                          //Beginning of programLeaders
+      "Carter",
+      "Gein",                           //Beginning of siteLeaders
+      "Lee",
+      "Lopez",
+      "Lawrence",
+      "Columbus",
+      "Mann",                         //Beginning of coaches
+      "Brown",
+      "James",
+      "Swift",
+      "Anthony",
+      "Neutron"
+    ];
+    const programLeadersNumber: number = 2;
+    const siteLeadersNumber: number = 5;
+    const coachNumber: number = 6;
+    let authRole: Array<string> = Array(programLeadersNumber).fill("programLeader");
+    authRole.push(...Array(siteLeadersNumber).fill("siteLeader"));
+    authRole.push(...Array(coachNumber).fill("coach"));
+
+    let coaches: Array<Object> = [];
+    let leaders: Array<Object> = [];
+
+    for (let i = 0; i < authEmail.length; i++) {
+      const userInfo = await secondFirebase.auth().createUserWithEmailAndPassword(authEmail[i], password[i]);
+      if (userInfo.user) {
+        let userData: Record<string, any> = {
+          email:  authEmail[i],
+          firstName: authFirstName[i],
+          lastName: authLastName[i],
+          role: authRole[i],
+          id: userInfo ? userInfo.user.uid : ""
+        };
+        if (userData.email.includes("coach")) {
+          let partners: Array<string> = []
+          if (userData.email.includes("coach1")) {
+            userData.sites =  ["site1", "site2"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("bathory").set({});
+              docRef.collection("partners").doc("gacy").set({});
+              docRef.collection("partners").doc("bundy").set({});
+              docRef.collection("partners").doc("monroe").set({});
+              docRef.collection("partners").doc("bellucci").set({});
+              docRef.collection("partners").doc("hewitt").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+            partners.push("bathory", "gacy", "bundy", "monroe", "bellucci", "hewitt");
+          }else if (userData.email.includes("coach2")) {
+            userData.sites =  ["site1"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }else if (userData.email.includes("coach3")) {
+            userData.sites =  ["site2"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("flinstone").set({});
+              docRef.collection("partners").doc("rubble").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+            partners.push("flinstone", "rubble");
+          }else if (userData.email.includes("coach4")) {
+            userData.sites =  ["site3"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("potter").set({});
+              docRef.collection("partners").doc("bozeman").set({});
+              docRef.collection("partners").doc("slaughter").set({});
+              docRef.collection("partners").doc("darlas").set({});
+              docRef.collection("partners").doc("davis").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+            partners.push("potter", "bozeman", "slaughter", "darlas", "davis");
+          }else if (userData.email.includes("coach5")) {
+            userData.sites =  ["site4"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("laframboise").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+            partners.push("laframboise");
+          }else if (userData.email.includes("coach6")) {
+            userData.sites =  ["site5"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("sawyer").set({});
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+            partners.push("sawyer")
+          } else {
+            userData.sites =  []
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+              docRef.collection("partners").doc("rJxNhJmzjRZP7xg29Ko6").set({});
+            })
+          }
+          coaches.push({
+            email: userData.email,
+            id: userData.id,
+            teachers: partners
+          });
+        } else {
+          if (userData.email.includes("program1")) {
+            userData.programs = ["program1"]
+          }else if (userData.email.includes("program2")) {
+            userData.programs = ["program2"]
+          }else if (userData.email.includes("site1")) {
+            userData.sites = ["site1"]
+          }else if (userData.email.includes("site2")) {
+            userData.sites = ["site2"]
+          }else if (userData.email.includes("site3")) {
+            userData.sites = ["site3"]
+          }else if (userData.email.includes("site4")) {
+            userData.sites = ["site4"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+            docRef.collection("partners").doc("olatunji").set({});
+            })
+          }else if (userData.email.includes("site5")) {
+            userData.sites = ["site5"]
+            const docRef = firebase.firestore().collection("users").doc(userInfo.user.uid);
+            await docRef.set(userData).then(() => {
+            docRef.collection("partners").doc("perez").set({});
+            })
+          } else {}
+          await firebase.firestore().collection("users").doc(userInfo.user.uid).set(userData);
+          leaders.push({
+            email: userData.email,
+            id: userData.id
+          });
+        }
+      }
+    }
+
+    console.log("Creating teachers...")
+    //Create Teachers
+    const teacherFirstName: Array<string> = [
+      "Elizabeth",
+      "Jonathan",
+      "Theodore",
+      "Marilyn",
+      "Monica",
+      "Bubba",
+      "Fred",
+      "Barney",
+      "Harry",
+      "Phillip",
+      "Chelsea",
+      "Kimberly",
+      "Mariah",
+      "Ashley",
+      "Bernadette",
+      "Babatunde",
+      "Isabella",
+      "Practice"
+    ];
+    const teacherLastName: Array<string> = [
+      "Bathory",
+      "Gacy",
+      "Bundy",
+      "Monroe",
+      "Bellucci",
+      "Hewitt",
+      "Flinstone",
+      "Rubble",
+      "Potter",
+      "Bozeman",
+      "Slaughter",
+      "Darlas",
+      "Davis",
+      "Laframboise",
+      "Sawyer",
+      "Olatunji",
+      "Perez",
+      "Teacher"
+    ];
+    const teacherSchool: Array<string> = [
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Ecsed Horizons",
+      "Wichita Stars",
+      "Wichita Stars",
+      "Wichita Stars",
+      "Leeds Learning",
+      "Leeds Learning",
+      "Leeds Learning",
+      "Leeds Learning",
+      "Leeds Learning",
+      "First Steps",
+      "Little Learners",
+      "First Steps",
+      "Little Learners",
+      "Elum Entaree School"
+    ];
+    const teacherEmail: Array<string> = [
+      "bathory@email.com",
+      "gacy@email.com",
+      "bundy@email.com",
+      "monroe@email.com",
+      "bellucci@email.com",
+      "hewitt@email.com",
+      "flinstone@email.com",
+      "rubble@email.com",
+      "potter@email.com",
+      "bozeman@email.com",
+      "slaughter@email.com",
+      "darlas@email.com",
+      "davis@email.com",
+      "laframboise@email.com",
+      "sawyer@email.com",
+      "olatunji@email.com",
+      "perez@email.com",
+      "practice@teacher.edu"
+    ];
+    const teacherId: Array<string> = [
+      "bathory",
+      "gacy",
+      "bundy",
+      "monroe",
+      "bellucci",
+      "hewitt",
+      "flinstone",
+      "rubble",
+      "potter",
+      "bozeman",
+      "slaughter",
+      "darlas",
+      "davis",
+      "laframboise",
+      "sawyer",
+      "olatunji",
+      "perez",
+      "rJxNhJmzjRZP7xg29Ko6"
+    ];
+    const teacherSites: Array<Array<string>> = [
+      ["site1"],
+      ["site1"],
+      ["site1"],
+      ["site1"],
+      ["site1"],
+      ["site2"],
+      ["site2"],
+      ["site2"],
+      ["site3"],
+      ["site3"],
+      ["site3"],
+      ["site3"],
+      ["site3"],
+      ["site4"],
+      ["site5"],
+      ["site4"],
+      ["site5"],
+      ["Elum Entaree School"]
+    ];
+
+    for (let i = 0; i < teacherFirstName.length; i++) {
+      let teacherInfo = {
+        firstName: teacherFirstName[i],
+        lastName: teacherLastName[i],
+        school: teacherSchool[i],
+        email: teacherEmail[i],
+        notes: "",
+        phone: "",
+        id: teacherId[i],
+        role: "teacher",
+        sites: teacherSites[i]
+      };
+      await firebase.firestore().collection("users").doc(teacherInfo.id).set(teacherInfo);
+    }
+
+    console.log("Creating programs...")
+    //Create Programs
+    const programId: Array<string> = ["program1", "program2"];
+    const pLeaders: Array<Array<string>> =  [
+      [leaders.filter(leader => {return leader.email.includes("program1")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("program2")})[0].id]
+    ];
+    const programName: Array<string> = ["Reading For Success", "Writing Rainbows"];
+    const sites: Array<Array<string>> = [["site1", "site2", "site3"], ["site4", "site5"]];
+
+    for (let i = 0; i < programId.length; i++) {
+      let programInfo: Record<string, any> = {
+        id: programId[i],
+        leaders: pLeaders[i],
+        name: programName[i],
+        sites: sites[i]
+      };
+      await firebase.firestore().collection("programs").doc(programInfo.id).set(programInfo);
+    }
+
+    console.log("Creating sites...")
+    //Create Sites
+    const siteId: Array<string> = ["site1", "site2", "site3", "site4", "site5", "site6"];
+    const sLeaders: Array<Array<string>> =  [
+      [leaders.filter(leader => {return leader.email.includes("site1")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site2")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site3")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site4")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
+      [leaders.filter(leader => {return leader.email.includes("site5")})[0].id],
+    ];
+    const siteName: Array<string> = ["Ecsed Horizons", "Wichita Stars", "Leeds Learning", "First Steps", "Little Learners", "Fairlawn"];
+    const siteProgram: Array<string> = ["program1", "program1", "program1", "program2", "program2", "program2"];
+
+    for (let i = 0; i < siteId.length; i++) {
+      let programInfo: Record<string, any> = {
+        id: siteId[i],
+        leaders: sLeaders[i],
+        name: siteName[i],
+        programs: siteProgram[i]
+      };
+     await firebase.firestore().collection("sites").doc(programInfo.id).set(programInfo);
+   }
+
+  console.log("Creating LI: Book Reading and Classroom Climate observations...")
+  //Create Observations
+  const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
+  const readingActivity: Array<string> = [
+    "All",
+    "Fiction",
+    "Nonfiction/Informational",
+    "Rhyming",
+    "Predictable",
+    "Poem",
+    "Alphabet/Counting",
+    "Class-Made Book"
+  ]
+
+  for (let coachIndex in coaches) {
+    let coach = coaches[coachIndex];
+    if (coach.teachers.length > 0) {
+    for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
+      for (let month = 0; month < 10; month++) {
+        if (![2, 3, 4].includes(month)) {
+          const documents: number = Math.floor(Math.random() * 3);;
+          for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
+            let date = new Date();
+            date.setMonth(date.getMonth()-month)
+            const entryNumber: number = Math.floor(Math.random() * 10);
+            const observationInfo = {
+                start: firebase.firestore.Timestamp.fromDate(date),
+                end: firebase.firestore.Timestamp.fromDate(date),
+                type: "climate",
+                activitySetting: null,
+                checklist: null,
+                completed: true,
+                observedBy: "/user/" + coach.id,
+                teacher: "/user/" + coach.teachers[teacherIndex],
+                timezone: "America/New_York"
+              };
+            this.sessionRef = this.db.collection('observations').doc();
+            let entryCollection = this.sessionRef.collection('entries')
+            for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+              entryCollection.add({
+                Timestamp: firebase.firestore.Timestamp.fromDate(date),
+                Type: "climate",
+                BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+              });
+            }
+            this.sessionRef.set(observationInfo)
+            this.sessionRef = null;
+
+          }
+        }
+      }
+    }
+    for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
+      for (let month = 0; month < 10; month++) {
+        if (![2, 3, 4].includes(month)) {
+          const documents: number = Math.floor(Math.random() * 3);;
+          for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
+            let date = new Date();
+            date.setMonth(date.getMonth()-month)
+            const entryNumber: number = Math.floor(Math.random() * 10);
+            const observationInfo = {
+                start: firebase.firestore.Timestamp.fromDate(date),
+                end: firebase.firestore.Timestamp.fromDate(date),
+                type: "LI",
+                activitySetting: readingActivity[Math.floor(Math.random() * 8)],
+                checklist: "ReadingTeacher",
+                completed: true,
+                observedBy: "/user/" + coach.id,
+                teacher: "/user/" + coach.teachers[teacherIndex],
+                timezone: "America/New_York"
+              };
+            this.sessionRef = this.db.collection('observations').doc();
+            let entryCollection = this.sessionRef.collection('entries')
+            for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+              const maxLen: number = Math.floor(Math.random() * 10)
+              let choices: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              let checked: Array<number> = maxLen === 0 ? [11] : []
+
+              for(let choice = 0; choice < maxLen; choice++) {
+                let num: number = choices[Math.floor(Math.random() * choices.length)];
+                checked.push(num)
+                choices.splice(choices.indexOf(num), 1)
+              }
+              entryCollection.add({
+                Timestamp: firebase.firestore.Timestamp.fromDate(date),
+                Checked: checked
+              });
+            }
+            this.sessionRef.set(observationInfo)
+            this.sessionRef = null;
+
+          }
+        }
+      }
+
+    }
+  }
+  }
+
+
+    secondFirebase.delete() // Frees resources for any subsequent users created
+  }
+
+
 }
 
 export default Firebase

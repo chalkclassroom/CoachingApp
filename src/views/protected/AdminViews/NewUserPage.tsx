@@ -18,6 +18,7 @@ import { Alert } from '@material-ui/lab'
 import { Role } from '../../../state/actions/coach'
 import { RouteComponentProps } from 'react-router-dom'
 import * as H from 'history'
+import * as Types from '../constants/Types';
 
 
 const styles:object = {
@@ -64,7 +65,9 @@ interface Style {
 type Props = RouteComponentProps & {
     history: H.History,
     firebase: Firebase,
-    isAdmin: boolean
+    isAdmin: boolean,
+    highLevelCreate: boolean,
+    lowLevelCreate: boolean
 }
 
 interface State {
@@ -72,7 +75,16 @@ interface State {
     lastName: string,
     email: string,
     role: Role,
-    createdPassword: string | undefined
+    createdPassword: string | undefined,
+    showProgram: boolean,
+    showSite: boolean,
+    programsList: Array<string>,
+    sitesList: Array<string>,
+    program: string,
+    site: string,
+    coach: string,
+    showCoach: boolean,
+    coachList: Array<string>,
 }
 
 /**
@@ -91,9 +103,29 @@ class NewUserPage extends React.Component<Props, State>{
             lastName: "",
             email: "",
             role: Role.ANONYMOUS,
-            createdPassword: undefined
+            createdPassword: undefined,
+            showProgram: false,
+            showSite: false,
+            programsList: [],
+            sitesList: [],
+            program: "",
+            site: "",
+            coach: "",
+            showCoach: false,
+            coachList: [],
         }
     }
+
+    componentDidMount(): void {
+        const firebase = this.context;
+        firebase.getPrograms().then((data) => {
+            this.setState({programsList: data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+        });
+        firebase.getSites().then((data) => {
+            this.setState({sitesList: data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+        })
+    }
+
 
     /**
      *
@@ -104,7 +136,11 @@ class NewUserPage extends React.Component<Props, State>{
             email,
             firstName,
             lastName,
-            role
+            role,
+            site,
+            program,
+            coach,
+            sitesList
         } = this.state;
 
         if (!email || email === ""){
@@ -122,35 +158,121 @@ class NewUserPage extends React.Component<Props, State>{
             return;
         }
 
-        if (![Role.ADMIN, Role.COACH, Role.TEACHER].includes(role)){
+        if (![Role.ADMIN, Role.COACH, Role.TEACHER, Role.PROGRAMLEADER, Role.SITELEADER].includes(role)){
             alert("Please select a role");
             return;
         }
+
+        if (this.state.showSite) {
+            if (!site || site === "") {
+                alert("Please select a site")
+                return;
+            }
+        }
+
+        // if (this.state.showCoach) {
+        //     if (!coach || coach === "") {
+        //         alert("Please select a coach")
+        //         return;
+        //     }
+        // }
+
+        if (this.state.showProgram) {
+            if (!program || program === "") {
+                alert("Please select a program")
+                return;
+            }
+        }
+
         const randomString = Math.random().toString(36).slice(-8)
-        await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role)
+
+        if (role === Role.TEACHER) {
+
+            // Get the site ID
+            var siteData = await sitesList.find(o => o.name == site);
+            var siteId = siteData.id;
+            console.log("SiteData: ", siteData);
+            console.log("siteId: ", siteId);
+
+
+            const teacherInfo = {
+                firstName: firstName,
+                lastName: lastName,
+                school: site,
+                email: email,
+                notes: '',
+                phone: '',
+                sites: [siteId]
+            }
+            await firebase.addTeacherToCoach(teacherInfo, coach)
             .then(() => {
-              this.setState({
-                createdPassword: randomString
+              }).catch(e => {
+                  this.setState({
+                    createdPassword: undefined
+                  });
+                  console.log(e)
+                  alert('Unable to create user. Please try again')
+              }).finally(() => {
+                  this.setState({ // Hold off setting new state until success has been determined
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    role: Role.ANONYMOUS,
+                    program: '',
+                    site: ''
+                  });
               });
-              return randomString
-            }).catch(e => {
+        } else {
+            await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
+                .then(() => {
                 this.setState({
-                  createdPassword: undefined
+                    createdPassword: randomString
                 });
-                console.log(e)
-                alert('Unable to create user. Please try again')
-            }).finally(() => {
-                this.setState({ // Hold off setting new state until success has been determined
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  role: Role.ANONYMOUS,
+                return randomString
+                }).catch(e => {
+                    this.setState({
+                    createdPassword: undefined
+                    });
+                    console.log(e)
+                    alert('Unable to create user. Please try again')
+                }).finally(() => {
+                    this.setState({ // Hold off setting new state until success has been determined
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    role: Role.ANONYMOUS,
+                    program: '',
+                    site: ''
+                    });
                 });
-            });
+        }
 
 
 
     }
+
+    renderDropdown = param => () => {
+        this.setState({showProgram: false, showSite: false});
+        switch(param) {
+            default: case 0:
+                break;
+            case 1:
+                this.setState({showProgram: true});
+                break;
+            case 2:
+                this.setState({showSite: true});
+                break;
+        }
+    }
+
+    handleChange = param => async () => {
+        this.setState({showCoach: false})
+        if(this.state.role == "teacher") {
+            const temp = await this.context.fetchSiteCoaches(param);
+            this.setState({coachList: temp, showCoach: true});
+        }
+    }
+
 
     /**
      * @return React.ReactNode
@@ -158,6 +280,8 @@ class NewUserPage extends React.Component<Props, State>{
     render():React.ReactNode {
         const {
             isAdmin,
+            lowLevelCreate,
+            highLevelCreate,
             classes
         } = this.props;
 
@@ -179,6 +303,9 @@ class NewUserPage extends React.Component<Props, State>{
             firstName,
             lastName,
             role,
+            program,
+            site,
+            coach
         } = this.state
         return <div className={classes.root}>
             <FirebaseContext.Consumer>
@@ -233,12 +360,66 @@ class NewUserPage extends React.Component<Props, State>{
                                 onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                                     this.setState({role: event.target.value})}
                             >
-                                <MenuItem value="teacher">Teacher</MenuItem>
-                                <MenuItem value="coach">Coach</MenuItem>
-                                <MenuItem value="admin">Admin</MenuItem>
+                                <MenuItem onClick={this.renderDropdown(2)} value="teacher">Teacher</MenuItem>
+                                <MenuItem onClick={this.renderDropdown(2)} value="coach">Coach</MenuItem>
+                                {lowLevelCreate ? <MenuItem onClick={this.renderDropdown(2)} value="siteLeader">Site Leader</MenuItem> : <></>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(1)} value="programLeader">Program Leader</MenuItem> : <></>}
+                                {highLevelCreate ? <MenuItem onClick={this.renderDropdown(0)} value="admin">Admin</MenuItem> : <></>}
                             </Select>
                         </StyledFormControl>
                     </Grid>
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+                    {this.state.showSite && (
+                            <StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Site</InputLabel>
+                            <Select
+                                labelId="role-select-label"
+                                id="role-select"
+                                value={site}
+                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                    this.setState({site: event.target.value})}
+                            >
+                                {this.state.sitesList.map((site, index) => {
+                                return <MenuItem onClick={this.handleChange(site.id)} key={site.id} value={role == "teacher" ? site.name : site.id}>
+                                    {site.name}
+                                </MenuItem>})}
+
+                            </Select>
+                        </StyledFormControl>
+                        )}
+                    {this.state.showProgram && (<StyledFormControl className={classes.formControl}>
+                        <InputLabel id="role-select-label">Program</InputLabel>
+                        <Select
+                            labelId="role-select-label"
+                            id="role-select"
+                            value={program}
+                            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                this.setState({program: event.target.value})}
+                        >
+                            {this.state.programsList.map((program, index) => {
+                                return <MenuItem key={program.id} value={program.id}>
+                                    {program.name}
+                                </MenuItem>})}
+                        </Select>
+                    </StyledFormControl>)}
+                    </Grid>
+                    <Grid item xs={8} spacing={8} className={classes.container}>
+                        {this.state.showCoach && role == "teacher" && (<StyledFormControl className={classes.formControl}>
+                            <InputLabel id="role-select-label">Coach</InputLabel>
+                            <Select
+                                labelId="role-select-label"
+                                id="role-select"
+                                value={coach}
+                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                                    this.setState({coach: event.target.value})}
+                            >
+                                {this.state.coachList.map((coach, index) => {
+                                    return <MenuItem key={coach.id} value={coach.id}>
+                                        {coach.name}
+                                    </MenuItem>})}
+                            </Select>
+                        </StyledFormControl>)}
+                        </Grid>
                     <Grid item xs={8} spacing={2} className={classes.container}>
                         <FormHelperText>A password will be automatically generated for this user</FormHelperText>
                     </Grid>
@@ -257,4 +438,14 @@ class NewUserPage extends React.Component<Props, State>{
     }
 }
 
-export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewUserPage))
+const mapStateToProps = (state: Types.ReduxState): {isAdmin: boolean, highLevelCreate: boolean, lowLevelCreate: boolean} => {
+    return {
+      isAdmin: [Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER].indexOf(state.coachState.role) >= 0,
+      highLevelCreate: state.coachState.role === Role.ADMIN,
+      lowLevelCreate: [Role.ADMIN, Role.PROGRAMLEADER].indexOf(state.coachState.role) >= 0
+    }
+  }
+
+NewUserPage.contextType = FirebaseContext
+// export default connect(state => ({ isAdmin: state.coachState.role === Role.ADMIN }))(withStyles(styles)(NewUserPage))
+export default connect(mapStateToProps)(withStyles(styles)(NewUserPage))
