@@ -55,6 +55,7 @@ function getDemonstrationUrl(type: LiteracyTypes): string {
  */
 export default function LiteracyTrainingPage(props: Props): React.ReactElement {
   const { location } = props
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={LiteracyIconImage}
@@ -66,6 +67,7 @@ export default function LiteracyTrainingPage(props: Props): React.ReactElement {
         <LiteracyInstructionHelpCard type={location.state.type} />
       }
       section="literacy"
+      type={type ? type : ''}
     />
   )
 }

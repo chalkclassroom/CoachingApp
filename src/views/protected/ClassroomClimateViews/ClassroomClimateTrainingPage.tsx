@@ -9,6 +9,7 @@ import * as Constants from '../../../constants/Constants';
  * @return {ReactElement}
  */
 export default function ClassroomClimateTrainingPage(): React.ReactElement {
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={ClassroomClimateIconImage}
@@ -17,6 +18,7 @@ export default function ClassroomClimateTrainingPage(): React.ReactElement {
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20CC%20(CC).mp4?alt=media&token=482a0756-8b7b-470d-9766-ff7559cdf4a5'
       definitions={<ClassroomClimateHelpCard />}
       section='climate'
+      type={type ? type : ''}
     />
   );
 }

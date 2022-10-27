@@ -9,6 +9,7 @@ import * as Constants from '../../../constants/Constants';
  * @return {ReactElement}
  */
 export default function StudentEngagementTrainingPage(): React.ReactElement {
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={EngagementIconImage}
@@ -17,6 +18,7 @@ export default function StudentEngagementTrainingPage(): React.ReactElement {
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20SE%20(CC).mp4?alt=media&token=e775fc3d-2a93-41e0-829a-318354f1f9bf'
       definitions={<StudentEngagementHelpCard />}
       section='student'
+      type={type ? type : ''}
     />
   );
 }

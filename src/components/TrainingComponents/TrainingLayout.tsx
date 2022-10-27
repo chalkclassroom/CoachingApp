@@ -122,7 +122,8 @@ interface Props {
   demonstrationUrl: string;
   definitions: React.ReactElement;
   section: string,
-  literacyType: Constants.LiteracyTypes
+  literacyType: Constants.LiteracyTypes,
+  type?: string
 }
 
 interface Style {
@@ -235,6 +236,7 @@ class TrainingLayout extends React.Component<Props, State> {
                   knowledgeCheckClick={this.knowledgeCheckClick}
                   colorTheme={this.props.colorTheme}
                   literacyType={this.props.literacyType}
+                  type={this.props.type}
                 />
               </Grid>
             </Grid>

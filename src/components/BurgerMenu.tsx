@@ -35,7 +35,8 @@ import * as Constants from '../constants/Constants';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 import * as H from 'history';
-import Firebase from './Firebase'
+import Firebase from './Firebase';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 
 const styles: object = {
   toolbarIcon: {
@@ -380,7 +381,7 @@ class BurgerMenu extends React.Component<Props, State>{
                 primary="Home"
               />
             </ListItem>
-            {role == Role.COACH || role == Role.ADMIN
+            {role == Role.COACH || role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER
                 ? this.coachNavigationMenu(classes) : this.teacherNavigationMenu(classes)}
             <ListItem button onClick={this.handleOpenChalk}>
               <ListItemIcon>
@@ -471,11 +472,27 @@ class BurgerMenu extends React.Component<Props, State>{
                   primary="Help"
               />
             </ListItem>
-              {role == Role.ADMIN && <>
+             {(role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER) && <>
                   <ListItem
                       button
                       onClick={() => this.props.handleNavigation( (): void => {
-                          this.setState({ menu: 13, chalkOpen: false });
+                          this.setState({ menu: 14, chalkOpen: false });
+                          this.props.history.push("/LeadersDashboard");
+                      })}
+                  >
+                      <ListItemIcon>
+                          <SupervisedUserCircleIcon style={{ fill: Constants.Colors.LC }} />
+                      </ListItemIcon>
+                      <ListItemText
+                          primary="Leaders DashBoard"
+                      />
+                  </ListItem>
+              </>}
+              {(role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER) && <>
+                  <ListItem
+                      button
+                      onClick={() => this.props.handleNavigation( (): void => {
+                          this.setState({ menu: 15, chalkOpen: false });
                           this.props.history.push("/NewUser");
                       })}
                   >
@@ -490,7 +507,7 @@ class BurgerMenu extends React.Component<Props, State>{
             <ListItem
                 button
                 onClick={() => this.props.handleNavigation( (): void => {
-                  this.setState({ menu: 14, chalkOpen: false });
+                  this.setState({ menu: 16, chalkOpen: false });
                   this.props.firebase.firebaseSignOut().then(() => {
                     this.props.history.push("/");
                     this.props.clearCoach();

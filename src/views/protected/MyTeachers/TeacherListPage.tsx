@@ -365,7 +365,15 @@ class TeacherListPage extends React.Component<Props, State> {
       allEvents: [],
       dataLoaded: false,
       view: 0,
-      deleteAppointmentDialog: false
+      deleteAppointmentDialog: false,
+
+      existingTeacherWithEmailModal: false,
+      existingTeacherWithNameModal: "",
+      existingTeacherName: "",
+      existingTeacherEmail: "",
+      existingTeacherInfo: "",
+      newTeacherInfo: {}
+
     };
   }
 
@@ -572,7 +580,7 @@ class TeacherListPage extends React.Component<Props, State> {
   };
 
   /**
-   * 
+   *
    * @param {string} type
    * @param {string} val
    */
@@ -631,7 +639,7 @@ class TeacherListPage extends React.Component<Props, State> {
     }
   };
 
-  handleAddConfirm = (): void | null => {
+  handleAddConfirm = async (): void | null => {
     const {
       inputFirstName,
       inputLastName,
@@ -667,50 +675,116 @@ class TeacherListPage extends React.Component<Props, State> {
     } else {
       // fields are validated
       const firebase = this.context;
-      firebase
-        .addTeacher({
-          firstName: inputFirstName,
-          lastName: inputLastName,
-          school: inputSchool,
-          email: inputEmail,
-          notes: inputNotes,
-          phone: inputPhone
-        })
-        .then((id: string) =>
-          firebase
-            .getTeacherInfo(id)
-            .then((teacherInfo: Teacher) => {
-              this.props.addTeacher(teacherInfo);
-              this.setState(
-                prevState => {
-                  return {
-                    teachers: prevState.teachers.concat(teacherInfo),
-                    searched: prevState.teachers.concat(teacherInfo),
-                    teacherDetails: prevState.teacherDetails.concat({...teacherInfo, type: undefined, title: '', start: undefined })
-                  };
-                },
-                () => {
-                  this.handleCloseModal();
-                  this.handleAddAlert(true);
-                }
-              )
-            })
-            .catch((error: Error) => {
-              console.error(
-                "Error occurred fetching new teacher's info: ",
-                error
-              );
-              this.handleCloseModal();
-              this.handleAddAlert(false);
-            })
-        )
-        .catch((error: Error) => {
-          console.error("Error occurred adding teacher to dB: ", error);
-          this.handleCloseModal();
-          this.handleAddAlert(false);
+
+      // Save new teacher fields so we can create a new teacher if we want to after we go through the verification popups
+      var newTeacherInfo = {
+        firstName: inputFirstName,
+        lastName: inputLastName,
+        school: inputSchool,
+        email: inputEmail,
+        notes: inputNotes,
+        phone: inputPhone
+      }
+      this.setState({newTeacherInfo: newTeacherInfo});
+
+      // Check to see if teacher with email already exist
+      var existingUser = await firebase.getTeacherByEmail({email: inputEmail});
+
+      if(existingUser)
+      {
+        var existingTeacherName = existingUser.firstName + " " + existingUser.lastName;
+        this.setState({
+          existingTeacherWithEmailModal: true,
+          existingTeacherName: existingTeacherName,
+          existingTeacherInfo: existingUser,
         });
+
+        return;
+      }
+      else
+      {
+        // Check to see if there is a teacher that already has the same name but not the same email
+        var existingUser = await firebase.getTeacherByFullName({firstName: inputFirstName, lastName: inputLastName});
+
+        if(existingUser)
+        {
+          var existingTeacherName = existingUser.firstName + " " + existingUser.lastName;
+          var existingTeacherEmail = existingUser.email;
+          this.setState({
+            existingTeacherWithNameModal: true,
+            existingTeacherName: existingTeacherName,
+            existingTeacherEmail: existingTeacherEmail,
+            existingTeacherInfo: existingUser,
+          });
+
+          return;
+        }
+
+
+      }
+
+
+      // Just create teacher if we pass the checks
+      this.addNewTeacher(newTeacherInfo);
+
+
     }
   };
+
+
+  addNewTeacher = async (teacherToAdd) => {
+    const firebase = this.context;
+    firebase
+      .addTeacher(teacherToAdd)
+      .then((id: string) =>
+        firebase
+          .getTeacherInfo(id)
+          .then((teacherInfo: Teacher) => {
+            this.props.addTeacher(teacherInfo);
+            this.setState(
+              prevState => {
+                return {
+                  teachers: prevState.teachers.concat(teacherInfo),
+                  searched: prevState.teachers.concat(teacherInfo),
+                };
+              },
+              () => {
+                this.handleCloseModal();
+                this.handleAddAlert(true);
+              }
+            )
+          })
+          .catch((error: Error) => {
+            console.error(
+              "Error occurred fetching new teacher's info: ",
+              error
+            );
+            this.handleCloseModal();
+            this.handleAddAlert(false);
+          })
+      )
+      .catch((error: Error) => {
+        console.error("Error occurred adding teacher to dB: ", error);
+        this.handleCloseModal();
+        this.handleAddAlert(false);
+      });
+
+      this.setState({
+        existingTeacherWithEmailModal: false,
+        existingTeacherWithNameModal: false,
+      });
+  }
+
+  addTeacherToCoach = async () => {
+    const firebase = this.context;
+    console.log("Adding teacher with information: ", this.state.existingTeacherInfo);
+    await firebase.addTeacherIdToCoach({teacherId: this.state.existingTeacherInfo.id});
+    this.handleCloseModal();
+    this.setState({
+      existingTeacherWithEmailModal: false,
+      existingTeacherWithNameModal: false,
+    });
+  }
 
   handleEditConfirm = (): void | null => {
     const {
@@ -938,7 +1012,7 @@ class TeacherListPage extends React.Component<Props, State> {
           },
           () => setTimeout(() => this.setState({ editAlert: false }), 3000)
         )
-      }); 
+      });
   };
 
   static propTypes = {
@@ -1122,6 +1196,45 @@ class TeacherListPage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
+
+        {/*
+            popup - Trying to create a new teacher with an existing email
+        */}
+        <Dialog open={this.state.existingTeacherWithEmailModal}>
+            <DialogTitle style={{ fontFamily: 'Arimo' }}>
+                Cannot create new teacher.
+                User, {this.state.existingTeacherName}, already uses that email adress.
+                Would you like to add them to your list of teachers?
+            </DialogTitle>
+            <DialogActions>
+                <Button onClick={() => {this.setState({existingTeacherWithEmailModal: false})}}>
+                    No
+                </Button>
+                <Button onClick={this.addTeacherToCoach}>
+                    Yes, Add Teacher
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+        {/*
+            popup - Trying to create a new teacher with an existing name but not email
+        */}
+        <Dialog open={this.state.existingTeacherWithNameModal}>
+            <DialogTitle style={{ fontFamily: 'Arimo' }}>
+                There's already a user named {this.state.existingTeacherName} with the email "{this.state.existingTeacherEmail}".
+                Would you like to continue?
+            </DialogTitle>
+            <DialogActions>
+                <Button onClick={() => {this.setState({existingTeacherWithNameModal: false})}}>
+                    Cancel
+                </Button>
+                <Button onClick={() => {this.addNewTeacher(this.state.newTeacherInfo)}}>
+                    Add New Teacher With Same Name
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+
         <Grid container direction="column" justify="center" alignItems="stretch" className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
           <Popover

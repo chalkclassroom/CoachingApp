@@ -83,6 +83,7 @@ interface ActionPlanInfo {
     }
     practice: string
     achieveBy: firebase.firestore.Timestamp
+    status: string
 }
 
 type ActionPlanInfoKey = keyof ActionPlanInfo
@@ -107,10 +108,10 @@ const headCells = [
         label: 'CHALK Practice',
     },
     {
-        id: 'achieveBy',
+        id: 'status',
         numeric: false,
         disablePadding: false,
-        label: 'Achieve By:',
+        label: 'Status',
     },
 ]
 
@@ -212,6 +213,7 @@ interface ActionPlanRow {
         nanoseconds: number
     }
     achieveBy: firebase.firestore.Timestamp
+    status: string
     teacherId: string
     practice: string
     teacherFirstName: string
@@ -661,6 +663,7 @@ class ActionPlanList extends React.Component<Props, State> {
      * @param index
      */
     renderActionPlanRow(row: ActionPlanRow, index: number): React.ReactNode {
+        let status = row.status ? row.status : "maintenance"
         let achieveBy = row.achieveBy
         if (row.achieveBy && typeof row.achieveBy !== 'string') {
             // achieveBy is a string in legacy storage
@@ -797,9 +800,10 @@ class ActionPlanList extends React.Component<Props, State> {
                             fontFamily: 'Arimo',
                         }}
                     >
-                        {achieveBy
+                        {/* {achieveBy
                             ? moment(achieveBy).format('MM/DD/YYYY')
-                            : ''}
+                            : ''} */}
+                            {status ? status : ''}
                     </Typography>
                 </TableCell>
             </TableRow>
