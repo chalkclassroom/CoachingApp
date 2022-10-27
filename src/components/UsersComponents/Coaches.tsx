@@ -1027,8 +1027,6 @@ class Coaches extends React.Component<Props, State> {
               </Button>
           </DialogActions>
       </Dialog>
-
-      {this.props.coachData.length > 0 ? (<>
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -1068,6 +1066,7 @@ class Coaches extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 </>)}
+                {this.props.coachData.length > 0 ? (<>
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
                   <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
@@ -1103,6 +1102,7 @@ class Coaches extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 </>)}
+                </>) : (<></>)}
                 </>) : (<>
                   <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
@@ -1140,6 +1140,8 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
+        
+        {this.props.coachData.length > 0 ? (<>
           <Grid container direction='column'>
             <Grid item xs={12}><span></span></Grid>
             <Grid item xs={12}>
@@ -1332,6 +1334,17 @@ class Coaches extends React.Component<Props, State> {
             </table>
             </Grid>
           </Grid>
+          </>) : (
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            style={{height: "100%", marginTop:'8vh'}}
+          >
+            <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
+          </Grid>
+          )}
       </>) : (this.state.view === 2 ? (<>
           <Grid item xs={1} style={{marginTop: '45px'}}>
 
@@ -2065,17 +2078,6 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
     </>) : (null))))}
       </Grid>
-      </>) : (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
-      </Grid>
-      )}
     </>)
   }
 }

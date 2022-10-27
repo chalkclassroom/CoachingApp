@@ -617,7 +617,7 @@ class Sites extends React.Component<Props, State> {
           </Button>
       </DialogActions>
     </Dialog>
-  {this.props.sitesList.length > 0 ? (<>
+  {/* {this.props.sitesList.length > 0 ? (<> */}
     <Grid container direction='row'>
   {this.state.view === 1 ? (<>
     <Grid item xs={3}>
@@ -700,6 +700,7 @@ class Sites extends React.Component<Props, State> {
     </Grid>
   </>) : (null)))}
   {this.state.view === 1 ? (<>
+    {this.props.sitesList.length > 0 ? (<>
     <Grid container direction='row' justifyContent='center' alignItems='center'>
       <Grid
       item
@@ -820,6 +821,17 @@ class Sites extends React.Component<Props, State> {
       </table>
       </Grid>
     </Grid>
+    </>) :  (<>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100%", marginTop:'8vh'}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+      </Grid>
+    </>)}
     </>) : (this.state.view === 2 ? (<>
     <Grid item xs={1} style={{marginTop: '45px'}}>
       <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
@@ -846,7 +858,7 @@ class Sites extends React.Component<Props, State> {
         <Grid item>
           <TextField
             size="small"
-            style={{width:'30vw', maxWidth: '440px'}}
+            style={{width:'29.5vw', maxWidth: '470px'}}
             id="site-name"
             label="Site Name"
             type="text"
@@ -1062,17 +1074,6 @@ class Sites extends React.Component<Props, State> {
         </Grid>
     </>) : (<></>)))}
     </Grid>
-    </>) :  (<>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
-      </Grid>
-    </>)}
 </>)
     
   }
