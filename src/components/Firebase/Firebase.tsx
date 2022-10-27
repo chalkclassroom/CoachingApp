@@ -3277,18 +3277,31 @@ class Firebase {
 
   }
 
-  getActionPlansForExport = async (coachId: string | undefined = undefined) => {
-    if ( !await this.userIsLeader() ) {
+  getActionPlansForExport = async (coachId: string | undefined = undefined, from, to) => {
+    if (!await this.userIsLeader()) {
       throw new Error('Not authorized to Perform this action')
     }
+
+    var fromDate = new Date(from);
+    var toDate = new Date(to);
+
+    // Set the date objects to make it the very beginning of the day (12am)
+    fromDate = new Date( fromDate.getTime() - fromDate.getTimezoneOffset() * -60000 );
+    toDate = new Date( toDate.getTime() - toDate.getTimezoneOffset() * -60000 );
+
+    // Set the to date so it's the beginning of the next day (a.k.a end of current day)
+    toDate.setDate(toDate.getDate() + 1);
+
     this.query = this.db
       .collection('actionPlans').orderBy('dateModified', 'desc')
     if (coachId) {
       this.query = this.query.where('coach', '==', coachId)
     }
+    this.query = this.query.where('dateModified', '>', fromDate).where('dateModified', '<', toDate)
+
     const actionPlans = await this.query.get();
     return Promise.all(actionPlans.docs.map(async (doc) => {
-      const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool, status} = doc.data()
+      const {coach, benefit, dateCreated, dateModified, goal, goalTimeline, teacher, tool} = doc.data()
       return {
         coachId: coach,
         teacherId: teacher,
@@ -3298,8 +3311,7 @@ class Firebase {
         dateModified: this.convertFirestoreTimestamp(dateModified),
         goalTimeline: this.convertFirestoreTimestamp(goalTimeline),
         dateCreated: this.convertFirestoreTimestamp(dateCreated),
-        steps: await this.getActionStepsForExport(doc.id),
-        status: status
+        steps: await this.getActionStepsForExport(doc.id)
       }
     }))
   }
