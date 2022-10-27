@@ -571,6 +571,8 @@ class UsersPage extends React.Component<Props, State> {
                         siteData = {this.state.siteData}
                         programData = {this.state.programData}
                         updateTeacherData={(data) => this.updateTeacherData(data)}
+                        updateSendToSitesData = {(data) => this.updateSendToSites(data)}
+                        sitesList = {this.state.sendToSites}
                         />
                     } />
                     <Route path="/LeadersTeachers" render={(props) =>

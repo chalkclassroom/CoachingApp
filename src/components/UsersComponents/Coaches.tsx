@@ -58,6 +58,9 @@ interface Props {
   location: string
   teacherData: Array<Object>
   coachData: Array<Object>
+  sitesList: Array<Object>
+  siteData: Array<Object>
+  updateSendToSitesData(data): void 
 }
 
 interface State {
@@ -710,6 +713,70 @@ class Coaches extends React.Component<Props, State> {
       coachInfo.siteList = newCoachSiteList;
 
       // Update sites, set this teacher as selected, and go back to last page
+
+      let update = this.props.sitesList;
+      let coachData = update.filter(o => {return o.id === coachId})
+      let removed = []
+      console.log(update)
+      for (let i = 0; i < coachData.length; i++) {
+        removed.push({
+          siteId: coachData[i].siteId,
+          siteName: coachData[i].siteName,
+          programId: coachData[i].programId,
+          programName: coachData[i].programName
+        })
+        update.splice(update.indexOf(coachData[i]), 1)
+      }
+      for (let i = 0; i < newCoachSiteList.length; i++) {
+        update.push({
+          siteName: newCoachSiteList[i].siteName,
+          siteId: newCoachSiteList[i].siteId,
+          programName: newCoachSiteList[i].name,
+          programId: newCoachSiteList[i].id,
+          firstName: coachInfo.firstName,
+          lastName: coachInfo.lastName,
+          id: coachId,
+          archived: false,
+          email: coachInfo.email
+        })
+      }
+      for (let i = 0; i < removed.length; i++) {
+        let check = update.filter(o => {return o.siteId === removed[i].siteId})
+        if(!(check.length > 0)) {
+          update.push({
+            siteName: removed[i].siteName,
+            siteId: removed[i].siteId,
+            programName: removed[i].programName,
+            programId: removed[i].programId,
+            firstName: "",
+            lastName: "",
+            id: "",
+            archived: false,
+            email: ""
+          })
+        }
+      }
+      let empty = []
+      update.map(o => {
+        if (o.id === "") {
+          empty.push(o.siteId)
+        }
+      })
+      console.log(empty)
+      for (let i = 0; i < newCoachSiteList.length; i++) {
+        if (empty.includes(newCoachSiteList[i].siteId)) {
+          let site = update.find(o => o.siteId === newCoachSiteList[i].siteId);
+          let index = update.indexOf(site)
+          update.splice(index, 1)
+
+        }
+      }
+      this.props.updateSendToSitesData(update)
+      /// if site is initially empty remove empty site
+      console.log(coachData)
+      console.log(newCoachSiteList)
+      console.log(update)
+
       this.setState({
         transferCoachCurrentSiteIds: newSites,
         transferCoachNewSiteIds: newSites,
