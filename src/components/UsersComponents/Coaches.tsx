@@ -674,17 +674,8 @@ class Coaches extends React.Component<Props, State> {
           console.log("Teacher ID => ", teacher.teacherId);
 
 
-          // Add a transfer log to the coach (Only the ones that are currently associated with teacher)
-          if( coachesTeachers.find(o => o.teacherId === teacher.teacherId ) )
-          {
-            await firebase.addToTransferLog({docType: "coach", docId: coachId, inOrOut: "out", transferId: teacher.teacherId});
-          }
-
         };
         teachersToRemove = teachersToRemove.concat(teachersToRemove);
-
-        // Add a transfer log to the site
-        await firebase.addToTransferLog({docType: "site", docId: tempSiteId, inOrOut: "out", transferId: coachId});
 
 
       }
@@ -1165,7 +1156,7 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
-        
+
         {this.props.coachData.length > 0 ? (<>
           <Grid container direction='column'>
             <Grid item xs={12}><span></span></Grid>
