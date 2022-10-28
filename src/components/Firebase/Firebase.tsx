@@ -4512,6 +4512,64 @@ class Firebase {
 
   }
 
+
+  /*
+   * We need to log whenever a teacher, coach, or site is transferred sowe can keep track of what data to include in the reports
+   *
+   * These logs will be kept in a subcollection of the program, site, or coach document that they are transferring in or out of
+   */
+  addToTransferLog = async (
+    data: {
+      docType: string, // What type of doc are we adding logs to? program, site, or coach
+      docId: string, // The id of the doc to update
+      inOrOut: string, // in or out
+      transferId: string, // The id of the teacher, coach, or site that is being transferred
+    }
+  ) => {
+
+    console.log("DATA => ", data);
+
+
+    // Get the collection that holds the document we need to update
+    var collectionToUpdate;
+    var transferType;
+    switch (data.docType) {
+      case "program":
+        collectionToUpdate = "programs";
+        transferType = "site";
+        break;
+      case "site":
+        collectionToUpdate = "sites";
+        transferType = "coach";
+        break;
+      case "coach":
+        collectionToUpdate = "users";
+        transferType = "teacher";
+        break;
+      default:
+        break;
+    }
+
+    var docId = data.docId;
+    var inOrOut = data.inOrOut;
+    var transferId = data.transferId;
+
+    var timeStamp = new Date();
+
+    this.db.collection(collectionToUpdate).doc(docId).collection("transferLogs").doc().set(
+      {
+        type: transferType,
+        id: transferId,
+        inOrOut: inOrOut,
+        time: timeStamp,
+      }
+    )
+    .then(data => {console.log("Transfer data : ", data);})
+    .catch((error: Error) => {
+      console.error("Error occurred when updating " + docType + "'s transfer logs.", error)
+    })
+  }
+
   archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
     const collection = await this.db.collection('users').doc(coachId).collection('partners').get()
     let partners: Array<string> = []
