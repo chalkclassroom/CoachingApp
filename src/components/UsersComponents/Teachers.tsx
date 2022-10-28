@@ -897,7 +897,6 @@ editTeacher = async (firebase:Firebase) => {
             </Button>
         </DialogActions>
     </Dialog>
-    {this.props.teacherData.length > 0 ? (
       <Grid container direction='row' style={{paddingBottom: '30px'}}>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -937,6 +936,7 @@ editTeacher = async (firebase:Firebase) => {
                     </Grid>
                 </Grid>
                 </>)}
+                {this.props.teacherData.length > 0 ? (<>
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
                   <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
@@ -972,6 +972,7 @@ editTeacher = async (firebase:Firebase) => {
                     </Grid>
                 </Grid>
                 </>)}
+                </>) : (<></>)}
                 </>) : (<>
                   <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
@@ -1009,6 +1010,7 @@ editTeacher = async (firebase:Firebase) => {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
+        {this.props.teacherData.length > 0 ? (<>
         <Grid item xs={6}><span></span></Grid>
         <Grid item xs={3}>
         <Grid container direction='column'>
@@ -1253,6 +1255,17 @@ editTeacher = async (firebase:Firebase) => {
           </table>
         </Grid>
       </Grid>
+      </>) : (
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          style={{height: "100%", marginTop:'8vh'}}
+        >
+          <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+        </Grid>
+      )}
     </>) : (this.state.view === 2 ? (<>
           <Grid item xs={1} style={{marginTop: '45px'}}>
 
@@ -1785,17 +1798,6 @@ editTeacher = async (firebase:Firebase) => {
             </Grid>
     </>) : (null))))}
     </Grid>
-    ) : (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
-      </Grid>
-    )}
     </>)
   }
 }
