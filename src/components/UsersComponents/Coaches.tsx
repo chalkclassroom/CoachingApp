@@ -60,7 +60,7 @@ interface Props {
   coachData: Array<Object>
   sitesList: Array<Object>
   siteData: Array<Object>
-  updateSendToSitesData(data): void 
+  updateSendToSitesData(data): void
 }
 
 interface State {
@@ -650,21 +650,43 @@ class Coaches extends React.Component<Props, State> {
       // Set the sites in firestore
       firebase.replaceSitesForUser({siteIds: newSites, userId: coachId});
 
+      var coachesTeachers = [...this.state.coachesTeachers];
+
       // Remove the sites from the user's document in firestore
       var teachersToRemove = [];
       for(var removedSiteIndex in removedSites)
       {
         var tempSiteId = removedSites[removedSiteIndex];
-
         //await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
 
         // Get teachers to remove from Coach's partner collection
         var teacherToRemoveData = this.props.teacherData.filter(x => x.selectedSiteId === tempSiteId);
 
-        teacherToRemoveData.forEach(element => {
-          teachersToRemove.push(element.teacherId);
-        });
+
+
+        for(var teacherIndex in teacherToRemoveData)
+        {
+          var teacher = teacherToRemoveData[teacherIndex];
+
+          teachersToRemove.push(teacher.teacherId);
+
+          console.log("coachesTeachers => ", coachesTeachers);
+          console.log("Teacher ID => ", teacher.teacherId);
+
+
+          // Add a transfer log to the coach (Only the ones that are currently associated with teacher)
+          if( coachesTeachers.find(o => o.teacherId === teacher.teacherId ) )
+          {
+            await firebase.addToTransferLog({docType: "coach", docId: coachId, inOrOut: "out", transferId: teacher.teacherId});
+          }
+
+        };
         teachersToRemove = teachersToRemove.concat(teachersToRemove);
+
+        // Add a transfer log to the site
+        await firebase.addToTransferLog({docType: "site", docId: tempSiteId, inOrOut: "out", transferId: coachId});
+
+
       }
 
       // Remove the teachers within those sites from the coach's collection
@@ -675,7 +697,6 @@ class Coaches extends React.Component<Props, State> {
       await firebase.removeTeacherFromCoach({coachId: coachId, bulkTeacherIds: teachersToRemove});
 
       // Remove teachers from coachesTeachers in state to update table
-      var coachesTeachers = this.state.coachesTeachers;
       coachesTeachers = coachesTeachers.filter(o => !teachersToRemove.includes(o.teacherId) );
       this.setState({coachesTeachers: coachesTeachers});
 
@@ -703,11 +724,15 @@ class Coaches extends React.Component<Props, State> {
         // Get program that has this site
         var newSitesProgramData = await this.props.programData.find(o => o.sites.includes(newSiteId) );
 
-        newCoachSiteList.push({
-          siteId: newSiteData.id,
-          siteName: newSiteData.name,
-          programName: newSitesProgramData.name,
-          programId: newSitesProgramData.id});
+        if(newSitesProgramData)
+        {
+          newCoachSiteList.push({
+            siteId: newSiteData.id,
+            siteName: newSiteData.name,
+            programName: newSitesProgramData.name,
+            programId: newSitesProgramData.id});
+        }
+
       }
 
       coachInfo.siteList = newCoachSiteList;
