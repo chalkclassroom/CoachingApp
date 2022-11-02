@@ -3339,7 +3339,7 @@ class Firebase {
       this.query = this.query.where('coach', '==', coachId)
     }
     this.query = this.query.where('dateModified', '>', fromDate).where('dateModified', '<', toDate)
-    
+
     const conferencePlans = await this.query.get();
     return Promise.all(conferencePlans.docs.map(async (doc) => {
       const {coach, dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool} = doc.data()
@@ -4507,14 +4507,14 @@ class Firebase {
     }
   }
 
-  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
+  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string, programId: string ) => {
     if(originalCoach !== "") {
       this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
       .catch((error: Error) => {
         console.error("Error occurred when deleting teacher from coach's partner list: ", error)
       })
     }
-    this.db.collection("users").doc(teacherId).update({school: siteName})
+    this.db.collection("users").doc(teacherId).update({school: siteName, programId: programId})
     .catch((error: Error) => {
       console.error("Error occurred when updating teacher school: ", error)
     })
@@ -6524,6 +6524,74 @@ class Firebase {
 
 
   }
+
+
+
+  /**
+   * gets list of all Transfer logs for a site or coach
+   */
+  getTransferLogs = async (type, objectId) => {
+      return this.db
+        .collection(type)
+        .doc(objectId)
+        .collection('transferLogs')
+        .get()
+        .then( async (logs) => {
+          const logList = []
+
+
+          logs.forEach(log =>{
+            logList.push(log.data());
+          }
+          )
+
+
+
+
+          /* START CACHE REMOVAL (for development) 
+          logs.forEach(log =>{
+
+            console.log("TRANSFER LOG DATA =====> ", log.id);
+
+            //var tempItem = await this.db.collection(data.dataType).doc(dataId).get()
+            var tempItem = this.db.collection(type)
+              .doc(objectId)
+              .collection('transferLogs')
+              .doc(log.id)
+              .get()
+              .then( logItem => {
+                if(logItem.exists)
+                {
+                  console.log("Temp TRANSFER DATA => ", log.data());
+
+                  logList.push(log.data());
+                }
+                else
+                {
+                  console.log("Removing cached item " + dataId + " from " + data.dataType);
+                }
+              })
+              .catch((error: Error) =>
+                console.error('Document doesnt exist', error)
+              )
+
+
+
+            //logList.push(log.data());
+          }
+          )
+          /* END CACHE REMOVAL */
+
+
+          console.log('log list', logList)
+          return logList;
+        })
+        .catch((error: Error) =>
+          console.error('Error getting partner list: ', error)
+        )
+  }
+
+
 
   //REMOVE AFTER DEVELOPMENT
 

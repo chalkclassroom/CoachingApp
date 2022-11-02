@@ -223,6 +223,21 @@ class ProgramProfileResults extends React.Component {
       }
   }
 
+  /*
+   * How we're fetching data for this page
+   *
+   *  1. Use firebase.fetchProgramTeachers() to get every site and teacher in this program
+   *      It returns an array with each site as the key and an array of that site's teacher id's as the value
+   *
+   *  2. Pass that data to getResultsFromBQ.
+   *
+   *    2.1 Look through the program's tranfer logs to get any site that a teacher was a part of before they left this program
+   *    2.2 Add that to the list of sites
+   *    2.3 Go through each site
+   *    2.4 Add any teachers that was transferred out of that site to the list
+   *    2.3 Get data for each of the teachers within each of the sites
+   */
+
   componentDidMount = async () => {
     const firebase = this.context;
 
@@ -252,8 +267,30 @@ class ProgramProfileResults extends React.Component {
   getResultsFromBQ = async (sites) => {
     const firebase = this.context;
 
-    // Grab results data
+    // Need to add sites from teachers that transferred out of this program in case they're not included any more
+    //    Note: These aren't sites that transferred programs, these are sites that a teacher was a part of before they transferred out of this program
+    var transferLogs = await firebase.getTransferLogs("programs", this.props.selectedProgramId);
 
+    if(transferLogs && transferLogs.length > 1)
+    {
+
+      var transferredOutSites = transferLogs.filter(o => o.inOrOut === "out" && o.type == "teacherSite");
+      // We just need the ids
+      transferredOutSites = transferredOutSites.map(o => {return o.id});
+      // Add the sites to our current list of sites if they're not there
+      for(var i = 0; i < transferredOutSites.length; i++)
+      {
+        if(!sites[transferredOutSites[i]])
+        {
+          sites[transferredOutSites[i]] = [];
+        }
+      }
+
+    }
+
+
+
+    // Grab results data
     var averagesList = {};
     var siteNames = {};
 
@@ -263,6 +300,49 @@ class ProgramProfileResults extends React.Component {
 
       var teachers = sites[siteIndex];
 
+      // Don't forget the teachers that were transferred out of the program in the past
+      // We need to get the site's transfer logs
+      var transferLogs = await firebase.getTransferLogs("sites", siteIndex);
+
+      // We only want the one's involving teachers
+      transferLogs = transferLogs.filter( o => o.type === "teacher" );
+
+      var transferedTeachersIds = transferLogs.map( log => {return log.id} );
+
+      // Remove duplicates
+      transferedTeachersIds = [...new Set(transferedTeachersIds)];
+
+      teachers = teachers.concat(transferedTeachersIds);
+
+      var transferredTeachersInfo = [];
+      // Add transferred teacher info to our list of teachers if they're not already there.
+      for(var teacherIndex in transferedTeachersIds)
+      {
+        var tempId = transferedTeachersIds[teacherIndex];
+        var teacherInfo = await firebase.getTeacherInfo(tempId);
+
+
+        if(teacherInfo.id)
+        {
+          transferredTeachersInfo.push(teacherInfo);
+
+          // Only add to teacher results if they're not already there
+          if( !( teachers.find(o => o.id === teacherInfo.id) ) )
+          {
+            teachers.push({firstName: teacherInfo.firstName, lastName: teacherInfo.lastName, id: tempId});
+            //teacherNames.push(teacherInfo.firstName + " " + teacherInfo.lastName);
+          }
+
+        }
+      }
+
+      // We need to get a list of dates to exclude for the transferred coaches
+      var datesToExclude = await this.getExcludedDatesForTransferredTeachers(transferredTeachersInfo, transferLogs);
+
+
+      // Remove cached users (they won't have names set) and Practice Teacher
+      teachers = teachers.filter( o => o.firstName && o.id !== "rJxNhJmzjRZP7xg29Ko6" );
+
       // Just skip if there are no teachers here
       if(teachers.length < 1)
       {
@@ -271,6 +351,21 @@ class ProgramProfileResults extends React.Component {
 
       // Get the averages for this site
       averagesList[siteIndex] = await firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers});
+
+
+      // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
+      // Go through each exclude date item
+      for(var excludeDateIndex in datesToExclude)
+      {
+        var excludeDateItem = datesToExclude[excludeDateIndex];
+
+        var tempFromDate = new Date(excludeDateItem.fromDate);
+        var tempToDate = new Date(excludeDateItem.toDate);
+        var tempUserId = '/user/' + excludeDateItem.id;
+
+        // Remove all the dates that are in that date range for this particular user
+        averagesList[siteIndex] = averagesList[siteIndex].filter(o => ( !( tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value ) ) && o.teacher === tempUserId ) || o.teacher !== tempUserId );
+      }
 
       // Set the site names
       var siteData = await firebase.getUserProgramOrSite({siteId: siteIndex});
@@ -294,6 +389,105 @@ class ProgramProfileResults extends React.Component {
     this.calculateResultsForCharts(averagesList, averagesList);
 
   }
+
+
+
+  /*
+   * Get list of date ranges where the teacher wasn't a part of a site
+   *
+   * @returns Array< Object {teacherId, fromDate (2022-10-06), toDate (2022-10-06) } >
+   */
+  getExcludedDatesForTransferredTeachers = async (teachersInfo, transferredLogs) => {
+    var excludedDatesResults = [];
+
+    // Go through each teacher that has been transferred in this site.
+    for(var teacherIndex in teachersInfo)
+    {
+      var tempTeacherInfo = teachersInfo[teacherIndex];
+
+      // Get the logs for the teacher involved
+      var tempTeacherLogs = transferredLogs.filter(o => o.id === tempTeacherInfo.id);
+
+      // If there aren't any transfer logs for some reason, just keep going
+      if(!tempTeacherLogs || tempTeacherLogs.length < 1)
+      {
+        continue;
+      }
+      // Let's sort the logs by date (oldest first)
+      tempTeacherLogs.sort((a,b)=>{ return a.time.toDate().getTime() - b.time.toDate().getTime() });
+
+      // Ideally the transfer logs should already alternate (in, out, in, out, etc.) but we don't trust things to work, so let's remove any that don't alternate just in case
+      var previousInOrOut = "";
+      for(var i = 0; i < tempTeacherLogs.length; i++)
+      {
+        var tempLog = tempTeacherLogs[i];
+
+        // If we have a new value, mark it
+        if(previousInOrOut !== tempLog.inOrOut)
+        {
+          previousInOrOut = tempLog.inOrOut;
+          continue;
+        }
+        // If it's not a new value, remove it from the array
+        else
+        {
+          tempTeacherLogs.splice(i, 1);
+        }
+
+      }
+
+
+      // Go through the logs and build the excluded date ranges
+      for(var i = 0; i < tempTeacherLogs.length; i++)
+      {
+        var tempLog = tempTeacherLogs[i];
+
+        var inOrOut = tempLog.inOrOut;
+        var logDate = tempLog.time.toDate().toISOString().split('T')[0];
+
+        var fromDate = "", toDate = "";
+
+        if(inOrOut === "in")
+        {
+          // If the first one is in, we want to exclude everything from before that date
+          if(i === 0)
+          {
+            fromDate = new Date(2000, 11, 24, 10, 33, 30, 0).toISOString().split('T')[0];
+            toDate = logDate;
+          }
+          // If it's an 'in' that's not the first one, we don't care
+          else
+          {
+            continue;
+          }
+        }
+        else if (inOrOut === "out")
+        {
+          fromDate = logDate;
+          // If the last one is out, we want to exclude everything after that date
+          if(i === tempTeacherLogs.length - 1)
+          {
+            toDate = new Date(2122, 11, 24, 10, 33, 30, 0).toISOString().split('T')[0];
+          }
+          // If it's an out date that's not the last one, we need to find the next in date to get the 'toDate'
+          else
+          {
+            toDate = tempTeacherLogs[i + 1].time.toDate().toISOString().split('T')[0];
+          }
+        }
+        else
+        {
+          continue;
+        }
+
+        excludedDatesResults.push({id: tempLog.id, fromDate: fromDate, toDate: toDate});
+      }
+
+    }
+
+    return excludedDatesResults;
+  }
+
 
 
   /*

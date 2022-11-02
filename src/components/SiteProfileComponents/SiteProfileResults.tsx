@@ -277,44 +277,51 @@ class SiteProfileResults extends React.Component {
       //var teacherNames = [];
 
       var teacherResults = await firebase.getTeacherBySiteName(this.props.selectedSiteName);
+
+      // Remove proactice teacher
+      teacherResults = teacherResults.filter(o => o.id !== "rJxNhJmzjRZP7xg29Ko6");
+
       var teacherNames = teacherResults.map( teacher => {return teacher.firstName + " " + teacher.lastName} );
 
-      // Go through each coach in the site
-      /*
-      for(var coachIndex in coachIdsArr)
+
+      // We need to get the site's transfer logs
+      var transferLogs = await firebase.getTransferLogs("sites", this.props.selectedSiteId);
+
+      // We only want the one's involving teachers
+      transferLogs = transferLogs.filter( o => o.type === "teacher" );
+
+      var transferedTeachersIds = transferLogs.map( log => {return log.id} );
+
+      // Remove duplicates
+      transferedTeachersIds = [...new Set(transferedTeachersIds)];
+
+      // Take out the transferred id's that are already located in teacher results
+      //transferedTeachersIds = transferedTeachersIds.filter(teacherId => !( teacherResults.find(o => o.id === teacherId) ) )
+
+      var transferredTeachersInfo = [];
+      // Add transferred teacher info to our list of teachers if they're not already there.
+      for(var teacherIndex in transferedTeachersIds)
       {
-        var coachId = coachIdsArr[coachIndex];
+        var tempId = transferedTeachersIds[teacherIndex];
+        var teacherInfo = await firebase.getTeacherInfo(tempId);
 
 
-        // Get the the coaches teacher
-        var teachersIdList = await firebase.getTeacherListFromUser({userId: coachId});
-        console.log("teachersIdList done...", teachersIdList);
-
-        // Remove practice teacher
-        var practiceTeacherIndex = teachersIdList.indexOf("rJxNhJmzjRZP7xg29Ko6");
-        if( practiceTeacherIndex > -1 )
+        if(teacherInfo.id)
         {
-          teachersIdList.splice(practiceTeacherIndex, 1);
+          transferredTeachersInfo.push(teacherInfo);
+
+          // Only add to teacher results if they're not already there
+          if( !( teacherResults.find(o => o.id === teacherInfo.id) ) )
+          {
+            teacherResults.push({firstName: teacherInfo.firstName, lastName: teacherInfo.lastName, id: tempId});
+            teacherNames.push(teacherInfo.firstName + " " + teacherInfo.lastName);
+          }
+
         }
-
-        // Get all information for all the teachers
-        var teachersList = await firebase.getMultipleUserProgramOrSite({userIds: teachersIdList});
-        console.log("teachersList done... ", teachersList);
-
-
-        teacherResults = teacherResults.concat(teachersList);
-
-        // Remove any duplicates from the teachers
-        teacherResults = teacherResults.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
-
-        // Set teachers names
-        var tempTeacherNames = teachersList.map( (teacher, index) => {return teacher.firstName + " " + teacher.lastName});
-
-        teacherNames = teacherNames.concat(tempTeacherNames);
-
-
       }
-      */
+
+      // We need to get a list of dates to exclude for the transferred coaches
+      var datesToExclude = await this.getExcludedDatesForTransferredTeachers(transferredTeachersInfo, transferLogs);
 
 
 
@@ -324,7 +331,7 @@ class SiteProfileResults extends React.Component {
       // If there are no teachers in this site, notify the user
       if(teacherResults.length > 0)
       {
-        this.getResultsFromBQ(teacherResults);
+        this.getResultsFromBQ(teacherResults, datesToExclude);
       }
       else
       {
@@ -337,17 +344,129 @@ class SiteProfileResults extends React.Component {
   }
 
   /*
+   * Get list of date ranges where the teacher wasn't a part of this site
+   *
+   * @returns Array< Object {teacherId, fromDate (2022-10-06), toDate (2022-10-06) } >
+   */
+  getExcludedDatesForTransferredTeachers = async (teachersInfo, transferredLogs) => {
+    console.log("[Function] Teachers Info : ", teachersInfo);
+    console.log("[Function] Transfer Logs : ", transferredLogs);
+
+    var excludedDatesResults = [];
+
+    // Go through each teacher that has been transferred in this site.
+    for(var teacherIndex in teachersInfo)
+    {
+      var tempTeacherInfo = teachersInfo[teacherIndex];
+
+      // Get the logs for the teacher involved
+      var tempTeacherLogs = transferredLogs.filter(o => o.id === tempTeacherInfo.id);
+
+      // If there aren't any transfer logs for some reason, just keep going
+      if(!tempTeacherLogs || tempTeacherLogs.length < 1)
+      {
+        continue;
+      }
+      // Let's sort the logs by date (oldest first)
+      tempTeacherLogs.sort((a,b)=>{ return a.time.toDate().getTime() - b.time.toDate().getTime() });
+
+      // Ideally the transfer logs should already alternate (in, out, in, out, etc.) but we don't trust things to work, so let's remove any that don't alternate just in case
+      var previousInOrOut = "";
+      for(var i = 0; i < tempTeacherLogs.length; i++)
+      {
+        var tempLog = tempTeacherLogs[i];
+
+        // If we have a new value, mark it
+        if(previousInOrOut !== tempLog.inOrOut)
+        {
+          previousInOrOut = tempLog.inOrOut;
+          continue;
+        }
+        // If it's not a new value, remove it from the array
+        else
+        {
+          tempTeacherLogs.splice(i, 1);
+        }
+
+      }
+
+      // Go through the logs and build the excluded date ranges
+      for(var i = 0; i < tempTeacherLogs.length; i++)
+      {
+        var tempLog = tempTeacherLogs[i];
+
+        var inOrOut = tempLog.inOrOut;
+        var logDate = tempLog.time.toDate().toISOString().split('T')[0];
+
+        var fromDate = "", toDate = "";
+
+        if(inOrOut === "in")
+        {
+          // If the first one is in, we want to exclude everything from before that date
+          if(i === 0)
+          {
+            fromDate = new Date(2000, 11, 24, 10, 33, 30, 0).toISOString().split('T')[0];
+            toDate = logDate;
+          }
+          // If it's an 'in' that's not the first one, we don't care
+          else
+          {
+            continue;
+          }
+        }
+        else if (inOrOut === "out")
+        {
+          fromDate = logDate;
+          // If the last one is out, we want to exclude everything after that date
+          if(i === tempTeacherLogs.length - 1)
+          {
+            toDate = new Date(2122, 11, 24, 10, 33, 30, 0).toISOString().split('T')[0];
+          }
+          // If it's an out date that's not the last one, we need to find the next in date to get the 'toDate'
+          else
+          {
+            toDate = tempTeacherLogs[i + 1].time.toDate().toISOString().split('T')[0];
+          }
+        }
+        else
+        {
+          continue;
+        }
+
+        excludedDatesResults.push({id: tempLog.id, fromDate: fromDate, toDate: toDate});
+      }
+
+    }
+
+    return excludedDatesResults;
+  }
+
+  /*
    * Get all the Results data from each of the teachers between the two given dates
    */
-  getResultsFromBQ = (teachers) => {
+  getResultsFromBQ = (teachers, datesToExclude) => {
     const firebase = this.context;
 
     // Grab results data
     firebase.fetchSiteProfileAverages({type: this.props.observationType, startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
       .then( (data) => {
         this.setState({BQData: data});
+
+        // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
+        // Go through each exclude date item
+        for(var excludeDateIndex in datesToExclude)
+        {
+          var excludeDateItem = datesToExclude[excludeDateIndex];
+
+          var tempFromDate = new Date(excludeDateItem.fromDate);
+          var tempToDate = new Date(excludeDateItem.toDate);
+          var tempUserId = '/user/' + excludeDateItem.id;
+
+          // Remove all the dates that are in that date range for this particular user
+          data = data.filter(o => ( !( tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value ) ) && o.teacher === tempUserId ) || o.teacher !== tempUserId );
+        }
+
         this.calculateResultsForCharts(data, teachers);
-        console.log("fetchSiteProfileAverages done...", data);
 
       });
 

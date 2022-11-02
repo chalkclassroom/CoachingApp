@@ -52,7 +52,7 @@ interface Props {
   coachData: Array<Object>
   siteData: Array<Object>
   programData: Array<Object>
-  updateArchivedData(data, type): void 
+  updateArchivedData(data, type): void
 }
 
 interface State {
@@ -269,8 +269,8 @@ class Teachers extends React.Component<Props, State> {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
-      if (event.target.value === "" && this.state.addTeacherLastName === "" 
-      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherLastName === ""
+      && this.state.addTeacherEmail === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherFirstName: event.target.value,
@@ -283,8 +283,8 @@ class Teachers extends React.Component<Props, State> {
       })}
     }
     if (name === 'lastName') {
-      if (event.target.value === "" && this.state.addTeacherFirstName === "" 
-      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherFirstName === ""
+      && this.state.addTeacherEmail === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherLastName: event.target.value,
@@ -296,8 +296,8 @@ class Teachers extends React.Component<Props, State> {
       })}
     }
     if (name === 'email') {
-      if (event.target.value === "" && this.state.addTeacherLastName === "" 
-      && this.state.addTeacherFirstName === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherLastName === ""
+      && this.state.addTeacherFirstName === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherEmail: event.target.value,
@@ -470,7 +470,7 @@ class Teachers extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.transferTeacher(transferTeacherId, originalCoachId, changeCoachId, changeSiteName)
+    await firebase.transferTeacher(transferTeacherId, originalCoachId, changeCoachId, changeSiteName, changeProgramId)
     .catch(e => {
       console.log(e)
       alert('Unable to transfer teacher. Please try again')
@@ -640,7 +640,7 @@ editTeacher = async (firebase:Firebase) => {
         this.setState({success: false})
       })
 
-    
+
     let update = this.props.archivedData
     let coachData = this.props.coachData.find(o => o.id === addCoach)
     let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
