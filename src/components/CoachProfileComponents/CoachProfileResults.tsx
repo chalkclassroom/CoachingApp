@@ -159,7 +159,7 @@ class CoachProfileResults extends React.Component {
     teachers = teachers.filter(o => o !== undefined);
 
     // Grab results data
-    firebase.fetchCoachProfileData({startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
+    firebase.fetchCoachProfileData({startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers, coachId: this.props.selectedCoach})
       .then( (data) => {
         this.setState({BQData: data});
       });

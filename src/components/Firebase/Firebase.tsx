@@ -6204,14 +6204,15 @@ class Firebase {
       data: {
         startDate: string,
         endDate: string,
-        teacherIds: string
+        teacherIds: string,
+        coachId: string
       }
     ): Promise<void> => {
 
       const fetchCoachProfile = this.functions.httpsCallable(
         'fetchCoachProfile'
       )
-      return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+      return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds, coachId: data.coachId})
         .then(
           (result) => {
             console.log("Result: " + result.data[0][0]);
@@ -6548,7 +6549,7 @@ class Firebase {
 
 
 
-          /* START CACHE REMOVAL (for development) 
+          /* START CACHE REMOVAL (for development)
           logs.forEach(log =>{
 
             console.log("TRANSFER LOG DATA =====> ", log.id);
