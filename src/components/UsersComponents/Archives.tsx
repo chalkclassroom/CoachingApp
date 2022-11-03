@@ -878,7 +878,7 @@ class Archives extends React.Component<Props, State> {
               <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
                   <Grid item>
                     <Typography variant="h6" style={{marginTop:'15px'}}>
-                      Teacher
+                      Coach
                     </Typography>
                   </Grid>
                   <Grid item>

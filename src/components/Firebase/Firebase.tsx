@@ -6485,7 +6485,10 @@ class Firebase {
           var errorCode = error.code;
           var errorMessage = error.message;
           // ..
-        });
+        })
+        .finally(
+          secondFirebase.delete()
+        )
 
     }
 
