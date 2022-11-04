@@ -527,6 +527,7 @@ class Sites extends React.Component<Props, State> {
         siteName: coach.siteList[i].siteName
       })
     }
+    archiveSites.sort((a, b) => a.site.toLowerCase().localeCompare(b.site.toLowerCase()))
 
 
     firebase.archiveCoach(editCoachId, editCoachFirstName, editCoachLastName, editCoachProgramName, editCoachProgramId, editCoachEmail, userSites, archiveSites)
