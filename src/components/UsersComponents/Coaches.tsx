@@ -46,6 +46,9 @@ const StyledSelect = withStyles({
 
 const TableRow = styled.tr`
 background-color: white;
+:nth-child(odd) {
+  background-color: rgb(234, 234, 234);
+}
 &:hover {
   background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
