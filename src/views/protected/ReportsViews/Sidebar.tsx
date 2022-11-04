@@ -1,6 +1,7 @@
 import { withRouter } from "react-router";
 import React, { Component } from "react";
 import styled from 'styled-components'
+import PrintIcon from '@material-ui/icons/Print';
 
 const SidebarParent = styled.div`
   background: white;
@@ -56,7 +57,8 @@ function checkPrint(currentPage) {
         if (location.pathname === BackList[i] || ("/" + currentPage) === BackList[i] ) {
             return (
                 <li style={listStyle}>
-                        <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/>
+                        {/* <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/> */}
+                        <PrintIcon style={{height: '1.5em', width: '1.5em', verticalAlign: 'bottom'}}/>
                         <a style={aStyle} href="javascript:window.print();">&ensp;Print</a>
                 </li>
             );
