@@ -229,8 +229,25 @@ class CoachProfile extends React.Component {
        // Grab the teacher ID's for the coaches
        let teacherIds = await firebase.getTeacherListFromUser({userId: coachId});
 
-       // Grab all the teachers' info
+       /// We need to add all the teachers that have been transfered.
+       var transferLogs =  await firebase.getTransferLogs("users", coachId);
+
+       // Get the unique ids of the teachers
+       var transferredTeacherIds = [...new Set(transferLogs.map(item => item.id))];
+
+       // Add transferred to the list
+       teacherIds = teacherIds.concat(transferredTeacherIds);
+
+       // Remove any duplicates
+       teacherIds = [...new Set(teacherIds)];
+
+      // Grab all the teachers' info
        var teacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: teacherIds});
+
+       console.log("transfer logs : ", transferLogs);
+       console.log("transfer logs IDS : ", transferredTeacherIds);
+
+       console.log("Teacher options: ", teacherOptions);
 
        // Grab all the users from the archives
        let allArchivedUsers = await firebase.getArchives();

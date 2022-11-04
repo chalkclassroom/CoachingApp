@@ -45,7 +45,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM  ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.ac
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -55,7 +55,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM  ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.climate
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -65,7 +65,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.engagement
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -75,7 +75,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.level
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -85,7 +85,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.listening
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -95,7 +95,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyFoundationalChild
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -105,7 +105,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyFoundationalTeacher
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -115,7 +115,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyLanguageTeacher
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -125,7 +125,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyReadingTeacher
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -135,7 +135,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyWritingChild
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -145,7 +145,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyWritingTeacher
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -155,7 +155,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.math
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -165,7 +165,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.sequential
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     UNION ALL
 
@@ -175,7 +175,7 @@ exports.fetchCoachProfile = functions.https.onCall(async (data, context) => {
                     teacher as teacher,
                     SUM(DISTINCT date_diff(sessionEnd, sessionStart, MILLISECOND)) as totalTime
                     FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.transition
-                    WHERE (${teacherSqlQuery}) and teacher = 'user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
+                    WHERE (${teacherSqlQuery}) and observedBy = '/user/${coachId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                     GROUP BY teacher
                     `;
 
