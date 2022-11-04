@@ -185,14 +185,25 @@ class TeacherProfile extends React.Component {
    /*
     * Change the teacher options we can choose from once a site is chosen
     */
-    setTeachers = async (siteName) => {
+    setTeachers = async (siteName, siteId) => {
       const firebase = this.context;
 
       // Grab the teachers in this site
       let teacherOptions = await firebase.getTeacherBySiteName(siteName);
 
-      // Remove duplicates because that's apparently a problem now
-      teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
+      // Make sure to include any teachers that may have been in the site previously (Teachers that have transferred out)
+      let transferredLogs = await firebase.getTransferLogs("sites", siteId);
+
+      // Get the unique ids of the teachers
+      var transferredTeacherIds = [...new Set(transferredLogs.map(item => item.id))];
+
+      // Grab all the transferred teachers' info
+       var transferredTeacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: transferredTeacherIds});
+
+      teacherOptions = teacherOptions.concat(transferredTeacherOptions);
+
+      // Remove duplicates because that's apparently a problem now. Also remove Practice Teacher
+      teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id)===i) && v.id !== "rJxNhJmzjRZP7xg29Ko6")
 
       // Set the names
       for(var teacherIndex in teacherOptions)
@@ -260,7 +271,7 @@ class TeacherProfile extends React.Component {
         this.setState({selectedSiteName: site.name});
 
         // Set the teacher options
-        this.setTeachers(site.name);
+        this.setTeachers(site.name, site.id);
 
         // Reset Error
         error['site'] = false;
