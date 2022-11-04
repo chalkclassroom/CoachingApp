@@ -1323,22 +1323,22 @@ class Coaches extends React.Component<Props, State> {
                 {this.state.coachesTeachers.map((value, index) => {
                   return(
                   <TableRow key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.teacherLastName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.teacherFirstName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.siteName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.selectedProgramName}
                       </Typography>

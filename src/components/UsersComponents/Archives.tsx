@@ -1152,27 +1152,27 @@ class Archives extends React.Component<Props, State> {
                 key={index} 
                 onClick={() => { this.handleTeacherEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.lastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.firstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.role !== "" ? value.role[0].toUpperCase() + value.role.substring(1) : value.role}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.site}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.program}
                     </Typography>
@@ -1185,22 +1185,22 @@ class Archives extends React.Component<Props, State> {
                 key={index} 
                 onClick={() => {this.handleCoachEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.lastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.firstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.role !== "" ? value.role[0].toUpperCase() + value.role.substring(1) : value.role}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.sites.map(item => {
                         return (
@@ -1213,7 +1213,7 @@ class Archives extends React.Component<Props, State> {
                       })}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.programName}
                     </Typography>

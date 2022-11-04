@@ -1182,32 +1182,32 @@ editTeacher = async (firebase:Firebase) => {
                 key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>
@@ -1221,32 +1221,32 @@ editTeacher = async (firebase:Firebase) => {
                 key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>

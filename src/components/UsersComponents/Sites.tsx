@@ -800,17 +800,17 @@ class Sites extends React.Component<Props, State> {
           {this.props.sitesList.map((site) => {
             return (<>
             <TableRow key={site.id} onClick={() => {this.handleEditClick(site)}}>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.siteName}
                 </Typography>
               </td>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.lastName}
                 </Typography>
               </td>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.firstName}
                 </Typography>
