@@ -308,7 +308,10 @@ class Firebase {
   }): Promise<firebase.auth.UserCredential | void> => {
     return this.auth
       .signInWithEmailAndPassword(userData.email, userData.password)
-      .catch((error: Error) => console.error('Error signing in: ', error))
+      .catch((error: Error) => {
+        console.error('Error signing in: ', error)
+        alert(error)
+      })
   }
 
   reauthenticate = async (userData: {

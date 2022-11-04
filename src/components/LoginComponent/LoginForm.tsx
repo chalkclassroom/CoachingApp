@@ -150,7 +150,7 @@ class LoginForm extends React.Component<Props, State> {
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = (): void => {
+  handleSubmit = (e): void => {
     if (!this.state.errors) {
       this.props.firebase
         .firebaseEmailSignIn(
@@ -163,6 +163,7 @@ class LoginForm extends React.Component<Props, State> {
             });
             this.props.history.push("/Home");
         });
+        e.preventDefault()
     }
   };
 
@@ -189,6 +190,7 @@ class LoginForm extends React.Component<Props, State> {
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
+          <form onSubmit={this.handleSubmit}>
           <TextField
             required
             id="email"
@@ -224,11 +226,12 @@ class LoginForm extends React.Component<Props, State> {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={this.handleSubmit}
+            // onClick={this.handleSubmit}
             disabled={this.state.errors}
           >
             Log in
           </Button>
+          </form>
         </Paper>
       </main>
     );

@@ -338,19 +338,29 @@ class Archives extends React.Component<Props, State> {
         console.log("reverse last name");
         break;
       case "siteName":
-        archivesList.sort((a,b) => (a.site > b.site) ? 1 : ((b.site > a.site) ? -1 : 0));
+        archivesList.map(item => {
+          if(item.role === "coach") {
+            item.sites.sort((a,b) => (a.site > b.site) ? 1 : ((b.site > a.site) ? -1 : 0))
+          }
+        })
+        archivesList.sort((a,b) => ((a.role === "coach" ? a.sites[0].siteName : a.site) > (b.role === "coach" ? b.sites[0].siteName : b.site)) ? 1 : (((b.role === "coach" ? b.sites[0].siteName : b.site) > (a.role === "coach" ? a.sites[0].siteName : a.site)) ? -1 : 0));
         console.log("site name");
         break;
       case "siteNameReverse":
-        archivesList.sort((a,b) => (b.site > a.site) ? 1 : ((a.site > b.site) ? -1 : 0));
+        archivesList.map(item => {
+          if(item.role === "coach") {
+            item.sites.sort((a,b) => (b.site > a.site) ? 1 : ((a.site > b.site) ? -1 : 0))
+          }
+        })
+        archivesList.sort((a,b) => ((b.role === "coach" ? b.sites[0].siteName : b.site) > (a.role === "coach" ? a.sites[0].siteName : a.site)) ? 1 : (((a.role === "coach" ? a.sites[0].siteName : a.site) > (b.role === "coach" ? b.sites[0].siteName : b.site)) ? -1 : 0));
         console.log("reverse site name");
         break;
       case "program":
-        archivesList.sort((a,b) => (a.program > b.program) ? 1 : ((b.program > a.program) ? -1 : 0));
+        archivesList.sort((a,b) => ((a.role === "coach" ? a.programName : a.program) > (b.role === "coach" ? b.programName : b.program)) ? 1 : ((b.program > (a.role === "coach" ? a.programName : a.program)) ? -1 : 0));
         console.log("program name");
         break;
       case "programReverse":
-        archivesList.sort((a,b) => (b.program > a.program) ? 1 : ((a.program > b.program) ? -1 : 0));
+        archivesList.sort((a,b) => ((b.role === "coach" ? b.programName : b.program) > (a.role === "coach" ? a.programName : a.program)) ? 1 : (((a.role === "coach" ? a.programName : a.program) > (b.role === "coach" ? b.programName : b.program)) ? -1 : 0));
         console.log("reverse program name");
         break;
       case "role":
