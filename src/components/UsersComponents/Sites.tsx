@@ -84,7 +84,7 @@ interface State {
     originalSiteLeaders: Array<Object>
     archiveModalOpen: boolean
     archiveList: Array<Object>
-
+    firstLoad: boolean
 
 }
 
@@ -116,7 +116,8 @@ class Sites extends React.Component<Props, State> {
       addSiteLeader: "",
       originalSiteLeaders: [],
       archiveModalOpen: false,
-      archiveList: []
+      archiveList: [],
+      firstLoad: true
 
     }
   
@@ -163,7 +164,15 @@ class Sites extends React.Component<Props, State> {
   sortCoaches = (sortType) => {
     var coaches = this.props.sitesList;
 
-    this.setState({sortType: sortType});
+    if (this.state.firstLoad === true && sortType === "siteName") {
+      this.setState({firstLoad: false, sortType: 'siteNameReverse'})
+      sortType = 'siteNameReverse'
+    } else if(this.state.firstLoad === true && sortType !== "siteName") {
+      this.setState({firstLoad: false, sortType: sortType})
+    } else {
+      this.setState({sortType: sortType});
+    }
+
 
     // Sort the teachers list
     switch (sortType) {
@@ -732,8 +741,8 @@ class Sites extends React.Component<Props, State> {
               }
             >
             <TableSortLabel
-              direction = {this.state.sortType === "siteName" ? 'desc' : 'asc'}
-              active = {['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false}
+              direction = {this.state.firstLoad ? 'desc' : (this.state.sortType === "siteName" ? 'desc' : 'asc')}
+              active = {this.state.firstLoad ? true : (['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false)}
               >
                 <Typography variant="h6">
                   <strong>Site</strong>

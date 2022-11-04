@@ -102,6 +102,7 @@ interface State {
   archiveModalOpen: boolean
   success: boolean
   archiveList: Array<Object>
+  firstLoad: boolean
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -151,7 +152,8 @@ class Teachers extends React.Component<Props, State> {
       successModalOpen: false,
       archiveModalOpen: false,
       success: true,
-      archiveList: []
+      archiveList: [],
+      firstLoad: true
     }
 
   }
@@ -181,7 +183,16 @@ class Teachers extends React.Component<Props, State> {
       var teachersList = this.state.teachersList;
     }
 
-    this.setState({sortType: sortType});
+    if (this.state.firstLoad === true && sortType === "lastName") {
+      this.setState({firstLoad: false, sortType: 'lastNameReverse'})
+      sortType = 'lastNameReverse'
+    } else if(this.state.firstLoad === true && sortType !== "lastName") {
+      this.setState({firstLoad: false, sortType: sortType})
+    } else {
+      this.setState({sortType: sortType});
+    }
+
+   
 
     // Sort the teachers list
     switch (sortType) {
@@ -1129,8 +1140,8 @@ editTeacher = async (firebase:Firebase) => {
                   }
                 >
                   <TableSortLabel
-                  direction = {this.state.sortType === "lastName" ? 'desc' : 'asc'}
-                  active = {['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false}
+                  direction = {this.state.firstLoad ? 'desc' : (this.state.sortType === "lastName" ? 'desc' : 'asc')}
+                  active = {this.state.firstLoad ? true : (['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false)}
                   >
                   <Typography variant="h6">
                     Last Name

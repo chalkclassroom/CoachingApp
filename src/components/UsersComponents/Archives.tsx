@@ -95,7 +95,7 @@ class Archives extends React.Component<Props, State> {
       archivedData: [],
       successModalOpen: false,
       archiveType: "",
-      sortType: "",
+      sortType: "lastName",
       view: 1,
       saved: true,
       editTeacherId: "",

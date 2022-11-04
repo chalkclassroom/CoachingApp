@@ -207,7 +207,7 @@ class UsersPage extends React.Component<Props, State> {
         result.push(draft)
       }
     }
-
+    result.sort((a, b) => a.teacherLastName.toLowerCase().localeCompare(b.teacherLastName.toLowerCase()))
     return result
 
     // let data: Array<Object> = []
@@ -368,6 +368,7 @@ class UsersPage extends React.Component<Props, State> {
         seen.push(site.id)
       }
     })
+    data.sort((a, b) => a.siteName.toLowerCase().localeCompare(b.siteName.toLowerCase()))
     return data;
   }
 
