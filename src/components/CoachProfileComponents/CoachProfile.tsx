@@ -116,6 +116,7 @@ class CoachProfile extends React.Component {
   }
 
   componentDidMount(): void {
+    this.handlePageChange(1);
     // Build all initial dropdown option
     this.setDropdownOptions();
   }
@@ -439,10 +440,12 @@ class CoachProfile extends React.Component {
     if(pageNumber == 1)
     {
       this.props.changePage("CoachProfile");
+      this.props.changeSubPage(1);
     }
     if(pageNumber == 2)
     {
       this.props.changePage("CoachResults");
+      this.props.changeSubPage(2);
     }
   }
 
@@ -533,7 +536,7 @@ class CoachProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === 1 ? (
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -736,7 +739,7 @@ class CoachProfile extends React.Component {
         </Grid>
 
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === 2 ? (
         <CoachProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}

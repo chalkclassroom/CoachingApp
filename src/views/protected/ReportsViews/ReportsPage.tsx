@@ -77,6 +77,8 @@ class ReportsPage extends React.Component<Props, State> {
       type: "",
       coachName: "",
       currentPage: "",
+      pageHistory: [{url: "Reports", title: "Reports"}],
+      subPage: 1,
     }
   }
 
@@ -111,8 +113,56 @@ class ReportsPage extends React.Component<Props, State> {
   }
 
 
-  changePage = (pageName) => {
-    this.setState({currentPage: pageName});
+  changePage = (pageUrl) => {
+    const pageUrlToName = {
+      TeacherProfile: 'Teacher Profile',
+      SiteProfile: 'Site Profile',
+      ProgramProfile: 'Program Profile',
+      CoachProfile: 'Coach Profile',
+      Reports: 'Reports',
+
+      TeacherResults: "Results",
+      SiteResults: "Results",
+      ProgramResults: "Results",
+      CoachResults: "Results",
+    }
+
+    console.log("Changing the page again : ", pageUrl);
+
+
+    var pageHistory = [...this.state.pageHistory];
+
+    // We need to add to page history. If the current page is already in the list that means we went back
+    if(pageHistory.find(o => o.url === pageUrl))
+    {
+      this.props.history.push(pageUrl)
+
+      // If the last item in the page history is a results page, we need to set the sub page back to reports form page
+      if(pageUrlToName[pageHistory[pageHistory.length - 1].url] === "Results")
+      {
+        this.setState({subPage: 1});
+      }
+
+      // Get the index of the object so we can remove everything after it
+      var indexOfPage = pageHistory.map(o => o.url).indexOf(pageUrl);
+      console.log("Page History : ", pageHistory);
+
+      pageHistory.length = indexOfPage + 1;
+      console.log("Page History 2 : ", pageHistory);
+    }
+    else
+    {
+      pageHistory.push({url: pageUrl, title: pageUrlToName[pageUrl]});
+    }
+    this.setState({
+      currentPage: pageUrl,
+      pageHistory: pageHistory,
+    });
+  }
+
+
+  changeSubPage = (pageNumber) => {
+    this.setState({subPage: pageNumber});
   }
 
   /**
@@ -132,7 +182,11 @@ class ReportsPage extends React.Component<Props, State> {
                 <img src={ReportsIcon} style={{fill: "#0988ec", height: '70px', width: '70px', minHeight: '2em', maxHeight: '120px', minWidth: '2em', paddingLeft: '2.8em'}} />
             </Grid>
         </Grid>
-        <MenuBar/>
+        <MenuBar
+          page={this.state.currentPage}
+          pageHistory={this.state.pageHistory}
+          changePage={(pageName) => this.changePage(pageName)}
+        />
         <div style={{display: "flex"}}>
           <Sidebar currPage={this.state.currentPage} />
           <Switch location={location} key={location.pathname}>
@@ -143,8 +197,10 @@ class ReportsPage extends React.Component<Props, State> {
             <Route path="/TeacherProfile" render={(props) =>
               <TeacherProfile
                 changePage={(pageName) => this.changePage(pageName)}
+                changeSubPage={(pageName) => this.changeSubPage(pageName)}
                 userRole={userRole}
                 location={this.props.location}
+                subPage={this.state.subPage}
                 />
             } />
             <Route path="/CoachProfile" render={(props) =>
@@ -152,6 +208,8 @@ class ReportsPage extends React.Component<Props, State> {
                 changePage={(pageName) => this.changePage(pageName)}
                 userRole={userRole}
                 location={this.props.location}
+                changeSubPage={(pageName) => this.changeSubPage(pageName)}
+                subPage={this.state.subPage}
                 />
             } />
             <Route path="/SiteProfile" render={(props) =>

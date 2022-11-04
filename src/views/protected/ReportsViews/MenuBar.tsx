@@ -18,6 +18,7 @@ const Styles = {
         /* justify-content: center; */
         alignItems: 'center',
         fontSize: '1.2rem',
+        paddingLeft: '1rem',
     },
 
 
@@ -34,9 +35,11 @@ const Styles = {
     navLinks: is_current => ({
         color: 'Black',
         textDecoration: is_current ? 'underline' : 'none',
-        padding: '0.5rem 1rem',
+        padding: '0.5rem 5px',
         cursor: 'default',
-        fontWeight: is_current ? 'bold' : 'normal'
+        fontWeight: is_current ? 'bold' : 'normal',
+        fontStyle: 'oblique',
+        'white-space': 'nowrap',
     })
 }
 
@@ -50,6 +53,13 @@ class Navbar extends Component {
     render() {
         return (
             <nav style={Styles.navItems}>
+              {this.props.pageHistory.map((item, index) => {
+                  return (<>
+
+                          {index == this.props.pageHistory.length - 1 ? <a style={{padding: '0.5rem 5px', fontWeight: 'bold'}}>{item.title}</a> : <a style={Styles.navLinks(checkCurrent(item))} onClick = {() => {this.props.changePage(item.url);}}>{item.title} > </a>}
+                          </>
+                  )
+              })}
                 <ul style={Styles.navMenu}>
                     {MenuItems.map((item, index) => {
                         return (
@@ -60,6 +70,10 @@ class Navbar extends Component {
                             </li>
                         )
                     })}
+                    <li>
+
+                    </li>
+
                 </ul>
             </nav>
         );

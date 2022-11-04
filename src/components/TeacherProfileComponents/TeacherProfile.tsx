@@ -116,6 +116,8 @@ class TeacherProfile extends React.Component {
   componentDidMount(): void {
     // Build all initial dropdown option
     this.setDropdownOptions();
+
+    this.handlePageChange(1);
   }
 
   /*
@@ -367,10 +369,12 @@ class TeacherProfile extends React.Component {
     if(pageNumber == 1)
     {
       this.props.changePage("TeacherProfile");
+      this.props.changeSubPage(1);
     }
     if(pageNumber == 2)
     {
-      this.props.changePage("SiteResults");
+      this.props.changePage("TeacherResults");
+      this.props.changeSubPage(2);
     }
   }
 
@@ -462,7 +466,7 @@ class TeacherProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === 1 ? (
         <Grid container style={{paddingLeft: '30px', paddingBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -718,7 +722,7 @@ class TeacherProfile extends React.Component {
             </Grid>
         </Grid>
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === 2 ? (
         <TeacherProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedTeacherName={this.state.selectedTeacherName}
