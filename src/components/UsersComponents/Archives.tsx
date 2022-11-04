@@ -1020,7 +1020,8 @@ class Archives extends React.Component<Props, State> {
             // height: '38vh', 
             // border: '2px solid #0988ec', 
             // borderRadius: '0.5em', 
-            marginTop: '130px' }}
+            marginTop: '93px' 
+          }}
         >
           <table style={{borderCollapse: 'collapse', width: '100%' }}>
             <thead style={{borderBottom:'2px solid #0988ec'}}>

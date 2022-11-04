@@ -710,7 +710,8 @@ class Sites extends React.Component<Props, State> {
         height: '38vh',
         // border: '2px solid #0988ec',
         // borderRadius: '0.5em',
-        marginTop:'180px' }}
+        // marginTop:'180px' 
+      }}
       >
       <table style={{borderCollapse: 'collapse', width: '100%' }}>
         <thead style={{borderBottom:'2px solid #0988ec'}}>
