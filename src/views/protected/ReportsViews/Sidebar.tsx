@@ -2,6 +2,8 @@ import { withRouter } from "react-router";
 import React, { Component } from "react";
 import styled from 'styled-components'
 import PrintIcon from '@material-ui/icons/Print';
+import Button from '@material-ui/core/Button';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 const SidebarParent = styled.div`
   background: white;
@@ -27,7 +29,7 @@ const MenuItems = [
 
 const BackItems = [
     {
-        title: 'Back to Reports',
+        title: 'Back to Reports Dashboard',
         url: '/Reports',
     },
 ]
@@ -54,17 +56,31 @@ function checkBack() {
 
 function checkPrint(currentPage) {
     for ( let i = 4; i < BackList.length; i++) {
-        if (location.pathname === BackList[i] || ("/" + currentPage) === BackList[i] ) {
+        if (location.pathname === BackList[i] || ("/" + currentPage) === BackList[i] && location.pathname !== "/Reports") {
             return (
+              <>
+              {/*
                 <li style={listStyle}>
-                        {/* <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/> */}
                         <PrintIcon style={{height: '1.5em', width: '1.5em', verticalAlign: 'bottom'}}/>
                         <a style={aStyle} href="javascript:window.print();">&ensp;Print</a>
                 </li>
+              */}
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<PrintIcon />}
+                  onClick = {() => window.print()}
+                  style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left', justifyContent: 'flex-start', marginBottom: '15px', padding: '11px 15px'}}
+                >
+                        {/* <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/> */}
+                        Print
+                </Button>
+              </>
             );
         }
     }
-    return (<li style={listStyle}/>);
+    //return (<li style={listStyle}/>);
+    return <></>
 }
 
 
@@ -88,18 +104,24 @@ class Sidebar extends Component {
     return (
         <>
             <SidebarParent>
-                <ul style={{    padding: '0 0 0 .8em', margin: '0'}}>
+                <div style={{padding: '1em 0 0 .8em', margin: '0', display: 'flex', flexDirection: 'column'}}>
                     {checkPrint(this.props.currPage)}
                     {checkBack().map((item, index) => {
                         return (
-                            <li style={listStyle} key={index}>
-                                <a style={aStyle} onClick = {() => this.handleBackButton(item.url)}>
-                                {item.title}
-                                </a>
-                            </li>
+                          <>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              startIcon={<ArrowBackIosIcon />}
+                              onClick = {() => this.handleBackButton(item.url)}
+                              style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left'}}
+                            >
+                              {item.title}
+                            </Button>
+                          </>
                         )
                     })}
-                </ul>
+                </div>
             </SidebarParent>
         </>
     );
