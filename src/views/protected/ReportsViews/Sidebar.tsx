@@ -75,6 +75,15 @@ class Sidebar extends Component {
       }
     }
 
+    handleBackButton = (url) => {
+      this.props.history.push(url);
+
+      // If there's a callback function, run it
+      if(this.props.callback){
+          this.props.callback();
+      }
+    }
+
     render() {
     return (
         <>
@@ -84,7 +93,7 @@ class Sidebar extends Component {
                     {checkBack().map((item, index) => {
                         return (
                             <li style={listStyle} key={index}>
-                                <a style={aStyle} onClick = {() => this.props.history.push(item.url)}>
+                                <a style={aStyle} onClick = {() => this.handleBackButton(item.url)}>
                                 {item.title}
                                 </a>
                             </li>

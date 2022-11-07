@@ -108,6 +108,7 @@ class SiteProfile extends React.Component {
   }
 
   componentDidMount(): void {
+    this.handlePageChange(1);
     // Sets sites for dropdown
     this.setDropdownOptions();
   }
@@ -283,10 +284,12 @@ class SiteProfile extends React.Component {
     if(pageNumber == 1)
     {
       this.props.changePage("SiteProfile");
+      this.props.changeSubPage(1);
     }
     if(pageNumber == 2)
     {
       this.props.changePage("SiteResults");
+      this.props.changeSubPage(2);
     }
   }
 
@@ -373,7 +376,7 @@ class SiteProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === 1 ? (
         <Grid container style={{paddingLeft: '30px', paddingBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -599,7 +602,7 @@ class SiteProfile extends React.Component {
             </Grid>
         </Grid>
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === 2 ? (
         <SiteProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedSiteName={this.state.selectedSiteName}

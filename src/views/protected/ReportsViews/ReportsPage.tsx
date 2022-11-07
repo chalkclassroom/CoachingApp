@@ -129,6 +129,8 @@ class ReportsPage extends React.Component<Props, State> {
 
     console.log("Changing the page again : ", pageUrl);
 
+    console.log("Props History : ", this.props.history);
+
 
     var pageHistory = [...this.state.pageHistory];
 
@@ -145,13 +147,19 @@ class ReportsPage extends React.Component<Props, State> {
 
       // Get the index of the object so we can remove everything after it
       var indexOfPage = pageHistory.map(o => o.url).indexOf(pageUrl);
-      console.log("Page History : ", pageHistory);
 
       pageHistory.length = indexOfPage + 1;
-      console.log("Page History 2 : ", pageHistory);
     }
     else
     {
+      // Having a problem where the previously viewed profile page shows up in the bread crumbs if the user presses back button then views another profile
+      // This is because pressing back button doesn't remove anything from the history
+      // So if we're pulling up another profile page, let's just reset the page history THEN push the new page.
+      if(pageUrl.includes('Profile'))
+      {
+        pageHistory = [{url: 'Reports', title: 'Reports'}]
+      }
+
       pageHistory.push({url: pageUrl, title: pageUrlToName[pageUrl]});
     }
     this.setState({
@@ -175,7 +183,7 @@ class ReportsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} callback={() => this.changeSubPage(1) } />}
         </FirebaseContext.Consumer>
         <Grid container className={classes.pictureBar}>
             <Grid item xs={1} style={{padding: '1.5em 0 1.5em 0'}}>
@@ -184,11 +192,14 @@ class ReportsPage extends React.Component<Props, State> {
         </Grid>
         <MenuBar
           page={this.state.currentPage}
-          pageHistory={this.state.pageHistory}
+          pageHistory={this.props.location.pathname === '/Reports' ? [{title: 'Reports', url: 'Reports'}] : this.state.pageHistory}
           changePage={(pageName) => this.changePage(pageName)}
         />
         <div style={{display: "flex"}}>
-          <Sidebar currPage={this.state.currentPage} />
+          <Sidebar
+            currPage={this.state.currentPage}
+            callback={() => this.changeSubPage(1) }
+          />
           <Switch location={location} key={location.pathname}>
             <Route path="/Reports" component={Reports} />
             <Route path="/ReportsList" component={ReportsList} />
@@ -197,10 +208,10 @@ class ReportsPage extends React.Component<Props, State> {
             <Route path="/TeacherProfile" render={(props) =>
               <TeacherProfile
                 changePage={(pageName) => this.changePage(pageName)}
-                changeSubPage={(pageName) => this.changeSubPage(pageName)}
                 userRole={userRole}
                 location={this.props.location}
-                subPage={this.state.subPage}
+                changeSubPage={(pageName) => this.changeSubPage(pageName)}
+                subPage={this.props.location.pathname === '/Reports' ? 1 : this.state.subPage}
                 />
             } />
             <Route path="/CoachProfile" render={(props) =>
@@ -217,6 +228,8 @@ class ReportsPage extends React.Component<Props, State> {
                 changePage={(pageName) => this.changePage(pageName)}
                 userRole={userRole}
                 location={this.props.location}
+                changeSubPage={(pageName) => this.changeSubPage(pageName)}
+                subPage={this.state.subPage}
                 />
             } />
             <Route path="/ProgramProfile" render={(props) =>
@@ -224,6 +237,8 @@ class ReportsPage extends React.Component<Props, State> {
                 changePage={(pageName) => this.changePage(pageName)}
                 userRole={userRole}
                 location={this.props.location}
+                changeSubPage={(pageName) => this.changeSubPage(pageName)}
+                subPage={this.state.subPage}
                 />
             } />
             {/* <Route path="/TeacherResults" component={TeacherResults} />
