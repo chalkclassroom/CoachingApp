@@ -663,11 +663,20 @@ class TeacherProfileResults extends React.Component {
                   ) : ((this.state.tabState == 0 && Object.keys(this.state.averages).length > 0 && !(this.state.showErrorMessage) ) ? (
                     <Grid container justify={"center"} direction={"column"} style={{height: 450, flexWrap: 'nowrap', padding: "30px 0px"}}>
                       {/* Show averages pie chart */}
+                      {/*}
                       <AveragesChart
                         data={this.state.averages}
                         type={this.state.radioValue}
                         teacherId={this.props.selectedTeacherId}
                         usingTime={this.state.usingTime}
+                      />
+                      */}
+                      <TeacherProfileBarDetails
+                        totalVisits={10}
+                        labels={this.state.teacherNames}
+                        data={this.state.averages}
+                        type={this.state.radioValue}
+                        barColors={this.state.lineColors}
                       />
                     </Grid>
                   ) : null)

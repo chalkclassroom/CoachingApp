@@ -70,7 +70,7 @@ function checkPrint(currentPage) {
                   color="primary"
                   startIcon={<PrintIcon />}
                   onClick = {() => window.print()}
-                  style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left', justifyContent: 'flex-start', marginBottom: '15px', padding: '11px 15px'}}
+                  style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left', justifyContent: 'flex-start', marginBottom: '15px', padding: '11px 15px',  textTransform: 'none'}}
                 >
                         {/* <img style={{height: '1.5em', width: '1.5em'}} src="../../../src/assets/icons/PrintIcon.png"/> */}
                         Print
@@ -104,7 +104,7 @@ class Sidebar extends Component {
     return (
         <>
             <SidebarParent>
-                <div style={{padding: '1em 0 0 .8em', margin: '0', display: 'flex', flexDirection: 'column'}}>
+                <div style={{padding: '1.7em 0 0 .8em', margin: '0', display: 'flex', flexDirection: 'column'}}>
                     {checkPrint(this.props.currPage)}
                     {checkBack().map((item, index) => {
                         return (
@@ -114,7 +114,7 @@ class Sidebar extends Component {
                               color="primary"
                               startIcon={<ArrowBackIosIcon />}
                               onClick = {() => this.handleBackButton(item.url)}
-                              style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left'}}
+                              style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left', textTransform: 'none'}}
                             >
                               {item.title}
                             </Button>

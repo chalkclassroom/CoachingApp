@@ -13,6 +13,16 @@ const chartTitleArr = {
   multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
 }
 
+// Set the colors for the bars
+const barColorChoices = {
+  "classroomClimate" : [
+    "#0988EC",
+    "#094492",
+    "#FFA812",
+    "#FF7F00",
+  ]
+}
+
 /**
  * Horizontal Bar Graph for Math Child Behaviors
  * @class EngagementBarDetails
@@ -121,7 +131,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: 'Average % of 1-Minute Intervals',
+                  labelString: 'Number Ovserved',
                   fontSize: 16,
                   fontColor: 'black'
                 }

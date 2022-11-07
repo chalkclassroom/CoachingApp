@@ -18,7 +18,7 @@ import {
     Tab,
     Tabs,
     Radio,
-    RadioGroup
+    RadioGroup,
 } from '@material-ui/core'
 
 import CalendarIcon from '../../assets/icons/CalendarIcon.png';
@@ -36,6 +36,9 @@ import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import { Line } from 'react-chartjs-2'
 import DetailsTable from './DetailsTable';
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
+
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+
 
 
 
@@ -210,12 +213,28 @@ class CoachProfileResults extends React.Component {
 
         <Grid container style={{paddingLeft: '30px', paddingRight: '30px', marginBottom: '30px'}}>
             <Grid container>
+              {/*
                 <Grid item xs={12} style={{paddingTop: 12}} onClick={() => this.props.handlePageChange(1)}>
                     <span>&#12296; Back to Report Criteria</span>
                 </Grid>
+              */}
 
                 <Grid item xs={12}>
-                    <h2>Coach Profile</h2>
+                    <h2 style={{marginBottom: '8px'}}>Coach Profile</h2>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      startIcon={<ArrowBackIosIcon />}
+                      onClick={() => this.props.handlePageChange(1)}
+                      style={{'white-space': 'initial', 'line-height': '20px', textAlign: 'left', marginBottom: '8px', textTransform: 'none',}}
+                    >
+                      Back to Report Criteria
+                    </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+
                 </Grid>
 
                 {/*
