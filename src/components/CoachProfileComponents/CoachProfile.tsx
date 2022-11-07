@@ -116,6 +116,7 @@ class CoachProfile extends React.Component {
   }
 
   componentDidMount(): void {
+    this.handlePageChange(1);
     // Build all initial dropdown option
     this.setDropdownOptions();
   }
@@ -229,8 +230,25 @@ class CoachProfile extends React.Component {
        // Grab the teacher ID's for the coaches
        let teacherIds = await firebase.getTeacherListFromUser({userId: coachId});
 
-       // Grab all the teachers' info
+       /// We need to add all the teachers that have been transfered.
+       var transferLogs =  await firebase.getTransferLogs("users", coachId);
+
+       // Get the unique ids of the teachers
+       var transferredTeacherIds = [...new Set(transferLogs.map(item => item.id))];
+
+       // Add transferred to the list
+       teacherIds = teacherIds.concat(transferredTeacherIds);
+
+       // Remove any duplicates
+       teacherIds = [...new Set(teacherIds)];
+
+      // Grab all the teachers' info
        var teacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: teacherIds});
+
+       console.log("transfer logs : ", transferLogs);
+       console.log("transfer logs IDS : ", transferredTeacherIds);
+
+       console.log("Teacher options: ", teacherOptions);
 
        // Grab all the users from the archives
        let allArchivedUsers = await firebase.getArchives();
@@ -422,10 +440,12 @@ class CoachProfile extends React.Component {
     if(pageNumber == 1)
     {
       this.props.changePage("CoachProfile");
+      this.props.changeSubPage(1);
     }
     if(pageNumber == 2)
     {
       this.props.changePage("CoachResults");
+      this.props.changeSubPage(2);
     }
   }
 
@@ -516,7 +536,7 @@ class CoachProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === 1 ? (
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -719,7 +739,7 @@ class CoachProfile extends React.Component {
         </Grid>
 
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === 2 ? (
         <CoachProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}

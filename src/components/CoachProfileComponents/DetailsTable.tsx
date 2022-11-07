@@ -94,7 +94,7 @@ class DetailsTable extends React.Component<Props, {}> {
 
     });
 
-    var actionPlans = await this.props.firebase.getActionPlansForExport(this.props.selectedCoach);
+    var actionPlans = await this.props.firebase.getActionPlansForExport(this.props.selectedCoach, this.props.startDate, this.props.endDate);
 
     // Calculate averages and count action plans
     //teachers.forEach(item => {

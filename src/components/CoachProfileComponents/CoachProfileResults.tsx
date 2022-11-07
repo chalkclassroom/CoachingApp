@@ -155,8 +155,11 @@ class CoachProfileResults extends React.Component {
   getResultsFromBQ = (teachers) => {
     const firebase = this.context;
 
+    // This function is throwing an 'undefined' value in teachers for no reason, so we have to check for that
+    teachers = teachers.filter(o => o !== undefined);
+
     // Grab results data
-    firebase.fetchCoachProfileData({startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers})
+    firebase.fetchCoachProfileData({startDate: this.props.startDate, endDate: this.props.endDate, teacherIds: teachers, coachId: this.props.selectedCoach})
       .then( (data) => {
         this.setState({BQData: data});
       });
@@ -238,6 +241,8 @@ class CoachProfileResults extends React.Component {
                     dataSet={this.state.BQData}
                     selectedTeachers={this.state.selectedTeachers}
                     firebase={this.context}
+                    startDate={this.props.startDate}
+                    endDate={this.props.endDate}
                     />
                 </Grid>
 

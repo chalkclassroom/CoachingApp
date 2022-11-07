@@ -45,11 +45,14 @@ const StyledSelect = withStyles({
 })(Select)
 
 const TableRow = styled.tr`
-  background-color: white;
-  &:hover {
-    background-color: rgb(9, 136, 236, 0.4);
-    cursor: pointer;
-  }
+background-color: white;
+:nth-child(odd) {
+  background-color: rgb(234, 234, 234);
+}
+&:hover {
+  background-color: rgb(9, 136, 236, .4);
+  cursor: pointer;
+}
 `
 
 interface Props {
@@ -1161,8 +1164,440 @@ class Coaches extends React.Component<Props, State> {
                             </Typography>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </>
+                    </Grid>
+                </Grid>
+                </>)}
+                {this.props.coachData.length > 0 ? (<>
+                {this.state.view === 3 ? (<>
+                <Grid item xs={6}>
+                  <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
+                        <Grid item>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography
+                              variant="h6"
+
+                              style={{marginTop:'20px',}}
+                              >
+                                Back
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                </>) : (<>
+                <Grid item xs={6}>
+                <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(3)}>
+                        <Grid item>
+                            <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px',}}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography
+                              variant="h6"
+
+                              style={{marginTop:'20px',}}
+                              >
+                                Transfer
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                </>)}
+                </>) : (<></>)}
+                </>) : (<>
+                  <Grid item xs={6}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
+                        <Grid item>
+                            <FolderIcon style={{fill: 'Khaki', fontSize:'40', marginTop:'15px'}}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography
+                              variant="h6"
+
+                              style={{marginTop:'20px' }}
+                              >
+                                Archive
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                    <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
+                        <Grid item>
+                            <ArrowBackIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'15px'}}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography
+                              variant="h6"
+
+                              style={{marginTop:'20px' }}
+                              >
+                                Back
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                </>)}
+            </Grid>
+        </Grid>
+        {this.state.view === 1 ? (<>
+
+        {this.props.coachData.length > 0 ? (<>
+          <Grid container direction='column'>
+            <Grid item xs={12}><span></span></Grid>
+            <Grid item xs={12}>
+              <Grid container direction='row'>
+                <Grid item xs={1}><span></span></Grid>
+                <Grid item xs={2}>
+                  <Typography variant="h6"   style={{marginTop:'5px',}}>
+                    Coach
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <FormControl variant="outlined">
+                    <StyledSelect
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={this.state.selectedCoach}
+                      onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                        this.handlePopulateTable(event)
+                      }
+                      name="selectedCoach"
+                      // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
+                    >
+                      {this.props.coachData.map(
+                        (coach, index)=>{
+                          if(coach.id !== "") {
+                          return (
+                              <MenuItem value={coach.id} key={index}>
+                                {coach.lastName + ", " + coach.firstName}
+                              </MenuItem>
+                          )}
+                          })}
+                    </StyledSelect>
+                    {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container direction='row' justifyContent='center' alignItems='center'>
+            <Grid
+            item
+            xs={8}
+            style={{
+              width: '100%',
+              height: '38vh',
+              // border: '2px solid #0988ec',
+              // borderRadius: '0.5em',
+              marginTop:'60px' }}
+            >
+            <table style={{borderCollapse: 'collapse', width: '100%' }}>
+              <thead style={{borderBottom:'2px solid #0988ec'}}>
+                <tr>
+                  <th colSpan={2}>
+                    <Typography variant="h6"  >
+                      <strong>Teachers Coached</strong>
+                    </Typography>
+                  </th>
+                  <th
+                    colSpan={1}
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "siteName")
+                        {
+                          this.sortTeachers("siteNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("siteName")
+                        }
+                      }
+                    }
+                  >
+                  <TableSortLabel
+                    direction = {this.state.sortType === "siteName" ? 'desc' : 'asc'}
+                    active = {['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false}
+                    >
+                      <Typography variant="h6">
+                        <strong>Site</strong>
+                      </Typography>
+                  </TableSortLabel>
+                  </th>
+                  <th
+                    colSpan={1}
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "program")
+                        {
+                          this.sortTeachers("programReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("program")
+                        }
+                      }
+                    }
+                  >
+                    <TableSortLabel
+                      direction = {this.state.sortType === "program" ? 'desc' : 'asc'}
+                      active = {['program', 'programReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        <strong>Program</strong>
+                      </Typography>
+                    </TableSortLabel>
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "lastName")
+                        {
+                          this.sortTeachers("lastNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("lastName")
+                        }
+                      }
+                    }
+                  >
+                    <TableSortLabel
+                      direction = {this.state.sortType === "lastName" ? 'desc' : 'asc'}
+                      active = {['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        Last Name
+                      </Typography>
+                    </TableSortLabel>
+                  </th>
+                  <th
+                    onClick={
+                      () =>{
+                        if(this.state.sortType == "firstName")
+                        {
+                          this.sortTeachers("firstNameReverse")
+                        }
+                        else
+                        {
+                          this.sortTeachers("firstName")
+                        }
+                      }
+                    }
+                  >
+                    <TableSortLabel
+                      direction = {this.state.sortType === "firstName" ? 'desc' : 'asc'}
+                      active = {['firstName', 'firstNameReverse'].includes(this.state.sortType) ? true : false}
+                      >
+                      <Typography variant="h6">
+                        First Name
+                      </Typography>
+                    </TableSortLabel>
+                  </th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.selectedCoach !== "" ? (<>
+                {this.state.coachesTeachers.map((value, index) => {
+                  return(
+                  <TableRow key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
+                    <td style={{textAlign:'left'}}>
+                      <Typography variant="h6"  >
+                        {value.teacherLastName}
+                      </Typography>
+                    </td>
+                    <td style={{textAlign:'left'}}>
+                      <Typography variant="h6"  >
+                        {value.teacherFirstName}
+                      </Typography>
+                    </td>
+                    <td style={{textAlign:'left'}}>
+                      <Typography variant="h6"  >
+                        {value.siteName}
+                      </Typography>
+                    </td>
+                    <td style={{textAlign:'left'}}>
+                      <Typography variant="h6"  >
+                        {value.selectedProgramName}
+                      </Typography>
+                    </td>
+                  </TableRow>
+                  )
+                })}
+                </>) : (<></>)}
+              </tbody>
+
+
+            </table>
+            </Grid>
+          </Grid>
+          </>) : (
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            style={{height: "100%", marginTop:'8vh'}}
+          >
+            <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
+          </Grid>
+          )}
+      </>) : (this.state.view === 2 ? (<>
+          <Grid item xs={1} style={{marginTop: '45px'}}>
+
+            <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
+              <Grid item>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
+                  Coach
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6"   style={{marginTop:'10px'}}>
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6"   style={{marginTop:'2px'}}>
+                  Program
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6"   style={{marginTop:'3px'}}>
+                  Sites
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={5} style={{marginTop: '45px'}}>
+            <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
+              <Grid item>
+                <Grid container direction='row' justifyContent='center' spacing={3}>
+                  <Grid item xs={6}>
+                    <TextField
+                      style={{width:'13.5vw', maxWidth: '225px'}}
+                      size="small"
+                      id="teacher-search"
+                      label="First Name"
+                      type="search"
+                      variant="outlined"
+                      onChange={() => this.handleNewCoachInput('firstName')}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      style={{width:'13.5vw', maxWidth: '225px'}}
+                      size="small"
+                      id="teacher-search"
+                      label="Last Name"
+                      type="search"
+                      variant="outlined"
+                      onChange={() => this.handleNewCoachInput('lastName')}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <TextField
+                  size="small"
+                  style={{width:'29.5vw', maxWidth: '470px'}}
+                  id="teacher-search"
+                  label="Email"
+                  type="search"
+                  variant="outlined"
+                  onChange={() => this.handleNewCoachInput('email')}
+                />
+              </Grid>
+
+              {/*
+                Programs dropdown
+                */}
+              <Grid item>
+                <FormControl variant="outlined">
+                  <StyledSelect
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    autoWidth={true}
+                    value={this.state.newCoachSelectedProgram}
+                    onChange={(event) => this.handleNewCoachProgramDropdown(event.target.value)}
+                    input={<OutlinedInput  />}
+                    autoWidth={true}
+                  >
+                    {this.props.programData.map(
+                      (option, index)=>{
+
+                        return <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
+                  </StyledSelect>
+                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                </FormControl>
+              </Grid>
+
+              {/*
+                Sites dropdown
+                */}
+              <Grid item>
+                <FormControl variant="outlined">
+                  <StyledSelect
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    multiple
+                    autoWidth={true}
+                    value={this.state.newCoachSiteIds}
+                    onChange={(event) => this.handleNewCoachSiteDropdown(event.target.value)}
+                    input={<OutlinedInput />}
+                    autoWidth={true}
+                  >
+                    {this.state.siteOptions.map(
+                      (option, index)=>{
+
+                        return <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+
+                    })}
+                  </StyledSelect>
+                {/* <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText> */}
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Grid>
+
+            <Grid container direction='row' justifyContent='center' alignItems='center' style={{marginTop:'45px'}}>
+            <Grid item xs={1}/>
+              <Grid item xs={1}>
+                <FirebaseContext.Consumer>
+                  {(firebase: Firebase) => (
+                    <Button
+                    onClick={(_)=>{this.addNewCoach(firebase)}}
+                    >
+                      {this.state.saved ? (
+                        <img
+                          alt="Save"
+                          src={SaveGrayImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      ) : (
+                        <img
+                          alt="Save"
+                          src={SaveImage}
+                          style={{
+                            width: '80%',
+                            minWidth:'70px'
+                          }}
+                        />
+                      )}
+                    </Button>
                   )}
                   {this.props.coachData.length > 0 ? (
                     <>

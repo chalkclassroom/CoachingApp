@@ -103,6 +103,7 @@ class ProgramProfile extends React.Component {
   }
 
   componentDidMount(): void {
+    this.handlePageChange(1);
     // Sets programs for dropdown
     this.setPrograms();
   }
@@ -214,10 +215,12 @@ class ProgramProfile extends React.Component {
     if(pageNumber == 1)
     {
       this.props.changePage("ProgramProfile");
+      this.props.changeSubPage(1);
     }
     if(pageNumber == 2)
     {
       this.props.changePage("ProgramResults");
+      this.props.changeSubPage(2);
     }
   }
 
@@ -297,7 +300,7 @@ class ProgramProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === 1 ? (
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -492,7 +495,7 @@ class ProgramProfile extends React.Component {
             </Grid>
         </Grid>
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === 2 ? (
         <ProgramProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}

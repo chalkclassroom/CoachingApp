@@ -35,6 +35,9 @@ exports.funcAddToTransferLogsOnUpdate = functions.firestore
       const newValue = change.after.data();
       const previousValue = change.before.data();
 
+      console.log("previousValue => ", previousValue);
+      console.log("newValue => ", newValue);
+
       var collectionName = context.params.collectionName;
 
       var currDate = new Date();
@@ -83,39 +86,75 @@ exports.funcAddToTransferLogsOnUpdate = functions.firestore
       if(newValue['role'] === "teacher")
       {
         // Make sure we're changing site
-        if( !(newValue['school']) || ( newValue['school'] === previousValue['school'] ))
+        if( !(newValue['school']) || ( newValue['school'] === previousValue['school'] ) || !(newValue['programId']) || ( newValue['programId'] === previousValue['programId'] ))
         {
           return null;
         }
 
-        var newSiteName = newValue['school']; // Remove any empty ones
-        var previousSiteName = previousValue['school'];
+        // If we're changing site
+        if(newValue['school'] ||  newValue['school'] !== previousValue['school'] )
+        {
+          var newSiteName = newValue['school'];
+          var previousSiteName = previousValue['school'];
+
+          // Set log in the site that we're joining
+          await firestore.collection("sites").where('name', '==', newSiteName)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            addToTransferLog("sites", doc.data().id, "teacher", newValue['id'], "in", currDate);
+
+                            // Add the previous site to the program's logs as well (so Program profile knows about them)
+                            if(newValue['programId'])
+                            {
+                              addToTransferLog("programs", newValue['programId'], "teacherSite", doc.data().id, "in", currDate);
+                            }
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    });
 
 
-        // Set log in the site that we're joining
-        await firestore.collection("sites").where('name', '==', newSiteName)
-                  .get()
-                  .then((querySnapshot) => {
-                      querySnapshot.forEach((doc) => {
-                          addToTransferLog("sites", doc.data().id, "teacher", newValue['id'], "in", currDate);
-                      });
-                  })
-                  .catch((error) => {
-                      console.log("Error getting documents: ", error);
-                  });
+          // Set log in the site that we're leaving
+          await firestore.collection("sites").where('name', '==', previousSiteName)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            addToTransferLog("sites", doc.data().id, "teacher", previousValue['id'], "out", currDate);
+
+                            // Add the previous site to the program's logs as well (so Program profile knows about them)
+                            if(previousValue['programId'])
+                            {
+                              addToTransferLog("programs", previousValue['programId'], "teacherSite", doc.data().id, "out", currDate);
+                            }
+
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    });
+        }
 
 
-        // Set log in the site that we're leaving
-        await firestore.collection("sites").where('name', '==', previousSiteName)
-                  .get()
-                  .then((querySnapshot) => {
-                      querySnapshot.forEach((doc) => {
-                          addToTransferLog("sites", doc.data().id, "teacher", previousValue['id'], "out", currDate);
-                      });
-                  })
-                  .catch((error) => {
-                      console.log("Error getting documents: ", error);
-                  });
+        // If we're changing Program
+        if(newValue['programId'] || newValue['programId'] !== previousValue['programId'] )
+        {
+          console.log("PROGRAM ID");
+          // Set log in the site that we're joining
+          addToTransferLog("programs", newValue['programId'], "teacher", newValue['id'], "in", currDate);
+
+          // Set log in the site that we're leaving
+          if(previousValue['programId'])
+          {
+            console.log("THERE'S A PROGRAM ID : ", previousValue['programId']);
+            addToTransferLog("programs", previousValue['programId'], "teacher", newValue['id'], "out", currDate);
+          }
+          else
+          {
+            console.log("NOPE : ", previousValue);
+          }
+        }
 
       }
 
@@ -168,7 +207,6 @@ const addToTransferLog = async (collectionToUpdate, docId, transferType, transfe
       time: timeStamp,
     }
   )
-  .then(data => {console.log("Transfer data : ", data);})
   .catch((error) => {
     console.error("Error occurred when updating " + docType + "'s transfer logs.", error)
   });

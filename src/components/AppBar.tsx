@@ -199,6 +199,12 @@ class AppBar extends React.Component<Props, State> {
       if(!await this.props.confirmAction!()) {
         return
     }
+
+    // If there's a callback function, run it
+    if(this.props.callback){
+        this.props.callback();
+    }
+
       navAction()
   }
 
@@ -291,7 +297,7 @@ class AppBar extends React.Component<Props, State> {
                           </Button>
                         </Grid>
                       </Grid>
-                      
+
                       <Grid item className={classes.backIcon} style={{paddingLeft: '1em'}}>
                         <IconButton
                           color="inherit"
