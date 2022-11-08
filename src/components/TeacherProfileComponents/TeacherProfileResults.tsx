@@ -278,7 +278,7 @@ class TeacherProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      radioValue: radioValueArr[this.props.observationType],
+      radioValue: '',
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
