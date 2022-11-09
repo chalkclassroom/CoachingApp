@@ -84,7 +84,7 @@ interface State {
     originalSiteLeaders: Array<Object>
     archiveModalOpen: boolean
     archiveList: Array<Object>
-
+    firstLoad: boolean
 
 }
 
@@ -116,7 +116,8 @@ class Sites extends React.Component<Props, State> {
       addSiteLeader: "",
       originalSiteLeaders: [],
       archiveModalOpen: false,
-      archiveList: []
+      archiveList: [],
+      firstLoad: true
 
     }
   
@@ -163,7 +164,15 @@ class Sites extends React.Component<Props, State> {
   sortCoaches = (sortType) => {
     var coaches = this.props.sitesList;
 
-    this.setState({sortType: sortType});
+    if (this.state.firstLoad === true && sortType === "siteName") {
+      this.setState({firstLoad: false, sortType: 'siteNameReverse'})
+      sortType = 'siteNameReverse'
+    } else if(this.state.firstLoad === true && sortType !== "siteName") {
+      this.setState({firstLoad: false, sortType: sortType})
+    } else {
+      this.setState({sortType: sortType});
+    }
+
 
     // Sort the teachers list
     switch (sortType) {
@@ -518,6 +527,7 @@ class Sites extends React.Component<Props, State> {
         siteName: coach.siteList[i].siteName
       })
     }
+    archiveSites.sort((a, b) => a.site.toLowerCase().localeCompare(b.site.toLowerCase()))
 
 
     firebase.archiveCoach(editCoachId, editCoachFirstName, editCoachLastName, editCoachProgramName, editCoachProgramId, editCoachEmail, userSites, archiveSites)
@@ -617,7 +627,7 @@ class Sites extends React.Component<Props, State> {
           </Button>
       </DialogActions>
     </Dialog>
-  {this.props.sitesList.length > 0 ? (<>
+  {/* {this.props.sitesList.length > 0 ? (<> */}
     <Grid container direction='row'>
   {this.state.view === 1 ? (<>
     <Grid item xs={3}>
@@ -700,6 +710,7 @@ class Sites extends React.Component<Props, State> {
     </Grid>
   </>) : (null)))}
   {this.state.view === 1 ? (<>
+    {this.props.sitesList.length > 0 ? (<>
     <Grid container direction='row' justifyContent='center' alignItems='center'>
       <Grid
       item
@@ -709,7 +720,8 @@ class Sites extends React.Component<Props, State> {
         height: '38vh',
         // border: '2px solid #0988ec',
         // borderRadius: '0.5em',
-        marginTop:'180px' }}
+        // marginTop:'180px' 
+      }}
       >
       <table style={{borderCollapse: 'collapse', width: '100%' }}>
         <thead style={{borderBottom:'2px solid #0988ec'}}>
@@ -730,8 +742,8 @@ class Sites extends React.Component<Props, State> {
               }
             >
             <TableSortLabel
-              direction = {this.state.sortType === "siteName" ? 'desc' : 'asc'}
-              active = {['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false}
+              direction = {this.state.firstLoad ? 'desc' : (this.state.sortType === "siteName" ? 'desc' : 'asc')}
+              active = {this.state.firstLoad ? true : (['siteName', 'siteNameReverse'].includes(this.state.sortType) ? true : false)}
               >
                 <Typography variant="h6">
                   <strong>Site</strong>
@@ -798,17 +810,17 @@ class Sites extends React.Component<Props, State> {
           {this.props.sitesList.map((site) => {
             return (<>
             <TableRow key={site.id} onClick={() => {this.handleEditClick(site)}}>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.siteName}
                 </Typography>
               </td>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.lastName}
                 </Typography>
               </td>
-              <td style={{textAlign:'center'}}>
+              <td style={{textAlign:'left'}}>
                 <Typography variant="h6"  >
                   {site.firstName}
                 </Typography>
@@ -820,6 +832,17 @@ class Sites extends React.Component<Props, State> {
       </table>
       </Grid>
     </Grid>
+    </>) :  (<>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100%", marginTop:'8vh'}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+      </Grid>
+    </>)}
     </>) : (this.state.view === 2 ? (<>
     <Grid item xs={1} style={{marginTop: '45px'}}>
       <Grid container direction='column' justifyContent='center' alignItems='flex-start' spacing={3}>
@@ -846,7 +869,7 @@ class Sites extends React.Component<Props, State> {
         <Grid item>
           <TextField
             size="small"
-            style={{width:'30vw', maxWidth: '440px'}}
+            style={{width:'29.5vw', maxWidth: '470px'}}
             id="site-name"
             label="Site Name"
             type="text"
@@ -1062,17 +1085,6 @@ class Sites extends React.Component<Props, State> {
         </Grid>
     </>) : (<></>)))}
     </Grid>
-    </>) :  (<>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
-      </Grid>
-    </>)}
 </>)
     
   }

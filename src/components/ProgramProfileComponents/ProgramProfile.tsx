@@ -70,6 +70,8 @@ const StyledSelect = withStyles({
   }
 })(Select);
 
+const REPORTS_FORM_PAGE = 1;
+const REPORTS_RESULTS_PAGE = 2;
 
 class ProgramProfile extends React.Component {
 
@@ -103,6 +105,7 @@ class ProgramProfile extends React.Component {
   }
 
   componentDidMount(): void {
+    this.handlePageChange(REPORTS_FORM_PAGE);
     // Sets programs for dropdown
     this.setPrograms();
   }
@@ -211,13 +214,15 @@ class ProgramProfile extends React.Component {
   handlePageChange = (pageNumber) => {
     this.setState({view: pageNumber});
 
-    if(pageNumber == 1)
+    if(pageNumber == REPORTS_FORM_PAGE)
     {
       this.props.changePage("ProgramProfile");
+      this.props.changeSubPage(REPORTS_FORM_PAGE);
     }
-    if(pageNumber == 2)
+    if(pageNumber == REPORTS_RESULTS_PAGE)
     {
       this.props.changePage("ProgramResults");
+      this.props.changeSubPage(REPORTS_RESULTS_PAGE);
     }
   }
 
@@ -297,7 +302,7 @@ class ProgramProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === REPORTS_FORM_PAGE ? (
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -492,7 +497,7 @@ class ProgramProfile extends React.Component {
             </Grid>
         </Grid>
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === REPORTS_RESULTS_PAGE ? (
         <ProgramProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}

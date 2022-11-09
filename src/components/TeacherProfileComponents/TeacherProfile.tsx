@@ -71,6 +71,9 @@ const StyledSelect = withStyles({
 })(Select);
 
 
+const REPORTS_FORM_PAGE = 1;
+const REPORTS_RESULTS_PAGE = 2;
+
 class TeacherProfile extends React.Component {
 
   constructor(props){
@@ -116,6 +119,8 @@ class TeacherProfile extends React.Component {
   componentDidMount(): void {
     // Build all initial dropdown option
     this.setDropdownOptions();
+
+    this.handlePageChange(REPORTS_FORM_PAGE);
   }
 
   /*
@@ -185,14 +190,25 @@ class TeacherProfile extends React.Component {
    /*
     * Change the teacher options we can choose from once a site is chosen
     */
-    setTeachers = async (siteName) => {
+    setTeachers = async (siteName, siteId) => {
       const firebase = this.context;
 
       // Grab the teachers in this site
       let teacherOptions = await firebase.getTeacherBySiteName(siteName);
 
-      // Remove duplicates because that's apparently a problem now
-      teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
+      // Make sure to include any teachers that may have been in the site previously (Teachers that have transferred out)
+      let transferredLogs = await firebase.getTransferLogs("sites", siteId);
+
+      // Get the unique ids of the teachers
+      var transferredTeacherIds = [...new Set(transferredLogs.map(item => item.id))];
+
+      // Grab all the transferred teachers' info
+       var transferredTeacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: transferredTeacherIds});
+
+      teacherOptions = teacherOptions.concat(transferredTeacherOptions);
+
+      // Remove duplicates because that's apparently a problem now. Also remove Practice Teacher
+      teacherOptions = teacherOptions.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id)===i) && v.id !== "rJxNhJmzjRZP7xg29Ko6")
 
       // Set the names
       for(var teacherIndex in teacherOptions)
@@ -260,7 +276,7 @@ class TeacherProfile extends React.Component {
         this.setState({selectedSiteName: site.name});
 
         // Set the teacher options
-        this.setTeachers(site.name);
+        this.setTeachers(site.name, site.id);
 
         // Reset Error
         error['site'] = false;
@@ -353,13 +369,15 @@ class TeacherProfile extends React.Component {
   handlePageChange = (pageNumber) => {
     this.setState({view: pageNumber});
 
-    if(pageNumber == 1)
+    if(pageNumber == REPORTS_FORM_PAGE)
     {
       this.props.changePage("TeacherProfile");
+      this.props.changeSubPage(REPORTS_FORM_PAGE);
     }
-    if(pageNumber == 2)
+    if(pageNumber == REPORTS_RESULTS_PAGE)
     {
-      this.props.changePage("SiteResults");
+      this.props.changePage("TeacherResults");
+      this.props.changeSubPage(REPORTS_RESULTS_PAGE);
     }
   }
 
@@ -451,7 +469,7 @@ class TeacherProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.state.view === 1 ? (
+        {this.props.subPage === REPORTS_FORM_PAGE ? (
         <Grid container style={{paddingLeft: '30px', paddingBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -707,7 +725,7 @@ class TeacherProfile extends React.Component {
             </Grid>
         </Grid>
 
-      ) : (this.state.view === 2 ? (
+      ) : (this.props.subPage === REPORTS_RESULTS_PAGE ? (
         <TeacherProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedTeacherName={this.state.selectedTeacherName}
