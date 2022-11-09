@@ -68,6 +68,9 @@ const StyledSelect = withStyles({
 })(Select);
 
 
+const REPORTS_FORM_PAGE = 1;
+const REPORTS_RESULTS_PAGE = 2;
+
 class CoachProfile extends React.Component {
 
   constructor(props){
@@ -116,7 +119,7 @@ class CoachProfile extends React.Component {
   }
 
   componentDidMount(): void {
-    this.handlePageChange(1);
+    this.handlePageChange(REPORTS_FORM_PAGE);
     // Build all initial dropdown option
     this.setDropdownOptions();
   }
@@ -244,11 +247,6 @@ class CoachProfile extends React.Component {
 
       // Grab all the teachers' info
        var teacherOptions = await firebase.getMultipleUserProgramOrSite({userIds: teacherIds});
-
-       console.log("transfer logs : ", transferLogs);
-       console.log("transfer logs IDS : ", transferredTeacherIds);
-
-       console.log("Teacher options: ", teacherOptions);
 
        // Grab all the users from the archives
        let allArchivedUsers = await firebase.getArchives();
@@ -437,15 +435,15 @@ class CoachProfile extends React.Component {
   handlePageChange = (pageNumber) => {
     this.setState({view: pageNumber});
 
-    if(pageNumber == 1)
+    if(pageNumber == REPORTS_FORM_PAGE)
     {
       this.props.changePage("CoachProfile");
-      this.props.changeSubPage(1);
+      this.props.changeSubPage(REPORTS_FORM_PAGE);
     }
-    if(pageNumber == 2)
+    if(pageNumber == REPORTS_RESULTS_PAGE)
     {
       this.props.changePage("CoachResults");
-      this.props.changeSubPage(2);
+      this.props.changeSubPage(REPORTS_RESULTS_PAGE);
     }
   }
 
@@ -536,7 +534,7 @@ class CoachProfile extends React.Component {
       return (
         <>
         {/* Control what we see based on page number */}
-        {this.props.subPage === 1 ? (
+        {this.props.subPage === REPORTS_FORM_PAGE ? (
         <Grid container style={{paddingLeft: '30px', marginBottom: '30px'}}>
             <Grid container>
                 <Grid item xs={12}>
@@ -739,7 +737,7 @@ class CoachProfile extends React.Component {
         </Grid>
 
 
-      ) : (this.props.subPage === 2 ? (
+      ) : (this.props.subPage === REPORTS_RESULTS_PAGE ? (
         <CoachProfileResults
           handlePageChange={(val) => this.handlePageChange(val)}
           selectedProgramName={this.state.selectedProgramName}

@@ -213,14 +213,15 @@ class CoachProfileResults extends React.Component {
 
         <Grid container style={{paddingLeft: '30px', paddingRight: '30px', marginBottom: '30px'}}>
             <Grid container>
-              {/*
+
                 <Grid item xs={12} style={{paddingTop: 12}} onClick={() => this.props.handlePageChange(1)}>
                     <span>&#12296; Back to Report Criteria</span>
                 </Grid>
-              */}
+
 
                 <Grid item xs={12}>
                     <h2 style={{marginBottom: '8px'}}>Coach Profile</h2>
+                    {/*
                     <Button
                       variant="outlined"
                       color="primary"
@@ -231,6 +232,7 @@ class CoachProfileResults extends React.Component {
                     >
                       Back to Report Criteria
                     </Button>
+                    */}
                 </Grid>
 
                 <Grid item xs={12}>
