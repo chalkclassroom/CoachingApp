@@ -37,6 +37,9 @@ const StyledSelect = withStyles({
 
 const TableRow = styled.tr`
 background-color: white;
+:nth-child(odd) {
+  background-color: rgb(234, 234, 234);
+}
 &:hover {
   background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
@@ -52,7 +55,7 @@ interface Props {
   coachData: Array<Object>
   siteData: Array<Object>
   programData: Array<Object>
-  updateArchivedData(data, type): void 
+  updateArchivedData(data, type): void
 }
 
 interface State {
@@ -99,6 +102,7 @@ interface State {
   archiveModalOpen: boolean
   success: boolean
   archiveList: Array<Object>
+  firstLoad: boolean
 }
 
 class Teachers extends React.Component<Props, State> {
@@ -148,7 +152,8 @@ class Teachers extends React.Component<Props, State> {
       successModalOpen: false,
       archiveModalOpen: false,
       success: true,
-      archiveList: []
+      archiveList: [],
+      firstLoad: true
     }
 
   }
@@ -178,7 +183,16 @@ class Teachers extends React.Component<Props, State> {
       var teachersList = this.state.teachersList;
     }
 
-    this.setState({sortType: sortType});
+    if (this.state.firstLoad === true && sortType === "lastName") {
+      this.setState({firstLoad: false, sortType: 'lastNameReverse'})
+      sortType = 'lastNameReverse'
+    } else if(this.state.firstLoad === true && sortType !== "lastName") {
+      this.setState({firstLoad: false, sortType: sortType})
+    } else {
+      this.setState({sortType: sortType});
+    }
+
+   
 
     // Sort the teachers list
     switch (sortType) {
@@ -269,8 +283,8 @@ class Teachers extends React.Component<Props, State> {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     if (name === 'firstName') {
-      if (event.target.value === "" && this.state.addTeacherLastName === "" 
-      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherLastName === ""
+      && this.state.addTeacherEmail === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherFirstName: event.target.value,
@@ -283,8 +297,8 @@ class Teachers extends React.Component<Props, State> {
       })}
     }
     if (name === 'lastName') {
-      if (event.target.value === "" && this.state.addTeacherFirstName === "" 
-      && this.state.addTeacherEmail === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherFirstName === ""
+      && this.state.addTeacherEmail === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherLastName: event.target.value,
@@ -296,8 +310,8 @@ class Teachers extends React.Component<Props, State> {
       })}
     }
     if (name === 'email') {
-      if (event.target.value === "" && this.state.addTeacherLastName === "" 
-      && this.state.addTeacherFirstName === "" && this.state.addCoach === "" 
+      if (event.target.value === "" && this.state.addTeacherLastName === ""
+      && this.state.addTeacherFirstName === "" && this.state.addCoach === ""
       && this.state.addSite === "" && this.state.addProgram === "") {
         this.setState({
           addTeacherEmail: event.target.value,
@@ -470,7 +484,7 @@ class Teachers extends React.Component<Props, State> {
       return;
     }
 
-    await firebase.transferTeacher(transferTeacherId, originalCoachId, changeCoachId, changeSiteName)
+    await firebase.transferTeacher(transferTeacherId, originalCoachId, changeCoachId, changeSiteName, changeProgramId)
     .catch(e => {
       console.log(e)
       alert('Unable to transfer teacher. Please try again')
@@ -640,7 +654,7 @@ editTeacher = async (firebase:Firebase) => {
         this.setState({success: false})
       })
 
-    
+
     let update = this.props.archivedData
     let coachData = this.props.coachData.find(o => o.id === addCoach)
     let siteData = this.props.siteData.find(o => o.name ===  addSiteName)
@@ -897,7 +911,6 @@ editTeacher = async (firebase:Firebase) => {
             </Button>
         </DialogActions>
     </Dialog>
-    {this.props.teacherData.length > 0 ? (
       <Grid container direction='row' style={{paddingBottom: '30px'}}>
         <Grid item xs={3}>
             <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -937,6 +950,7 @@ editTeacher = async (firebase:Firebase) => {
                     </Grid>
                 </Grid>
                 </>)}
+                {this.props.teacherData.length > 0 ? (<>
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
                   <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
@@ -972,6 +986,7 @@ editTeacher = async (firebase:Firebase) => {
                     </Grid>
                 </Grid>
                 </>)}
+                </>) : (<></>)}
                 </>) : (<>
                   <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
@@ -1009,6 +1024,7 @@ editTeacher = async (firebase:Firebase) => {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
+        {this.props.teacherData.length > 0 ? (<>
         <Grid item xs={6}><span></span></Grid>
         <Grid item xs={3}>
         <Grid container direction='column'>
@@ -1124,8 +1140,8 @@ editTeacher = async (firebase:Firebase) => {
                   }
                 >
                   <TableSortLabel
-                  direction = {this.state.sortType === "lastName" ? 'desc' : 'asc'}
-                  active = {['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false}
+                  direction = {this.state.firstLoad ? 'desc' : (this.state.sortType === "lastName" ? 'desc' : 'asc')}
+                  active = {this.state.firstLoad ? true : (['lastName', 'lastNameReverse'].includes(this.state.sortType) ? true : false)}
                   >
                   <Typography variant="h6">
                     Last Name
@@ -1177,32 +1193,32 @@ editTeacher = async (firebase:Firebase) => {
                 key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>
@@ -1216,32 +1232,32 @@ editTeacher = async (firebase:Firebase) => {
                 key={index}
                 onClick={() => {this.handleEditClick(value)}}
                 >
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.teacherFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachLastName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.coachFirstName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.siteName}
                     </Typography>
                   </td>
-                  <td style={{textAlign:'center'}}>
+                  <td style={{textAlign:'left'}}>
                     <Typography variant="h6">
                       {value.selectedProgramName}
                     </Typography>
@@ -1253,6 +1269,17 @@ editTeacher = async (firebase:Firebase) => {
           </table>
         </Grid>
       </Grid>
+      </>) : (
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          style={{height: "100%", marginTop:'8vh'}}
+        >
+          <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+        </Grid>
+      )}
     </>) : (this.state.view === 2 ? (<>
           <Grid item xs={1} style={{marginTop: '45px'}}>
 
@@ -1785,17 +1812,6 @@ editTeacher = async (firebase:Firebase) => {
             </Grid>
     </>) : (null))))}
     </Grid>
-    ) : (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" />
-      </Grid>
-    )}
     </>)
   }
 }

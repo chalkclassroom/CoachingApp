@@ -46,6 +46,9 @@ const StyledSelect = withStyles({
 
 const TableRow = styled.tr`
 background-color: white;
+:nth-child(odd) {
+  background-color: rgb(234, 234, 234);
+}
 &:hover {
   background-color: rgb(9, 136, 236, .4);
   cursor: pointer;
@@ -60,7 +63,7 @@ interface Props {
   coachData: Array<Object>
   sitesList: Array<Object>
   siteData: Array<Object>
-  updateSendToSitesData(data): void 
+  updateSendToSitesData(data): void
 }
 
 interface State {
@@ -650,21 +653,34 @@ class Coaches extends React.Component<Props, State> {
       // Set the sites in firestore
       firebase.replaceSitesForUser({siteIds: newSites, userId: coachId});
 
+      var coachesTeachers = [...this.state.coachesTeachers];
+
       // Remove the sites from the user's document in firestore
       var teachersToRemove = [];
       for(var removedSiteIndex in removedSites)
       {
         var tempSiteId = removedSites[removedSiteIndex];
-
         //await firebase.removeItemFromArray({siteToRemove: tempSiteId, userToRemoveFrom: coachId})
 
         // Get teachers to remove from Coach's partner collection
         var teacherToRemoveData = this.props.teacherData.filter(x => x.selectedSiteId === tempSiteId);
 
-        teacherToRemoveData.forEach(element => {
-          teachersToRemove.push(element.teacherId);
-        });
+
+
+        for(var teacherIndex in teacherToRemoveData)
+        {
+          var teacher = teacherToRemoveData[teacherIndex];
+
+          teachersToRemove.push(teacher.teacherId);
+
+          console.log("coachesTeachers => ", coachesTeachers);
+          console.log("Teacher ID => ", teacher.teacherId);
+
+
+        };
         teachersToRemove = teachersToRemove.concat(teachersToRemove);
+
+
       }
 
       // Remove the teachers within those sites from the coach's collection
@@ -675,7 +691,6 @@ class Coaches extends React.Component<Props, State> {
       await firebase.removeTeacherFromCoach({coachId: coachId, bulkTeacherIds: teachersToRemove});
 
       // Remove teachers from coachesTeachers in state to update table
-      var coachesTeachers = this.state.coachesTeachers;
       coachesTeachers = coachesTeachers.filter(o => !teachersToRemove.includes(o.teacherId) );
       this.setState({coachesTeachers: coachesTeachers});
 
@@ -703,11 +718,15 @@ class Coaches extends React.Component<Props, State> {
         // Get program that has this site
         var newSitesProgramData = await this.props.programData.find(o => o.sites.includes(newSiteId) );
 
-        newCoachSiteList.push({
-          siteId: newSiteData.id,
-          siteName: newSiteData.name,
-          programName: newSitesProgramData.name,
-          programId: newSitesProgramData.id});
+        if(newSitesProgramData)
+        {
+          newCoachSiteList.push({
+            siteId: newSiteData.id,
+            siteName: newSiteData.name,
+            programName: newSitesProgramData.name,
+            programId: newSitesProgramData.id});
+        }
+
       }
 
       coachInfo.siteList = newCoachSiteList;
@@ -1027,8 +1046,6 @@ class Coaches extends React.Component<Props, State> {
               </Button>
           </DialogActions>
       </Dialog>
-
-      {this.props.coachData.length > 0 ? (<>
       <Grid container direction='row'>
         <Grid item xs={3}>
         <Grid container direction='column' style={{ marginLeft:'30px'}}>
@@ -1068,6 +1085,7 @@ class Coaches extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 </>)}
+                {this.props.coachData.length > 0 ? (<>
                 {this.state.view === 3 ? (<>
                 <Grid item xs={6}>
                   <Grid container direction='row' style={{cursor: 'default'}} onClick={() => this.handlePageChange(1)}>
@@ -1103,6 +1121,7 @@ class Coaches extends React.Component<Props, State> {
                     </Grid>
                 </Grid>
                 </>)}
+                </>) : (<></>)}
                 </>) : (<>
                   <Grid item xs={6}>
                     <Grid container direction='row' style={{cursor: 'default'}} onClick={(_) => {this.setState({archiveModalOpen: true})}}>
@@ -1140,6 +1159,8 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
         </Grid>
         {this.state.view === 1 ? (<>
+
+        {this.props.coachData.length > 0 ? (<>
           <Grid container direction='column'>
             <Grid item xs={12}><span></span></Grid>
             <Grid item xs={12}>
@@ -1302,22 +1323,22 @@ class Coaches extends React.Component<Props, State> {
                 {this.state.coachesTeachers.map((value, index) => {
                   return(
                   <TableRow key={index} onClick={() => {this.handlePageChange(4); this.handleEditClick(value)}}>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.teacherLastName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.teacherFirstName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.siteName}
                       </Typography>
                     </td>
-                    <td style={{textAlign:'center'}}>
+                    <td style={{textAlign:'left'}}>
                       <Typography variant="h6"  >
                         {value.selectedProgramName}
                       </Typography>
@@ -1332,6 +1353,17 @@ class Coaches extends React.Component<Props, State> {
             </table>
             </Grid>
           </Grid>
+          </>) : (
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            style={{height: "100%", marginTop:'8vh'}}
+          >
+            <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
+          </Grid>
+          )}
       </>) : (this.state.view === 2 ? (<>
           <Grid item xs={1} style={{marginTop: '45px'}}>
 
@@ -1708,8 +1740,6 @@ class Coaches extends React.Component<Props, State> {
           <Grid item xs={4} style={{marginTop: '45px'}}>
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
               <Grid item>
-
-
                 <FormControl variant="outlined">
                   <StyledSelect
                     labelId="demo-simple-select-outlined-label"
@@ -1752,7 +1782,6 @@ class Coaches extends React.Component<Props, State> {
                 (siteId, index)=>{
                     // Get the info for this item
                     var siteData = this.props.siteData.find(o => o.id === siteId);
-
                     return <Grid item>
                               <FormControl variant="outlined" disabled>
                                 <StyledSelect
@@ -1764,13 +1793,9 @@ class Coaches extends React.Component<Props, State> {
                                   input={<OutlinedInput />}
                                   autoWidth={true}
                                 >
-
-
                                       <MenuItem key={siteData.id} value={siteData.id}>
                                         {siteData.name}
                                       </MenuItem>
-
-
                                 </StyledSelect>
                               </FormControl>
                             </Grid>
@@ -1790,18 +1815,11 @@ class Coaches extends React.Component<Props, State> {
                     input={<OutlinedInput />}
                     autoWidth={true}
                   >
-
-
                         <MenuItem>
-
                         </MenuItem>
-
-
                   </StyledSelect>
                 </FormControl>
               </Grid>
-
-
             </Grid>
           </Grid>
           */}
@@ -1817,21 +1835,17 @@ class Coaches extends React.Component<Props, State> {
             {this.state.transferCoachCurrentSiteIds.map(
               (siteId, index)=>{
                 return <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-
                           <Grid item>
                             <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
                           </Grid>
                         </Grid>
               }
             )}
-
             <Grid container direction='column' justifyContent='center' alignItems='center' spacing={3}>
-
               <Grid item>
                 <ForwardIcon style={{fill: '#0988ec', fontSize:'40', marginTop:'4px',}}/>
               </Grid>
             </Grid>
-
           </Grid>
           */}
           {/*
@@ -1867,17 +1881,14 @@ class Coaches extends React.Component<Props, State> {
                   >
                     {this.props.siteData.map(
                       (option, index)=>{
-
                         return <MenuItem key={option.id} value={option.id}>
                           {option.name}
                         </MenuItem>
-
                     })}
                   </StyledSelect>
                 </FormControl>
               </Grid>
             </Grid>
-
           </Grid>
           */}
 
@@ -2065,17 +2076,6 @@ class Coaches extends React.Component<Props, State> {
             </Grid>
     </>) : (null))))}
       </Grid>
-      </>) : (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        style={{height: "100%", marginTop:'8vh'}}
-      >
-        <img src={CHALKLogoGIF} alt="Loading" width="40%" style={{maxHeight: '100%'}} />
-      </Grid>
-      )}
     </>)
   }
 }

@@ -163,12 +163,12 @@ class NewUserPage extends React.Component<Props, State>{
             return;
         }
 
-        if (this.state.showSite) {
-            if (!site || site === "") {
-                alert("Please select a site")
-                return;
-            }
-        }
+        // if (this.state.showSite) {
+        //     if (!site || site === "") {
+        //         alert("Please select a site")
+        //         return;
+        //     }
+        // }
 
         // if (this.state.showCoach) {
         //     if (!coach || coach === "") {
@@ -177,12 +177,12 @@ class NewUserPage extends React.Component<Props, State>{
         //     }
         // }
 
-        if (this.state.showProgram) {
-            if (!program || program === "") {
-                alert("Please select a program")
-                return;
-            }
-        }
+        // if (this.state.showProgram) {
+        //     if (!program || program === "") {
+        //         alert("Please select a program")
+        //         return;
+        //     }
+        // }
 
         const randomString = Math.random().toString(36).slice(-8)
 
@@ -224,10 +224,11 @@ class NewUserPage extends React.Component<Props, State>{
               });
         } else {
             await firebase.firebaseEmailSignUp({ email, password: randomString, firstName, lastName }, role, this.state.showProgram, program, this.state.showSite, site)
-                .then(() => {
+                .then(async () => {
                 this.setState({
                     createdPassword: randomString
                 });
+                await firebase.sendEmailToNewUser(email)
                 return randomString
                 }).catch(e => {
                     this.setState({

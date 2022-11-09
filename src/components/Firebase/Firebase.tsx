@@ -246,7 +246,7 @@ class Firebase {
               )
             )
         })
-        if( hasProgram ) {
+        if( hasProgram && (program !== "")) {
           this.assignProgramToUser({userId: data.id, programId: program }).then(() => {
             console.log("Program " + program + "added to user " + data.id);
           }).catch(e => console.error("error =>", e));
@@ -257,7 +257,7 @@ class Firebase {
           data.program = program;
         }
 
-        if ( hasSite ) {
+        if ( hasSite && (site !== "")) {
 
           // Check to see if it's a string or array
           var assignSite;
@@ -308,7 +308,10 @@ class Firebase {
   }): Promise<firebase.auth.UserCredential | void> => {
     return this.auth
       .signInWithEmailAndPassword(userData.email, userData.password)
-      .catch((error: Error) => console.error('Error signing in: ', error))
+      .catch((error: Error) => {
+        console.error('Error signing in: ', error)
+        alert(error)
+      })
   }
 
   reauthenticate = async (userData: {
@@ -3339,7 +3342,7 @@ class Firebase {
       this.query = this.query.where('coach', '==', coachId)
     }
     this.query = this.query.where('dateModified', '>', fromDate).where('dateModified', '<', toDate)
-    
+
     const conferencePlans = await this.query.get();
     return Promise.all(conferencePlans.docs.map(async (doc) => {
       const {coach, dateCreated, dateModified, feedback, notes, questions, teacher, addedQuestions, tool} = doc.data()
@@ -4507,14 +4510,14 @@ class Firebase {
     }
   }
 
-  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string) => {
+  transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string, programId: string ) => {
     if(originalCoach !== "") {
       this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
       .catch((error: Error) => {
         console.error("Error occurred when deleting teacher from coach's partner list: ", error)
       })
     }
-    this.db.collection("users").doc(teacherId).update({school: siteName})
+    this.db.collection("users").doc(teacherId).update({school: siteName, programId: programId})
     .catch((error: Error) => {
       console.error("Error occurred when updating teacher school: ", error)
     })
@@ -4524,6 +4527,64 @@ class Firebase {
       console.error("Error occurred when adding teacher to coach's partner list: ", error)
     })
 
+  }
+
+
+  /*
+   * We need to log whenever a teacher, coach, or site is transferred sowe can keep track of what data to include in the reports
+   *
+   * These logs will be kept in a subcollection of the program, site, or coach document that they are transferring in or out of
+   */
+  addToTransferLog = async (
+    data: {
+      docType: string, // What type of doc are we adding logs to? program, site, or coach
+      docId: string, // The id of the doc to update
+      inOrOut: string, // in or out
+      transferId: string, // The id of the teacher, coach, or site that is being transferred
+    }
+  ) => {
+
+    console.log("DATA => ", data);
+
+
+    // Get the collection that holds the document we need to update
+    var collectionToUpdate;
+    var transferType;
+    switch (data.docType) {
+      case "program":
+        collectionToUpdate = "programs";
+        transferType = "site";
+        break;
+      case "site":
+        collectionToUpdate = "sites";
+        transferType = "coach";
+        break;
+      case "coach":
+        collectionToUpdate = "users";
+        transferType = "teacher";
+        break;
+      default:
+        break;
+    }
+
+    var docId = data.docId;
+    var inOrOut = data.inOrOut;
+    var transferId = data.transferId;
+
+    var timeStamp = new Date();
+
+    this.db.collection(collectionToUpdate).doc(docId).collection("transferLogs").doc().set(
+      {
+        type: transferType,
+        id: transferId,
+        inOrOut: inOrOut,
+        time: timeStamp,
+      }
+    )
+    .then(data => {console.log("Transfer data : ", data);})
+    .catch((error: Error) => {
+      console.error("Error occurred when updating " + docType + "'s transfer logs.", error)
+    })
   }
 
   archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
@@ -6146,14 +6207,15 @@ class Firebase {
       data: {
         startDate: string,
         endDate: string,
-        teacherIds: string
+        teacherIds: string,
+        coachId: string
       }
     ): Promise<void> => {
 
       const fetchCoachProfile = this.functions.httpsCallable(
         'fetchCoachProfile'
       )
-      return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
+      return fetchCoachProfile({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds, coachId: data.coachId})
         .then(
           (result) => {
             console.log("Result: " + result.data[0][0]);
@@ -6426,7 +6488,11 @@ class Firebase {
           var errorCode = error.code;
           var errorMessage = error.message;
           // ..
-        });
+        })
+        .finally( () => {
+          secondFirebase.delete()
+        }
+        )
 
     }
 
@@ -6466,6 +6532,74 @@ class Firebase {
 
 
   }
+
+
+
+  /**
+   * gets list of all Transfer logs for a site or coach
+   */
+  getTransferLogs = async (type, objectId) => {
+      return this.db
+        .collection(type)
+        .doc(objectId)
+        .collection('transferLogs')
+        .get()
+        .then( async (logs) => {
+          const logList = []
+
+
+          logs.forEach(log =>{
+            logList.push(log.data());
+          }
+          )
+
+
+
+
+          /* START CACHE REMOVAL (for development)
+          logs.forEach(log =>{
+
+            console.log("TRANSFER LOG DATA =====> ", log.id);
+
+            //var tempItem = await this.db.collection(data.dataType).doc(dataId).get()
+            var tempItem = this.db.collection(type)
+              .doc(objectId)
+              .collection('transferLogs')
+              .doc(log.id)
+              .get()
+              .then( logItem => {
+                if(logItem.exists)
+                {
+                  console.log("Temp TRANSFER DATA => ", log.data());
+
+                  logList.push(log.data());
+                }
+                else
+                {
+                  console.log("Removing cached item " + dataId + " from " + data.dataType);
+                }
+              })
+              .catch((error: Error) =>
+                console.error('Document doesnt exist', error)
+              )
+
+
+
+            //logList.push(log.data());
+          }
+          )
+          /* END CACHE REMOVAL */
+
+
+          console.log('log list', logList)
+          return logList;
+        })
+        .catch((error: Error) =>
+          console.error('Error getting partner list: ', error)
+        )
+  }
+
+
 
   //REMOVE AFTER DEVELOPMENT
 
