@@ -246,7 +246,7 @@ class Firebase {
               )
             )
         })
-        if( hasProgram ) {
+        if( hasProgram && (program !== "")) {
           this.assignProgramToUser({userId: data.id, programId: program }).then(() => {
             console.log("Program " + program + "added to user " + data.id);
           }).catch(e => console.error("error =>", e));
@@ -257,7 +257,7 @@ class Firebase {
           data.program = program;
         }
 
-        if ( hasSite ) {
+        if ( hasSite && (site !== "")) {
 
           // Check to see if it's a string or array
           var assignSite;
@@ -6489,8 +6489,9 @@ class Firebase {
           var errorMessage = error.message;
           // ..
         })
-        .finally(
+        .finally( () => {
           secondFirebase.delete()
+        }
         )
 
     }

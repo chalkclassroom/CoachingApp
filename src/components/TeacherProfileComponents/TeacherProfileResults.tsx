@@ -230,9 +230,9 @@ const chartTitleArr = {
   demonstrateStepsAverage: 'Demonstrating the steps to an activity or game',
   actOutAverage:
     'Supporting children as they act out a dramatic play scenario or book',
-  supportAverage: 'Teacher Support for Sequential Activities',
-  noSupportAverage: 'Teacher Present, No Support',
-  notAtCenterAverage: 'Teacher Not at Center',
+  // supportAverage: 'Teacher Support for Sequential Activities',
+  // noSupportAverage: 'Teacher Present, No Support',
+  // notAtCenterAverage: 'Teacher Not at Center',
 
   foundationalSkillsAverage: 'Literacy Instruction - Total Instruction',
   phonologicalAverage: 'Phonological awareness or the sounds of language',
@@ -261,11 +261,11 @@ const chartTitleArr = {
   askingQuestionsAverage: "Asking questions to extend children's thinking",
   encouragingChildrenAverage: 'Encouraging children to share',
   helpingChildrenAverage: 'Helping children find the words to communicate',
-  supportAverage:
-    "Supported children's associative and cooperative interactions",
-  noSupportAverage:
-    'Was present in the center but did not support associative and cooperative interactions',
-  notAtCenterAverage: 'Was not present in the centers observed',
+  // supportAverage:
+  //   "Supported children's associative and cooperative interactions",
+  // noSupportAverage:
+  //   'Was present in the center but did not support associative and cooperative interactions',
+  // notAtCenterAverage: 'Was not present in the centers observed',
 }
 
 class TeacherProfileResults extends React.Component {
