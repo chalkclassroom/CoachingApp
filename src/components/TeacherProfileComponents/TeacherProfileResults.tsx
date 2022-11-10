@@ -751,6 +751,16 @@ class TeacherProfileResults extends React.Component {
       },
     })
 
+    /*
+     * List of which observation types will display a bar graph
+     */
+    const barGraphObservationTypes = [
+      "classroomClimate",
+      "studentEngagement",
+      "mathInstruction",
+      "levelOfInstruction",
+    ]
+
     return (
       <div id="TeacherProfileResultsContainer">
         <Grid
@@ -911,7 +921,7 @@ class TeacherProfileResults extends React.Component {
                     usingTime={this.state.usingTime}
                   />
                   */}
-
+              {barGraphObservationTypes.includes(this.props.observationType) ? (
                   <TeacherProfileBarDetails
                     totalVisits={10}
                     labels={this.state.teacherNames}
@@ -921,6 +931,7 @@ class TeacherProfileResults extends React.Component {
                     observationType={this.props.selectedPractices}
                     teacherId={this.props.selectedTeacherId}
                   />
+                ) : null}
 
                 </Grid>
               ) : null}
