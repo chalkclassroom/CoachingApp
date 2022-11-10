@@ -107,6 +107,8 @@ class AveragesData {
       specificapproval: 0,
       disapproval: 0,
       redirection: 0,
+      toneTotal: 0,
+      toneCount: 0,
     };
 
 
@@ -126,21 +128,59 @@ class AveragesData {
         results[teacherId].total += row.count;
       }
 
+      // Get tone rating
+      if(row.toneRating !== null)
+      {
+        results[teacherId].toneTotal += row.toneRating;
+        results[teacherId].toneCount++;
+      }
+
     }
 
     // Calculate the averages in percentages
     // Go through each teacher
+
     for(var resultsIndex in results)
     {
       var result = results[resultsIndex];
 
+      var tempDataArray = data.filter(o => o.behaviorResponse === "nonspecificapproval").map(o => {return o.count});
+      result.nonspecificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.nonspecificapprovalAverage = Math.round(result.nonspecificapprovalAverage)
+
+      tempDataArray = data.filter(o => o.behaviorResponse === "specificapproval").map(o => {return o.count});
+      result.specificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.specificapprovalAverage = Math.round(result.specificapprovalAverage)
+
+      tempDataArray = data.filter(o => o.behaviorResponse === "disapproval").map(o => {return o.count});
+      result.disapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.disapprovalAverage = Math.round(result.disapprovalAverage)
+
+      tempDataArray = data.filter(o => o.behaviorResponse === "redirection").map(o => {return o.count});
+      result.redirectionAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.redirectionAverage = Math.round(result.redirectionAverage)
+
+      result.toneAverage = Math.round(result.toneTotal / result.toneCount);
+
+      /*
       var tempTotalInstructions = result.total;
 
       result.nonspecificapprovalAverage = result.nonspecificapproval > 0 ? (result.nonspecificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.specificapprovalAverage = result.specificapproval > 0 ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
+      */
     }
+
+
+
+    console.log("========================================");
+    console.log("data : ", data);
+    console.log("Nonspecific : ", results[teacherId]["nonspecificapproval"]);
+    console.log("========================================");
+
+
+
 
     return results;
 

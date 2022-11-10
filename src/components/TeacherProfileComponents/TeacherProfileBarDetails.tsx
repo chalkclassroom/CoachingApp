@@ -15,12 +15,98 @@ const chartTitleArr = {
 
 // Set the colors for the bars
 const barColorChoices = {
+  "transitionTime" : [
+    "#AED581",
+    "#FFA726",
+    "#FF7043",
+    "#64B5F6",
+    "#FF5252",
+    "#536DFE",
+  ],
   "classroomClimate" : [
     "#0988EC",
     "#094492",
     "#FFA812",
     "#FF7F00",
+  ],
+  "mathInstruction" : [
+    "#459AEB",
+    "#459AEB",
+    "#459AEB",
+    "#459AEB",
+  ],
+  "levelOfInstruction" : [
+    "#38761D",
+    "#38761D",
+    "#1155CC",
+    "#1155CC",
+  ],
+  "studentEngagement" : [
+
   ]
+}
+
+// Options for the bar graph labels
+const barLabelChoices = {
+  "classroomClimate" : [
+    "Specific Approval",
+    "General Approval",
+    "Redirection",
+    "Disapproval"
+  ],
+  "transitionTime" : [
+    "Waiting in Line",
+    "Traveling",
+    "Children Waiting",
+    "Classroom Routines",
+    "Behavior Management",
+    "Other",
+  ],
+  "mathInstruction" : [
+    "Using math vocabulary",
+    "Asking questions about math concepts",
+    "Demonstrating math concepts",
+    "Helping children use math to problem solve",
+  ],
+  "levelOfInstruction" : [
+    "Teacher Asks High-Level Question",
+    "Child Answers High-Level Question",
+    "Teacher Asks Low-Level Question",
+    "Child Answers Low-Level Question",
+  ],
+}
+
+// This will hold the names of the variables that holds the data from the data props for each observation type
+const barDataVariableName = {
+  "classroomClimate" : [
+    "specificapprovalAverage",
+    "nonspecificapprovalAverage",
+    "redirectionAverage",
+    "disapprovalAverage"
+  ],
+  "transitionTime" : [
+    "lineAverage",
+    "travelingAverage",
+    "waitingAverage",
+    "routinesAverage",
+    "behaviorManagementAverage",
+    "otherAverage",
+  ],
+  "mathInstruction" : [
+    "mathVocabularyAverage",
+    "askingQuestionsAverage",
+    "mathConceptsAverage",
+    "helpingChildrenAverage",
+    "notAtCenterAverage",
+    "noSupportAverage",
+    "supportAverage",
+  ],
+  "levelOfInstruction" : [
+    "hlq",
+    "hlqResponse",
+    "llq",
+    "llqResponse",
+  ],
 }
 
 /**
@@ -37,8 +123,81 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     this.state = {
       teacherNames: [],
       chartTitle: "",
-      barColors: []
+      barColors: [],
+      labels: [],
+      axisMax: 20,
+      axisStepSize: 1,
+      axisLabel: "Number Observed",
     }
+  }
+
+  componentDidMount = () => {
+    console.log("TYPE => ", this.props.observationType);
+    console.log("LABELS => ",  barLabelChoices[this.props.observationType]);
+
+    var graphVariables = barDataVariableName[this.props.observationType];
+    console.log("GRAPH Variables =>> ", graphVariables);
+
+    var colorChoices = barColorChoices[this.props.observationType];
+
+    var chartData = [];
+    var barColors = [];
+    for(var i = 0; i < graphVariables.length; i++)
+    {
+        var variableName = graphVariables[i];
+
+        var tempAvg = this.props.data[this.props.teacherId][variableName];
+        tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+        chartData.push(tempAvg);
+
+        barColors.push(colorChoices[i % colorChoices.length]);
+    }
+
+    console.log("HIGHEST NUMBER => ", Math.max.apply(null, chartData));
+
+    // Set the x-axis numbers
+    var highestNumberInResults = Math.max.apply(null, chartData);
+    var axisMax = 20;
+    var axisStepSize = 1;
+    if(highestNumberInResults > 20)
+    {
+      axisMax = highestNumberInResults + Math.round(highestNumberInResults * .2);
+      axisStepSize = 2;
+    }
+    if(highestNumberInResults > 50)
+    {
+      axisStepSize = 5;
+    }
+
+    this.setState({axisMax: axisMax, axisStepSize: axisStepSize});
+    console.log("AVERAGE TEST ", Math.round(highestNumberInResults * .2) )
+
+
+    this.setState({labels: barLabelChoices[this.props.observationType], graphData: chartData, barColors: barColors});
+
+
+    // Set the x-axis numbers
+    var highestNumberInResults = Math.max.apply(null, chartData);
+    var axisMax = 20;
+    var axisStepSize = 1;
+    if(highestNumberInResults > 20)
+    {
+      axisMax = highestNumberInResults + Math.round(highestNumberInResults * .2);
+      axisStepSize = 2;
+    }
+    if(highestNumberInResults > 50)
+    {
+      axisStepSize = 5;
+    }
+
+    this.setState({axisMax: axisMax, axisStepSize: axisStepSize});
+    console.log("AVERAGE TEST ", Math.round(highestNumberInResults * .2) )
+
+
+    this.setState({labels: barLabelChoices[this.props.observationType], graphData: chartData, barColors: barColors});
+
+    this.modifyGraphByObservationType();
+
   }
 
   // What to do when the data is recieved
@@ -50,6 +209,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
       var teacherNames = [];
       var graphData = [];
       var barColors = this.state.barColors;
+      /*
       for(var teacherIndex in data)
       {
 
@@ -71,11 +231,30 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
           barColors.push(this.randomRgbColor());
         }
       }
+      */
 
-      this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors });
+
+
+
+
+      //this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: barColors });
     }
   }
 
+
+  // Different observations will have differents styles for graphs. We need to set those
+  modifyGraphByObservationType = () => {
+    var axisLabel = "Number Observed";
+
+    if(this.props.observationType === "classroomClimate")
+    {
+        axisLabel = "Average Number across Observations"
+    }
+
+    this.setState({
+      axisLabel: axisLabel,
+    });
+  }
 
   randomRgbColor() {
     return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
@@ -93,7 +272,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const isCompleted = this.props.completed;
     const childBehaviorsData = {
-      labels: this.state.teacherNames,
+      labels: this.state.labels,
       datasets: [
         {
           //data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
@@ -119,19 +298,19 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 100,
-                  stepSize: 10,
+                  max: this.state.axisMax,
+                  stepSize: this.state.axisStepSize,
                   fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black',
                   // Include a percent sign in the ticks
                   callback: function(value, index, values) {
-                      return value + '%';
+                      return value;
                   }
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: 'Number Ovserved',
+                  labelString: this.state.axisLabel,
                   fontSize: 16,
                   fontColor: 'black'
                 }
@@ -167,7 +346,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
               },
               formatter: function(value: number): number | null {
                 if (value > 0) {
-                  return value + "%";
+                  return value;
                 } else {
                   return null;
                 }

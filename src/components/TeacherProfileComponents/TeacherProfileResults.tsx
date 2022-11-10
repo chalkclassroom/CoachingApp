@@ -10,6 +10,7 @@ import {
   withStyles,
   MenuItem,
   Select,
+  Slider,
   TextField,
   Checkbox,
   FormLabel,
@@ -20,6 +21,9 @@ import {
   Radio,
   RadioGroup,
 } from '@material-ui/core'
+
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 import CalendarIcon from '../../assets/icons/CalendarIcon.png'
 
@@ -230,9 +234,9 @@ const chartTitleArr = {
   demonstrateStepsAverage: 'Demonstrating the steps to an activity or game',
   actOutAverage:
     'Supporting children as they act out a dramatic play scenario or book',
-  // supportAverage: 'Teacher Support for Sequential Activities',
-  // noSupportAverage: 'Teacher Present, No Support',
-  // notAtCenterAverage: 'Teacher Not at Center',
+  supportAverage: 'Teacher Support for Sequential Activities',
+  noSupportAverage: 'Teacher Present, No Support',
+  notAtCenterAverage: 'Teacher Not at Center',
 
   foundationalSkillsAverage: 'Literacy Instruction - Total Instruction',
   phonologicalAverage: 'Phonological awareness or the sounds of language',
@@ -261,12 +265,40 @@ const chartTitleArr = {
   askingQuestionsAverage: "Asking questions to extend children's thinking",
   encouragingChildrenAverage: 'Encouraging children to share',
   helpingChildrenAverage: 'Helping children find the words to communicate',
-  // supportAverage:
-  //   "Supported children's associative and cooperative interactions",
-  // noSupportAverage:
-  //   'Was present in the center but did not support associative and cooperative interactions',
-  // notAtCenterAverage: 'Was not present in the centers observed',
+  supportAverage:
+    "Supported children's associative and cooperative interactions",
+  noSupportAverage:
+    'Was present in the center but did not support associative and cooperative interactions',
+  notAtCenterAverage: 'Was not present in the centers observed',
 }
+
+// Set the colors for the trends line graph
+const barColorChoices = {
+  "classroomClimate" : {
+    "Specific Approval": "#0988EC",
+    "General Approval": "#094492",
+    "Redirection": "#FFA812",
+    "Disapproval": "#FF7F00",
+  },
+  "transitionTime" : {
+    "Waiting in Line": "#AED581",
+    "Traveling": "#FFA726",
+    "Children Waiting": "#FF7043",
+    "Classroom Routines": "#64B5F6",
+    "Behavior Management": "#FF5252",
+    "Other": "#536DFE",
+  },
+  "mathInstruction" : {
+    "useForAll": "#459AEB",
+  },
+  "levelOfInstruction" : {
+    "Teacher Asks High-Level Question": "#38761D",
+    "Child Answers High-Level Question": "#38761D",
+    "Teacher Asks Low-Level Question": "#1155CC",
+    "Child Answers Low-Level Question": "#1155CC",
+  },
+}
+
 
 class TeacherProfileResults extends React.Component {
   constructor(props) {
@@ -540,6 +572,24 @@ class TeacherProfileResults extends React.Component {
     // Go through each trends and save the averages in the dataset so there's a line for each answer type
     var teachersTrends = trends[teacher.id]
 
+    // Get the number of lines we're going to make
+    var lineLength = 0;
+    for (var trendIndex in teachersTrends) {
+      // Make sure we're only grabbing the averages, also not the data that was used for calculations
+      if (trendIndex.includes('Average')) {
+        lineLength++;
+      }
+    }
+
+    // Check if this observation type has individual colors for each answer type or the same for all
+    var useColorForAll = false;
+    var colorToUse = "#AAAAAA";
+    if(barColorChoices[this.props.observationType]["useForAll"])
+    {
+      useColorForAll = true;
+      colorToUse = barColorChoices[this.props.observationType]["useForAll"];
+    }
+
     for (var trendIndex in teachersTrends) {
       // Make sure we're only grabbing the averages, also not the data that was used for calculations
       if (
@@ -557,13 +607,20 @@ class TeacherProfileResults extends React.Component {
         return Math.round((each_element + Number.EPSILON) * 100) / 100
       })
 
-      var trendLabel = chartTitleArr[trendIndex]
-        ? chartTitleArr[trendIndex]
-        : trendIndex
+      var trendLabel = chartTitleArr[trendIndex] ? chartTitleArr[trendIndex] : trendIndex
 
       // If there isn't a color set for this teacher, set it
       if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+        // If there isn't a single color to use for all of them
+        if(!useColorForAll)
+        {
+          lineColors[i] = barColorChoices[this.props.observationType][trendLabel]
+        }
+        else
+        {
+          lineColors[i] = colorToUse;
+        }
+        //lineColors[i] = barColorChoices[this.props.observationType][i % lineLength]
       }
       var tempData = {
         label: trendLabel,
@@ -571,6 +628,7 @@ class TeacherProfileResults extends React.Component {
         borderColor: lineColors[i],
         fill: false,
         tension: 0.0,
+        borderDash: (trendIndex === "hlqResponseAverage" || trendIndex === "llqResponseAverage") ? [5,5] : [0,0]
       }
 
       tempDataSet.push(tempData)
@@ -632,14 +690,7 @@ class TeacherProfileResults extends React.Component {
 
         const currDate = new Date()
 
-        pdf.save(
-          'Site_Teacher_Results_' +
-            currDate.getMonth() +
-            '_' +
-            currDate.getDate() +
-            '_' +
-            currDate.getFullYear() +
-            '.pdf'
+        pdf.save('Site_Teacher_Results_' + currDate.getMonth() + '_' + currDate.getDate() + '_' + currDate.getFullYear() + '.pdf'
         )
       })
       .then(() => {
@@ -676,22 +727,30 @@ class TeacherProfileResults extends React.Component {
   }
 
   randomRgbColor = () => {
-    return (
-      'rgba(' +
-      this.randomInteger(255) +
-      ', ' +
-      this.randomInteger(255) +
-      ', ' +
-      this.randomInteger(255) +
-      ')'
-    )
+    return ('rgba(' + this.randomInteger(255) + ', ' + this.randomInteger(255) + ', ' + this.randomInteger(255) + ')')
   }
 
   randomInteger = max => {
     return Math.floor(Math.random() * (max + 1))
   }
 
+
+
   render() {
+
+    const tempTheme = createTheme({
+      overrides: {
+        // Style sheet name ⚛️
+        MuiSlider: {
+          // Name of the rule
+          track: {
+            // Some CSS
+            backgroundColor: '#FF8E53',
+          },
+        },
+      },
+    })
+
     return (
       <div id="TeacherProfileResultsContainer">
         <Grid
@@ -756,6 +815,7 @@ class TeacherProfileResults extends React.Component {
             {/*
                     The checklists
                 */}
+                {/*
             <RadioGroup
               aria-label="gender"
               name="gender1"
@@ -765,6 +825,7 @@ class TeacherProfileResults extends React.Component {
             >
               <RadioSets type={this.props.observationType} />
             </RadioGroup>
+            */}
 
             {/*
                     The chart switcher
@@ -785,8 +846,7 @@ class TeacherProfileResults extends React.Component {
                 */}
             <Grid item xs={12} style={centerColumn}>
               {/* Show loading logo */}
-              {Object.keys(this.state.averages).length <= 0 &&
-              !this.state.showErrorMessage ? (
+              {Object.keys(this.state.averages).length <= 0 && !this.state.showErrorMessage ? (
                 <img src={CHALKLogoGIF} alt="Loading" width="60%" />
               ) : null}
 
@@ -843,12 +903,25 @@ class TeacherProfileResults extends React.Component {
                   }}
                 >
                   {/* Show averages pie chart */}
+                  {/*
                   <AveragesChart
                     data={this.state.averages}
                     type={this.state.radioValue}
                     teacherId={this.props.selectedTeacherId}
                     usingTime={this.state.usingTime}
                   />
+                  */}
+
+                  <TeacherProfileBarDetails
+                    totalVisits={10}
+                    labels={this.state.teacherNames}
+                    data={this.state.averages}
+                    type={this.state.radioValue}
+                    barColors={this.state.lineColors}
+                    observationType={this.props.selectedPractices}
+                    teacherId={this.props.selectedTeacherId}
+                  />
+
                 </Grid>
               ) : null}
             </Grid>
@@ -856,6 +929,7 @@ class TeacherProfileResults extends React.Component {
             {/*
                   Total Length of Observation
                 */}
+                {/*
             <Grid item xs={12} style={centerColumn}>
               {this.state.observationTime !== '' ? (
                 <span style={{ fontSize: '24px', marginBottom: '20px' }}>
@@ -863,6 +937,55 @@ class TeacherProfileResults extends React.Component {
                 </span>
               ) : null}
             </Grid>
+            */}
+
+            {/*
+              The tone rating slider
+              */}
+            {this.props.observationType == "classroomClimate" ? (
+              <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '20px'}}>
+                <h3 style={{whiteSpace: 'no-wrap', marginRight: '20px'}}>Teacher Tone</h3>
+                <Slider
+                  defaultValue={3}
+                  aria-labelledby="discrete-slider-always"
+                  step={1}
+                  max={5}
+                  style={{width: '300px',}}
+                  marks={[
+                    {
+                      value: 0,
+                      label: '0',
+                    },
+                    {
+                      value: 1,
+                      label: '1',
+                    },
+                    {
+                      value: 2,
+                      label: '2',
+                    },
+                    {
+                      value: 3,
+                      label: '3',
+                    },
+                    {
+                      value: 4,
+                      label: '4',
+                    },
+                    {
+                      value: 5,
+                      label: '5',
+                    },
+                  ]}
+                  getAriaValueText={(string) => {return string + 'AYYE'}}
+                  valueLabelDisplay="on"
+                  disabled={true}
+                  theme={tempTheme}
+                />
+              </Grid>
+            ) : null}
+
+
 
             {/*
                   Download PDF button
