@@ -398,8 +398,9 @@ class Sites extends React.Component<Props, State> {
   handlePopulateSiteLeaders = (event) => {
     this.setState({addProgramId: event.target.value, saved: false})
     let leaders = this.state.originalSiteLeaders
+    console.log(leaders)
     let program = this.props.programData.find(o => o.id === event.target.value)
-    leaders = leaders.filter(leader => {return leader.sites.some(site => program.sites.includes(site))})
+    // leaders = leaders.filter(leader => {return leader.sites.some(site => program.sites.includes(site))})
     this.setState({addSiteLeaderList: leaders})
   }
 
