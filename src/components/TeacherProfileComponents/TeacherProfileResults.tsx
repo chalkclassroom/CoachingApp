@@ -612,13 +612,18 @@ class TeacherProfileResults extends React.Component {
       // If there isn't a color set for this teacher, set it
       if (!lineColors[i]) {
         // If there isn't a single color to use for all of them
-        if(!useColorForAll)
+        if(useColorForAll)
+        {
+          lineColors[i] = colorToUse;
+        }
+        else if(barColorChoices[this.props.observationType][trendLabel])
         {
           lineColors[i] = barColorChoices[this.props.observationType][trendLabel]
         }
+        // Account for if this observation's colors haven't been set yet, just generate some random ones
         else
         {
-          lineColors[i] = colorToUse;
+          lineColors[i] = this.randomRgbColor();
         }
         //lineColors[i] = barColorChoices[this.props.observationType][i % lineLength]
       }

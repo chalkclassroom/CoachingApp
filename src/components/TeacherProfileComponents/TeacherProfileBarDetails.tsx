@@ -42,7 +42,10 @@ const barColorChoices = {
     "#1155CC",
   ],
   "studentEngagement" : [
-
+    "#E99C2E",
+    "#E55529",
+    "#FFD300",
+    "#BABABA",
   ]
 }
 
@@ -73,6 +76,12 @@ const barLabelChoices = {
     "Child Answers High-Level Question",
     "Teacher Asks Low-Level Question",
     "Child Answers Low-Level Question",
+  ],
+  "studentEngagement" : [
+    "Off Task",
+    "Mildly Engaged",
+    "Engaged",
+    "Highly Engaged",
   ],
 }
 
@@ -106,6 +115,12 @@ const barDataVariableName = {
     "hlqResponse",
     "llq",
     "llqResponse",
+  ],
+  "studentEngagement" : [
+    "offTask",
+    "mildlyEngaged",
+    "engaged",
+    "highlyEngaged",
   ],
 }
 
