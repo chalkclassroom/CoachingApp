@@ -136,6 +136,10 @@ class TrendData {
        specificapprovalAverage: new Array(12).fill(0),
        disapprovalAverage: new Array(12).fill(0),
        redirectionAverage: new Array(12).fill(0),
+
+       toneTotal: new Array(12).fill(0),
+       toneCount: new Array(12).fill(0),
+       toneAverage: new Array(12).fill(0),
      };
 
 
@@ -160,6 +164,13 @@ class TrendData {
          results[teacherId].total[rowMonth] += row.count;
        }
 
+       // Get tone rating
+       if(row.toneRating !== null)
+       {
+         results[teacherId].toneTotal[rowMonth] += row.toneRating;
+         results[teacherId].toneCount[rowMonth]++;
+       }
+
      }
 
      // Calculate the averages in percentages
@@ -178,6 +189,7 @@ class TrendData {
          result.disapprovalAverage[i] = result.disapproval[i] > 0 ? (result.disapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
          result.redirectionAverage[i] = result.redirection[i] > 0 ? (result.redirection[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
+         result.toneAverage[i] = result.toneCount[i] > 0 ? Math.round(((result.toneTotal[i] / result.toneCount[i]) + Number.EPSILON) * 100) / 100 : 0;
        }
      }
 
