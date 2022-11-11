@@ -300,6 +300,56 @@ const barColorChoices = {
 }
 
 
+const ClimateSlider = withStyles({
+  root: {
+    color: '#0988EC',
+    height: 3,
+    padding: '13px 0',
+  },
+  thumb: {
+    '& .bar': {
+      // display: inline-block !important;
+      height: 9,
+      width: 1,
+      backgroundColor: '#0988EC',
+      marginLeft: 1,
+      marginRight: 1,
+    },
+  },
+  markLabel: {
+    fontSize: '20px',
+    maxWidth: '68px',
+    whiteSpace: 'normal',
+    textAlign: 'center'
+  }
+
+})(Slider);
+
+const ClimateSliderLabels = withStyles({
+  root: {
+    color: '#0988EC',
+    height: 3,
+    padding: '13px 0',
+  },
+  thumb: {
+     display: 'none',
+  },
+  markLabel: {
+    fontSize: '15px',
+    maxWidth: '68px',
+    whiteSpace: 'normal',
+    textAlign: 'center'
+  },
+  rail: {
+    display: 'none',
+  },
+  track: {
+    display: 'none',
+  },
+
+})(Slider);
+
+
 class TeacherProfileResults extends React.Component {
   constructor(props) {
     super(props)
@@ -333,6 +383,9 @@ class TeacherProfileResults extends React.Component {
 
       showErrorMessage: false,
       errorMessage: '',
+
+      toneCount: 0,
+      toneAverage: 0,
     }
   }
 
@@ -555,6 +608,11 @@ class TeacherProfileResults extends React.Component {
       this.setState({ observationTime: observationTime })
     }
 
+    if(averages[this.props.selectedTeacherId].toneCount)
+    {
+      this.setState({toneCount: averages[this.props.selectedTeacherId].toneCount, toneAverage: averages[this.props.selectedTeacherId].toneAverage})
+    }
+
     this.setState({ averages: averages, trends: trends, usingTime: usingTime })
 
     // Build data for line graph
@@ -742,19 +800,6 @@ class TeacherProfileResults extends React.Component {
 
 
   render() {
-
-    const tempTheme = createTheme({
-      overrides: {
-        // Style sheet name ⚛️
-        MuiSlider: {
-          // Name of the rule
-          track: {
-            // Some CSS
-            backgroundColor: '#FF8E53',
-          },
-        },
-      },
-    })
 
     /*
      * List of which observation types will display a bar graph
@@ -958,47 +1003,94 @@ class TeacherProfileResults extends React.Component {
             {/*
               The tone rating slider
               */}
-            {this.props.observationType == "classroomClimate" ? (
-              <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '20px'}}>
-                <h3 style={{whiteSpace: 'no-wrap', marginRight: '20px'}}>Teacher Tone</h3>
-                <Slider
-                  defaultValue={3}
-                  aria-labelledby="discrete-slider-always"
-                  step={1}
-                  max={5}
-                  style={{width: '300px',}}
-                  marks={[
-                    {
-                      value: 0,
-                      label: '0',
-                    },
-                    {
-                      value: 1,
-                      label: '1',
-                    },
-                    {
-                      value: 2,
-                      label: '2',
-                    },
-                    {
-                      value: 3,
-                      label: '3',
-                    },
-                    {
-                      value: 4,
-                      label: '4',
-                    },
-                    {
-                      value: 5,
-                      label: '5',
-                    },
-                  ]}
-                  getAriaValueText={(string) => {return string + 'AYYE'}}
-                  valueLabelDisplay="on"
-                  disabled={true}
-                  theme={tempTheme}
-                />
-              </Grid>
+            {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+              <>
+                <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '20px',}}>
+                  <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px'}}>Teacher Tone</h3>
+                  <ClimateSlider
+                    value={this.state.toneAverage}
+                    aria-labelledby="discrete-slider-always"
+                    step={1}
+                    max={5}
+                    min={1}
+                    style={{width: '66%',}}
+                    marks={[
+                      {
+                        value: 1,
+                        label: '1',
+                      },
+                      {
+                        value: 2,
+                        label: '2',
+                      },
+                      {
+                        value: 3,
+                        label: '3',
+                      },
+                      {
+                        value: 4,
+                        label: '4',
+                      },
+                      {
+                        value: 5,
+                        label: '5',
+                      },
+                    ]}
+                    color="primary"
+                    getAriaValueText={this.valuetext}
+                    valueLabelDisplay="on"
+                    sx={{
+                      "& .MuiSlider-markLabel": {
+                        fontSize: '3em',
+                        color: 'black',
+                        fontFamily: 'Arimo'
+                      },
+                      '& .MuiSlider-thumb': {
+                        borderRadius: '1px',
+                      },
+                    }}
+
+                  />
+                </Grid>
+
+                <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', marginTop: '-30px', marginBottom: '100px',}}>
+                  <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px', color: 'rgba(0,0,0,0)'}}>Teacher Tone</h3>
+
+                  <ClimateSliderLabels
+                    value={this.state.toneAverage}
+                    aria-labelledby="discrete-slider-always"
+                    step={1}
+                    max={5}
+                    min={1}
+                    style={{width: '66%',}}
+                    marks={[
+                      {
+                        value: 1,
+                        label: 'Anger',
+                      },
+                      {
+                        value: 2,
+                        label: 'Irritation',
+                      },
+                      {
+                        value: 3,
+                        label: 'Neutral',
+                      },
+                      {
+                        value: 4,
+                        label: 'Positive Interest',
+                      },
+                      {
+                        value: 5,
+                        label: 'Excitement',
+                      },
+                    ]}
+                    color="primary"
+                    valueLabelDisplay="on"
+
+                  />
+                </Grid>
+              </>
             ) : null}
 
 
