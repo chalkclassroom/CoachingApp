@@ -117,10 +117,10 @@ const barDataVariableName = {
     "llqResponse",
   ],
   "studentEngagement" : [
-    "offTask",
-    "mildlyEngaged",
-    "engaged",
-    "highlyEngaged",
+    "smallGroupAverage",
+    "wholeGroupAverage",
+    "transitionGroupAverage",
+    "centersGroupAverage",
   ],
 }
 
