@@ -349,12 +349,16 @@ class AveragesData {
 
     results[teacher.id] = {
       name: tempName,
-      totalInstructions: 0,
-      offTask: 0,
-      mildlyEngaged: 0,
-      engaged: 0,
-      highlyEngaged: 0,
+      smallRows: 0,
+      wholeRows: 0,
+      transitionRows: 0,
+      centersRows: 0,
+      smallGroup: 0,
+      wholeGroup: 0,
+      transitionGroup: 0,
+      centersGroup: 0
     };
+
 
 
     // Get number of instances for each type of data
@@ -364,26 +368,70 @@ class AveragesData {
 
       var teacherId = teacher.id;
 
-      // Add to behavior types
-      switch (row.point) {
-        case 0:
-          results[teacherId].offTask += row.count;
-          break;
-        case 1:
-          results[teacherId].mildlyEngaged += row.count;
-          break;
-        case 2:
-          results[teacherId].engaged += row.count;
-          break;
-        case 3:
-          results[teacherId].highlyEngaged += row.count;
-          break;
-        default:
-          break;
+      if (row.entryType === "small" && row.count === 0) {
+        results[teacherId].smallGroup += 0
+        results[teacherId].smallRows++
       }
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.count;
+      if (row.entryType === "small" && row.count === 1) {
+        results[teacherId].smallGroup += 1
+        results[teacherId].smallRows++
+      }
+      if (row.entryType === "small" && row.count === 2) {
+        results[teacherId].smallGroup += 2
+        results[teacherId].smallRows++
+      }
+      if (row.entryType === "small" && row.count === 3) {
+        results[teacherId].smallGroup += 3
+        results[teacherId].smallRows++
+      }
+      if (row.entryType === "whole" && row.count === 0) {
+        results[teacherId].wholeGroup += 0
+        results[teacherId].wholeRows++
+      }
+      if (row.entryType === "whole" && row.count === 1) {
+        results[teacherId].wholeGroup += 1
+        results[teacherId].wholeRows++
+      }
+      if (row.entryType === "whole" && row.count === 2) {
+        results[teacherId].wholeGroup += 2
+        results[teacherId].wholeRows++
+      }
+      if (row.entryType === "whole" && row.count === 3) {
+        results[teacherId].wholeGroup += 3
+        results[teacherId].wholeRows++
+      }
+      if (row.entryType === "transition" && row.count === 0) {
+        results[teacherId].transitionGroup += 0
+        results[teacherId].transitionRows++
+      }
+      if (row.entryType === "transition" && row.count === 1) {
+        results[teacherId].transitionGroup += 1
+        results[teacherId].transitionRows++
+      }
+      if (row.entryType === "transition" && row.count === 2) {
+        results[teacherId].transitionGroup += 2
+        results[teacherId].transitionRows++
+      }
+      if (row.entryType === "transition" && row.count === 3) {
+        results[teacherId].transitionGroup += 3
+        results[teacherId].transitionRows++
+      }
+      if (row.entryType === "centers" && row.count === 0) {
+        results[teacherId].centersGroup += 0
+        results[teacherId].centersRows++
+      }
+      if (row.entryType === "centers" && row.count === 1) {
+        results[teacherId].centersGroup += 1
+        results[teacherId].centersRows++
+      }
+      if (row.entryType === "centers" && row.count === 2) {
+        results[teacherId].centersGroup += 2
+        results[teacherId].centersRows++
+      }
+      if (row.entryType === "centers" && row.count === 3) {
+        results[teacherId].centersGroup += 3
+        results[teacherId].centersRows++
+      }
     }
 
     // Calculate the averages in percentages
@@ -394,11 +442,10 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions;
 
-      result.offTaskAverage = result.offTask > 0 ? (result.offTask / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.mildlyEngagedAverage = result.mildlyEngaged > 0 ? (result.mildlyEngaged / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.engagedAverage = result.engaged > 0 ? (result.engaged / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.highlyEngagedAverage = result.highlyEngaged > 0 ? (result.highlyEngaged / tempTotalInstructions).toFixed(2) * 100 : 0;
-
+      result.smallGroupAverage = result.smallGroup > 0 ? (result.smallGroup / result.smallRows) : 0;
+      result.wholeGroupAverage = result.wholeGroup > 0 ? (result.wholeGroup / result.wholeRows) : 0;
+      result.transitionGroupAverage = result.transitionGroup > 0 ? (result.transitionGroup / result.transitionRows) : 0;
+      result.centersGroupAverage = result.centersGroup > 0 ? (result.centersGroup / result.centersRows) : 0;
     }
 
     return results;
