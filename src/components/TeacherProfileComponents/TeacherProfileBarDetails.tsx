@@ -259,7 +259,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
 
     if(this.props.observationType === "classroomClimate")
     {
-        axisLabel = "Average Number across Observations"
+        axisLabel = "Average Number across Observations";
     }
 
     this.setState({
@@ -317,7 +317,17 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
       return results;
     }
 
-    const topLabels = {
+
+
+    // We don't want to show the percentages on all the observation types
+    //  NOTE: I tried controlling this using state but it was being difficult. This way is easier.
+    var showPercentages = false;
+    if(this.props.observationType === "classroomClimate")
+    {
+      showPercentages = true;
+    }
+
+    const topLabels = (showPercentages) ? {
       id: 'topLabels',
       afterDatasetsDraw(chart, args, pluginOptions) {
         const { ctx, scales} = chart;
@@ -342,7 +352,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
           })
 
       }
-    }
+    } : {}
 
     return (
       <HorizontalBar
