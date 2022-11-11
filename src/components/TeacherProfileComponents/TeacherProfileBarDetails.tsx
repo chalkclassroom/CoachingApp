@@ -79,10 +79,10 @@ const barLabelChoices = {
     "Child Answers Low-Level Question",
   ],
   "studentEngagement" : [
-    "Off Task",
-    "Mildly Engaged",
-    "Engaged",
-    "Highly Engaged",
+    "Small Group",
+    "Whole Group",
+    "Centers",
+    "Transitions",
   ],
 }
 
