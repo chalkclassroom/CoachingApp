@@ -343,13 +343,18 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
 
         chart.config.data.datasets.forEach(function (dataset) {
 
-              if(dataset._meta[0].type === "horizontalBar"){
-                  const dataArray = dataset.data;
-                  dataset._meta[0].data.forEach(function (bar, index) {
-                      ctx.fillText(percentages[index] + '%', bar._view.x + 10, bar._view.y + 5);
-                  });
-              };
-          })
+          if(dataset._meta[0])
+          {
+
+
+            if(dataset._meta[0].type === "horizontalBar"){
+                const dataArray = dataset.data;
+                dataset._meta[0].data.forEach(function (bar, index) {
+                    ctx.fillText(percentages[index] + '%', bar._view.x + 10, bar._view.y + 5);
+                });
+            };
+          }
+        })
 
       }
     } : {}

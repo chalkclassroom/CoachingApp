@@ -112,10 +112,13 @@ const LineGraphOptions = {
         display: true,
         scaleLabel: {
           display: true,
-          labelString: 'Date',
+          labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
           fontColor: 'black',
+        },
+        gridLines : {
+          drawOnChartArea: false
         },
       },
     ],
@@ -131,23 +134,21 @@ const LineGraphOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: '% of 1-minute Intervals',
+          labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
           fontColor: 'black',
         },
       },
     ],
+    layout: {
+    }
   },
   plugins: {
     datalabels: {
-      display: 'auto',
-      color: 'gray',
-      align: 'right',
-      formatter: function(value: number): string {
-        return value + '%'
-      },
+      display: false,
     },
+
   },
 }
 
@@ -212,10 +213,10 @@ const chartTitleArr = {
   llqAverage: 'Teacher Asks Low-Level Question',
   llqResponseAverage: 'Child Answers Low-Level Question',
 
-  smallGroupAverage: 'Small Group',
-  wholeGroupAverage: 'Whole Group',
-  transitionGroupAverage: 'Transition',
-  centersGroupAverage: 'Centers',
+  offTaskAverage: 'Off Task',
+  mildlyEngagedAverage: 'Mildly Engaged',
+  engagedAverage: 'Engaged',
+  highlyEngagedAverage: 'Highly Engaged',
 
   eyeLevelAverage: 'At Eye Level',
   positiveExpressionAverage:
@@ -439,7 +440,6 @@ class TeacherProfileResults extends React.Component {
         } else {
           this.calculateResultsForCharts(data, teacherId)
         }
-        console.log('DATA => ', data)
       })
   }
 
@@ -608,9 +608,16 @@ class TeacherProfileResults extends React.Component {
       this.setState({ observationTime: observationTime })
     }
 
+    // Set the tones for averages
     if(averages[this.props.selectedTeacherId].toneCount)
     {
       this.setState({toneCount: averages[this.props.selectedTeacherId].toneCount, toneAverage: averages[this.props.selectedTeacherId].toneAverage})
+    }
+
+    // Set the tones for trends
+    if(trends[this.props.selectedTeacherId].toneCount)
+    {
+      this.setState({toneCountTrend: trends[this.props.selectedTeacherId].toneCount, toneAverageTrend: trends[this.props.selectedTeacherId].toneAverage})
     }
 
     this.setState({ averages: averages, trends: trends, usingTime: usingTime })
@@ -630,14 +637,6 @@ class TeacherProfileResults extends React.Component {
     // Go through each trends and save the averages in the dataset so there's a line for each answer type
     var teachersTrends = trends[teacher.id]
 
-    // Get the number of lines we're going to make
-    var lineLength = 0;
-    for (var trendIndex in teachersTrends) {
-      // Make sure we're only grabbing the averages, also not the data that was used for calculations
-      if (trendIndex.includes('Average')) {
-        lineLength++;
-      }
-    }
 
     // Check if this observation type has individual colors for each answer type or the same for all
     var useColorForAll = false;
@@ -653,7 +652,8 @@ class TeacherProfileResults extends React.Component {
       if (
         !trendIndex.includes('Average') ||
         trendIndex === 'totalObservedAverage' ||
-        trendIndex === 'totalInstructionsAverage'
+        trendIndex === 'totalInstructionsAverage' ||
+        trendIndex == "toneAverage"
       ) {
         continue
       }
@@ -717,7 +717,6 @@ class TeacherProfileResults extends React.Component {
       datasets: tempDataSet,
     }
 
-    console.log('Line Data => ', lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -901,6 +900,8 @@ class TeacherProfileResults extends React.Component {
               </Grid>
             </Grid>
 
+            <h3 style={{textAlign: 'center', width: '100%', marginBottom: 20}}>Teacher Behaviors</h3>
+
             {/*
                   The "averages" bar graph and "trends" line graph
                 */}
@@ -917,21 +918,47 @@ class TeacherProfileResults extends React.Component {
               ) : null}
 
               {/* Show trends line graph if trends tab is clicked and it's not book reading type */}
-              {this.state.tabState == 1 &&
-              this.props.observationType !== 'bookReading' &&
-              Object.keys(this.state.averages).length > 0 &&
-              !this.state.showErrorMessage ? (
+              {this.state.tabState == 1 && this.props.observationType !== 'bookReading' && Object.keys(this.state.averages).length > 0 && !this.state.showErrorMessage ? (
                 <Grid
                   container
-                  justify={'center'}
-                  direction={'column'}
-                  style={{ height: 500 }}
+                  style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
                 >
-                  <Line
-                    data={this.state.lineGraphData}
-                    options={LineGraphOptions}
-                  />
+                  <Grid
+                    container
+                    style={{ height: 500, width: '86%'}}
+                  >
+                    <Line
+                      data={this.state.lineGraphData}
+                      options={LineGraphOptions}
+                    />
+                  </Grid>
+
+                  {/*
+                    The tone rating slider
+                    */}
+                  {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                    <div style={{width: '100%', display: 'flex', position: 'relative', justifyContent: 'center'}}>
+                      <div style={{position: 'absolute', left: '-40px'}}>
+                        <h4>Teacher Tone</h4>
+                      </div>
+                      <div style={{width: 'calc(86% - 35px)', display: 'flex', flexDirection: 'row', transform: 'translateX(56px)'}}>
+                        {this.state.toneAverageTrend.map(
+                          (value, index) => {
+                            return (
+                              <div style={{flex: '1', alignItems: 'center', }}>
+                                <h4 style={{color: '#094492', textAlign: 'left',  fontWeight: '400',}}>
+                                  {value}
+                                </h4>
+                              </div>
+                            )
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+
+
                 </Grid>
+
               ) : this.state.tabState == 1 &&
                 Object.keys(this.state.averages).length > 0 &&
                 this.props.observationType == 'bookReading' &&
@@ -949,15 +976,13 @@ class TeacherProfileResults extends React.Component {
                     widenTable={this.state.widenTable}
                   />
                 </Grid>
-              ) : this.state.tabState == 0 &&
-                Object.keys(this.state.averages).length > 0 &&
-                !this.state.showErrorMessage ? (
+              ) : this.state.tabState == 0 && Object.keys(this.state.averages).length > 0 && !this.state.showErrorMessage ? (
                 <Grid
                   container
                   justify={'center'}
                   direction={'column'}
                   style={{
-                    height: 450,
+                    minHeight: 450,
                     flexWrap: 'nowrap',
                     padding: '30px 0px',
                   }}
@@ -971,17 +996,118 @@ class TeacherProfileResults extends React.Component {
                     usingTime={this.state.usingTime}
                   />
                   */}
-              {barGraphObservationTypes.includes(this.props.observationType) ? (
-                  <TeacherProfileBarDetails
-                    totalVisits={10}
-                    labels={this.state.teacherNames}
-                    data={this.state.averages}
-                    type={this.state.radioValue}
-                    barColors={this.state.lineColors}
-                    observationType={this.props.selectedPractices}
-                    teacherId={this.props.selectedTeacherId}
-                  />
-                ) : null}
+                  {barGraphObservationTypes.includes(this.props.observationType) ? (
+                    <>
+                      <Grid
+                        style={{
+                          height: 450,
+                          marginBottom: 20,
+                        }}
+                      >
+                        <TeacherProfileBarDetails
+                          totalVisits={10}
+                          labels={this.state.teacherNames}
+                          data={this.state.averages}
+                          type={this.state.radioValue}
+                          barColors={this.state.lineColors}
+                          observationType={this.props.selectedPractices}
+                          teacherId={this.props.selectedTeacherId}
+                        />
+                      </Grid>
+                      {/*
+                        The tone rating slider
+                        */}
+                      {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                        <>
+                          <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '50px',}}>
+                            <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px'}}>Teacher Tone</h3>
+                            <ClimateSlider
+                              value={this.state.toneAverage}
+                              aria-labelledby="discrete-slider-always"
+                              step={1}
+                              max={5}
+                              min={1}
+                              style={{width: '66%',}}
+                              marks={[
+                                {
+                                  value: 1,
+                                  label: '1',
+                                },
+                                {
+                                  value: 2,
+                                  label: '2',
+                                },
+                                {
+                                  value: 3,
+                                  label: '3',
+                                },
+                                {
+                                  value: 4,
+                                  label: '4',
+                                },
+                                {
+                                  value: 5,
+                                  label: '5',
+                                },
+                              ]}
+                              color="primary"
+                              getAriaValueText={this.valuetext}
+                              valueLabelDisplay="on"
+                              sx={{
+                                "& .MuiSlider-markLabel": {
+                                  fontSize: '3em',
+                                  color: 'black',
+                                  fontFamily: 'Arimo'
+                                },
+                                '& .MuiSlider-thumb': {
+                                  borderRadius: '1px',
+                                },
+                              }}
+
+                            />
+                          </Grid>
+
+                          <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', marginTop: '-30px', marginBottom: '20px',}}>
+                            <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px', color: 'rgba(0,0,0,0)'}}>Teacher Tone</h3>
+
+                            <ClimateSliderLabels
+                              value={this.state.toneAverage}
+                              aria-labelledby="discrete-slider-always"
+                              step={1}
+                              max={5}
+                              min={1}
+                              style={{width: '66%',}}
+                              marks={[
+                                {
+                                  value: 1,
+                                  label: 'Anger',
+                                },
+                                {
+                                  value: 2,
+                                  label: 'Irritation',
+                                },
+                                {
+                                  value: 3,
+                                  label: 'Neutral',
+                                },
+                                {
+                                  value: 4,
+                                  label: 'Positive Interest',
+                                },
+                                {
+                                  value: 5,
+                                  label: 'Excitement',
+                                },
+                              ]}
+                              color="primary"
+                              valueLabelDisplay="on"
+
+                            />
+                          </Grid>
+                        </>
+                      ) : null}
+                      </>
+                    ) : null}
 
                 </Grid>
               ) : null}
@@ -1000,98 +1126,7 @@ class TeacherProfileResults extends React.Component {
             </Grid>
             */}
 
-            {/*
-              The tone rating slider
-              */}
-            {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
-              <>
-                <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '20px',}}>
-                  <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px'}}>Teacher Tone</h3>
-                  <ClimateSlider
-                    value={this.state.toneAverage}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    max={5}
-                    min={1}
-                    style={{width: '66%',}}
-                    marks={[
-                      {
-                        value: 1,
-                        label: '1',
-                      },
-                      {
-                        value: 2,
-                        label: '2',
-                      },
-                      {
-                        value: 3,
-                        label: '3',
-                      },
-                      {
-                        value: 4,
-                        label: '4',
-                      },
-                      {
-                        value: 5,
-                        label: '5',
-                      },
-                    ]}
-                    color="primary"
-                    getAriaValueText={this.valuetext}
-                    valueLabelDisplay="on"
-                    sx={{
-                      "& .MuiSlider-markLabel": {
-                        fontSize: '3em',
-                        color: 'black',
-                        fontFamily: 'Arimo'
-                      },
-                      '& .MuiSlider-thumb': {
-                        borderRadius: '1px',
-                      },
-                    }}
 
-                  />
-                </Grid>
-
-                <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', marginTop: '-30px', marginBottom: '100px',}}>
-                  <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px', color: 'rgba(0,0,0,0)'}}>Teacher Tone</h3>
-
-                  <ClimateSliderLabels
-                    value={this.state.toneAverage}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    max={5}
-                    min={1}
-                    style={{width: '66%',}}
-                    marks={[
-                      {
-                        value: 1,
-                        label: 'Anger',
-                      },
-                      {
-                        value: 2,
-                        label: 'Irritation',
-                      },
-                      {
-                        value: 3,
-                        label: 'Neutral',
-                      },
-                      {
-                        value: 4,
-                        label: 'Positive Interest',
-                      },
-                      {
-                        value: 5,
-                        label: 'Excitement',
-                      },
-                    ]}
-                    color="primary"
-                    valueLabelDisplay="on"
-
-                  />
-                </Grid>
-              </>
-            ) : null}
 
 
 
