@@ -213,10 +213,10 @@ const chartTitleArr = {
   llqAverage: 'Teacher Asks Low-Level Question',
   llqResponseAverage: 'Child Answers Low-Level Question',
 
-  offTaskAverage: 'Off Task',
-  mildlyEngagedAverage: 'Mildly Engaged',
-  engagedAverage: 'Engaged',
-  highlyEngagedAverage: 'Highly Engaged',
+  smallGroupAverage: 'Small Group',
+  wholeGroupAverage: 'Whole Group',
+  transitionGroupAverage: 'Transition',
+  centersGroupAverage: 'Centers',
 
   eyeLevelAverage: 'At Eye Level',
   positiveExpressionAverage:
