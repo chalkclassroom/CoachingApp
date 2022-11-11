@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
@@ -124,6 +125,9 @@ const barDataVariableName = {
   ],
 }
 
+
+
+
 /**
  * Horizontal Bar Graph for Math Child Behaviors
  * @class EngagementBarDetails
@@ -143,15 +147,13 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
       axisMax: 20,
       axisStepSize: 1,
       axisLabel: "Number Observed",
+      graphData: [],
     }
   }
 
   componentDidMount = () => {
-    console.log("TYPE => ", this.props.observationType);
-    console.log("LABELS => ",  barLabelChoices[this.props.observationType]);
 
     var graphVariables = barDataVariableName[this.props.observationType];
-    console.log("GRAPH Variables =>> ", graphVariables);
 
     var colorChoices = barColorChoices[this.props.observationType];
 
@@ -168,8 +170,6 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
         barColors.push(colorChoices[i % colorChoices.length]);
     }
 
-    console.log("HIGHEST NUMBER => ", Math.max.apply(null, chartData));
-
     // Set the x-axis numbers
     var highestNumberInResults = Math.max.apply(null, chartData);
     var axisMax = 20;
@@ -185,8 +185,6 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     }
 
     this.setState({axisMax: axisMax, axisStepSize: axisStepSize});
-    console.log("AVERAGE TEST ", Math.round(highestNumberInResults * .2) )
-
 
     this.setState({labels: barLabelChoices[this.props.observationType], graphData: chartData, barColors: barColors});
 
@@ -206,8 +204,6 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     }
 
     this.setState({axisMax: axisMax, axisStepSize: axisStepSize});
-    console.log("AVERAGE TEST ", Math.round(highestNumberInResults * .2) )
-
 
     this.setState({labels: barLabelChoices[this.props.observationType], graphData: chartData, barColors: barColors});
 
@@ -280,6 +276,9 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
   }
 
 
+
+
+
   /**
    * render function
    * @return {ReactNode}
@@ -294,14 +293,61 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
           data: this.state.graphData,
           backgroundColor: this.state.barColors,
           hoverBackgroundColor: this.state.barColors,
-
-        }
+          label: 'shibby',
+        },
       ]
     };
+
+    // Get the average percentages for the percentage label at the end of each bar in the graph
+    function getPercentages(data){
+
+      var results = [];
+      if(data.length > 0)
+      {
+        var total = 0;
+        data.forEach(element => {
+          total += element;
+        });
+
+        data.forEach(element => {
+          var tempPercentage = Math.round(element / total * 100);
+          results.push(tempPercentage);
+        });
+      }
+      return results;
+    }
+
+    const topLabels = {
+      id: 'topLabels',
+      afterDatasetsDraw(chart, args, pluginOptions) {
+        const { ctx, scales} = chart;
+
+        var x = scales['x-axis-0'];
+        var y = scales['y-axis-0'];
+
+        ctx.font = '18px sans-serif';
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'left';
+
+        var percentages = getPercentages(chart.config.data.datasets[0].data);
+
+        chart.config.data.datasets.forEach(function (dataset) {
+
+              if(dataset._meta[0].type === "horizontalBar"){
+                  const dataArray = dataset.data;
+                  dataset._meta[0].data.forEach(function (bar, index) {
+                      ctx.fillText(percentages[index] + '%', bar._view.x + 10, bar._view.y + 5);
+                  });
+              };
+          })
+
+      }
+    }
 
     return (
       <HorizontalBar
         data={childBehaviorsData}
+        plugins={[ChartDataLabels, topLabels]}
         options={{
           animation: {
             onComplete: function(): void {
@@ -323,6 +369,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                       return value;
                   }
                 },
+                stacked: false,
                 scaleLabel: {
                   display: true,
                   labelString: this.state.axisLabel,
@@ -336,7 +383,8 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                 ticks: {
                   fontSize: 16,
                   fontColor: 'black',
-                }
+                },
+                stacked: true,
               }
             ]
           },
@@ -351,10 +399,11 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
             fontFamily: 'Arimo',
             fontStyle: "bold"
           },
+
           plugins: {
             datalabels: {
               display: 'auto',
-              color: 'white',
+              color: 'black',
               font: {
                 size: 14,
                 weight: 'bold'
@@ -366,6 +415,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                   return null;
                 }
               }
+
             }
           },
           maintainAspectRatio: false
