@@ -169,6 +169,7 @@ const practicesArr = {
 }
 
 // Array used to match the default radio value based on the type
+/*
 const radioValueArr = {
   transitionTime: 'line',
   classroomClimate: 'nonspecificapproval',
@@ -182,6 +183,11 @@ const radioValueArr = {
   bookReading: 'bookReading',
   languageEnvironment: 'languageEnvironment',
   associativeAndCooperative: 'childrensPlay',
+}
+*/
+
+const radioValueArr = {
+  mathInstruction: 'teacherBehavior',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -361,7 +367,7 @@ class TeacherProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      radioValue: radioValueArr[this.props.observationType],
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : "",
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
