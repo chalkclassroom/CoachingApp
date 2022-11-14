@@ -6331,7 +6331,15 @@ class Firebase {
            .then(
              (result) => {
                console.log("Result: ", result.data);
-               return result.data;
+
+               var results = result.data[0];
+
+               for(var i = 1; i < result.data.length; i++)
+               {
+                  results = results.concat(result.data[i]);
+               }
+
+               return results;
              }
            )
            .catch((error: Error) =>
