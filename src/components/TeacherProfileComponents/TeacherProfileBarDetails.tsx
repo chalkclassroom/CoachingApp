@@ -291,10 +291,22 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
   // Different observations will have differents styles for graphs. We need to set those
   modifyGraphByObservationType = () => {
     var axisLabel = "Number Observed";
+    var axisMax = 20;
+    var axisStepSize = 1;
+
 
     if(this.props.observationType === "classroomClimate")
     {
         axisLabel = "Average Number across Observations";
+    }
+    if (this.props.observationType === "studentEngagement") {
+      axisLabel ="Level of Engagement"
+      axisStepSize = 1
+      axisMax = 3
+      this.setState({
+        axisStepSize: axisStepSize,
+        axisMax: axisMax
+      })
     }
 
     if(this.props.observationType === "mathInstruction")
