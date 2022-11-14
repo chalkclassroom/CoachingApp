@@ -223,6 +223,8 @@ class TrendData {
       return new Date(a) - new Date(b);
     });
 
+    var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
+
     console.log("Observatoin Dates : ", observationDates);
 
 
@@ -256,7 +258,7 @@ class TrendData {
       childNonMathAverage: new Array(arraySize).fill(0),
       childMathAverage: new Array(arraySize).fill(0),
 
-      lineChartLabels: observationDates,
+      lineChartLabels: observationDatesFormatted,
     };
 
 
