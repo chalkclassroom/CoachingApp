@@ -6245,8 +6245,8 @@ class Firebase {
       return fetchTeacherProfileData({startDate: data.startDate, endDate: data.endDate, teacherIds: data.teacherIds})
         .then(
           (result) => {
-            console.log("Result: " + result.data[0][0]);
-            return result.data[0];
+            console.log("Result:", result.data);
+            return result.data;
           }
         )
         .catch((error: Error) =>
@@ -6330,8 +6330,8 @@ class Firebase {
          return fetchTeacherProfileAverages({type: data.type, startDate: data.startDate, endDate: data.endDate, teacherId: data.teacherId})
            .then(
              (result) => {
-               console.log("Result: " + result.data[0][0]);
-               return result.data[0];
+               console.log("Result: ", result.data);
+               return result.data;
              }
            )
            .catch((error: Error) =>
