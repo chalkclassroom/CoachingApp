@@ -436,6 +436,7 @@ class TeacherProfileResults extends React.Component {
 
     // Get data from BQ
     this.getResultsFromBQ(this.props.selectedTeacherId)
+    this.modifyLineGraphByObervationType()
 
     if (this.props.observationType == 'bookReading') {
       firebase
@@ -787,6 +788,29 @@ class TeacherProfileResults extends React.Component {
 
   randomInteger = max => {
     return Math.floor(Math.random() * (max + 1))
+  }
+
+
+  modifyLineGraphByObervationType = () => {
+    if (this.props.observationType === "studentEngagement") {
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 3
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+        if (value == 0) {
+          return 'Off Task'
+        }
+        if (value == 1) {
+          return 'Mildly Engaged'
+        }
+        if (value == 2) {
+          return 'Engaged'
+        }
+        if (value == 3) {
+          return 'Highly Engaged'
+        }
+      }
+    }
   }
 
 
