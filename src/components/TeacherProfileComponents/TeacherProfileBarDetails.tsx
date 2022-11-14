@@ -147,7 +147,6 @@ const barDataVariableName = {
 
 
 
-
 /**
  * Horizontal Bar Graph for Math Child Behaviors
  * @class EngagementBarDetails
@@ -236,12 +235,19 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
 
     var chartData = [];
     var barColors = [];
+
+    // If there are no variables, don't worry about it (we're probably looking at the trends tab that has other radio values)
+    if(!graphVariables){return;}
+    
     for(var i = 0; i < graphVariables.length; i++)
     {
         var variableName = graphVariables[i];
 
         var tempAvg = this.props.data[this.props.teacherId][variableName];
+
+
         tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+
         chartData.push(tempAvg);
 
         barColors.push(colorChoices[i % colorChoices.length]);
@@ -311,7 +317,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
 
     if(this.props.observationType === "mathInstruction")
     {
-        axisLabel = "Average Number of Times Each Behabior was Observed";
+        axisLabel = "Average Number of Times Each Behavior was Observed";
     }
 
     this.setState({
@@ -357,7 +363,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
       {
         var total = 0;
         data.forEach(element => {
-          total += element;
+          total += parseFloat(element);
         });
 
         data.forEach(element => {
@@ -373,7 +379,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     // We don't want to show the percentages on all the observation types
     //  NOTE: I tried controlling this using state but it was being difficult. This way is easier.
     var showPercentages = false;
-    if(this.props.observationType === "classroomClimate")
+    if(this.props.observationType === "classroomClimate" || this.props.observationType === "mathInstruction")
     {
       showPercentages = true;
     }

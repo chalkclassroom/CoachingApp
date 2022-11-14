@@ -169,6 +169,7 @@ const practicesArr = {
 }
 
 // Array used to match the default radio value based on the type
+/*
 const radioValueArr = {
   transitionTime: 'line',
   classroomClimate: 'nonspecificapproval',
@@ -182,6 +183,11 @@ const radioValueArr = {
   bookReading: 'bookReading',
   languageEnvironment: 'languageEnvironment',
   associativeAndCooperative: 'childrensPlay',
+}
+*/
+
+const radioValueArr = {
+  mathInstruction: 'teacherBehavior',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -203,9 +209,11 @@ const chartTitleArr = {
   askingQuestionsAverage: 'Asking Questions About Math Concepts',
   mathConceptsAverage: 'Demonstrating Math Concepts',
   helpingChildrenAverage: 'Helping Children Use Math to Problem Solve',
-  notAtCenterAverage: 'Teacher Not at Center',
-  noSupportAverage: 'No Support',
-  supportAverage: 'Teacher Support',
+  notAtCenterMathAverage: 'Teacher Not at Center',
+  noSupportMathAverage: 'No Support',
+  supportMathAverage: 'Teacher Support',
+  childNonMathAverage: 'Non-Math Activities',
+  childMathAverage: 'Math',
   totalInstructionsAverage: 'Total Instruction',
 
   hlqAverage: 'Teacher Asks High-Level Question',
@@ -273,8 +281,26 @@ const chartTitleArr = {
   notAtCenterAverage: 'Was not present in the centers observed',
 }
 
+
+// Different observation types are going to show different data. This will be used to tell the program which ones to show for each type
+const trendsToShow = {
+
+  "mathInstruction" : {
+    teacherMathBehavior: {
+      "notAtCenterMathAverage": "#FFFFFF",
+      "noSupportMathAverage": "#EC2409",
+      "supportMathAverage": "#459AEB"
+    },
+    childMathBehavior: {
+      "childNonMathAverage": "#EC2409",
+      "childMathAverage": "#094492"
+    }
+
+  },
+}
+
 // Set the colors for the trends line graph
-const barColorChoices = {
+const lineColorChoices = {
   "classroomClimate" : {
     "Specific Approval": "#0988EC",
     "General Approval": "#094492",
@@ -290,7 +316,17 @@ const barColorChoices = {
     "Other": "#536DFE",
   },
   "mathInstruction" : {
-    "useForAll": "#459AEB",
+    //"useForAll": "#459AEB",
+    teacherMathBehavior: {
+      "Teacher Not at Center": "#BABABA",
+      "No Support": "#EC2409",
+      "Teacher Support": "#459AEB"
+    },
+    childMathBehavior: {
+      "Non-Math Activities": "#EC2409",
+      "Math": "#094492"
+    }
+
   },
   "levelOfInstruction" : {
     "Teacher Asks High-Level Question": "#38761D",
@@ -299,6 +335,9 @@ const barColorChoices = {
     "Child Answers Low-Level Question": "#1155CC",
   },
 }
+
+const AVERAGES_SUBPAGE = 0;
+const TRENDS_SUBPAGE = 1;
 
 
 const ClimateSlider = withStyles({
@@ -361,7 +400,7 @@ class TeacherProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      radioValue: radioValueArr[this.props.observationType],
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : "",
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -460,29 +499,13 @@ class TeacherProfileResults extends React.Component {
     var usingTime = false
     switch (this.props.observationType) {
       case 'transitionTime':
-        averages = this.state.averagesClass.calculateTransitionAverage(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateTransitionTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateTransitionAverage( data, teacher)
+        trends = this.state.trendsClass.calculateTransitionTrends( data, teacher, this.props.startDate, this.props.endDate)
         usingTime = true
         break
       case 'classroomClimate':
-        averages = this.state.averagesClass.calculateClimateAverage(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateClimateTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateClimateAverage( data, teacher)
+        trends = this.state.trendsClass.calculateClimateTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'mathInstruction':
         averages = this.state.averagesClass.calculateMathAverages(data, teacher)
@@ -490,109 +513,40 @@ class TeacherProfileResults extends React.Component {
         this.setState({chartsTitle: "Teacher Support for Math"});
         break
       case 'levelOfInstruction':
-        averages = this.state.averagesClass.calculateLevelInstructionAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateLevelInstructionTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teacher)
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'studentEngagement':
-        averages = this.state.averagesClass.calculateStudentEngagementAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateStudentEngagementTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teacher)
+        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'listeningToChildren':
-        averages = this.state.averagesClass.calculateListeningToChildrenAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateListeningToChildrenTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teacher)
+        trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'sequentialActivities':
-        averages = this.state.averagesClass.calculateSequentialActivitiesAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateSequentialActivitiesTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teacher)
+        trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'foundationSkills':
-        averages = this.state.averagesClass.calculateFoundationalSkillsAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateFoundationalSkillsTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teacher)
+        trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'writing':
-        averages = this.state.averagesClass.calculateWritingSkillsAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateWritingSkillsTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teacher)
+        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'bookReading':
-        averages = this.state.averagesClass.calculateBookReadingAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateBookReadingTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateBookReadingAverages( data, teacher)
+        trends = this.state.trendsClass.calculateBookReadingTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'languageEnvironment':
-        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(
-          data,
-          teacher
-        )
-        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teacher)
+        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
       case 'associativeAndCooperative':
         averages = this.state.averagesClass.calculateACAverages(data, teacher)
-        trends = this.state.trendsClass.calculateACTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        trends = this.state.trendsClass.calculateACTrends( data, teacher, this.props.startDate, this.props.endDate)
         break
 
       default:
@@ -624,7 +578,10 @@ class TeacherProfileResults extends React.Component {
     this.setLineGraphData(teacher, this.state.radioValue)
   }
 
+
   // Set Line Graph data
+  // @param teacher: a json object holding all the teacher's information
+  // @param type: the value of the radio button selected
   setLineGraphData = (teacher, type) => {
     var trends = this.state.trends
 
@@ -633,19 +590,36 @@ class TeacherProfileResults extends React.Component {
     var i = 0
 
     // Go through each trends and save the averages in the dataset so there's a line for each answer type
-    var teachersTrends = trends[teacher.id]
+    var trendsToUse = trends[teacher.id]
 
 
     // Check if this observation type has individual colors for each answer type or the same for all
     var useColorForAll = false;
     var colorToUse = "#AAAAAA";
-    if(barColorChoices[this.props.observationType]["useForAll"])
+    if(lineColorChoices[this.props.observationType]["useForAll"])
     {
       useColorForAll = true;
-      colorToUse = barColorChoices[this.props.observationType]["useForAll"];
+      colorToUse = lineColorChoices[this.props.observationType]["useForAll"];
     }
 
-    for (var trendIndex in teachersTrends) {
+    // If we specified what trends should show in trendsToShow[], let's use those
+    if(trendsToShow[this.props.observationType])
+    {
+      // If we have the trends specified for individual radio buttons
+      if(trendsToShow[this.props.observationType][type])
+      {
+        trendsToUse = trendsToShow[this.props.observationType][type];
+      }
+      else
+      {
+        trendsToUse = trendsToShow[this.props.observationType]
+      }
+    }
+
+
+    // Go through each of the trends we want to show on the line chart
+    for (var trendIndex in trendsToUse) {
+
       // Make sure we're only grabbing the averages, also not the data that was used for calculations
       if (
         !trendIndex.includes('Average') ||
@@ -656,6 +630,7 @@ class TeacherProfileResults extends React.Component {
         continue
       }
 
+      // Get the actual data for this line
       var trendData = trends[teacher.id][trendIndex]
 
       // Round off all the numbers
@@ -665,24 +640,29 @@ class TeacherProfileResults extends React.Component {
 
       var trendLabel = chartTitleArr[trendIndex] ? chartTitleArr[trendIndex] : trendIndex
 
-      // If there isn't a color set for this teacher, set it
-      if (!lineColors[i]) {
-        // If there isn't a single color to use for all of them
-        if(useColorForAll)
-        {
-          lineColors[i] = colorToUse;
-        }
-        else if(barColorChoices[this.props.observationType][trendLabel])
-        {
-          lineColors[i] = barColorChoices[this.props.observationType][trendLabel]
-        }
-        // Account for if this observation's colors haven't been set yet, just generate some random ones
-        else
-        {
-          lineColors[i] = this.randomRgbColor();
-        }
-        //lineColors[i] = barColorChoices[this.props.observationType][i % lineLength]
+
+      // SET THE COLORS
+      // If there is a single color to use for all of them
+      if(useColorForAll)
+      {
+        lineColors[i] = colorToUse;
       }
+      else if(lineColorChoices[this.props.observationType][trendLabel])
+      {
+        lineColors[i] = lineColorChoices[this.props.observationType][trendLabel]
+      }
+      // If there's a subtype in the line colors (To account for the different radio buttons)
+      else if(lineColorChoices[this.props.observationType][type])
+      {
+        lineColors[i] = lineColorChoices[this.props.observationType][type][trendLabel]
+      }
+      // Account for if this observation's colors haven't been set yet, just generate some random ones
+      else
+      {
+        lineColors[i] = this.randomRgbColor();
+      }
+
+      // Save the data
       var tempData = {
         label: trendLabel,
         data: trendData,
@@ -781,8 +761,23 @@ class TeacherProfileResults extends React.Component {
     this.setState({ [event.target.name]: dateVal })
   }
 
-  // When any of the date dropdowns are changed
+  // When the Averages/Trends tabs are clicked on
   handleTabChange = (event: React.SyntheticEvent<{}>, newValue: any) => {
+
+    // Some observations have different radio buttons for their trends and averages sub pages. We need to reset the selected value based on that
+    if(this.props.observationType === "mathInstruction")
+    {
+      if(newValue == AVERAGES_SUBPAGE)
+      {
+        this.setState({ radioValue: "teacherBehavior" });
+      }
+      else
+      {
+        this.setState({ radioValue: "teacherMathBehavior" });
+        this.setLineGraphData(this.state.teacherInfo, "teacherMathBehavior")
+      }
+    }
+
     this.setState({ tabState: newValue })
   }
 
@@ -880,7 +875,7 @@ class TeacherProfileResults extends React.Component {
                 onChange={this.handleRadioChange}
                 style={{ width: '100%' }}
               >
-                <RadioSets type={this.props.observationType} />
+                <RadioSets type={this.props.observationType} subPage={this.state.tabState} />
               </RadioGroup>
             ) : null}
 
@@ -957,10 +952,7 @@ class TeacherProfileResults extends React.Component {
 
                 </Grid>
 
-              ) : this.state.tabState == 1 &&
-                Object.keys(this.state.averages).length > 0 &&
-                this.props.observationType == 'bookReading' &&
-                !this.state.showErrorMessage ? (
+              ) : this.state.tabState == 1 && Object.keys(this.state.averages).length > 0 && this.props.observationType == 'bookReading' && !this.state.showErrorMessage ? (
                 <Grid
                   container
                   justify={'center'}

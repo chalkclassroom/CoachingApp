@@ -227,15 +227,21 @@ class TrendData {
       noSupport: new Array(12).fill(0),
       support: new Array(12).fill(0),
 
+      childNonMath: new Array(12).fill(0),
+      childMath: new Array(12).fill(0),
+
       totalInstructionsAverage: new Array(12).fill(0),
       mathVocabularyAverage: new Array(12).fill(0),
       askingQuestionsAverage: new Array(12).fill(0),
       mathConceptsAverage: new Array(12).fill(0),
       helpingChildrenAverage: new Array(12).fill(0),
 
-      notAtCenterAverage: new Array(12).fill(0),
-      noSupportAverage: new Array(12).fill(0),
-      supportAverage: new Array(12).fill(0),
+      notAtCenterMathAverage: new Array(12).fill(0),
+      noSupportMathAverage: new Array(12).fill(0),
+      supportMathAverage: new Array(12).fill(0),
+
+      childNonMathAverage: new Array(12).fill(0),
+      childMathAverage: new Array(12).fill(0),
     };
 
 
@@ -265,6 +271,9 @@ class TrendData {
       results[teacherId].notAtCenter[rowMonth] += row.noOpportunity;
       results[teacherId].support[rowMonth] += row.support;
       results[teacherId].noSupport[rowMonth] += row.noSupport;
+
+      results[teacherId].childNonMath[rowMonth] += row.noMath;
+      results[teacherId].childMath[rowMonth] += (row.count - row.noMath);
     }
 
     // Calculate the averages in percentages
@@ -283,9 +292,12 @@ class TrendData {
         result.mathConceptsAverage[i] = result.mathConcepts[i] > 0 ? (result.mathConcepts[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.helpingChildrenAverage[i] = result.helpingChildren[i] > 0 ? (result.helpingChildren[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-        result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.supportAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.noSupportAverage[i] = result.noSupport[i] > 0 ? (result.noSupport[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.notAtCenterMathAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.supportMathAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.noSupportMathAverage[i] = result.noSupport[i] > 0 ? (result.noSupport[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+        result.childNonMathAverage[i] = result.childNonMath[i] > 0 ? (result.childNonMath[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.childMathAverage[i] = result.childMath[i] > 0 ? (result.childMath[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       }
     }

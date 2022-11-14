@@ -114,6 +114,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "math")
     {
       sqlQuery = `SELECT
+                      id,
                       COUNT(id) as count,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
@@ -126,12 +127,13 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.child2) THEN 'math2' ELSE NULL END) AS shapes,
                       COUNT(CASE WHEN (checklist.child3) THEN 'math3' ELSE NULL END) AS patterns,
                       COUNT(CASE WHEN (checklist.child4) THEN 'math4' ELSE NULL END) AS measurement,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'math5' ELSE NULL END) AS noMath,
                       teacher,
                       peopletype,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY teacher, timestamp, peopletype
+                      GROUP BY teacher, timestamp, peopletype, id
                       ORDER BY timestamp ASC;`;
     }
 
