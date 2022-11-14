@@ -249,6 +249,59 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      let options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+                  
+                      let [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      let teacher = await job.getQueryResults();
+
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.item1) THEN 'foundational1' ELSE NULL END) AS foundational1,
+                      COUNT(CASE WHEN (checklist.item2) THEN 'foundational2' ELSE NULL END) AS foundational2,
+                      COUNT(CASE WHEN (checklist.item3) THEN 'foundational3' ELSE NULL END) AS foundational3,
+                      COUNT(CASE WHEN (checklist.item4) THEN 'foundational4' ELSE NULL END) AS foundational4,
+                      COUNT(CASE WHEN (checklist.item5) THEN 'foundational5' ELSE NULL END) AS foundational5,
+                      COUNT(CASE WHEN (checklist.item6) THEN 'foundational6' ELSE NULL END) AS foundational6,
+                      COUNT(CASE WHEN (checklist.item7) THEN 'foundational7' ELSE NULL END) AS foundational7,
+                      COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
+                      COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
+                      COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
+                      COUNT (sessionStart) AS total,
+                      teacher,
+                      time
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyFoundationalChild
+                      where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
+                      GROUP BY time, GroupDate, startDate, teacher
+                      ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+                  
+                      [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      child = await job.getQueryResults();
+                      
+                      console.log(teacher, child)
+
+                      const rows = teacher.concat(child)
+
+                      console.log(rows)
+
+                      return rows
     }
 
 
@@ -275,6 +328,59 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      let options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+                  
+                      let [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      let teacher = await job.getQueryResults();
+          
+
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.item1) THEN 'writing1' ELSE NULL END) AS writingChild1,
+                      COUNT(CASE WHEN (checklist.item2) THEN 'writing2' ELSE NULL END) AS writingChild2,
+                      COUNT(CASE WHEN (checklist.item3) THEN 'writing3' ELSE NULL END) AS writingChild3,
+                      COUNT(CASE WHEN (checklist.item4) THEN 'writing4' ELSE NULL END) AS writingChild4,
+                      COUNT(CASE WHEN (checklist.item5) THEN 'writing5' ELSE NULL END) AS writingChild5,
+                      COUNT(CASE WHEN (checklist.item6) THEN 'writing6' ELSE NULL END) AS writingChild6,
+                      COUNT(CASE WHEN (checklist.item7) THEN 'writing7' ELSE NULL END) AS writingChild7,
+                      COUNT(CASE WHEN (checklist.item8) THEN 'writing8' ELSE NULL END) AS writingChild8,
+                      COUNT(CASE WHEN (checklist.item9) THEN 'writing9' ELSE NULL END) AS writingChild9,
+                      COUNT (sessionStart) AS total,
+                      teacher,
+                      time
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyWritingChild
+                      where teacher = '${teacherId}' and time <= '${endDate}' and time >= '${startDate}'
+                      GROUP BY time, GroupDate, startDate, teacher
+                      ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+                  
+                      [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      child = await job.getQueryResults();
+                      
+                      console.log(teacher, child)
+
+                      const rows = teacher.concat(child)
+
+                      console.log(rows)
+
+                      return rows
+
     }
 
     /*
@@ -364,25 +470,6 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
                       GROUP BY timestamp, GroupDate, peopleType, startDate, teacher
                       ORDER BY GroupDate DESC;`;
-    }
-
-
-
-    if (observationType === "literacyWritingTeacher") {
-      console.log("QUERY: ", sqlQuery);
-
-      const options = {
-          query: sqlQuery,
-          // Location must match that of the dataset(s) referenced in the query.
-          location: 'US',
-      };
-
-      const [job] = await bigquery.createQueryJob(options);
-      console.log(`Job ${job.id} started.`);
-      const rows = await job.getQueryResults();
-      console.log(rows);
-      return rows;
-
     }
 
     console.log("QUERY: ", sqlQuery);
