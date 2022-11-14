@@ -215,33 +215,48 @@ class TrendData {
     // Add each teacher to the object
     var tempName = teacher.firstName + " " + teacher.lastName;
 
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(data.map(item => item.timestamp))];
+
+    // Sort by date just in case
+    observationDates.sort(function(a,b){
+      return new Date(a) - new Date(b);
+    });
+
+    console.log("Observatoin Dates : ", observationDates);
+
+
+    var arraySize = observationDates.length;
+
     results[teacher.id] = {
       name: tempName,
-      totalInstructions: new Array(12).fill(0),
-      mathVocabulary: new Array(12).fill(0),
-      askingQuestions: new Array(12).fill(0),
-      mathConcepts: new Array(12).fill(0),
-      helpingChildren: new Array(12).fill(0),
+      totalInstructions: new Array(arraySize).fill(0),
+      mathVocabulary: new Array(arraySize).fill(0),
+      askingQuestions: new Array(arraySize).fill(0),
+      mathConcepts: new Array(arraySize).fill(0),
+      helpingChildren: new Array(arraySize).fill(0),
 
-      notAtCenter: new Array(12).fill(0),
-      noSupport: new Array(12).fill(0),
-      support: new Array(12).fill(0),
+      notAtCenter: new Array(arraySize).fill(0),
+      noSupport: new Array(arraySize).fill(0),
+      support: new Array(arraySize).fill(0),
 
-      childNonMath: new Array(12).fill(0),
-      childMath: new Array(12).fill(0),
+      childNonMath: new Array(arraySize).fill(0),
+      childMath: new Array(arraySize).fill(0),
 
-      totalInstructionsAverage: new Array(12).fill(0),
-      mathVocabularyAverage: new Array(12).fill(0),
-      askingQuestionsAverage: new Array(12).fill(0),
-      mathConceptsAverage: new Array(12).fill(0),
-      helpingChildrenAverage: new Array(12).fill(0),
+      totalInstructionsAverage: new Array(arraySize).fill(0),
+      mathVocabularyAverage: new Array(arraySize).fill(0),
+      askingQuestionsAverage: new Array(arraySize).fill(0),
+      mathConceptsAverage: new Array(arraySize).fill(0),
+      helpingChildrenAverage: new Array(arraySize).fill(0),
 
-      notAtCenterMathAverage: new Array(12).fill(0),
-      noSupportMathAverage: new Array(12).fill(0),
-      supportMathAverage: new Array(12).fill(0),
+      notAtCenterMathAverage: new Array(arraySize).fill(0),
+      noSupportMathAverage: new Array(arraySize).fill(0),
+      supportMathAverage: new Array(arraySize).fill(0),
 
-      childNonMathAverage: new Array(12).fill(0),
-      childMathAverage: new Array(12).fill(0),
+      childNonMathAverage: new Array(arraySize).fill(0),
+      childMathAverage: new Array(arraySize).fill(0),
+
+      lineChartLabels: observationDates,
     };
 
 
@@ -256,7 +271,8 @@ class TrendData {
 
       var teacherId = teacher.id;
 
-      var rowMonth = new Date(row.timestamp).getMonth();
+      // var rowMonth = new Date(row.timestamp).getMonth();
+      var rowMonth = observationDates.indexOf(row.timestamp);
 
       // Add to total # of intervals
       //results[teacherId].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;

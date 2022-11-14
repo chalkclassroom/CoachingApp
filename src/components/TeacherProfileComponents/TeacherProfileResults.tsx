@@ -93,7 +93,7 @@ const switcherButton = {
   background: '#f3f3f3',
 }
 
-const LineGraphOptions = {
+var LineGraphOptions = {
   maintainAspectRatio: false,
   showScale: true,
   pointDot: true,
@@ -676,7 +676,7 @@ class TeacherProfileResults extends React.Component {
       i++
     }
 
-    const labels = [
+    var labels = [
       'January',
       'February',
       'March',
@@ -690,6 +690,13 @@ class TeacherProfileResults extends React.Component {
       'November',
       'December',
     ]
+
+    // If we don't want to use the 12 months and have a custom one, use that instead
+    if(trends[teacher.id].lineChartLabels)
+    {
+      labels = trends[teacher.id].lineChartLabels;
+    }
+
     const lineData = {
       labels,
       datasets: tempDataSet,
@@ -802,6 +809,24 @@ class TeacherProfileResults extends React.Component {
       "mathInstruction",
       "levelOfInstruction",
     ]
+
+    var lineGraphOptions = LineGraphOptions;
+
+    console.log("LineGraphOptions 1 :", lineGraphOptions);
+
+    // Trends for some of the observation types need to have the percent showing for each dot
+    if(this.props.observationType === "mathInstruction")
+    {
+      lineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        color: 'gray',
+        align: 'right',
+        formatter: function(value: number): string {
+          return value + '%'
+        },
+      }
+    }
+    console.log("LineGraphOptions 2 :", lineGraphOptions);
 
     return (
       <div id="TeacherProfileResultsContainer">
@@ -922,7 +947,7 @@ class TeacherProfileResults extends React.Component {
                   >
                     <Line
                       data={this.state.lineGraphData}
-                      options={LineGraphOptions}
+                      options={lineGraphOptions}
                     />
                   </Grid>
 

@@ -130,7 +130,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.child5) THEN 'math5' ELSE NULL END) AS noMath,
                       teacher,
                       peopletype,
-                      FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
+                      FORMAT_DATETIME("%b-%d-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY teacher, timestamp, peopletype, id
@@ -259,7 +259,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       let [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
@@ -292,11 +292,11 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
-                      
+
                       console.log(teacher, child)
 
                       const rows = teacher.concat(child)
@@ -338,11 +338,11 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       let [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
-          
+
 
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       DATE(sessionStart) as GroupDate,
@@ -370,11 +370,11 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
-                      
+
                       console.log(teacher, child)
 
                       const rows = teacher.concat(child)
