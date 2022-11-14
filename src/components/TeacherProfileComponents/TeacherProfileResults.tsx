@@ -172,7 +172,7 @@ const practicesArr = {
 const radioValueArr = {
   transitionTime: 'line',
   classroomClimate: 'nonspecificapproval',
-  mathInstruction: 'mathVocabulary',
+  mathInstruction: 'teacherBehavior',
   levelOfInstruction: 'hlq',
   studentEngagement: 'offTask',
   listeningToChildren: 'eyeLevel',
@@ -361,7 +361,7 @@ class TeacherProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      radioValue: '',
+      radioValue: radioValueArr[this.props.observationType],
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -387,6 +387,8 @@ class TeacherProfileResults extends React.Component {
 
       toneCount: 0,
       toneAverage: 0,
+
+      chartsTitle: "Teacher Behaviors",
     }
   }
 
@@ -484,12 +486,8 @@ class TeacherProfileResults extends React.Component {
         break
       case 'mathInstruction':
         averages = this.state.averagesClass.calculateMathAverages(data, teacher)
-        trends = this.state.trendsClass.calculateMathTrends(
-          data,
-          teacher,
-          this.props.startDate,
-          this.props.endDate
-        )
+        trends = this.state.trendsClass.calculateMathTrends(data, teacher, this.props.startDate, this.props.endDate)
+        this.setState({chartsTitle: "Teacher Support for Math"});
         break
       case 'levelOfInstruction':
         averages = this.state.averagesClass.calculateLevelInstructionAverages(
@@ -872,23 +870,23 @@ class TeacherProfileResults extends React.Component {
             </Grid>
 
             {/*
-                    The checklists
-                */}
-                {/*
-            <RadioGroup
-              aria-label="gender"
-              name="gender1"
-              value={this.state.radioValue}
-              onChange={this.handleRadioChange}
-              style={{ width: '100%' }}
-            >
-              <RadioSets type={this.props.observationType} />
-            </RadioGroup>
+                The checklists
             */}
+            {this.props.observationType === "mathInstruction" ? (
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={this.state.radioValue}
+                onChange={this.handleRadioChange}
+                style={{ width: '100%' }}
+              >
+                <RadioSets type={this.props.observationType} />
+              </RadioGroup>
+            ) : null}
 
             {/*
-                    The chart switcher
-                */}
+                The chart switcher
+            */}
             <Grid container style={centerRow}>
               <Grid xs={8}>
                 <TabBarWrapper
@@ -900,7 +898,7 @@ class TeacherProfileResults extends React.Component {
               </Grid>
             </Grid>
 
-            <h3 style={{textAlign: 'center', width: '100%', marginBottom: 20}}>Teacher Behaviors</h3>
+            <h3 style={{textAlign: 'center', width: '100%', marginBottom: 20}}>{this.state.chartsTitle}</h3>
 
             {/*
                   The "averages" bar graph and "trends" line graph
