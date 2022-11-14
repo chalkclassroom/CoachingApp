@@ -321,7 +321,8 @@ interface State {
   allEvents: Array<any>,
   dataLoaded: boolean,
   view: number,
-  deleteAppointmentDialog: boolean
+  deleteAppointmentDialog: boolean,
+  sites: Array<Object>
 }
 
 /**
@@ -372,9 +373,17 @@ class TeacherListPage extends React.Component<Props, State> {
       existingTeacherName: "",
       existingTeacherEmail: "",
       existingTeacherInfo: "",
-      newTeacherInfo: {}
+      newTeacherInfo: {},
+      sites: []
 
     };
+  }
+
+  handleAddSchool = (event) => {
+    this.setState({
+      inputSchool: event.target.value
+    })
+    console.log(event.target.value)
   }
 
   addEventsToTeachers = (): Array<Teacher & {type: Types.ToolNamesKey, title: string, start: Date}> => {
@@ -398,7 +407,7 @@ class TeacherListPage extends React.Component<Props, State> {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
+  componentDidMount = async () => {
     const firebase = this.context;
     let allEvents: Array<Types.CalendarEvent> = [];
     this.setState({
@@ -453,8 +462,10 @@ class TeacherListPage extends React.Component<Props, State> {
         })
       })
     })
+    const sites = await firebase.getSites()
     this.setState({
-      teachers: this.props.teacherList
+      teachers: this.props.teacherList,
+      sites: sites
     })
   }
 
@@ -1407,6 +1418,8 @@ class TeacherListPage extends React.Component<Props, State> {
             phoneErrorText={phoneErrorText}
             notesErrorText={notesErrorText}
             handleComplete={isAdding ? this.handleAddConfirm : this.handleEditConfirm}
+            sites={this.state.sites}
+            handleAddSchool = {this.handleAddSchool}
           />
           <Dialog
             open={addAlert}
