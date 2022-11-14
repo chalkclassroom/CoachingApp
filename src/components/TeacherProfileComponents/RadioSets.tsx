@@ -20,6 +20,11 @@ const centerRow = {
     marginBottom: 8
 }
 
+
+const AVERAGES_SUBPAGE = 0;
+const TRENDS_SUBPAGE = 1;
+
+
 class RadioSets extends React.Component<Props, {}> {
   /**
    * @param {Props} props
@@ -131,36 +136,75 @@ class RadioSets extends React.Component<Props, {}> {
     if(this.props.type === "mathInstruction")
     {
 
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={"checkboxesform"}>
-              <FormGroup>
+      if(this.props.subPage === AVERAGES_SUBPAGE)
+      {
 
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Behaviors"
-                  value="teacherBehavior"
-                />
+        return (
+          <Grid container style={centerRow}>
+            <Grid item xs={6}>
+              <FormControl component="fieldset" className={"checkboxesform"}>
+                <FormGroup>
 
-              </FormGroup>
-            </FormControl>
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="Teacher Behaviors"
+                    value="teacherBehavior"
+                  />
+
+                </FormGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl component="fieldset" className={"checkboxesform"}>
+                <FormGroup>
+
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="Child Behaviors"
+                    value="childBehavior"
+                  />
+
+                </FormGroup>
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={"checkboxesform"}>
-              <FormGroup>
+        )
+      }
 
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Child Behaviors"
-                  value="childBehavior"
-                />
+      if(this.props.subPage === TRENDS_SUBPAGE)
+      {
 
-              </FormGroup>
-            </FormControl>
+        return (
+          <Grid container style={centerRow}>
+            <Grid item xs={6}>
+              <FormControl component="fieldset" className={"checkboxesform"}>
+                <FormGroup>
+
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="Teacher Support for Math"
+                    value="teacherMathBehavior"
+                  />
+
+                </FormGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl component="fieldset" className={"checkboxesform"}>
+                <FormGroup>
+
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="Child Math Behaviors"
+                    value="childMathBehavior"
+                  />
+
+                </FormGroup>
+              </FormControl>
+            </Grid>
           </Grid>
-        </Grid>
-      )
+        )
+      }
     }
 
 
