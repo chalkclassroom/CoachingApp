@@ -250,6 +250,11 @@ class Coaches extends React.Component<Props, State> {
       return;
     }
 
+    if (await firebase.emailExists(editEmail)) {
+      alert("This email already exists for another user")
+      return;
+    }
+
      await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, "teacher").
        catch(e => {
          console.log(e)
@@ -464,6 +469,11 @@ class Coaches extends React.Component<Props, State> {
     if (!this.validateEmail(newCoachEmail) ){
         alert("Please enter a valid email");
         return;
+    }
+
+    if (await firebase.emailExists(newCoachEmail)) {
+      alert("This email already exists for another user")
+      return;
     }
 
     const randomString = Math.random().toString(36).slice(-8)

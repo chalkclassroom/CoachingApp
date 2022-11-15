@@ -6541,6 +6541,15 @@ class Firebase {
 
   }
 
+  emailExists = async (email) => {
+    this.query = this.db.collection('users').where("email", "==", email)
+    let collection = await this.query.get()
+    if (collection.docs.length > 0) {
+      return true
+    }
+    return false
+  }
+
 
 
   /**

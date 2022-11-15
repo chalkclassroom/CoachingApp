@@ -479,6 +479,11 @@ class Archives extends React.Component<Props, State> {
       return;
     }
 
+    if (await firebase.emailExists(editEmail)) {
+      alert("This email already exists for another user")
+      return;
+    }
+
     await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, "teacher", true).
       catch(e => {
         console.log(e)
@@ -637,6 +642,11 @@ class Archives extends React.Component<Props, State> {
 
     if (editCoachEmail !== "" && !this.validateEmail(editCoachEmail)) {
       alert("No email or valid email is required");
+      return;
+    }
+
+    if (await firebase.emailExists(editCoachEmail)) {
+      alert("This email already exists for another user")
       return;
     }
 

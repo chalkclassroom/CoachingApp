@@ -240,7 +240,12 @@ class Sites extends React.Component<Props, State> {
         return;
       }
 
-      await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail, "coach").
+      if (await firebase.emailExists(editCoachEmail)) {
+        alert("This email already exists for another user")
+        return;
+      }
+
+      await firebase.editUserName(editCoachId, editCoachFirstName, editCoachLastName, editCoachEmail, "coach", false).
         catch(e => {
           console.log(e)
           alert('Unable to edit Coach. Please try again')
