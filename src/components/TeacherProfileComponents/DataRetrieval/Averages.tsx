@@ -357,7 +357,9 @@ class AveragesData {
       smallGroup: 0,
       wholeGroup: 0,
       transitionGroup: 0,
-      centersGroup: 0
+      centersGroup: 0,
+      totalPoints: 0,
+      totalObservations: 0,
     };
 
 
@@ -368,6 +370,9 @@ class AveragesData {
       var row = data[rowIndex];
 
       var teacherId = teacher.id;
+
+      results[teacherId].totalPoints += row.point
+      results[teacherId].totalObservations += row.count
 
       if (row.entryType === "small" && row.count === 0) {
         results[teacherId].smallGroup += 0
@@ -447,6 +452,7 @@ class AveragesData {
       result.wholeGroupAverage = result.wholeGroup > 0 ? (result.wholeGroup / result.wholeRows) : 0;
       result.transitionGroupAverage = result.transitionGroup > 0 ? (result.transitionGroup / result.transitionRows) : 0;
       result.centersGroupAverage = result.centersGroup > 0 ? (result.centersGroup / result.centersRows) : 0;
+      result.totalAverage = result.totalPoints / result.totalObservations
     }
 
     return results;
