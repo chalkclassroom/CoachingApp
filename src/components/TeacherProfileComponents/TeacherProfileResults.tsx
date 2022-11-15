@@ -223,6 +223,16 @@ const radioValueArr = {
 
 const radioValueArr = {
   mathInstruction: 'teacherBehavior',
+  bookReading: 'bookReading',
+
+  transitionTime: 'line',
+  listeningToChildren: 'eyeLevel',
+  sequentialActivities: 'sequentialActivities',
+  foundationSkills: 'foundationalSkills',
+  writing: 'writingSkills',
+  bookReading: 'bookReading',
+  languageEnvironment: 'languageEnvironment',
+  associativeAndCooperative: 'childrensPlay',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -632,10 +642,13 @@ class TeacherProfileResults extends React.Component {
     // Check if this observation type has individual colors for each answer type or the same for all
     var useColorForAll = false;
     var colorToUse = "#AAAAAA";
-    if(lineColorChoices[this.props.observationType]["useForAll"])
+    if(lineColorChoices[this.props.observationType])
     {
-      useColorForAll = true;
-      colorToUse = lineColorChoices[this.props.observationType]["useForAll"];
+      if(lineColorChoices[this.props.observationType]["useForAll"])
+      {
+        useColorForAll = true;
+        colorToUse = lineColorChoices[this.props.observationType]["useForAll"];
+      }
     }
 
     // If we specified what trends should show in trendsToShow[], let's use those
@@ -683,14 +696,17 @@ class TeacherProfileResults extends React.Component {
       {
         lineColors[i] = colorToUse;
       }
-      else if(lineColorChoices[this.props.observationType][trendLabel])
+      else if(lineColorChoices[this.props.observationType])
       {
-        lineColors[i] = lineColorChoices[this.props.observationType][trendLabel]
-      }
-      // If there's a subtype in the line colors (To account for the different radio buttons)
-      else if(lineColorChoices[this.props.observationType][type])
-      {
-        lineColors[i] = lineColorChoices[this.props.observationType][type][trendLabel]
+        if(lineColorChoices[this.props.observationType][trendLabel])
+        {
+          lineColors[i] = lineColorChoices[this.props.observationType][trendLabel]
+        }
+        if(lineColorChoices[this.props.observationType][type])
+        {
+          // If there's a subtype in the line colors (To account for the different radio buttons)
+          lineColors[i] = lineColorChoices[this.props.observationType][type][trendLabel]
+        }
       }
       // Account for if this observation's colors haven't been set yet, just generate some random ones
       else
@@ -869,6 +885,34 @@ class TeacherProfileResults extends React.Component {
       "levelOfInstruction",
     ]
 
+    /*
+     * List of which observation types will display the radio buttons
+     */
+    const radioObservationTypes = [
+      "transitionTime",
+      "listeningToChildren",
+      "sequentialActivities",
+      "foundationSkills",
+      "writing",
+      "bookReading",
+      "languageEnvironment",
+      "associativeAndCooperative",
+    ]
+
+    /*
+     * List of which observation types will display a pie chart
+     */
+    const pieChartObservationTypes = [
+      "transitionTime",
+      "listeningToChildren",
+      "sequentialActivities",
+      "foundationSkills",
+      "writing",
+      "bookReading",
+      "languageEnvironment",
+      "associativeAndCooperative",
+    ]
+
     var lineGraphOptions = LineGraphOptions;
 
 
@@ -969,7 +1013,7 @@ class TeacherProfileResults extends React.Component {
             {/*
                 The checklists
             */}
-            {this.props.observationType === "mathInstruction" ? (
+            {radioObservationTypes.includes(this.props.observationType) ? (
               <RadioGroup
                 aria-label="gender"
                 name="gender1"
@@ -1086,14 +1130,21 @@ class TeacherProfileResults extends React.Component {
                     padding: '30px 0px',
                   }}
                 >
-                  {/* Show averages pie chart */}
+
                   {/*
-                  <AveragesChart
-                    data={this.state.averages}
-                    type={this.state.radioValue}
-                    teacherId={this.props.selectedTeacherId}
-                    usingTime={this.state.usingTime}
-                  />
+                    Show averages pie chart if this observation type calls for it
+                  */}
+                  {pieChartObservationTypes.includes(this.props.observationType) ? (
+                    <AveragesChart
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      teacherId={this.props.selectedTeacherId}
+                      usingTime={this.state.usingTime}
+                    />
+                  ) : null}
+
+                  {/*
+                    Show Averages Bar Graph if this observation type calls for it
                   */}
                   {barGraphObservationTypes.includes(this.props.observationType) ? (
                     <>
@@ -1213,9 +1264,9 @@ class TeacherProfileResults extends React.Component {
             </Grid>
 
             {/*
-                  Total Length of Observation
-                */}
-                {/*
+              Total Length of Observation (Book Reading)
+            */}
+
             <Grid item xs={12} style={centerColumn}>
               {this.state.observationTime !== '' ? (
                 <span style={{ fontSize: '24px', marginBottom: '20px' }}>
@@ -1223,7 +1274,7 @@ class TeacherProfileResults extends React.Component {
                 </span>
               ) : null}
             </Grid>
-            */}
+
 
 
 
