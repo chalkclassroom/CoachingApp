@@ -405,92 +405,80 @@ class TrendData {
  calculateStudentEngagementTrends = (data, teacher, startDate, endDate) => {
 
    // Initialize the array that will hold all the data
-   var results = {};
+    var results = {};
 
-   var totalIntervals = 0;
+    var totalIntervals = 0;
 
    // Get start month and year
-   const startMonth = startDate.getMonth();
+    const startMonth = startDate.getMonth();
 
-   const endMonth = endDate.getMonth();
+    const endMonth = endDate.getMonth();
 
    // Add each teacher to the object
-   var tempName = teacher.firstName + " " + teacher.lastName;
+    var tempName = teacher.firstName + " " + teacher.lastName;
+
+    var observationDates = [...new Set(data.map(item => item.startDate))];
+
+    // Sort by date just in case
+    observationDates.sort(function(a,b){
+      return new Date(a) - new Date(b);
+    });
+
+    var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
+
+    console.log("Observation Dates : ", observationDates);
+
+
+    var arraySize = observationDates.length;
+
 
    results[teacher.id] = {
      name: tempName,
-     totalInstructions: new Array(12).fill(0),
-     offTask: new Array(12).fill(0),
-     mildlyEngaged: new Array(12).fill(0),
-     engaged: new Array(12).fill(0),
-     highlyEngaged: new Array(12).fill(0),
+     totalPoints: new Array(arraySize).fill(0),
+     totalIntervals: new Array(arraySize).fill(0),
+     dailyAverage: new Array(arraySize).fill(0),
 
-
-     offTaskAverage: new Array(12).fill(0),
-     mildlyEngagedAverage: new Array(12).fill(0),
-     engagedAverage: new Array(12).fill(0),
-     highlyEngagedAverage: new Array(12).fill(0),
+     lineChartLabels: observationDatesFormatted,
    };
 
 
 
 
    // Get number of instances for each type of data
-   var tempIntervalData = 0;
+  var tempIntervalData = 0;
    //var rowMonth = startMonth;
-   for(var rowIndex in data)
-   {
-     var row = data[rowIndex];
+  for(var rowIndex in data)
+  {
+    var row = data[rowIndex];
 
-     var teacherId = teacher.id;
+    var teacherId = teacher.id;
 
-     var rowMonth = new Date(row.startDate).getMonth();
+    var rowMonth = observationDates.indexOf(row.startDate);
 
-     // Add to total # of intervals
-     results[teacherId].totalInstructions[rowMonth] += row.count;
+     // Add to total # of interval
 
      // Add to behavior types
-     switch (row.point) {
-       case 0:
-         results[teacherId].offTask[rowMonth] += row.count;
-         break;
-       case 1:
-         results[teacherId].mildlyEngaged[rowMonth] += row.count;
-         break;
-       case 2:
-         results[teacherId].engaged[rowMonth] += row.count;
-         break;
-       case 3:
-         results[teacherId].highlyEngaged[rowMonth] += row.count;
-         break;
-       default:
-         break;
-     }
-
-   }
+    results[teacherId].totalPoints[rowMonth] += row.point
+    results[teacherId].totalIntervals[rowMonth] += row.count
+  }
 
    // Calculate the averages in percentages
    // Go through each teacher
    for(var resultsIndex in results)
    {
      var result = results[resultsIndex];
+     var arraySize = observationDates.length;
 
      // Go through the months
-     for(var i = 0; i < 12; i++)
+     for(var i = 0; i < arraySize; i++)
      {
-       var tempTotalInstructions = result.totalInstructions[i];
-
-       result.offTaskAverage[i] = result.offTask[i] > 0 ? (result.offTask[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.mildlyEngagedAverage[i] = result.mildlyEngaged[i] > 0 ? (result.mildlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.engagedAverage[i] = result.engaged[i] > 0 ? (result.engaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
+       result.dailyAverage[i] = (result.totalPoints[i] / result.totalIntervals[i])
      }
    }
 
    return results;
 
- }
+}
 
 
 
