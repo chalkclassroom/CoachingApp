@@ -890,6 +890,20 @@ class TeacherProfileResults extends React.Component {
     lineGraphOptions.scales.xAxes[0].scaleLabel.labelString = trendsXAxisLabels[this.props.observationType];
     lineGraphOptions.scales.yAxes[0].scaleLabel.labelString = trendsYAxisLabels[this.props.observationType];
 
+    // Some observations have a title under the trends chart. Set that here
+    var titleUnderTrendsChart = ""
+    if(this.props.observationType === "mathInstruction")
+    {
+      if(this.state.radioValue === "teacherMathBehavior")
+      {
+        titleUnderTrendsChart = "Average Percentage of Times Each Behavior was Observed"
+      }
+      if(this.state.radioValue === "childMathBehavior")
+      {
+        titleUnderTrendsChart = "Average Percentage of Math Behaviors Observed"
+      }
+    }
+
 
     return (
       <div id="TeacherProfileResultsContainer">
@@ -1012,11 +1026,18 @@ class TeacherProfileResults extends React.Component {
                       data={this.state.lineGraphData}
                       options={lineGraphOptions}
                     />
+
+
                   </Grid>
 
                   {/*
-                    The tone rating slider
-                    */}
+                    Some Obaservations have a title below trends chart
+                  */}
+                  {titleUnderTrendsChart !== "" ? (<h4 style={{fontWeight:400}}>{titleUnderTrendsChart}</h4>) : null}
+
+                  {/*
+                    The tone rating slider for the classroom climate observations
+                  */}
                   {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
                     <div style={{width: '100%', display: 'flex', position: 'relative', justifyContent: 'center'}}>
                       <div style={{position: 'absolute', left: '-40px'}}>
@@ -1203,6 +1224,7 @@ class TeacherProfileResults extends React.Component {
               ) : null}
             </Grid>
             */}
+
 
 
 
