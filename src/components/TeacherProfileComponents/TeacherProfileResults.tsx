@@ -93,6 +93,39 @@ const switcherButton = {
   background: '#f3f3f3',
 }
 
+
+// Some of the observation types need a X axis label on the trends line graph. Set those here
+const trendsXAxisLabels = {
+  transitionTime: '',
+  classroomClimate: '',
+  mathInstruction: 'Date',
+  levelOfInstruction: 'Date',
+  studentEngagement: 'Date',
+  listeningToChildren: '',
+  sequentialActivities: '',
+  foundationSkills: '',
+  writing: '',
+  bookReading: '',
+  languageEnvironment: '',
+  associativeAndCooperative: '',
+}
+
+// Some of the observation types need a X axis label on the trends line graph. Set those here
+const trendsYAxisLabels = {
+  transitionTime: '',
+  classroomClimate: '',
+  mathInstruction: '% of 1-Minute Intervals',
+  levelOfInstruction: 'Average Percentage of Each Question and Answer Type',
+  studentEngagement: 'Average Engagement Rating',
+  listeningToChildren: '',
+  sequentialActivities: '',
+  foundationSkills: '',
+  writing: '',
+  bookReading: '',
+  languageEnvironment: '',
+  associativeAndCooperative: '',
+}
+
 var LineGraphOptions = {
   maintainAspectRatio: false,
   showScale: true,
@@ -167,6 +200,8 @@ const practicesArr = {
   languageEnvironment: 'Language Environment',
   associativeAndCooperative: 'Associative and Cooperative',
 }
+
+
 
 // Array used to match the default radio value based on the type
 /*
@@ -836,7 +871,6 @@ class TeacherProfileResults extends React.Component {
 
     var lineGraphOptions = LineGraphOptions;
 
-    console.log("LineGraphOptions 1 :", lineGraphOptions);
 
     // Trends for some of the observation types need to have the percent showing for each dot
     if(this.props.observationType === "mathInstruction")
@@ -850,7 +884,12 @@ class TeacherProfileResults extends React.Component {
         },
       }
     }
-    console.log("LineGraphOptions 2 :", lineGraphOptions);
+
+
+    // Trends for some of the observation types need to have the labels on the axis
+    lineGraphOptions.scales.xAxes[0].scaleLabel.labelString = trendsXAxisLabels[this.props.observationType];
+    lineGraphOptions.scales.yAxes[0].scaleLabel.labelString = trendsYAxisLabels[this.props.observationType];
+
 
     return (
       <div id="TeacherProfileResultsContainer">
