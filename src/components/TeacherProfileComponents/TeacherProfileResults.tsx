@@ -271,6 +271,8 @@ const chartTitleArr = {
   transitionGroupAverage: 'Transition',
   centersGroupAverage: 'Centers',
 
+  dailyAverage: "Daily Average",
+
   eyeLevelAverage: 'At Eye Level',
   positiveExpressionAverage:
     'Uses positive or interested expression to encourage child talk',
@@ -379,6 +381,9 @@ const lineColorChoices = {
     "Teacher Asks Low-Level Question": "#1155CC",
     "Child Answers Low-Level Question": "#1155CC",
   },
+  "studentEngagement" : {
+    "Daily Average": "#FF7F00"
+  }
 }
 
 const AVERAGES_SUBPAGE = 0;
