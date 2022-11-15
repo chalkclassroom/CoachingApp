@@ -436,6 +436,20 @@ class Sites extends React.Component<Props, State> {
       selectedProgram: addProgramId
     }
 
+    let proceed = true;
+
+    for (let i = 0; i < this.props.sitesList.length; i++) {
+      if (this.props.sitesList[i].siteName.toLowerCase() === addSiteName.toLowerCase()) {
+        proceed = false;
+        i = this.props.sitesList.length;
+      }
+    }
+
+    if (!proceed) {
+      alert("Site name already exists")
+      return;
+    }
+    
     await firebase.createSite(siteInfo)
         .then((data) => {
           console.log("Site Created");
