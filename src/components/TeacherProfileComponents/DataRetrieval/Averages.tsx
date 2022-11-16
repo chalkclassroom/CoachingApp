@@ -381,67 +381,67 @@ class AveragesData {
       results[teacherId].totalPoints += row.point
       results[teacherId].totalObservations += row.count
 
-      if (row.entryType === "small" && row.count === 0) {
+      if (row.entryType === "small" && row.point === 0) {
         results[teacherId].smallGroup += 0
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 1) {
+      if (row.entryType === "small" && row.point === 1) {
         results[teacherId].smallGroup += 1
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 2) {
+      if (row.entryType === "small" && row.point === 2) {
         results[teacherId].smallGroup += 2
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 3) {
+      if (row.entryType === "small" && row.point === 3) {
         results[teacherId].smallGroup += 3
         results[teacherId].smallRows++
       }
-      if (row.entryType === "whole" && row.count === 0) {
+      if (row.entryType === "whole" && row.point === 0) {
         results[teacherId].wholeGroup += 0
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 1) {
+      if (row.entryType === "whole" && row.point === 1) {
         results[teacherId].wholeGroup += 1
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 2) {
+      if (row.entryType === "whole" && row.point === 2) {
         results[teacherId].wholeGroup += 2
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 3) {
+      if (row.entryType === "whole" && row.point === 3) {
         results[teacherId].wholeGroup += 3
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "transition" && row.count === 0) {
+      if (row.entryType === "transition" && row.point === 0) {
         results[teacherId].transitionGroup += 0
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 1) {
+      if (row.entryType === "transition" && row.point === 1) {
         results[teacherId].transitionGroup += 1
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 2) {
+      if (row.entryType === "transition" && row.point === 2) {
         results[teacherId].transitionGroup += 2
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 3) {
+      if (row.entryType === "transition" && row.point === 3) {
         results[teacherId].transitionGroup += 3
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "centers" && row.count === 0) {
+      if (row.entryType === "centers" && row.point === 0) {
         results[teacherId].centersGroup += 0
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 1) {
+      if (row.entryType === "centers" && row.point === 1) {
         results[teacherId].centersGroup += 1
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 2) {
+      if (row.entryType === "centers" && row.point === 2) {
         results[teacherId].centersGroup += 2
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 3) {
+      if (row.entryType === "centers" && row.point === 3) {
         results[teacherId].centersGroup += 3
         results[teacherId].centersRows++
       }
