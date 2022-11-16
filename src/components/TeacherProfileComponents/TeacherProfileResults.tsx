@@ -875,6 +875,13 @@ class TeacherProfileResults extends React.Component {
           return 'Highly Engaged'
         }
       }
+    } else {
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 100
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+            return value + '%'
+      }
     }
   }
 
