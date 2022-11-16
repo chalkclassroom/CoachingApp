@@ -318,9 +318,11 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     {
       axisStepSize = 1
       axisMax = 3
+      axisLabel = ""
       this.setState({
         axisStepSize: axisStepSize,
         axisMax: axisMax,
+        axisLabel: axisLabel
       })
     }
     if (this.props.observationType === "studentEngagement") {
