@@ -271,6 +271,8 @@ const chartTitleArr = {
   transitionGroupAverage: 'Transition',
   centersGroupAverage: 'Centers',
 
+  totalAverage: 'Total Average',
+
   dailyAverage: "Daily Average",
 
   eyeLevelAverage: 'At Eye Level',
@@ -1172,6 +1174,24 @@ class TeacherProfileResults extends React.Component {
                       {/*
                         The tone rating slider
                         */}
+                      {this.props.observationType == "studentEngagement" ? (
+                        <>
+                          <Grid
+                          style={{
+                          height: 200,
+                          marginBottom: 20,
+                        }}
+                      >
+                        <TeacherProfileBarDetails
+                          totalVisits={10}
+                          data={this.state.totalAverage}
+                          barColors={this.state.lineColors}
+                          observationType={this.props.studentEngagement}
+                          teacherId={this.props.selectedTeacherId}
+                        />
+                      </Grid>
+                        </>
+                      ) : null}
                       {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
                         <>
                           <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '50px',}}>
