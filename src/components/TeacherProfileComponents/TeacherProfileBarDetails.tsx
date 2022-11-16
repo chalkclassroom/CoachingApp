@@ -440,8 +440,12 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                   fontSize: 16,
                   fontColor: 'black',
                   // Include a percent sign in the ticks
-                  callback: function(value, index, values) {
-                      return value;
+                  callback: (value, index, values) => {
+                    if (this.props.observationType === "studentEngagement") {
+                    const x_label = ["Off Task", "Mildly Engaged", "Engaged", "Highly Engaged"]
+                    return [value, x_label[value]]
+                    }
+                    return value
                   }
                 },
                 stacked: false,
