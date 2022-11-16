@@ -1191,9 +1191,11 @@ class TeacherProfileResults extends React.Component {
                       >
                         <TeacherProfileBarDetails
                           totalVisits={10}
-                          data={this.state.totalAverage}
+                          labels={this.state.teacherNames}
+                          data={this.state.averages}
+                          type={this.state.radioValue}
                           barColors={this.state.lineColors}
-                          observationType={this.props.studentEngagement}
+                          observationType={"averageEngagement"}
                           teacherId={this.props.selectedTeacherId}
                         />
                       </Grid>

@@ -55,6 +55,9 @@ const barColorChoices = {
     "#E55529",
     "#FFD300",
     "#BABABA",
+  ],
+  "averageEngagement" : [
+    "#E99C2E",
   ]
 }
 
@@ -100,6 +103,9 @@ const barLabelChoices = {
     "Centers",
     "Transitions",
   ],
+  "averageEngagement" : [
+    "Average Engagement"
+  ]
 }
 
 // This will hold the names of the variables that holds the data from the data props for each observation type
@@ -143,6 +149,9 @@ const barDataVariableName = {
     "transitionGroupAverage",
     "centersGroupAverage",
   ],
+  "averageEngagement" : [
+    "totalAverage"
+  ]
 }
 
 
@@ -304,6 +313,15 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     if(this.props.observationType === "classroomClimate")
     {
         axisLabel = "Average Number across Observations";
+    }
+    if(this.props.observationType === "averageEngagement")
+    {
+      axisStepSize = 1
+      axisMax = 3
+      this.setState({
+        axisStepSize: axisStepSize,
+        axisMax: axisMax,
+      })
     }
     if (this.props.observationType === "studentEngagement") {
       axisLabel ="",
