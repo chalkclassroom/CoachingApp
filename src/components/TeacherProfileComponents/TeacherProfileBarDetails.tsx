@@ -315,6 +315,9 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
       })
     }
 
+    if (this.props.observationType === "levelOfInstruction") {
+      axisLabel ="Average Number of Each Question and Answer Type"
+    }
     if(this.props.observationType === "mathInstruction")
     {
         axisLabel = "Average Number of Times Each Behavior was Observed";
@@ -379,7 +382,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     // We don't want to show the percentages on all the observation types
     //  NOTE: I tried controlling this using state but it was being difficult. This way is easier.
     var showPercentages = false;
-    if(this.props.observationType === "classroomClimate" || this.props.observationType === "mathInstruction")
+    if(this.props.observationType === "classroomClimate" || this.props.observationType === "mathInstruction" || this.props.observationType === "levelOfInstruction")
     {
       showPercentages = true;
     }

@@ -285,14 +285,11 @@ class AveragesData {
 
     // Initialize the array that will hold all the data
     var results = {};
-
-    var totalIntervals = 0;
-
-    // Add each teacher to the object
-    var tempName = teacher.firstName + " " + teacher.lastName;
+    let date = data[0].startDate.value
+    let observations = 1
 
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + " " + teacher.lastName,
       total: 0,
       hlq: 0,
       hlqResponse: 0,
@@ -300,13 +297,10 @@ class AveragesData {
       llqResponse: 0,
     };
 
-
-
     // Get number of instances for each type of data
     for(var rowIndex in data)
     {
       var row = data[rowIndex];
-
       var teacherId = teacher.id;
 
       // Add to total # of intervals
@@ -314,6 +308,11 @@ class AveragesData {
 
       // Add to behavior types
       results[teacherId][row.instructionType] += row.count;
+
+      if (date !== row.startDate.value) {
+        observations += 1;
+        date = row.startDate.value
+      }
     }
 
     // Calculate the averages in percentages
@@ -322,14 +321,22 @@ class AveragesData {
     {
       var result = results[resultsIndex];
 
-      var tempTotalInstructions = result.total;
+      result.hlq = result.hlq > 0 ? Math.round(result.hlq / observations) : 0;
+      result.hlqResponse = result.hlqResponse > 0 ? Math.round(result.hlqResponse / observations) : 0;
+      result.llq = result.llq > 0 ? Math.round(result.llq / observations) : 0;
+      result.llqResponse = result.llqResponse > 0 ? Math.round(result.llqResponse / observations) : 0;
 
-      result.hlqAverage = result.hlq > 0 ? (result.hlq / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.hlqResponseAverage = result.hlqResponse > 0 ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.llqAverage = result.llq > 0 ? (result.llq / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
+      let total = result.hlq + result.hlqResponse + result.llq + result.llqResponse;
+      console.log(total)
+      result.hlqAverage = (result.hlq / total) * 100
+      result.hlqResponseAverage = (result.hlqResponse / total) * 100
+      result.llqAverage = (result.llq / total) * 100
+      result.llqResponseAverage = (result.llqResponse / total) * 100
     }
 
+
+
+    console.log(results)
     return results;
 
   }
