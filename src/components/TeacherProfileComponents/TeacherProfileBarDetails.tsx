@@ -306,12 +306,12 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
         axisLabel = "Average Number across Observations";
     }
     if (this.props.observationType === "studentEngagement") {
-      axisLabel ="Level of Engagement"
+      axisLabel ="",
       axisStepSize = 1
       axisMax = 3
       this.setState({
         axisStepSize: axisStepSize,
-        axisMax: axisMax
+        axisMax: axisMax,
       })
     }
 
