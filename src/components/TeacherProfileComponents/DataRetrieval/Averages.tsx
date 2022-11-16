@@ -285,11 +285,14 @@ class AveragesData {
 
     // Initialize the array that will hold all the data
     var results = {};
-    let date = data[0].startDate.value
-    let observations = 1
+
+    var totalIntervals = 0;
+
+    // Add each teacher to the object
+    var tempName = teacher.firstName + " " + teacher.lastName;
 
     results[teacher.id] = {
-      name: teacher.firstName + " " + teacher.lastName,
+      name: tempName,
       total: 0,
       hlq: 0,
       hlqResponse: 0,
@@ -297,10 +300,13 @@ class AveragesData {
       llqResponse: 0,
     };
 
+
+
     // Get number of instances for each type of data
     for(var rowIndex in data)
     {
       var row = data[rowIndex];
+
       var teacherId = teacher.id;
 
       // Add to total # of intervals
@@ -308,11 +314,6 @@ class AveragesData {
 
       // Add to behavior types
       results[teacherId][row.instructionType] += row.count;
-
-      if (date !== row.startDate.value) {
-        observations += 1;
-        date = row.startDate.value
-      }
     }
 
     // Calculate the averages in percentages
@@ -321,22 +322,14 @@ class AveragesData {
     {
       var result = results[resultsIndex];
 
-      result.hlq = result.hlq > 0 ? Math.round(result.hlq / observations) : 0;
-      result.hlqResponse = result.hlqResponse > 0 ? Math.round(result.hlqResponse / observations) : 0;
-      result.llq = result.llq > 0 ? Math.round(result.llq / observations) : 0;
-      result.llqResponse = result.llqResponse > 0 ? Math.round(result.llqResponse / observations) : 0;
+      var tempTotalInstructions = result.total;
 
-      let total = result.hlq + result.hlqResponse + result.llq + result.llqResponse;
-      console.log(total)
-      result.hlqAverage = (result.hlq / total) * 100
-      result.hlqResponseAverage = (result.hlqResponse / total) * 100
-      result.llqAverage = (result.llq / total) * 100
-      result.llqResponseAverage = (result.llqResponse / total) * 100
+      result.hlqAverage = result.hlq > 0 ? (result.hlq / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.hlqResponseAverage = result.hlqResponse > 0 ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.llqAverage = result.llq > 0 ? (result.llq / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
     }
 
-
-
-    console.log(results)
     return results;
 
   }
@@ -381,67 +374,67 @@ class AveragesData {
       results[teacherId].totalPoints += row.point
       results[teacherId].totalObservations += row.count
 
-      if (row.entryType === "small" && row.count === 0) {
+      if (row.entryType === "small" && row.point === 0) {
         results[teacherId].smallGroup += 0
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 1) {
+      if (row.entryType === "small" && row.point === 1) {
         results[teacherId].smallGroup += 1
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 2) {
+      if (row.entryType === "small" && row.point === 2) {
         results[teacherId].smallGroup += 2
         results[teacherId].smallRows++
       }
-      if (row.entryType === "small" && row.count === 3) {
+      if (row.entryType === "small" && row.point === 3) {
         results[teacherId].smallGroup += 3
         results[teacherId].smallRows++
       }
-      if (row.entryType === "whole" && row.count === 0) {
+      if (row.entryType === "whole" && row.point === 0) {
         results[teacherId].wholeGroup += 0
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 1) {
+      if (row.entryType === "whole" && row.point === 1) {
         results[teacherId].wholeGroup += 1
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 2) {
+      if (row.entryType === "whole" && row.point === 2) {
         results[teacherId].wholeGroup += 2
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "whole" && row.count === 3) {
+      if (row.entryType === "whole" && row.point === 3) {
         results[teacherId].wholeGroup += 3
         results[teacherId].wholeRows++
       }
-      if (row.entryType === "transition" && row.count === 0) {
+      if (row.entryType === "transition" && row.point === 0) {
         results[teacherId].transitionGroup += 0
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 1) {
+      if (row.entryType === "transition" && row.point === 1) {
         results[teacherId].transitionGroup += 1
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 2) {
+      if (row.entryType === "transition" && row.point === 2) {
         results[teacherId].transitionGroup += 2
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "transition" && row.count === 3) {
+      if (row.entryType === "transition" && row.point === 3) {
         results[teacherId].transitionGroup += 3
         results[teacherId].transitionRows++
       }
-      if (row.entryType === "centers" && row.count === 0) {
+      if (row.entryType === "centers" && row.point === 0) {
         results[teacherId].centersGroup += 0
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 1) {
+      if (row.entryType === "centers" && row.point === 1) {
         results[teacherId].centersGroup += 1
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 2) {
+      if (row.entryType === "centers" && row.point === 2) {
         results[teacherId].centersGroup += 2
         results[teacherId].centersRows++
       }
-      if (row.entryType === "centers" && row.count === 3) {
+      if (row.entryType === "centers" && row.point === 3) {
         results[teacherId].centersGroup += 3
         results[teacherId].centersRows++
       }
