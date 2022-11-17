@@ -342,19 +342,34 @@ class TrendData {
     // Add each teacher to the object
     var tempName = teacher.firstName + " " + teacher.lastName;
 
+    var observationDates = [...new Set(data.map(item => {return item.startDate.value}))];
+
+    // observationDates.sort(function(a,b){
+    //   return new Date(a) - new Date(b);
+    // });
+
+    data.map(i => console.log(i.startDate))
+    var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
+
+    console.log("Observation Dates : ", observationDates);
+
+
+    var arraySize = observationDates.length;
 
     results[teacher.id] = {
       name: tempName,
-      totalInstructions: new Array(12).fill(0),
-      hlq: new Array(12).fill(0),
-      hlqResponse: new Array(12).fill(0),
-      llq: new Array(12).fill(0),
-      llqResponse: new Array(12).fill(0),
+      totalInstructions: new Array(arraySize).fill(0),
+      hlq: new Array(arraySize).fill(0),
+      hlqResponse: new Array(arraySize).fill(0),
+      llq: new Array(arraySize).fill(0),
+      llqResponse: new Array(arraySize).fill(0),
 
-      hlqAverage: new Array(12).fill(0),
-      hlqResponseAverage: new Array(12).fill(0),
-      llqAverage: new Array(12).fill(0),
-      llqResponseAverage: new Array(12).fill(0),
+      hlqAverage: new Array(arraySize).fill(0),
+      hlqResponseAverage: new Array(arraySize).fill(0),
+      llqAverage: new Array(arraySize).fill(0),
+      llqResponseAverage: new Array(arraySize).fill(0),
+
+      lineChartLabels: observationDatesFormatted,
 
     };
 
@@ -367,7 +382,9 @@ class TrendData {
 
       var teacherId = teacher.id;
 
-      var rowMonth = new Date(row.startDate.value).getMonth();
+      // var rowMonth = new Date(row.startDate.value).getMonth();
+      var rowMonth = observationDates.indexOf(row.startDate.value);
+
 
       // Add to total # of intervals
       results[teacherId].totalInstructions[rowMonth] += row.count;
@@ -381,9 +398,11 @@ class TrendData {
     for(var resultsIndex in results)
     {
       var result = results[resultsIndex];
+      var arraySize = observationDates.length;
+
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < arraySize; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
 
@@ -395,6 +414,7 @@ class TrendData {
       }
     }
 
+    console.log("h: ", results)
     return results;
 
   }

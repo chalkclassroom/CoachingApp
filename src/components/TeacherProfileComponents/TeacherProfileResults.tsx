@@ -178,10 +178,9 @@ var LineGraphOptions = {
     }
   },
   plugins: {
-    datalabels: {
-      display: false,
-    },
-
+    datalabels: { 
+      display: false
+    }
   },
 }
 
@@ -935,14 +934,49 @@ class TeacherProfileResults extends React.Component {
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
-        color: 'gray',
-        align: 'right',
-        formatter: function(value: number): string {
-          return value + '%'
+        align: 'right', 
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold'
         },
+        formatter: function(value, context) {
+          return value + '%';
+        }
       }
     }
 
+    if(this.props.observationType === "levelOfInstruction")
+    {
+      lineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top', 
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold'
+        },
+        formatter: function(value, context) {
+          return value + '%';
+        }
+      }
+    }
+
+    if(this.props.observationType === "studentEngagement")
+    {
+      lineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top', 
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold'
+        }
+      }
+    }
 
     // Trends for some of the observation types need to have the labels on the axis
     lineGraphOptions.scales.xAxes[0].scaleLabel.labelString = trendsXAxisLabels[this.props.observationType];
