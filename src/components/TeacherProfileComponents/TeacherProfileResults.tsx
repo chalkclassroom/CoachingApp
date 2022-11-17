@@ -945,9 +945,7 @@ class TeacherProfileResults extends React.Component {
           return value + '%';
         }
       }
-    }
-
-    if(this.props.observationType === "levelOfInstruction")
+    } else if(this.props.observationType === "levelOfInstruction")
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
@@ -962,9 +960,7 @@ class TeacherProfileResults extends React.Component {
           return value + '%';
         }
       }
-    }
-
-    if(this.props.observationType === "studentEngagement")
+    } else if(this.props.observationType === "studentEngagement")
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
@@ -976,6 +972,8 @@ class TeacherProfileResults extends React.Component {
           weight: 'bold'
         }
       }
+    } else {
+      lineGraphOptions.plugins.datalabels = {display: false}
     }
 
     // Trends for some of the observation types need to have the labels on the axis
