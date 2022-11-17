@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { HorizontalBar } from "react-chartjs-2";
+import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -363,16 +363,31 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const show_percentages = ["classroomClimate", "levelOfInstruction", "mathInstruction"]
+    const total = getPercentages(this.state.graphData);
     const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: this.state.labels,
       datasets: [
         {
           //data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
-          data: this.state.graphData,
+          data: this.state.graphData, label: "Average",
           backgroundColor: this.state.barColors,
           hoverBackgroundColor: this.state.barColors,
         },
+        show_percentages.includes(this.props.observationType) ? {
+          data: this.state.graphData, label: "Hidden", 
+          type: 'horizontalBar', 
+          datalabels: { 
+            align: 'right', 
+            anchor: 'end',
+            font: { weight: '400' },
+            color: '#444',
+            formatter: function(value, context) {
+              return total[context.dataIndex] + '%';
+            }
+          }
+        } : {}
       ]
     };
 
@@ -440,8 +455,11 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     return (
       <HorizontalBar
         data={childBehaviorsData}
-        plugins={[ChartDataLabels, topLabels]}
+        // plugins={[ChartDataLabels, topLabels]}
         options={{
+          tooltips: {
+            enabled: false
+          },
           animation: {
             onComplete: function(): void {
               isCompleted ? isCompleted() : null
