@@ -268,8 +268,8 @@ const chartTitleArr = {
 
   smallGroupAverage: 'Small Group',
   wholeGroupAverage: 'Whole Group',
-  transitionGroupAverage: 'Transition',
   centersGroupAverage: 'Centers',
+  transitionGroupAverage: 'Transition',
 
   totalAverage: 'Total Average',
 
