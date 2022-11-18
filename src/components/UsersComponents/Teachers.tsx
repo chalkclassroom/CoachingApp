@@ -560,7 +560,7 @@ editTeacher = async (firebase:Firebase) => {
       return;
     }
 
-    if (await firebase.emailExists(editEmail)) {
+    if (await firebase.emailExists(editEmail, editTeacherId)) {
       alert("This email already exists for another user")
       return;
     }

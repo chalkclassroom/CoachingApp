@@ -240,7 +240,7 @@ class Sites extends React.Component<Props, State> {
         return;
       }
 
-      if (await firebase.emailExists(editCoachEmail)) {
+      if (await firebase.emailExists(editCoachEmail, editCoachId)) {
         alert("This email already exists for another user")
         return;
       }

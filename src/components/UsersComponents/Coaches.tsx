@@ -250,7 +250,7 @@ class Coaches extends React.Component<Props, State> {
       return;
     }
 
-    if (await firebase.emailExists(editEmail)) {
+    if (await firebase.emailExists(editEmail, editTeacherId)) {
       alert("This email already exists for another user")
       return;
     }
