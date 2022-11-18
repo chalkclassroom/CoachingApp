@@ -109,6 +109,8 @@ class AveragesData {
         specificapproval: 0,
         disapproval: 0,
         redirection: 0,
+        toneTotal: 0,
+        toneCount: 0,
       };
 
     }
@@ -128,6 +130,28 @@ class AveragesData {
         results[teacherId].total += row.count;
       }
 
+      // Get tone rating
+      if(row.toneRating !== null)
+      {
+        results[teacherId].toneTotal += row.toneRating;
+        results[teacherId].toneCount++;
+      }
+
+    }
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      nonspecificapproval: 0,
+      specificapproval: 0,
+      disapproval: 0,
+      redirection: 0,
+
+      toneTotal: 0,
+      toneCount: 0,
     }
 
     // Calculate the averages in percentages
@@ -142,7 +166,42 @@ class AveragesData {
       result.specificapprovalAverage = result.specificapproval > 0 ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+      result.toneAverage = result.toneCount > 0 ? (result.toneTotal / result.toneCount).toFixed(2) : 0;
+
+
+      // Gather info for the site bar
+      siteBar.nonspecificapproval += result.nonspecificapproval;
+      siteBar.specificapproval += result.specificapproval;
+      siteBar.disapproval += result.disapproval;
+      siteBar.redirection += result.redirection;
+
+      console.log("result.toneCount", result.toneCount);
+      console.log("result.toneTotal", result.toneTotal);
+
+      siteBar.toneCount += result.toneCount;
+      siteBar.toneTotal += result.toneTotal;
+
+      siteBar.total += result.total;
+
     }
+
+    // Calculate the site bar averages
+    siteBar.nonspecificapprovalAverage = siteBar.nonspecificapproval > 0 ? (siteBar.nonspecificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.specificapprovalAverage = siteBar.specificapproval > 0 ? (siteBar.specificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.disapprovalAverage = siteBar.disapproval > 0 ? (siteBar.disapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.redirectionAverage = siteBar.redirection > 0 ? (siteBar.redirection / siteBar.total).toFixed(2) * 100 : 0;
+
+    siteBar.toneAverage = siteBar.toneCount > 0 ? (siteBar.toneTotal / siteBar.toneCount).toFixed(2) : 0;
+
+
+
+    results.siteBar = siteBar;
+    console.log("sitebar : ", siteBar);
+
+
+
+
 
     return results;
 
@@ -993,7 +1052,7 @@ class AveragesData {
         noSequence: 0,
         formalRules: 0,
         sequence: 0,
-  
+
         support: 0,
         noSupport: 0,
         notAtCenter: 0,

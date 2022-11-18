@@ -3,6 +3,8 @@ import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
+import {withStyles} from '@material-ui/core'
+
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
   bookReadingAverage: "Book Reading: Total Instruction",
@@ -21,12 +23,13 @@ const averageLine = {
 
 
 
+
 /**
  * Horizontal Bar Graph for Math Child Behaviors
  * @class EngagementBarDetails
  * @return {void}
  */
-class SiteProfileBarDetails extends React.Component<Props, {}> {
+class ClassroomClimateBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -46,7 +49,8 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
           position: 'absolute',
           left: '95px',
           top: '36px',
-      }
+      },
+      dataSets: []
     }
   }
 
@@ -66,8 +70,15 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
+
     var teacherNames = [];
-    var graphData = [];
+    var graphData = {};
+
+
+    var specificApproval = [];
+    var generalApproval = [];
+    var redirectionAverage = [];
+    var disapprovalAverage = [];
     for(var teacherIndex in data)
     {
 
@@ -75,15 +86,101 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
       var teacher = data[teacherIndex];
       teacherNames.push(teacher.name);
 
+      // We only need the name for the site Average Bar. We'll take care of the data after this loop.
+      if(teacher.name === "Site Average")
+      {
+        continue;
+      }
+
+      console.log("Teacher : ", teacher);
+
+      specificApproval.push(Math.round((teacher['specificapprovalAverage'] + Number.EPSILON) * 100) / 100);
+      generalApproval.push(Math.round((teacher['nonspecificapprovalAverage'] + Number.EPSILON) * 100) / 100);
+      redirectionAverage.push(Math.round((teacher['redirectionAverage'] + Number.EPSILON) * 100) / 100);
+      disapprovalAverage.push(Math.round((teacher['disapprovalAverage'] + Number.EPSILON) * 100) / 100);
 
       // Create bar graph data
-      var tempAvg = teacher[type];
+      //var tempAvg = teacher[type];
+      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
 
       // Round the number just in case there are trailing decimals (There were for some reason)
-      tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      graphData.push(tempAvg);
+      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      //graphData.push(tempAvg);
 
     }
+
+
+    // We need to set the site average data
+    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+    var dataSize = Object.keys(data).length;
+
+    var siteAverageSpecificeApproval = new Array(dataSize).fill(0);
+    siteAverageSpecificeApproval[dataSize - 1] = data.siteBar.specificapprovalAverage;
+
+    var siteAverageGeneralApproval = new Array(dataSize).fill(0);
+    siteAverageGeneralApproval[dataSize - 1] = data.siteBar.nonspecificapprovalAverage;
+
+    var siteAverageRedirectionAverage = new Array(dataSize).fill(0);
+    siteAverageRedirectionAverage[dataSize - 1] = data.siteBar.redirectionAverage;
+
+    var siteAverageDisapprovalAverage = new Array(dataSize).fill(0);
+    siteAverageDisapprovalAverage[dataSize - 1] = data.siteBar.disapprovalAverage;
+
+
+    // Use that data to create our dataset
+    var dataSets = [
+      {
+        label: 'Specific Approval',
+        data: specificApproval,
+        backgroundColor: "#0988EC"
+      },
+      {
+        label: 'General Approval',
+        data: generalApproval,
+        backgroundColor: "#094492"
+      },
+      {
+        label: 'Redirection',
+        data: redirectionAverage,
+        backgroundColor: "#FFA812"
+      },
+      {
+        label: 'Disapproval',
+        data: disapprovalAverage,
+        backgroundColor: "#FF7F00"
+      },
+
+      // The total Site Averages
+      {
+        label: 'Specific Approval Site Average',
+        data: siteAverageSpecificeApproval,
+        backgroundColor: "#FFF",
+        borderColor: "#0988EC",
+        borderWidth: 4,
+      },
+      {
+        label: 'General Approval Site Average',
+        data: siteAverageGeneralApproval,
+        data: siteAverageGeneralApproval,
+        backgroundColor: "#FFF",
+        borderColor: "#094492",
+        borderWidth: 4,
+      },
+      {
+        label: 'Redirection Site Average',
+        data: siteAverageRedirectionAverage,
+        backgroundColor: "#FFF",
+        borderColor: "#FFA812",
+        borderWidth: 4,
+      },
+      {
+        label: 'Disapproval Site Average',
+        data: siteAverageDisapprovalAverage,
+        backgroundColor: "#FFF",
+        borderColor: "#FF7F00",
+        borderWidth: 4,
+      }
+    ]
 
     /*
      * Set placement for the site average bar
@@ -95,11 +192,8 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     }
     siteAverage = (siteAverage / graphData.length) / 100;
 
-
-    //const chartHeight = 342;
-    const chartHeight = 405;
-    const chartTopPadding = 40;
-    //const chartTopPadding = 14;
+    const chartHeight = 342;
+    const chartTopPadding = 36;
 
 
     var topPos = (chartTopPadding + chartHeight - (chartHeight * siteAverage));
@@ -117,7 +211,7 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     };
 
 
-    this.setState({teacherNames: teacherNames, graphData: graphData, chartTitle: chartTitleArr[type], barColors: this.props.barColors, averageLineWrapStyle: averageLineStyle });
+    this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
 
   }
 
@@ -139,20 +233,13 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
     const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: this.state.teacherNames,
-      datasets: [
-        {
-          //data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
-          data: this.state.graphData,
-          backgroundColor: this.state.barColors,
-          hoverBackgroundColor: this.state.barColors,
-
-        }
-      ]
+      datasets: this.state.dataSets
     };
 
     return (
       <>
-        <div className={"realChart"} style={{height: 450}}>
+        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
+        <div className={"realChart"} style={{height: 500}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -165,6 +252,7 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
                 yAxes: [
                   {
                     ticks: {
+                      display:false,
                       min: 0,
                       max: 100,
                       stepSize: 10,
@@ -174,13 +262,17 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
                       // Include a percent sign in the ticks
                       callback: function(value, index, values) {
                           return value + '%';
-                      }
+                      },
                     },
                     scaleLabel: {
-                      display: true,
-                      labelString: 'Average % of 1-Minute Intervals',
+                      display: false,
+                      labelString: '',
                       fontSize: 16,
                       fontColor: 'black'
+                    },
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0,0,0,0)",
                     }
                   }
                 ],
@@ -189,12 +281,24 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
                     ticks: {
                       fontSize: 16,
                       fontColor: 'black',
+                      callback: (value, index, values) => {
+                        return value
+                      }
+                    },
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0,0,0,0)",
                     }
                   }
                 ]
               },
               legend: {
-                display: false
+                display: true,
+                labels: {
+                  filter: function(legendItem, data) {
+                        return !legendItem.text.includes('Site Average')
+                  }
+                }
               },
               title: {
                 display: this.props.title,
@@ -207,10 +311,10 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
               plugins: {
                 datalabels: {
                   display: 'auto',
-                  color: 'white',
+                  color: 'black',
                   font: {
                     size: 14,
-                    weight: 'bold'
+                    weight: '400'
                   },
                   formatter: function(value: number): number | null {
                     if (value > 0) {
@@ -219,15 +323,12 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
                       return null;
                     }
                   }
-                }
+                },
+
               },
               maintainAspectRatio: false
             }}
           />
-        </div>
-        <div className={"averageLineWrap"} style={this.state.averageLineWrapStyle}>
-          <div className={"averageLine"} style={averageLine}></div>
-          <div className={"averageLineLabel"} style={{whiteSpace: 'nowrap', color: '#45818E'}}>Site Average</div>
         </div>
       </>
     );
@@ -235,4 +336,4 @@ class SiteProfileBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default SiteProfileBarDetails;
+export default ClassroomClimateBarDetails;

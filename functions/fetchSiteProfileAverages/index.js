@@ -132,11 +132,11 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "climate")
     {
       sqlQuery = `SELECT
-                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher,
+                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher, toneRating,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY behaviorResponse, teacher, startDate
+                      GROUP BY behaviorResponse, teacher, startDate, toneRating
                       ORDER BY startDate ASC;`;
     }
 
@@ -147,6 +147,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "math")
     {
       sqlQuery = `SELECT
+                      FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -163,7 +164,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY teacher, timestamp, peopletype
+                      GROUP BY teacher, timestamp, peopletype, startDate
                       ORDER BY timestamp ASC;`;
     }
 
@@ -288,7 +289,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       let [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
@@ -321,11 +322,11 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
-                      
+
                       console.log(teacher, child)
 
                       const rows = teacher.concat(child)
@@ -367,7 +368,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                           // Location must match that of the dataset(s) referenced in the query.
                           location: 'US',
                       };
-                  
+
                       let [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
@@ -397,11 +398,11 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                         // Location must match that of the dataset(s) referenced in the query.
                         location: 'US',
                     };
-                
+
                     [job] = await bigquery.createQueryJob(options);
                     console.log(`Job ${job.id} started.`);
                     child = await job.getQueryResults();
-                    
+
                     console.log(teacher, child)
 
                     const rows = teacher.concat(child)
