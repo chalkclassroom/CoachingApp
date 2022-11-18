@@ -132,9 +132,10 @@ const barDataVariableName = {
       "helpingChildrenAverage",
     ],
     childBehavior : [
-      "notAtCenterAverage",
-      "noSupportAverage",
-      "supportAverage",
+      "countingAverage",
+      "shapesAverage",
+      "patternsAverage",
+      "measurementAverage"
     ]
   },
   "levelOfInstruction" : [
@@ -453,6 +454,8 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
 
       }
     } : {}
+
+    console.log(this.state.graphData)
 
     return (
       <HorizontalBar

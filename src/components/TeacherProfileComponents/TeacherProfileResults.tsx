@@ -910,6 +910,7 @@ class TeacherProfileResults extends React.Component {
       "bookReading",
       "languageEnvironment",
       "associativeAndCooperative",
+      "mathInstruction"
     ]
 
     /*

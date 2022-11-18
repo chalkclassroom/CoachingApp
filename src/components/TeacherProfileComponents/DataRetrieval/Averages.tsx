@@ -213,8 +213,8 @@ class AveragesData {
       counting: 0,
       shapes: 0,
       patterns: 0,
-      measurement: 0
-
+      measurement: 0,
+      observation: [data[0].id]
     };
 
 
@@ -243,6 +243,11 @@ class AveragesData {
       // Calculate the total Number of instructions
       //results[teacherId].total += row.noSupport + row.noOpportunity + row.support;
       results[teacherId].total += row.count;
+
+      if (!results[teacherId].observation.includes(row.id)) {
+        results[teacherId].observation.push(row.id)
+      }
+      
     }
 
 
@@ -254,24 +259,25 @@ class AveragesData {
 
       //var tempTotalInstructions = result.total;
       var tempTotalInstructions = data.length;
+      let observations_count = result.observation.length
 
+      result.mathVocabularyAverage = result.mathVocabulary > 0 ? Math.round(result.mathVocabulary / observations_count) : 0;
+      result.askingQuestionsAverage = result.askingQuestions > 0 ? Math.round(result.askingQuestions / observations_count) : 0;
+      result.mathConceptsAverage = result.mathConcepts > 0 ? Math.round(result.mathConcepts / observations_count) : 0;
+      result.helpingChildrenAverage = result.helpingChildren > 0 ? Math.round(result.helpingChildren / observations_count) : 0;
 
-      result.mathVocabularyAverage = result.mathVocabulary > 0 ? Math.round(result.mathVocabulary / tempTotalInstructions) : 0;
-      result.askingQuestionsAverage = result.askingQuestions > 0 ? Math.round(result.askingQuestions / tempTotalInstructions) : 0;
-      result.mathConceptsAverage = result.mathConcepts > 0 ? Math.round(result.mathConcepts / tempTotalInstructions) : 0;
-      result.helpingChildrenAverage = result.helpingChildren > 0 ? Math.round(result.helpingChildren / tempTotalInstructions) : 0;
+      result.countingAverage = result.counting > 0 ? Math.round(result.counting / observations_count) : 0;
+      result.shapesAverage = result.shapes > 0 ? Math.round(result.shapes / observations_count) : 0;
+      result.patternsAverage = result.patterns > 0 ? Math.round(result.patterns / observations_count) : 0;
+      result.measurementAverage = result.measurement > 0 ? Math.round(result.measurement / observations_count) : 0;
 
-      result.countingAverage = result.counting > 0 ? Math.round(result.counting / tempTotalInstructions) : 0;
-      result.shapesAverage = result.shapes > 0 ? Math.round(result.shapes / tempTotalInstructions) : 0;
-      result.patternsAverage = result.patterns > 0 ? Math.round(result.patterns / tempTotalInstructions) : 0;
-      result.measurementAverage = result.measurement > 0 ? Math.round(result.measurement / tempTotalInstructions) : 0;
-
-      result.notAtCenterAverage = result.notAtCenter > 0 ? Math.round(result.notAtCenter / tempTotalInstructions) : 0;
-      result.supportAverage = result.support > 0 ? Math.round(result.support / tempTotalInstructions) : 0;
-      result.noSupportAverage = result.noSupport > 0 ? Math.round(result.noSupport / tempTotalInstructions) : 0;
+      result.notAtCenterAverage = result.notAtCenter > 0 ? Math.round(result.notAtCenter / observations_count) : 0;
+      result.supportAverage = result.support > 0 ? Math.round(result.support / observations_count) : 0;
+      result.noSupportAverage = result.noSupport > 0 ? Math.round(result.noSupport / observations_count) : 0;
 
     }
 
+    console.log(results)
     return results;
 
   }
@@ -285,8 +291,6 @@ class AveragesData {
 
     // Initialize the array that will hold all the data
     var results = {};
-    let date = data[0].startDate.value
-    let observations = 1
 
     results[teacher.id] = {
       name: teacher.firstName + " " + teacher.lastName,
@@ -295,6 +299,7 @@ class AveragesData {
       hlqResponse: 0,
       llq: 0,
       llqResponse: 0,
+      observation: [data[0].id]
     };
 
     // Get number of instances for each type of data
@@ -309,9 +314,8 @@ class AveragesData {
       // Add to behavior types
       results[teacherId][row.instructionType] += row.count;
 
-      if (date !== row.startDate.value) {
-        observations += 1;
-        date = row.startDate.value
+      if (!results[teacherId].observation.includes(row.id)) {
+        results[teacherId].observation.push(row.id)
       }
     }
 
@@ -320,18 +324,12 @@ class AveragesData {
     for(var resultsIndex in results)
     {
       var result = results[resultsIndex];
+      let observations_count = result.observation.length
 
-      result.hlq = result.hlq > 0 ? Math.round(result.hlq / observations) : 0;
-      result.hlqResponse = result.hlqResponse > 0 ? Math.round(result.hlqResponse / observations) : 0;
-      result.llq = result.llq > 0 ? Math.round(result.llq / observations) : 0;
-      result.llqResponse = result.llqResponse > 0 ? Math.round(result.llqResponse / observations) : 0;
-
-      let total = result.hlq + result.hlqResponse + result.llq + result.llqResponse;
-      console.log(total)
-      result.hlqAverage = (result.hlq / total) * 100
-      result.hlqResponseAverage = (result.hlqResponse / total) * 100
-      result.llqAverage = (result.llq / total) * 100
-      result.llqResponseAverage = (result.llqResponse / total) * 100
+      result.hlq = result.hlq > 0 ? Math.round(result.hlq / observations_count) : 0;
+      result.hlqResponse = result.hlqResponse > 0 ? Math.round(result.hlqResponse / observations_count) : 0;
+      result.llq = result.llq > 0 ? Math.round(result.llq / observations_count) : 0;
+      result.llqResponse = result.llqResponse > 0 ? Math.round(result.llqResponse / observations_count) : 0;
     }
 
 
