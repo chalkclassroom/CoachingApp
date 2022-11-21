@@ -6541,9 +6541,14 @@ class Firebase {
 
   }
 
-  emailExists = async (email, id?) => {
+  emailExists = async (email: string, id?: string, archives?: boolean) => {
     if (id) {
-      const check = await this.db.collection('users').doc(id).get()
+      let check
+      if (archives) {
+        check = await this.db.collection('users').doc("archived" + id).get()
+      } else {
+        check = await this.db.collection('users').doc(id).get()
+      }
       if (check.exists) {
         if (check.data().email === email) {
           return false

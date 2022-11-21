@@ -57,6 +57,10 @@ interface Props {
   updateTeacherData(data): void 
   programData: Array<Object>
   updateSendToSitesData(data): void 
+  siteData: Array<Object>
+  updateSiteData(data): void
+  updateProgramData(data): void
+
 }
 
 interface State {
@@ -495,6 +499,22 @@ class Sites extends React.Component<Props, State> {
 
             this.props.updateSendToSitesData(update)
 
+            update = this.props.siteData
+            update.push({
+              name: addSiteName,
+              id: siteId,
+              siteLeaderId: "",
+              coaches: ""
+            })
+
+            this.props.updateSiteData(update)
+
+            update = this.props.programData
+            let programData = update.find(o => o.id === addProgramId);
+            let programIndex = update.indexOf(programData);
+
+            update[programIndex].sites.push(siteId) 
+            this.props.updateProgramData(update)
 
             this.setState({ // Hold off setting new state until success has been determined
               addSiteName: "",

@@ -501,7 +501,15 @@ class UsersPage extends React.Component<Props, State> {
   }
 
   updateSendToSites = (data) => {
-    this.setState({SendToSites: data})
+    this.setState({sendToSites: data})
+  }
+
+  updateSiteData = (data) => {
+    this.setState({siteData: data})
+  }
+
+  updateProgramData = (data) => {
+    this.setState({programData: data})
   }
 
 
@@ -615,6 +623,9 @@ class UsersPage extends React.Component<Props, State> {
                         updateTeacherData={(data) => this.updateTeacherData(data)}
                         programData = {this.state.programData}
                         updateSendToSitesData = {(data) => this.updateSendToSites(data)}
+                        siteData = {this.state.siteData}
+                        updateSiteData = {(data) => this.updateSiteData(data)}
+                        updateProgramData = {(data) => this.updateProgramData(data)}
                         />
                     } />
                   </Switch>

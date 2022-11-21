@@ -496,6 +496,7 @@ class Coaches extends React.Component<Props, State> {
     await firebase.firebaseEmailSignUp({ email: newCoachEmail, password: randomString, firstName: newCoachFirstName, lastName: newCoachLastName }, 'coach', hasProgram, this.state.newCoachProgramId, hasSite, this.state.newCoachSiteIds)
         .then(async (data) => {
 
+          let update = this.props.sitesList
           // Add new user to the coach data that we got from props
           var newCoachSiteList = [];
           for(var siteIndex in data.sites)
@@ -509,6 +510,24 @@ class Coaches extends React.Component<Props, State> {
               // Get program that has this site
               var programData = await this.props.programData.find(o => o.sites.includes(programId) );
 
+              let siteDataCB = update.find(o => o.siteId === siteId && o.id === "");
+              if (siteDataCB) {
+                let siteIndex = update.indexOf(siteDataCB);
+                update.splice(siteIndex, 1);
+              }
+
+              update.push({
+                siteName: siteData.name,
+                siteId: siteId,
+                programName: programData.name,
+                programId: data.program,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                id: data.id,
+                archived: false,
+                email: newCoachEmail
+              })
+
               newCoachSiteList.push({
                 programId: data.program,
                 programName: programData.name,
@@ -517,6 +536,8 @@ class Coaches extends React.Component<Props, State> {
               });
           }
 
+          this.props.updateSendToSitesData(update)
+          
           var newCoachInfo = {
             id: data.id,
             firstName: data.firstName,

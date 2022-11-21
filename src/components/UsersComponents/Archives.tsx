@@ -645,7 +645,7 @@ class Archives extends React.Component<Props, State> {
       return;
     }
 
-    if (await firebase.emailExists(editCoachEmail, editCoachId)) {
+    if (await firebase.emailExists(editCoachEmail, editCoachId, true)) {
       alert("This email already exists for another user")
       return;
     }
