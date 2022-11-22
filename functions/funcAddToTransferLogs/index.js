@@ -182,7 +182,9 @@ exports.funcAddToTransferLogsOnPartnerCreate = functions.firestore
 
       var currDate = new Date();
 
-      await addToTransferLog("users", context.params.userId, "teacher", context.params.partnerId, inOrOut, currDate)
+      if (context.params.userId.substr(0, 8) !== "archived") {
+        await addToTransferLog("users", context.params.userId, "teacher", context.params.partnerId, inOrOut, currDate)
+      }
 
       console.log("==================== funcAddToTransferLogsOnPartnerCreate ========================")
       console.log("New VALUE ", newValue);

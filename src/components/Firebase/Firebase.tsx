@@ -4589,10 +4589,21 @@ class Firebase {
 
   archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
     const collection = await this.db.collection('users').doc(coachId).collection('partners').get()
+    const collection2 = await this.db.collection('users').doc(coachId).collection('transferLogs').get()
     let partners: Array<string> = []
+    let logs: Array<Object> = []
 
     collection.docs.map(item => {
       partners.push(item.id)
+    })
+    collection2.docs.map(item => {
+      logs.push({
+        docId: item.id,
+        id: item.data().id,
+        inOrOut: item.data().inOrOut,
+        time: item.data().time,
+        type: item.data().type
+      })
     })
 
     let userData: Record<string, any> = {
@@ -4612,9 +4623,48 @@ class Firebase {
       }
     }).catch((error: Error) => {
       console.error(
-        "Error occurred when creating archived coach doc: ",
+        "Error occurred when creating archived coach doc partners: ",
         error
       )
+    }).then (() => {
+      for (let logIndex = 0; logIndex < logs.length; logIndex++) {
+        docRef.collection("transferLogs").doc(logs[logIndex].docId).set({
+          id: logs[logIndex].id,
+          inOrOut: logs[logIndex].inOrOut,
+          time: logs[logIndex].time,
+          type: logs[logIndex].type
+        });
+        docRef.collection("transferLogs").doc().set({
+          id: logs[logIndex].id,
+          inOrOut: "out",
+          time: new Date(),
+          type: logs[logIndex].type
+        });
+      }
+    }).catch((error: Error) => {
+      console.error(
+        "Error occurred when creating archived coach doc transferLogs: ",
+        error
+      )
+    }).finally(async () => {
+      //Delete original document
+      for (let i = 0; i < partners.length; i++) {
+        await this.db.collection('users').doc(coachId).collection('partners').doc(partners[i]).delete()
+      }
+      const collection3 = await this.db.collection('users').doc(coachId).collection('transferLogs').get()
+      let del: Array<string> = []
+      collection3.docs.map(item => {
+        del.push(item.id)
+      })
+      for (let i = 0; i < del.length; i++) {
+        await this.db.collection('users').doc(coachId).collection('transferLogs').doc(del[i]).delete()
+      }
+      await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
+        console.error(
+          "Error occurred when deleting original coach doc: ",
+          error
+        )
+      })
     })
 
     //Create archive
@@ -4633,18 +4683,6 @@ class Firebase {
         error
       )
     })
-
-    //Delete original document
-    for (let i = 0; i < partners.length; i++) {
-      await this.db.collection('users').doc(coachId).collection('partners').doc(partners[i]).delete()
-    }
-    await this.db.collection('users').doc(coachId).delete().catch((error: Error) => {
-      console.error(
-        "Error occurred when deleting original coach doc: ",
-        error
-      )
-    })
-
   }
 
   unarchiveCoach = async (coachId: string) => {
@@ -4670,19 +4708,43 @@ class Firebase {
       partners.push(item.id)
     })
 
+    const collection2 = await this.db.collection('users').doc("archived" + coachId).collection('transferLogs').get()
+    let logs: Array<Object> = []
+
+    collection2.docs.map(item => {
+      logs.push({
+        docId: item.id,
+        id: item.data().id,
+        inOrOut: item.data().inOrOut,
+        time: item.data().time,
+        type: item.data().type
+      })
+    })
+
+
     let docRef = firebase.firestore().collection("users").doc(userData.id);
     await docRef.set(userData).then(() => {
-      // for (let partnerIndex = 0; partnerIndex < partners.length; partnerIndex++) {
-      //   docRef.collection("partners").doc(partners[partnerIndex]).set({});
-      // }
+      for (let logIndex = 0; logIndex < logs.length; logIndex++) {
+        docRef.collection("transferLogs").doc(logs[logIndex].docId).set({
+          id: logs[logIndex].id,
+          inOrOut: logs[logIndex].inOrOut,
+          time: logs[logIndex].time,
+          type: logs[logIndex].type
+        });
+      }
     }).catch((error: Error) => {
       console.error(
         "Error occurred when creating archived coach doc: ",
         error
       )
+    }).finally(() => {
+      docRef.collection('partners').doc('rJxNhJmzjRZP7xg29Ko6').set({});
     })
     for (let i = 0; i < partners.length; i++) {
       await this.db.collection('users').doc("archived" + coachId).collection('partners').doc(partners[i]).delete()
+    }
+    for (let i = 0; i < logs.length; i++) {
+      await this.db.collection('users').doc("archived" + coachId).collection('transferLogs').doc(logs[i].docId).delete()
     }
     await this.db.collection("users").doc("archived" + coachId).delete()
     .catch((error: Error) => {
