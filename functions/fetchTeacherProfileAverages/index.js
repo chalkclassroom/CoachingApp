@@ -144,7 +144,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "level")
     {
       sqlQuery = `SELECT
-                      id, 
+                      id,
                       instructionType, COUNT(instructionType) AS count, teacher,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
@@ -277,7 +277,6 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
                       COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
-                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
                       COUNT (sessionStart) AS total,
                       teacher,
                       time

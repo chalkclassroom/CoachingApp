@@ -167,7 +167,7 @@ class AveragesData {
       result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-      result.toneAverage = result.toneCount > 0 ? (result.toneTotal / result.toneCount).toFixed(2) : 0;
+      result.toneAverage = result.toneCount > 0 ? (result.toneTotal / result.toneCount).toFixed(1) : 0;
 
 
       // Gather info for the site bar
@@ -176,8 +176,6 @@ class AveragesData {
       siteBar.disapproval += result.disapproval;
       siteBar.redirection += result.redirection;
 
-      console.log("result.toneCount", result.toneCount);
-      console.log("result.toneTotal", result.toneTotal);
 
       siteBar.toneCount += result.toneCount;
       siteBar.toneTotal += result.toneTotal;
@@ -192,16 +190,9 @@ class AveragesData {
     siteBar.disapprovalAverage = siteBar.disapproval > 0 ? (siteBar.disapproval / siteBar.total).toFixed(2) * 100 : 0;
     siteBar.redirectionAverage = siteBar.redirection > 0 ? (siteBar.redirection / siteBar.total).toFixed(2) * 100 : 0;
 
-    siteBar.toneAverage = siteBar.toneCount > 0 ? (siteBar.toneTotal / siteBar.toneCount).toFixed(2) : 0;
-
-
+    siteBar.toneAverage = siteBar.toneCount > 0 ? (siteBar.toneTotal / siteBar.toneCount).toFixed(1) : 0;
 
     results.siteBar = siteBar;
-    console.log("sitebar : ", siteBar);
-
-
-
-
 
     return results;
 

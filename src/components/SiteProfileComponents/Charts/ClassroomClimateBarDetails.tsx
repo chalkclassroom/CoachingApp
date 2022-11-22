@@ -92,7 +92,6 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-      console.log("Teacher : ", teacher);
 
       specificApproval.push(Math.round((teacher['specificapprovalAverage'] + Number.EPSILON) * 100) / 100);
       generalApproval.push(Math.round((teacher['nonspecificapprovalAverage'] + Number.EPSILON) * 100) / 100);
@@ -236,6 +235,22 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
       datasets: this.state.dataSets
     };
 
+    // Adds some space between the legend
+    const plugin = {
+      beforeInit(chart) {
+        // Get reference to the original fit function
+        const originalFit = chart.legend.fit;
+
+        // Override the fit function
+        chart.legend.fit = function fit() {
+          // Call original function and bind scope in order to use `this` correctly inside it
+          originalFit.bind(chart.legend)();
+          // Change the height as suggested in another answers
+          this.height += 30;
+        };
+      }
+    };
+
     return (
       <>
         <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
@@ -287,6 +302,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                     },
                     stacked: true,
                     gridLines: {
+                      display: false,
                       color: "rgba(0,0,0,0)",
                     }
                   }
@@ -297,8 +313,10 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                 labels: {
                   filter: function(legendItem, data) {
                         return !legendItem.text.includes('Site Average')
-                  }
-                }
+                  },
+                  padding: 20,
+                  boxWidth: 12,
+                },
               },
               title: {
                 display: this.props.title,
@@ -328,6 +346,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
               },
               maintainAspectRatio: false
             }}
+            plugins={[plugin]}
           />
         </div>
       </>

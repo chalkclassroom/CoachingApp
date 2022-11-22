@@ -21,6 +21,21 @@ class TrendData {
 
      const endMonth = endDate.getMonth();
 
+     // Build list of month between start date and end date
+     var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+     // Set the month after the end date, formatted like Nov 21, 2022
+     var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+     var months = [];
+     while(tempDate !== endDatePlusOneMonth)
+     {
+       months.push(tempDate);
+       tempDate = new Date(tempDate);
+       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+     }
+
+     var monthsCount = months.length;
+
      // Add each teacher to the object
      var tempName = "";
      for(var siteIndex in sites)
@@ -28,20 +43,22 @@ class TrendData {
 
        results[siteIndex] = {
          name: tempName,
-         line: new Array(12).fill(0),
-         traveling: new Array(12).fill(0),
-         waiting: new Array(12).fill(0),
-         routines: new Array(12).fill(0),
-         behaviorManagement: new Array(12).fill(0),
-         other: new Array(12).fill(0),
-         total: new Array(12).fill(0),
+         line: new Array(monthsCount).fill(0),
+         traveling: new Array(monthsCount).fill(0),
+         waiting: new Array(monthsCount).fill(0),
+         routines: new Array(monthsCount).fill(0),
+         behaviorManagement: new Array(monthsCount).fill(0),
+         other: new Array(monthsCount).fill(0),
+         total: new Array(monthsCount).fill(0),
 
-         lineAverage: new Array(12).fill(0),
-         travelingAverage: new Array(12).fill(0),
-         waitingAverage: new Array(12).fill(0),
-         routinesAverage: new Array(12).fill(0),
-         behaviorManagementAverage: new Array(12).fill(0),
-         otherAverage: new Array(12).fill(0),
+         lineAverage: new Array(monthsCount).fill(0),
+         travelingAverage: new Array(monthsCount).fill(0),
+         waitingAverage: new Array(monthsCount).fill(0),
+         routinesAverage: new Array(monthsCount).fill(0),
+         behaviorManagementAverage: new Array(monthsCount).fill(0),
+         otherAverage: new Array(monthsCount).fill(0),
+
+         lineChartLabels: months,
        };
 
      }
@@ -64,7 +81,8 @@ class TrendData {
        {
          var row = sites[siteIndex][rowIndex];
 
-         rowMonth = new Date(row.startDate.value).getMonth();
+         //rowMonth = new Date(row.startDate.value).getMonth();
+         rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
          // Add to behavior types
          results[siteIndex].line[rowMonth] +=  row.line;
@@ -87,7 +105,7 @@ class TrendData {
        var result = results[resultsIndex];
 
        // Go through the months
-       for(var i = 0; i < 12; i++)
+       for(var i = 0; i < monthsCount; i++)
        {
          var tempTotalInstructions = result.total[i];
 
@@ -120,6 +138,21 @@ class TrendData {
 
      const endMonth = endDate.getMonth();
 
+     // Build list of month between start date and end date
+     var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+     // Set the month after the end date, formatted like Nov 21, 2022
+     var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+     var months = [];
+     while(tempDate !== endDatePlusOneMonth)
+     {
+       months.push(tempDate);
+       tempDate = new Date(tempDate);
+       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+     }
+
+     var monthsCount = months.length;
+
      // Add each teacher to the object
      var tempName = "";
      for(var siteIndex in sites)
@@ -127,16 +160,18 @@ class TrendData {
 
        results[siteIndex] = {
          name: tempName,
-         total: new Array(12).fill(0),
-         nonspecificapproval: new Array(12).fill(0),
-         specificapproval: new Array(12).fill(0),
-         disapproval: new Array(12).fill(0),
-         redirection: new Array(12).fill(0),
+         total: new Array(monthsCount).fill(0),
+         nonspecificapproval: new Array(monthsCount).fill(0),
+         specificapproval: new Array(monthsCount).fill(0),
+         disapproval: new Array(monthsCount).fill(0),
+         redirection: new Array(monthsCount).fill(0),
 
-         nonspecificapprovalAverage: new Array(12).fill(0),
-         specificapprovalAverage: new Array(12).fill(0),
-         disapprovalAverage: new Array(12).fill(0),
-         redirectionAverage: new Array(12).fill(0),
+         nonspecificapprovalAverage: new Array(monthsCount).fill(0),
+         specificapprovalAverage: new Array(monthsCount).fill(0),
+         disapprovalAverage: new Array(monthsCount).fill(0),
+         redirectionAverage: new Array(monthsCount).fill(0),
+
+         lineChartLabels: months,
        };
 
      }
@@ -154,7 +189,8 @@ class TrendData {
 
          var row = sites[siteIndex][rowIndex];
 
-         rowMonth = new Date(row.startDate.value).getMonth();
+         //rowMonth = new Date(row.startDate.value).getMonth();
+         rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
 
          // Add to behavior types
@@ -175,7 +211,7 @@ class TrendData {
        var result = results[resultsIndex];
 
        // Go through the months
-       for(var i = 0; i < 12; i++)
+       for(var i = 0; i < monthsCount; i++)
        {
          var tempTotalInstructions = result.total[i];
 
@@ -206,6 +242,21 @@ class TrendData {
 
     const endMonth = endDate.getMonth();
 
+    // Build list of month between start date and end date
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var months = [];
+    while(tempDate !== endDatePlusOneMonth)
+    {
+      months.push(tempDate);
+      tempDate = new Date(tempDate);
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    }
+
+    var monthsCount = months.length;
+
     // Add each teacher to the object
     var tempName = "";
     for(var siteIndex in sites)
@@ -215,25 +266,37 @@ class TrendData {
 
       results[siteIndex] = {
         name: tempName,
-        totalInstructions: new Array(12).fill(0),
-        mathVocabulary: new Array(12).fill(0),
-        askingQuestions: new Array(12).fill(0),
-        mathConcepts: new Array(12).fill(0),
-        helpingChildren: new Array(12).fill(0),
+        totalInstructions: new Array(monthsCount).fill(0),
+        mathVocabulary: new Array(monthsCount).fill(0),
+        askingQuestions: new Array(monthsCount).fill(0),
+        mathConcepts: new Array(monthsCount).fill(0),
+        helpingChildren: new Array(monthsCount).fill(0),
 
-        notAtCenter: new Array(12).fill(0),
-        noSupport: new Array(12).fill(0),
-        support: new Array(12).fill(0),
+        notAtCenter: new Array(monthsCount).fill(0),
+        noSupport: new Array(monthsCount).fill(0),
+        support: new Array(monthsCount).fill(0),
 
-        totalInstructionsAverage: new Array(12).fill(0),
-        mathVocabularyAverage: new Array(12).fill(0),
-        askingQuestionsAverage: new Array(12).fill(0),
-        mathConceptsAverage: new Array(12).fill(0),
-        helpingChildrenAverage: new Array(12).fill(0),
+        counting: new Array(monthsCount).fill(0),
+        shapes: new Array(monthsCount).fill(0),
+        patterns: new Array(monthsCount).fill(0),
+        measurement: new Array(monthsCount).fill(0),
 
-        notAtCenterAverage: new Array(12).fill(0),
-        noSupportAverage: new Array(12).fill(0),
-        supportAverage: new Array(12).fill(0),
+        totalInstructionsAverage: new Array(monthsCount).fill(0),
+        mathVocabularyAverage: new Array(monthsCount).fill(0),
+        askingQuestionsAverage: new Array(monthsCount).fill(0),
+        mathConceptsAverage: new Array(monthsCount).fill(0),
+        helpingChildrenAverage: new Array(monthsCount).fill(0),
+
+        notAtCenterAverage: new Array(monthsCount).fill(0),
+        noSupportAverage: new Array(monthsCount).fill(0),
+        supportAverage: new Array(monthsCount).fill(0),
+
+        countingAverage: new Array(monthsCount).fill(0),
+        shapesAverage: new Array(monthsCount).fill(0),
+        patternsAverage: new Array(monthsCount).fill(0),
+        measurementAverage: new Array(monthsCount).fill(0),
+
+        lineChartLabels: months,
       };
 
     }
@@ -248,7 +311,8 @@ class TrendData {
       {
         var row = sites[siteIndex][rowIndex];
 
-        var rowMonth = new Date(row.timestamp).getMonth();
+        //var rowMonth = new Date(row.timestamp).getMonth();
+        var rowMonth = months.indexOf(new Date(row.timestamp).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
         // Add to total # of intervals
         results[siteIndex].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
@@ -258,6 +322,11 @@ class TrendData {
         results[siteIndex].askingQuestions[rowMonth] += row.askingQuestions;
         results[siteIndex].mathConcepts[rowMonth] += row.mathConcepts;
         results[siteIndex].helpingChildren[rowMonth] += row.helpingChildren;
+
+        results[siteIndex].counting[rowMonth] += row.counting;
+        results[siteIndex].shapes[rowMonth] += row.shapes;
+        results[siteIndex].patterns[rowMonth] += row.patterns;
+        results[siteIndex].measurement[rowMonth] += row.measurement;
 
         results[siteIndex].notAtCenter[rowMonth] += row.noOpportunity;
         results[siteIndex].support[rowMonth] += row.support;
@@ -272,7 +341,7 @@ class TrendData {
       var result = results[resultsIndex];
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < monthsCount; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
 
@@ -280,6 +349,12 @@ class TrendData {
         result.askingQuestionsAverage[i] = result.askingQuestions[i] > 0 ? (result.askingQuestions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.mathConceptsAverage[i] = result.mathConcepts[i] > 0 ? (result.mathConcepts[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.helpingChildrenAverage[i] = result.helpingChildren[i] > 0 ? (result.helpingChildren[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+        result.countingAverage = result.counting > 0 ? (result.counting / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.shapesAverage = result.shapes > 0 ? (result.shapes / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.patternsAverage = result.patterns > 0 ? (result.patterns / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.measurementAverage = result.measurement > 0 ? (result.measurement / tempTotalInstructions).toFixed(2) * 100 : 0;
+
 
         result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.supportAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
@@ -307,6 +382,21 @@ class TrendData {
 
     const endMonth = endDate.getMonth();
 
+    // Build list of month between start date and end date
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var months = [];
+    while(tempDate !== endDatePlusOneMonth)
+    {
+      months.push(tempDate);
+      tempDate = new Date(tempDate);
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    }
+
+    var monthsCount = months.length;
+
     // Add each teacher to the object
     var tempName = "";
     for(var siteIndex in sites)
@@ -314,16 +404,18 @@ class TrendData {
 
       results[siteIndex] = {
         name: tempName,
-        totalInstructions: new Array(12).fill(0),
-        hlq: new Array(12).fill(0),
-        hlqResponse: new Array(12).fill(0),
-        llq: new Array(12).fill(0),
-        llqResponse: new Array(12).fill(0),
+        totalInstructions: new Array(monthsCount).fill(0),
+        hlq: new Array(monthsCount).fill(0),
+        hlqResponse: new Array(monthsCount).fill(0),
+        llq: new Array(monthsCount).fill(0),
+        llqResponse: new Array(monthsCount).fill(0),
 
-        hlqAverage: new Array(12).fill(0),
-        hlqResponseAverage: new Array(12).fill(0),
-        llqAverage: new Array(12).fill(0),
-        llqResponseAverage: new Array(12).fill(0),
+        hlqAverage: new Array(monthsCount).fill(0),
+        hlqResponseAverage: new Array(monthsCount).fill(0),
+        llqAverage: new Array(monthsCount).fill(0),
+        llqResponseAverage: new Array(monthsCount).fill(0),
+
+        lineChartLabels: months,
 
       };
 
@@ -339,9 +431,8 @@ class TrendData {
       {
         var row = sites[siteIndex][rowIndex];
 
-
-
-        var rowMonth = new Date(row.startDate.value).getMonth();
+        //var rowMonth = new Date(row.startDate.value).getMonth();
+        var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
         // Add to total # of intervals
         results[siteIndex].totalInstructions[rowMonth] += row.count;
@@ -358,7 +449,7 @@ class TrendData {
       var result = results[resultsIndex];
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < monthsCount; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
 
@@ -389,6 +480,21 @@ class TrendData {
 
    const endMonth = endDate.getMonth();
 
+   // Build list of month between start date and end date
+   var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+   // Set the month after the end date, formatted like Nov 21, 2022
+   var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+   var months = [];
+   while(tempDate !== endDatePlusOneMonth)
+   {
+     months.push(tempDate);
+     tempDate = new Date(tempDate);
+     tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+   }
+
+   var monthsCount = months.length;
+
    // Add each teacher to the object
    var tempName = "";
    for(var siteIndex in sites)
@@ -398,17 +504,19 @@ class TrendData {
 
      results[siteIndex] = {
        name: tempName,
-       totalInstructions: new Array(12).fill(0),
-       offTask: new Array(12).fill(0),
-       mildlyEngaged: new Array(12).fill(0),
-       engaged: new Array(12).fill(0),
-       highlyEngaged: new Array(12).fill(0),
+       totalInstructions: new Array(monthsCount).fill(0),
+       offTask: new Array(monthsCount).fill(0),
+       mildlyEngaged: new Array(monthsCount).fill(0),
+       engaged: new Array(monthsCount).fill(0),
+       highlyEngaged: new Array(monthsCount).fill(0),
 
 
-       offTaskAverage: new Array(12).fill(0),
-       mildlyEngagedAverage: new Array(12).fill(0),
-       engagedAverage: new Array(12).fill(0),
-       highlyEngagedAverage: new Array(12).fill(0),
+       offTaskAverage: new Array(monthsCount).fill(0),
+       mildlyEngagedAverage: new Array(monthsCount).fill(0),
+       engagedAverage: new Array(monthsCount).fill(0),
+       highlyEngagedAverage: new Array(monthsCount).fill(0),
+
+       lineChartLabels: months,
      };
 
    }
@@ -425,7 +533,8 @@ class TrendData {
 
 
 
-       var rowMonth = new Date(row.startDate).getMonth();
+       //var rowMonth = new Date(row.startDate).getMonth();
+       var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
        // Add to total # of intervals
        results[siteIndex].totalInstructions[rowMonth] += row.count;
@@ -458,7 +567,7 @@ class TrendData {
      var result = results[resultsIndex];
 
      // Go through the months
-     for(var i = 0; i < 12; i++)
+     for(var i = 0; i < monthsCount; i++)
      {
        var tempTotalInstructions = result.totalInstructions[i];
 
@@ -492,6 +601,21 @@ class TrendData {
 
    const endMonth = endDate.getMonth();
 
+   // Build list of month between start date and end date
+   var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+   // Set the month after the end date, formatted like Nov 21, 2022
+   var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+   var months = [];
+   while(tempDate !== endDatePlusOneMonth)
+   {
+     months.push(tempDate);
+     tempDate = new Date(tempDate);
+     tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+   }
+
+   var monthsCount = months.length;
+
    // Add each teacher to the object
    var tempName = "";
    for(var siteIndex in sites)
@@ -501,33 +625,34 @@ class TrendData {
 
      results[siteIndex] = {
        name: tempName,
-       eyeLevel: new Array(12).fill(0),
-       positiveExpression: new Array(12).fill(0),
-       repeats: new Array(12).fill(0),
-       openEndedQuestions: new Array(12).fill(0),
-       extendsPlay: new Array(12).fill(0),
-       encouragesPeerTalk: new Array(12).fill(0),
+       eyeLevel: new Array(monthsCount).fill(0),
+       positiveExpression: new Array(monthsCount).fill(0),
+       repeats: new Array(monthsCount).fill(0),
+       openEndedQuestions: new Array(monthsCount).fill(0),
+       extendsPlay: new Array(monthsCount).fill(0),
+       encouragesPeerTalk: new Array(monthsCount).fill(0),
 
-       encouraging: new Array(12).fill(0),
-       noBehaviors: new Array(12).fill(0),
+       encouraging: new Array(monthsCount).fill(0),
+       noBehaviors: new Array(monthsCount).fill(0),
 
-       totalInstructions: new Array(12).fill(0),
-       totalObserved: new Array(12).fill(0),
+       totalInstructions: new Array(monthsCount).fill(0),
+       totalObserved: new Array(monthsCount).fill(0),
 
 
-       eyeLevelAverage: new Array(12).fill(0),
-       positiveExpressionAverage: new Array(12).fill(0),
-       repeatsAverage: new Array(12).fill(0),
-       openEndedQuestionsAverage: new Array(12).fill(0),
-       extendsPlayAverage: new Array(12).fill(0),
-       encouragesPeerTalkAverage: new Array(12).fill(0),
+       eyeLevelAverage: new Array(monthsCount).fill(0),
+       positiveExpressionAverage: new Array(monthsCount).fill(0),
+       repeatsAverage: new Array(monthsCount).fill(0),
+       openEndedQuestionsAverage: new Array(monthsCount).fill(0),
+       extendsPlayAverage: new Array(monthsCount).fill(0),
+       encouragesPeerTalkAverage: new Array(monthsCount).fill(0),
 
-       encouragingAverage: new Array(12).fill(0),
-       noBehaviorsAverage: new Array(12).fill(0),
+       encouragingAverage: new Array(monthsCount).fill(0),
+       noBehaviorsAverage: new Array(monthsCount).fill(0),
 
-       totalInstructionsAverage: new Array(12).fill(0),
-       totalObservedAverage: new Array(12).fill(0),
+       totalInstructionsAverage: new Array(monthsCount).fill(0),
+       totalObservedAverage: new Array(monthsCount).fill(0),
 
+       lineChartLabels: months,
      };
 
    }
@@ -544,7 +669,8 @@ class TrendData {
 
 
 
-       var rowMonth = new Date(row.startDate).getMonth();
+       //var rowMonth = new Date(row.startDate).getMonth();
+       var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
        // Add to behavior types
        results[siteIndex].eyeLevel[rowMonth] += row.listening1;
@@ -572,7 +698,7 @@ class TrendData {
      var result = results[resultsIndex];
 
      // Go through the months
-     for(var i = 0; i < 12; i++)
+     for(var i = 0; i < monthsCount; i++)
      {
        var tempTotalInstructions = result.totalInstructions[i];
        var tempTotalObserved = result.totalObserved[i];
@@ -611,6 +737,21 @@ calculateSequentialActivitiesTrends = (data, sites, startDate, endDate) => {
 
   const endMonth = endDate.getMonth();
 
+  // Build list of month between start date and end date
+  var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+  // Set the month after the end date, formatted like Nov 21, 2022
+  var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  var months = [];
+  while(tempDate !== endDatePlusOneMonth)
+  {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  }
+
+  var monthsCount = months.length;
+
   // Add each teacher to the object
   var tempName = "";
   for(var siteIndex in sites)
@@ -620,25 +761,27 @@ calculateSequentialActivitiesTrends = (data, sites, startDate, endDate) => {
 
     results[siteIndex] = {
       name: tempName,
-      totalInstructions: new Array(12).fill(0),
-      sequentialActivities: new Array(12).fill(0),
-      drawImages: new Array(12).fill(0),
-      demonstrateSteps: new Array(12).fill(0),
-      actOut: new Array(12).fill(0),
+      totalInstructions: new Array(monthsCount).fill(0),
+      sequentialActivities: new Array(monthsCount).fill(0),
+      drawImages: new Array(monthsCount).fill(0),
+      demonstrateSteps: new Array(monthsCount).fill(0),
+      actOut: new Array(monthsCount).fill(0),
 
-      notAtCenter: new Array(12).fill(0),
-      noSupport: new Array(12).fill(0),
-      support: new Array(12).fill(0),
+      notAtCenter: new Array(monthsCount).fill(0),
+      noSupport: new Array(monthsCount).fill(0),
+      support: new Array(monthsCount).fill(0),
 
-      totalInstructionsAverage: new Array(12).fill(0),
-      sequentialActivitiesAverage: new Array(12).fill(0),
-      drawImagesAverage: new Array(12).fill(0),
-      demonstrateStepsAverage: new Array(12).fill(0),
-      actOutAverage: new Array(12).fill(0),
+      totalInstructionsAverage: new Array(monthsCount).fill(0),
+      sequentialActivitiesAverage: new Array(monthsCount).fill(0),
+      drawImagesAverage: new Array(monthsCount).fill(0),
+      demonstrateStepsAverage: new Array(monthsCount).fill(0),
+      actOutAverage: new Array(monthsCount).fill(0),
 
-      notAtCenterAverage: new Array(12).fill(0),
-      noSupportAverage: new Array(12).fill(0),
-      supportAverage: new Array(12).fill(0),
+      notAtCenterAverage: new Array(monthsCount).fill(0),
+      noSupportAverage: new Array(monthsCount).fill(0),
+      supportAverage: new Array(monthsCount).fill(0),
+
+      lineChartLabels: months,
     };
 
   }
@@ -653,9 +796,9 @@ calculateSequentialActivitiesTrends = (data, sites, startDate, endDate) => {
     {
       var row = sites[siteIndex][rowIndex];
 
+      //var rowMonth = new Date(row.timestamp).getMonth();
+      var rowMonth = months.indexOf(new Date(row.timestamp).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
-
-      var rowMonth = new Date(row.timestamp).getMonth();
 
       // Add to total # of intervals
       results[siteIndex].totalInstructions[rowMonth] += row.notAtCenter + row.support + row.noSupport;
@@ -679,7 +822,7 @@ calculateSequentialActivitiesTrends = (data, sites, startDate, endDate) => {
     var result = results[resultsIndex];
 
     // Go through the months
-    for(var i = 0; i < 12; i++)
+    for(var i = 0; i < monthsCount; i++)
     {
       var tempTotalInstructions = result.totalInstructions[i];
 
@@ -717,6 +860,21 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
 
   const endMonth = endDate.getMonth();
 
+  // Build list of month between start date and end date
+  var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+  // Set the month after the end date, formatted like Nov 21, 2022
+  var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  var months = [];
+  while(tempDate !== endDatePlusOneMonth)
+  {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  }
+
+  var monthsCount = months.length;
+
   // Add each teacher to the object
   var tempName = "";
   for(var siteIndex in sites)
@@ -726,21 +884,24 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
 
     results[siteIndex] = {
       name: tempName,
-      totalIntervals: new Array(12).fill(0),
-      totalInstructions: new Array(12).fill(0),
-      phonological: new Array(12).fill(0),
-      alphabetic: new Array(12).fill(0),
-      openEndedQuestions: new Array(12).fill(0),
-      realisticReading: new Array(12).fill(0),
-      multimodalInstruction: new Array(12).fill(0),
-      foundationalSkills: new Array(12).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
+      totalInstructions: new Array(monthsCount).fill(0),
+      phonological: new Array(monthsCount).fill(0),
+      alphabetic: new Array(monthsCount).fill(0),
+      openEndedQuestions: new Array(monthsCount).fill(0),
+      realisticReading: new Array(monthsCount).fill(0),
+      multimodalInstruction: new Array(monthsCount).fill(0),
+      foundationalSkills: new Array(monthsCount).fill(0),
 
-      phonologicalAverage: new Array(12).fill(0),
-      alphabeticAverage: new Array(12).fill(0),
-      openEndedQuestionsAverage: new Array(12).fill(0),
-      realisticReadingAverage: new Array(12).fill(0),
-      multimodalInstructionAverage: new Array(12).fill(0),
-      foundationalSkillsAverage: new Array(12).fill(0),
+      phonologicalAverage: new Array(monthsCount).fill(0),
+      alphabeticAverage: new Array(monthsCount).fill(0),
+      openEndedQuestionsAverage: new Array(monthsCount).fill(0),
+      realisticReadingAverage: new Array(monthsCount).fill(0),
+      multimodalInstructionAverage: new Array(monthsCount).fill(0),
+      foundationalSkillsAverage: new Array(monthsCount).fill(0),
+
+      lineChartLabels: months,
+
     };
 
   }
@@ -767,7 +928,8 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
 
 
 
-      rowMonth = new Date(row.GroupDate.value).getMonth();
+      //rowMonth = new Date(row.GroupDate.value).getMonth();
+      rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
       // Add to total # of intervals
       results[siteIndex].totalIntervals[rowMonth]++;
@@ -818,7 +980,7 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
     var result = results[resultsIndex];
 
     // Go through the months
-    for(var i = 0; i < 12; i++)
+    for(var i = 0; i < monthsCount; i++)
     {
       var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
@@ -857,6 +1019,21 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
 
   const endMonth = endDate.getMonth();
 
+  // Build list of month between start date and end date
+  var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+  // Set the month after the end date, formatted like Nov 21, 2022
+  var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  var months = [];
+  while(tempDate !== endDatePlusOneMonth)
+  {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  }
+
+  var monthsCount = months.length;
+
   // Add each teacher to the object
   var tempName = "";
   for(var siteIndex in sites)
@@ -866,23 +1043,22 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
 
     results[siteIndex] = {
       name: tempName,
-      totalIntervals: new Array(12).fill(0),
-      totalInstructions: new Array(12).fill(0),
-      writingSkills: new Array(12).fill(0),
-      meaning: new Array(12).fill(0),
-      printProcesses: new Array(12).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
+      totalInstructions: new Array(monthsCount).fill(0),
+      writingSkills: new Array(monthsCount).fill(0),
+      meaning: new Array(monthsCount).fill(0),
+      printProcesses: new Array(monthsCount).fill(0),
 
 
-      writingSkillsAverage: new Array(12).fill(0),
-      meaningAverage: new Array(12).fill(0),
-      printProcessesAverage: new Array(12).fill(0),
+      writingSkillsAverage: new Array(monthsCount).fill(0),
+      meaningAverage: new Array(monthsCount).fill(0),
+      printProcessesAverage: new Array(monthsCount).fill(0),
+
+      lineChartLabels: months,
 
     };
 
   }
-
-
-
 
 
   for(var siteIndex in sites)
@@ -903,7 +1079,8 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
 
 
 
-      rowMonth = new Date(row.GroupDate.value).getMonth();
+      //rowMonth = new Date(row.GroupDate.value).getMonth();
+      rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
       // Add to total # of intervals
       results[siteIndex].totalIntervals[rowMonth]++;
@@ -938,7 +1115,7 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
     var result = results[resultsIndex];
 
     // Go through the months
-    for(var i = 0; i < 12; i++)
+    for(var i = 0; i < monthsCount; i++)
     {
       var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
@@ -973,6 +1150,21 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
   const endMonth = endDate.getMonth();
 
+  // Build list of month between start date and end date
+  var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+  // Set the month after the end date, formatted like Nov 21, 2022
+  var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  var months = [];
+  while(tempDate !== endDatePlusOneMonth)
+  {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  }
+
+  var monthsCount = months.length;
+
   // Add each teacher to the object
   var tempName = "";
   for(var siteIndex in sites)
@@ -982,21 +1174,23 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
     results[siteIndex] = {
       name: tempName,
-      totalIntervals: new Array(12).fill(0),
-      totalInstructions: new Array(12).fill(0),
-      bookReading: new Array(12).fill(0),
-      vocabFocus: new Array(12).fill(0),
-      languageConnections: new Array(12).fill(0),
-      childrenSupport: new Array(12).fill(0),
-      fairnessDiscussions: new Array(12).fill(0),
-      multimodalInstruction: new Array(12).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
+      totalInstructions: new Array(monthsCount).fill(0),
+      bookReading: new Array(monthsCount).fill(0),
+      vocabFocus: new Array(monthsCount).fill(0),
+      languageConnections: new Array(monthsCount).fill(0),
+      childrenSupport: new Array(monthsCount).fill(0),
+      fairnessDiscussions: new Array(monthsCount).fill(0),
+      multimodalInstruction: new Array(monthsCount).fill(0),
 
-      vocabFocusAverage: new Array(12).fill(0),
-      languageConnectionsAverage: new Array(12).fill(0),
-      childrenSupportAverage: new Array(12).fill(0),
-      fairnessDiscussionsAverage: new Array(12).fill(0),
-      multimodalInstructionAverage: new Array(12).fill(0),
-      bookReadingAverage: new Array(12).fill(0),
+      vocabFocusAverage: new Array(monthsCount).fill(0),
+      languageConnectionsAverage: new Array(monthsCount).fill(0),
+      childrenSupportAverage: new Array(monthsCount).fill(0),
+      fairnessDiscussionsAverage: new Array(monthsCount).fill(0),
+      multimodalInstructionAverage: new Array(monthsCount).fill(0),
+      bookReadingAverage: new Array(monthsCount).fill(0),
+
+      lineChartLabels: months,
     };
 
   }
@@ -1022,9 +1216,8 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     {
       var row = sites[siteIndex][rowIndex];
 
-
-
-      rowMonth = new Date(row.GroupDate.value).getMonth();
+      //rowMonth = new Date(row.GroupDate.value).getMonth();
+      rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
       // Add to total # of intervals
       results[siteIndex].totalIntervals[rowMonth]++;
@@ -1074,7 +1267,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     var result = results[resultsIndex];
 
     // Go through the months
-    for(var i = 0; i < 12; i++)
+    for(var i = 0; i < monthsCount; i++)
     {
       var tempTotalInstructions = result.totalInstructions[i];
       var tempTotalIntervals = result.totalIntervals[i];
@@ -1111,6 +1304,21 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
     const endMonth = endDate.getMonth();
 
+    // Build list of month between start date and end date
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var months = [];
+    while(tempDate !== endDatePlusOneMonth)
+    {
+      months.push(tempDate);
+      tempDate = new Date(tempDate);
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    }
+
+    var monthsCount = months.length;
+
     // Add each teacher to the object
     var tempName = "";
     for(var siteIndex in sites)
@@ -1120,18 +1328,20 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
       results[siteIndex] = {
         name: tempName,
-        totalIntervals: new Array(12).fill(0),
-        totalInstructions: new Array(12).fill(0),
-        languageEnvironment: new Array(12).fill(0),
-        talk: new Array(12).fill(0),
-        encourageChildren: new Array(12).fill(0),
-        respondChildren: new Array(12).fill(0),
+        totalIntervals: new Array(monthsCount).fill(0),
+        totalInstructions: new Array(monthsCount).fill(0),
+        languageEnvironment: new Array(monthsCount).fill(0),
+        talk: new Array(monthsCount).fill(0),
+        encourageChildren: new Array(monthsCount).fill(0),
+        respondChildren: new Array(monthsCount).fill(0),
 
 
-        languageEnvironmentAverage: new Array(12).fill(0),
-        talkAverage: new Array(12).fill(0),
-        encourageChildrenAverage: new Array(12).fill(0),
-        respondChildrenAverage: new Array(12).fill(0),
+        languageEnvironmentAverage: new Array(monthsCount).fill(0),
+        talkAverage: new Array(monthsCount).fill(0),
+        encourageChildrenAverage: new Array(monthsCount).fill(0),
+        respondChildrenAverage: new Array(monthsCount).fill(0),
+
+        lineChartLabels: months,
 
       };
 
@@ -1159,8 +1369,9 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
         var row = sites[siteIndex][rowIndex];
 
 
+        //rowMonth = new Date(row.GroupDate.value).getMonth();
+        rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
-        rowMonth = new Date(row.GroupDate.value).getMonth();
 
         // Add to total # of intervals
         results[siteIndex].totalIntervals[rowMonth]++;
@@ -1202,7 +1413,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
       var result = results[resultsIndex];
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < monthsCount; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
         var tempTotalIntervals = result.totalIntervals[i];
@@ -1234,6 +1445,21 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
     const endMonth = endDate.getMonth();
 
+    // Build list of month between start date and end date
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var months = [];
+    while(tempDate !== endDatePlusOneMonth)
+    {
+      months.push(tempDate);
+      tempDate = new Date(tempDate);
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    }
+
+    var monthsCount = months.length;
+
     // Add each teacher to the object
     var tempName = "";
     for(var siteIndex in sites)
@@ -1243,27 +1469,29 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
       results[siteIndex] = {
         name: tempName,
-        totalIntervals: new Array(12).fill(0),
-        totalInstructions: new Array(12).fill(0),
+        totalIntervals: new Array(monthsCount).fill(0),
+        totalInstructions: new Array(monthsCount).fill(0),
 
-        childrensPlay: new Array(12).fill(0),
-        askingQuestions: new Array(12).fill(0),
-        encouragingChildren: new Array(12).fill(0),
-        helpingChildren: new Array(12).fill(0),
+        childrensPlay: new Array(monthsCount).fill(0),
+        askingQuestions: new Array(monthsCount).fill(0),
+        encouragingChildren: new Array(monthsCount).fill(0),
+        helpingChildren: new Array(monthsCount).fill(0),
 
-        support: new Array(12).fill(0),
-        noSupport: new Array(12).fill(0),
-        notAtCenter: new Array(12).fill(0),
+        support: new Array(monthsCount).fill(0),
+        noSupport: new Array(monthsCount).fill(0),
+        notAtCenter: new Array(monthsCount).fill(0),
 
 
-        childrensPlayAverage: new Array(12).fill(0),
-        askingQuestionsAverage: new Array(12).fill(0),
-        encouragingChildrenAverage: new Array(12).fill(0),
-        helpingChildrenAverage: new Array(12).fill(0),
+        childrensPlayAverage: new Array(monthsCount).fill(0),
+        askingQuestionsAverage: new Array(monthsCount).fill(0),
+        encouragingChildrenAverage: new Array(monthsCount).fill(0),
+        helpingChildrenAverage: new Array(monthsCount).fill(0),
 
-        supportAverage: new Array(12).fill(0),
-        noSupportAverage: new Array(12).fill(0),
-        notAtCenterAverage: new Array(12).fill(0),
+        supportAverage: new Array(monthsCount).fill(0),
+        noSupportAverage: new Array(monthsCount).fill(0),
+        notAtCenterAverage: new Array(monthsCount).fill(0),
+
+        lineChartLabels: months,
 
       };
 
@@ -1289,7 +1517,8 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
 
 
-        rowMonth = new Date(row.GroupDate.value).getMonth();
+        //rowMonth = new Date(row.GroupDate.value).getMonth();
+        rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
         // Add to total # of intervals
         results[siteIndex].totalIntervals[rowMonth]++;
