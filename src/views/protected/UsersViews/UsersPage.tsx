@@ -163,9 +163,9 @@ class UsersPage extends React.Component<Props, State> {
         let program = programs.find(o => o.sites.includes(site.id))
 
         let draft = {
-          coachId: coach.id,
-          coachFirstName: coach.firstName,
-          coachLastName: coach.lastName,
+          coachId: coach.archived ? "" : coach.id,
+          coachFirstName: coach.archived ? "" : coach.firstName,
+          coachLastName: coach.archived ? "" : coach.lastName,
           siteName: site.name,
           teacherId: teacher.id,
           teacherFirstName: teacher.firstName,
@@ -333,20 +333,22 @@ class UsersPage extends React.Component<Props, State> {
     let data = [];
     coachData.map(coach => {
       coach.siteList.map(value => {
-        if ((this.props.userRole === "siteLeader") ? filter.includes(value.siteId) : (this.props.userRole === "programleader") ? filter.includes(value.programId) : true){
-        data.push({
-          siteName: value.siteName,
-          siteId: value.siteId,
-          programName: value.programName,
-          programId: value.programId,
-          firstName: coach.firstName,
-          lastName: coach.lastName,
-          id: coach.id,
-          archived: coach.archived,
-          email: coach.email
-        })
-        seen.push(value.siteId)
-      }
+        if ((this.props.userRole === "siteLeader") ? filter.includes(value.siteId) : (this.props.userRole === "programleader") ? filter.includes(value.programId) : true){     
+          console.log(coach.id.substr(0,8))
+          if (!coach.archived) {
+            data.push({
+              siteName: value.siteName,
+              siteId: value.siteId,
+              programName: value.programName,
+              programId: value.programId,
+              firstName: coach.firstName,
+              lastName: coach.lastName,
+              id: coach.id,
+              archived: coach.archived,
+              email: coach.email
+            })
+            seen.push(value.siteId)
+          }}
       })
     })
     siteData.map(site => {
