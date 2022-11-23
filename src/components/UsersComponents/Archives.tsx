@@ -356,7 +356,7 @@ class Archives extends React.Component<Props, State> {
         console.log("reverse site name");
         break;
       case "program":
-        archivesList.sort((a,b) => ((a.role === "coach" ? a.programName : a.program) > (b.role === "coach" ? b.programName : b.program)) ? 1 : ((b.program > (a.role === "coach" ? a.programName : a.program)) ? -1 : 0));
+        archivesList.sort((a,b) => ((a.role === "coach" ? a.programName : a.program) > (b.role === "coach" ? b.programName : b.program)) ? 1 : (((b.role === "coach" ? b.programName : b.program) > (a.role === "coach" ? a.programName : a.program)) ? -1 : 0));
         console.log("program name");
         break;
       case "programReverse":
@@ -476,6 +476,11 @@ class Archives extends React.Component<Props, State> {
 
     if (editEmail !== "" && !this.validateEmail(editEmail)) {
       alert("No email or valid email is required");
+      return;
+    }
+
+    if (await firebase.emailExists(editEmail, editTeacherId)) {
+      alert("This email already exists for another user")
       return;
     }
 
@@ -637,6 +642,11 @@ class Archives extends React.Component<Props, State> {
 
     if (editCoachEmail !== "" && !this.validateEmail(editCoachEmail)) {
       alert("No email or valid email is required");
+      return;
+    }
+
+    if (await firebase.emailExists(editCoachEmail, editCoachId, true)) {
+      alert("This email already exists for another user")
       return;
     }
 

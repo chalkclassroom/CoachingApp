@@ -374,12 +374,8 @@ class ProgramProfileResults extends React.Component {
         // Remove all the dates that are in that date range for this particular user
         averagesList[siteIndex] = averagesList[siteIndex].filter(
           o =>
-            (!(
-              tempFromDate < new Date(o.startDate.value) &&
-              tempToDate > new Date(o.startDate.value)
-            ) &&
-              o.teacher === tempUserId) ||
-            o.teacher !== tempUserId
+            (!(tempFromDate < new Date(o.startDate) && tempToDate > new Date(o.startDate)) && !(tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value)) && o.teacher === tempUserId) ||
+            o.teacher !== tempUserId 
         )
       }
 
@@ -399,6 +395,8 @@ class ProgramProfileResults extends React.Component {
         errorMessage: 'There are no sites in this Program!',
       })
     }
+
+
 
     this.calculateResultsForCharts(averagesList, averagesList)
   }
@@ -507,149 +505,61 @@ class ProgramProfileResults extends React.Component {
    * Calculate results for the charts using the rows of data from BQ results
    */
   calculateResultsForCharts = (data, teachers) => {
+    // Need to get the endDate as a deep copy this way because using 'this.props.endDate' passes as a reference instead of a value. So it's getting manipulated by the setMonth() part of the following functions.
+    var tempProps = JSON.parse(JSON.stringify(this.props));
+    var endDate = new Date(tempProps.endDate);
+
+
     // Excute function based on observation type
     var averages, trends
     switch (this.props.observationType) {
       case 'transitionTime':
-        averages = this.state.averagesClass.calculateTransitionAverage(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateTransitionTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers )
+        trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
-        averages = this.state.averagesClass.calculateClimateAverage(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateClimateTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateClimateAverage( data, teachers )
+        trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'mathInstruction':
-        averages = this.state.averagesClass.calculateMathAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateMathTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateMathAverages( data, teachers )
+        trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'levelOfInstruction':
-        averages = this.state.averagesClass.calculateLevelInstructionAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateLevelInstructionTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers )
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'studentEngagement':
-        averages = this.state.averagesClass.calculateStudentEngagementAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateStudentEngagementTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers )
+        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'listeningToChildren':
-        averages = this.state.averagesClass.calculateListeningToChildrenAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateListeningToChildrenTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teachers )
+        trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'sequentialActivities':
-        averages = this.state.averagesClass.calculateSequentialActivitiesAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateSequentialActivitiesTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teachers )
+        trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'foundationSkills':
-        averages = this.state.averagesClass.calculateFoundationalSkillsAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateFoundationalSkillsTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teachers )
+        trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'writing':
-        averages = this.state.averagesClass.calculateWritingSkillsAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateWritingSkillsTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers )
+        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'bookReading':
-        averages = this.state.averagesClass.calculateBookReadingAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateBookReadingTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers )
+        trends = this.state.trendsClass.calculateBookReadingTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'languageEnvironment':
-        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages(
-          data,
-          teachers
-        )
-        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers )
+        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
         averages = this.state.averagesClass.calculateACAverages(data, teachers)
-        trends = this.state.trendsClass.calculateACTrends(
-          data,
-          teachers,
-          this.props.startDate,
-          this.props.endDate
-        )
+        trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, endDate )
         break
 
       default:
@@ -668,6 +578,7 @@ class ProgramProfileResults extends React.Component {
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
+    var tempLineChartLabels = [];
     for (var siteIndex in sites) {
       var site = sites[siteIndex]
       //var siteName = site.name
@@ -692,11 +603,17 @@ class ProgramProfileResults extends React.Component {
         tension: 0.0,
       }
 
+      // Get the labels for the Trends charts
+      if(trends[siteIndex].lineChartLabels)
+      {
+        tempLineChartLabels = trends[siteIndex].lineChartLabels
+      }
+
       tempDataSet.push(tempData)
       i++
     }
 
-    const labels = [
+    var labels = [
       'January',
       'February',
       'March',
@@ -710,6 +627,12 @@ class ProgramProfileResults extends React.Component {
       'November',
       'December',
     ]
+
+    if(tempLineChartLabels.length > 0)
+    {
+      labels = tempLineChartLabels;
+    }
+
     const lineData = {
       labels,
       datasets: tempDataSet,

@@ -465,6 +465,8 @@ class ConferencePlanListPage extends React.Component<Props, State> {
                                                                                   row.teacherId,
                                                                               sessionId:
                                                                                   row.sessionId,
+                                                                                practice:
+                                                                                row.practice
                                                                           },
                                                                       }
                                                                   )

@@ -49,7 +49,7 @@ exports.funcAddToTransferLogsOnUpdate = functions.firestore
       {
         // Make sure we're changing sites or programs and nothing else
         var newSites, previousSites;
-        if( !(newValue['sites']) || newValue['sites'].filter(x => x !== "") === previousValue['sites'])
+        if( !(newValue['sites']) || JSON.stringify( newValue['sites'].filter(x => x !== "") ) === JSON.stringify( previousValue['sites']) )
         {
           return null;
         }
@@ -64,7 +64,6 @@ exports.funcAddToTransferLogsOnUpdate = functions.firestore
 
         // Get the sites that we are being added from (in the new values but not the old)
         var sitesToAdd = newSites.filter(x => !(previousSites.includes(x)) );
-
 
         // Add sites to the log
         for(var siteIndex in sitesToAdd)
@@ -182,7 +181,9 @@ exports.funcAddToTransferLogsOnPartnerCreate = functions.firestore
 
       var currDate = new Date();
 
-      await addToTransferLog("users", context.params.userId, "teacher", context.params.partnerId, inOrOut, currDate)
+      if (context.params.userId.substr(0, 8) !== "archived") {
+        await addToTransferLog("users", context.params.userId, "teacher", context.params.partnerId, inOrOut, currDate)
+      }
 
       console.log("==================== funcAddToTransferLogsOnPartnerCreate ========================")
       console.log("New VALUE ", newValue);

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     pie_dialog:{
         position: 'relative', 
         height: '35vh', 
-        width: '35vw'
+        // width: '100'
     },
 
     pie_summary: {

@@ -132,11 +132,11 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "climate")
     {
       sqlQuery = `SELECT
-                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher,
+                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher, toneRating,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY behaviorResponse, teacher, startDate
+                      GROUP BY behaviorResponse, teacher, startDate, toneRating
                       ORDER BY startDate ASC;`;
     }
 
@@ -147,6 +147,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "math")
     {
       sqlQuery = `SELECT
+                      FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -154,12 +155,16 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.teacher2) THEN 'askingQuestions' ELSE NULL END) AS askingQuestions,
                       COUNT(CASE WHEN (checklist.teacher3) THEN 'mathConcepts' ELSE NULL END) AS mathConcepts,
                       COUNT(CASE WHEN (checklist.teacher4) THEN 'helpingChildren' ELSE NULL END) AS helpingChildren,
+                      COUNT(CASE WHEN (checklist.child1) THEN 'math1' ELSE NULL END) AS counting,
+                      COUNT(CASE WHEN (checklist.child2) THEN 'math2' ELSE NULL END) AS shapes,
+                      COUNT(CASE WHEN (checklist.child3) THEN 'math3' ELSE NULL END) AS patterns,
+                      COUNT(CASE WHEN (checklist.child4) THEN 'math4' ELSE NULL END) AS measurement,
                       teacher,
                       peopletype,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY teacher, timestamp, peopletype
+                      GROUP BY teacher, timestamp, peopletype, startDate
                       ORDER BY timestamp ASC;`;
     }
 
@@ -229,6 +234,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "sequential")
     {
       sqlQuery = `SELECT
+                      FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'notAtCenter' ELSE NULL END) AS notAtCenter,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -236,12 +242,16 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.teacher2) THEN 'drawImages' ELSE NULL END) AS drawImages,
                       COUNT(CASE WHEN (checklist.teacher3) THEN 'demonstrateSteps' ELSE NULL END) AS demonstrateSteps,
                       COUNT(CASE WHEN (checklist.teacher4) THEN 'actOut' ELSE NULL END) AS actOut,
+                      COUNT(CASE WHEN (checklist.child1) THEN 'sequential1' ELSE NULL END) AS materials,
+                      COUNT(CASE WHEN (checklist.child2) THEN 'sequential2' ELSE NULL END) AS drawing,
+                      COUNT(CASE WHEN (checklist.child3) THEN 'sequential3' ELSE NULL END) AS playing,
+                      COUNT(CASE WHEN (checklist.child4) THEN 'sequential4' ELSE NULL END) AS speaking,
                       teacher,
                       peopletype,
                       COUNT (sessionStart) AS total,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY teacher, timestamp, peopletype
+                      GROUP BY teacher, timestamp, peopletype, startDate
                       ORDER BY timestamp ASC;`;
     }
 
@@ -272,6 +282,59 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      let options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+
+                      let [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      let teacher = await job.getQueryResults();
+
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.item1) THEN 'foundational1' ELSE NULL END) AS foundational1,
+                      COUNT(CASE WHEN (checklist.item2) THEN 'foundational2' ELSE NULL END) AS foundational2,
+                      COUNT(CASE WHEN (checklist.item3) THEN 'foundational3' ELSE NULL END) AS foundational3,
+                      COUNT(CASE WHEN (checklist.item4) THEN 'foundational4' ELSE NULL END) AS foundational4,
+                      COUNT(CASE WHEN (checklist.item5) THEN 'foundational5' ELSE NULL END) AS foundational5,
+                      COUNT(CASE WHEN (checklist.item6) THEN 'foundational6' ELSE NULL END) AS foundational6,
+                      COUNT(CASE WHEN (checklist.item7) THEN 'foundational7' ELSE NULL END) AS foundational7,
+                      COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
+                      COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
+                      COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
+                      COUNT (sessionStart) AS total,
+                      teacher,
+                      time
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
+                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      GROUP BY time, GroupDate, startDate, teacher
+                      ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+
+                      [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      child = await job.getQueryResults();
+
+                      console.log(teacher, child)
+
+                      const rows = teacher.concat(child)
+
+                      console.log(rows)
+
+                      return rows
     }
 
 
@@ -298,6 +361,56 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
                       GROUP BY time, GroupDate, startDate, teacher
                       ORDER BY GroupDate ASC;`;
+
+                      console.log("QUERY: ", sqlQuery);
+
+                      let options = {
+                          query: sqlQuery,
+                          // Location must match that of the dataset(s) referenced in the query.
+                          location: 'US',
+                      };
+
+                      let [job] = await bigquery.createQueryJob(options);
+                      console.log(`Job ${job.id} started.`);
+                      let teacher = await job.getQueryResults();
+
+
+      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      DATE(sessionStart) as GroupDate,
+                      COUNT(CASE WHEN (checklist.item1) THEN 'writing1' ELSE NULL END) AS writing1,
+                      COUNT(CASE WHEN (checklist.item2) THEN 'writing2' ELSE NULL END) AS writing2,
+                      COUNT(CASE WHEN (checklist.item3) THEN 'writing3' ELSE NULL END) AS writing3,
+                      COUNT(CASE WHEN (checklist.item4) THEN 'writing4' ELSE NULL END) AS writing4,
+                      COUNT(CASE WHEN (checklist.item5) THEN 'writing5' ELSE NULL END) AS writing5,
+                      COUNT(CASE WHEN (checklist.item6) THEN 'writing6' ELSE NULL END) AS writing6,
+                      COUNT(CASE WHEN (checklist.item7) THEN 'writing7' ELSE NULL END) AS writing7,
+                      COUNT(CASE WHEN (checklist.item8) THEN 'writing8' ELSE NULL END) AS writing8,
+                      COUNT(CASE WHEN (checklist.item9) THEN 'writing9' ELSE NULL END) AS writing9,
+                      COUNT (sessionStart) AS total,
+                      teacher,
+                      time
+                      FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
+                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
+                      GROUP BY time, GroupDate, startDate, teacher
+                      ORDER BY GroupDate ASC;`;
+
+                      options = {
+                        query: sqlQuery,
+                        // Location must match that of the dataset(s) referenced in the query.
+                        location: 'US',
+                    };
+
+                    [job] = await bigquery.createQueryJob(options);
+                    console.log(`Job ${job.id} started.`);
+                    child = await job.getQueryResults();
+
+                    console.log(teacher, child)
+
+                    const rows = teacher.concat(child)
+
+                    console.log(rows)
+
+                    return rows
     }
 
     /*
@@ -365,6 +478,10 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
                       COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
                       COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
+                      COUNT(CASE WHEN (checklist.child1) THEN 'child1' ELSE NULL END) AS child1,
+                      COUNT(CASE WHEN (checklist.child2) THEN 'child2' ELSE NULL END) AS child2,
+                      COUNT(CASE WHEN (checklist.child3) THEN 'child3' ELSE NULL END) AS child3,
+                      COUNT(CASE WHEN (checklist.child4) THEN 'child4' ELSE NULL END) AS child4,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
