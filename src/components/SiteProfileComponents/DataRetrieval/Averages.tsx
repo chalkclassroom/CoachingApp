@@ -247,10 +247,10 @@ class AveragesData {
       results[teacherId].mathConcepts += row.mathConcepts;
       results[teacherId].helpingChildren += row.helpingChildren;
 
-      results[teacherId].mathVocabulary += row.counting;
-      results[teacherId].askingQuestions += row.shapes;
-      results[teacherId].mathConcepts += row.patterns;
-      results[teacherId].helpingChildren += row.measurement;
+      results[teacherId].counting += row.counting;
+      results[teacherId].shapes += row.shapes;
+      results[teacherId].patterns += row.patterns;
+      results[teacherId].measurement += row.measurement;
 
       results[teacherId].notAtCenter += row.noOpportunity;
       results[teacherId].support += row.support;
@@ -273,10 +273,10 @@ class AveragesData {
       result.mathConceptsAverage = result.mathConcepts > 0 ? (result.mathConcepts / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-      result.countingAverage = result.mathVocabulary > 0 ? (result.counting / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.shapesAverage = result.askingQuestions > 0 ? (result.shapes / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.patternsAverage = result.mathConcepts > 0 ? (result.patterns / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.measurementAverage = result.helpingChildren > 0 ? (result.measurement / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.countingAverage = result.counting > 0 ? (result.counting / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.shapesAverage = result.shapes > 0 ? (result.shapes / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.patternsAverage = result.patterns > 0 ? (result.patterns / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.measurementAverage = result.measurement > 0 ? (result.measurement / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
