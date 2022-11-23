@@ -251,6 +251,8 @@ const lineColorChoices = {
   }
 }
 
+const AVERAGES_SUBPAGE = 0;
+const TRENDS_SUBPAGE = 1;
 
 class SiteProfileResults extends React.Component {
   constructor(props) {
@@ -557,55 +559,60 @@ class SiteProfileResults extends React.Component {
    */
   calculateResultsForCharts = (data, teachers) => {
     // Excute function based on observation type
-    var averages, trends
+    var averages, trends;
+
+    // Need to get the endDate as a deep copy this way because using 'this.props.endDate' passes as a reference instead of a value. So it's getting manipulated by the setMonth() part of the following functions.
+    var tempProps = JSON.parse(JSON.stringify(this.props));
+    var endDate = new Date(tempProps.endDate);
+
     switch (this.props.observationType) {
       case 'transitionTime':
         averages = this.state.averagesClass.calculateTransitionAverage( data, teachers )
-        trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
         averages = this.state.averagesClass.calculateClimateAverage( data, teachers )
-        trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'mathInstruction':
         averages = this.state.averagesClass.calculateMathAverages( data, teachers )
-        trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'levelOfInstruction':
         averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers )
-        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'studentEngagement':
         averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers )
-        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'listeningToChildren':
         averages = this.state.averagesClass.calculateListeningToChildrenAverages(data,teachers)
-        trends = this.state.trendsClass.calculateListeningToChildrenTrends(data,teachers,this.props.startDate,this.props.endDate)
+        trends = this.state.trendsClass.calculateListeningToChildrenTrends(data,teachers,this.props.startDate, endDate)
         break
       case 'sequentialActivities':
         averages = this.state.averagesClass.calculateSequentialActivitiesAverages(data,teachers)
-        trends = this.state.trendsClass.calculateSequentialActivitiesTrends(data,teachers,this.props.startDate,this.props.endDate)
+        trends = this.state.trendsClass.calculateSequentialActivitiesTrends(data,teachers,this.props.startDate, endDate)
         break
       case 'foundationSkills':
         averages = this.state.averagesClass.calculateFoundationalSkillsAverages(data,teachers)
-        trends = this.state.trendsClass.calculateFoundationalSkillsTrends(data,teachers,this.props.startDate,this.props.endDate)
+        trends = this.state.trendsClass.calculateFoundationalSkillsTrends(data,teachers,this.props.startDate, endDate)
         break
       case 'writing':
         averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers )
-        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'bookReading':
         averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers )
-        trends = this.state.trendsClass.calculateBookReadingTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateBookReadingTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'languageEnvironment':
         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers )
-        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
         averages = this.state.averagesClass.calculateACAverages(data, teachers)
-        trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, this.props.endDate )
+        trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, endDate )
         break
 
       default:
@@ -636,11 +643,14 @@ class SiteProfileResults extends React.Component {
   // Set Line Graph data
 
   setLineGraphData = (teachers, type) => {
+
     var trends = this.state.trends
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
+    var tempMonths = [];
+
     for (var teacherIndex in teachers) {
       var teacher = teachers[teacherIndex]
       var fullName = teacher.firstName + ' ' + teacher.lastName
@@ -664,11 +674,18 @@ class SiteProfileResults extends React.Component {
         tension: 0.0,
       }
 
+      // Add the months so we can set the right labels for the trends chart
+      if(trends[teacher.id].lineChartLabels)
+      {
+        tempMonths = trends[teacher.id].lineChartLabels;
+      }
+
       tempDataSet.push(tempData)
       i++
     }
 
-    const labels = [
+    // Get the months from the data
+    const monthOptions = [
       'January',
       'February',
       'March',
@@ -682,6 +699,15 @@ class SiteProfileResults extends React.Component {
       'November',
       'December',
     ]
+
+
+    var labels = monthOptions;
+    if(tempMonths.length > 0)
+    {
+      labels = tempMonths
+    }
+
+
     const lineData = {
       labels,
       datasets: tempDataSet,
@@ -965,7 +991,7 @@ class SiteProfileResults extends React.Component {
             {/*
               The tone rating slider for the classroom climate observations
             */}
-            {this.props.observationType == "classroomClimate" && Object.keys(this.state.averages).length > 0  ? (
+            {this.props.observationType == "classroomClimate" && Object.keys(this.state.averages).length > 0 && this.state.tabState == AVERAGES_SUBPAGE ? (
               <div style={{width: '100%', display: 'flex', position: 'relative', justifyContent: 'center', marginBottom: 30}}>
                 <div style={{position: 'absolute', left: '-40px'}}>
                   <h4>Teacher Tone</h4>

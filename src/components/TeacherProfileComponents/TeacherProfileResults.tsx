@@ -42,6 +42,8 @@ import BarChartLegend from '../LayoutComponents/GraphLayouts/BarChartLegend'
 
 import AveragesChart from './ResultsComponents/AveragesChart'
 import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
+import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
+import ClimateToneSliderAverages from './ResultsComponents/ClimateToneSliderAverages'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -166,7 +168,7 @@ var LineGraphOptions = {
           },
         },
         scaleLabel: {
-          display: true,
+          display: false,
           labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
@@ -178,10 +180,17 @@ var LineGraphOptions = {
     }
   },
   plugins: {
-    datalabels: { 
+    datalabels: {
       display: false
-    }
+    },
   },
+  legend: {
+    labels: {
+      usePointStyle: true,
+      generateLabels: {
+      }
+    }
+  }
 }
 
 // Array used to match the name of a practice to the value that's saved
@@ -391,55 +400,6 @@ const AVERAGES_SUBPAGE = 0;
 const TRENDS_SUBPAGE = 1;
 
 
-const ClimateSlider = withStyles({
-  root: {
-    color: '#0988EC',
-    height: 3,
-    padding: '13px 0',
-  },
-  thumb: {
-    '& .bar': {
-      // display: inline-block !important;
-      height: 9,
-      width: 1,
-      backgroundColor: '#0988EC',
-      marginLeft: 1,
-      marginRight: 1,
-    },
-  },
-  markLabel: {
-    fontSize: '20px',
-    maxWidth: '68px',
-    whiteSpace: 'normal',
-    textAlign: 'center'
-  }
-
-})(Slider);
-
-const ClimateSliderLabels = withStyles({
-  root: {
-    color: '#0988EC',
-    height: 3,
-    padding: '13px 0',
-  },
-  thumb: {
-     display: 'none',
-  },
-  markLabel: {
-    fontSize: '15px',
-    maxWidth: '68px',
-    whiteSpace: 'normal',
-    textAlign: 'center'
-  },
-  rail: {
-    display: 'none',
-  },
-  track: {
-    display: 'none',
-  },
-
-})(Slider);
-
 
 class TeacherProfileResults extends React.Component {
   constructor(props) {
@@ -546,59 +506,63 @@ class TeacherProfileResults extends React.Component {
     var teacher = await firebase.getUserProgramOrSite({ userId: teacherId })
     this.setState({ teacherInfo: teacher })
 
+    // Need to get the endDate as a deep copy this way because using 'this.props.endDate' passes as a reference instead of a value. So it's getting manipulated by the setMonth() part of the following functions.
+    var tempProps = JSON.parse(JSON.stringify(this.props));
+    var endDate = new Date(tempProps.endDate);
+
     // Excute function based on observation type
     var averages, trends
     var usingTime = false
     switch (this.props.observationType) {
       case 'transitionTime':
         averages = this.state.averagesClass.calculateTransitionAverage( data, teacher)
-        trends = this.state.trendsClass.calculateTransitionTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateTransitionTrends( data, teacher, this.props.startDate, endDate)
         usingTime = true
         break
       case 'classroomClimate':
         averages = this.state.averagesClass.calculateClimateAverage( data, teacher)
-        trends = this.state.trendsClass.calculateClimateTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateClimateTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'mathInstruction':
         averages = this.state.averagesClass.calculateMathAverages(data, teacher)
-        trends = this.state.trendsClass.calculateMathTrends(data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateMathTrends(data, teacher, this.props.startDate, endDate)
         this.setState({chartsTitle: "Teacher Support for Math"});
         break
       case 'levelOfInstruction':
         averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teacher)
-        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'studentEngagement':
         averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teacher)
-        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'listeningToChildren':
         averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teacher)
-        trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'sequentialActivities':
         averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teacher)
-        trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'foundationSkills':
         averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teacher)
-        trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'writing':
         averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teacher)
-        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'bookReading':
         averages = this.state.averagesClass.calculateBookReadingAverages( data, teacher)
-        trends = this.state.trendsClass.calculateBookReadingTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateBookReadingTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'languageEnvironment':
         averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teacher)
-        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teacher, this.props.startDate, endDate)
         break
       case 'associativeAndCooperative':
         averages = this.state.averagesClass.calculateACAverages(data, teacher)
-        trends = this.state.trendsClass.calculateACTrends( data, teacher, this.props.startDate, this.props.endDate)
+        trends = this.state.trendsClass.calculateACTrends( data, teacher, this.props.startDate, endDate)
         break
 
       default:
@@ -727,13 +691,15 @@ class TeacherProfileResults extends React.Component {
         borderColor: lineColors[i],
         fill: false,
         tension: 0.0,
-        borderDash: (trendIndex === "hlqResponseAverage" || trendIndex === "llqResponseAverage") ? [5,5] : [0,0]
+        borderDash: (trendIndex === "hlqResponseAverage" || trendIndex === "llqResponseAverage") ? [5,5] : [0,0],
+        pointStyle: 'circle',
       }
 
       tempDataSet.push(tempData)
       i++
     }
 
+    // Get the months from the data
     var labels = [
       'January',
       'February',
@@ -935,7 +901,7 @@ class TeacherProfileResults extends React.Component {
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
-        align: 'right', 
+        align: 'right',
         anchor: 'end',
         color: '#444',
         font: {
@@ -950,7 +916,7 @@ class TeacherProfileResults extends React.Component {
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
-        align: 'top', 
+        align: 'top',
         anchor: 'end',
         color: '#444',
         font: {
@@ -965,7 +931,7 @@ class TeacherProfileResults extends React.Component {
     {
       lineGraphOptions.plugins.datalabels = {
         display: 'auto',
-        align: 'top', 
+        align: 'top',
         anchor: 'end',
         color: '#444',
         font: {
@@ -1127,26 +1093,12 @@ class TeacherProfileResults extends React.Component {
                   {titleUnderTrendsChart !== "" ? (<h4 style={{fontWeight:400}}>{titleUnderTrendsChart}</h4>) : null}
 
                   {/*
-                    The tone rating slider for the classroom climate observations
+                    The tone ratings for the classroom climate observations Trends chart
                   */}
                   {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
-                    <div style={{width: '100%', display: 'flex', position: 'relative', justifyContent: 'center'}}>
-                      <div style={{position: 'absolute', left: '-40px'}}>
-                        <h4>Teacher Tone</h4>
-                      </div>
-                      <div style={{width: 'calc(86% - 35px)', display: 'flex', flexDirection: 'row', transform: 'translateX(56px)'}}>
-                        {this.state.toneAverageTrend.map(
-                          (value, index) => {
-                            return (
-                              <div style={{flex: '1', alignItems: 'center', }}>
-                                <h4 style={{color: '#094492', textAlign: 'left',  fontWeight: '400',}}>
-                                  {value}
-                                </h4>
-                              </div>
-                            )
-                        })}
-                      </div>
-                    </div>
+                    <ClimateToneTrends
+                      toneAverageTrend={this.state.toneAverageTrend}
+                    />
                   ) : null}
 
 
@@ -1236,91 +1188,9 @@ class TeacherProfileResults extends React.Component {
                       ) : null}
                       {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
                         <>
-                          <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '50px',}}>
-                            <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px'}}>Teacher Tone</h3>
-                            <ClimateSlider
-                              value={this.state.toneAverage}
-                              aria-labelledby="discrete-slider-always"
-                              step={1}
-                              max={5}
-                              min={1}
-                              style={{width: '66%',}}
-                              marks={[
-                                {
-                                  value: 1,
-                                  label: '1',
-                                },
-                                {
-                                  value: 2,
-                                  label: '2',
-                                },
-                                {
-                                  value: 3,
-                                  label: '3',
-                                },
-                                {
-                                  value: 4,
-                                  label: '4',
-                                },
-                                {
-                                  value: 5,
-                                  label: '5',
-                                },
-                              ]}
-                              color="primary"
-                              getAriaValueText={this.valuetext}
-                              valueLabelDisplay="on"
-                              sx={{
-                                "& .MuiSlider-markLabel": {
-                                  fontSize: '3em',
-                                  color: 'black',
-                                  fontFamily: 'Arimo'
-                                },
-                                '& .MuiSlider-thumb': {
-                                  borderRadius: '1px',
-                                },
-                              }}
-
+                          <ClimateToneSliderAverages
+                            toneAverage={this.state.toneAverage}
                             />
-                          </Grid>
-
-                          <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', marginTop: '-30px', marginBottom: '20px',}}>
-                            <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px', color: 'rgba(0,0,0,0)'}}>Teacher Tone</h3>
-
-                            <ClimateSliderLabels
-                              value={this.state.toneAverage}
-                              aria-labelledby="discrete-slider-always"
-                              step={1}
-                              max={5}
-                              min={1}
-                              style={{width: '66%',}}
-                              marks={[
-                                {
-                                  value: 1,
-                                  label: 'Anger',
-                                },
-                                {
-                                  value: 2,
-                                  label: 'Irritation',
-                                },
-                                {
-                                  value: 3,
-                                  label: 'Neutral',
-                                },
-                                {
-                                  value: 4,
-                                  label: 'Positive Interest',
-                                },
-                                {
-                                  value: 5,
-                                  label: 'Excitement',
-                                },
-                              ]}
-                              color="primary"
-                              valueLabelDisplay="on"
-
-                            />
-                          </Grid>
                         </>
                       ) : null}
                       </>

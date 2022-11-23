@@ -97,6 +97,7 @@ exports.funcTransitionTrend = require('./funcTransitionTrend').funcBehaviourTren
 exports.funcTransitionTrend2 = require('./funcTransitionTrend2').funcBehaviourTrend;
 exports.funcTransitionTrendNew = require('./funcTransitionTrendNew').funcTransitionTrendNew;
 exports.funcTransitionTypeSummary = require('./funcTransitionTypeSummary').funcTransitionTypeSummary;
+exports.funcUpdateCoach = require('./funcUpdateCoach').funcUpdateCoach;
 exports.observationsToBQ = require('./observationToBQ').observationsToBQ;
 exports.exportBqData = require('./exportBqData').exportBqData;
 

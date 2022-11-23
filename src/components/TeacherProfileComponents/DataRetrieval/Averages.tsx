@@ -173,15 +173,6 @@ class AveragesData {
     }
 
 
-
-    console.log("========================================");
-    console.log("data : ", data);
-    console.log("Nonspecific : ", results[teacherId]["nonspecificapproval"]);
-    console.log("========================================");
-
-
-
-
     return results;
 
   }
@@ -247,7 +238,7 @@ class AveragesData {
       if (!results[teacherId].observation.includes(row.id)) {
         results[teacherId].observation.push(row.id)
       }
-      
+
     }
 
 
