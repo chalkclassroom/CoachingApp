@@ -6691,6 +6691,22 @@ class Firebase {
         )
   }
 
+  getLiteracyType = async (planId: string) => {
+    let plan = await this.db.collection("conferencePlans").doc(planId).get().then(async (p) => {
+      if (p.exists) {
+        let observation = await this.db.collection("observations").doc(p.data().sessionId).get().then((dat) => {
+          if (dat.exists) {
+            const type = dat.data().checklist
+            return type
+          }
+        })
+        return observation
+      }
+    })
+    console.log(plan)
+    return plan
+  }
+
 
 
   //REMOVE AFTER DEVELOPMENT
