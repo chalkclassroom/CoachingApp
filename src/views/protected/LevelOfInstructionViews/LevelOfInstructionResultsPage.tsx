@@ -74,6 +74,7 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean,
   noDataYet: boolean
+  view: string
 }
 
 /**
@@ -107,7 +108,9 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       noteAdded: false,
       questionAdded: false,
       teacherModal: false,
-      noDataYet: false
+      noDataYet: false,
+      view: this.props.location.state ? this.props.location.state.view : 'data'
+
     };
   }
 
@@ -506,6 +509,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
           <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
           <ResultsLayout
+            parentView={this.state.view}
             teacher={this.props.teacherSelected}
             magic8="Level of Instruction"
             summary={

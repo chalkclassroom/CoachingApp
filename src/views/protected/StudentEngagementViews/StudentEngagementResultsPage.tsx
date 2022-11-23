@@ -66,6 +66,7 @@ interface State {
   noteAdded: boolean,
   questionAdded: boolean,
   noDataYet: boolean
+  view: string
 }
 
 /**
@@ -99,7 +100,8 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       teacherModal: false,
       noteAdded: false,
       questionAdded: false,
-      noDataYet: false
+      noDataYet: false,
+      view: this.props.location.state ? this.props.location.state.view : 'data'
     };
   }
 
@@ -470,6 +472,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
           <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
           <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
           <ResultsLayout
+            parentView={this.state.view}
             teacher={this.props.teacherSelected}
             magic8="Level of Engagement"
             summary={

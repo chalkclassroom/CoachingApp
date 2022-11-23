@@ -366,6 +366,7 @@ class Teachers extends React.Component<Props, State> {
         awaitingConfirmationRef: null,
         addTeacherFirstName: "",
         addTeacherLastName: "",
+        addTeacherEmail: "",
         addCoach: "",
         addCoachSites: [],
         addSiteName: "",
@@ -559,6 +560,11 @@ editTeacher = async (firebase:Firebase) => {
       return;
     }
 
+    if (await firebase.emailExists(editEmail, editTeacherId)) {
+      alert("This email already exists for another user")
+      return;
+    }
+
     await firebase.editUserName(editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail, "teacher").
       catch(e => {
         console.log(e)
@@ -630,6 +636,11 @@ editTeacher = async (firebase:Firebase) => {
 
     if (addTeacherEmail !== "" && !this.validateEmail(addTeacherEmail)) {
       alert("No email or valid email is required");
+      return;
+    }
+
+    if (await firebase.emailExists(addTeacherEmail)) {
+      alert("This email already exists for another user")
       return;
     }
 

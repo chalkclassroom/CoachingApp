@@ -109,6 +109,8 @@ class AveragesData {
         specificapproval: 0,
         disapproval: 0,
         redirection: 0,
+        toneTotal: 0,
+        toneCount: 0,
       };
 
     }
@@ -128,6 +130,28 @@ class AveragesData {
         results[teacherId].total += row.count;
       }
 
+      // Get tone rating
+      if(row.toneRating !== null)
+      {
+        results[teacherId].toneTotal += row.toneRating;
+        results[teacherId].toneCount++;
+      }
+
+    }
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      nonspecificapproval: 0,
+      specificapproval: 0,
+      disapproval: 0,
+      redirection: 0,
+
+      toneTotal: 0,
+      toneCount: 0,
     }
 
     // Calculate the averages in percentages
@@ -142,7 +166,33 @@ class AveragesData {
       result.specificapprovalAverage = result.specificapproval > 0 ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+      result.toneAverage = result.toneCount > 0 ? (result.toneTotal / result.toneCount).toFixed(1) : 0;
+
+
+      // Gather info for the site bar
+      siteBar.nonspecificapproval += result.nonspecificapproval;
+      siteBar.specificapproval += result.specificapproval;
+      siteBar.disapproval += result.disapproval;
+      siteBar.redirection += result.redirection;
+
+
+      siteBar.toneCount += result.toneCount;
+      siteBar.toneTotal += result.toneTotal;
+
+      siteBar.total += result.total;
+
     }
+
+    // Calculate the site bar averages
+    siteBar.nonspecificapprovalAverage = siteBar.nonspecificapproval > 0 ? (siteBar.nonspecificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.specificapprovalAverage = siteBar.specificapproval > 0 ? (siteBar.specificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.disapprovalAverage = siteBar.disapproval > 0 ? (siteBar.disapproval / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.redirectionAverage = siteBar.redirection > 0 ? (siteBar.redirection / siteBar.total).toFixed(2) * 100 : 0;
+
+    siteBar.toneAverage = siteBar.toneCount > 0 ? (siteBar.toneTotal / siteBar.toneCount).toFixed(1) : 0;
+
+    results.siteBar = siteBar;
 
     return results;
 
@@ -175,7 +225,11 @@ class AveragesData {
         helpingChildren: 0,
         notAtCenter: 0,
         noSupport: 0,
-        support: 0
+        support: 0,
+        counting: 0,
+        shapes: 0,
+        patterns: 0,
+        measurement: 0
       };
 
     }
@@ -192,6 +246,11 @@ class AveragesData {
       results[teacherId].askingQuestions += row.askingQuestions;
       results[teacherId].mathConcepts += row.mathConcepts;
       results[teacherId].helpingChildren += row.helpingChildren;
+
+      results[teacherId].counting += row.counting;
+      results[teacherId].shapes += row.shapes;
+      results[teacherId].patterns += row.patterns;
+      results[teacherId].measurement += row.measurement;
 
       results[teacherId].notAtCenter += row.noOpportunity;
       results[teacherId].support += row.support;
@@ -213,6 +272,11 @@ class AveragesData {
       result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.mathConceptsAverage = result.mathConcepts > 0 ? (result.mathConcepts / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+      result.countingAverage = result.counting > 0 ? (result.counting / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.shapesAverage = result.shapes > 0 ? (result.shapes / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.patternsAverage = result.patterns > 0 ? (result.patterns / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.measurementAverage = result.measurement > 0 ? (result.measurement / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
@@ -476,7 +540,11 @@ class AveragesData {
           actOut: 0,
           notAtCenter: 0,
           noSupport: 0,
-          support: 0
+          support: 0,
+          materials: 0,
+          drawing: 0,
+          playing: 0,
+          speaking: 0
         };
 
       }
@@ -493,6 +561,11 @@ class AveragesData {
         results[teacherId].drawImages += row.drawImages;
         results[teacherId].actOut += row.actOut;
         results[teacherId].demonstrateSteps += row.demonstrateSteps;
+
+        results[teacherId].materials += row.materials;
+        results[teacherId].drawing += row.drawing;
+        results[teacherId].playing += row.playing;
+        results[teacherId].speaking += row.speaking;
 
         results[teacherId].notAtCenter += row.notAtCenter;
         results[teacherId].support += row.support;
@@ -514,6 +587,11 @@ class AveragesData {
         result.drawImagesAverage = result.drawImages > 0 ? (result.drawImages / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.actOutAverage = result.actOut > 0 ? (result.actOut / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.demonstrateStepsAverage = result.demonstrateSteps > 0 ? (result.demonstrateSteps / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+        result.materialsAverage = result.materials > 0 ? (result.materials / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.drawingAverage = result.drawing > 0 ? (result.drawing / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.playingAverage = result.playing > 0 ? (result.playing / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.speakingAverage = result.speaking > 0 ? (result.speaking / tempTotalInstructions).toFixed(2) * 100 : 0;
 
         result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
@@ -962,6 +1040,10 @@ class AveragesData {
         encouragingChildren: 0,
         helpingChildren: 0,
 
+        noSequence: 0,
+        formalRules: 0,
+        sequence: 0,
+
         support: 0,
         noSupport: 0,
         notAtCenter: 0,
@@ -1005,6 +1087,18 @@ class AveragesData {
       {
         results[teacherId].helpingChildren++;
       }
+      if( row.child2 )
+      {
+        results[teacherId].noSequence++;
+      }
+      if( row.child3 )
+      {
+        results[teacherId].formalRules++;
+      }
+      if( row.child4 )
+      {
+        results[teacherId].sequence++;
+      }
 
       // Check for act types
       // If teacher was there
@@ -1043,6 +1137,10 @@ class AveragesData {
       result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.encouragingChildrenAverage = result.encouraging > 0 ? (result.encouraging / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+      result.noSequenceAverage = result.noSequence > 0 ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.formalRulesAverage = result.formalRules > 0 ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.sequenceAverage = result.sequence > 0 ? (result.sequence / tempTotalIntervals).toFixed(2) * 100 : 0;
 
       result.supportAverage = result.support > 0 ? (result.support / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalIntervals).toFixed(2) * 100 : 0;

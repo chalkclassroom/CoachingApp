@@ -6,7 +6,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  TextField
+  TextField,
+  MenuItem
 } from '@material-ui/core';
 
 interface Props {
@@ -26,7 +27,9 @@ interface Props {
   emailErrorText: string,
   phoneErrorText: string,
   notesErrorText: string,
-  handleComplete(): void
+  handleComplete(): void,
+  sites: Array<Object>,
+  handleAddSchool(event): void
 }
 
 export default function EditTeacherDialog(props: Props): React.ReactElement {
@@ -47,7 +50,9 @@ export default function EditTeacherDialog(props: Props): React.ReactElement {
     emailErrorText,
     phoneErrorText,
     notesErrorText,
-    handleComplete
+    handleComplete,
+    sites,
+    handleAddSchool
   } = props;
 
   return (
@@ -95,9 +100,11 @@ export default function EditTeacherDialog(props: Props): React.ReactElement {
           fullWidth
         />
         <TextField
+          select
           required
-          defaultValue={inputSchool}
-          onChange={handleAddText}
+          disabled={!(sites.length > 0) /* Disable if there are no site options */}
+          // defaultValue={inputSchool}
+          onChange={(event) => handleAddSchool(event)}
           margin="dense"
           id="school"
           name="inputSchool"
@@ -106,7 +113,16 @@ export default function EditTeacherDialog(props: Props): React.ReactElement {
           error={!!schoolErrorText}
           type="text"
           fullWidth
-        />
+        > 
+        {sites.length > 0 && sites.map(
+          (site, index)=>{
+            return (
+                <MenuItem value={site.name} key={index}>
+                  {site.name}
+                </MenuItem>
+            )
+          })}
+        </TextField>
         <TextField
           required
           defaultValue={inputEmail}

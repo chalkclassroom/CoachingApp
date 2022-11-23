@@ -168,7 +168,12 @@ class AveragesData {
         helpingChildren: 0,
         notAtCenter: 0,
         noSupport: 0,
-        support: 0
+        support: 0,
+        counting: 0,
+        shapes: 0,
+        patterns: 0,
+        measurement: 0
+
       };
 
     }
@@ -185,6 +190,11 @@ class AveragesData {
         results[siteIndex].askingQuestions += row.askingQuestions;
         results[siteIndex].mathConcepts += row.mathConcepts;
         results[siteIndex].helpingChildren += row.helpingChildren;
+
+        results[siteIndex].counting += row.counting;
+        results[siteIndex].shapes += row.shapes;
+        results[siteIndex].patterns += row.patterns;
+        results[siteIndex].measurement += row.measurement;
 
         results[siteIndex].notAtCenter += row.noOpportunity;
         results[siteIndex].support += row.support;
@@ -207,6 +217,11 @@ class AveragesData {
       result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.mathConceptsAverage = result.mathConcepts > 0 ? (result.mathConcepts / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+      result.countingAverage = result.counting > 0 ? (result.counting / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.shapesAverage = result.shapes > 0 ? (result.shapes / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.patternsAverage = result.patterns > 0 ? (result.patterns / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.measurementAverage = result.measurement > 0 ? (result.measurement / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
@@ -463,7 +478,11 @@ class AveragesData {
           actOut: 0,
           notAtCenter: 0,
           noSupport: 0,
-          support: 0
+          support: 0,
+          materials: 0,
+          drawing: 0,
+          playing: 0,
+          speaking: 0
         };
 
       }
@@ -480,6 +499,11 @@ class AveragesData {
           results[siteIndex].drawImages += row.drawImages;
           results[siteIndex].actOut += row.actOut;
           results[siteIndex].demonstrateSteps += row.demonstrateSteps;
+
+          results[siteIndex].materials += row.materials;
+          results[siteIndex].drawing += row.drawing;
+          results[siteIndex].playing += row.playing;
+          results[siteIndex].speaking += row.speaking;
 
           results[siteIndex].notAtCenter += row.notAtCenter;
           results[siteIndex].support += row.support;
@@ -502,6 +526,11 @@ class AveragesData {
         result.drawImagesAverage = result.drawImages > 0 ? (result.drawImages / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.actOutAverage = result.actOut > 0 ? (result.actOut / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.demonstrateStepsAverage = result.demonstrateSteps > 0 ? (result.demonstrateSteps / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+        result.materialsAverage = result.materials > 0 ? (result.materials / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.drawingAverage = result.drawing > 0 ? (result.drawing / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.playingAverage = result.playing > 0 ? (result.playing / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.speakingAverage = result.speaking > 0 ? (result.speaking / tempTotalInstructions).toFixed(2) * 100 : 0;
 
         result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
@@ -921,6 +950,10 @@ class AveragesData {
         encouragingChildren: 0,
         helpingChildren: 0,
 
+        noSequence: 0,
+        formalRules: 0,
+        sequence: 0,
+
         support: 0,
         noSupport: 0,
         notAtCenter: 0,
@@ -962,6 +995,18 @@ class AveragesData {
         {
           results[siteIndex].helpingChildren++;
         }
+        if( row.child2 )
+        {
+          results[siteIndex].noSequence++;
+        }
+        if( row.child3 )
+        {
+          results[siteIndex].formalRules++;
+        }
+        if( row.child4 )
+        {
+          results[siteIndex].sequence++;
+        }
 
         // Check for act types
         // If teacher was there
@@ -999,8 +1044,12 @@ class AveragesData {
 
       result.childrensPlayAverage = result.childrensPlay > 0 ? (result.childrensPlay / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.encouragingChildrenAverage = result.encouraging > 0 ? (result.encouraging / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.encouragingChildrenAverage = result.encouragingChildren > 0 ? (result.encouragingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
+
+      result.noSequenceAverage = result.noSequence > 0 ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.formalRulesAverage = result.formalRules > 0 ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.sequenceAverage = result.sequence > 0 ? (result.sequence / tempTotalIntervals).toFixed(2) * 100 : 0;
 
       result.supportAverage = result.support > 0 ? (result.support / tempTotalIntervals).toFixed(2) * 100 : 0;
       result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalIntervals).toFixed(2) * 100 : 0;
