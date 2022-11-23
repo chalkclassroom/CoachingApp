@@ -19,7 +19,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FolderIcon from '@material-ui/icons/Folder';
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import Firebase, { FirebaseContext } from '../Firebase';
-import SaveImage from '../../assets/images/SaveImage.svg'; 
+import SaveImage from '../../assets/images/SaveImage.svg';
 import SaveGrayImage from '../../assets/images/SaveGrayImage.svg';
 import styled from 'styled-components';
 
@@ -53,10 +53,10 @@ interface Props {
   coachData: Array<Object>
   teacherData: Array<Object>
   sitesList: Array<Object>
-  updateCoachData(data): void 
-  updateTeacherData(data): void 
+  updateCoachData(data): void
+  updateTeacherData(data): void
   programData: Array<Object>
-  updateSendToSitesData(data): void 
+  updateSendToSitesData(data): void
   siteData: Array<Object>
   updateSiteData(data): void
   updateProgramData(data): void
@@ -95,7 +95,7 @@ interface State {
 class Sites extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-  
+
       this.state = {
       view: 1,
       saved: true,
@@ -124,7 +124,7 @@ class Sites extends React.Component<Props, State> {
       firstLoad: true
 
     }
-  
+
   }
 
   componentDidMount = async () => {
@@ -182,27 +182,21 @@ class Sites extends React.Component<Props, State> {
     switch (sortType) {
       case "lastName":
         coaches.sort((a,b) => (a.lastName > b.lastName) ? 1 : ((b.lastName > a.lastName) ? -1 : 0));
-        console.log("last name");
         break;
       case "lastNameReverse":
         coaches.sort((a,b) => (b.lastName > a.lastName) ? 1 : ((a.lastName > b.lastName) ? -1 : 0));
-        console.log("reverse last name");
         break;
       case "firstName":
         coaches.sort((a,b) => (a.firstName > b.firstName) ? 1 : ((b.firstName > a.firstName) ? -1 : 0));
-        console.log("first name");
         break;
       case "firstNameReverse":
         coaches.sort((a,b) => (b.firstName > a.firstName) ? 1 : ((a.firstName > b.firstName) ? -1 : 0));
-        console.log("reverse first name");
         break;
       case "siteName":
         coaches.sort((a,b) => (a.siteName > b.siteName) ? 1 : ((b.siteName > a.siteName) ? -1 : 0));
-        console.log("site name");
         break;
       case "siteNameReverse":
         coaches.sort((a,b) => (b.siteName > a.siteName) ? 1 : ((a.siteName > b.siteName) ? -1 : 0));
-        console.log("reverse site name");
         break;
 
       default:
@@ -281,7 +275,7 @@ class Sites extends React.Component<Props, State> {
               update[coachDataIndex].lastName = editCoachLastName;
               update[coachDataIndex].email = editCoachEmail;
             })
-            
+
 
             this.setState({ // Hold off setting new state until success has been determined
               editCoachId: "",
@@ -407,7 +401,6 @@ class Sites extends React.Component<Props, State> {
   handlePopulateSiteLeaders = (event) => {
     this.setState({addProgramId: event.target.value, saved: false})
     let leaders = this.state.originalSiteLeaders
-    console.log(leaders)
     let program = this.props.programData.find(o => o.id === event.target.value)
     // leaders = leaders.filter(leader => {return leader.sites.some(site => program.sites.includes(site))})
     this.setState({addSiteLeaderList: leaders})
@@ -458,7 +451,7 @@ class Sites extends React.Component<Props, State> {
       alert("Site name already exists")
       return;
     }
-    
+
     await firebase.createSite(siteInfo)
         .then((data) => {
           console.log("Site Created");
@@ -513,7 +506,7 @@ class Sites extends React.Component<Props, State> {
             let programData = update.find(o => o.id === addProgramId);
             let programIndex = update.indexOf(programData);
 
-            update[programIndex].sites.push(siteId) 
+            update[programIndex].sites.push(siteId)
             this.props.updateProgramData(update)
 
             this.setState({ // Hold off setting new state until success has been determined
@@ -624,7 +617,7 @@ class Sites extends React.Component<Props, State> {
   }
 
   render() {
-    
+
     return (<>
     <Dialog open={this.state.archiveModalOpen}>
       <DialogTitle style={{ fontFamily: 'Arimo' }}>
@@ -760,7 +753,7 @@ class Sites extends React.Component<Props, State> {
         height: '38vh',
         // border: '2px solid #0988ec',
         // borderRadius: '0.5em',
-        // marginTop:'180px' 
+        // marginTop:'180px'
       }}
       >
       <table style={{borderCollapse: 'collapse', width: '100%' }}>
@@ -913,7 +906,7 @@ class Sites extends React.Component<Props, State> {
             id="site-name"
             label="Site Name"
             type="text"
-            value={this.state.addSiteName} 
+            value={this.state.addSiteName}
             variant="outlined"
             onChange={this.handleInputChange('site')}
           />
@@ -1126,7 +1119,7 @@ class Sites extends React.Component<Props, State> {
     </>) : (<></>)))}
     </Grid>
 </>)
-    
+
   }
 }
 
