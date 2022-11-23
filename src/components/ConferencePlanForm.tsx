@@ -70,7 +70,9 @@ interface Props {
   chosenQuestions: Array<string>,
   conferencePlanId?: string,
   history?: H.History,
-  notesModal: boolean
+  notesModal: boolean,
+  viewClick(view:string): void 
+  practice: string
 }
 
 interface State {
@@ -405,6 +407,20 @@ class ConferencePlanForm extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history
   };
 
+  handleConferencePlanClick = () => {
+    let path = ""
+    const studentEngagement = 'Level of Engagement'
+    if (this.props.practice === studentEngagement) {
+      path = "/StudentEngagementResults"
+    } else {
+      let practice = ""
+      this.props.practice.split(" ")
+        .map(str => practice += str.substring(0, 1).toUpperCase() + str.substring(1))
+      path = "/" + practice + "Results"
+    }
+    this.props.history?.push({pathname: path, state: {view: 'questions'}})
+  }
+
   /**
    * render function
    * @return {ReactNode}
@@ -697,7 +713,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                             : BlankTheme
                                           }
                                         >
-                                          <Button color="primary" size="small" variant="outlined">
+                                          <Button color="primary" size="small" variant="outlined" onClick={() => 
+                                            !this.props.readOnly ? this.props.viewClick('questions') : this.handleConferencePlanClick()
+                                            }>
                                             Questions
                                           </Button>
                                         </MuiThemeProvider>
