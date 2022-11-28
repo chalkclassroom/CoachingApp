@@ -444,6 +444,7 @@ class TeacherProfileResults extends React.Component {
 
   componentDidMount(): void {
     const firebase = this.context
+    let chartsTitle = ""
 
     // Get data from BQ
     this.getResultsFromBQ(this.props.selectedTeacherId)
@@ -462,6 +463,12 @@ class TeacherProfileResults extends React.Component {
             teacherTrends: trends,
           })
         })
+    }
+    if (this.props.observationType == 'studentEngagement') {
+      chartsTitle = "Engagement Rating"
+      this.setState({
+        chartsTitle: chartsTitle,
+      })
     }
   }
 
