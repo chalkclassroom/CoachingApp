@@ -509,13 +509,10 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                   fontColor: 'black',
                 },
                 scaleLabel: {
-                  callback: (value, index, values) => {
-                    if (this.props.observationType === "studentEngagement") {
-                    const text = "Activity Type"
-                    return [value, text[value]]
-                    }
-                    return value
-                  },
+                  display: true,
+                  labelString: this.props.observationType == "studentEngagement" ? "Activity Type" : "",
+                  fontSize: 16,
+                  fontColor: 'black'
                 },
                 stacked: true,
               }
