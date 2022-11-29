@@ -168,7 +168,7 @@ var LineGraphOptions = {
           },
         },
         scaleLabel: {
-          display: false,
+          display: true,
           labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
@@ -183,14 +183,16 @@ var LineGraphOptions = {
     datalabels: {
       display: false
     },
-  },
-  legend: {
-    labels: {
-      usePointStyle: true,
-      generateLabels: {
+    legend: {
+      display: true,
+      position: 'top',
+      align: 'center',
+      labels: {
+        generateLabels: {
+        }
       }
     }
-  }
+  },
 }
 
 // Array used to match the name of a practice to the value that's saved
@@ -444,6 +446,7 @@ class TeacherProfileResults extends React.Component {
 
   componentDidMount(): void {
     const firebase = this.context
+    let chartsTitle = ""
 
     // Get data from BQ
     this.getResultsFromBQ(this.props.selectedTeacherId)
@@ -462,6 +465,12 @@ class TeacherProfileResults extends React.Component {
             teacherTrends: trends,
           })
         })
+    }
+    if (this.props.observationType == 'studentEngagement') {
+      chartsTitle = "Engagement Rating"
+      this.setState({
+        chartsTitle: chartsTitle,
+      })
     }
   }
 
@@ -848,6 +857,12 @@ class TeacherProfileResults extends React.Component {
             return value + '%'
       }
     }
+
+    // Turn off y-axis label for Classroom Climate
+    if (this.props.observationType === "classroomClimate")
+    {
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+    }
   }
 
 
@@ -1095,9 +1110,10 @@ class TeacherProfileResults extends React.Component {
                   {/*
                     The tone ratings for the classroom climate observations Trends chart
                   */}
-                  {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                  {this.props.observationType == "classroomClimate" ? (
                     <ClimateToneTrends
                       toneAverageTrend={this.state.toneAverageTrend}
+                      toneCount={this.state.toneCount}
                     />
                   ) : null}
 
@@ -1186,10 +1202,11 @@ class TeacherProfileResults extends React.Component {
                       </Grid>
                         </>
                       ) : null}
-                      {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                      {this.props.observationType == "classroomClimate" ? (
                         <>
                           <ClimateToneSliderAverages
                             toneAverage={this.state.toneAverage}
+                            toneCount={this.state.toneCount}
                             />
                         </>
                       ) : null}

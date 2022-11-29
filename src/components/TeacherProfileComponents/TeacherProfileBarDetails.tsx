@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { display } from "html2canvas/dist/types/css/property-descriptors/display";
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
@@ -57,7 +58,7 @@ const barColorChoices = {
     "#BABABA",
   ],
   "averageEngagement" : [
-    "#E99C2E",
+    "#FFF",
   ]
 }
 
@@ -100,8 +101,8 @@ const barLabelChoices = {
   "studentEngagement" : [
     "Small Group",
     "Whole Group",
-    "Centers",
     "Transitions",
+    "Centers",
   ],
   "averageEngagement" : [
     "Average Engagement"
@@ -367,6 +368,7 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const show_percentages = ["classroomClimate", "levelOfInstruction", "mathInstruction"]
+    const showBorder = ["averageEngagement"]
     const total = getPercentages(this.state.graphData);
     const isCompleted = this.props.completed;
     const childBehaviorsData = {
@@ -376,6 +378,8 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
           //data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
           data: this.state.graphData, label: "Average",
           backgroundColor: this.state.barColors,
+          borderColor: this.props.observationType === "averageEngagement" ? '#880808' : this.state.barColors,
+          borderWidth: 4,
           hoverBackgroundColor: this.state.barColors,
         },
         show_percentages.includes(this.props.observationType) ? {
@@ -503,6 +507,12 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
                 ticks: {
                   fontSize: 16,
                   fontColor: 'black',
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: this.props.observationType == "studentEngagement" ? "Activity Type" : "",
+                  fontSize: 16,
+                  fontColor: 'black'
                 },
                 stacked: true,
               }

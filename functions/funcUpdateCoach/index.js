@@ -37,7 +37,7 @@ exports.funcUpdateCoach = functions.firestore
 
 
 
-        if(newValue['role'] === "coach")
+        if(newValue['role'] === "admin" || newValue['role'] === "coach" || newValue['role'] === "programLeader" || newValue['role'] === "siteLeader")
         {
 
           admin.auth().getUserByEmail(prevEmail)
