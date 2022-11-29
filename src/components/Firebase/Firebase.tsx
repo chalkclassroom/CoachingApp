@@ -354,6 +354,24 @@ class Firebase {
     return userDocs.docs[0].get('role') === 'admin' || userDocs.docs[0].get('role') === 'programLeader' || userDocs.docs[0].get('role') === 'siteLeader'
   }
 
+  updateCurrentUsersInfo = async (firstName, lastName, email) => {
+    var user = firebase.auth().currentUser;
+
+    // Update firestore document for this user
+    await this.db.collection('users')
+      .doc(user.uid)
+      .update(
+        {
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+        }
+      )
+
+    return user;
+
+  }
+
   sendEmail = async (msg: string): Promise<void> => {
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       'funcSendEmail'
