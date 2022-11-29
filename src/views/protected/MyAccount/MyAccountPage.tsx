@@ -48,28 +48,7 @@ const StyledFormControl = withStyles(() => ({
     },
 }))(FormControl)
 
-const save = (name: string,
-              email: string,
-              currentPassword: string,
-              password: string,
-              confirmPassword: string, firebase: Firebase) => {
-    if (password !== confirmPassword) {
-        alert('Passwords do not match')
-        return;
-    }
 
-    return firebase.reauthenticate({email, password: currentPassword})
-        .then(user => {
-            user.updatePassword(password);
-            alert("Your password has been changed!")
-        })
-        .catch(e => {
-            console.log(e);
-            alert("Unable to authenticate you. Please confirm your current password")
-        });
-
-
-}
 /**
  * @return {ReactNode}
  */
@@ -81,6 +60,84 @@ const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' }, hist
     const [currentPassword, setCurrentPassword] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+
+    const save = async (firstName: string,
+                  lastName: string,
+                  currentEmail: string,
+                  email: string,
+                  currentPassword: string,
+                  password: string,
+                  confirmPassword: string, firebase: Firebase) => {
+
+        // If we're changing password
+        if (password !== confirmPassword) {
+            alert('The passwords you have entered do not match')
+            return;
+        }
+
+        // If they didn't specify current password
+        if(currentPassword === "" )
+        {
+          alert('Please confirm your current password')
+          return "false";
+        }
+
+        // Check if we're changing email
+        var changingEmail = (currentEmail !== email) ? true : false;
+
+        // If we're changing password
+        var changingPassword = ((password !== "" && confirmPassword !== "") && password === confirmPassword ) ? true: false;
+
+        // Handle changing password
+        if ( changingPassword )
+        {
+
+          // If the current password isn't correct
+          var checkSignIn = await firebase.firebaseEmailSignIn({email: currentEmail, password: currentPassword});
+          if(checkSignIn === undefined)
+          {
+            return "false";
+          }
+
+          // We have to reauthenticate (if we're changing email, we'll do it later)
+          firebase.reauthenticate({email: currentEmail, password: currentPassword})
+              .then(user => {
+                  user.updatePassword(password);
+              })
+              .catch(e => {
+                  console.log(e);
+                  alert("Unable to authenticate you. Please confirm your current password")
+                  return false;
+              });
+        }
+
+
+        // Update all other information
+        return await firebase.updateCurrentUsersInfo(firstName, lastName, email)
+          .then( async user => {
+
+            // If we're changing email, we have to reauthenticate
+            if(changingEmail)
+            {
+
+              await user.updateEmail(email);
+
+              // If we're changing password, whe have to authenticate using new password
+              var passwordToUse = (changingPassword) ? password : currentPassword;
+
+              firebase.reauthenticate({email: email, password: passwordToUse})
+              currentEmail = email;
+            }
+
+            alert('Changes have been saved!');
+
+            return "success"
+          });
+
+
+
+    }
+
     return <div className={classes.root}>
         <FirebaseContext.Consumer>
             {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
@@ -144,8 +201,16 @@ const MyAccountPage = ({ user = { firstName: '', lastName: '', email: '' }, hist
                         {(firebase:Firebase) => (
                             <Button variant="contained" color="primary"
                                     onClick={(_) =>
-                                        save(name, email, currentPassword, password, confirmPassword, firebase)
-                                            .then(() => history.push("/Home"))}>Save</Button>)}
+                                        save(firstName, lastName, user.email, email, currentPassword, password, confirmPassword, firebase)
+                                            .then((res) => {
+                                                if(res === "success")
+                                                {
+                                                  history.push("/Home")
+                                                  location.reload();
+                                                }
+                                              }
+                                            )
+                                          }>Save</Button>)}
                     </FirebaseContext.Consumer>
                 </Grid>
             </Grid>
