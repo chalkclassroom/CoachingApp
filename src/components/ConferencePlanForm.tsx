@@ -61,7 +61,8 @@ interface Props {
     saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
     completeAppointment(teacherId: string, type: string, tool: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
-    getCoachLastName(): Promise<string>
+    getCoachLastName(): Promise<string>,
+    getLiteracyType(planId: string): Promise<string>
   },
   sessionId?: string,
   readOnly: boolean,
@@ -407,18 +408,37 @@ class ConferencePlanForm extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history
   };
 
-  handleConferencePlanClick = () => {
+  handleConferencePlanClick = async () => {
+    const types = {
+      'FoundationalTeacher': "Foundational",
+      'FoundationalChild': "Foundational",
+      'WritingTeacher': "Writing",
+      'WritingChild': "Writing",
+      'ReadingTeacher': "Reading",
+      'LanguageTeacher': "Language"
+    }
+    let useFirebase = false
     let path = ""
     const studentEngagement = 'Level of Engagement'
+    const AC = 'AC'
     if (this.props.practice === studentEngagement) {
       path = "/StudentEngagementResults"
+    } else if (this.props.practice === AC) {
+      path ="/AssociativeCooperativeInteractionsResults"
     } else {
       let practice = ""
       this.props.practice.split(" ")
         .map(str => practice += str.substring(0, 1).toUpperCase() + str.substring(1))
       path = "/" + practice + "Results"
+      useFirebase = true
     }
-    this.props.history?.push({pathname: path, state: {view: 'questions'}})
+
+    if (!useFirebase) {
+      this.props.history?.push({pathname: path, state: {view: 'questions'}})
+    } else {
+      let type = await this.props.firebase.getLiteracyType(this.props.conferencePlanId)
+      this.props.history?.push({pathname: path, state: {view: 'questions', type: types[type]}})
+    }
   }
 
   /**

@@ -100,8 +100,8 @@ const barLabelChoices = {
   "studentEngagement" : [
     "Small Group",
     "Whole Group",
-    "Centers",
     "Transitions",
+    "Centers",
   ],
   "averageEngagement" : [
     "Average Engagement"
