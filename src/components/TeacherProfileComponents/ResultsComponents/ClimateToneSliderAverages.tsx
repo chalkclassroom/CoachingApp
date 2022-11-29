@@ -72,12 +72,13 @@ class ClimateToneSliderAverages extends React.Component {
         <Grid style={{display: 'flex', flexWrap: 'no-wrap', justifyContent: 'center', width: '100%', paddingTop: '50px',}}>
           <h3 style={{whiteSpace: 'no-wrap', marginRight: '45px'}}>Teacher Tone</h3>
           <ClimateSlider
-            value={this.props.toneAverage}
+            value={this.props.toneCount > 0 ? this.props.toneAverage : "NA"}
             aria-labelledby="discrete-slider-always"
             step={1}
             max={5}
             min={1}
             style={{width: '66%',}}
+            disabled={this.props.toneCount > 0 ? false : true}
             marks={[
               {
                 value: 1,

@@ -857,6 +857,12 @@ class TeacherProfileResults extends React.Component {
             return value + '%'
       }
     }
+
+    // Turn off y-axis label for Classroom Climate
+    if (this.props.observationType === "classroomClimate")
+    {
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+    }
   }
 
 
@@ -1104,9 +1110,10 @@ class TeacherProfileResults extends React.Component {
                   {/*
                     The tone ratings for the classroom climate observations Trends chart
                   */}
-                  {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                  {this.props.observationType == "classroomClimate" ? (
                     <ClimateToneTrends
                       toneAverageTrend={this.state.toneAverageTrend}
+                      toneCount={this.state.toneCount}
                     />
                   ) : null}
 
@@ -1195,10 +1202,11 @@ class TeacherProfileResults extends React.Component {
                       </Grid>
                         </>
                       ) : null}
-                      {this.props.observationType == "classroomClimate" && this.state.toneCount > 0 ? (
+                      {this.props.observationType == "classroomClimate" ? (
                         <>
                           <ClimateToneSliderAverages
                             toneAverage={this.state.toneAverage}
+                            toneCount={this.state.toneCount}
                             />
                         </>
                       ) : null}

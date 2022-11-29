@@ -20,12 +20,17 @@ class ClimateToneTrends extends React.Component {
           {this.props.toneAverageTrend.map(
             (value, index) => {
               var align = 'flex-start';
-              var content = <h4 style={{fontWeight: 400}}>{value}</h4>;
+
+              var middleItemTransform = value > 0 ? 'translateX(-4px)' : 'translateX(-13px)'
+
+              var newValue = value > 0 ? value : "N/A";
+
+              var content = <h4 style={{fontWeight: 400, transform: middleItemTransform}}>{newValue}</h4>;
 
               // The numbers in the middle are slightlyyy off center
               if(index !== 0 && index !== (this.props.toneAverageTrend.length - 1))
               {
-                content = <h4 style={{fontWeight: 400, transform: 'translateX(-4px)'}}>{value}</h4>;
+                content = <h4 style={{fontWeight: 400, transform: middleItemTransform}}>{newValue}</h4>;
               }
 
               /*
@@ -35,7 +40,7 @@ class ClimateToneTrends extends React.Component {
                */
               if(index === (this.props.toneAverageTrend.length - 2) )
               {
-                content = <><h4 style={{fontWeight: 400, transform: 'translateX(-4px)'}}>{value}</h4><h4 style={{fontWeight: 400}}>{this.props.toneAverageTrend[index + 1]}</h4></>
+              content = <><h4 style={{fontWeight: 400, transform: middleItemTransform}}>{newValue}</h4><h4 style={{fontWeight: 400, transform: this.props.toneAverageTrend[index + 1] > 0 ? 'translateX(0px)' : "translateX(12px)"  }}>{this.props.toneAverageTrend[index + 1] > 0 ? this.props.toneAverageTrend[index + 1] : "N/A"}</h4></>
                 align = 'space-between';
               }
 
