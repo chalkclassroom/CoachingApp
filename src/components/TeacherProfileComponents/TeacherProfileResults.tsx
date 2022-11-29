@@ -168,7 +168,7 @@ var LineGraphOptions = {
           },
         },
         scaleLabel: {
-          display: false,
+          display: true,
           labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
@@ -183,14 +183,16 @@ var LineGraphOptions = {
     datalabels: {
       display: false
     },
-  },
-  legend: {
-    labels: {
-      usePointStyle: true,
-      generateLabels: {
+    legend: {
+      display: true,
+      position: 'top',
+      align: 'center',
+      labels: {
+        generateLabels: {
+        }
       }
     }
-  }
+  },
 }
 
 // Array used to match the name of a practice to the value that's saved

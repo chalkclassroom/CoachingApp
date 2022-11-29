@@ -6714,21 +6714,21 @@ class Firebase {
   populateUser = async () => {
     const user = this.auth.currentUser ? this.auth.currentUser.uid : '';
     //Create KnowledgeChecks
-    const answerIndex: Array<number> = [0, 3, 1, 2, 4];
-    console.log(`Completing knowledge check for ${user}...`)
-    for (let i = 0; i < 5; i++) {
-      await firebase.firestore().collection("knowledgeChecks").doc().set({
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        type: "climate",
-        isCorrect: true,
-        answeredBy: user,
-        questionIndex: i,
-        answerIndex: answerIndex[i]
-      });
-    }
-    await this.db.collection('users').doc(user).update({unlocked: [2]})
+    // const answerIndex: Array<number> = [0, 3, 1, 2, 4];
+    // console.log(`Completing knowledge check for ${user}...`)
+    // for (let i = 0; i < 5; i++) {
+    //   await firebase.firestore().collection("knowledgeChecks").doc().set({
+    //     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     type: "climate",
+    //     isCorrect: true,
+    //     answeredBy: user,
+    //     questionIndex: i,
+    //     answerIndex: answerIndex[i]
+    //   });
+    // }
+    // await this.db.collection('users').doc(user).update({unlocked: [2]})
 
-    //for testing begin
+    /** for testing BEGIN */
     // let teacherInfo = {
     //   firstName: "Elizabeth",
     //   lastName: "Bathory",
@@ -6741,95 +6741,203 @@ class Firebase {
     //   // sites: teacherSites[i]
     // };
     // await firebase.firestore().collection("users").doc(teacherInfo.id).set(teacherInfo);
-    //for testing end
+    /** for testing END  */
 
 
     console.log("Adding partner...")
     await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({});
-    console.log(`Creating Classroom Climate observation for ${user} observing bathory...`)
-    const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
-    const entryNumber: number = Math.floor(Math.random() * 10);
-    const observationInfo = {
-        start: firebase.firestore.FieldValue.serverTimestamp(),
-        end: firebase.firestore.FieldValue.serverTimestamp(),
-        type: "climate",
-        activitySetting: null,
-        checklist: null,
-        completed: true,
-        observedBy: "/user/" + user,
-        teacher: "/user/bathory",
-        timezone: "America/New_York"
-      };
-    this.sessionRef = this.db.collection('observations').doc('demo');
-    let entryCollection = this.sessionRef.collection('entries')
-    for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
-      entryCollection.add({
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        Type: "climate",
-        BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
-      });
-    }
-    this.sessionRef.set(observationInfo)
-    this.sessionRef = null;
+
+    // console.log(`Creating Classroom Climate observation for ${user} observing bathory...`)
+    // const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
+    // const entryNumber: number = Math.floor(Math.random() * 10);
+    // const observationInfo = {
+    //     start: firebase.firestore.FieldValue.serverTimestamp(),
+    //     end: firebase.firestore.FieldValue.serverTimestamp(),
+    //     type: "climate",
+    //     activitySetting: null,
+    //     checklist: null,
+    //     completed: true,
+    //     observedBy: "/user/" + user,
+    //     teacher: "/user/bathory",
+    //     timezone: "America/New_York"
+    //   };
+    // this.sessionRef = this.db.collection('observations').doc('demo');
+    // let entryCollection = this.sessionRef.collection('entries')
+    // for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+    //   entryCollection.add({
+    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     Type: "climate",
+    //     BehaviorResponse: behaviorResponse[Math.floor(Math.random() * 4)]
+    //   });
+    // }
+    // this.sessionRef.set(observationInfo)
+    // this.sessionRef = null;
+
+    // console.log(`Creating Level of Instruction observation for ${user} observing bathory...`)
+    // const instructionType: Array<string> = ["hlq", "llq", "hlqResponse", "llqResponse"];
+    // const entryNumber: number = Math.floor(Math.random() * 10);
+    // const observationInfo = {
+    //     start: firebase.firestore.FieldValue.serverTimestamp(),
+    //     end: firebase.firestore.FieldValue.serverTimestamp(),
+    //     type: "level",
+    //     activitySetting: null,
+    //     checklist: null,
+    //     completed: true,
+    //     observedBy: "/user/" + user,
+    //     teacher: "/user/bathory",
+    //     timezone: "America/New_York"
+    //   };
+    // this.sessionRef = this.db.collection('observations').doc();
+    // let entryCollection = this.sessionRef.collection('entries')
+    // for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+    //   entryCollection.add({
+    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     instructionType: instructionType[Math.floor(Math.random() * 4)]
+    //   });
+    // }
+    // this.sessionRef.set(observationInfo)
+    // this.sessionRef = null;
+
+    // console.log(`Creating Level of Engagement observation for ${user} observing bathory...`)
+    // const entryType: Array<string> = ["whole", "small", "centers", "transition"];
+    // const point: Array<number> = [0, 1, 2, 3]
+    // const entryNumber: number = Math.floor(Math.random() * 10);
+    // const observationInfo = {
+    //     start: firebase.firestore.FieldValue.serverTimestamp(),
+    //     end: firebase.firestore.FieldValue.serverTimestamp(),
+    //     type: "engagement",
+    //     activitySetting: null,
+    //     checklist: null,
+    //     completed: true,
+    //     observedBy: "/user/" + user,
+    //     teacher: "/user/bathory",
+    //     timezone: "America/New_York"
+    //   };
+    // this.sessionRef = this.db.collection('observations').doc();
+    // let entryCollection = this.sessionRef.collection('entries')
+    // for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+    //   entryCollection.add({
+    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     entryType: entryType[Math.floor(Math.random() * 4)],
+    //     point: point[Math.floor(Math.random() * 4)],
+    //     studentId: "bathory"
+    //   });
+    // }
+    // this.sessionRef.set(observationInfo)
+    // this.sessionRef = null;
+
+    // console.log(`Creating Math instruction observation for ${user} observing bathory...`)
+    // const entryNumber: number = Math.floor(Math.random() * 10);
+    // const observationInfo = {
+    //     start: firebase.firestore.FieldValue.serverTimestamp(),
+    //     end: firebase.firestore.FieldValue.serverTimestamp(),
+    //     type: "math",
+    //     activitySetting: null,
+    //     checklist: null,
+    //     completed: true,
+    //     observedBy: "/user/" + user,
+    //     teacher: "/user/bathory",
+    //     timezone: "America/New_York"
+    //   };
+    // this.sessionRef = this.db.collection('observations').doc();
+    // let entryCollection = this.sessionRef.collection('entries')
+    // for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+    //   let customType = Math.floor(Math.random() * 3) + 1
+    //   let maxChild: number = 0;
+    //   let maxTeacher: number = 0;
+
+    //   maxChild = Math.floor(Math.random() * 5)
+
+    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+
+    //   let choicesChild: Array<number> = [1, 2, 3, 4]
+    //   let choicesTeacher: Array<number> = [6, 7, 8, 9]
+
+    //   let checkedChild: Array<number> = maxChild === 0 ? [5] : []
+    //   let checkedTeacher: Array<number> = maxTeacher === 0 ? [10] : []
+
+    //   for(let y = 0; y < maxChild; y++) {
+    //     let num: number = choicesChild[Math.floor(Math.random() * choicesChild.length)];
+    //     checkedChild.push(num)
+    //     choicesChild.splice(choicesChild.indexOf(num), 1)
+    //   }
+
+    //   for(let y = 0; y < maxTeacher; y++) {
+    //     let num: number = choicesTeacher[Math.floor(Math.random() * choicesTeacher.length)];
+    //     checkedTeacher.push(num)
+    //     choicesTeacher.splice(choicesTeacher.indexOf(num), 1)
+    //   }
+
+    //   let customEntries = checkedChild.concat(checkedTeacher)
+
+    //   entryCollection.add({
+    //     Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     Checked: customEntries,
+    //     PeopleType: customType,
+    //   });
+    // }
+    // this.sessionRef.set(observationInfo)
+    // this.sessionRef = null;
+
 
     //Create ActionPlan
-    console.log("Creating Action Plan...")
-    let date = new Date();
-    date.setMonth(date.getMonth()+3)
-    let actionPlanInfo = {
-      benefit: "A positive classroom climate feels safe, respectful, welcoming, and supportive of student learning.",
-      coach: user,
-      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
-      goal: "Improve the intellectual, social, emotional, and physical environments in which our students learn.",
-      goalTimeline: date,
-      planNum: 1,
-      status: "Active",
-      teacher: "bathory",
-      tool: "Classroom Climate"
-    }
-    this.sessionRef = this.db.collection('actionPlans').doc();
-    let actionSteps = this.sessionRef.collection('actionSteps');
-    date.setMonth(date.getMonth()-2)
-    actionSteps.add({
-      person: "Elizabeth Bathory",
-      step: "Increase the sense of responsibility of students for what happens in the classroom.",
-      timeline: date
-    })
-    date.setMonth(date.getMonth()+1)
-    actionSteps.add({
-      person: "Elizabeth Bathory",
-      step: "Provide opportunities for students to assume leadership roles",
-      timeline: date
-    })
-    await this.sessionRef.set(actionPlanInfo)
-    this.sessionRef = null
+    // console.log("Creating Action Plan...")
+    // let date = new Date();
+    // date.setMonth(date.getMonth()+3)
+    // let actionPlanInfo = {
+    //   benefit: "A positive classroom climate feels safe, respectful, welcoming, and supportive of student learning.",
+    //   coach: user,
+    //   dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+    //   dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+    //   goal: "Improve the intellectual, social, emotional, and physical environments in which our students learn.",
+    //   goalTimeline: date,
+    //   planNum: 1,
+    //   status: "Active",
+    //   teacher: "bathory",
+    //   tool: "Classroom Climate"
+    // }
+    // this.sessionRef = this.db.collection('actionPlans').doc();
+    // let actionSteps = this.sessionRef.collection('actionSteps');
+    // date.setMonth(date.getMonth()-2)
+    // actionSteps.add({
+    //   person: "Elizabeth Bathory",
+    //   step: "Increase the sense of responsibility of students for what happens in the classroom.",
+    //   timeline: date
+    // })
+    // date.setMonth(date.getMonth()+1)
+    // actionSteps.add({
+    //   person: "Elizabeth Bathory",
+    //   step: "Provide opportunities for students to assume leadership roles",
+    //   timeline: date
+    // })
+    // await this.sessionRef.set(actionPlanInfo)
+    // this.sessionRef = null
 
     //Add Favorite Questions
-    console.log("Adding favorite questions...")
-    await this.db.collection('users').doc(user).update({favoriteQuestions: [
-      "Classroom Climate: Does the room feel safe and comforting?",
-      "Classroom Climate: How is the room divided?",
-      "Classroom Climate: Do the materials and activities encourage learning?"
-    ]})
+    // console.log("Adding favorite questions...")
+    // await this.db.collection('users').doc(user).update({favoriteQuestions: [
+    //   "Classroom Climate: Does the room feel safe and comforting?",
+    //   "Classroom Climate: How is the room divided?",
+    //   "Classroom Climate: Do the materials and activities encourage learning?"
+    // ]})
 
     //Create Conference Plan
     console.log("Creating Conference Plan...")
-    let conferencePlanInfo = {
-      addedQuestions: ["Does the room feel safe and comforting?", "Are there any redirections you give to children that you feel are repetitive?"],
-      coach: user,
-      dateModified: firebase.firestore.FieldValue.serverTimestamp(),
-      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-      feedback: ["Great at redirecting children into learning activities."],
-      notes: ["Elizabeth gives unsettling disapprovals but they are usually followed by appropriate redirections."],
-      questions: ["Do you use downtime, snack time, before, and after school to ask questions and play quick games with the children to break the ice?"],
-      sessionId: "demo",
-      teacher: "bathory",
-      tool: "Classroom Climate"
-    }
-    await this.db.collection('conferencePlans').doc().set(conferencePlanInfo).then(() =>
-      window.location.reload()
-    )
+    // let conferencePlanInfo = {
+    //   addedQuestions: ["Does the room feel safe and comforting?", "Are there any redirections you give to children that you feel are repetitive?"],
+    //   coach: user,
+    //   dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+    //   dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+    //   feedback: ["Great at redirecting children into learning activities."],
+    //   notes: ["Elizabeth gives unsettling disapprovals but they are usually followed by appropriate redirections."],
+    //   questions: ["Do you use downtime, snack time, before, and after school to ask questions and play quick games with the children to break the ice?"],
+    //   sessionId: "demo",
+    //   teacher: "bathory",
+    //   tool: "Classroom Climate"
+    // }
+    // await this.db.collection('conferencePlans').doc().set(conferencePlanInfo).then(() =>
+    //   window.location.reload()
+    // )
 
   }
 
@@ -7201,19 +7309,24 @@ class Firebase {
      await firebase.firestore().collection("sites").doc(programInfo.id).set(programInfo);
    }
 
-  console.log("Creating LI: Book Reading and Classroom Climate observations...")
+  console.log("Creating Observations...")
   //Create Observations
   const behaviorResponse: Array<string> = ["nonspecificapproval", "disapproval", "specificapproval", "redirection"];
-  const readingActivity: Array<string> = [
-    "All",
-    "Fiction",
-    "Nonfiction/Informational",
-    "Rhyming",
-    "Predictable",
-    "Poem",
-    "Alphabet/Counting",
-    "Class-Made Book"
-  ]
+  const instructionType: Array<string> = ["hlq", "llq", "hlqResponse", "llqResponse"];
+  const entryType: Array<string> = ["whole", "small", "centers", "transition"];
+  const point: Array<number> = [0, 1, 2, 3];
+  /** Book Reading Activities BEGIN */
+  // const readingActivity: Array<string> = [
+  //   "All",
+  //   "Fiction",
+  //   "Nonfiction/Informational",
+  //   "Rhyming",
+  //   "Predictable",
+  //   "Poem",
+  //   "Alphabet/Counting",
+  //   "Class-Made Book"
+  // ]
+  /** Book Reading Activities END */
 
   for (let coachIndex in coaches) {
     let coach = coaches[coachIndex];
@@ -7253,6 +7366,53 @@ class Firebase {
         }
       }
     }
+
+    /** Book Reading Observations BEGIN **/
+    // for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
+    //   for (let month = 0; month < 10; month++) {
+    //     if (![2, 3, 4].includes(month)) {
+    //       const documents: number = Math.floor(Math.random() * 3);;
+    //       for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
+    //         let date = new Date();
+    //         date.setMonth(date.getMonth()-month)
+    //         const entryNumber: number = Math.floor(Math.random() * 10);
+    //         const observationInfo = {
+    //             start: firebase.firestore.Timestamp.fromDate(date),
+    //             end: firebase.firestore.Timestamp.fromDate(date),
+    //             type: "LI",
+    //             activitySetting: readingActivity[Math.floor(Math.random() * 8)],
+    //             checklist: "ReadingTeacher",
+    //             completed: true,
+    //             observedBy: "/user/" + coach.id,
+    //             teacher: "/user/" + coach.teachers[teacherIndex],
+    //             timezone: "America/New_York"
+    //           };
+    //         this.sessionRef = this.db.collection('observations').doc();
+    //         let entryCollection = this.sessionRef.collection('entries')
+    //         for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+    //           const maxLen: number = Math.floor(Math.random() * 10)
+    //           let choices: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    //           let checked: Array<number> = maxLen === 0 ? [11] : []
+
+    //           for(let choice = 0; choice < maxLen; choice++) {
+    //             let num: number = choices[Math.floor(Math.random() * choices.length)];
+    //             checked.push(num)
+    //             choices.splice(choices.indexOf(num), 1)
+    //           }
+    //           entryCollection.add({
+    //             Timestamp: firebase.firestore.Timestamp.fromDate(date),
+    //             Checked: checked
+    //           });
+    //         }
+    //         this.sessionRef.set(observationInfo)
+    //         this.sessionRef = null;
+
+    //       }
+    //     }
+    //   }
+
+    // }
+    /** Book Reading Observations END **/
     for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
       for (let month = 0; month < 10; month++) {
         if (![2, 3, 4].includes(month)) {
@@ -7264,9 +7424,9 @@ class Firebase {
             const observationInfo = {
                 start: firebase.firestore.Timestamp.fromDate(date),
                 end: firebase.firestore.Timestamp.fromDate(date),
-                type: "LI",
-                activitySetting: readingActivity[Math.floor(Math.random() * 8)],
-                checklist: "ReadingTeacher",
+                type: "level",
+                activitySetting: null,
+                checklist: null,
                 completed: true,
                 observedBy: "/user/" + coach.id,
                 teacher: "/user/" + coach.teachers[teacherIndex],
@@ -7275,18 +7435,9 @@ class Firebase {
             this.sessionRef = this.db.collection('observations').doc();
             let entryCollection = this.sessionRef.collection('entries')
             for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
-              const maxLen: number = Math.floor(Math.random() * 10)
-              let choices: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-              let checked: Array<number> = maxLen === 0 ? [11] : []
-
-              for(let choice = 0; choice < maxLen; choice++) {
-                let num: number = choices[Math.floor(Math.random() * choices.length)];
-                checked.push(num)
-                choices.splice(choices.indexOf(num), 1)
-              }
               entryCollection.add({
                 Timestamp: firebase.firestore.Timestamp.fromDate(date),
-                Checked: checked
+                instructionType: instructionType[Math.floor(Math.random() * 4)]
               });
             }
             this.sessionRef.set(observationInfo)
@@ -7295,10 +7446,108 @@ class Firebase {
           }
         }
       }
+    }
+    for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
+      for (let month = 0; month < 10; month++) {
+        if (![2, 3, 4].includes(month)) {
+          const documents: number = Math.floor(Math.random() * 3);;
+          for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
+            let date = new Date();
+            date.setMonth(date.getMonth()-month)
+            const entryNumber: number = Math.floor(Math.random() * 10);
+            const observationInfo = {
+                start: firebase.firestore.Timestamp.fromDate(date),
+                end: firebase.firestore.Timestamp.fromDate(date),
+                type: "engagement",
+                activitySetting: null,
+                checklist: null,
+                completed: true,
+                observedBy: "/user/" + coach.id,
+                teacher: "/user/" + coach.teachers[teacherIndex],
+                timezone: "America/New_York"
+              };
+            this.sessionRef = this.db.collection('observations').doc();
+            let entryCollection = this.sessionRef.collection('entries')
+            for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+              entryCollection.add({
+                Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                entryType: entryType[Math.floor(Math.random() * 4)],
+                point: point[Math.floor(Math.random() * 4)],
+                studentId: coach.teachers[teacherIndex]
+              });
+            }
+            this.sessionRef.set(observationInfo)
+            this.sessionRef = null;
 
+          }
+        }
+      }
+    }
+    for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
+      for (let month = 0; month < 10; month++) {
+        if (![2, 3, 4].includes(month)) {
+          const documents: number = Math.floor(Math.random() * 3);;
+          for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
+            let date = new Date();
+            date.setMonth(date.getMonth()-month)
+            const entryNumber: number = Math.floor(Math.random() * 10);
+            const observationInfo = {
+                start: firebase.firestore.Timestamp.fromDate(date),
+                end: firebase.firestore.Timestamp.fromDate(date),
+                type: "math",
+                activitySetting: null,
+                checklist: null,
+                completed: true,
+                observedBy: "/user/" + coach.id,
+                teacher: "/user/" + coach.teachers[teacherIndex],
+                timezone: "America/New_York"
+              };
+            this.sessionRef = this.db.collection('observations').doc();
+            let entryCollection = this.sessionRef.collection('entries')
+            for (let entryIndex = 0; entryIndex < entryNumber; entryIndex++) {
+            let customType = Math.floor(Math.random() * 3) + 1
+            let maxChild: number = 0;
+            let maxTeacher: number = 0;
+
+            maxChild = Math.floor(Math.random() * 5)
+
+            maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+
+            let choicesChild: Array<number> = [1, 2, 3, 4]
+            let choicesTeacher: Array<number> = [6, 7, 8, 9]
+
+            let checkedChild: Array<number> = maxChild === 0 ? [5] : []
+            let checkedTeacher: Array<number> = maxTeacher === 0 ? [10] : []
+
+            for(let y = 0; y < maxChild; y++) {
+              let num: number = choicesChild[Math.floor(Math.random() * choicesChild.length)];
+              checkedChild.push(num)
+              choicesChild.splice(choicesChild.indexOf(num), 1)
+            }
+
+            for(let y = 0; y < maxTeacher; y++) {
+              let num: number = choicesTeacher[Math.floor(Math.random() * choicesTeacher.length)];
+              checkedTeacher.push(num)
+              choicesTeacher.splice(choicesTeacher.indexOf(num), 1)
+            }
+
+            let customEntries = checkedChild.concat(checkedTeacher)
+
+            entryCollection.add({
+              Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              Checked: customEntries,
+              PeopleType: customType,
+            });
+            }
+            this.sessionRef.set(observationInfo)
+            this.sessionRef = null;
+
+          }
+        }
+      }
     }
   }
-  }
+  } //END OF OBSERVATION LOOP
 
 
     secondFirebase.delete() // Frees resources for any subsequent users created
