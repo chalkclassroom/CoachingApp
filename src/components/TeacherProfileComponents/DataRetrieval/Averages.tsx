@@ -160,7 +160,7 @@ class AveragesData {
       result.redirectionAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.redirectionAverage = Math.round(result.redirectionAverage)
 
-      result.toneAverage = Math.round(result.toneTotal / result.toneCount);
+      result.toneAverage = result.toneCount > 0 ? Math.round(result.toneTotal / result.toneCount) : -1;
 
       /*
       var tempTotalInstructions = result.total;
