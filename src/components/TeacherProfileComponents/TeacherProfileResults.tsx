@@ -40,6 +40,8 @@ import TeacherProfileBarDetails from './TeacherProfileBarDetails'
 import GraphHeader from '../LayoutComponents/GraphLayouts/GraphHeader'
 import BarChartLegend from '../LayoutComponents/GraphLayouts/BarChartLegend'
 
+import { spacing } from '@mui/system';
+
 import AveragesChart from './ResultsComponents/AveragesChart'
 import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
 import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
@@ -1187,6 +1189,7 @@ class TeacherProfileResults extends React.Component {
                           <Grid
                           style={{
                           height: 200,
+                          width: 1860,
                           marginBottom: 20,
                         }}
                       >
@@ -1198,6 +1201,7 @@ class TeacherProfileResults extends React.Component {
                           barColors={this.state.lineColors}
                           observationType={"averageEngagement"}
                           teacherId={this.props.selectedTeacherId}
+                          sx={{paddingRight: 40}}
                         />
                       </Grid>
                         </>
