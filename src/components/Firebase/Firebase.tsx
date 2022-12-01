@@ -7585,6 +7585,24 @@ class Firebase {
   const user = this.auth.currentUser ? this.auth.currentUser.uid : '';
   console.log(`Completing knowledge checks for ${user}`)
   await this.db.collection('users').doc(user).update({unlocked: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]})
+  await this.db.collection('users').doc(user).collection('training').doc('LI').set({
+    conceptsFoundational: true,
+    conceptsLanguage: true,
+    conceptsReading: true,
+    conceptsWriting: true,
+    definitionsFoundational: true,
+    definitionsLanguage: true,
+    definitionsReading: true,
+    definitionsWriting: true,
+    demoFoundational: true,
+    demoLanguage: true,
+    demoReading: true,
+    demoWriting: true,
+    knowledgeCheckFoundational:true,
+    knowledgeCheckLanguage: true,
+    knowledgeCheckReading: true,
+    knowledgeCheckWriting: true
+  })
   console.log(`Adding partner to ${user}...`)
   await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({}).then(() => window.location.reload());
   /** END */
