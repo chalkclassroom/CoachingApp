@@ -50,6 +50,8 @@ import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
+import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
+import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 
 const centerRow = {
   display: 'flex',
@@ -814,8 +816,6 @@ class SiteProfileResults extends React.Component {
     const radioObservationTypes = [
       'mathInstruction',
       'bookReading',
-      'levelOfInstruction',
-      'studentEngagement',
       'transitionTime',
       'listeningToChildren',
       'sequentialActivities',
@@ -824,6 +824,15 @@ class SiteProfileResults extends React.Component {
       'bookReading',
       'languageEnvironment',
       'associativeAndCooperative',
+    ]
+
+    /*
+     * List of observation types that have their own custom average chart
+     */
+    const customAveragesObservationTypes = [
+      'classroomClimate',
+      'levelOfInstruction',
+      "studentEngagement",
     ]
 
     return (
@@ -901,8 +910,8 @@ class SiteProfileResults extends React.Component {
             ) : null}
 
             {/*
-                    The chart switcher
-                */}
+                The chart switcher
+            */}
             <Grid container style={centerRow}>
               <Grid xs={8}>
                 <TabBarWrapper
@@ -915,8 +924,8 @@ class SiteProfileResults extends React.Component {
             </Grid>
 
             {/*
-                  The "averages" bar graph and "trends" line graph
-                */}
+              The "averages" bar graph and "trends" line graph
+            */}
             <Grid item xs={12} style={centerColumn}>
               {Object.keys(this.state.averages).length <= 0 &&
               !this.state.showErrorMessage ? (
@@ -925,6 +934,10 @@ class SiteProfileResults extends React.Component {
               {this.state.showErrorMessage ? (
                 <h1>{this.state.errorMessage}</h1>
               ) : null}
+
+              {/*
+                The "trends" line graph
+              */}
               {this.state.tabState == 1 &&  Object.keys(this.state.averages).length > 0 ? (
                 <Grid
                   container
@@ -937,7 +950,13 @@ class SiteProfileResults extends React.Component {
                     options={LineGraphOptions}
                   />
                 </Grid>
-              ) : this.state.tabState == 0 &&Object.keys(this.state.averages).length > 0 ? (
+              ) : null }
+
+
+              {/*
+                The "averages" bar graph
+              */}
+              {this.state.tabState == 0 &&Object.keys(this.state.averages).length > 0 ? (
                 <Grid
                   container
                   justify={'center'}
@@ -946,9 +965,7 @@ class SiteProfileResults extends React.Component {
                     width: '85%',
                     minHeight: 500,
                     flexWrap: 'nowrap',
-                    padding: '30px',
-                    //paddingBottom: '60px',
-                    //paddingRight: '50px',
+                    padding: '0px',
                     position: 'relative',
                     border: 'solid 2px #eee',
                     marginTop: 20,
@@ -962,24 +979,37 @@ class SiteProfileResults extends React.Component {
                     The Averages Charts
                   */}
 
-                  {this.props.observationType !== "classroomClimate" ? (
-                    <SiteProfileBarDetails
-                      totalVisits={10}
-                      labels={this.state.teacherNames}
-                      data={this.state.averages}
-                      type={this.state.radioValue}
-                      barColors={this.state.lineColors}
-                    />
+                  {/* Generic chart if there is no custom chart built for this observation type */}
+                  {!customAveragesObservationTypes.includes(this.props.observationType) ? (
+                    <div style={{padding: 30}}>
+                      <SiteProfileBarDetails
+                        totalVisits={10}
+                        labels={this.state.teacherNames}
+                        data={this.state.averages}
+                        type={this.state.radioValue}
+                        barColors={this.state.lineColors}
+                      />
+                    </div>
                   ) : null}
 
                   {/* Classroom Climate Chart */}
                   {this.props.observationType === "classroomClimate" ? (
                     <ClassroomClimateBarDetails
-                      totalVisits={10}
-                      labels={this.state.teacherNames}
                       data={this.state.averages}
-                      type={this.state.radioValue}
-                      barColors={this.state.lineColors}
+                    />
+                  ) : null}
+
+                  {/* Level of Instruction Chart */}
+                  {this.props.observationType === "levelOfInstruction" ? (
+                    <LevelOfInstructionBarDetails
+                      data={this.state.averages}
+                    />
+                  ) : null}
+
+                  {/* Student Engagement Chart */}
+                  {this.props.observationType === "studentEngagement" ? (
+                    <StudentEngagementBarDetails
+                      data={this.state.averages}
                     />
                   ) : null}
 

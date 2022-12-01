@@ -332,6 +332,22 @@ class AveragesData {
       results[teacherId][row.instructionType] += row.count;
     }
 
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      hlq: 0,
+      hlqResponse: 0,
+      llq: 0,
+      llqResponse: 0,
+
+    }
+
+
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -344,7 +360,27 @@ class AveragesData {
       result.hlqResponseAverage = result.hlqResponse > 0 ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqAverage = result.llq > 0 ? (result.llq / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+
+
+      // Gather info for the site bar
+      siteBar.hlq += result.hlq;
+      siteBar.hlqResponse += result.hlqResponse;
+      siteBar.llq += result.llq;
+      siteBar.llqResponse += result.llqResponse;
+
+      siteBar.total += tempTotalInstructions;
+
     }
+
+
+    // Calculate the site bar averages
+    siteBar.hlqAverage = siteBar.hlq > 0 ? (siteBar.hlq / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.hlqResponseAverage = siteBar.hlqResponse > 0 ? (siteBar.hlqResponse / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.llqAverage = siteBar.llq > 0 ? (siteBar.llq / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.llqResponseAverage = siteBar.llqResponse > 0 ? (siteBar.llqResponse / siteBar.total).toFixed(2) * 100 : 0;
+
+    results.siteBar = siteBar;
 
     return results;
 
@@ -375,6 +411,7 @@ class AveragesData {
         mildlyEngaged: 0,
         engaged: 0,
         highlyEngaged: 0,
+        totalPoints: 0,
       };
 
     }
@@ -404,8 +441,21 @@ class AveragesData {
           break;
       }
 
+      // Calculate the total score
+      results[teacherId].totalPoints += row.point;
+
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions += row.count;
+    }
+
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      totalPoints: 0,
     }
 
     // Calculate the averages in percentages
@@ -421,7 +471,15 @@ class AveragesData {
       result.engagedAverage = result.engaged > 0 ? (result.engaged / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.highlyEngagedAverage = result.highlyEngaged > 0 ? (result.highlyEngaged / tempTotalInstructions).toFixed(2) * 100 : 0;
 
+      result.totalPointsAverage = result.totalPoints > 0 ? (result.totalPoints / tempTotalInstructions).toFixed(2) : 0;
+
+      siteBar.totalPoints += parseFloat(result.totalPointsAverage);
+
     }
+
+    siteBar.totalPointsAverage = siteBar.totalPoints > 0 ? (siteBar.totalPoints / Object.keys(results).length).toFixed(2) : 0;
+
+    results.siteBar = siteBar;
 
     return results;
 
