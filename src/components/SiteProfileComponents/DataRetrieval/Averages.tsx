@@ -442,7 +442,7 @@ class AveragesData {
       }
 
       // Calculate the total score
-      results[teacherId].totalPoints += row.point;
+      results[teacherId].totalPoints += row.point * row.count;
 
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions += row.count;
