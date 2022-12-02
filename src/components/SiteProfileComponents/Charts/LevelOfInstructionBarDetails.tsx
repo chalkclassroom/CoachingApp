@@ -122,13 +122,11 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         label: 'High Level Instruction',
         data: hlqAverage,
         backgroundColor: "#38761D",
-        barPercentage: 0.5,
       },
       {
         label: 'Low Level Instruction',
         data: llqAverage,
         backgroundColor: "#1155CC",
-        barPercentage: 0.5,
       },
 
       // The total Site Averages
@@ -138,7 +136,6 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         backgroundColor: "#FFF",
         borderColor: "#38761D",
         borderWidth: 4,
-        barPercentage: 0.5,
       },
       {
         label: 'Low Level Instruction Site Average',
@@ -146,7 +143,6 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         backgroundColor: "#FFF",
         borderColor: "#1155CC",
         borderWidth: 4,
-        barPercentage: 0.5,
       },
     ]
 
@@ -214,6 +210,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                       fixedStepSize: 1,
                       fontSize: 16,
                       fontColor: 'black',
+                      padding: 20,
                       // Include a percent sign in the ticks
                       callback: function(value, index, values) {
                           return value + '%';
@@ -227,6 +224,8 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                     },
                     stacked: true,
                     gridLines: {
+                      drawBorder: false,
+                      drawTicks: false,
                     }
                   }
                 ],

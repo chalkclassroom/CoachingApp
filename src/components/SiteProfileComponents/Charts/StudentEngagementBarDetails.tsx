@@ -82,11 +82,9 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
         data: [],
         borderColor: [],
         borderWidth: 5,
-        barPercentage: 0.3,
       }
     ];
 
-    console.log("DATA =======> ", data);
 
     var totalPointsAverage = [];
     for(var teacherIndex in data)
@@ -117,8 +115,6 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
     dataSets[0].hoverBackgroundColor.push("#FFFFFF");
     dataSets[0].borderColor.push("#E94635");
     dataSets[0].data.push(data.siteBar.totalPointsAverage);
-
-    console.log("DATASETS : ", dataSets);
 
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
