@@ -1193,8 +1193,9 @@ class TeacherProfileResults extends React.Component {
                           <Grid
                           style={{
                           height: 200,
-                          width: 1860,
+                          width: '100.5%',
                           marginBottom: 20,
+                          marginLeft: '-60px'
                         }}
                       >
                         <TeacherProfileBarDetails
