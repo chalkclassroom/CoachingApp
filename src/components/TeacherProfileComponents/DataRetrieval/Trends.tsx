@@ -148,6 +148,7 @@ class TrendData {
      // Set the month after the end date, formatted like Nov 21, 2022
      var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
      var months = [];
+     console.log(endDatePlusOneMonth)
      while(tempDate !== endDatePlusOneMonth)
      {
        months.push(tempDate);
@@ -392,7 +393,7 @@ class TrendData {
     // });
 
     data.map(i => console.log(i.startDate))
-    var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
+    var observationDatesFormatted = observationDates.map(o => {return new Date(o.replace(/-/g, '\/')).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
 
     console.log("Observation Dates : ", observationDates);
     console.log("Observation Dates Formatted: ", observationDatesFormatted)
