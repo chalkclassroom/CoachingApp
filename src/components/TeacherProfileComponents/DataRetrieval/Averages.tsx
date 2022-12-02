@@ -145,19 +145,19 @@ class AveragesData {
       var result = results[resultsIndex];
 
       var tempDataArray = data.filter(o => o.behaviorResponse === "nonspecificapproval").map(o => {return o.count});
-      result.nonspecificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.nonspecificapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.nonspecificapprovalAverage = Math.round(result.nonspecificapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "specificapproval").map(o => {return o.count});
-      result.specificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.specificapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.specificapprovalAverage = Math.round(result.specificapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "disapproval").map(o => {return o.count});
-      result.disapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.disapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.disapprovalAverage = Math.round(result.disapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "redirection").map(o => {return o.count});
-      result.redirectionAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.redirectionAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.redirectionAverage = Math.round(result.redirectionAverage)
 
       result.toneAverage = result.toneCount > 0 ? Math.round(result.toneTotal / result.toneCount) : -1;
