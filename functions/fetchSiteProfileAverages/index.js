@@ -194,9 +194,9 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       point,
                       COUNT(point) as count,
                       teacher,
-                      FORMAT_DATE('%D', DATE(codedTime)) AS startDate,
+                      FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where (${teacherSqlQuery}) and codedTime <= '${endDate}' and codedTime >= '${startDate}'
+                      where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY startDate, teacher, point
                       ORDER BY startDate ASC;`;
     }
