@@ -663,6 +663,8 @@ class TeacherProfileResults extends React.Component {
       // Get the actual data for this line
       var trendData = trends[teacher.id][trendIndex]
 
+      console.log(trendData)
+
       // Round off all the numbers
       trendData = trendData.map(function(each_element) {
         return Math.round((each_element + Number.EPSILON) * 100) / 100
@@ -736,6 +738,8 @@ class TeacherProfileResults extends React.Component {
       labels,
       datasets: tempDataSet,
     }
+
+    console.log(lineData)
 
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })

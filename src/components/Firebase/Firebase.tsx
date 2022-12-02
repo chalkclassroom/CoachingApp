@@ -7296,7 +7296,7 @@ class Firebase {
       [leaders.filter(leader => {return leader.email.includes("program2")})[0].id]
     ];
     const programName: Array<string> = ["Reading For Success", "Writing Rainbows"];
-    const sites: Array<Array<string>> = [["site1", "site2", "site3"], ["site4", "site5"]];
+    const sites: Array<Array<string>> = [["site1", "site2", "site3"], ["site4", "site5", "site6"]];
 
     for (let i = 0; i < programId.length; i++) {
       let programInfo: Record<string, any> = {

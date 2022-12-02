@@ -143,6 +143,8 @@ class TrendData {
      // Build list of month between start date and end date
      var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
 
+     console.log(tempDate)
+
      // Set the month after the end date, formatted like Nov 21, 2022
      var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
      var months = [];
@@ -257,16 +259,17 @@ class TrendData {
     var observationDates = [...new Set(data.map(item => item.timestamp))];
 
     // Sort by date just in case
-    observationDates.sort(function(a,b){
-      return new Date(a) - new Date(b);
-    });
+    // observationDates.sort(function(a,b){
+    //   return new Date(a) - new Date(b);
+    // });
 
     var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
 
-    console.log("Observatoin Dates : ", observationDates);
+    console.log("Observatoin Dates : ", observationDates, observationDatesFormatted);
 
 
     var arraySize = observationDates.length;
+    console.log(arraySize)
 
     results[teacher.id] = {
       name: tempName,
@@ -339,7 +342,7 @@ class TrendData {
       var result = results[resultsIndex];
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < arraySize; i++)
       {
         var tempTotalInstructions = result.totalInstructions[i];
 
@@ -357,6 +360,8 @@ class TrendData {
 
       }
     }
+
+    console.log(results)
 
     return results;
 
@@ -390,6 +395,7 @@ class TrendData {
     var observationDatesFormatted = observationDates.map(o => {return new Date(o).toLocaleDateString('en-us', {year:"numeric", month:"short", day:"numeric"})} )
 
     console.log("Observation Dates : ", observationDates);
+    console.log("Observation Dates Formatted: ", observationDatesFormatted)
 
 
     var arraySize = observationDates.length;
