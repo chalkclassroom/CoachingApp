@@ -67,6 +67,32 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '3em',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
+  },
+  listItemIcon: {
+    
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    listItemText: {
+      fontFamily: 'Arimo',
+      paddingLeft: '1.3em',
+      maxHeight: '3em',
+      overflow: 'hidden',
+    },
+    listItemIcon: {
+      height: '8vh'
+    }
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    listItemText: {
+      fontFamily: 'Arimo',
+      paddingLeft: '2.3em',
+      maxHeight: '3em',
+      overflow: 'hidden',
+    },
+    listItemIcon: {
+      height: '6vh',
+    }
   }
 }));
 
@@ -224,19 +250,19 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                 <Grid container direction="column" justify="center" alignItems="center">
                   <List>
                     <ListItem button selected={tool === 'TT'} onClick={(): void => setTool('TT')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={TransitionTimeIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Transition Time" classes={{primary: classes.listItemText}} />
                     </ListItem>
                     <ListItem button selected={tool === 'IN'} onClick={(): void => setTool('IN')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={InstructionIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Level of Instruction" classes={{primary: classes.listItemText}} />
                     </ListItem>
                     <ListItem button selected={tool === 'SA'} onClick={(): void => setTool('SA')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={SequentialIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Sequential Activities" classes={{primary: classes.listItemText}} />
@@ -248,19 +274,19 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                 <Grid container direction="column" justify="center" alignItems="center">
                   <List>
                     <ListItem button selected={tool === 'CC'} onClick={(): void => setTool('CC')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={ClassroomClimateIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Classroom Climate" classes={{primary: classes.listItemText}} />
                     </ListItem>
                     <ListItem button selected={tool === 'SE'} onClick={(): void => setTool('SE')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={EngagementIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Student Engagement" classes={{primary: classes.listItemText}} />
                     </ListItem>
                     <ListItem button selected={tool === 'LI'} onClick={(): void => setTool('LI')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={LiteracyIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Literacy Instruction" classes={{primary: classes.listItemText}} />
@@ -272,19 +298,19 @@ export default function NewEventStepper(props: Props): React.ReactElement {
                 <Grid container direction="column" justify="flex-start" alignItems="flex-start">
                   <List>
                     <ListItem button selected={tool === 'MI'} onClick={(): void => setTool('MI')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={MathIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Math Instruction" classes={{primary: classes.listItemText}} />
-                    </ListItem>
+                    </ListItem >
                     <ListItem button selected={tool === 'LC'} onClick={(): void => setTool('LC')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={ListeningIconImage} />
                       </ListItemIcon>
                       <ListItemText primary="Listening to Children" classes={{primary: classes.listItemText}} />
                     </ListItem>
                     <ListItem button selected={tool === 'AC'} onClick={(): void => setTool('AC')}>
-                      <ListItemIcon>
+                      <ListItemIcon className={classes.listItemIcon}>
                         <img src={AssocCoopIconImage} />
                       </ListItemIcon>
                       <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
