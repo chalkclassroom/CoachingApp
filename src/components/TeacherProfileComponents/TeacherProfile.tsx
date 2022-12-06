@@ -325,8 +325,11 @@ class TeacherProfile extends React.Component {
 
   // When any of the date dropdowns are changed
   handleDateChange = (event: SelectChangeEvent) => {
-    const dateVal = new Date(event.target.value);
+    const dateVal = new Date(event.target.value.replace(/-/g, '\/'));
     this.setState({[event.target.name]: dateVal});
+
+    console.log(event.target.value)
+    console.log(dateVal)
 
     // Error Message Handling
     var error = this.state.error;

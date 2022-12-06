@@ -7,7 +7,6 @@ const COLLECTION_NAME = "observations";
 const admin = require('firebase-admin');
 
 
-
 var firestore;
 // If we're not in local development, we want to retrieve the firestore remotely using @google-cloud/firestore package
 if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
@@ -19,10 +18,11 @@ if(!process.env.REACT_APP_USE_LOCAL_FIRESTORE)
 // If we are in local development, we want to retrieve our local firestore using firebase-admin
 else
 {
-  if (admin.apps.length === 0) {
-    admin.initializeApp();
-  }
   firestore = admin.firestore();
+}
+
+if (admin.apps.length === 0) {
+  admin.initializeApp();
 }
 
 exports.funcUpdateCoach = functions.firestore
@@ -36,11 +36,11 @@ exports.funcUpdateCoach = functions.firestore
         const newEmail = newValue.email;
 
 
-
         if(newValue['role'] === "admin" || newValue['role'] === "coach" || newValue['role'] === "programLeader" || newValue['role'] === "siteLeader")
         {
 
-          admin.auth().getUserByEmail(prevEmail)
+          admin.auth()
+            .getUserByEmail(prevEmail)
             .then((user) => {
               if(newEmail !== prevEmail)
               {

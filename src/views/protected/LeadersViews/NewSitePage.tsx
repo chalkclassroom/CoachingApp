@@ -216,7 +216,7 @@ class NewSitePage extends React.Component<Props, State>{
             </FirebaseContext.Consumer>
             {savedSiteName  &&
             <Alert severity={'success'}>Site has been created with the name "{savedSiteName}"</Alert>}
-
+            
 
             <div className={classes.formContainer}>
                 <Grid container

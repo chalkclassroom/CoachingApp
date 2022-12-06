@@ -171,10 +171,10 @@ class AveragesData {
 
 
       // Gather info for the site bar
-      siteBar.nonspecificapproval += result.nonspecificapproval;
-      siteBar.specificapproval += result.specificapproval;
-      siteBar.disapproval += result.disapproval;
-      siteBar.redirection += result.redirection;
+      siteBar.nonspecificapproval += result.nonspecificapprovalAverage;
+      siteBar.specificapproval += result.specificapprovalAverage;
+      siteBar.disapproval += result.disapprovalAverage;
+      siteBar.redirection += result.redirectionAverage;
 
 
       siteBar.toneCount += result.toneCount;
@@ -185,14 +185,22 @@ class AveragesData {
     }
 
     // Calculate the site bar averages
-    siteBar.nonspecificapprovalAverage = siteBar.nonspecificapproval > 0 ? (siteBar.nonspecificapproval / siteBar.total).toFixed(2) * 100 : 0;
-    siteBar.specificapprovalAverage = siteBar.specificapproval > 0 ? (siteBar.specificapproval / siteBar.total).toFixed(2) * 100 : 0;
-    siteBar.disapprovalAverage = siteBar.disapproval > 0 ? (siteBar.disapproval / siteBar.total).toFixed(2) * 100 : 0;
-    siteBar.redirectionAverage = siteBar.redirection > 0 ? (siteBar.redirection / siteBar.total).toFixed(2) * 100 : 0;
+    //siteBar.nonspecificapprovalAverage = siteBar.nonspecificapproval > 0 ? (siteBar.nonspecificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    //siteBar.specificapprovalAverage = siteBar.specificapproval > 0 ? (siteBar.specificapproval / siteBar.total).toFixed(2) * 100 : 0;
+    //siteBar.disapprovalAverage = siteBar.disapproval > 0 ? (siteBar.disapproval / siteBar.total).toFixed(2) * 100 : 0;
+    //siteBar.redirectionAverage = siteBar.redirection > 0 ? (siteBar.redirection / siteBar.total).toFixed(2) * 100 : 0;
+
+    siteBar.nonspecificapprovalAverage = siteBar.nonspecificapproval > 0 ? Math.round( parseFloat( (siteBar.nonspecificapproval / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.specificapprovalAverage = siteBar.specificapproval > 0 ? Math.round( parseFloat( (siteBar.specificapproval / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.disapprovalAverage = siteBar.disapproval > 0 ? Math.round( parseFloat( (siteBar.disapproval / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.redirectionAverage = siteBar.redirection > 0 ? Math.round( parseFloat( (siteBar.redirection / Object.keys(results).length).toFixed(2) ) ) : 0;
 
     siteBar.toneAverage = siteBar.toneCount > 0 ? (siteBar.toneTotal / siteBar.toneCount).toFixed(1) : 0;
 
     results.siteBar = siteBar;
+
+    console.log("RESULTS ======>>> ", results);
+
 
     return results;
 
@@ -332,6 +340,22 @@ class AveragesData {
       results[teacherId][row.instructionType] += row.count;
     }
 
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      hlq: 0,
+      hlqResponse: 0,
+      llq: 0,
+      llqResponse: 0,
+
+    }
+
+
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -344,7 +368,33 @@ class AveragesData {
       result.hlqResponseAverage = result.hlqResponse > 0 ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqAverage = result.llq > 0 ? (result.llq / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+
+
+      // Gather info for the site bar
+      siteBar.hlq += result.hlqAverage;
+      siteBar.hlqResponse += result.hlqResponseAverage;
+      siteBar.llq += result.llqAverage;
+      siteBar.llqResponse += result.llqResponseAverage;
+
+      siteBar.total += tempTotalInstructions;
+
     }
+
+
+    // Calculate the site bar averages
+    // siteBar.hlqAverage = siteBar.hlq > 0 ? (siteBar.hlq / siteBar.total).toFixed(2) * 100 : 0;
+    // siteBar.hlqResponseAverage = siteBar.hlqResponse > 0 ? (siteBar.hlqResponse / siteBar.total).toFixed(2) * 100 : 0;
+    // siteBar.llqAverage = siteBar.llq > 0 ? (siteBar.llq / siteBar.total).toFixed(2) * 100 : 0;
+    // siteBar.llqResponseAverage = siteBar.llqResponse > 0 ? (siteBar.llqResponse / siteBar.total).toFixed(2) * 100 : 0;
+
+    // Calculate the site bar averages
+    siteBar.hlqAverage = siteBar.hlq > 0 ? Math.round( parseFloat( (siteBar.hlq / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.hlqResponseAverage = siteBar.hlqResponse > 0 ? Math.round( parseFloat( (siteBar.hlqResponse / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.llqAverage = siteBar.llq > 0 ? Math.round( parseFloat( (siteBar.llq / Object.keys(results).length).toFixed(2) ) ) : 0;
+    siteBar.llqResponseAverage = siteBar.llqResponse > 0 ? Math.round( parseFloat( (siteBar.llqResponse / Object.keys(results).length).toFixed(2) ) ) : 0;
+
+    results.siteBar = siteBar;
 
     return results;
 
@@ -375,6 +425,7 @@ class AveragesData {
         mildlyEngaged: 0,
         engaged: 0,
         highlyEngaged: 0,
+        totalPoints: 0,
       };
 
     }
@@ -404,8 +455,21 @@ class AveragesData {
           break;
       }
 
+      // Calculate the total score
+      results[teacherId].totalPoints += row.point * row.count;
+
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions += row.count;
+    }
+
+
+    // We're going to have a bar for site's total averages lets gather info for that
+    var siteBar = {
+      name: "Site Average",
+
+      total: 0,
+
+      totalPoints: 0,
     }
 
     // Calculate the averages in percentages
@@ -421,7 +485,15 @@ class AveragesData {
       result.engagedAverage = result.engaged > 0 ? (result.engaged / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.highlyEngagedAverage = result.highlyEngaged > 0 ? (result.highlyEngaged / tempTotalInstructions).toFixed(2) * 100 : 0;
 
+      result.totalPointsAverage = result.totalPoints > 0 ? (result.totalPoints / tempTotalInstructions).toFixed(2) : 0;
+
+      siteBar.totalPoints += parseFloat(result.totalPointsAverage);
+
     }
+
+    siteBar.totalPointsAverage = siteBar.totalPoints > 0 ? (siteBar.totalPoints / Object.keys(results).length).toFixed(2) : 0;
+
+    results.siteBar = siteBar;
 
     return results;
 

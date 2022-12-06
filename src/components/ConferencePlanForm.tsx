@@ -20,6 +20,8 @@ import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { changeTeacher } from '../state/actions/teacher';
+import { connect } from 'react-redux';
 
 const BlankTheme = createTheme({
   palette: {
@@ -74,6 +76,8 @@ interface Props {
   notesModal: boolean,
   viewClick(view:string): void 
   practice: string
+  changeTeacher(teacher: string): void
+  teacherList: Array<Types.Teacher>,
 }
 
 interface State {
@@ -409,6 +413,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
   };
 
   handleConferencePlanClick = async () => {
+    this.props.changeTeacher(this.props.teacher)
+
     const types = {
       'FoundationalTeacher': "Foundational",
       'FoundationalChild': "Foundational",
@@ -430,8 +436,13 @@ class ConferencePlanForm extends React.Component<Props, State> {
       this.props.practice.split(" ")
         .map(str => practice += str.substring(0, 1).toUpperCase() + str.substring(1))
       path = "/" + practice + "Results"
+    }
+
+    if (path === "/LiteracyInstructionResults") {
       useFirebase = true
     }
+
+    console.log(this.props.teacher)
 
     if (!useFirebase) {
       this.props.history?.push({pathname: path, state: {view: 'questions'}})
@@ -921,4 +932,14 @@ class ConferencePlanForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(ConferencePlanForm);
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(ConferencePlanForm));
