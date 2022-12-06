@@ -165,9 +165,9 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(entryType) as count,
                       point,
                       teacher,
-                      FORMAT_DATE('%D', DATE(codedTime)) AS startDate,
+                      FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
-                      where teacher = '${teacherId}' and codedTime <= '${endDate}' and codedTime >= '${startDate}'
+                      where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY startDate, teacher, entryType, point
                       ORDER BY startDate ASC;`;
     }

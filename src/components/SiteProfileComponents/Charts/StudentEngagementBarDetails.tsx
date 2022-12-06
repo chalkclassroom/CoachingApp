@@ -29,7 +29,7 @@ const averageLine = {
  * @class EngagementBarDetails
  * @return {void}
  */
-class ClassroomClimateBarDetails extends React.Component<Props, {}> {
+class StudentEngagementBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -75,10 +75,18 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     var graphData = {};
 
 
-    var specificApproval = [];
-    var generalApproval = [];
-    var redirectionAverage = [];
-    var disapprovalAverage = [];
+    var dataSets = [
+      {
+        backgroundColor: [],
+        hoverBackgroundColor: [],
+        data: [],
+        borderColor: [],
+        borderWidth: 5,
+      }
+    ];
+
+
+    var totalPointsAverage = [];
     for(var teacherIndex in data)
     {
 
@@ -93,121 +101,20 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
       }
 
 
-      specificApproval.push(Math.round((teacher['specificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      generalApproval.push(Math.round((teacher['nonspecificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      redirectionAverage.push(Math.round((teacher['redirectionAverage'] + Number.EPSILON) * 100) / 100);
-      disapprovalAverage.push(Math.round((teacher['disapprovalAverage'] + Number.EPSILON) * 100) / 100);
+      var tempTotalPointsAverage = parseFloat(teacher['totalPointsAverage']);
 
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
-
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
+      dataSets[0].backgroundColor.push("#ED7D31");
+      dataSets[0].hoverBackgroundColor.push("#ED7D31");
+      dataSets[0].borderColor.push("rgba(0,0,0,0)");
+      dataSets[0].data.push(tempTotalPointsAverage);
 
     }
 
-
-    // We need to set the site average data
-    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    var dataSize = Object.keys(data).length;
-
-    var siteAverageSpecificeApproval = new Array(dataSize).fill(0);
-    siteAverageSpecificeApproval[dataSize - 1] = Math.round((data.siteBar.specificapprovalAverage + Number.EPSILON) * 100) / 100;
-
-    var siteAverageGeneralApproval = new Array(dataSize).fill(0);
-    siteAverageGeneralApproval[dataSize - 1] = Math.round((data.siteBar.nonspecificapprovalAverage + Number.EPSILON) * 100) / 100;
-
-    var siteAverageRedirectionAverage = new Array(dataSize).fill(0);
-    siteAverageRedirectionAverage[dataSize - 1] = Math.round((data.siteBar.redirectionAverage + Number.EPSILON) * 100) / 100;
-
-    var siteAverageDisapprovalAverage = new Array(dataSize).fill(0);
-    siteAverageDisapprovalAverage[dataSize - 1] = Math.round((data.siteBar.disapprovalAverage + Number.EPSILON) * 100) / 100;
-
-
-    // Use that data to create our dataset
-    var dataSets = [
-      {
-        label: 'Specific Approval',
-        data: specificApproval,
-        backgroundColor: "#0988EC"
-      },
-      {
-        label: 'General Approval',
-        data: generalApproval,
-        backgroundColor: "#094492"
-      },
-      {
-        label: 'Redirection',
-        data: redirectionAverage,
-        backgroundColor: "#FFA812"
-      },
-      {
-        label: 'Disapproval',
-        data: disapprovalAverage,
-        backgroundColor: "#FF7F00"
-      },
-
-      // The total Site Averages
-      {
-        label: 'Specific Approval Site Average',
-        data: siteAverageSpecificeApproval,
-        backgroundColor: "#FFF",
-        borderColor: "#0988EC",
-        borderWidth: 4,
-      },
-      {
-        label: 'General Approval Site Average',
-        data: siteAverageGeneralApproval,
-        data: siteAverageGeneralApproval,
-        backgroundColor: "#FFF",
-        borderColor: "#094492",
-        borderWidth: 4,
-      },
-      {
-        label: 'Redirection Site Average',
-        data: siteAverageRedirectionAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#FFA812",
-        borderWidth: 4,
-      },
-      {
-        label: 'Disapproval Site Average',
-        data: siteAverageDisapprovalAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#FF7F00",
-        borderWidth: 4,
-      }
-    ]
-
-    /*
-     * Set placement for the site average bar
-     */
-    var siteAverage = 0;
-    for(var i = 0; i < graphData.length; i++)
-    {
-      siteAverage += graphData[i];
-    }
-    siteAverage = (siteAverage / graphData.length) / 100;
-
-    const chartHeight = 342;
-    const chartTopPadding = 36;
-
-
-    var topPos = (chartTopPadding + chartHeight - (chartHeight * siteAverage));
-
-    var averageLineStyle = {
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'flex-start',
-        marginBottom: 8,
-        height: '20px',
-        width: '105%',
-        position: 'absolute',
-        left: '95px',
-        top: topPos + 'px',
-    };
+    // Add the Site Average Bar
+    dataSets[0].backgroundColor.push("#FFFFFF");
+    dataSets[0].hoverBackgroundColor.push("#FFFFFF");
+    dataSets[0].borderColor.push("#E94635");
+    dataSets[0].data.push(data.siteBar.totalPointsAverage);
 
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
@@ -252,9 +159,19 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <div style={{padding: 30}}>
-        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
-        <div className={"realChart"} style={{height: 500}}>
+      <div style={{padding: '30px 30px 0px 30px'}}>
+        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Engagement Rating</h2>
+        <div className={"realChart"} style={{height: 500, position: 'relative'}}>
+
+          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 0, left: '-150px'}}>
+            <div style={{flex:1}}>Highly Engaged</div>
+            <div style={{flex:1}}>Engaged</div>
+            <div style={{flex:1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+              <div>Mildly Engaged</div>
+              <div style={{transform: 'translateY(15px)', textAlign: 'right'}}>Off Task</div>
+            </div>
+          </div>
+
           <Bar
             data={childBehaviorsData}
             options={{
@@ -267,44 +184,46 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                 yAxes: [
                   {
                     ticks: {
-                      display:false,
+                      display:true,
                       min: 0,
-                      max: 100,
-                      stepSize: 10,
+                      max: 3,
+                      stepSize: 1,
                       fixedStepSize: 1,
                       fontSize: 16,
                       fontColor: 'black',
+                      padding: 20,
                       // Include a percent sign in the ticks
-                      callback: function(value, index, values) {
-                          return value + '%';
-                      },
+                      callback: (value, index, values) => {
+                        return value
+                      }
                     },
-                    scaleLabel: {
-                      display: false,
-                      labelString: '',
-                      fontSize: 16,
-                      fontColor: 'black'
-                    },
-                    stacked: true,
                     gridLines: {
-                      color: "rgba(0,0,0,0)",
+                      drawBorder: false,
+                      drawTicks: false,
+                      tickMarkLength: 20,
+
                     }
                   }
                 ],
                 xAxes: [
                   {
                     ticks: {
+                      display: true,
                       fontSize: 16,
                       fontColor: 'black',
                       callback: (value, index, values) => {
                         return value
                       }
                     },
-                    stacked: true,
                     gridLines: {
                       display: false,
                       color: "rgba(0,0,0,0)",
-                    }
+                    },
+                    scaleLabel: {
+                      display: false,
+                      fontSize: 16,
+                      fontColor: 'black'
+                    },
                   }
                 ]
               },
@@ -312,11 +231,12 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                 display: true,
                 labels: {
                   filter: function(legendItem, data) {
-                        return !legendItem.text.includes('Site Average')
+                        //return !legendItem.text.includes('Site Average')
                   },
                   padding: 20,
                   boxWidth: 12,
                 },
+                position: 'bottom',
               },
               title: {
                 display: this.props.title,
@@ -334,9 +254,12 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                     size: 14,
                     weight: '400'
                   },
+                  anchor: "end",
+                  offset: -30,
+                  align: "start",
                   formatter: function(value: number): number | null {
                     if (value > 0) {
-                      return value + "%";
+                      return value;
                     } else {
                       return null;
                     }
@@ -344,7 +267,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                 },
 
               },
-              maintainAspectRatio: false
+              maintainAspectRatio: false,
             }}
             plugins={[plugin]}
           />
@@ -355,4 +278,4 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default ClassroomClimateBarDetails;
+export default StudentEngagementBarDetails;

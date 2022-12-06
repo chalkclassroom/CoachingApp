@@ -145,19 +145,19 @@ class AveragesData {
       var result = results[resultsIndex];
 
       var tempDataArray = data.filter(o => o.behaviorResponse === "nonspecificapproval").map(o => {return o.count});
-      result.nonspecificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.nonspecificapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.nonspecificapprovalAverage = Math.round(result.nonspecificapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "specificapproval").map(o => {return o.count});
-      result.specificapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.specificapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.specificapprovalAverage = Math.round(result.specificapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "disapproval").map(o => {return o.count});
-      result.disapprovalAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.disapprovalAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.disapprovalAverage = Math.round(result.disapprovalAverage)
 
       tempDataArray = data.filter(o => o.behaviorResponse === "redirection").map(o => {return o.count});
-      result.redirectionAverage = tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
+      result.redirectionAverage = tempDataArray.length === 0 ? 0 : tempDataArray.reduce((a, b) => a + b) / tempDataArray.length;
       result.redirectionAverage = Math.round(result.redirectionAverage)
 
       result.toneAverage = result.toneCount > 0 ? Math.round(result.toneTotal / result.toneCount) : -1;
@@ -335,7 +335,6 @@ class AveragesData {
    * Student Engagement
    */
   calculateStudentEngagementAverages = (data, teacher) => {
-
     // Initialize the array that will hold all the data
     var results = {};
 
@@ -356,6 +355,7 @@ class AveragesData {
       centersGroup: 0,
       totalPoints: 0,
       totalObservations: 0,
+      totalInstructions: 0,
     };
 
 
@@ -367,74 +367,107 @@ class AveragesData {
 
       var teacherId = teacher.id;
 
-      results[teacherId].totalPoints += row.point
-      results[teacherId].totalObservations += row.count
-
       if (row.entryType === "small" && row.point === 0) {
-        results[teacherId].smallGroup += 0
-        results[teacherId].smallRows++
+        results[teacherId].smallGroup += 0 * row.count;
+        results[teacherId].smallRows += row.count;
+        results[teacherId].totalPoints += 0 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "small" && row.point === 1) {
-        results[teacherId].smallGroup += 1
-        results[teacherId].smallRows++
+        results[teacherId].smallGroup += 1 * row.count;
+        results[teacherId].smallRows += row.count;
+        results[teacherId].totalPoints += 1 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "small" && row.point === 2) {
-        results[teacherId].smallGroup += 2
-        results[teacherId].smallRows++
+        results[teacherId].smallGroup += 2 * row.count;
+        results[teacherId].smallRows += row.count;
+        results[teacherId].totalPoints += 2 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "small" && row.point === 3) {
-        results[teacherId].smallGroup += 3
-        results[teacherId].smallRows++
+        results[teacherId].smallGroup += 3 * row.count;
+        results[teacherId].smallRows += row.count;
+        results[teacherId].totalPoints += 3 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "whole" && row.point === 0) {
-        results[teacherId].wholeGroup += 0
-        results[teacherId].wholeRows++
+        results[teacherId].wholeGroup += 0 * row.count;
+        results[teacherId].wholeRows += row.count;
+        results[teacherId].totalPoints += 0 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "whole" && row.point === 1) {
-        results[teacherId].wholeGroup += 1
-        results[teacherId].wholeRows++
+        results[teacherId].wholeGroup += 1 * row.count;
+        results[teacherId].wholeRows += row.count;
+        results[teacherId].totalPoints += 1 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "whole" && row.point === 2) {
-        results[teacherId].wholeGroup += 2
-        results[teacherId].wholeRows++
+        results[teacherId].wholeGroup += 2 * row.count;
+        results[teacherId].wholeRows += row.count;
+        results[teacherId].totalPoints += 2 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "whole" && row.point === 3) {
-        results[teacherId].wholeGroup += 3
-        results[teacherId].wholeRows++
+        results[teacherId].wholeGroup += 3 * row.count;
+        results[teacherId].wholeRows += row.count;
+        results[teacherId].totalPoints += 3 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "transition" && row.point === 0) {
-        results[teacherId].transitionGroup += 0
-        results[teacherId].transitionRows++
+        results[teacherId].transitionGroup += 0 * row.count;
+        results[teacherId].transitionRows += row.count;
+        results[teacherId].totalPoints += 0 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "transition" && row.point === 1) {
-        results[teacherId].transitionGroup += 1
-        results[teacherId].transitionRows++
+        results[teacherId].transitionGroup += 1 * row.count;
+        results[teacherId].transitionRows += row.count;
+        results[teacherId].totalPoints += 1 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "transition" && row.point === 2) {
-        results[teacherId].transitionGroup += 2
-        results[teacherId].transitionRows++
+        results[teacherId].transitionGroup += 2 * row.count;
+        results[teacherId].transitionRows += row.count;
+        results[teacherId].totalPoints += 2 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "transition" && row.point === 3) {
-        results[teacherId].transitionGroup += 3
-        results[teacherId].transitionRows++
+        results[teacherId].transitionGroup += 3 * row.count;
+        results[teacherId].transitionRows += row.count;
+        results[teacherId].totalPoints += 3 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "centers" && row.point === 0) {
-        results[teacherId].centersGroup += 0
-        results[teacherId].centersRows++
+        results[teacherId].centersGroup += 0 * row.count;
+        results[teacherId].centersRows += row.count;
+        results[teacherId].totalPoints += 0 * row.count;
+        results[teacherId].totalObservations += 1
       }
+
       if (row.entryType === "centers" && row.point === 1) {
-        results[teacherId].centersGroup += 1
-        results[teacherId].centersRows++
+        results[teacherId].centersGroup += 1 * row.count;
+        results[teacherId].centersRows += row.count;
+        results[teacherId].totalPoints += 1 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "centers" && row.point === 2) {
-        results[teacherId].centersGroup += 2
-        results[teacherId].centersRows++
+        results[teacherId].centersGroup += 2 * row.count;
+        results[teacherId].centersRows += row.count;
+        results[teacherId].totalPoints += 2 * row.count;
+        results[teacherId].totalObservations += 1
       }
       if (row.entryType === "centers" && row.point === 3) {
-        results[teacherId].centersGroup += 3
-        results[teacherId].centersRows++
+        results[teacherId].centersGroup += 3 * row.count;
+        results[teacherId].centersRows += row.count;
+        results[teacherId].totalPoints += 3 * row.count;
+        results[teacherId].totalObservations += 1
       }
+
+      results[teacherId].totalInstructions += row.count
     }
+
 
     // Calculate the averages in percentages
     // Go through each teacher
@@ -448,7 +481,7 @@ class AveragesData {
       result.wholeGroupAverage = result.wholeGroup > 0 ? (result.wholeGroup / result.wholeRows) : 0;
       result.transitionGroupAverage = result.transitionGroup > 0 ? (result.transitionGroup / result.transitionRows) : 0;
       result.centersGroupAverage = result.centersGroup > 0 ? (result.centersGroup / result.centersRows) : 0;
-      result.totalAverage = result.totalPoints / result.totalObservations
+      result.totalAverage = result.totalPoints / result.totalInstructions
     }
 
     return results;
