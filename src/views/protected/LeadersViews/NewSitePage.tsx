@@ -216,8 +216,7 @@ class NewSitePage extends React.Component<Props, State>{
             </FirebaseContext.Consumer>
             {savedSiteName  &&
             <Alert severity={'success'}>Site has been created with the name "{savedSiteName}"</Alert>}
-
-            <Button onClick={() => {this.context.populateFirebase()}}>CLICK ME</Button>
+            
 
             <div className={classes.formContainer}>
                 <Grid container
