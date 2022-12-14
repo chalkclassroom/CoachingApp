@@ -53,6 +53,16 @@ import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 
+const StyledSelect = withStyles({
+  root: {
+    padding: '11px 14px',
+    width: '200px',
+  },
+  disabled: {
+    opacity: 0.3
+  }
+})(Select);
+
 const centerRow = {
   display: 'flex',
   alignItems: 'center',
@@ -99,6 +109,9 @@ const LineGraphOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
+  legend: {
+    display: false
+  },
   tooltips: {
     mode: 'index',
     intersect: false,
@@ -666,9 +679,13 @@ class SiteProfileResults extends React.Component {
       // })
 
       // If there isn't a color set for this teacher, set it
+      if (this.props.observationType === "studentEngagement") {
+        lineColors[i] = "#FF7F00"
+      }
       if (!lineColors[i]) {
         lineColors[i] = this.randomRgbColor()
       }
+
       var tempData = {
         label: fullName,
         data: chosenData,
@@ -980,7 +997,17 @@ class SiteProfileResults extends React.Component {
               {/*
                 The "trends" line graph
               */}
-              {this.state.tabState == 1 &&  Object.keys(this.state.averages).length > 0 ? (
+              {this.state.tabState == 1 &&  Object.keys(this.state.averages).length > 0 ? ( <>
+                <FormControl variant="outlined">
+                  <StyledSelect
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  // value={this.state.selectedProgram}
+                  // onChange={this.handleChangeDropdown}
+                  name="selectedProgram"
+                >
+                </StyledSelect>
+                </FormControl>
                 <Grid
                   container
                   justify={'center'}
@@ -992,7 +1019,7 @@ class SiteProfileResults extends React.Component {
                     options={LineGraphOptions}
                   />
                 </Grid>
-              ) : null }
+                </>) : null }
 
 
               {/*

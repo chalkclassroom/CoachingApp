@@ -459,16 +459,17 @@ class TrendData {
 
 
     // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"long"});
 
     // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"long"});
     var months = [];
     while(tempDate !== endDatePlusOneMonth)
     {
-      months.push(tempDate);
+      console.log(tempDate)
+      months.push(tempDate.slice(0, tempDate.length - 5));
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"long"});
     }
 
     var monthsCount = months.length;
@@ -512,7 +513,7 @@ class TrendData {
      var teacherId = row.teacher.split("/")[2];
 
      //var rowMonth = new Date(row.startDate).getMonth();
-     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
+     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"long"}) );
 
      // Add to total # of intervals
      results[teacherId].totalInstructions[rowMonth] += row.count;
