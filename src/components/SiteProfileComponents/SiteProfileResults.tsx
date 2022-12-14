@@ -635,6 +635,7 @@ class SiteProfileResults extends React.Component {
     }
     */
 
+    console.log(trends)
 
     this.setState({ averages: averages, trends: trends })
 
@@ -660,9 +661,9 @@ class SiteProfileResults extends React.Component {
       var chosenData = trends[teacher.id][type]
 
       // Round off all the numbers
-      chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
+      // chosenData = chosenData.map(function(each_element) {
+      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+      // })
 
       // If there isn't a color set for this teacher, set it
       if (!lineColors[i]) {
@@ -714,6 +715,8 @@ class SiteProfileResults extends React.Component {
       labels,
       datasets: tempDataSet,
     }
+
+    console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -834,6 +837,45 @@ class SiteProfileResults extends React.Component {
       'levelOfInstruction',
       "studentEngagement",
     ]
+
+    if(this.props.observationType === "studentEngagement")
+    {
+      LineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top',
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold'
+        }
+      }
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 3
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+        if (value == 0) {
+          return 'Off Task'
+        }
+        if (value == 1) {
+          return 'Mildly Engaged'
+        }
+        if (value == 2) {
+          return 'Engaged'
+        }
+        if (value == 3) {
+          return 'Highly Engaged'
+        }
+      }
+    } else {
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 100
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+            return value + '%'
+      }
+    }
 
     return (
       <div id="siteProfileResultsContainer">
