@@ -279,6 +279,7 @@ class SiteProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
+      selectedTeacher: 'None',
       radioValue: '',
       BQData: [],
       averagesClass: new AveragesData(),
@@ -327,7 +328,7 @@ class SiteProfileResults extends React.Component {
       (v, i, a) => a.findIndex(v2 => v2 === v) === i
     )
 
-    this.getSitesTeachersInfo(siteCoachIds)
+    await this.getSitesTeachersInfo(siteCoachIds)
 
     // Get a list of the coaches for the chosen site.
     /*
@@ -359,6 +360,7 @@ class SiteProfileResults extends React.Component {
       this.props.selectedSiteName
     )
 
+    console.log(teacherResults)
     // Remove proactice teacher
     teacherResults = teacherResults.filter(o => o.id !== 'rJxNhJmzjRZP7xg29Ko6')
 
@@ -785,6 +787,14 @@ class SiteProfileResults extends React.Component {
     })
   }
 
+  handleTrendsDropdown = (event: SelectChangeEvent) => {
+      this.setState({selectedTeacher: event.target.value})
+      let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
+        return teacher.id != event.target.value
+      })
+      this.setLineGraphData(modifiedInfo, this.state.radioValue)
+  }
+
   // When any of the checkboxes are checked or unchecked
   handleCheckboxChange = (event: SelectChangeEvent) => {
     // If we're checking it, add to array
@@ -1002,10 +1012,18 @@ class SiteProfileResults extends React.Component {
                   <StyledSelect
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  // value={this.state.selectedProgram}
-                  // onChange={this.handleChangeDropdown}
+                  value={this.state.selectedTeacher}
+                  onChange={this.handleTrendsDropdown}
                   name="selectedProgram"
+
                 >
+                  <MenuItem value="None">Select Teacher</MenuItem>
+                  {this.state.teacherInfo.map(
+                            (teacher, index)=>{
+                              return <MenuItem value={teacher.id} key={index}>
+                                    {`${teacher.firstName} ${teacher.lastName}`}
+                                  </MenuItem>
+                              })}
                 </StyledSelect>
                 </FormControl>
                 <Grid
