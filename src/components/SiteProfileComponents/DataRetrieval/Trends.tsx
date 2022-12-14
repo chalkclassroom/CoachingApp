@@ -485,17 +485,20 @@ class TrendData {
 
      results[teachers[teacherIndex].id] = {
        name: tempName,
-       totalInstructions: new Array(monthsCount).fill(0),
-       offTask: new Array(monthsCount).fill(0),
-       mildlyEngaged: new Array(monthsCount).fill(0),
-       engaged: new Array(monthsCount).fill(0),
-       highlyEngaged: new Array(monthsCount).fill(0),
+      //  totalInstructions: new Array(monthsCount).fill(0),
+      //  offTask: new Array(monthsCount).fill(0),
+      //  mildlyEngaged: new Array(monthsCount).fill(0),
+      //  engaged: new Array(monthsCount).fill(0),
+      //  highlyEngaged: new Array(monthsCount).fill(0),
 
 
-       offTaskAverage: new Array(monthsCount).fill(0),
-       mildlyEngagedAverage: new Array(monthsCount).fill(0),
-       engagedAverage: new Array(monthsCount).fill(0),
-       highlyEngagedAverage: new Array(monthsCount).fill(0),
+      //  offTaskAverage: new Array(monthsCount).fill(0),
+      //  mildlyEngagedAverage: new Array(monthsCount).fill(0),
+      //  engagedAverage: new Array(monthsCount).fill(0),
+      //  highlyEngagedAverage: new Array(monthsCount).fill(0),
+      totalPoints: new Array(monthsCount).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
+      dailyAverage: new Array(monthsCount).fill(0),
 
        lineChartLabels: months,
      };
@@ -516,25 +519,27 @@ class TrendData {
      var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"long"}) );
 
      // Add to total # of intervals
-     results[teacherId].totalInstructions[rowMonth] += row.count;
+    //  results[teacherId].totalInstructions[rowMonth] += row.count;
 
      // Add to behavior types
-     switch (row.point) {
-       case 0:
-         results[teacherId].offTask[rowMonth] += row.count;
-         break;
-       case 1:
-         results[teacherId].mildlyEngaged[rowMonth] += row.count;
-         break;
-       case 2:
-         results[teacherId].engaged[rowMonth] += row.count;
-         break;
-       case 3:
-         results[teacherId].highlyEngaged[rowMonth] += row.count;
-         break;
-       default:
-         break;
-     }
+    //  switch (row.point) {
+    //    case 0:
+    //      results[teacherId].offTask[rowMonth] += row.count;
+    //      break;
+    //    case 1:
+    //      results[teacherId].mildlyEngaged[rowMonth] += row.count;
+    //      break;
+    //    case 2:
+    //      results[teacherId].engaged[rowMonth] += row.count;
+    //      break;
+    //    case 3:
+    //      results[teacherId].highlyEngaged[rowMonth] += row.count;
+    //      break;
+    //    default:
+    //      break;
+    //  }
+    results[teacherId].totalPoints[rowMonth] += row.point
+    results[teacherId].totalIntervals[rowMonth] += row.count
 
    }
 
@@ -547,12 +552,13 @@ class TrendData {
      // Go through the months
      for(var i = 0; i < monthsCount; i++)
      {
-       var tempTotalInstructions = result.totalInstructions[i];
+      //  var tempTotalInstructions = result.totalInstructions[i];
 
-       result.offTaskAverage[i] = result.offTask[i] > 0 ? (result.offTask[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.mildlyEngagedAverage[i] = result.mildlyEngaged[i] > 0 ? (result.mildlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.engagedAverage[i] = result.engaged[i] > 0 ? (result.engaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.offTaskAverage[i] = result.offTask[i] > 0 ? (result.offTask[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.mildlyEngagedAverage[i] = result.mildlyEngaged[i] > 0 ? (result.mildlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.engagedAverage[i] = result.engaged[i] > 0 ? (result.engaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.dailyAverage[i] = (result.totalPoints[i] / result.totalIntervals[i])
 
      }
    }

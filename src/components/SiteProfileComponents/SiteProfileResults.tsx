@@ -221,8 +221,12 @@ const trendsToShow = {
     childMathBehavior: {
       "childNonMathAverage": "#EC2409",
       "childMathAverage": "#094492"
+    },
+    studentEngagement : {
+      "dailyAverage": "#FF7F00",
+      "totalIntervals": "#FF7F00",
+      "totalPoints": "#FF7F00"
     }
-
   },
 }
 
@@ -790,7 +794,7 @@ class SiteProfileResults extends React.Component {
   handleTrendsDropdown = (event: SelectChangeEvent) => {
       this.setState({selectedTeacher: event.target.value})
       let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
-        return teacher.id != event.target.value
+        return teacher.id == event.target.value
       })
       this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
@@ -883,16 +887,16 @@ class SiteProfileResults extends React.Component {
       LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
       LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
         if (value == 0) {
-          return 'Off Task'
+          return 'Off Task  0  '
         }
         if (value == 1) {
-          return 'Mildly Engaged'
+          return 'Mildly Engaged  1  '
         }
         if (value == 2) {
-          return 'Engaged'
+          return 'Engaged  2  '
         }
         if (value == 3) {
-          return 'Highly Engaged'
+          return 'Highly Engaged  3  '
         }
       }
     } else {

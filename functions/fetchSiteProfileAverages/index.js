@@ -191,13 +191,15 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
     if(observationType == "engagement")
     {
       sqlQuery = `SELECT
+                      entryType,
+                      COUNT(entryType) as et,
                       point,
                       COUNT(point) as count,
                       teacher,
                       FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY startDate, teacher, point
+                      GROUP BY startDate, teacher, point, entryType
                       ORDER BY startDate ASC;`;
     }
 
