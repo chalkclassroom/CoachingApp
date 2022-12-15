@@ -547,9 +547,11 @@ class TrendData {
    var siteBar = {
     name: "Site Average",
 
-    total: 0,
+    dailyAverage: new Array(monthsCount).fill(0),
 
-    totalPoints: 0,
+    totalPoints: new Array(monthsCount).fill(0),
+
+    lineChartLabels: months,
   }
 
    // Calculate the averages in percentages
@@ -571,12 +573,11 @@ class TrendData {
 
       console.log(result.dailyAverage[i])
 
-      siteBar.totalPoints = result.dailyAverage[i] > 0 ? siteBar.totalPoints + result.dailyAverage[i] : 0;
+      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i];
+      siteBar.dailyAverage[i] = siteBar.dailyAverage[i] > 0 ? (siteBar.dailyAverage[i] / Object.keys(results).length).toFixed(2) : 0;
 
      }
    }
-
-   siteBar.total = siteBar.totalPoints > 0 ? (siteBar.totalPoints / Object.keys(results).length).toFixed(2) : 0;
 
    results.siteBar = siteBar;
 

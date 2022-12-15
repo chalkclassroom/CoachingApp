@@ -283,7 +283,7 @@ class SiteProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      selectedTeacher: 'siteBar',
+      selectedTeacher: 'None',
       radioValue: '',
       BQData: [],
       averagesClass: new AveragesData(),
@@ -667,6 +667,7 @@ class SiteProfileResults extends React.Component {
   setLineGraphData = (teachers, type) => {
 
     var trends = this.state.trends
+    console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
@@ -709,6 +710,38 @@ class SiteProfileResults extends React.Component {
       tempDataSet.push(tempData)
       i++
     }
+
+      chosenData = trends["siteBar"]["dailyAverage"]
+
+      // Round off all the numbers
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      if (this.props.observationType === "studentEngagement") {
+        lineColors[i] = "#FF7F00"
+      }
+      if (!lineColors[i]) {
+        lineColors[i] = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: "Site Average",
+        data: chosenData,
+        borderColor: lineColors[i],
+        fill: false,
+        tension: 0.0,
+      }
+
+      // Add the months so we can set the right labels for the trends chart
+      if(trends["siteBar"].lineChartLabels)
+      {
+        tempMonths = trends["siteBar"].lineChartLabels;
+      }
+
+      tempDataSet.push(tempData)
+
 
     // Get the months from the data
     const monthOptions = [
@@ -794,8 +827,7 @@ class SiteProfileResults extends React.Component {
   handleTrendsDropdown = (event: SelectChangeEvent) => {
       this.setState({selectedTeacher: event.target.value})
       let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
-        return teacher.id == event.target.value || teacher.id 
-      })
+        return teacher.id == event.target.value})
       this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
 
