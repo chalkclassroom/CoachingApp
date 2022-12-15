@@ -110,7 +110,8 @@ const LineGraphOptions = {
   pointDot: true,
   showLines: true,
   legend: {
-    display: false
+    display: false,
+    position: "top"
   },
   tooltips: {
     mode: 'index',
@@ -658,6 +659,10 @@ class SiteProfileResults extends React.Component {
 
     this.setState({ averages: averages, trends: trends })
 
+    if (this.state.selectedTeacher === "None") {
+      teachers = []
+    }
+
     // Build data for line graph
     this.setLineGraphData(teachers, this.state.radioValue)
   }
@@ -674,11 +679,16 @@ class SiteProfileResults extends React.Component {
     var i = 0
     var tempMonths = [];
 
+    if (this.props.observationType === "studentEngagement") {
+      type = "dailyAverage"
+    }
+
+
     for (var teacherIndex in teachers) {
       var teacher = teachers[teacherIndex]
       var fullName = teacher.firstName + ' ' + teacher.lastName
 
-      var chosenData = trends[teacher.id]["dailyAverage"]
+      var chosenData = trends[teacher.id][type]
 
       // Round off all the numbers
       chosenData = chosenData.map(function(each_element) {
@@ -730,6 +740,7 @@ class SiteProfileResults extends React.Component {
         label: "Site Average",
         data: chosenData,
         borderColor: lineColors[i],
+        borderDash: [10,5],
         fill: false,
         tension: 0.0,
       }
@@ -828,6 +839,13 @@ class SiteProfileResults extends React.Component {
       this.setState({selectedTeacher: event.target.value})
       let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
         return teacher.id == event.target.value})
+      if (event.target.value != "None") {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = "bottom"
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+
       this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
 

@@ -459,17 +459,17 @@ class TrendData {
 
 
     // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"long"});
+    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
 
     // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"long"});
+    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
     var months = [];
     while(tempDate !== endDatePlusOneMonth)
     {
       console.log(tempDate)
       months.push(tempDate);
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"long"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
     }
 
     var monthsCount = months.length;
@@ -517,7 +517,7 @@ class TrendData {
      var teacherId = row.teacher.split("/")[2];
 
      //var rowMonth = new Date(row.startDate).getMonth();
-     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"long"}) );
+     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
      // Add to total # of intervals
     //  results[teacherId].totalInstructions[rowMonth] += row.count;
@@ -572,11 +572,18 @@ class TrendData {
       result.dailyAverage[i] = (result.totalPoints[i] / result.totalIntervals[i])
 
       console.log(result.dailyAverage[i])
+      if (isNaN(result.dailyAverage[i])) {
+        result.dailyAverage[i] = 0
+      } 
 
-      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i];
-      siteBar.dailyAverage[i] = siteBar.dailyAverage[i] > 0 ? (siteBar.dailyAverage[i] / Object.keys(results).length).toFixed(2) : 0;
-
+      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i]
+    
      }
+   }
+   
+   for(var i = 0; i < monthsCount; i++)
+   {
+    siteBar.dailyAverage[i] = siteBar.totalPoints[i] > 0 ? parseFloat((siteBar.totalPoints[i] / Object.keys(results).length).toFixed(2)) : 0;
    }
 
    results.siteBar = siteBar;
