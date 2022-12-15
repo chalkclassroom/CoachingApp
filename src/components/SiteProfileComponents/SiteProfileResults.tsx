@@ -283,7 +283,7 @@ class SiteProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
-      selectedTeacher: 'None',
+      selectedTeacher: 'siteBar',
       radioValue: '',
       BQData: [],
       averagesClass: new AveragesData(),
@@ -677,12 +677,12 @@ class SiteProfileResults extends React.Component {
       var teacher = teachers[teacherIndex]
       var fullName = teacher.firstName + ' ' + teacher.lastName
 
-      var chosenData = trends[teacher.id][type]
+      var chosenData = trends[teacher.id]["dailyAverage"]
 
       // Round off all the numbers
-      // chosenData = chosenData.map(function(each_element) {
-      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-      // })
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
 
       // If there isn't a color set for this teacher, set it
       if (this.props.observationType === "studentEngagement") {
@@ -794,7 +794,7 @@ class SiteProfileResults extends React.Component {
   handleTrendsDropdown = (event: SelectChangeEvent) => {
       this.setState({selectedTeacher: event.target.value})
       let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
-        return teacher.id == event.target.value
+        return teacher.id == event.target.value || teacher.id 
       })
       this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }

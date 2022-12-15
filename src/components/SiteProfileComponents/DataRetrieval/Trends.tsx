@@ -467,7 +467,7 @@ class TrendData {
     while(tempDate !== endDatePlusOneMonth)
     {
       console.log(tempDate)
-      months.push(tempDate.slice(0, tempDate.length - 5));
+      months.push(tempDate);
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"long"});
     }
@@ -505,6 +505,7 @@ class TrendData {
 
    }
 
+   console.log(months)
 
    // Get number of instances for each type of data
    var tempIntervalData = 0;
@@ -543,6 +544,14 @@ class TrendData {
 
    }
 
+   var siteBar = {
+    name: "Site Average",
+
+    total: 0,
+
+    totalPoints: 0,
+  }
+
    // Calculate the averages in percentages
    // Go through each teacher
    for(var resultsIndex in results)
@@ -560,8 +569,18 @@ class TrendData {
       //  result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.dailyAverage[i] = (result.totalPoints[i] / result.totalIntervals[i])
 
+      console.log(result.dailyAverage[i])
+
+      siteBar.totalPoints = result.dailyAverage[i] > 0 ? siteBar.totalPoints + result.dailyAverage[i] : 0;
+
      }
    }
+
+   siteBar.total = siteBar.totalPoints > 0 ? (siteBar.totalPoints / Object.keys(results).length).toFixed(2) : 0;
+
+   results.siteBar = siteBar;
+
+   console.log(results)
 
    return results;
 
