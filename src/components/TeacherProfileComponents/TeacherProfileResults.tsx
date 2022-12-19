@@ -776,8 +776,7 @@ class TeacherProfileResults extends React.Component {
 
         const currDate = new Date()
 
-        pdf.save('Site_Teacher_Results_' + currDate.getMonth() + '_' + currDate.getDate() + '_' + currDate.getFullYear() + '.pdf'
-        )
+        pdf.save(`Teacher_Profile_Results_${currDate.getMonth()+1}_${currDate.getDate()}_${currDate.getFullYear()}.pdf`)
       })
       .then(() => {
         if (tableWrap) {

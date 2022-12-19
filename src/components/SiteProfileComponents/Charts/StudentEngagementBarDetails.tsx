@@ -175,6 +175,11 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
           <Bar
             data={childBehaviorsData}
             options={{
+              layout: {
+                padding: {
+                  top: 20
+                }
+              },
               animation: {
                 onComplete: function(): void {
                   isCompleted ? isCompleted() : null
@@ -244,25 +249,26 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                 fontSize: 14,
                 fontColor: 'black',
                 fontFamily: 'Arimo',
-                fontStyle: "bold"
+                fontStyle: "bold",
               },
               plugins: {
                 datalabels: {
+                  anchor: 'end',
+                  align: 'top',
+                  offset: 0,
                   display: 'auto',
                   color: 'black',
                   font: {
                     size: 14,
                     weight: '400'
                   },
-                  anchor: "end",
-                  offset: -30,
-                  align: "start",
                   formatter: function(value: number): number | null {
                     if (value > 0) {
                       return value;
                     } else {
                       return null;
                     }
+                    
                   }
                 },
 
