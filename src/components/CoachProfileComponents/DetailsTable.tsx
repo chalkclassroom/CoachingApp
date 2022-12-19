@@ -1,4 +1,5 @@
 import * as React from "react";
+import styled from "styled-components";
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 
 const practicesArr = {
@@ -31,6 +32,17 @@ const tdStyle = {
   minWidth: '75px'
 }
 
+const TableData = styled.td`
+  padding: 8px;
+  font-size: 12px;
+  text-align: left;
+  min-width: 75px;
+&:hover {
+  background-color: rgb(9, 136, 236, .4);
+  cursor: pointer;
+}
+`
+
 class DetailsTable extends React.Component<Props, {}> {
   /**
    * @param {Props} props
@@ -42,11 +54,15 @@ class DetailsTable extends React.Component<Props, {}> {
       observations: [],
       observationsRow: [],
       teacherRows: [],
+      goalType: "percent",
+      prevGoalType: "percent"
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.dataSet !== this.props.dataSet) {
+    if (prevProps.dataSet !== this.props.dataSet || this.state.goalType != this.state.prevGoalType) {
+
+      this.setState({prevGoalType: this.state.goalType})
 
       var teachers = this.props.selectedTeachers;
       var data = this.props.dataSet;
@@ -96,6 +112,7 @@ class DetailsTable extends React.Component<Props, {}> {
 
     var actionPlans = await this.props.firebase.getActionPlansForExport(this.props.selectedCoach, this.props.startDate, this.props.endDate);
 
+
     // Calculate averages and count action plans
     //teachers.forEach(item => {
     for(var itemIndex in teachers)
@@ -103,8 +120,11 @@ class DetailsTable extends React.Component<Props, {}> {
       var item = teachers[itemIndex];
 
       // Get all the action plans for this user
+      let activeForThisUser = actionPlans.filter(x => x.teacherId === item.id && x.status ==="Active")
       var actionPlansForThisUser = actionPlans.filter(x => x.teacherId === item.id && x.status === "Maintenance");
       count[item.id].actionPlans = actionPlansForThisUser.length;
+      count[item.id].active = activeForThisUser.length
+      count[item.id].actionPlanPercent = count[item.id].actionPlans === 0 && count[item.id].active === 0 ? 0 : (count[item.id].actionPlans / (count[item.id].actionPlans + count[item.id].active)) * 100
 
       // Calculate average time
       if(count[item.id].total > 0 && count[item.id].totalTimeMilliseconds > 0)
@@ -157,14 +177,26 @@ class DetailsTable extends React.Component<Props, {}> {
         }
         tempObservationData.push(tempTd);
       }
-
-      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlans}</td>{tempObservationData}</tr>);
+      this.state.goalType === "percent" ?
+      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlanPercent}%</td>{tempObservationData}</tr>)
+      : teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlans} / {count[teacher.id].active + count[teacher.id].actionPlans}</td>{tempObservationData}</tr>);
 
 
     });
 
     this.setState({teacherRows: teacherRows});
 
+  }
+
+  handleGoalChange = () => {
+    switch (this.state.goalType) {
+      default: case "percent":
+        this.setState({goalType: "fraction"})
+        break
+      case "fraction":
+        this.setState({goalType: "percent"})
+        break
+    }
   }
 
 
@@ -176,7 +208,7 @@ class DetailsTable extends React.Component<Props, {}> {
     var header2 = <span><b>Observations by CHALK Classroom Practice</b></span>;
 
     // The first 4 tds in the second row
-    var header3 = ["Teacher", "Number of Observations", "Average Duration of Observation", "Number of Goals Met"];
+    var header3 = ["Teacher", "Number of Observations", "Average Duration of Observation", "Goals Met"];
 
     return (
       <div style={{overflowX: 'auto', maxWidth: '80vw', paddingBottom: '20px'}}>
@@ -193,7 +225,9 @@ class DetailsTable extends React.Component<Props, {}> {
               <td style={tdStyle}>{header3[0]}</td>
               <td style={tdStyle}>{header3[1]}</td>
               <td style={tdStyle}>{header3[2]}</td>
-              <td style={tdStyle}>{header3[3]}</td>
+              <TableData onClick={() => {
+                this.handleGoalChange()
+              }}>{header3[3]}</TableData>
               {this.state.observationsRow}
             </tr>
             {this.state.teacherRows}
