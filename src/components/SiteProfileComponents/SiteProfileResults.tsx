@@ -53,6 +53,16 @@ import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 
+const StyledSelect = withStyles({
+  root: {
+    padding: '11px 14px',
+    width: '200px',
+  },
+  disabled: {
+    opacity: 0.3
+  }
+})(Select);
+
 const centerRow = {
   display: 'flex',
   alignItems: 'center',
@@ -99,6 +109,10 @@ const LineGraphOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
+  legend: {
+    display: false,
+    position: "top"
+  },
   tooltips: {
     mode: 'index',
     intersect: false,
@@ -208,8 +222,12 @@ const trendsToShow = {
     childMathBehavior: {
       "childNonMathAverage": "#EC2409",
       "childMathAverage": "#094492"
+    },
+    studentEngagement : {
+      "dailyAverage": "#FF7F00",
+      "totalIntervals": "#FF7F00",
+      "totalPoints": "#FF7F00"
     }
-
   },
 }
 
@@ -266,6 +284,7 @@ class SiteProfileResults extends React.Component {
       siteCoaches: [],
       teacherInfo: [],
       teacherNames: [],
+      selectedTeacher: 'None',
       radioValue: '',
       BQData: [],
       averagesClass: new AveragesData(),
@@ -314,7 +333,7 @@ class SiteProfileResults extends React.Component {
       (v, i, a) => a.findIndex(v2 => v2 === v) === i
     )
 
-    this.getSitesTeachersInfo(siteCoachIds)
+    await this.getSitesTeachersInfo(siteCoachIds)
 
     // Get a list of the coaches for the chosen site.
     /*
@@ -346,6 +365,7 @@ class SiteProfileResults extends React.Component {
       this.props.selectedSiteName
     )
 
+    console.log(teacherResults)
     // Remove proactice teacher
     teacherResults = teacherResults.filter(o => o.id !== 'rJxNhJmzjRZP7xg29Ko6')
 
@@ -635,8 +655,13 @@ class SiteProfileResults extends React.Component {
     }
     */
 
+    console.log(trends)
 
     this.setState({ averages: averages, trends: trends })
+
+    if (this.state.selectedTeacher === "None") {
+      teachers = []
+    }
 
     // Build data for line graph
     this.setLineGraphData(teachers, this.state.radioValue)
@@ -647,11 +672,17 @@ class SiteProfileResults extends React.Component {
   setLineGraphData = (teachers, type) => {
 
     var trends = this.state.trends
+    console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
     var tempMonths = [];
+
+    if (this.props.observationType === "studentEngagement") {
+      type = "dailyAverage"
+    }
+
 
     for (var teacherIndex in teachers) {
       var teacher = teachers[teacherIndex]
@@ -665,9 +696,13 @@ class SiteProfileResults extends React.Component {
       })
 
       // If there isn't a color set for this teacher, set it
+      if (this.props.observationType === "studentEngagement") {
+        lineColors[i] = "#FF7F00"
+      }
       if (!lineColors[i]) {
         lineColors[i] = this.randomRgbColor()
       }
+
       var tempData = {
         label: fullName,
         data: chosenData,
@@ -685,6 +720,39 @@ class SiteProfileResults extends React.Component {
       tempDataSet.push(tempData)
       i++
     }
+
+      chosenData = trends["siteBar"]["dailyAverage"]
+
+      // Round off all the numbers
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      if (this.props.observationType === "studentEngagement") {
+        lineColors[i] = "#FF7F00"
+      }
+      if (!lineColors[i]) {
+        lineColors[i] = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: "Site Average",
+        data: chosenData,
+        borderColor: lineColors[i],
+        borderDash: [10,5],
+        fill: false,
+        tension: 0.0,
+      }
+
+      // Add the months so we can set the right labels for the trends chart
+      if(trends["siteBar"].lineChartLabels)
+      {
+        tempMonths = trends["siteBar"].lineChartLabels;
+      }
+
+      tempDataSet.push(tempData)
+
 
     // Get the months from the data
     const monthOptions = [
@@ -714,6 +782,8 @@ class SiteProfileResults extends React.Component {
       labels,
       datasets: tempDataSet,
     }
+
+    console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -761,8 +831,22 @@ class SiteProfileResults extends React.Component {
 
       const currDate = new Date()
 
-      pdf.save('Site_Profile_Results_' +  currDate.getMonth() + '_' + currDate.getDate() + '_' + currDate.getFullYear() + '.pdf')
+      pdf.save(`Site_Profile_Results_${currDate.getMonth()+1}_${currDate.getDate()}_${currDate.getFullYear()}.pdf`)
     })
+  }
+
+  handleTrendsDropdown = (event: SelectChangeEvent) => {
+      this.setState({selectedTeacher: event.target.value})
+      let modifiedInfo = this.state.teacherInfo.filter((teacher) => {
+        return teacher.id == event.target.value})
+      if (event.target.value != "None") {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = "bottom"
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+
+      this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
 
   // When any of the checkboxes are checked or unchecked
@@ -834,6 +918,45 @@ class SiteProfileResults extends React.Component {
       'levelOfInstruction',
       "studentEngagement",
     ]
+
+    if(this.props.observationType === "studentEngagement")
+    {
+      LineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top',
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold'
+        }
+      }
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 3
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+        if (value == 0) {
+          return 'Off Task  0  '
+        }
+        if (value == 1) {
+          return 'Mildly Engaged  1  '
+        }
+        if (value == 2) {
+          return 'Engaged  2  '
+        }
+        if (value == 3) {
+          return 'Highly Engaged  3  '
+        }
+      }
+    } else {
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 100
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(value: number): string {
+            return value + '%'
+      }
+    }
 
     return (
       <div id="siteProfileResultsContainer">
@@ -938,7 +1061,25 @@ class SiteProfileResults extends React.Component {
               {/*
                 The "trends" line graph
               */}
-              {this.state.tabState == 1 &&  Object.keys(this.state.averages).length > 0 ? (
+              {this.state.tabState == 1 &&  Object.keys(this.state.averages).length > 0 ? ( <>
+                <FormControl variant="outlined">
+                  <StyledSelect
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={this.state.selectedTeacher}
+                  onChange={this.handleTrendsDropdown}
+                  name="selectedProgram"
+
+                >
+                  <MenuItem value="None">Select Teacher</MenuItem>
+                  {this.state.teacherInfo.map(
+                            (teacher, index)=>{
+                              return <MenuItem value={teacher.id} key={index}>
+                                    {`${teacher.firstName} ${teacher.lastName}`}
+                                  </MenuItem>
+                              })}
+                </StyledSelect>
+                </FormControl>
                 <Grid
                   container
                   justify={'center'}
@@ -950,7 +1091,7 @@ class SiteProfileResults extends React.Component {
                     options={LineGraphOptions}
                   />
                 </Grid>
-              ) : null }
+                </>) : null }
 
 
               {/*
