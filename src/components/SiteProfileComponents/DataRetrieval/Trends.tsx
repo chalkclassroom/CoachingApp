@@ -466,6 +466,7 @@ class TrendData {
     var months = [];
     while(tempDate !== endDatePlusOneMonth)
     {
+      console.log(tempDate)
       months.push(tempDate);
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
@@ -484,23 +485,27 @@ class TrendData {
 
      results[teachers[teacherIndex].id] = {
        name: tempName,
-       totalInstructions: new Array(monthsCount).fill(0),
-       offTask: new Array(monthsCount).fill(0),
-       mildlyEngaged: new Array(monthsCount).fill(0),
-       engaged: new Array(monthsCount).fill(0),
-       highlyEngaged: new Array(monthsCount).fill(0),
+      //  totalInstructions: new Array(monthsCount).fill(0),
+      //  offTask: new Array(monthsCount).fill(0),
+      //  mildlyEngaged: new Array(monthsCount).fill(0),
+      //  engaged: new Array(monthsCount).fill(0),
+      //  highlyEngaged: new Array(monthsCount).fill(0),
 
 
-       offTaskAverage: new Array(monthsCount).fill(0),
-       mildlyEngagedAverage: new Array(monthsCount).fill(0),
-       engagedAverage: new Array(monthsCount).fill(0),
-       highlyEngagedAverage: new Array(monthsCount).fill(0),
+      //  offTaskAverage: new Array(monthsCount).fill(0),
+      //  mildlyEngagedAverage: new Array(monthsCount).fill(0),
+      //  engagedAverage: new Array(monthsCount).fill(0),
+      //  highlyEngagedAverage: new Array(monthsCount).fill(0),
+      totalPoints: new Array(monthsCount).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
+      dailyAverage: new Array(monthsCount).fill(0),
 
        lineChartLabels: months,
      };
 
    }
 
+   console.log(months)
 
    // Get number of instances for each type of data
    var tempIntervalData = 0;
@@ -515,27 +520,39 @@ class TrendData {
      var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
      // Add to total # of intervals
-     results[teacherId].totalInstructions[rowMonth] += row.count;
+    //  results[teacherId].totalInstructions[rowMonth] += row.count;
 
      // Add to behavior types
-     switch (row.point) {
-       case 0:
-         results[teacherId].offTask[rowMonth] += row.count;
-         break;
-       case 1:
-         results[teacherId].mildlyEngaged[rowMonth] += row.count;
-         break;
-       case 2:
-         results[teacherId].engaged[rowMonth] += row.count;
-         break;
-       case 3:
-         results[teacherId].highlyEngaged[rowMonth] += row.count;
-         break;
-       default:
-         break;
-     }
+    //  switch (row.point) {
+    //    case 0:
+    //      results[teacherId].offTask[rowMonth] += row.count;
+    //      break;
+    //    case 1:
+    //      results[teacherId].mildlyEngaged[rowMonth] += row.count;
+    //      break;
+    //    case 2:
+    //      results[teacherId].engaged[rowMonth] += row.count;
+    //      break;
+    //    case 3:
+    //      results[teacherId].highlyEngaged[rowMonth] += row.count;
+    //      break;
+    //    default:
+    //      break;
+    //  }
+    results[teacherId].totalPoints[rowMonth] += row.point
+    results[teacherId].totalIntervals[rowMonth] += row.count
 
    }
+
+   var siteBar = {
+    name: "Site Average",
+
+    dailyAverage: new Array(monthsCount).fill(0),
+
+    totalPoints: new Array(monthsCount).fill(0),
+
+    lineChartLabels: months,
+  }
 
    // Calculate the averages in percentages
    // Go through each teacher
@@ -546,15 +563,32 @@ class TrendData {
      // Go through the months
      for(var i = 0; i < monthsCount; i++)
      {
-       var tempTotalInstructions = result.totalInstructions[i];
+      //  var tempTotalInstructions = result.totalInstructions[i];
 
-       result.offTaskAverage[i] = result.offTask[i] > 0 ? (result.offTask[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.mildlyEngagedAverage[i] = result.mildlyEngaged[i] > 0 ? (result.mildlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.engagedAverage[i] = result.engaged[i] > 0 ? (result.engaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.offTaskAverage[i] = result.offTask[i] > 0 ? (result.offTask[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.mildlyEngagedAverage[i] = result.mildlyEngaged[i] > 0 ? (result.mildlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.engagedAverage[i] = result.engaged[i] > 0 ? (result.engaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      //  result.highlyEngagedAverage[i] = result.highlyEngaged[i] > 0 ? (result.highlyEngaged[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.dailyAverage[i] = (result.totalPoints[i] / result.totalIntervals[i])
 
+      console.log(result.dailyAverage[i])
+      if (isNaN(result.dailyAverage[i])) {
+        result.dailyAverage[i] = 0
+      } 
+
+      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i]
+    
      }
    }
+   
+   for(var i = 0; i < monthsCount; i++)
+   {
+    siteBar.dailyAverage[i] = siteBar.totalPoints[i] > 0 ? parseFloat((siteBar.totalPoints[i] / Object.keys(results).length).toFixed(2)) : 0;
+   }
+
+   results.siteBar = siteBar;
+
+   console.log(results)
 
    return results;
 
