@@ -9,6 +9,7 @@ import * as Constants from '../../../constants/Constants';
  * @return {ReactElement}
  */
 export default function AssociativeCooperativeInteractionsTrainingPage(): React.ReactElement {
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={AssocCoopIconImage}
@@ -17,6 +18,7 @@ export default function AssociativeCooperativeInteractionsTrainingPage(): React.
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20AC%20(CC).mp4?alt=media&token=27b52565-60e0-4c31-b419-cbccfed38e45'
       definitions={<AssocCoopHelpCard />}
       section='ac'
+      type={type ? type : ''}
     />
   );
 }

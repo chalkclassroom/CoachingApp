@@ -87,6 +87,7 @@ class ConferencePlanView extends React.Component<Props, State>{
                       conferencePlanExists={true}
                       history={this.props.history}
                       sessionId={this.props.location.state.sessionId}
+                      practice={this.props.location.state  ? this.props.location.state.practice : null}
                     />}
                   </FirebaseContext.Consumer>
                 ) : (null)}

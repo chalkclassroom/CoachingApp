@@ -9,6 +9,7 @@ import * as Constants from '../../../constants/Constants';
  * @return {ReactElement}
  */
 export default function ListeningToChildrenTrainingPage(): React.ReactElement {
+  const type = localStorage.getItem('type');
   return (
     <TrainingLayout
       icon={ListeningIconImage}
@@ -17,6 +18,7 @@ export default function ListeningToChildrenTrainingPage(): React.ReactElement {
       demonstrationUrl='https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Demo%20LC%20(CC).mp4?alt=media&token=4ba283ac-133a-4bd2-a040-639748c3cc3d'
       definitions={<ListeningToChildrenHelpCard />}
       section='listening'
+      type={type ? type : ''}
     />
   );
 }

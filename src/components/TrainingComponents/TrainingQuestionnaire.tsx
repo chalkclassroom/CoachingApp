@@ -14,6 +14,7 @@ import { addUnlocked } from '../../state/actions/unlocked';
 import { unlockLiteracyKnowledgeCheck } from '../../state/actions/training-literacy';
 import { connect } from 'react-redux';
 import * as Constants from '../../constants/Constants';
+import { Route } from 'react-router-dom'
 
 
 const styles: object = {
@@ -327,9 +328,10 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
   getModalAction = (): React.ReactElement => {
     if (this.state.passed ) { // || this.state.failed) {
       return <DialogActions>
-        <Button onClick={(): void => this.setState({ modalOpen: false })} style={{fontFamily: 'Arimo'}}>
+        <Route render={({ history}) => (
+        <Button onClick={() => { history.push('/Home') }} style={{fontFamily: 'Arimo'}}>
           OK
-        </Button>
+        </Button>)}/>
       </DialogActions>
     }  else {
       return <DialogActions>

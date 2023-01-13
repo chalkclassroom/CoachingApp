@@ -202,7 +202,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       clearInterval(this.timer);
       if (this.state.final) {
         this.handleChecklists();
-        this.handleTimeUpNotification();
+        this.handleNext();
       } else {
         this.handleTimeUpNotification();
       }

@@ -21,6 +21,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import { ThemeOptions } from './MessagingComponents/MessagingTypes'
 
 const styles: object = {
     main: {
@@ -132,6 +133,7 @@ interface Props {
     conferencePlanExists: boolean
     noDataYet: boolean
     literacyType?: string
+    parentView?: string
 }
 
 interface Style {
@@ -173,7 +175,7 @@ class ResultsLayout extends React.Component<Props, State> {
         super(props)
 
         this.state = {
-            view: 'data',
+            view: this.props.parentView ? this.props.parentView : 'data',
             nextView: null,
             tabValue: 0,
             actionPlanEditMode: false,
@@ -312,6 +314,7 @@ class ResultsLayout extends React.Component<Props, State> {
      */
     render(): React.ReactNode {
         const { classes } = this.props
+        console.log(this.state.view)
         return (
             <div>
                 <FirebaseContext.Consumer>
@@ -688,6 +691,7 @@ class ResultsLayout extends React.Component<Props, State> {
                                                                     this.state
                                                                         .notesModal
                                                                 }
+                                                                viewClick= {(view) => this.viewClick(view)}
                                                             />
                                                         )}
                                                     </FirebaseContext.Consumer>

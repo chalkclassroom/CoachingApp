@@ -81,6 +81,13 @@ import MyAccountPage from './views/protected/MyAccount/MyAccountPage'
 import { UserDocument } from './components/Firebase/Firebase'
 import Firebase from './components/Firebase'
 import NewUserPage from './views/protected/AdminViews/NewUserPage'
+import LeadersDashboard from './views/protected/LeadersViews/LeadersDashboard'
+import NewProgramPage from './views/protected/LeadersViews/NewProgramPage'
+import MyProgramsPage from './views/protected/LeadersViews/MyProgramsPage'
+import NewSitePage from './views/protected/LeadersViews/NewSitePage'
+import ReportsPage from './views/protected/ReportsViews/ReportsPage'
+import ChalkPracticePage from './views/protected/ChalkPracticeViews/chalkPracticePage'
+import UsersPage from './views/protected/UsersViews/UsersPage'
 
 import CreateTable from './components/tempCustomFunction/CreateTable'
 
@@ -323,14 +330,14 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Messaging"
-              allowedRoles={[Role.COACH,Role.ADMIN]}
+              allowedRoles={[Role.COACH,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               component={MessagingView}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              allowedRoles={[Role.COACH, ,Role.ADMIN]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History
@@ -339,7 +346,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={auth}
               path="/ActionPlan"
-              allowedRoles={[Role.COACH, ,Role.ADMIN]}
+              allowedRoles={[Role.COACH, ,Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -352,7 +359,7 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
               auth={auth}
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               path="/ConferencePlans"
               render={(props: {
@@ -362,7 +369,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -548,7 +555,7 @@ class App extends React.Component<Props, State> {
               exact
               auth={this.state.auth}
               path="/MyTeachers"
-              allowedRoles={[Role.COACH, Role.ADMIN]}
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
               userRole={role}
               render={(props: {
                 history: H.History,
@@ -623,14 +630,14 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[Role.ADMIN]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/Admin"
                 component={AdminPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[Role.ADMIN]}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/NewUser"
                 component={NewUserPage}
@@ -716,12 +723,171 @@ class App extends React.Component<Props, State> {
               exact={true}
               component={CoachingChalkCrosswalks}
             />
+
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                userRole={role}
+                path="/LeadersDashboard"
+                render={(props: object) : React.ReactElement=> <LeadersDashboard {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                userRole={role}
+                path="/MyPrograms"
+                render={(props: object) : React.ReactElement=> <MyProgramsPage {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                userRole={role}
+                path="/NewProgram"
+                render={(props: object) : React.ReactElement=> <NewProgramPage {...props}/>}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                userRole={role}
+                path="/NewSite"
+                render={(props: object) : React.ReactElement=> <NewSitePage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/Reports"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/ReportsList"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/ReportImages"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/ReportDesc"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/TeacherProfile"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/CoachProfile"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/SiteProfile"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/ProgramProfile"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ReportsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersClassroomPractices"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ChalkPracticePage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersUsers"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersTeachers"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />  
+
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersCoaches"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />  
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersSites"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersArchive"
+              allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />    
+
             <PrivateRoute
               auth={this.state.auth}
               path="/CreateTable"
               exact={true}
               component={CreateTable}
             />
+
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>

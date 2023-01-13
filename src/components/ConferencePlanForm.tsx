@@ -20,6 +20,8 @@ import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { changeTeacher } from '../state/actions/teacher';
+import { connect } from 'react-redux';
 
 const BlankTheme = createTheme({
   palette: {
@@ -61,7 +63,8 @@ interface Props {
     saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
     completeAppointment(teacherId: string, type: string, tool: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
-    getCoachLastName(): Promise<string>
+    getCoachLastName(): Promise<string>,
+    getLiteracyType(planId: string): Promise<string>
   },
   sessionId?: string,
   readOnly: boolean,
@@ -70,7 +73,11 @@ interface Props {
   chosenQuestions: Array<string>,
   conferencePlanId?: string,
   history?: H.History,
-  notesModal: boolean
+  notesModal: boolean,
+  viewClick(view:string): void 
+  practice: string
+  changeTeacher(teacher: string): void
+  teacherList: Array<Types.Teacher>,
 }
 
 interface State {
@@ -405,6 +412,46 @@ class ConferencePlanForm extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history
   };
 
+  handleConferencePlanClick = async () => {
+    this.props.changeTeacher(this.props.teacher)
+
+    const types = {
+      'FoundationalTeacher': "Foundational",
+      'FoundationalChild': "Foundational",
+      'WritingTeacher': "Writing",
+      'WritingChild': "Writing",
+      'ReadingTeacher': "Reading",
+      'LanguageTeacher': "Language"
+    }
+    let useFirebase = false
+    let path = ""
+    const studentEngagement = 'Level of Engagement'
+    const AC = 'AC'
+    if (this.props.practice === studentEngagement) {
+      path = "/StudentEngagementResults"
+    } else if (this.props.practice === AC) {
+      path ="/AssociativeCooperativeInteractionsResults"
+    } else {
+      let practice = ""
+      this.props.practice.split(" ")
+        .map(str => practice += str.substring(0, 1).toUpperCase() + str.substring(1))
+      path = "/" + practice + "Results"
+    }
+
+    if (path === "/LiteracyInstructionResults") {
+      useFirebase = true
+    }
+
+    console.log(this.props.teacher)
+
+    if (!useFirebase) {
+      this.props.history?.push({pathname: path, state: {view: 'questions'}})
+    } else {
+      let type = await this.props.firebase.getLiteracyType(this.props.conferencePlanId)
+      this.props.history?.push({pathname: path, state: {view: 'questions', type: types[type]}})
+    }
+  }
+
   /**
    * render function
    * @return {ReactNode}
@@ -697,7 +744,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                             : BlankTheme
                                           }
                                         >
-                                          <Button color="primary" size="small" variant="outlined">
+                                          <Button color="primary" size="small" variant="outlined" onClick={() => 
+                                            !this.props.readOnly ? this.props.viewClick('questions') : this.handleConferencePlanClick()
+                                            }>
                                             Questions
                                           </Button>
                                         </MuiThemeProvider>
@@ -883,4 +932,14 @@ class ConferencePlanForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(ConferencePlanForm);
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(ConferencePlanForm));

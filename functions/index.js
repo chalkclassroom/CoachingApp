@@ -38,6 +38,10 @@ exports.fetchTeacherSeqSummary = require('./fetchTeacherSeqSummary').fetchTeache
 exports.fetchTeacherSeqTrend = require('./fetchTeacherSeqTrend').fetchTeacherSeqTrend;
 exports.fetchTransitionLog = require('./fetchTransitionLog').fetchTransitionLog;
 exports.fetchTransitionsTrend = require('./fetchTransitionsTrend').fetchTransitionsTrend;
+exports.fetchSiteProfileAverages = require('./fetchSiteProfileAverages').fetchSiteProfileAverages;
+exports.fetchTeacherProfileAverages = require('./fetchTeacherProfileAverages').fetchTeacherProfileAverages;
+exports.fetchTeacherProfileReadingTrend = require('./fetchTeacherProfileReadingTrend').fetchTeacherProfileReadingTrend;
+exports.fetchCoachProfile = require('./fetchCoachProfile').fetchCoachProfile;
 
 exports.funcACDetails = require('./funcACDetails').funcACDetails;
 exports.funcAvgToneRating = require('./funcAvgToneRating').funcAvgToneRating;
@@ -93,6 +97,9 @@ exports.funcTransitionTrend = require('./funcTransitionTrend').funcBehaviourTren
 exports.funcTransitionTrend2 = require('./funcTransitionTrend2').funcBehaviourTrend;
 exports.funcTransitionTrendNew = require('./funcTransitionTrendNew').funcTransitionTrendNew;
 exports.funcTransitionTypeSummary = require('./funcTransitionTypeSummary').funcTransitionTypeSummary;
+exports.funcUpdateCoach = require('./funcUpdateCoach').funcUpdateCoach;
 exports.observationsToBQ = require('./observationToBQ').observationsToBQ;
 exports.exportBqData = require('./exportBqData').exportBqData;
-exports.createTables = require('./createTables').createTables;
+
+exports.funcAddToTransferLogsOnUpdate = require('./funcAddToTransferLogs').funcAddToTransferLogsOnUpdate;
+exports.funcAddToTransferLogsOnPartnerCreate = require('./funcAddToTransferLogs').funcAddToTransferLogsOnPartnerCreate;
