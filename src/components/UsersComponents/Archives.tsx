@@ -135,6 +135,15 @@ class Archives extends React.Component<Props, State> {
     console.log(this.props.userRole)
   }
 
+  /**
+   * 
+   *  @brief This function takes an instance of firebase as an input. It retrieves the archiveTeacherId from the component's state, and finds the coachId associated with the archived teacher.
+   *  The function then calls the unarchiveTeacher method from the firebase instance, passing in the archiveTeacherId and coachId as arguments.
+   *  If the call is successful, the function updates the teacherData in the component's props and the archivedData in the component's state, and sets the state of several other properties.
+   *  If the call is not successful, it will throw an error and display an alert message.
+   * 
+   *  @param {Object} firebase - instance of firebase
+   */
   async unarchiveTeacher(firebase:Firebase) {
     firebase
     const {
@@ -191,6 +200,13 @@ class Archives extends React.Component<Props, State> {
     });
   }
 
+ /**
+  * @brief this function retrieves the coachId from state and calls the unarchiveCoach method from the firebase instance with the id. 
+  * If the call is successful it will update the other pages
+  * If the call is not successful it will throw an error and display an alert message
+  * 
+  *  @param {Object} firebase - instance of firebase
+  */
   async unarchiveCoach(firebase:Firebase) {
     firebase
     const {
@@ -453,6 +469,17 @@ class Archives extends React.Component<Props, State> {
     return re.test(String(email).toLowerCase());
   };
 
+  /**
+   * @brief function for editing the teacher's details and updating the teacherData and archivedData in the component's state
+   * This function takes an instance of firebase as an input. It retrieves the editTeacherId, editTeacherFirstName, editTeacherLastName and editEmail from the component's state.
+   * The function checks that the first name and last name are not empty, and that the email (if provided) is valid.
+   * If the email provided already exists in the database, the function will alert the user.
+   * The function then calls the editUserName method from the firebase instance, passing in the editTeacherId, editTeacherFirstName, editTeacherLastName, editEmail and "teacher" as arguments.
+   * If the call is successful, the function updates the teacherData in the component's props and the archivedData in the component's state, and sets the state of several other properties.
+   * If the call is not successful, it will throw an error and display an alert message, and set the state of success to false.
+   * 
+   * @param {Object} firebase - instance of firebase
+   */
   async editTeacher(firebase:Firebase) {
     firebase
     const {
@@ -619,6 +646,14 @@ class Archives extends React.Component<Props, State> {
       })
   }
 
+  /**
+   * @brief function for updating a coaches data in state and firebase. Checks if all fields are input correctly and uses them to call the firebase instance method editUserName.
+   * On success the function will update firestore and the state
+   * On failure the function will throw an error and display an alert
+   * 
+   * @param {Object} firebase - instance of firebase
+   * @returns void
+   */
   editCoach = async (firebase:Firebase) => {
     firebase
     const {
