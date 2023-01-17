@@ -178,8 +178,8 @@ class DetailsTable extends React.Component<Props, {}> {
         tempObservationData.push(tempTd);
       }
       this.state.goalType === "percent" ?
-      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlanPercent}%</td>{tempObservationData}</tr>)
-      : teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes}</td><td style={tdStyle}>{count[teacher.id].actionPlans} / {count[teacher.id].active + count[teacher.id].actionPlans}</td>{tempObservationData}</tr>);
+      teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes} minutes</td><td style={tdStyle}>{count[teacher.id].actionPlanPercent}%</td>{tempObservationData}</tr>)
+      : teacherRows.push(<tr><td style={tdStyle}>{teacher.firstName}  {teacher.lastName}</td><td style={tdStyle}>{count[teacher.id].total}</td><td style={tdStyle}>{count[teacher.id].avgTimeMinutes} minutes</td><td style={tdStyle}>{count[teacher.id].actionPlans} / {count[teacher.id].active + count[teacher.id].actionPlans}</td>{tempObservationData}</tr>);
 
 
     });
