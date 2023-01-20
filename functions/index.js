@@ -103,3 +103,4 @@ exports.exportBqData = require('./exportBqData').exportBqData;
 
 exports.funcAddToTransferLogsOnUpdate = require('./funcAddToTransferLogs').funcAddToTransferLogsOnUpdate;
 exports.funcAddToTransferLogsOnPartnerCreate = require('./funcAddToTransferLogs').funcAddToTransferLogsOnPartnerCreate;
+exports.retrieveTableFromFirestore = require('./retrieveTableFromFirestore').retrieveTableFromFirestore;
