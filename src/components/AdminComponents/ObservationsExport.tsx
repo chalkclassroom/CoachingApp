@@ -110,7 +110,12 @@ const generateExcel = async (
     }
   })
 
-  xlsx.writeFile(wb, 'CoachingAppExport.xlsx')
+  try {
+    xlsx.writeFile(wb, 'CoachingAppExport.xlsx');
+  } catch (err) {
+    console.log("Error writing the file: ", err);
+    window.alert("Workbook is empty!")
+  }
   setLoading(false)
 }
 
