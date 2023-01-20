@@ -107,6 +107,11 @@ exports.exportBqData = functions.https.onCall(async (data, context) => {
     return ''
   }
 
+  let newTo = new Date(data.to);
+  newTo.setDate(newTo.getDate() + 1);
+  newTo = newTo.toISOString().split("T")[0]
+
+
   const sqlQuery = `select * from ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${table} where sessionStart > @from and sessionEnd < @to order by id`
 
   const options = {
@@ -115,7 +120,7 @@ exports.exportBqData = functions.https.onCall(async (data, context) => {
     location: 'US',
     params: {
       from: data.from,
-      to: data.to,
+      to: newTo,
     },
   }
 

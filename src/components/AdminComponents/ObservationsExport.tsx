@@ -101,7 +101,7 @@ const generateExcel = async (
 
   const wb = xlsx.utils.book_new()
   results.forEach(r => {
-    const wsName = r.table
+    const wsName = r.table.substring(0, 31)
     if (r.data.data) {
       const wsData = r.data.data.split('\n')
         .map(d => d.split(',').map(r => maybeTransformForTime(r)))
