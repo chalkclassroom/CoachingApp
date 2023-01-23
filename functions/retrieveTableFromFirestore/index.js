@@ -59,6 +59,7 @@ exports.retrieveTableFromFirestore = functions.https.onCall(async () => {
 
     const results = await job.getQueryResults();
 
+    let rows = []
     return firestore.collection(COLLECTION_NAME).where("checklist", "==", "ReadingTeacher").where("completed", "==", true).get()
     .then(querySnapshot => {
         if (querySnapshot.docs.length == 0) {
@@ -134,12 +135,14 @@ exports.retrieveTableFromFirestore = functions.https.onCall(async () => {
                         console.log(`DUPLICATE=>${doc.id}::TS=>${row.json.time} Insert prevented!`)
                         return
                     }
-                    console.log(`INSERT=>${doc.id}::TS=>${row.json.time} into table=>${tableName}.`)
-                    table.insert(row, { raw: true, skipInvalidRows: true }).catch(err => {
-                        console.error(`table.insert: ${JSON.stringify(err)}`);
-                        console.log(err)
-                    });
+                    console.log(`INSERT=>${doc.id}::TS=>${row.json.time} into rows.`)
+                    rows.push(row)
                 });
+                table.insert(rows, { raw: true, skipInvalidRows: true }).catch(err => {
+                    console.error(`table.insert: ${JSON.stringify(err)}`);
+                    console.log(err)
+                });
+                console.log(`INSERT=>rows into ${tableName}.`)
             });
         });
       })
