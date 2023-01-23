@@ -49,6 +49,16 @@ else
 
 
 exports.retrieveTableFromFirestore = functions.https.onCall(async () => {
+    const sqlQuery = `SELECT * FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyReadingTeacher `;
+    const options = {
+        query: sqlQuery,
+        location: 'US',
+    };
+
+    const [job] = await bigquery.createQueryJob(options);
+
+    const results = await job.getQueryResults();
+
     return firestore.collection(COLLECTION_NAME).where("checklist", "==", "ReadingTeacher").where("completed", "==", true).get()
     .then(querySnapshot => {
         if (querySnapshot.docs.length == 0) {
@@ -61,18 +71,18 @@ exports.retrieveTableFromFirestore = functions.https.onCall(async () => {
             || typeof doc.data().teacher == "undefined"
             || typeof doc.data().observedBy == "undefined"
             || typeof doc.data().activitySetting == "undefined" ) {
-                console.log("SKIPPED=>Docoument is missing required fields")
+                console.log(`SKIPPED=>${doc.id}Docoument is missing required fields`)
                 return
             }
             this.sessionRef = await firestore.collection(COLLECTION_NAME).doc(doc.id).collection("entries").orderBy('Timestamp').get()
             .then(entries => {
                 if (entries.docs.length == 0) {
-                    console.log("SKIPPED=>Document does not contain entries subcollection")
+                    console.log(`SKIPPED=>${doc.id}Document does not contain entries subcollection`)
                     return
                 }
                 entries.forEach(async entry => {
                     if (typeof entry.data().Checked == "undefined" || typeof entry.data().Timestamp == "undefined") {
-                        console.log("SKIPPED=>Entry does not contain required fields")
+                        console.log(`SKIPPED=>${doc.id}::Entry does not contain required fields`)
                         return
                     }
                     let entryData = entry.data();
@@ -101,24 +111,34 @@ exports.retrieveTableFromFirestore = functions.https.onCall(async () => {
                             time: Math.floor(entryData.Timestamp.toDate() / 1000),
                         }
                     };
-                    const sqlQuery = `SELECT COUNT(*) as count FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.literacyReadingTeacher WHERE id = '${row.json.id}' AND sessionStart = TIMESTAMP_SECONDS(${row.json.sessionStart}) AND sessionEnd = TIMESTAMP_SECONDS(${row.json.sessionEnd}) AND teacher = '${row.json.teacher}' AND observedBy = '${row.json.observedBy}' AND activitySetting = '${row.json.activitySetting}' AND checklist.item1 = ${row.json.checklist.item1} AND checklist.item2 = ${row.json.checklist.item2} AND checklist.item3 = ${row.json.checklist.item3} AND checklist.item4 = ${row.json.checklist.item4} AND checklist.item5 = ${row.json.checklist.item5} AND checklist.item6 = ${row.json.checklist.item6} AND checklist.item7 = ${row.json.checklist.item7} AND checklist.item8 = ${row.json.checklist.item8} AND checklist.item9 = ${row.json.checklist.item9} AND checklist.item10 = ${row.json.checklist.item10} AND checklist.item11 = ${row.json.checklist.item11} AND time = TIMESTAMP_SECONDS(${row.json.time})`;
-                    const options = {
-                        query: sqlQuery,
-                        location: 'US',
-                    };
                 
-                    const [job] = await bigquery.createQueryJob(options);
-                
-                    const duplicates = await job.getQueryResults();
-                    if (duplicates[0][0].count < 1) {
-                        console.log(`INSERT=>${doc.id}::TS=>${row.json.time} into table=>${tableName}.`)
-                        table.insert(row, { raw: true, skipInvalidRows: true }).catch(err => {
-                            console.error(`table.insert: ${JSON.stringify(err)}`);
-                            console.log(err)
-                        });
-                    } else {
+                    const duplicates = results[0].filter((result) => {
+                        return result.id == row.json.id &&
+                        result.teacher == row.json.teacher &&
+                        result.observedBy == row.json.observedBy &&
+                        result.activitySetting == row.json.activitySetting &&
+                        result.checklist.item1 == row.json.checklist.item1 &&
+                        result.checklist.item2 == row.json.checklist.item2 &&
+                        result.checklist.item3 == row.json.checklist.item3 &&
+                        result.checklist.item4 == row.json.checklist.item4 &&
+                        result.checklist.item5 == row.json.checklist.item5 &&
+                        result.checklist.item6 == row.json.checklist.item6 &&
+                        result.checklist.item7 == row.json.checklist.item7 &&
+                        result.checklist.item8 == row.json.checklist.item8 &&
+                        result.checklist.item9 == row.json.checklist.item9 &&
+                        result.checklist.item10 == row.json.checklist.item10 &&
+                        result.checklist.item11 == row.json.checklist.item11
+                    });
+
+                    if (duplicates.length > 0) {
                         console.log(`DUPLICATE=>${doc.id}::TS=>${row.json.time} Insert prevented!`)
+                        return
                     }
+                    console.log(`INSERT=>${doc.id}::TS=>${row.json.time} into table=>${tableName}.`)
+                    table.insert(row, { raw: true, skipInvalidRows: true }).catch(err => {
+                        console.error(`table.insert: ${JSON.stringify(err)}`);
+                        console.log(err)
+                    });
                 });
             });
         });
