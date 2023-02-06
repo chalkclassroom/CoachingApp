@@ -52,6 +52,7 @@ import RadioSets from './RadioSets'
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
+import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -186,7 +187,7 @@ const practicesArr = {
 const radioValueArr = {
   transitionTime: 'lineAverage',
   classroomClimate: 'nonspecificapprovalAverage',
-  mathInstruction: 'mathVocabularyAverage',
+  mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
@@ -285,7 +286,7 @@ class SiteProfileResults extends React.Component {
       teacherInfo: [],
       teacherNames: [],
       selectedTeacher: 'None',
-      radioValue: '',
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : '',
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -917,6 +918,7 @@ class SiteProfileResults extends React.Component {
       'classroomClimate',
       'levelOfInstruction',
       "studentEngagement",
+      'mathInstruction',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1151,6 +1153,14 @@ class SiteProfileResults extends React.Component {
                   {this.props.observationType === "studentEngagement" ? (
                     <StudentEngagementBarDetails
                       data={this.state.averages}
+                    />
+                  ) : null}
+
+                  {/* Math Instruction Chart */}
+                  {this.props.observationType === "mathInstruction" ? (
+                    <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
                     />
                   ) : null}
 

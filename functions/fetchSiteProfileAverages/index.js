@@ -159,6 +159,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.child2) THEN 'math2' ELSE NULL END) AS shapes,
                       COUNT(CASE WHEN (checklist.child3) THEN 'math3' ELSE NULL END) AS patterns,
                       COUNT(CASE WHEN (checklist.child4) THEN 'math4' ELSE NULL END) AS measurement,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'math5' ELSE NULL END) AS childOther,
                       teacher,
                       peopletype,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
