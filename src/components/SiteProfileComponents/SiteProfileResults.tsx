@@ -53,6 +53,7 @@ import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
+import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -902,7 +903,6 @@ class SiteProfileResults extends React.Component {
       'mathInstruction',
       'bookReading',
       'transitionTime',
-      'listeningToChildren',
       'sequentialActivities',
       'foundationSkills',
       'writing',
@@ -919,6 +919,7 @@ class SiteProfileResults extends React.Component {
       'levelOfInstruction',
       "studentEngagement",
       'mathInstruction',
+      'listeningToChildren',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1159,6 +1160,14 @@ class SiteProfileResults extends React.Component {
                   {/* Math Instruction Chart */}
                   {this.props.observationType === "mathInstruction" ? (
                     <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Listening to Children Chart */}
+                  {this.props.observationType === "listeningToChildren" ? (
+                    <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
