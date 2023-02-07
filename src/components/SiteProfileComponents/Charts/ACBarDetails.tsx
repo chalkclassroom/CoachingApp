@@ -232,6 +232,8 @@ class ACBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let dataSize = this.state.teacherNames.length;
+
     return (
       <div style={{padding: '30px 30px 0px 30px'}}>
         <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>{this.props.type == "teacherAverage" ? "Teacher Behaviors" : "Child Behaviors"}</h2>
@@ -313,7 +315,15 @@ class ACBarDetails extends React.Component<Props, {}> {
               plugins: {
                 datalabels: {
                   display: 'auto',
-                  color: 'black',
+                  color: function (context) {
+                    var index = context.dataIndex;
+                    var value = context.dataset.data[index];
+                    if (index === dataSize - 1) {
+                      return (value = 'black');
+                    } else {
+                      return (value = '#fff');
+                    }
+                  },
                   font: {
                     size: 14,
                     weight: '400'
