@@ -5,31 +5,13 @@ import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
 
-// Set array so we can edit the label on top of the Chart based on type
-const chartTitleArr = {
-  bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
-  childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
-}
-
-const averageLine = {
-    width: '80%',
-    marginRight: '15px',
-    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
-}
-
-
-
 
 /**
- * Horizontal Bar Graph for Math Child Behaviors
- * @class EngagementBarDetails
+ * Horizontal Bar Graph for Listening to Children Behaviors
+ * @class ListeningToChildrenBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -157,7 +139,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
     ]
 
-    this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
+    this.setState({teacherNames: teacherNames, dataSets: dataSets, barColors: this.props.barColors});
 
   }
 
@@ -305,4 +287,4 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default LevelOfInstructionBarDetails;
+export default ListeningToChildrenBarDetails;
