@@ -249,6 +249,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.child2) THEN 'sequential2' ELSE NULL END) AS drawing,
                       COUNT(CASE WHEN (checklist.child3) THEN 'sequential3' ELSE NULL END) AS playing,
                       COUNT(CASE WHEN (checklist.child4) THEN 'sequential4' ELSE NULL END) AS speaking,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'sequential5' ELSE NULL END) AS childNonSequential,
                       teacher,
                       peopletype,
                       COUNT (sessionStart) AS total,

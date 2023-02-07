@@ -54,6 +54,7 @@ import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
 import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
+import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -192,7 +193,7 @@ const radioValueArr = {
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
-  sequentialActivities: 'sequentialActivitiesAverage',
+  sequentialActivities: 'teacherAverage',
   foundationSkills: 'foundationalSkillsAverage',
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
@@ -920,6 +921,7 @@ class SiteProfileResults extends React.Component {
       "studentEngagement",
       'mathInstruction',
       'listeningToChildren',
+      'sequentialActivities',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1168,6 +1170,14 @@ class SiteProfileResults extends React.Component {
                   {/* Listening to Children Chart */}
                   {this.props.observationType === "listeningToChildren" ? (
                     <ListeningToChildrenBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Sequesntial Activities Chart */}
+                  {this.props.observationType === "sequentialActivities" ? (
+                    <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />

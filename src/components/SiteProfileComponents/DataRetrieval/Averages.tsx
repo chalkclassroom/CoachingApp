@@ -629,7 +629,8 @@ class AveragesData {
           materials: 0,
           drawing: 0,
           playing: 0,
-          speaking: 0
+          speaking: 0,
+          childNonSequential:0,
         };
 
       }
@@ -656,8 +657,10 @@ class AveragesData {
         results[teacherId].support += row.support;
         results[teacherId].noSupport += row.noSupport;
 
+        results[teacherId].childNonSequential += row.childNonSequential;
+
         // Calculate the total Number of instructions
-        results[teacherId].totalInstructions += row.noSupport + row.notAtCenter + row.support;
+        results[teacherId].totalInstructions += row.noSupport + row.support;
       }
 
       // Calculate the averages in percentages
@@ -681,6 +684,8 @@ class AveragesData {
         result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+        result.childNonSequentialAverage = result.childNonSequential > 0 ? (result.childNonSequential / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       }
 
