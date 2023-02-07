@@ -55,6 +55,7 @@ import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
 import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
 import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
+import ACBarDetails from './Charts/ACBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -198,7 +199,7 @@ const radioValueArr = {
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
   languageEnvironment: 'languageEnvironmentAverage',
-  associativeAndCooperative: 'childrensPlayAverage',
+  associativeAndCooperative: 'teacherAverage',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -922,6 +923,7 @@ class SiteProfileResults extends React.Component {
       'mathInstruction',
       'listeningToChildren',
       'sequentialActivities',
+      'associativeAndCooperative',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1178,6 +1180,14 @@ class SiteProfileResults extends React.Component {
                   {/* Sequesntial Activities Chart */}
                   {this.props.observationType === "sequentialActivities" ? (
                     <SequentialActivitiesBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Associative and Cooperative Chart */}
+                  {this.props.observationType === "associativeAndCooperative" ? (
+                    <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />

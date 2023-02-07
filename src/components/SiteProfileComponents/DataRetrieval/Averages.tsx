@@ -619,6 +619,7 @@ class AveragesData {
         results[teachers[teacherIndex].id] = {
           name: tempName,
           totalInstructions: 0,
+          allInstructions: 0,
           sequentialActivities: 0,
           drawImages: 0,
           demonstrateSteps: 0,
@@ -659,8 +660,11 @@ class AveragesData {
 
         results[teacherId].childNonSequential += row.childNonSequential;
 
-        // Calculate the total Number of instructions
+        // Calculate the total Number of instructions that the teacher was there
         results[teacherId].totalInstructions += row.noSupport + row.support;
+
+        // Calculate the total number of instruction to calculate child averages
+        results[teacherId].allInstructions += row.noSupport + row.support + row.notAtCenter;
       }
 
       // Calculate the averages in percentages
@@ -685,7 +689,7 @@ class AveragesData {
         result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-        result.childNonSequentialAverage = result.childNonSequential > 0 ? (result.childNonSequential / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.childNonSequentialAverage = result.childNonSequential > 0 ? (result.childNonSequential / result.allInstructions).toFixed(2) * 100 : 0;
 
       }
 
@@ -1137,6 +1141,8 @@ class AveragesData {
         support: 0,
         noSupport: 0,
         notAtCenter: 0,
+
+        childNoInteraction: 0,
       };
 
     }
@@ -1189,6 +1195,10 @@ class AveragesData {
       {
         results[teacherId].sequence++;
       }
+      if( row.childNoInteraction )
+      {
+        results[teacherId].childNoInteraction++;
+      }
 
       // Check for act types
       // If teacher was there
@@ -1223,18 +1233,22 @@ class AveragesData {
       var tempTotalInstructions = result.totalInstructions;
       var tempTotalIntervals = result.totalIntervals;
 
-      result.childrensPlayAverage = result.childrensPlay > 0 ? (result.childrensPlay / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.encouragingChildrenAverage = result.encouraging > 0 ? (result.encouraging / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
+      let tempTotalIntervalsTeacherPresent = result.totalIntervals - result.notAtCenter;
 
-      result.noSequenceAverage = result.noSequence > 0 ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.formalRulesAverage = result.formalRules > 0 ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.sequenceAverage = result.sequence > 0 ? (result.sequence / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.childrensPlayAverage = result.childrensPlay > 0 ? (result.childrensPlay / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.encouragingChildrenAverage = result.encouraging > 0 ? (result.encouraging / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
 
-      result.supportAverage = result.support > 0 ? (result.support / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.noSequenceAverage = result.noSequence > 0 ? (result.noSequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.formalRulesAverage = result.formalRules > 0 ? (result.formalRules / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.sequenceAverage = result.sequence > 0 ? (result.sequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+
+      result.supportAverage = result.support > 0 ? (result.support / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+      result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalIntervalsTeacherPresent).toFixed(2) * 100 : 0;
+
+      result.childNoInteractionAverage = result.childNoInteraction > 0 ? (result.childNoInteraction / tempTotalIntervals).toFixed(2) * 100 : 0;
 
     }
 
