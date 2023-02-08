@@ -859,7 +859,6 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
  * Foundational Skills
  */
 calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
-
   let results = {};
   let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
   let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
@@ -905,6 +904,8 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
     let result = results[resultsIndex];
 
     for (let i = 0; i < monthsCount; i++) {
+      siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
+      siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
       result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
       result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
@@ -914,9 +915,6 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       } 
-
-      siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
-      siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
       siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
     }
   }
@@ -929,162 +927,6 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
   results.siteBar = siteBar;
   console.log(results)
   return results;
-
-  // // Initialize the array that will hold all the data
-  // var results = {};
-
-  // var totalIntervals = 0;
-
-  // // Get start month and year
-  // const startMonth = startDate.getMonth();
-
-  // const endMonth = endDate.getMonth();
-
-  // // Build list of month between start date and end date
-  // var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-  // // Set the month after the end date, formatted like Nov 21, 2022
-  // var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-  // var months = [];
-  // while(tempDate !== endDatePlusOneMonth)
-  // {
-  //   months.push(tempDate);
-  //   tempDate = new Date(tempDate);
-  //   tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-  // }
-
-  // var monthsCount = months.length;
-
-  // // Add each teacher to the object
-  // var tempName = "";
-  // for(var teacherIndex in teachers)
-  // {
-
-  //   tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-  //   results[teachers[teacherIndex].id] = {
-  //     name: tempName,
-  //     totalIntervals: new Array(monthsCount).fill(0),
-  //     totalInstructions: new Array(monthsCount).fill(0),
-  //     phonological: new Array(monthsCount).fill(0),
-  //     alphabetic: new Array(monthsCount).fill(0),
-  //     openEndedQuestions: new Array(monthsCount).fill(0),
-  //     realisticReading: new Array(monthsCount).fill(0),
-  //     multimodalInstruction: new Array(monthsCount).fill(0),
-  //     foundationalSkills: new Array(monthsCount).fill(0),
-
-  //     phonologicalAverage: new Array(monthsCount).fill(0),
-  //     alphabeticAverage: new Array(monthsCount).fill(0),
-  //     openEndedQuestionsAverage: new Array(monthsCount).fill(0),
-  //     realisticReadingAverage: new Array(monthsCount).fill(0),
-  //     multimodalInstructionAverage: new Array(monthsCount).fill(0),
-  //     foundationalSkillsAverage: new Array(monthsCount).fill(0),
-
-  //     lineChartLabels: months,
-  //   };
-
-  // }
-
-
-  // // Sort by date just in case
-  // data.sort(function(a,b){
-  //   return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
-  // });
-
-
-  // // Get number of instances for each type of data
-  // var tempIntervalData = 0;
-  // var prevMonth = 0, rowMonth = startMonth;
-
-
-
-  // for(var rowIndex in data)
-  // {
-  //   var row = data[rowIndex];
-
-  //   var teacherId = row.teacher.split("/")[2];
-
-  //   //rowMonth = new Date(row.GroupDate.value).getMonth();
-  //   rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-  //   // Add to total # of intervals
-  //   // results[teacherId].totalIntervals[rowMonth] += row.total;
-  //   results[teacherId].totalIntervals[rowMonth]++;
-
-  //   // Add to behavior types
-  //   /*
-  //   results[teacherId].phonological[rowMonth] += row.foundational1 + row.foundational2;
-  //   results[teacherId].alphabetic[rowMonth] += row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7;
-  //   results[teacherId].openEndedQuestions[rowMonth] += row.foundational8;
-  //   results[teacherId].realisticReading[rowMonth] += row.foundational9;
-  //   results[teacherId].multimodalInstruction[rowMonth] += row.foundational10;
-
-  //   // THIS ONE ISN'T RIGHT FOR NOW
-  //   results[teacherId].foundationalSkillsAverage[rowMonth] += row.foundational10;
-  //   */
-
-  //   // If this observation has a phonal answer.
-  //   if(row.foundational1 || row.foundational2)
-  //   {
-  //     results[teacherId].phonological[rowMonth]++;
-  //   }
-  //   // If this observation has a alphabetic answer
-  //   if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
-  //   {
-  //     results[teacherId].alphabetic[rowMonth]++;
-  //   }
-  //   // If this observation has a open ended question
-  //   if(row.foundational8)
-  //   {
-  //     results[teacherId].openEndedQuestions[rowMonth]++;
-  //   }
-  //   // If this observation has a realistic Reading
-  //   if(row.foundational9)
-  //   {
-  //     results[teacherId].realisticReading[rowMonth]++;
-  //   }
-  //   // If this observation has a Multi Modal
-  //   if(row.foundational10)
-  //   {
-  //     results[teacherId].multimodalInstruction[rowMonth]++;
-  //   }
-  //   // If this observation has anything
-  //   if(!row.foundational11)
-  //   {
-  //     results[teacherId].foundationalSkills[rowMonth]++;
-  //   }
-
-
-  //   // Calculate the total Number of instructions
-  //   results[teacherId].totalInstructions[rowMonth] += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
-  // }
-
-  // // Calculate the averages in percentages
-  // // Go through each teacher
-  // for(var resultsIndex in results)
-  // {
-  //   var result = results[resultsIndex];
-
-  //   // Go through the months
-  //   for(var i = 0; i < monthsCount; i++)
-  //   {
-  //     var tempTotalInstructions = result.totalInstructions[i];
-  //     var tempTotalIntervals = result.totalIntervals[i];
-
-  //     result.phonologicalAverage[i] = result.phonological[i] > 0 ? (result.phonological[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-  //     result.alphabeticAverage[i] = result.alphabetic[i] > 0 ? (result.alphabetic[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-  //     result.openEndedQuestionsAverage[i] = result.openEndedQuestions[i] > 0 ? (result.openEndedQuestions[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-  //     result.realisticReadingAverage[i] = result.realisticReading[i] > 0 ? (result.realisticReading[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-  //     result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-  //     // THIS ONE ISN'T RIGHT FOR NOW
-  //     result.foundationalSkillsAverage[i] = result.foundationalSkills[i] > 0 ? (result.foundationalSkills[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-  //   }
-  // }
-
-  // return results;
-
 }
 
 
@@ -1094,138 +936,74 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
  * Writing Skills
  */
 calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
-
-  // Initialize the array that will hold all the data
-  var results = {};
-
-  var totalIntervals = 0;
-
-  // Get start month and year
-  const startMonth = startDate.getMonth();
-
-  const endMonth = endDate.getMonth();
-
-  // Build list of month between start date and end date
-  var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-  // Set the month after the end date, formatted like Nov 21, 2022
-  var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-  var months = [];
-  while(tempDate !== endDatePlusOneMonth)
-  {
+  let results = {};
+  let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+  let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+  let months = [];
+  while (tempDate !== endDatePlusOneMonth) {
     months.push(tempDate);
     tempDate = new Date(tempDate);
-    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
   }
 
-  var monthsCount = months.length;
-
-
-  // Add each teacher to the object
-  var tempName = "";
-  for(var teacherIndex in teachers)
-  {
-
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
+  let monthsCount = months.length;
+  for (let teacherIndex in teachers) {
     results[teachers[teacherIndex].id] = {
-      name: tempName,
+      name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
       totalIntervals: new Array(monthsCount).fill(0),
-      totalInstructions: new Array(monthsCount).fill(0),
-      writingSkills: new Array(monthsCount).fill(0),
-      meaning: new Array(monthsCount).fill(0),
-      printProcesses: new Array(monthsCount).fill(0),
-
-
-      writingSkillsAverage: new Array(monthsCount).fill(0),
-      meaningAverage: new Array(monthsCount).fill(0),
-      printProcessesAverage: new Array(monthsCount).fill(0),
-
-      lineChartLabels: months,
-
+      literacyInstruction: new Array(monthsCount).fill(0),
+      noBehaviors: new Array(monthsCount).fill(0),
+      lineChartLabels: months
     };
-
   }
 
-
-  // Sort by date just in case
-  data.sort(function(a,b){
-    return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
-  });
-
-
-  // Get number of instances for each type of data
-  var tempIntervalData = 0;
-  var prevMonth = 0, rowMonth = startMonth;
-
-
-
-  for(var rowIndex in data)
-  {
-    var row = data[rowIndex];
-
-    var teacherId = row.teacher.split("/")[2];
-
-    //rowMonth = new Date(row.GroupDate.value).getMonth();
-    rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-    // Add to total # of intervals
-    // results[teacherId].totalIntervals[rowMonth] += row.total;
+  for (let rowIndex in data) {
+    let row = data[rowIndex];
+    let teacherId = row.teacher.split("/")[2];
+    let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
     results[teacherId].totalIntervals[rowMonth]++;
-
-    // Add to behavior types
-    /*
-    results[teacherId].meaning[rowMonth] += row.writing1 + row.writing2;
-    results[teacherId].printProcesses[rowMonth] += row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
-
-    // THIS ONE ISN'T RIGHT FOR NOW
-    results[teacherId].writingSkills[rowMonth] += row.writing1;
-    */
-
-    // Count each observation interval that has a meaning in it.
-    if(row.writing1 || row.writing2)
-    {
-      results[teacherId].meaning[rowMonth]++;
-    }
-    // Count each observation interval that has a Print Process in it
-    if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
-    {
-      results[teacherId].printProcesses[rowMonth]++;
-    }
-
-    // Count each observation interval that has anything in it
-    if(!row.writing9)
-    {
-      results[teacherId].writingSkills[rowMonth]++;
-    }
-
-    // Calculate the total Number of instructions
-    results[teacherId].totalInstructions[rowMonth] += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
-  }
-
-  // Calculate the averages in percentages
-  // Go through each teacher
-  for(var resultsIndex in results)
-  {
-    var result = results[resultsIndex];
-
-    // Go through the months
-    for(var i = 0; i < monthsCount; i++)
-    {
-      var tempTotalInstructions = result.totalInstructions[i];
-      var tempTotalIntervals = result.totalIntervals[i];
-
-      result.meaningAverage[i] = result.meaning[i] > 0 ? (result.meaning[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.printProcessesAverage[i] = result.printProcesses[i] > 0 ? (result.printProcesses[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      // THIS ONE ISN'T RIGHT FOR NOW
-      result.writingSkillsAverage[i] = result.writingSkills[i] > 0 ? (result.writingSkills[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
+    if (row.writing9) {
+      results[teacherId].noBehaviors[rowMonth]++;
+    } else {
+      results[teacherId].literacyInstruction[rowMonth]++;
     }
   }
 
+  let siteBar = {
+    name: "Site Average",
+    total: new Array(monthsCount).fill(0),
+    literacyInstruction: new Array(monthsCount).fill(0),
+    noBehaviors: new Array(monthsCount).fill(0),
+    lineChartLabels: months
+  }
+
+  for (let resultsIndex in results) {
+    let result = results[resultsIndex];
+
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
+      siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
+      result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+      result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+
+      if (isNaN(result.literacyInstruction[i])) {
+        result.literacyInstruction[i] = 0
+      } 
+      if (isNaN(result.noBehaviors[i])) {
+        result.noBehaviors[i] = 0
+      } 
+      siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
+    }
+  }
+
+  for (let i = 0; i < monthsCount; i++) {
+    siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+  }
+
+  results.siteBar = siteBar;
+  console.log(results)
   return results;
-
 }
 
 
@@ -1234,165 +1012,74 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
    * Book Reading
    */
   calculateBookReadingTrends = (data, teachers, startDate, endDate) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Get start month and year
-    const startMonth = startDate.getMonth();
-
-    const endMonth = endDate.getMonth();
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    var months = [];
-    while(tempDate !== endDatePlusOneMonth)
-    {
+    let results = {};
+    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    let months = [];
+    while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate);
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-
-    var monthsCount = months.length;
-
-
-
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
-
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
+  
+    let monthsCount = months.length;
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
+        name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
         totalIntervals: new Array(monthsCount).fill(0),
-        totalInstructions: new Array(monthsCount).fill(0),
-        bookReading: new Array(monthsCount).fill(0),
-        vocabFocus: new Array(monthsCount).fill(0),
-        languageConnections: new Array(monthsCount).fill(0),
-        childrenSupport: new Array(monthsCount).fill(0),
-        fairnessDiscussions: new Array(monthsCount).fill(0),
-        multimodalInstruction: new Array(monthsCount).fill(0),
-
-        vocabFocusAverage: new Array(monthsCount).fill(0),
-        languageConnectionsAverage: new Array(monthsCount).fill(0),
-        childrenSupportAverage: new Array(monthsCount).fill(0),
-        fairnessDiscussionsAverage: new Array(monthsCount).fill(0),
-        multimodalInstructionAverage: new Array(monthsCount).fill(0),
-        bookReadingAverage: new Array(monthsCount).fill(0),
-
-        lineChartLabels: months,
+        literacyInstruction: new Array(monthsCount).fill(0),
+        noBehaviors: new Array(monthsCount).fill(0),
+        lineChartLabels: months
       };
-
     }
-
-
-    // Sort by date just in case
-    data.sort(function(a,b){
-      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
-    });
-
-
-    // Get number of instances for each type of data
-    var tempIntervalData = 0;
-    var prevMonth = 0, rowMonth = startMonth;
-
-
-
-    for(var rowIndex in data)
-    {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      //rowMonth = new Date(row.GroupDate.value).getMonth();
-      rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
+  
+    for (let rowIndex in data) {
+      let row = data[rowIndex];
+      let teacherId = row.teacher.split("/")[2];
+      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
       results[teacherId].totalIntervals[rowMonth]++;
-
-      // Add to behavior types
-      /*
-      results[teacherId].vocabFocus[rowMonth] +=  row.literacy1 + row.literacy2 + row.literacy3;
-
-      results[teacherId].languageConnections[rowMonth] += row.literacy4 + row.literacy5;
-      results[teacherId].childrenSupport[rowMonth] += row.literacy6 + row.literacy7 + row.literacy8;
-      results[teacherId].fairnessDiscussions[rowMonth] += row.literacy9;
-      results[teacherId].multimodalInstruction[rowMonth] += row.literacy10;
-      */
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
-
-      // If there were any vocabanswers in this observation
-      if( row.literacy1 || row.literacy2 || row.literacy3 )
-      {
-        results[teacherId].vocabFocus[rowMonth]++;
-      }
-      // If there were any Language Connection answers in this observation
-      if( row.literacy4 || row.literacy5 )
-      {
-        results[teacherId].languageConnections[rowMonth]++;
-      }
-      // If there were any Children Support answers in this observation
-      if( row.literacy6 || row.literacy7 || row.literacy8 )
-      {
-        results[teacherId].childrenSupport[rowMonth]++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy9 )
-      {
-        results[teacherId].fairnessDiscussions[rowMonth]++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy10 )
-      {
-        results[teacherId].multimodalInstruction[rowMonth]++;
-      }
-      // If there were any answers in this observation
-      if( !row.literacy11 )
-      {
-        results[teacherId].bookReading[rowMonth]++;
-      }
-
-    }
-
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
-
-      console.log("RESULT LOOP");
-
-
-      // Go through the months
-      for(var i = 0; i < monthsCount; i++)
-      {
-        console.log("MONTHS LOOP");
-
-        var tempTotalInstructions = result.totalInstructions[i];
-        var tempTotalIntervals = result.totalIntervals[i];
-
-        result.vocabFocusAverage[i] = result.vocabFocus[i] > 0 ? (result.vocabFocus[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.languageConnectionsAverage[i] = result.languageConnections[i] > 0 ? (result.languageConnections[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.childrenSupportAverage[i] = result.childrenSupport[i] > 0 ? (result.childrenSupport[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.fairnessDiscussionsAverage[i] = result.fairnessDiscussions[i] > 0 ? (result.fairnessDiscussions[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.multimodalInstructionAverage[i] = result.multimodalInstruction[i] > 0 ? (result.multimodalInstruction[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-        result.bookReadingAverage[i] = result.bookReading[i] > 0 ? (result.bookReading[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
+      if (row.literacy11) {
+        results[teacherId].noBehaviors[rowMonth]++;
+      } else {
+        results[teacherId].literacyInstruction[rowMonth]++;
       }
     }
-
+  
+    let siteBar = {
+      name: "Site Average",
+      total: new Array(monthsCount).fill(0),
+      literacyInstruction: new Array(monthsCount).fill(0),
+      noBehaviors: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    }
+  
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+  
+      for (let i = 0; i < monthsCount; i++) {
+        siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
+        siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
+        result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+  
+        if (isNaN(result.literacyInstruction[i])) {
+          result.literacyInstruction[i] = 0
+        } 
+        if (isNaN(result.noBehaviors[i])) {
+          result.noBehaviors[i] = 0
+        } 
+        siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
+      }
+    }
+  
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+      siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+    }
+  
+    results.siteBar = siteBar;
+    console.log(results)
     return results;
-
   }
 
 
@@ -1401,139 +1088,74 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
    * Language Environment
    */
   calculateLanguageEnvironmentTrends = (data, teachers, startDate, endDate) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Get start month and year
-    const startMonth = startDate.getMonth();
-
-    const endMonth = endDate.getMonth();
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    var months = [];
-    while(tempDate !== endDatePlusOneMonth)
-    {
+    let results = {};
+    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    let months = [];
+    while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate);
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-
-    var monthsCount = months.length;
-
-
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
-
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
+  
+    let monthsCount = months.length;
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
+        name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
         totalIntervals: new Array(monthsCount).fill(0),
-        totalInstructions: new Array(monthsCount).fill(0),
-        languageEnvironment: new Array(monthsCount).fill(0),
-        talk: new Array(monthsCount).fill(0),
-        encourageChildren: new Array(monthsCount).fill(0),
-        respondChildren: new Array(monthsCount).fill(0),
-
-
-        languageEnvironmentAverage: new Array(monthsCount).fill(0),
-        talkAverage: new Array(monthsCount).fill(0),
-        encourageChildrenAverage: new Array(monthsCount).fill(0),
-        respondChildrenAverage: new Array(monthsCount).fill(0),
-
-        lineChartLabels: months,
-
+        literacyInstruction: new Array(monthsCount).fill(0),
+        noBehaviors: new Array(monthsCount).fill(0),
+        lineChartLabels: months
       };
-
     }
-
-
-    // Sort by date just in case
-    data.sort(function(a,b){
-      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value);
-    });
-
-
-    // Get number of instances for each type of data
-    var tempIntervalData = 0;
-    var prevMonth = 0, rowMonth = startMonth;
-
-
-
-    for(var rowIndex in data)
-    {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      //rowMonth = new Date(row.GroupDate.value).getMonth();
-      rowMonth = months.indexOf(new Date(row.GroupDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals[rowMonth] += row.total;
+  
+    for (let rowIndex in data) {
+      let row = data[rowIndex];
+      let teacherId = row.teacher.split("/")[2];
+      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
       results[teacherId].totalIntervals[rowMonth]++;
-
-      // Add to behavior types
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7;
-
-
-      // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
-      if( row.literacy1 || row.literacy2)
-      {
-        results[teacherId].talk[rowMonth]++;
-      }
-      // If there were any "Encourage Children to talk" answers in this observation
-      if( row.literacy3 || row.literacy4 || row.literacy5 )
-      {
-        results[teacherId].encourageChildren[rowMonth]++;
-      }
-      // If there were any "Respond to children" answers in this observation
-      if( row.literacy6 || row.literacy7 || row.literacy8 )
-      {
-        results[teacherId].respondChildren[rowMonth]++;
-      }
-
-      // If there were any answers in this observation
-      if( !row.literacy9 )
-      {
-        results[teacherId].languageEnvironment[rowMonth]++;
+      if (row.literacy9) {
+        results[teacherId].noBehaviors[rowMonth]++;
+      } else {
+        results[teacherId].literacyInstruction[rowMonth]++;
       }
     }
-
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
-
-      // Go through the months
-      for(var i = 0; i < monthsCount; i++)
-      {
-        var tempTotalInstructions = result.totalInstructions[i];
-        var tempTotalIntervals = result.totalIntervals[i];
-
-        result.talkAverage[i] = result.talk[i] > 0 ? (result.talk[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.encourageChildrenAverage[i] = result.encourageChildren[i] > 0 ? (result.encourageChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-        result.respondChildrenAverage[i] = result.respondChildren[i] > 0 ? (result.respondChildren[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-        result.languageEnvironmentAverage[i] = result.languageEnvironment[i] > 0 ? (result.languageEnvironment[i] / tempTotalIntervals).toFixed(2) * 100 : 0;
-
+  
+    let siteBar = {
+      name: "Site Average",
+      total: new Array(monthsCount).fill(0),
+      literacyInstruction: new Array(monthsCount).fill(0),
+      noBehaviors: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    }
+  
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+  
+      for (let i = 0; i < monthsCount; i++) {
+        siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
+        siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
+        result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+  
+        if (isNaN(result.literacyInstruction[i])) {
+          result.literacyInstruction[i] = 0
+        } 
+        if (isNaN(result.noBehaviors[i])) {
+          result.noBehaviors[i] = 0
+        } 
+        siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
       }
     }
-
+  
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+      siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+    }
+  
+    results.siteBar = siteBar;
+    console.log(results)
     return results;
-
   }
 
 
