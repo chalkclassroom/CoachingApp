@@ -2,7 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
-import {draw, generate} from 'patternomaly'
 
 import {withStyles} from '@material-ui/core'
 
@@ -137,10 +136,9 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         label: 'Site Average Behavior Approval',
         //data: hlqAverage,
         data: [10,20,30,40],
-        //backgroundColor: "#5B9BD5",
-        backgroundColor: [draw("diagonal-right-left", "#78ce90")],
+        backgroundColor: this.createDiagonalPattern('#5B9BD5'),
         borderColor: "#5B9BD5",
-        borderWidth: 4,
+        borderWidth: 3,
       },
 
       {
@@ -156,9 +154,9 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         label: 'Site Average Behavior Disapproval',
         //data: siteAverageLlqAverage,
         data: [40,50,60,70],
-        backgroundColor: "#ED7D31",
+        backgroundColor: this.createDiagonalPattern('#ED7D31'),
         borderColor: "#ED7D31",
-        borderWidth: 4,
+        borderWidth: 3,
       },
     ]
 
@@ -167,6 +165,43 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
   }
 
+  createDiagonalPattern(color = 'black') {
+    let shape = document.createElement('canvas')
+    shape.width = 10
+    shape.height = 10
+    let c = shape.getContext('2d')
+    c.strokeStyle = color
+    c.beginPath()
+
+    c.moveTo(0, 10)
+    c.lineTo(8, 2)
+    c.stroke()
+    c.beginPath()
+    c.moveTo(8, 2)
+    c.lineTo(10, 0)
+    c.stroke()
+
+    c.beginPath()
+    c.moveTo(0, 5)
+    c.lineTo(5, 0)
+    c.stroke()
+
+    c.beginPath()
+    c.moveTo(5, 10)
+    c.lineTo(10, 5)
+    c.stroke()
+
+    /*
+    c.moveTo(0, 15)
+    c.lineTo(8, 7)
+    c.stroke()
+    c.beginPath()
+    c.moveTo(8, 7)
+    c.lineTo(10, 5)
+    c.stroke()
+    */
+    return c.createPattern(shape, 'repeat')
+  }
 
   randomRgbColor() {
     return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
@@ -206,7 +241,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
     return (
       <div style={{padding: '30px 30px 0px 30px'}}>
-        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Level of Instruction</h2>
+        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
         <div className={"realChart"} style={{height: 500}}>
           <Bar
             data={childBehaviorsData}
@@ -248,6 +283,8 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                 ],
                 xAxes: [
                   {
+                    categoryPercentage: .8,
+                    barPercentage: 1.0,
                     ticks: {
                       fontSize: 16,
                       fontColor: 'black',
@@ -284,7 +321,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
               },
               plugins: {
                 datalabels: {
-                  display: 'none',
+                  display: false,
                   color: 'black',
                   font: {
                     size: 14,
