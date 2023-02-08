@@ -766,6 +766,13 @@ class SiteProfileResults extends React.Component {
   // Set Line Graph data
 
   setLineGraphData = (teachers, type) => {
+    let oneType = ["studentEngagement"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment"];
+    let type2 = "";
+    let label1 = "";
+    let label2 = "";
+    let color1 = "";
+    let color2 = "";
 
     var trends = this.state.trends
     console.log(trends)
@@ -775,11 +782,19 @@ class SiteProfileResults extends React.Component {
     var i = 0
     var tempMonths = [];
 
+    /** CHANGE YOUR ATTRIBUTES HERE */
     if (this.props.observationType === "studentEngagement") {
       type = "dailyAverage"
+      color1 = "#FF7F00"
+      label1 = "Daily Average"
     }
     if (this.props.observationType === "foundationSkills") {
       type = "literacyInstruction"
+      type2 = "noBehaviors"
+      label1 = "Literacy Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#C4395A"
+      color2 = "#E5E5E5"
     }
 
 
@@ -795,17 +810,14 @@ class SiteProfileResults extends React.Component {
       })
 
       // If there isn't a color set for this teacher, set it
-      if (this.props.observationType === "studentEngagement") {
-        lineColors[i] = "#FF7F00"
-      }
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+      if (color1 === "") {
+        color1 = this.randomRgbColor()
       }
 
       var tempData = {
-        label: fullName,
+        label: `${fullName} ${label1}`,
         data: chosenData,
-        borderColor: lineColors[i],
+        borderColor: color1,
         fill: false,
         tension: 0.0,
       }
@@ -820,16 +832,61 @@ class SiteProfileResults extends React.Component {
       i++
     }
 
-    if (this.props.observationType === "foundationSkills") {
-      type = "noBehaviors"
+    if (twoType.includes(this.props.observationType)) {
+      for (var teacherIndex in teachers) {
+        var teacher = teachers[teacherIndex]
+        var fullName = teacher.firstName + ' ' + teacher.lastName
 
+        var chosenData = trends[teacher.id][type2]
 
+        // Round off all the numbers
+        chosenData = chosenData.map(function(each_element) {
+          return Math.round((each_element + Number.EPSILON) * 100) / 100
+        })
 
-    for (var teacherIndex in teachers) {
-      var teacher = teachers[teacherIndex]
-      var fullName = teacher.firstName + ' ' + teacher.lastName
+        // If there isn't a color set for this teacher, set it
+        if (color2 === "") {
+          color2 = this.randomRgbColor()
+        }
 
-      var chosenData = trends[teacher.id][type]
+        var tempData = {
+          label: `${fullName} ${label2}`,
+          data: chosenData,
+          borderColor: color2,
+          fill: false,
+          tension: 0.0,
+        }
+
+        // Add the months so we can set the right labels for the trends chart
+        if(trends[teacher.id].lineChartLabels)
+        {
+          tempMonths = trends[teacher.id].lineChartLabels;
+        }
+
+        tempDataSet.push(tempData)
+        i++
+      }
+    }
+
+    chosenData = trends["siteBar"][type]
+    // Round off all the numbers
+    chosenData = chosenData.map(function(each_element) {
+    return Math.round((each_element + Number.EPSILON) * 100) / 100
+    })
+
+    var tempData = {
+      label: `Site Average ${label1}`,
+      data: chosenData,
+      borderColor: color1,
+      borderDash: [10,5],
+      fill: false,
+      tension: 0.0,
+    }
+
+    tempDataSet.push(tempData)
+
+    if (twoType.includes(this.props.observationType)) {
+      chosenData = trends["siteBar"][type2]
 
       // Round off all the numbers
       chosenData = chosenData.map(function(each_element) {
@@ -837,92 +894,28 @@ class SiteProfileResults extends React.Component {
       })
 
       // If there isn't a color set for this teacher, set it
-      if (this.props.observationType === "studentEngagement") {
-        lineColors[i] = "#FF7F00"
-      }
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+      //// ADD YOUR SECOND COLOR HERE
+      if (color2 === "") {
+        color2 = this.randomRgbColor()
       }
 
       var tempData = {
-        label: fullName,
+        label: `Site Average ${label2}`,
         data: chosenData,
-        borderColor: lineColors[i],
-        fill: false,
-        tension: 0.0,
-      }
-
-      // Add the months so we can set the right labels for the trends chart
-      if(trends[teacher.id].lineChartLabels)
-      {
-        tempMonths = trends[teacher.id].lineChartLabels;
-      }
-
-      tempDataSet.push(tempData)
-      i++
-    }
-  }
-
-    if (this.props.observationType === "studentEngagement") {
-      chosenData = trends["siteBar"]["dailyAverage"]
-    }
-
-    if (this.props.observationType === "foundationSkills") {
-      chosenData = trends["siteBar"]["literacyInstruction"]
-       // Round off all the numbers
-       chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
-
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
-      }
-
-      var tempData = {
-        label: "Site Average",
-        data: chosenData,
-        borderColor: lineColors[i],
+        borderColor: color2,
         borderDash: [10,5],
         fill: false,
         tension: 0.0,
       }
 
       tempDataSet.push(tempData)
-
-      chosenData = trends["siteBar"]["noBehaviors"]
     }
 
-      // Round off all the numbers
-      chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
-
-      // If there isn't a color set for this teacher, set it
-      if (this.props.observationType === "studentEngagement") {
-        lineColors[i] = "#FF7F00"
-      }
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
-      }
-
-      var tempData = {
-        label: "Site Average",
-        data: chosenData,
-        borderColor: lineColors[i],
-        borderDash: [10,5],
-        fill: false,
-        tension: 0.0,
-      }
-
-      // Add the months so we can set the right labels for the trends chart
-      if(trends["siteBar"].lineChartLabels)
-      {
-        tempMonths = trends["siteBar"].lineChartLabels;
-      }
-
-      tempDataSet.push(tempData)
-
-
+    // Add the months so we can set the right labels for the trends chart
+    if(trends["siteBar"].lineChartLabels)
+    {
+      tempMonths = trends["siteBar"].lineChartLabels;
+    }
     // Get the months from the data
     const monthOptions = [
       'January',
