@@ -486,6 +486,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(async (data, context) 
                       COUNT(CASE WHEN (checklist.child2) THEN 'child2' ELSE NULL END) AS child2,
                       COUNT(CASE WHEN (checklist.child3) THEN 'child3' ELSE NULL END) AS child3,
                       COUNT(CASE WHEN (checklist.child4) THEN 'child4' ELSE NULL END) AS child4,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'child5' ELSE NULL END) AS childNoInteraction,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,

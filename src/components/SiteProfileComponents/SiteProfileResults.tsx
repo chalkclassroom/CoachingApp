@@ -50,6 +50,7 @@ import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
+import ClassroomClimateTrends from './Charts/ClassroomClimateTrends'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
@@ -1093,12 +1094,26 @@ class SiteProfileResults extends React.Component {
                   direction={'column'}
                   style={{ height: 500 }}
                 >
-                  <Line
-                    data={this.state.lineGraphData}
-                    options={LineGraphOptions}
-                  />
+                  {this.props.observationType !== "classroomClimate" ? (
+                    <Line
+                      data={this.state.lineGraphData}
+                      options={LineGraphOptions}
+                    />
+                  ) : null}
+                  {/* Classroom Climate Trends */}
+                  {this.props.observationType === "classroomClimate" ? (
+                    <ClassroomClimateTrends
+                      data={this.state.trends}
+                      options={LineGraphOptions}
+                      selectedTeacher={this.state.selectedTeacher}
+                    />
+                  ) : null}
+
                 </Grid>
-                </>) : null }
+
+
+
+              </>) : null }
 
 
               {/*
