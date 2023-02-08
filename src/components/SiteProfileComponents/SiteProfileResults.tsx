@@ -1187,7 +1187,7 @@ class SiteProfileResults extends React.Component {
                   container
                   justify={'center'}
                   direction={'column'}
-                  style={{ height: 500 }}
+                  style={{ minHeight: 500 }}
                 >
                   {this.props.observationType !== "classroomClimate" ? (
                     <Line
@@ -1300,9 +1300,6 @@ class SiteProfileResults extends React.Component {
                     />
                   ) : null}
 
-                  {this.props.observationType === 'classroomClimate' ? (
-                    <ClassroomClimateBarDetails data={this.state.averages} />
-                  ) : null}
 
                   {this.props.observationType === 'transitionTime' ? (
                     <TransitionAverageBarDetails data={this.state.averages} />
