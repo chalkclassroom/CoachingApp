@@ -59,6 +59,7 @@ import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetail
 import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 import ACBarDetails from './Charts/ACBarDetails'
 import TransitionAverageBarDetails from './Charts/TransitionAverageBarDetails'
+import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -998,10 +999,6 @@ class SiteProfileResults extends React.Component {
       'mathInstruction',
       'bookReading',
       'sequentialActivities',
-      'foundationSkills',
-      'writing',
-      'bookReading',
-      'languageEnvironment',
       'associativeAndCooperative',
     ]
 
@@ -1017,6 +1014,10 @@ class SiteProfileResults extends React.Component {
       'sequentialActivities',
       'associativeAndCooperative',
       'transitionTime',
+      'foundationSkills',
+      'writing',
+      'bookReading',
+      'languageEnvironment',
     ]
 
     if (this.props.observationType === 'studentEngagement') {
@@ -1307,6 +1308,15 @@ class SiteProfileResults extends React.Component {
                   {this.props.observationType === 'transitionTime' ? (
                     <TransitionAverageBarDetails data={this.state.averages} />
                   ) : null}
+
+                  {/* Literacy Instruction Charts */}
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                    <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                    />
+                  ) : null}
+                  
                 </Grid>
               ) : null}
             </Grid>
