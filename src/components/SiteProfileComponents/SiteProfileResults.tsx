@@ -59,6 +59,7 @@ import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetail
 import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 import ACBarDetails from './Charts/ACBarDetails'
 import TransitionAverageBarDetails from './Charts/TransitionAverageBarDetails'
+import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -765,17 +766,37 @@ class SiteProfileResults extends React.Component {
   // Set Line Graph data
 
   setLineGraphData = (teachers, type) => {
+    let oneType = ["studentEngagement"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment"];
+    let type2 = "";
+    let label1 = "";
+    let label2 = "";
+    let color1 = "";
+    let color2 = "";
+
     var trends = this.state.trends
     console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
-    var tempMonths = []
+    var tempMonths = [];
 
-    if (this.props.observationType === 'studentEngagement') {
-      type = 'dailyAverage'
+    /** CHANGE YOUR ATTRIBUTES HERE */
+    if (this.props.observationType === "studentEngagement") {
+      type = "dailyAverage"
+      color1 = "#FF7F00"
+      label1 = "Daily Average"
     }
+    if (this.props.observationType === "foundationSkills") {
+      type = "literacyInstruction"
+      type2 = "noBehaviors"
+      label1 = "Literacy Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#C4395A"
+      color2 = "#E5E5E5"
+    }
+
 
     for (var teacherIndex in teachers) {
       var teacher = teachers[teacherIndex]
@@ -789,61 +810,112 @@ class SiteProfileResults extends React.Component {
       })
 
       // If there isn't a color set for this teacher, set it
-      if (this.props.observationType === 'studentEngagement') {
-        lineColors[i] = '#FF7F00'
-      }
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+      if (color1 === "") {
+        color1 = this.randomRgbColor()
       }
 
       var tempData = {
-        label: fullName,
+        label: `${fullName} ${label1}`,
         data: chosenData,
-        borderColor: lineColors[i],
+        borderColor: color1,
         fill: false,
         tension: 0.0,
       }
 
       // Add the months so we can set the right labels for the trends chart
-      if (trends[teacher.id].lineChartLabels) {
-        tempMonths = trends[teacher.id].lineChartLabels
+      if(trends[teacher.id].lineChartLabels)
+      {
+        tempMonths = trends[teacher.id].lineChartLabels;
       }
 
       tempDataSet.push(tempData)
       i++
     }
 
-    // chosenData = trends['siteBar']['dailyAverage']
+    if (twoType.includes(this.props.observationType)) {
+      for (var teacherIndex in teachers) {
+        var teacher = teachers[teacherIndex]
+        var fullName = teacher.firstName + ' ' + teacher.lastName
 
-    // // Round off all the numbers
-    // chosenData = chosenData.map(function(each_element) {
-    //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-    // })
+        var chosenData = trends[teacher.id][type2]
 
-    // // If there isn't a color set for this teacher, set it
-    // if (this.props.observationType === 'studentEngagement') {
-    //   lineColors[i] = '#FF7F00'
-    // }
-    // if (!lineColors[i]) {
-    //   lineColors[i] = this.randomRgbColor()
-    // }
+        // Round off all the numbers
+        chosenData = chosenData.map(function(each_element) {
+          return Math.round((each_element + Number.EPSILON) * 100) / 100
+        })
 
-    // var tempData = {
-    //   label: 'Site Average',
-    //   data: chosenData,
-    //   borderColor: lineColors[i],
-    //   borderDash: [10, 5],
-    //   fill: false,
-    //   tension: 0.0,
-    // }
+        // If there isn't a color set for this teacher, set it
+        if (color2 === "") {
+          color2 = this.randomRgbColor()
+        }
 
-    // // Add the months so we can set the right labels for the trends chart
-    // if (trends['siteBar'].lineChartLabels) {
-    //   tempMonths = trends['siteBar'].lineChartLabels
-    // }
+        var tempData = {
+          label: `${fullName} ${label2}`,
+          data: chosenData,
+          borderColor: color2,
+          fill: false,
+          tension: 0.0,
+        }
 
-    // tempDataSet.push(tempData)
+        // Add the months so we can set the right labels for the trends chart
+        if(trends[teacher.id].lineChartLabels)
+        {
+          tempMonths = trends[teacher.id].lineChartLabels;
+        }
 
+        tempDataSet.push(tempData)
+        i++
+      }
+    }
+
+    chosenData = trends["siteBar"][type]
+    // Round off all the numbers
+    chosenData = chosenData.map(function(each_element) {
+    return Math.round((each_element + Number.EPSILON) * 100) / 100
+    })
+
+    var tempData = {
+      label: `Site Average ${label1}`,
+      data: chosenData,
+      borderColor: color1,
+      borderDash: [10,5],
+      fill: false,
+      tension: 0.0,
+    }
+
+    tempDataSet.push(tempData)
+
+    if (twoType.includes(this.props.observationType)) {
+      chosenData = trends["siteBar"][type2]
+
+      // Round off all the numbers
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      //// ADD YOUR SECOND COLOR HERE
+      if (color2 === "") {
+        color2 = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: `Site Average ${label2}`,
+        data: chosenData,
+        borderColor: color2,
+        borderDash: [10,5],
+        fill: false,
+        tension: 0.0,
+      }
+
+      tempDataSet.push(tempData)
+    }
+
+    // Add the months so we can set the right labels for the trends chart
+    if(trends["siteBar"].lineChartLabels)
+    {
+      tempMonths = trends["siteBar"].lineChartLabels;
+    }
     // Get the months from the data
     const monthOptions = [
       'January',
@@ -860,10 +932,13 @@ class SiteProfileResults extends React.Component {
       'December',
     ]
 
-    var labels = monthOptions
-    if (tempMonths.length > 0) {
+
+    var labels = monthOptions;
+    if(tempMonths.length > 0)
+    {
       labels = tempMonths
     }
+
 
     const lineData = {
       labels,
@@ -998,10 +1073,6 @@ class SiteProfileResults extends React.Component {
       'mathInstruction',
       'bookReading',
       'sequentialActivities',
-      'foundationSkills',
-      'writing',
-      'bookReading',
-      'languageEnvironment',
       'associativeAndCooperative',
     ]
 
@@ -1017,6 +1088,10 @@ class SiteProfileResults extends React.Component {
       'sequentialActivities',
       'associativeAndCooperative',
       'transitionTime',
+      'foundationSkills',
+      'writing',
+      'bookReading',
+      'languageEnvironment',
     ]
 
     if (this.props.observationType === 'studentEngagement') {
@@ -1304,6 +1379,15 @@ class SiteProfileResults extends React.Component {
                   {this.props.observationType === 'transitionTime' ? (
                     <TransitionAverageBarDetails data={this.state.averages} />
                   ) : null}
+
+                  {/* Literacy Instruction Charts */}
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                    <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                    />
+                  ) : null}
+                  
                 </Grid>
               ) : null}
             </Grid>
