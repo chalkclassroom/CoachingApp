@@ -10,116 +10,61 @@ class TrendData {
    * Will return an object that holds data for all of the trends data for Book Reading
    */
    calculateTransitionTrends = (data, teachers, startDate, endDate) => {
+    let results = {};
+    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    let months = [];
+    while (tempDate !== endDatePlusOneMonth) {
+      months.push(tempDate);
+      tempDate = new Date(tempDate);
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    }
+    
+    console.log(months)
+    let monthsCount = months.length;
+    for (let teacherIndex in teachers) {
+      results[teachers[teacherIndex].id] = {
+        name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+        total: new Array(monthsCount).fill(0),
+        sessionTotal: new Array(monthsCount).fill(0),
+        lineChartLabels: months
+      };
+    }
 
-     // Initialize the array that will hold all the data
-     var results = {};
-
-     var totalIntervals = 0;
-
-     // Get start month and year
-     const startMonth = startDate.getMonth();
-
-     const endMonth = endDate.getMonth();
-
-     // Build list of month between start date and end date
-     var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-     // Set the month after the end date, formatted like Nov 21, 2022
-     var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-     var months = [];
-     while(tempDate !== endDatePlusOneMonth)
-     {
-       months.push(tempDate);
-       tempDate = new Date(tempDate);
-       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-     }
-
-     var monthsCount = months.length;
-
-     // Add each teacher to the object
-     var tempName = "";
-     for(var teacherIndex in teachers)
-     {
-
-       tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-       results[teachers[teacherIndex].id] = {
-         name: tempName,
-         line: new Array(monthsCount).fill(0),
-         traveling: new Array(monthsCount).fill(0),
-         waiting: new Array(monthsCount).fill(0),
-         routines: new Array(monthsCount).fill(0),
-         behaviorManagement: new Array(monthsCount).fill(0),
-         other: new Array(monthsCount).fill(0),
-         total: new Array(monthsCount).fill(0),
-
-         lineAverage: new Array(monthsCount).fill(0),
-         travelingAverage: new Array(monthsCount).fill(0),
-         waitingAverage: new Array(monthsCount).fill(0),
-         routinesAverage: new Array(monthsCount).fill(0),
-         behaviorManagementAverage: new Array(monthsCount).fill(0),
-         otherAverage: new Array(monthsCount).fill(0),
-
-         lineChartLabels: months,
-       };
-
-     }
-
-
-     // Sort by date just in case
-     data.sort(function(a,b){
-       return new Date(b.startDate.value) - new Date(a.startDate.value);
-     });
-
-
-     // Get number of instances for each type of data
-     var prevMonth = 0, rowMonth = startMonth;
-
-     for(var rowIndex in data)
-     {
-       var row = data[rowIndex];
-
-       var teacherId = row.teacher.split("/")[2];
-
-       //rowMonth = new Date(row.startDate.value).getMonth();
-       var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-       // Add to behavior types
-       results[teacherId].line[rowMonth] +=  row.line;
-
-       results[teacherId].traveling[rowMonth] += row.traveling;
-       results[teacherId].waiting[rowMonth] += row.waiting;
-       results[teacherId].routines[rowMonth] += row.routines;
-       results[teacherId].behaviorManagement[rowMonth] += row.behaviorManagement;
-       results[teacherId].other[rowMonth] += row.other;
-
-       // Calculate the total Number of instructions
-       results[teacherId].total[rowMonth] += row.total;
-     }
-
-     // Calculate the averages in percentages
-     // Go through each teacher
-     for(var resultsIndex in results)
-     {
-       var result = results[resultsIndex];
-
-       // Go through the months
-       for(var i = 0; i < monthsCount; i++)
-       {
-         var tempTotalInstructions = result.total[i];
-
-         result.lineAverage[i] = result.line[i] > 0 ? (result.line[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.travelingAverage[i] = result.traveling[i] > 0 ? (result.traveling[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.waitingAverage[i] = result.waiting[i] > 0 ? (result.waiting[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.routinesAverage[i] = result.routines[i] > 0 ? (result.routines[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.behaviorManagementAverage[i] = result.behaviorManagement[i] > 0 ? (result.behaviorManagement[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.otherAverage[i] = result.other[i] > 0 ? (result.other[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-       }
-     }
-
-     return results;
-
+    console.log(results)
+  
+    for (let rowIndex in data) {
+      let row = data[rowIndex];
+      let teacherId = row.teacher.split("/")[2];
+      let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
+      results[teacherId].total[rowMonth] = row.total; //transition time
+      results[teacherId].sessionTotal[rowMonth] = row.sessionTotal; //activity time
+    }
+  
+    let siteBar = {
+      name: "Site Average",
+      total: new Array(monthsCount).fill(0),
+      sessionTotal: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    }
+  
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+  
+      for (let i = 0; i < monthsCount; i++) {
+        result.total[i] = result.total[i] / result.sessionTotal[i]
+        result.sessionTotal[i] = 100 - result.total[i]
+      }
+    }
+  
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.total[i] = 10;
+      siteBar.sessionTotal[i] = 20;
+    }
+  
+    results.siteBar = siteBar;
+    console.log(results)
+    return results;
    }
 
    /*
