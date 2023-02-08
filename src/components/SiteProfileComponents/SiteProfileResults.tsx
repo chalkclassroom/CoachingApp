@@ -788,7 +788,7 @@ class SiteProfileResults extends React.Component {
       color1 = "#FF7F00"
       label1 = "Daily Average"
     }
-    if (this.props.observationType === "foundationSkills") {
+    if (["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType)) {
       type = "literacyInstruction"
       type2 = "noBehaviors"
       label1 = "Literacy Instruction"
@@ -1071,7 +1071,6 @@ class SiteProfileResults extends React.Component {
      */
     const radioObservationTypes = [
       'mathInstruction',
-      'bookReading',
       'sequentialActivities',
       'associativeAndCooperative',
     ]
