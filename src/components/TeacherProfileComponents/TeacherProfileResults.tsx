@@ -45,6 +45,7 @@ import AveragesChart from './ResultsComponents/AveragesChart'
 import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
 import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
 import ClimateToneSliderAverages from './ResultsComponents/ClimateToneSliderAverages'
+import LiteracyInstructionAverages from './ResultsComponents/LiteracyInstructionAverages'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -234,7 +235,7 @@ const radioValueArr = {
   transitionTime: 'line',
   listeningToChildren: 'eyeLevel',
   sequentialActivities: 'sequentialActivities',
-  foundationSkills: 'foundationalSkills',
+  foundationSkills: 'teacherAverage',
   writing: 'writingSkills',
   bookReading: 'bookReading',
   languageEnvironment: 'languageEnvironment',
@@ -984,7 +985,6 @@ class TeacherProfileResults extends React.Component {
       'transitionTime',
       'listeningToChildren',
       'sequentialActivities',
-      'foundationSkills',
       'writing',
       'bookReading',
       'languageEnvironment',
@@ -1241,12 +1241,23 @@ class TeacherProfileResults extends React.Component {
                   {/*
                     Show averages pie chart if this observation type calls for it
                   */}
-                  {pieChartObservationTypes.includes(
-                    this.props.observationType
-                  ) ? (
+                  {pieChartObservationTypes.includes(this.props.observationType) ? (
                     <AveragesChart
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      teacherId={this.props.selectedTeacherId}
+                      usingTime={this.state.usingTime}
+                    />
+                  ) : null}
+
+                  {/*
+                    Show pie chart for Foundational Skills
+                  */}
+                  {this.props.observationType == "foundationSkills" ? (
+                    <LiteracyInstructionAverages
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      observationType={this.props.observationType}
                       teacherId={this.props.selectedTeacherId}
                       usingTime={this.state.usingTime}
                     />

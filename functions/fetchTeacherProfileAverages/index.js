@@ -297,11 +297,21 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
 
-                      console.log(teacher, child)
+                      //child[0] = child[0].map(obj => ({ ...obj, isChild: true }))
+
+                      for(var childIndex in child[0])
+                      {
+                        let tempChild = child[0][childIndex];
+                        tempChild.isChild = true;
+                      }
+
+                      console.log("Child => ", child);
+
+                      //console.log(teacher, child)
 
                       const rows = teacher.concat(child)
 
-                      console.log(rows)
+                      //console.log(rows)
 
                       return rows
     }
