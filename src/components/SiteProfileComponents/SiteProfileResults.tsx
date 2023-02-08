@@ -52,6 +52,10 @@ import RadioSets from './RadioSets'
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
+import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
+import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
+import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
+import ACBarDetails from './Charts/ACBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -186,16 +190,16 @@ const practicesArr = {
 const radioValueArr = {
   transitionTime: 'lineAverage',
   classroomClimate: 'nonspecificapprovalAverage',
-  mathInstruction: 'mathVocabularyAverage',
+  mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
-  sequentialActivities: 'sequentialActivitiesAverage',
+  sequentialActivities: 'teacherAverage',
   foundationSkills: 'foundationalSkillsAverage',
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
   languageEnvironment: 'languageEnvironmentAverage',
-  associativeAndCooperative: 'childrensPlayAverage',
+  associativeAndCooperative: 'teacherAverage',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -285,7 +289,7 @@ class SiteProfileResults extends React.Component {
       teacherInfo: [],
       teacherNames: [],
       selectedTeacher: 'None',
-      radioValue: '',
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : '',
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -901,7 +905,6 @@ class SiteProfileResults extends React.Component {
       'mathInstruction',
       'bookReading',
       'transitionTime',
-      'listeningToChildren',
       'sequentialActivities',
       'foundationSkills',
       'writing',
@@ -917,6 +920,10 @@ class SiteProfileResults extends React.Component {
       'classroomClimate',
       'levelOfInstruction',
       "studentEngagement",
+      'mathInstruction',
+      'listeningToChildren',
+      'sequentialActivities',
+      'associativeAndCooperative',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1151,6 +1158,38 @@ class SiteProfileResults extends React.Component {
                   {this.props.observationType === "studentEngagement" ? (
                     <StudentEngagementBarDetails
                       data={this.state.averages}
+                    />
+                  ) : null}
+
+                  {/* Math Instruction Chart */}
+                  {this.props.observationType === "mathInstruction" ? (
+                    <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Listening to Children Chart */}
+                  {this.props.observationType === "listeningToChildren" ? (
+                    <ListeningToChildrenBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Sequesntial Activities Chart */}
+                  {this.props.observationType === "sequentialActivities" ? (
+                    <SequentialActivitiesBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Associative and Cooperative Chart */}
+                  {this.props.observationType === "associativeAndCooperative" ? (
+                    <ACBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
                     />
                   ) : null}
 

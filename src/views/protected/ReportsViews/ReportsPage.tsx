@@ -13,9 +13,7 @@ import Firebase from '../../../components/Firebase'
 import MenuBar from './MenuBar'
 import ReportsIcon from '../../../assets/icons/ReportsIcon.png';
 import Reports from './Reports';
-import ReportsList from "./ReportsList";
-import ReportDesc from "./ReportDesc";
-import ReportImages from "./ReportImages";
+
 import Sidebar from "./Sidebar";
 import { Switch, Route,} from "react-router-dom";
 import ReportsImages from "./ReportImages";
@@ -202,9 +200,6 @@ class ReportsPage extends React.Component<Props, State> {
           />
           <Switch location={location} key={location.pathname}>
             <Route path="/Reports" component={Reports} />
-            <Route path="/ReportsList" component={ReportsList} />
-            <Route path="/ReportImages" component={ReportImages} />
-            <Route path="/ReportDesc" component={ReportDesc} />
             <Route path="/TeacherProfile" render={(props) =>
               <TeacherProfile
                 changePage={(pageName) => this.changePage(pageName)}
