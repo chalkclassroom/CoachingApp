@@ -50,7 +50,8 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
           left: '95px',
           top: '36px',
       },
-      dataSets: []
+      dataSets: [],
+      monthCount: 0,
     }
   }
 
@@ -75,7 +76,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-    let months = [];
+    let monthLabels = [];
     var hlqAverage = [];
     var llqAverage = [];
     for(var teacherIndex in data)
@@ -85,9 +86,9 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       teacherNames.push(teacher.name);
 
       // Set the months for the chart. (The months are set in each teacher)
-      if(months.length == 0)
+      if(monthLabels.length == 0)
       {
-        months = teacher.lineChartLabels;
+        monthLabels = teacher.lineChartLabels;
       }
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
@@ -122,6 +123,9 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     siteAverageLlqAverage[dataSize - 1] = Math.round((data.siteBar.llqAverage + data.siteBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
     */
 
+    // Reformat the months to only show the month name. ex(Sep 2023 -> September)
+    monthLabels = monthLabels.map(x => {return new Date(x).toLocaleDateString("en-US", {month: 'long'}) })
+
     // Use that data to create our dataset
     var dataSets = [
       {
@@ -131,6 +135,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         backgroundColor: "#0070C0",
         borderColor: "#5B9BD5",
         borderWidth: 2,
+        // To press the grouped bars together and seperate from other groups
+        categoryPercentage: .8,
+        barPercentage: 1.0,
+        barThickness: 30,
       },
       {
         label: 'Site Average Behavior Approval',
@@ -139,6 +147,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         backgroundColor: this.createDiagonalPattern('#5B9BD5'),
         borderColor: "#5B9BD5",
         borderWidth: 3,
+        // To press the grouped bars together and seperate from other groups
+        categoryPercentage: .8,
+        barPercentage: 1.0,
+        barThickness: 30,
       },
 
       {
@@ -148,6 +160,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         backgroundColor: "#ED7D31",
         borderColor: "#2F5597",
         borderWidth: 2,
+        // To press the grouped bars together and seperate from other groups
+        categoryPercentage: .8,
+        barPercentage: 1.0,
+        barThickness: 30,
       },
 
       {
@@ -157,11 +173,16 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         backgroundColor: this.createDiagonalPattern('#ED7D31'),
         borderColor: "#ED7D31",
         borderWidth: 3,
+        // To press the grouped bars together and seperate from other groups
+        categoryPercentage: .8,
+        barPercentage: 1.0,
+        barThickness: 30,
       },
+
     ]
 
     //let teacherNames = ["apple", "onion", "henry", "Danger"];
-    this.setState({monthLabels: months, dataSets: dataSets, chartTitle: "SWEET"});
+    this.setState({monthLabels: monthLabels, monthCount: monthLabels.length, dataSets: dataSets, chartTitle: "SWEET"});
 
   }
 
@@ -191,15 +212,6 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     c.lineTo(10, 5)
     c.stroke()
 
-    /*
-    c.moveTo(0, 15)
-    c.lineTo(8, 7)
-    c.stroke()
-    c.beginPath()
-    c.moveTo(8, 7)
-    c.lineTo(10, 5)
-    c.stroke()
-    */
     return c.createPattern(shape, 'repeat')
   }
 
@@ -240,9 +252,20 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     };
 
     return (
-      <div style={{padding: '30px 30px 0px 30px'}}>
+      <div style={{
+        padding: '30px 30px 0px 30px',
+        border: 'solid 2px #eee',
+        marginTop: '30px',
+        marginBottom: '30px',
+        overflowX: 'scroll',
+        maxWidth: '70vw',
+
+      }}>
         <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
-        <div className={"realChart"} style={{height: 500}}>
+        <div className={"realChart"} style={{
+          height: 500,
+          width: 300 + this.state.monthCount * 160, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
+        }}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -251,6 +274,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                   isCompleted ? isCompleted() : null
                 }
               },
+              global: {
+                responsive: false,
+                maintainAspectRatio: false
+             },
               scales: {
                 yAxes: [
                   {
@@ -267,12 +294,14 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                       callback: function(value, index, values) {
                           return value + '%';
                       },
+
                     },
                     scaleLabel: {
-                      display: false,
-                      labelString: '',
-                      fontSize: 16,
-                      fontColor: 'black'
+                      display: true,
+                      labelString: 'Percentage of each Behavior Type',
+                      fontFamily: 'Arimo',
+                      fontSize: 18,
+                      fontColor: 'black',
                     },
                     //stacked: true,
                     gridLines: {
@@ -283,14 +312,20 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                 ],
                 xAxes: [
                   {
-                    categoryPercentage: .8,
-                    barPercentage: 1.0,
+
                     ticks: {
                       fontSize: 16,
                       fontColor: 'black',
                       callback: (value, index, values) => {
                         return value
                       }
+                    },
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Month',
+                      fontFamily: 'Arimo',
+                      fontSize: 18,
+                      fontColor: 'black',
                     },
                     //stacked: true,
                     gridLines: {
@@ -338,8 +373,11 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
               },
               maintainAspectRatio: false,
-              layout: {
 
+              layout: {
+                padding: {
+                  bottom: 50,
+                }
               }
             }}
             plugins={[plugin]}
