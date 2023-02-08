@@ -72,21 +72,33 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
       teacherNames.push(teacher.name)
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if (teacher.name === 'Transition Time') {
+      if (teacher.name === 'Site Average') {
         continue
       }
+      if (teacher.totalTransitionTime === 0) {
+        transitionTimeAverage.push(0)
+        learningActivityAverage.push(0)
+      } else {
+        let tempAverage =
+          Math.round(
+            (teacher['learningActivityAverage'] + Number.EPSILON) * 100
+          ) / 100
 
-      transitionTimeAverage.push(
-        Math.round((teacher['transtionTimeAverage'] + Number.EPSILON) * 100) /
-          100
-      )
-      learningActivityAverage.push(
-        Math.round(
-          (teacher['learningActivityAverage'] + Number.EPSILON) * 100
-        ) / 100
-      )
-      console.log(transitionTimeAverage)
-      console.log(learningActivityAverage)
+        transitionTimeAverage.push(100 - tempAverage)
+        learningActivityAverage.push(tempAverage)
+        console.log(transitionTimeAverage)
+        console.log(learningActivityAverage)
+      }
+
+      // let tempAverage =
+      //   Math.round(
+      //     (teacher['learningActivityAverage'] + Number.EPSILON) * 100
+      //   ) / 100
+
+      // transitionTimeAverage.push(100 - tempAverage)
+      // learningActivityAverage.push(tempAverage)
+      // console.log(transitionTimeAverage)
+      // console.log(learningActivityAverage)
 
       // Create bar graph data
       //var tempAvg = teacher[type];
