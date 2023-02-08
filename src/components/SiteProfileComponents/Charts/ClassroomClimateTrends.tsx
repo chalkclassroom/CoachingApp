@@ -190,11 +190,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     c.moveTo(5, 10)
     c.lineTo(10, 5)
     c.stroke()
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> cf3b3bcc1847d94a763974eaf75c55946f59dda9
     /*
     c.moveTo(0, 15)
     c.lineTo(8, 7)
