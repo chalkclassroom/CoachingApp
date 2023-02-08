@@ -160,7 +160,6 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
       {
         label: 'General Approval Site Average',
         data: siteAverageGeneralApproval,
-        data: siteAverageGeneralApproval,
         backgroundColor: "#FFF",
         borderColor: "#094492",
         borderWidth: 4,

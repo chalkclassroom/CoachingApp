@@ -281,60 +281,12 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
         location: 'US',
       }
 
-<<<<<<< HEAD
-                      let [job] = await bigquery.createQueryJob(options);
-                      console.log(`Job ${job.id} started.`);
-                      let rows = await job.getQueryResults();
-                      console.log(rows)
-
-                      return rows
-=======
-      let [job] = await bigquery.createQueryJob(options)
-      console.log(`Job ${job.id} started.`)
-      let teacher = await job.getQueryResults()
-
-      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
-                      DATE(sessionStart) as GroupDate,
-                      COUNT(CASE WHEN (checklist.item1) THEN 'foundational1' ELSE NULL END) AS foundational1,
-                      COUNT(CASE WHEN (checklist.item2) THEN 'foundational2' ELSE NULL END) AS foundational2,
-                      COUNT(CASE WHEN (checklist.item3) THEN 'foundational3' ELSE NULL END) AS foundational3,
-                      COUNT(CASE WHEN (checklist.item4) THEN 'foundational4' ELSE NULL END) AS foundational4,
-                      COUNT(CASE WHEN (checklist.item5) THEN 'foundational5' ELSE NULL END) AS foundational5,
-                      COUNT(CASE WHEN (checklist.item6) THEN 'foundational6' ELSE NULL END) AS foundational6,
-                      COUNT(CASE WHEN (checklist.item7) THEN 'foundational7' ELSE NULL END) AS foundational7,
-                      COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
-                      COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
-                      COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
-                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
-                      COUNT (sessionStart) AS total,
-                      teacher,
-                      time
-                      FROM ${functions.config().env.bq_project}.${
-        functions.config().env.bq_dataset
-      }.${observationType}
-                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY time, GroupDate, startDate, teacher
-                      ORDER BY GroupDate ASC;`
-
-      console.log('QUERY: ', sqlQuery)
-
-      options = {
-        query: sqlQuery,
-        // Location must match that of the dataset(s) referenced in the query.
-        location: 'US',
-      }
-      ;[job] = await bigquery.createQueryJob(options)
-      console.log(`Job ${job.id} started.`)
-      child = await job.getQueryResults()
-
-      console.log(teacher, child)
-
-      const rows = teacher.concat(child)
-
+      let [job] = await bigquery.createQueryJob(options);
+      console.log(`Job ${job.id} started.`);
+      let rows = await job.getQueryResults();
       console.log(rows)
 
       return rows
->>>>>>> bf59f07a61b9b3e2cc8d8e4a69d06319e89829fe
     }
 
     /*
@@ -364,68 +316,18 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
 
       console.log('QUERY: ', sqlQuery)
 
-<<<<<<< HEAD
-                      let options = {
-                          query: sqlQuery,
-                          // Location must match that of the dataset(s) referenced in the query.
-                          location: 'US',
-                      };
-
-                      let [job] = await bigquery.createQueryJob(options);
-                      console.log(`Job ${job.id} started.`);
-                      let rows = await job.getQueryResults();
-                      console.log(rows)
-
-                    return rows
-=======
       let options = {
-        query: sqlQuery,
-        // Location must match that of the dataset(s) referenced in the query.
-        location: 'US',
-      }
+          query: sqlQuery,
+          // Location must match that of the dataset(s) referenced in the query.
+          location: 'US',
+      };
 
-      let [job] = await bigquery.createQueryJob(options)
-      console.log(`Job ${job.id} started.`)
-      let teacher = await job.getQueryResults()
-
-      sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
-                      DATE(sessionStart) as GroupDate,
-                      COUNT(CASE WHEN (checklist.item1) THEN 'writing1' ELSE NULL END) AS writing1,
-                      COUNT(CASE WHEN (checklist.item2) THEN 'writing2' ELSE NULL END) AS writing2,
-                      COUNT(CASE WHEN (checklist.item3) THEN 'writing3' ELSE NULL END) AS writing3,
-                      COUNT(CASE WHEN (checklist.item4) THEN 'writing4' ELSE NULL END) AS writing4,
-                      COUNT(CASE WHEN (checklist.item5) THEN 'writing5' ELSE NULL END) AS writing5,
-                      COUNT(CASE WHEN (checklist.item6) THEN 'writing6' ELSE NULL END) AS writing6,
-                      COUNT(CASE WHEN (checklist.item7) THEN 'writing7' ELSE NULL END) AS writing7,
-                      COUNT(CASE WHEN (checklist.item8) THEN 'writing8' ELSE NULL END) AS writing8,
-                      COUNT(CASE WHEN (checklist.item9) THEN 'writing9' ELSE NULL END) AS writing9,
-                      COUNT (sessionStart) AS total,
-                      teacher,
-                      time
-                      FROM ${functions.config().env.bq_project}.${
-        functions.config().env.bq_dataset
-      }.${observationType}
-                      where (${teacherSqlQuery}) and time <= '${endDate}' and time >= '${startDate}'
-                      GROUP BY time, GroupDate, startDate, teacher
-                      ORDER BY GroupDate ASC;`
-
-      options = {
-        query: sqlQuery,
-        // Location must match that of the dataset(s) referenced in the query.
-        location: 'US',
-      }
-      ;[job] = await bigquery.createQueryJob(options)
-      console.log(`Job ${job.id} started.`)
-      child = await job.getQueryResults()
-
-      console.log(teacher, child)
-
-      const rows = teacher.concat(child)
-
+      let [job] = await bigquery.createQueryJob(options);
+      console.log(`Job ${job.id} started.`);
+      let rows = await job.getQueryResults();
       console.log(rows)
 
-      return rows
->>>>>>> bf59f07a61b9b3e2cc8d8e4a69d06319e89829fe
+    return rows
     }
 
     /*
