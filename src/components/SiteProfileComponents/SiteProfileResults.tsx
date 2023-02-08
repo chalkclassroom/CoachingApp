@@ -53,6 +53,7 @@ import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
+import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -683,6 +684,9 @@ class SiteProfileResults extends React.Component {
     if (this.props.observationType === "studentEngagement") {
       type = "dailyAverage"
     }
+    if (this.props.observationType === "foundationSkills") {
+      type = "literacyInstruction"
+    }
 
 
     for (var teacherIndex in teachers) {
@@ -722,7 +726,77 @@ class SiteProfileResults extends React.Component {
       i++
     }
 
+    if (this.props.observationType === "foundationSkills") {
+      type = "noBehaviors"
+
+
+
+    for (var teacherIndex in teachers) {
+      var teacher = teachers[teacherIndex]
+      var fullName = teacher.firstName + ' ' + teacher.lastName
+
+      var chosenData = trends[teacher.id][type]
+
+      // Round off all the numbers
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      if (this.props.observationType === "studentEngagement") {
+        lineColors[i] = "#FF7F00"
+      }
+      if (!lineColors[i]) {
+        lineColors[i] = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: fullName,
+        data: chosenData,
+        borderColor: lineColors[i],
+        fill: false,
+        tension: 0.0,
+      }
+
+      // Add the months so we can set the right labels for the trends chart
+      if(trends[teacher.id].lineChartLabels)
+      {
+        tempMonths = trends[teacher.id].lineChartLabels;
+      }
+
+      tempDataSet.push(tempData)
+      i++
+    }
+  }
+
+    if (this.props.observationType === "studentEngagement") {
       chosenData = trends["siteBar"]["dailyAverage"]
+    }
+
+    if (this.props.observationType === "foundationSkills") {
+      chosenData = trends["siteBar"]["literacyInstruction"]
+       // Round off all the numbers
+       chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      if (!lineColors[i]) {
+        lineColors[i] = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: "Site Average",
+        data: chosenData,
+        borderColor: lineColors[i],
+        borderDash: [10,5],
+        fill: false,
+        tension: 0.0,
+      }
+
+      tempDataSet.push(tempData)
+
+      chosenData = trends["siteBar"]["noBehaviors"]
+    }
 
       // Round off all the numbers
       chosenData = chosenData.map(function(each_element) {
@@ -900,14 +974,9 @@ class SiteProfileResults extends React.Component {
      */
     const radioObservationTypes = [
       'mathInstruction',
-      'bookReading',
       'transitionTime',
       'listeningToChildren',
       'sequentialActivities',
-      'foundationSkills',
-      'writing',
-      'bookReading',
-      'languageEnvironment',
       'associativeAndCooperative',
     ]
 
@@ -919,6 +988,10 @@ class SiteProfileResults extends React.Component {
       'levelOfInstruction',
       "studentEngagement",
       'mathInstruction',
+      'foundationSkills',
+      'writing',
+      'bookReading',
+      'languageEnvironment',
     ]
 
     if(this.props.observationType === "studentEngagement")
@@ -1164,6 +1237,13 @@ class SiteProfileResults extends React.Component {
                     />
                   ) : null}
 
+                  {/* Literacy Instruction Charts */}
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                    <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                    />
+                  ) : null}
 
                 </Grid>
               ) : null}
