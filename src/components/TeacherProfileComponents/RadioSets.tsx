@@ -430,7 +430,7 @@ class RadioSets extends React.Component<Props, {}> {
           <Grid item xs={6}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-
+              {/*
                 <FormControlLabel
                   control={<Radio />}
                   label="Literacy Instruction - Total Instruction"
@@ -446,12 +446,19 @@ class RadioSets extends React.Component<Props, {}> {
                   label="The alphabetic principle and print concepts"
                   value="alphabetic"
                 />
+                */}
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Teacher Behaviors"
+                  value="teacherAverage"
+                />
               </FormGroup>
             </FormControl>
           </Grid>
           <Grid item xs={6}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
+              {/*
                 <FormControlLabel
                   control={<Radio />}
                   label="Open-ended questions or prompts"
@@ -467,7 +474,12 @@ class RadioSets extends React.Component<Props, {}> {
                   label="Multimodal Instruction"
                   value="multimodalInstruction"
                 />
-
+                */}
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Child Behaviors"
+                  value="childAverage"
+                />
               </FormGroup>
             </FormControl>
           </Grid>

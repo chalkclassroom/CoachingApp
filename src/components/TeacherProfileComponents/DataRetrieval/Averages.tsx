@@ -783,6 +783,7 @@ class AveragesData {
       realisticReading: 0,
       multimodalInstruction: 0,
       foundationalSkills: 0,
+      childFoundationalSkills: 0,
     }
 
     // Get number of instances for each type of data
@@ -824,7 +825,14 @@ class AveragesData {
       }
       // If this observation has anything
       if (!row.foundational11) {
-        results[teacherId].foundationalSkills++
+        if(row.isChild)
+        {
+          results[teacherId].childFoundationalSkills++;
+        }
+        else
+        {
+          results[teacherId].foundationalSkills++
+        }
       }
     }
 
@@ -857,9 +865,14 @@ class AveragesData {
           : 0
 
       // THIS ONE ISN'T RIGHT FOR NOW
-      result.foundationalSkillsAverage =
+      result.teacherAverage =
         result.foundationalSkills > 0
           ? (result.foundationalSkills / tempTotalIntervals).toFixed(2) * 100
+          : 0
+
+      result.childAverage =
+        result.childFoundationalSkills > 0
+          ? (result.childFoundationalSkills / tempTotalIntervals).toFixed(2) * 100
           : 0
     }
 
