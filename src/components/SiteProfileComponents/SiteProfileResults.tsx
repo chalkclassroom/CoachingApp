@@ -769,6 +769,7 @@ class SiteProfileResults extends React.Component {
     console.log(type)
     let oneType = ["studentEngagement"];
     let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren"];
+    let radioType = [ 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative',]
     let type2 = "";
     let label1 = "";
     let label2 = "";
@@ -820,6 +821,25 @@ class SiteProfileResults extends React.Component {
       label2 = "No Target Behaviors Observed"
       color1 = "#07DFBB"
       color2 = "#E20000"
+    }
+    if (radioType.includes(this.props.observationType)) {
+      if (this.props.observationType === "associativeAndCooperative") {
+        if (type === "TeacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Support for Associative and Cooperative Interactions"
+          label2 = "No Support"
+          color1 = "#07DFBB"
+          color2 = "#E20000"
+        } else {
+          type = "listeningInstruction"
+          type2 = "noBehaviors"
+          label1 = "Associative and Cooperative Interactions"
+          label2 = "No Associative and Cooperative Interactions"
+          color1 = "#07DFBB"
+          color2 = "#E20000"
+        }
+      }
     }
 
 
