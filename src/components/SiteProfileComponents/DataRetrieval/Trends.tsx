@@ -9,7 +9,7 @@ class TrendData {
   /*
    * Will return an object that holds data for all of the trends data for Book Reading
    */
-   calculateTransitionTrends = (data, teachers, startDate, endDate) => {
+  calculateTransitionTrends = (data, teachers, startDate, endDate) => {
     let results = {};
     let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
     let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
@@ -52,21 +52,36 @@ class TrendData {
       let result = results[resultsIndex];
   
       for (let i = 0; i < monthsCount; i++) {
-        result.total[i] = result.total[i] / result.sessionTotal[i]
-        result.sessionTotal[i] = 100 - result.total[i]
+        result.total[i] = result.total[i] / result.sessionTotal[i];
+        result.sessionTotal[i] = 100 - result.total[i];
+        if (isNaN(result.total[i])) {
+          result.total[i] = 0
+        } 
+        if (isNaN(result.sessionTotal[i])) {
+          result.sessionTotal[i] = 0
+        } 
+        siteBar.total[i] = siteBar.total[i] + result.total[i];
+        console.log(siteBar)
+        console.log(result)
+        siteBar.sessionTotal[i] = siteBar.sessionTotal[i] + result.sessionTotal[i];
+        if (isNaN(siteBar.total[i])) {
+          siteBar.total[i] = 0
+        } 
+        if (isNaN(siteBar.sessionTotal[i])) {
+          siteBar.sessionTotal[i] = 0
+        } 
       }
     }
   
     for (let i = 0; i < monthsCount; i++) {
-      siteBar.total[i] = 10;
-      siteBar.sessionTotal[i] = 20;
+      siteBar.total[i] = siteBar.total[i] / siteBar.sessionTotal[i];
+      siteBar.sessionTotal[i] = 100 - siteBar.total[i];
     }
   
     results.siteBar = siteBar;
     console.log(results)
     return results;
    }
-
    /*
     * Classroom Climate
     */
