@@ -358,100 +358,6 @@ class TrendData {
     results.siteBar = siteBar;
     console.log(results)
     return results;
-    // // Initialize the array that will hold all the data
-    // var results = {};
-
-    // var totalIntervals = 0;
-
-    // // Get start month and year
-    // const startMonth = startDate.getMonth();
-
-    // const endMonth = endDate.getMonth();
-
-
-    // // Build list of month between start date and end date
-    // var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // // Set the month after the end date, formatted like Nov 21, 2022
-    // var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    // var months = [];
-    // while(tempDate !== endDatePlusOneMonth)
-    // {
-    //   months.push(tempDate);
-    //   tempDate = new Date(tempDate);
-    //   tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    // }
-
-    // var monthsCount = months.length;
-
-
-    // // Add each teacher to the object
-    // var tempName = "";
-    // for(var teacherIndex in teachers)
-    // {
-
-    //   tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-    //   results[teachers[teacherIndex].id] = {
-    //     name: tempName,
-    //     totalInstructions: new Array(monthsCount).fill(0),
-    //     hlq: new Array(monthsCount).fill(0),
-    //     hlqResponse: new Array(monthsCount).fill(0),
-    //     llq: new Array(monthsCount).fill(0),
-    //     llqResponse: new Array(monthsCount).fill(0),
-
-    //     hlqAverage: new Array(monthsCount).fill(0),
-    //     hlqResponseAverage: new Array(monthsCount).fill(0),
-    //     llqAverage: new Array(monthsCount).fill(0),
-    //     llqResponseAverage: new Array(monthsCount).fill(0),
-
-    //     lineChartLabels: months,
-
-    //   };
-
-    // }
-
-
-    // // Get number of instances for each type of data
-    // var tempIntervalData = 0;
-    // //var rowMonth = startMonth;
-    // for(var rowIndex in data)
-    // {
-    //   var row = data[rowIndex];
-
-    //   var teacherId = row.teacher.split("/")[2];
-
-    //   //var rowMonth = new Date(row.startDate.value).getMonth();
-    //   var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-    //   // Add to total # of intervals
-    //   results[teacherId].totalInstructions[rowMonth] += row.count;
-
-    //   // Add to behavior types
-    //   results[teacherId][row.instructionType][rowMonth] += row.count;
-    // }
-
-    // // Calculate the averages in percentages
-    // // Go through each teacher
-    // for(var resultsIndex in results)
-    // {
-    //   var result = results[resultsIndex];
-
-    //   // Go through the months
-    //   for(var i = 0; i < monthsCount; i++)
-    //   {
-    //     var tempTotalInstructions = result.totalInstructions[i];
-
-    //     result.hlqAverage[i] = result.hlq[i] > 0 ? (result.hlq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.hlqResponseAverage[i] = result.hlqResponse[i] > 0 ? (result.hlqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.llqAverage[i] = result.llq[i] > 0 ? (result.llq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.llqResponseAverage[i] = result.llqResponse[i] > 0 ? (result.llqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-    //   }
-    // }
-
-    // return results;
-
   }
 
   /*
@@ -613,132 +519,212 @@ class TrendData {
    * Listening to Children
    */
  calculateListeningToChildrenTrends = (data, teachers, startDate, endDate) => {
+  console.log(data)
+  let results = {};
+  let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+  let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+  let months = [];
+  while (tempDate !== endDatePlusOneMonth) {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+  }
 
-   // Initialize the array that will hold all the data
-   var results = {};
+  let monthsCount = months.length;
+  for (let teacherIndex in teachers) {
+    results[teachers[teacherIndex].id] = {
+      name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+      totalIntervals: new Array(monthsCount).fill(0),
+      listeningInstruction: new Array(monthsCount).fill(0),
+      noBehaviors: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    };
+  }
 
-   var totalIntervals = 0;
+  for (let rowIndex in data) {
+    let row = data[rowIndex];
+    let teacherId = row.teacher.split("/")[2];
+    let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
 
-   // Get start month and year
-   const startMonth = startDate.getMonth();
-
-   const endMonth = endDate.getMonth();
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    var months = [];
-    while(tempDate !== endDatePlusOneMonth)
-    {
-      months.push(tempDate);
-      tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    console.log(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}))
+    results[teacherId].totalIntervals[rowMonth] = row.count
+    if (row.listening7) {
+      results[teacherId].noBehaviors[rowMonth]++;
     }
+    if (row.listening1 || row.listening2 || row.listening3 || row.listening4 || row.listening5 || row.listening6) {
+      results[teacherId].listeningInstruction[rowMonth] = Math.max(row.listening1, row.listening2, row.listening3, row.listening4, row.listening5, row.listening6)
+    }
+  }
 
-    var monthsCount = months.length;
+  let siteBar = {
+    name: "Site Average",
+    totalIntervals: new Array(monthsCount).fill(0),
+    listeningInstruction: new Array(monthsCount).fill(0),
+    noBehaviors: new Array(monthsCount).fill(0),
+    lineChartLabels: months
+  }
 
-   // Add each teacher to the object
-   var tempName = "";
-   for(var teacherIndex in teachers)
-   {
+  console.log(results)
+  for (let resultsIndex in results) {
+    let result = results[resultsIndex];
 
-     tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.listeningInstruction[i] += result.listeningInstruction[i];
+      siteBar.noBehaviors[i] += result.noBehaviors[i];
 
-     results[teachers[teacherIndex].id] = {
-       name: tempName,
-       eyeLevel: new Array(monthsCount).fill(0),
-       positiveExpression: new Array(monthsCount).fill(0),
-       repeats: new Array(monthsCount).fill(0),
-       openEndedQuestions: new Array(monthsCount).fill(0),
-       extendsPlay: new Array(monthsCount).fill(0),
-       encouragesPeerTalk: new Array(monthsCount).fill(0),
+      result.listeningInstruction[i] = parseFloat((result.listeningInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+      result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
-       encouraging: new Array(monthsCount).fill(0),
-       noBehaviors: new Array(monthsCount).fill(0),
+      if (isNaN(result.listeningInstruction[i])) {
+        result.listeningInstruction[i] = 0
+      } 
+      if (isNaN(result.noBehaviors[i])) {
+        result.noBehaviors[i] = 0
+      } 
+      siteBar.totalIntervals[i] = siteBar.listeningInstruction[i] + siteBar.noBehaviors[i];
+    }
+  }
 
-       totalInstructions: new Array(monthsCount).fill(0),
-       totalObserved: new Array(monthsCount).fill(0),
+  for (let i = 0; i < monthsCount; i++) {
+    siteBar.listeningInstruction[i] = parseFloat((siteBar.listeningInstruction[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+    siteBar.noBehaviors[i] = parseFloat((siteBar.noBehaviors[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+
+    if (isNaN(siteBar.listeningInstruction[i])) {
+      siteBar.listeningInstruction[i] = 0
+    } 
+    if (isNaN(siteBar.noBehaviors[i])) {
+      siteBar.noBehaviors[i] = 0
+    } 
+  }
+
+  results.siteBar = siteBar;
+  console.log(results)
+  return results;
+  //  // Initialize the array that will hold all the data
+  //  var results = {};
+
+  //  var totalIntervals = 0;
+
+  //  // Get start month and year
+  //  const startMonth = startDate.getMonth();
+
+  //  const endMonth = endDate.getMonth();
+
+  //   // Build list of month between start date and end date
+  //   var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+  //   // Set the month after the end date, formatted like Nov 21, 2022
+  //   var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  //   var months = [];
+  //   while(tempDate !== endDatePlusOneMonth)
+  //   {
+  //     months.push(tempDate);
+  //     tempDate = new Date(tempDate);
+  //     tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+  //   }
+
+  //   var monthsCount = months.length;
+
+  //  // Add each teacher to the object
+  //  var tempName = "";
+  //  for(var teacherIndex in teachers)
+  //  {
+
+  //    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+
+  //    results[teachers[teacherIndex].id] = {
+  //      name: tempName,
+  //      eyeLevel: new Array(monthsCount).fill(0),
+  //      positiveExpression: new Array(monthsCount).fill(0),
+  //      repeats: new Array(monthsCount).fill(0),
+  //      openEndedQuestions: new Array(monthsCount).fill(0),
+  //      extendsPlay: new Array(monthsCount).fill(0),
+  //      encouragesPeerTalk: new Array(monthsCount).fill(0),
+
+  //      encouraging: new Array(monthsCount).fill(0),
+  //      noBehaviors: new Array(monthsCount).fill(0),
+
+  //      totalInstructions: new Array(monthsCount).fill(0),
+  //      totalObserved: new Array(monthsCount).fill(0),
 
 
-       eyeLevelAverage: new Array(monthsCount).fill(0),
-       positiveExpressionAverage: new Array(monthsCount).fill(0),
-       repeatsAverage: new Array(monthsCount).fill(0),
-       openEndedQuestionsAverage: new Array(monthsCount).fill(0),
-       extendsPlayAverage: new Array(monthsCount).fill(0),
-       encouragesPeerTalkAverage: new Array(monthsCount).fill(0),
+  //      eyeLevelAverage: new Array(monthsCount).fill(0),
+  //      positiveExpressionAverage: new Array(monthsCount).fill(0),
+  //      repeatsAverage: new Array(monthsCount).fill(0),
+  //      openEndedQuestionsAverage: new Array(monthsCount).fill(0),
+  //      extendsPlayAverage: new Array(monthsCount).fill(0),
+  //      encouragesPeerTalkAverage: new Array(monthsCount).fill(0),
 
-       encouragingAverage: new Array(monthsCount).fill(0),
-       noBehaviorsAverage: new Array(monthsCount).fill(0),
+  //      encouragingAverage: new Array(monthsCount).fill(0),
+  //      noBehaviorsAverage: new Array(monthsCount).fill(0),
 
-       totalInstructionsAverage: new Array(monthsCount).fill(0),
-       totalObservedAverage: new Array(monthsCount).fill(0),
+  //      totalInstructionsAverage: new Array(monthsCount).fill(0),
+  //      totalObservedAverage: new Array(monthsCount).fill(0),
 
-       lineChartLabels: months,
+  //      lineChartLabels: months,
 
-     };
+  //    };
 
-   }
+  //  }
 
 
-   // Get number of instances for each type of data
-   var tempIntervalData = 0;
-   //var rowMonth = startMonth;
-   for(var rowIndex in data)
-   {
-     var row = data[rowIndex];
+  //  // Get number of instances for each type of data
+  //  var tempIntervalData = 0;
+  //  //var rowMonth = startMonth;
+  //  for(var rowIndex in data)
+  //  {
+  //    var row = data[rowIndex];
 
-     var teacherId = row.teacher.split("/")[2];
+  //    var teacherId = row.teacher.split("/")[2];
 
-     //var rowMonth = new Date(row.startDate).getMonth();
-     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
+  //    //var rowMonth = new Date(row.startDate).getMonth();
+  //    var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
-     // Add to behavior types
-     results[teacherId].eyeLevel[rowMonth] += row.listening1;
-     results[teacherId].positiveExpression[rowMonth] += row.listening2;
-     results[teacherId].repeats[rowMonth] += row.listening3;
-     results[teacherId].openEndedQuestions[rowMonth] += row.listening4;
-     results[teacherId].extendsPlay[rowMonth] += row.listening5;
-     results[teacherId].encouragesPeerTalk[rowMonth] += row.listening6;
+  //    // Add to behavior types
+  //    results[teacherId].eyeLevel[rowMonth] += row.listening1;
+  //    results[teacherId].positiveExpression[rowMonth] += row.listening2;
+  //    results[teacherId].repeats[rowMonth] += row.listening3;
+  //    results[teacherId].openEndedQuestions[rowMonth] += row.listening4;
+  //    results[teacherId].extendsPlay[rowMonth] += row.listening5;
+  //    results[teacherId].encouragesPeerTalk[rowMonth] += row.listening6;
 
-     results[teacherId].noBehaviors[rowMonth] += row.listening7;
-     results[teacherId].encouraging[rowMonth] += row.count - row.listening7;
+  //    results[teacherId].noBehaviors[rowMonth] += row.listening7;
+  //    results[teacherId].encouraging[rowMonth] += row.count - row.listening7;
 
-     // Calculate the total Number of instructions
-     results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
+  //    // Calculate the total Number of instructions
+  //    results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
 
-     // Calculate total number of observations
-     results[teacherId].totalObserved[rowMonth] += row.count;
+  //    // Calculate total number of observations
+  //    results[teacherId].totalObserved[rowMonth] += row.count;
 
-   }
+  //  }
 
-   // Calculate the averages in percentages
-   // Go through each teacher
-   for(var resultsIndex in results)
-   {
-     var result = results[resultsIndex];
+  //  // Calculate the averages in percentages
+  //  // Go through each teacher
+  //  for(var resultsIndex in results)
+  //  {
+  //    var result = results[resultsIndex];
 
-     // Go through the months
-     for(var i = 0; i < monthsCount; i++)
-     {
-       var tempTotalInstructions = result.totalInstructions[i];
-       var tempTotalObserved = result.totalObserved[i];
+  //    // Go through the months
+  //    for(var i = 0; i < monthsCount; i++)
+  //    {
+  //      var tempTotalInstructions = result.totalInstructions[i];
+  //      var tempTotalObserved = result.totalObserved[i];
 
-       result.eyeLevelAverage[i] = result.eyeLevel[i] > 0 ? (result.eyeLevel[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.positiveExpressionAverage[i] = result.positiveExpression[i] > 0 ? (result.positiveExpression[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.repeatsAverage[i] = result.repeats[i] > 0 ? (result.repeats[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.openEndedQuestionsAverage[i] = result.openEndedQuestions[i] > 0 ? (result.openEndedQuestions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.extendsPlayAverage[i] = result.extendsPlay[i] > 0 ? (result.extendsPlay[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-       result.encouragesPeerTalkAverage[i] = result.encouragesPeerTalk[i] > 0 ? (result.encouragesPeerTalk[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.eyeLevelAverage[i] = result.eyeLevel[i] > 0 ? (result.eyeLevel[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.positiveExpressionAverage[i] = result.positiveExpression[i] > 0 ? (result.positiveExpression[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.repeatsAverage[i] = result.repeats[i] > 0 ? (result.repeats[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.openEndedQuestionsAverage[i] = result.openEndedQuestions[i] > 0 ? (result.openEndedQuestions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.extendsPlayAverage[i] = result.extendsPlay[i] > 0 ? (result.extendsPlay[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //      result.encouragesPeerTalkAverage[i] = result.encouragesPeerTalk[i] > 0 ? (result.encouragesPeerTalk[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-       result.noBehaviorsAverage[i] = result.noBehaviors[i] > 0 ? (result.noBehaviors[i] / tempTotalObserved).toFixed(2) * 100 : 0;
-       result.encouragingAverage[i] = result.encouraging[i] > 0 ? (result.encouraging[i] / tempTotalObserved).toFixed(2) * 100 : 0;
+  //      result.noBehaviorsAverage[i] = result.noBehaviors[i] > 0 ? (result.noBehaviors[i] / tempTotalObserved).toFixed(2) * 100 : 0;
+  //      result.encouragingAverage[i] = result.encouraging[i] > 0 ? (result.encouraging[i] / tempTotalObserved).toFixed(2) * 100 : 0;
 
-     }
-   }
+  //    }
+  //  }
 
-   return results;
+  //  return results;
 
  }
 

@@ -767,7 +767,7 @@ class SiteProfileResults extends React.Component {
 
   setLineGraphData = (teachers, type) => {
     let oneType = ["studentEngagement"];
-    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren"];
     let type2 = "";
     let label1 = "";
     let label2 = "";
@@ -799,18 +799,26 @@ class SiteProfileResults extends React.Component {
     if (this.props.observationType === "transitionTime") {
       type = "total"
       type2 = "sessionTotal"
-      label1 = "Literacy Instruction"
-      label2 = "No Target Behaviors Observed"
-      color1 = "#C4395A"
-      color2 = "#E5E5E5"
+      label1 = "Transition Time"
+      label2 = "Learning Activity"
+      color1 = "#fc8c03"
+      color2 = "#03b1fc"
     }
     if (this.props.observationType === "levelOfInstruction") {
       type = "highLevel"
       type2 = "lowLevel"
       label1 = "High-Level Instruction"
       label2 = "Low-Level Instruction"
-      color1 = "#C4395A"
-      color2 = "#E5E5E5"
+      color1 = "#38761D"
+      color2 = '#1155CC'
+    }
+    if (this.props.observationType === "listeningToChildren") {
+      type = "listeningInstruction"
+      type2 = "noBehaviors"
+      label1 = "Listening Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#07DFBB"
+      color2 = "#E20000"
     }
 
 
