@@ -768,8 +768,8 @@ class SiteProfileResults extends React.Component {
   setLineGraphData = (teachers, type) => {
     console.log(type)
     let oneType = ["studentEngagement"];
-    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren"];
-    let radioType = [ 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative',]
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren", 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative'];
+    let radioType = [ 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative']
     let type2 = "";
     let label1 = "";
     let label2 = "";
@@ -824,7 +824,7 @@ class SiteProfileResults extends React.Component {
     }
     if (radioType.includes(this.props.observationType)) {
       if (this.props.observationType === "associativeAndCooperative") {
-        if (type === "TeacherAverage") {
+        if (type === "teacherAverage") {
           type = "teacherSupport"
           type2 = "noSupport"
           label1 = "Support for Associative and Cooperative Interactions"
@@ -832,8 +832,8 @@ class SiteProfileResults extends React.Component {
           color1 = "#07DFBB"
           color2 = "#E20000"
         } else {
-          type = "listeningInstruction"
-          type2 = "noBehaviors"
+          type = "ac"
+          type2 = "noAC"
           label1 = "Associative and Cooperative Interactions"
           label2 = "No Associative and Cooperative Interactions"
           color1 = "#07DFBB"
@@ -1080,7 +1080,11 @@ class SiteProfileResults extends React.Component {
   handleRadioChange = (event: SelectChangeEvent) => {
     this.setState({ radioValue: event.target.value })
 
-    this.setLineGraphData(this.state.teacherInfo, event.target.value)
+    let modifiedInfo = this.state.teacherInfo.filter(teacher => {
+      return teacher.id == this.state.selectedTeacher
+    })
+
+    this.setLineGraphData(modifiedInfo, event.target.value)
   }
 
   // When any of the date dropdowns are changed
