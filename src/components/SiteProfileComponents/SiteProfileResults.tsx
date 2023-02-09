@@ -766,6 +766,7 @@ class SiteProfileResults extends React.Component {
   // Set Line Graph data
 
   setLineGraphData = (teachers, type) => {
+    console.log(type)
     let oneType = ["studentEngagement"];
     let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren"];
     let type2 = "";
