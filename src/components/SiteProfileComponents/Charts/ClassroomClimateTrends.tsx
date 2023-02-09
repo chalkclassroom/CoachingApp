@@ -1,31 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { HorizontalBar, Bar } from "react-chartjs-2";
+import {Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
 
-// Set array so we can edit the label on top of the Chart based on type
-const chartTitleArr = {
-  bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
-  childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
-}
-
-const averageLine = {
-    width: '80%',
-    marginRight: '15px',
-    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
-}
-
-
 
 
 /**
- * Horizontal Bar Graph for Math Child Behaviors
+ * Vertical Bar Graph for Classroom Climate Trends
  * @class EngagementBarDetails
  * @return {void}
  */
@@ -37,29 +20,17 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     super(props);
     this.state = {
       teacherNames: [],
-      chartTitle: "",
-      barColors: [],
-      averageLineWrapStyle: {
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'flex-start',
-          marginBottom: 8,
-          height: '20px',
-          width: '96%',
-          position: 'absolute',
-          left: '95px',
-          top: '36px',
-      },
       dataSets: [],
       monthCount: 0,
+      maxPercentage: 100, // The highest tick on the chart
     }
   }
 
   // What to do when the data is recieved
   componentDidUpdate(nextProps) {
-    const { data, type } = this.props
+    const { data, type, selectedTeacher } = this.props
 
-    if (nextProps.data !== data || nextProps.type !== type) {
+    if (nextProps.data !== data || nextProps.type !== type || nextProps.selectedTeacher !== selectedTeacher) {
       this.setData();
     }
   }
@@ -76,116 +47,173 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-    let monthLabels = [];
-    var hlqAverage = [];
-    var llqAverage = [];
-    for(var teacherIndex in data)
-    {
-      // Create Names to display as labels
-      var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
-
-      // Set the months for the chart. (The months are set in each teacher)
-      if(monthLabels.length == 0)
-      {
-        monthLabels = teacher.lineChartLabels;
-      }
-
-      // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
-      {
-        continue;
-      }
-
-
-      // hlqAverage.push(Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100);
-      // llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
-
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
-
-    }
-
-
-    // We need to set the site average data
-    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    var dataSize = Object.keys(data).length;
     /*
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
-
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = Math.round((data.siteBar.llqAverage + data.siteBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
+      Get the months for the labels
     */
-
+    // The months are stored by the teacher objects. Just get it from the first on
+    let monthLabels = Object.values(data)[0].lineChartLabels;
     // Reformat the months to only show the month name. ex(Sep 2023 -> September)
     monthLabels = monthLabels.map(x => {return new Date(x).toLocaleDateString("en-US", {month: 'long'}) })
 
-    // Use that data to create our dataset
-    var dataSets = [
+    /*
+      Calculate the totals to use for the site average
+
+      NOTE: We don't want to include teachers with no observations in the averages calculations.
+            So we're initializing the siteApprovalValues with an object that will keep a 'count'
+              of how many teachers had observations for that month, and the total sum of approval averages
+
+            We don't need to keep track of the disapproval stats because we'll just do 100 - minus the
+              approval stats.
+    */
+    const monthCount = monthLabels.length;
+
+    let siteApprovalValues = new Array(monthCount).fill().map(u => ({approvalTotal: 0, count: 0}));
+    for(var teacherIndex in data)
+    {
+      let teacher = data[teacherIndex];
+
+      // Add the averages to the site totals
+      for(var i=0; i < monthCount; i++)
       {
-        label: 'Teacher A Behavior Approval',
-        //data: siteAverageHlqAverage,
-        data: [30,40,50,60],
-        backgroundColor: "#0070C0",
-        borderColor: "#5B9BD5",
-        borderWidth: 2,
-        // To press the grouped bars together and seperate from other groups
-        categoryPercentage: .8,
-        barPercentage: 1.0,
-        barThickness: 30,
-      },
+        let tempApproval = 0;
+
+        // If there's no data, just skip
+        if(teacher['total'][i] == 0)
+        {
+          continue;
+        }
+
+        tempApproval = teacher['nonspecificapprovalAverage'][i] + teacher['specificapprovalAverage'][i];
+
+        siteApprovalValues[i].approvalTotal += tempApproval;
+        siteApprovalValues[i].count++;
+
+      }
+    }
+
+    // Calculate the site average
+    const siteApprovalAverage = siteApprovalValues.map(x => {return x.count > 0 ? Math.round(x.approvalTotal / x.count + Number.EPSILON) : 0 });
+    const siteDisapprovalAverage = siteApprovalValues.map(x => {return x.count > 0 ? 100 - Math.round(x.approvalTotal / x.count + Number.EPSILON) : 0 });
+
+
+
+    /*
+     * Create dataset with site averages in it
+     */
+    var dataSets = [
       {
         label: 'Site Average Behavior Approval',
         //data: hlqAverage,
-        data: [10,20,30,40],
-        backgroundColor: this.createDiagonalPattern('#5B9BD5'),
-        borderColor: "#5B9BD5",
+        data: siteApprovalAverage,
+        backgroundColor: this.props.selectedTeacher !== "None" ? this.createDiagonalPattern('#5B9BD5') : this.createDiagonalPattern('#2F5597'),
+        borderColor: this.props.selectedTeacher !== "None" ? "#5B9BD5" : "#2F5597",
         borderWidth: 3,
         // To press the grouped bars together and seperate from other groups
-        categoryPercentage: .8,
+        categoryPercentage: .5,
         barPercentage: 1.0,
-        barThickness: 30,
+        barThickness: this.props.selectedTeacher !== "None" ? 30 : 50,
+        order: 1,
       },
-
-      {
-        label: 'Teacher A Behavior Disapproval',
-        //data: llqAverage,
-        data: [20,30,40,50],
-        backgroundColor: "#ED7D31",
-        borderColor: "#2F5597",
-        borderWidth: 2,
-        // To press the grouped bars together and seperate from other groups
-        categoryPercentage: .8,
-        barPercentage: 1.0,
-        barThickness: 30,
-      },
-
       {
         label: 'Site Average Behavior Disapproval',
         //data: siteAverageLlqAverage,
-        data: [40,50,60,70],
+        data: siteDisapprovalAverage,
         backgroundColor: this.createDiagonalPattern('#ED7D31'),
         borderColor: "#ED7D31",
         borderWidth: 3,
         // To press the grouped bars together and seperate from other groups
-        categoryPercentage: .8,
+        categoryPercentage: .5,
         barPercentage: 1.0,
-        barThickness: 30,
-      },
+        barThickness: this.props.selectedTeacher !== "None" ? 30 : 50,
 
+        order: 3,
+      },
     ]
 
-    //let teacherNames = ["apple", "onion", "henry", "Danger"];
-    this.setState({monthLabels: monthLabels, monthCount: monthLabels.length, dataSets: dataSets, chartTitle: "SWEET"});
+
+    /*
+     * If a teacher is selected, we have to add their average to the dataset
+     */
+    let teacherApprovalAverages = [];
+    let teacherDisapprovalAverages = [];
+    if(this.props.selectedTeacher !== "None")
+    {
+      const selectedTeacher = data[this.props.selectedTeacher];
+
+      // Calculate approval averages
+      teacherApprovalAverages = selectedTeacher['nonspecificapprovalAverage'].map(
+        function(currentValue, index, arr){
+          return currentValue + selectedTeacher['specificapprovalAverage'][index]
+        }
+      );
+
+      // Calculate disapproval averages (100 - approval averages)
+      teacherDisapprovalAverages = teacherApprovalAverages.map(
+        function(currentValue, index, arr){
+          if(selectedTeacher['total'][index] > 0)
+            return 100 - currentValue;
+          else
+            return 0;
+        }
+      );
+
+      dataSets.push(
+        {
+          label: 'Teacher A Behavior Approval',
+          //data: siteAverageHlqAverage,
+          data: teacherApprovalAverages,
+          backgroundColor: "#0070C0",
+          borderColor: "#5B9BD5",
+          borderWidth: 2,
+          // To press the grouped bars together and seperate from other groups
+          categoryPercentage: .5,
+          barPercentage: 1.0,
+          barThickness: 30,
+          order: 0,
+        },
+
+
+        {
+          label: 'Teacher A Behavior Disapproval',
+          //data: llqAverage,
+          data: teacherDisapprovalAverages,
+          backgroundColor: "#ED7D31",
+          borderColor: "#2F5597",
+          borderWidth: 2,
+          // To press the grouped bars together and seperate from other groups
+          categoryPercentage: .5,
+          barPercentage: 1.0,
+          barThickness: 30,
+          order: 2,
+        },
+      );
+    }
+
+
+
+    /*
+     * Find the highest percentage number to show on graph. (10 above highest value)
+     */
+    // Find the highest number from all the arrays
+    let maxArr = [...siteApprovalAverage, ...siteDisapprovalAverage, ...teacherApprovalAverages, ...teacherApprovalAverages]
+    let maxValue = Math.max.apply(Math, maxArr);
+    // Round to the next highest 10 (add 10 so if the highest is 70, we'll get 80)
+    maxValue = Math.floor( (maxValue + 10) / 10) * 10;
+
+
+
+    this.setState({
+      monthLabels: monthLabels,
+      monthCount: monthCount,
+      dataSets: dataSets,
+      maxPercentage: maxValue
+    });
 
   }
 
+  /*
+    Function to create background pattern for site average
+  */
   createDiagonalPattern(color = 'black') {
     let shape = document.createElement('canvas')
     shape.width = 10
@@ -261,7 +289,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         maxWidth: '70vw',
 
       }}>
-        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
+        <h4 style={{width: '100%', textAlign: 'center', marginTop: 0, fontWeight: 400, fontSize: 18}}>Teacher Behaviors</h4>
         <div className={"realChart"} style={{
           height: 500,
           width: 300 + this.state.monthCount * 160, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
@@ -284,12 +312,12 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                     ticks: {
                       display:true,
                       min: 0,
-                      max: 100,
+                      max: this.state.maxPercentage,
                       stepSize: 10,
                       fixedStepSize: 1,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontColor: 'black',
-                      padding: 20,
+                      padding: 10,
                       // Include a percent sign in the ticks
                       callback: function(value, index, values) {
                           return value + '%';
@@ -300,7 +328,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                       display: true,
                       labelString: 'Percentage of each Behavior Type',
                       fontFamily: 'Arimo',
-                      fontSize: 18,
+                      fontSize: 12,
                       fontColor: 'black',
                     },
                     //stacked: true,
@@ -314,7 +342,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                   {
 
                     ticks: {
-                      fontSize: 16,
+                      fontSize: 12,
                       fontColor: 'black',
                       callback: (value, index, values) => {
                         return value
@@ -324,7 +352,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                       display: true,
                       labelString: 'Month',
                       fontFamily: 'Arimo',
-                      fontSize: 18,
+                      fontSize: 12,
                       fontColor: 'black',
                     },
                     //stacked: true,
@@ -337,22 +365,12 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
               },
               legend: {
                 display: true,
+                fontSize: 12,
                 labels: {
-                  //filter: function(legendItem, data) {
-                  //      return !legendItem.text.includes('Site Average')
-                  //},
                   padding: 20,
                   boxWidth: 12,
                 },
                 position: 'right',
-              },
-              title: {
-                display: this.props.title,
-                text: this.state.chartTitle,
-                fontSize: 14,
-                fontColor: 'black',
-                fontFamily: 'Arimo',
-                fontStyle: "bold"
               },
               plugins: {
                 datalabels: {
