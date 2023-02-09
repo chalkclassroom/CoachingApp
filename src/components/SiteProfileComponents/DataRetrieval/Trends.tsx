@@ -290,100 +290,167 @@ class TrendData {
     * Level of Instructions
     */
   calculateLevelInstructionTrends = (data, teachers, startDate, endDate) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Get start month and year
-    const startMonth = startDate.getMonth();
-
-    const endMonth = endDate.getMonth();
-
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    var months = [];
-    while(tempDate !== endDatePlusOneMonth)
-    {
+    console.log(data)
+    let results = {};
+    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    let months = [];
+    while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate);
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-
-    var monthsCount = months.length;
-
-
-    // Add each teacher to the object
-    var tempName = "";
-    for(var teacherIndex in teachers)
-    {
-
-      tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
+  
+    let monthsCount = months.length;
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
+        name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
         totalInstructions: new Array(monthsCount).fill(0),
-        hlq: new Array(monthsCount).fill(0),
-        hlqResponse: new Array(monthsCount).fill(0),
-        llq: new Array(monthsCount).fill(0),
-        llqResponse: new Array(monthsCount).fill(0),
-
-        hlqAverage: new Array(monthsCount).fill(0),
-        hlqResponseAverage: new Array(monthsCount).fill(0),
-        llqAverage: new Array(monthsCount).fill(0),
-        llqResponseAverage: new Array(monthsCount).fill(0),
-
-        lineChartLabels: months,
-
+        highLevel: new Array(monthsCount).fill(0),
+        lowLevel: new Array(monthsCount).fill(0),
+        lineChartLabels: months
       };
-
     }
-
-
-    // Get number of instances for each type of data
-    var tempIntervalData = 0;
-    //var rowMonth = startMonth;
-    for(var rowIndex in data)
-    {
-      var row = data[rowIndex];
-
-      var teacherId = row.teacher.split("/")[2];
-
-      //var rowMonth = new Date(row.startDate.value).getMonth();
-      var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-      // Add to total # of intervals
+  
+    for (let rowIndex in data) {
+      let row = data[rowIndex];
+      let teacherId = row.teacher.split("/")[2];
+      let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
       results[teacherId].totalInstructions[rowMonth] += row.count;
-
-      // Add to behavior types
-      results[teacherId][row.instructionType][rowMonth] += row.count;
-    }
-
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
-
-      // Go through the months
-      for(var i = 0; i < monthsCount; i++)
-      {
-        var tempTotalInstructions = result.totalInstructions[i];
-
-        result.hlqAverage[i] = result.hlq[i] > 0 ? (result.hlq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.hlqResponseAverage[i] = result.hlqResponse[i] > 0 ? (result.hlqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.llqAverage[i] = result.llq[i] > 0 ? (result.llq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.llqResponseAverage[i] = result.llqResponse[i] > 0 ? (result.llqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
+      if (["hlq", "hlqResonse"].includes(row.instructionType)) {
+        results[teacherId].highLevel[rowMonth] += row.count;
+      } else {
+        results[teacherId].lowLevel[rowMonth] += row.count;
       }
     }
-
+  
+    let siteBar = {
+      name: "Site Average",
+      totalInstructions: new Array(monthsCount).fill(0),
+      highLevel: new Array(monthsCount).fill(0),
+      lowLevel: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    }
+  
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+  
+      for (let i = 0; i < monthsCount; i++) {
+        siteBar.highLevel[i] += result.highLevel[i]
+        siteBar.lowLevel[i] += result.lowLevel[i]
+        result.highLevel[i] = parseFloat((result.highLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
+        result.lowLevel[i] = parseFloat((result.lowLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
+        if (isNaN(result.highLevel[i])) {
+          result.highLevel[i] = 0
+        } 
+        if (isNaN(result.lowLevel[i])) {
+          result.lowLevel[i] = 0
+        }   
+        siteBar.totalInstructions[i] = siteBar.highLevel[i] + siteBar.lowLevel[i]
+      }
+    }
+  
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.highLevel[i] = siteBar.highLevel[i] > 0 ? parseFloat((siteBar.highLevel[i] / siteBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
+      siteBar.lowLevel[i] = siteBar.lowLevel[i] > 0 ? parseFloat((siteBar.lowLevel[i] / siteBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
+    }
+  
+    results.siteBar = siteBar;
+    console.log(results)
     return results;
+    // // Initialize the array that will hold all the data
+    // var results = {};
+
+    // var totalIntervals = 0;
+
+    // // Get start month and year
+    // const startMonth = startDate.getMonth();
+
+    // const endMonth = endDate.getMonth();
+
+
+    // // Build list of month between start date and end date
+    // var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
+
+    // // Set the month after the end date, formatted like Nov 21, 2022
+    // var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    // var months = [];
+    // while(tempDate !== endDatePlusOneMonth)
+    // {
+    //   months.push(tempDate);
+    //   tempDate = new Date(tempDate);
+    //   tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+    // }
+
+    // var monthsCount = months.length;
+
+
+    // // Add each teacher to the object
+    // var tempName = "";
+    // for(var teacherIndex in teachers)
+    // {
+
+    //   tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
+
+    //   results[teachers[teacherIndex].id] = {
+    //     name: tempName,
+    //     totalInstructions: new Array(monthsCount).fill(0),
+    //     hlq: new Array(monthsCount).fill(0),
+    //     hlqResponse: new Array(monthsCount).fill(0),
+    //     llq: new Array(monthsCount).fill(0),
+    //     llqResponse: new Array(monthsCount).fill(0),
+
+    //     hlqAverage: new Array(monthsCount).fill(0),
+    //     hlqResponseAverage: new Array(monthsCount).fill(0),
+    //     llqAverage: new Array(monthsCount).fill(0),
+    //     llqResponseAverage: new Array(monthsCount).fill(0),
+
+    //     lineChartLabels: months,
+
+    //   };
+
+    // }
+
+
+    // // Get number of instances for each type of data
+    // var tempIntervalData = 0;
+    // //var rowMonth = startMonth;
+    // for(var rowIndex in data)
+    // {
+    //   var row = data[rowIndex];
+
+    //   var teacherId = row.teacher.split("/")[2];
+
+    //   //var rowMonth = new Date(row.startDate.value).getMonth();
+    //   var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
+
+    //   // Add to total # of intervals
+    //   results[teacherId].totalInstructions[rowMonth] += row.count;
+
+    //   // Add to behavior types
+    //   results[teacherId][row.instructionType][rowMonth] += row.count;
+    // }
+
+    // // Calculate the averages in percentages
+    // // Go through each teacher
+    // for(var resultsIndex in results)
+    // {
+    //   var result = results[resultsIndex];
+
+    //   // Go through the months
+    //   for(var i = 0; i < monthsCount; i++)
+    //   {
+    //     var tempTotalInstructions = result.totalInstructions[i];
+
+    //     result.hlqAverage[i] = result.hlq[i] > 0 ? (result.hlq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+    //     result.hlqResponseAverage[i] = result.hlqResponse[i] > 0 ? (result.hlqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+    //     result.llqAverage[i] = result.llq[i] > 0 ? (result.llq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+    //     result.llqResponseAverage[i] = result.llqResponse[i] > 0 ? (result.llqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+    //   }
+    // }
+
+    // return results;
 
   }
 

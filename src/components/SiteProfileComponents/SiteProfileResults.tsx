@@ -767,7 +767,7 @@ class SiteProfileResults extends React.Component {
 
   setLineGraphData = (teachers, type) => {
     let oneType = ["studentEngagement"];
-    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction"];
     let type2 = "";
     let label1 = "";
     let label2 = "";
@@ -801,6 +801,14 @@ class SiteProfileResults extends React.Component {
       type2 = "sessionTotal"
       label1 = "Literacy Instruction"
       label2 = "No Target Behaviors Observed"
+      color1 = "#C4395A"
+      color2 = "#E5E5E5"
+    }
+    if (this.props.observationType === "levelOfInstruction") {
+      type = "highLevel"
+      type2 = "lowLevel"
+      label1 = "High-Level Instruction"
+      label2 = "Low-Level Instruction"
       color1 = "#C4395A"
       color2 = "#E5E5E5"
     }
