@@ -829,14 +829,14 @@ class SiteProfileResults extends React.Component {
           type2 = "noSupport"
           label1 = "Support for Associative and Cooperative Interactions"
           label2 = "No Support"
-          color1 = "#07DFBB"
+          color1 = "#2EB9EB"
           color2 = "#E20000"
         } else {
           type = "ac"
           type2 = "noAC"
           label1 = "Associative and Cooperative Interactions"
           label2 = "No Associative and Cooperative Interactions"
-          color1 = "#07DFBB"
+          color1 = "#7030A0"
           color2 = "#E20000"
         }
       }
@@ -1050,11 +1050,16 @@ class SiteProfileResults extends React.Component {
     let modifiedInfo = this.state.teacherInfo.filter(teacher => {
       return teacher.id == event.target.value
     })
-    if (event.target.value != 'None') {
+    if (this.props.observationType === "studentEngagement") {
+      if (event.target.value != 'None') {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = 'bottom'
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+    } else {
       LineGraphOptions.legend.display = true
       LineGraphOptions.legend.position = 'bottom'
-    } else {
-      LineGraphOptions.legend.display = false
     }
 
     this.setLineGraphData(modifiedInfo, this.state.radioValue)

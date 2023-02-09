@@ -1113,37 +1113,45 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         siteBar.ac[i] += result.ac[i]
         siteBar.noAC[i] += result.noAC[i]
 
-        result.teacherSupport[i] = 10
-        result.ac[i] = 20
-        result.noSupport[i] = 30 
-        result.noAC[i] = 40
-        // result.listeningInstruction[i] = parseFloat((result.listeningInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-        // result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.ac[i] = parseFloat((result.ac[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100; 
+        result.noAC[i] = parseFloat((result.noAC[i] / result.totalIntervals[i]).toFixed(2)) * 100;
   
-        // if (isNaN(result.listeningInstruction[i])) {
-        //   result.listeningInstruction[i] = 0
-        // } 
-        // if (isNaN(result.noBehaviors[i])) {
-        //   result.noBehaviors[i] = 0
-        // } 
-        // siteBar.totalIntervals[i] = siteBar.listeningInstruction[i] + siteBar.noBehaviors[i];
+        if (isNaN(result.teacherSupport[i])) {
+          result.teacherSupport[i] = 0
+        } 
+        if (isNaN(result.noSupport[i])) {
+          result.noSupport[i] = 0
+        } 
+        if (isNaN(result.ac[i])) {
+          result.ac[i] = 0
+        } 
+        if (isNaN(result.noAC[i])) {
+          result.noAC[i] = 0
+        } 
+        siteBar.totalIntervals[i] += result.totalIntervals[i]
       }
     }
   
     for (let i = 0; i < monthsCount; i++) {
-      siteBar.teacherSupport[i] = 50
-      siteBar.ac[i] = 60
-      siteBar.noSupport[i] = 70 
-      siteBar.noAC[i] = 80
-      // siteBar.listeningInstruction[i] = parseFloat((siteBar.listeningInstruction[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
-      // siteBar.noBehaviors[i] = parseFloat((siteBar.noBehaviors[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.teacherSupport[i] = parseFloat((siteBar.teacherSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.ac[i] = parseFloat((siteBar.ac[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100; 
+      siteBar.noAC[i] = parseFloat((siteBar.noAC[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
   
-      // if (isNaN(siteBar.listeningInstruction[i])) {
-      //   siteBar.listeningInstruction[i] = 0
-      // } 
-      // if (isNaN(siteBar.noBehaviors[i])) {
-      //   siteBar.noBehaviors[i] = 0
-      // } 
+      if (isNaN(siteBar.teacherSupport[i])) {
+        siteBar.teacherSupport[i] = 0
+      } 
+      if (isNaN(siteBar.noSupport[i])) {
+        siteBar.noSupport[i] = 0
+      } 
+      if (isNaN(siteBar.ac[i])) {
+        siteBar.ac[i] = 0
+      } 
+      if (isNaN(siteBar.noAC[i])) {
+        siteBar.noAC[i] = 0
+      } 
     }
   
     results.siteBar = siteBar;
