@@ -634,93 +634,51 @@ class TrendData {
   * Sequential Activities
   */
 calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
-
+  // support/noSupport
   // Initialize the array that will hold all the data
-  var results = {};
-
-  var totalIntervals = 0;
-
-  // Get start month and year
-  const startMonth = startDate.getMonth();
-
-  const endMonth = endDate.getMonth();
-
-
-   // Build list of month between start date and end date
-   var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-   // Set the month after the end date, formatted like Nov 21, 2022
-   var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-   var months = [];
-   while(tempDate !== endDatePlusOneMonth)
-   {
-     months.push(tempDate);
-     tempDate = new Date(tempDate);
-     tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-   }
-
-   var monthsCount = months.length;
-
-
-  // Add each teacher to the object
-  var tempName = "";
-  for(var teacherIndex in teachers)
-  {
-
-    tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
+  let results = {};
+  let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+  let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+  let months = [];
+  while (tempDate !== endDatePlusOneMonth) {
+    months.push(tempDate);
+    tempDate = new Date(tempDate);
+    tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+  }
+  
+  console.log(months)
+  let monthsCount = months.length;
+  for (let teacherIndex in teachers) {
     results[teachers[teacherIndex].id] = {
-      name: tempName,
-      totalInstructions: new Array(monthsCount).fill(0),
-      sequentialActivities: new Array(monthsCount).fill(0),
-      drawImages: new Array(monthsCount).fill(0),
-      demonstrateSteps: new Array(monthsCount).fill(0),
-      actOut: new Array(monthsCount).fill(0),
-
-      notAtCenter: new Array(monthsCount).fill(0),
-      noSupport: new Array(monthsCount).fill(0),
+      name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
       support: new Array(monthsCount).fill(0),
-
-      totalInstructionsAverage: new Array(monthsCount).fill(0),
-      sequentialActivitiesAverage: new Array(monthsCount).fill(0),
-      drawImagesAverage: new Array(monthsCount).fill(0),
-      demonstrateStepsAverage: new Array(monthsCount).fill(0),
-      actOutAverage: new Array(monthsCount).fill(0),
-
-      notAtCenterAverage: new Array(monthsCount).fill(0),
-      noSupportAverage: new Array(monthsCount).fill(0),
-      supportAverage: new Array(monthsCount).fill(0),
-
-      lineChartLabels: months,
+      noSupport: new Array(monthsCount).fill(0),
+      sequentialActivities: new Array(monthsCount).fill(0),
+      childNonSequential: new Array(monthsCount).fill(0),
+      total: new Array(monthsCount).fill(0),
+      lineChartLabels: months
     };
-
   }
 
+  console.log(results)
 
-  // Get number of instances for each type of data
-  var tempIntervalData = 0;
-  //var rowMonth = startMonth;
-  for(var rowIndex in data)
-  {
-    var row = data[rowIndex];
-
-    var teacherId = row.teacher.split("/")[2];
-
-    //var rowMonth = new Date(row.timestamp).getMonth();
-    var rowMonth = months.indexOf(new Date(row.timestamp).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-    // Add to total # of intervals
-    results[teacherId].totalInstructions[rowMonth] += row.notAtCenter + row.support + row.noSupport;
-
-    // Add to behavior types
-    results[teacherId].sequentialActivities[rowMonth] += row.sequentialActivities;
-    results[teacherId].drawImages[rowMonth] += row.drawImages;
-    results[teacherId].demonstrateSteps[rowMonth] += row.demonstrateSteps;
-    results[teacherId].actOut[rowMonth] += row.actOut;
-
-    results[teacherId].notAtCenter[rowMonth] += row.notAtCenter;
-    results[teacherId].support[rowMonth] += row.support;
-    results[teacherId].noSupport[rowMonth] += row.noSupport;
+  for (let rowIndex in data) {
+    let row = data[rowIndex];
+    let teacherId = row.teacher.split("/")[2];
+    let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
+    results[teacherId].support[rowMonth] = row.support; //transition time
+    results[teacherId].noSupport[rowMonth] = row.noSupport;
+    results[teacherId].sequentialActivities[rowMonth] = row.sequentialActivities; //transition time
+    results[teacherId].childNonSequential[rowMonth] = row.childNonSequential;
+    results[teacherId].total[rowMonth] = row.total;
+  }
+  let siteBar = {
+    name: "Site Average",
+    total: new Array(monthsCount).fill(0),
+    support: new Array(monthsCount).fill(0),
+    noSupport: new Array(monthsCount).fill(0),
+    sequentialActivities: new Array(monthsCount).fill(0),
+    childNonSequential: new Array(monthsCount).fill(0),
   }
 
   // Calculate the averages in percentages
@@ -732,20 +690,61 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < monthsCount; i++)
     {
-      var tempTotalInstructions = result.totalInstructions[i];
 
-      result.sequentialActivitiesAverage[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.drawImagesAverage[i] = result.drawImages[i] > 0 ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.demonstrateStepsAverage[i] = result.demonstrateSteps[i] > 0 ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.actOutAverage[i] = result.actOut[i] > 0 ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      // result.sequentialActivitiesAverage[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      // result.drawImagesAverage[i] = result.drawImages[i] > 0 ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      // result.demonstrateStepsAverage[i] = result.demonstrateSteps[i] > 0 ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      // result.actOutAverage[i] = result.actOut[i] > 0 ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
-      result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.supportAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.noSupportAverage[i] = result.noSupport[i] > 0 ? (result.noSupport[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      // result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.support[i] = result.support[i] > 0 ? (result.support[i] / result.total[i]) : 0;
+      result.noSupport[i] = result.noSupport[i] > 0 ? (100 - result.support[i]) : 0;
+      result.sequentialActivities[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / result.total[i]) : 0;
+      result.childNonSequential[i] = result.childNonSequential[i] > 0 ? (100 - result.sequentialActivities[i]) : 0;
+      if (isNaN(result.support[i])) {
+        result.support[i] = 0
+      } 
+      if (isNaN(result.noSupport[i])) {
+        result.noSupport[i] = 0
+      } 
+      if (isNaN(result.sequentialActivities[i])) {
+        result.sequentialActivities[i] = 0
+      } 
+      if (isNaN(result.childNonSequential[i])) {
+        result.childNonSequential[i] = 0
+      } 
 
+      siteBar.support[i] = siteBar.support[i] + result.support[i];
+      siteBar.noSupport[i] = siteBar.noSupport[i] + result.noSupport[i]
+      siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] + result.sequentialActivities[i];
+      siteBar.noSupport[i] = siteBar.childNonSequential[i] + result.childNonSequential[i]
+      siteBar.total[i] += result.total[i];
+
+      if (isNaN(siteBar.support[i])) {
+        siteBar.support[i] = 0
+      } 
+      if (isNaN(siteBar.noSupport[i])) {
+        siteBar.noSupport[i] = 0
+      } 
+      if (isNaN(siteBar.sequentialActivities[i])) {
+        siteBar.sequentialActivities[i] = 0
+      } 
+      if (isNaN(siteBar.childNonSequential[i])) {
+        siteBar.childNonSequential[i] = 0
+      } 
     }
   }
 
+  for (let i = 0; i < monthsCount; i++) {
+    siteBar.support[i] = siteBar.support[i] / siteBar.total[i];
+    siteBar.noSupport[i] = 100 - siteBar.support[i];
+    siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] / siteBar.total[i];
+    siteBar.childNonSequential[i] = 100 - siteBar.sequentialActivities[i];
+  }
+
+
+  results.siteBar = siteBar;
+  console.log(results)
   return results;
 
 }
