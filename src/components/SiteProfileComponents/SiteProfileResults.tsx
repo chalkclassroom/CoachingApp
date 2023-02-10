@@ -208,7 +208,7 @@ const radioValueArr = {
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
-  bookReadingAverage: 'Book Reading: Total Instruction',
+  bookReadingAverage: '',
   vocabFocusAverage: 'Book Reading: Focuses on Vocabulary',
   languageConnectionsAverage: 'Book Reading: Makes Connections',
   childrenSupportAverage: "Book Reading: Support Children's Speaking",

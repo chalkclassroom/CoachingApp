@@ -206,11 +206,9 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
     }
 
     return (
-      <div style={{ padding: '30px 30px 0px 30px' }}>
-        <h2 style={{ width: '100%', textAlign: 'center', marginTop: 0 }}>
-          Transition Time
-        </h2>
-        <div className={'realChart'} style={{ height: 500 }}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Transition Time</h2>
+      <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
