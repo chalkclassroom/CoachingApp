@@ -193,7 +193,7 @@ const practicesArr = {
 // Array used to match the default radio value based on the type
 const radioValueArr = {
   transitionTime: 'lineAverage',
-  classroomClimate: 'nonspecificapprovalAverage',
+  classroomClimate: 'teacherApprovals',
   mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
@@ -1234,6 +1234,22 @@ class SiteProfileResults extends React.Component {
             ) : null}
 
             {/*
+                Radio buttons for the Classrom Climate Trends.
+                Note: gotta do this seperately because the radio buttons only show on trends for this observation type
+            */}
+            {this.props.observationType == "classroomClimate" && this.state.tabState == 1 ? (
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={this.state.radioValue}
+                onChange={this.handleRadioChange}
+                style={{ width: '100%' }}
+              >
+                <RadioSets type={this.props.observationType} />
+              </RadioGroup>
+            ) : null}
+
+            {/*
                 The chart switcher
             */}
             <Grid container style={centerRow}>
@@ -1299,6 +1315,7 @@ class SiteProfileResults extends React.Component {
                       data={this.state.trends}
                       options={LineGraphOptions}
                       selectedTeacher={this.state.selectedTeacher}
+                      radioValue={this.state.radioValue}
                     />
                   ) : null}
 
@@ -1410,7 +1427,7 @@ class SiteProfileResults extends React.Component {
                       LI={this.props.observationType}
                     />
                   ) : null}
-                  
+
                 </Grid>
               ) : null}
             </Grid>

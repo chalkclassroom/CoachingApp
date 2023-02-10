@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import {Bar } from "react-chartjs-2";
+import {Bar, Line} from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
@@ -20,9 +20,11 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     super(props);
     this.state = {
       teacherNames: [],
-      dataSets: [],
+      approvalBarGraphData: [],
+      toneLineGraphData: [],
       monthCount: 0,
       maxPercentage: 100, // The highest tick on the chart
+      lineGraphData: {},
     }
   }
 
@@ -68,6 +70,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     const monthCount = monthLabels.length;
 
     let siteApprovalValues = new Array(monthCount).fill().map(u => ({approvalTotal: 0, count: 0}));
+    let siteToneValues = new Array(monthCount).fill().map(u => ({toneTotal: 0, count: 0}));
     for(var teacherIndex in data)
     {
       let teacher = data[teacherIndex];
@@ -76,6 +79,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       for(var i=0; i < monthCount; i++)
       {
         let tempApproval = 0;
+        let tempTone = 0;
 
         // If there's no data, just skip
         if(teacher['total'][i] == 0)
@@ -84,9 +88,17 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         }
 
         tempApproval = teacher['nonspecificapprovalAverage'][i] + teacher['specificapprovalAverage'][i];
+        tempTone = teacher['toneAverage'][i];
 
         siteApprovalValues[i].approvalTotal += tempApproval;
         siteApprovalValues[i].count++;
+
+        // Get total score of tone averages for the month
+        if(teacher['toneCount'][i] !== 0)
+        {
+          siteToneValues[i].toneTotal += tempTone;
+          siteToneValues[i].count++;
+        }
 
       }
     }
@@ -94,13 +106,14 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     // Calculate the site average
     const siteApprovalAverage = siteApprovalValues.map(x => {return x.count > 0 ? Math.round(x.approvalTotal / x.count + Number.EPSILON) : 0 });
     const siteDisapprovalAverage = siteApprovalValues.map(x => {return x.count > 0 ? 100 - Math.round(x.approvalTotal / x.count + Number.EPSILON) : 0 });
+    const siteToneAverage = siteToneValues.map(x => {return x.count > 0 ? x.toneTotal / x.count : 0 });
 
 
 
     /*
-     * Create dataset with site averages in it
+     * Create dataset with site averages in it for the Approvals Graph
      */
-    var dataSets = [
+    var approvalDataSets = [
       {
         label: 'Site Average Behavior Approval',
         //data: hlqAverage,
@@ -130,6 +143,19 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       },
     ]
 
+    let toneDataSets = [
+      {
+        label: 'Site Average',
+        borderColor: '#4472C4',
+        backgroundColor: 'rgba(255, 99, 132, 0)',
+        data: siteToneAverage,
+        borderDash: [10,5],
+        tension: 0.0,
+        pointStyle: 'dash',
+        borderCapStyle: 'round'
+      }
+    ]
+
 
     /*
      * If a teacher is selected, we have to add their average to the dataset
@@ -157,9 +183,9 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         }
       );
 
-      dataSets.push(
+      approvalDataSets.push(
         {
-          label: 'Teacher A Behavior Approval',
+          label: selectedTeacher.name + ' Behavior Approval',
           //data: siteAverageHlqAverage,
           data: teacherApprovalAverages,
           backgroundColor: "#0070C0",
@@ -187,6 +213,20 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
           order: 2,
         },
       );
+
+      // Add the Trends data for the teacher
+
+      toneDataSets.push(
+        {
+          label: selectedTeacher.name,
+          borderColor: '#4472C4',
+          backgroundColor: 'rgba(255, 99, 132, 0)',
+          data: selectedTeacher.toneAverage,
+          tension: 0.0,
+          pointStyle: 'line'
+        }
+      )
+
     }
 
 
@@ -205,7 +245,8 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
     this.setState({
       monthLabels: monthLabels,
       monthCount: monthCount,
-      dataSets: dataSets,
+      approvalBarGraphData: approvalDataSets,
+      toneLineGraphData: toneDataSets,
       maxPercentage: maxValue
     });
 
@@ -258,9 +299,14 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const isCompleted = this.props.completed;
-    const childBehaviorsData = {
+    const approvalBarGraphData = {
       labels: this.state.monthLabels,
-      datasets: this.state.dataSets
+      datasets: this.state.approvalBarGraphData
+    };
+
+    let toneLineGraphData = {
+      labels: this.state.monthLabels,
+      datasets: this.state.toneLineGraphData
     };
 
     // Adds some space between the legend
@@ -279,6 +325,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       }
     };
 
+    let graphContainerWidth = this.props.radioValue == "teacherApprovals" ? 300 + this.state.monthCount * 160 : 300 + this.state.monthCount * 60
+    let headingFontSize = this.props.radioValue == "teacherApprovals" ? 18 : 26;
+
+
     return (
       <div style={{
         padding: '30px 30px 0px 30px',
@@ -289,13 +339,19 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
         maxWidth: '70vw',
 
       }}>
-        <h4 style={{width: '100%', textAlign: 'center', marginTop: 0, fontWeight: 400, fontSize: 18}}>Teacher Behaviors</h4>
+        <h4 style={{width: '100%', textAlign: 'center', marginTop: 0, fontWeight: 400, fontSize: headingFontSize}}>{this.props.radioValue == "teacherApprovals" ? 'Teacher Behaviors' : 'Teacher Tone'}</h4>
         <div className={"realChart"} style={{
           height: 500,
-          width: 300 + this.state.monthCount * 160, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
+          width: graphContainerWidth, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
+          minWidth: '100%'
         }}>
-          <Bar
-            data={childBehaviorsData}
+
+          {/*
+            Show the Approvals BAR GRAPH
+            */}
+          {this.props.radioValue == "teacherApprovals" ? (
+            <Bar
+            data={approvalBarGraphData}
             options={{
               animation: {
                 onComplete: function(): void {
@@ -400,6 +456,93 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
             }}
             plugins={[plugin]}
           />
+          ) : null}
+
+          {/*
+            Show the Tone LINE GRAPH
+          */}
+          {this.props.radioValue == "teacherTone" ? (
+            <Line
+              data={toneLineGraphData}
+              options={
+                  {
+                  maintainAspectRatio: false,
+                  showScale: true,
+                  pointDot: false,
+                  showLines: true,
+                  legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                      usePointStyle: true,
+                      pointStyle: 'start',
+                      boxWidth: 80,
+                      fontSize: 18
+                    }
+                  },
+                  tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                  },
+                  hover: {
+                    mode: 'nearest',
+                    intersect: true,
+                  },
+                  scales: {
+
+                    xAxes: [
+                      {
+                        beginAtZero: true,
+                        display: true,
+                        scaleLabel: {
+                          display: false,
+                        },
+                        ticks: {
+                          fontSize: 18,
+                          align: 'center',
+                        },
+                        gridLines: {
+                          display: false,
+                          color: "rgba(0,0,0,0)",
+                        },
+
+                      },
+                    ],
+                    yAxes: [
+                      {
+                        ticks: {
+                          beginAtZero: true,
+                          min: 1,
+                          max: 5,
+                          stepSize: 1,
+                          callback: function(value: number): string {
+                            return value + '.0'
+                          },
+                          fontSize: 18,
+                          padding: 20,
+                          fontColor: 'black',
+
+                        },
+                        gridLines: {
+                          drawBorder: false,
+                          drawTicks: false,
+                        }
+                      },
+                    ],
+                    grid: {
+                      //lineWidth: 5,
+                    }
+                  },
+                  plugins: {
+                    datalabels: {
+                      display: false,
+                    },
+                  },
+                }
+              }
+            />
+          ) : null}
+
         </div>
       </div>
     );

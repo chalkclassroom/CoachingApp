@@ -19,7 +19,7 @@ class TrendData {
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-    
+
     console.log(months)
     let monthsCount = months.length;
     for (let teacherIndex in teachers) {
@@ -32,7 +32,7 @@ class TrendData {
     }
 
     console.log(results)
-  
+
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
@@ -40,28 +40,28 @@ class TrendData {
       results[teacherId].total[rowMonth] = row.total; //transition time
       results[teacherId].sessionTotal[rowMonth] = row.sessionTotal; //activity time
     }
-  
+
     let siteBar = {
       name: "Site Average",
       total: new Array(monthsCount).fill(0),
       sessionTotal: new Array(monthsCount).fill(0),
       lineChartLabels: months
     }
-  
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
-  
+
       for (let i = 0; i < monthsCount; i++) {
         result.total[i] = result.total[i] / result.sessionTotal[i]
         result.sessionTotal[i] = 100 - result.total[i]
       }
     }
-  
+
     for (let i = 0; i < monthsCount; i++) {
       siteBar.total[i] = 10;
       siteBar.sessionTotal[i] = 20;
     }
-  
+
     results.siteBar = siteBar;
     console.log(results)
     return results;
@@ -112,11 +112,14 @@ class TrendData {
          specificapproval: new Array(monthsCount).fill(0),
          disapproval: new Array(monthsCount).fill(0),
          redirection: new Array(monthsCount).fill(0),
+         tone: new Array(monthsCount).fill(0),
+         toneCount: new Array(monthsCount).fill(0),
 
          nonspecificapprovalAverage: new Array(monthsCount).fill(0),
          specificapprovalAverage: new Array(monthsCount).fill(0),
          disapprovalAverage: new Array(monthsCount).fill(0),
          redirectionAverage: new Array(monthsCount).fill(0),
+         toneAverage: new Array(monthsCount).fill(0),
 
          lineChartLabels: months,
        };
@@ -137,11 +140,18 @@ class TrendData {
        rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
        // Add to behavior types
-       // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+       // There's a row for the tone. We need to make sure we don't use that one
        if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
        {
          results[teacherId][row.behaviorResponse][rowMonth] +=  row.count;
          results[teacherId].total[rowMonth] += row.count;
+       }
+       else
+       {
+         console.log("Tone Rating : ", row);
+
+         results[teacherId].tone[rowMonth] +=  row.toneRating;
+         results[teacherId].toneCount[rowMonth]++;
        }
 
      }
@@ -161,6 +171,8 @@ class TrendData {
          result.specificapprovalAverage[i] = result.specificapproval[i] > 0 ? (result.specificapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
          result.disapprovalAverage[i] = result.disapproval[i] > 0 ? (result.disapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
          result.redirectionAverage[i] = result.redirection[i] > 0 ? (result.redirection[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+         result.toneAverage[i] = result.toneCount[i] > 0 ? (result.tone[i] / result.toneCount[i]) : 0;
 
        }
      }
@@ -300,7 +312,7 @@ class TrendData {
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-  
+
     let monthsCount = months.length;
     for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
@@ -311,7 +323,7 @@ class TrendData {
         lineChartLabels: months
       };
     }
-  
+
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
@@ -323,7 +335,7 @@ class TrendData {
         results[teacherId].lowLevel[rowMonth] += row.count;
       }
     }
-  
+
     let siteBar = {
       name: "Site Average",
       totalInstructions: new Array(monthsCount).fill(0),
@@ -331,10 +343,10 @@ class TrendData {
       lowLevel: new Array(monthsCount).fill(0),
       lineChartLabels: months
     }
-  
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
-  
+
       for (let i = 0; i < monthsCount; i++) {
         siteBar.highLevel[i] += result.highLevel[i]
         siteBar.lowLevel[i] += result.lowLevel[i]
@@ -342,19 +354,19 @@ class TrendData {
         result.lowLevel[i] = parseFloat((result.lowLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
         if (isNaN(result.highLevel[i])) {
           result.highLevel[i] = 0
-        } 
+        }
         if (isNaN(result.lowLevel[i])) {
           result.lowLevel[i] = 0
-        }   
+        }
         siteBar.totalInstructions[i] = siteBar.highLevel[i] + siteBar.lowLevel[i]
       }
     }
-  
+
     for (let i = 0; i < monthsCount; i++) {
       siteBar.highLevel[i] = siteBar.highLevel[i] > 0 ? parseFloat((siteBar.highLevel[i] / siteBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
       siteBar.lowLevel[i] = siteBar.lowLevel[i] > 0 ? parseFloat((siteBar.lowLevel[i] / siteBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
     }
-  
+
     results.siteBar = siteBar;
     console.log(results)
     return results;
@@ -492,13 +504,13 @@ class TrendData {
       console.log(result.dailyAverage[i])
       if (isNaN(result.dailyAverage[i])) {
         result.dailyAverage[i] = 0
-      } 
+      }
 
       siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i]
-    
+
      }
    }
-   
+
    for(var i = 0; i < monthsCount; i++)
    {
     siteBar.dailyAverage[i] = siteBar.totalPoints[i] > 0 ? parseFloat((siteBar.totalPoints[i] / Object.keys(results).length).toFixed(2)) : 0;
@@ -577,10 +589,10 @@ class TrendData {
 
       if (isNaN(result.listeningInstruction[i])) {
         result.listeningInstruction[i] = 0
-      } 
+      }
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
-      } 
+      }
       siteBar.totalIntervals[i] = siteBar.listeningInstruction[i] + siteBar.noBehaviors[i];
     }
   }
@@ -591,10 +603,10 @@ class TrendData {
 
     if (isNaN(siteBar.listeningInstruction[i])) {
       siteBar.listeningInstruction[i] = 0
-    } 
+    }
     if (isNaN(siteBar.noBehaviors[i])) {
       siteBar.noBehaviors[i] = 0
-    } 
+    }
   }
 
   results.siteBar = siteBar;
@@ -909,10 +921,10 @@ calculateFoundationalSkillsTrends = (data, teachers, startDate, endDate) => {
 
       if (isNaN(result.literacyInstruction[i])) {
         result.literacyInstruction[i] = 0
-      } 
+      }
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
-      } 
+      }
       siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
     }
   }
@@ -986,10 +998,10 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
 
       if (isNaN(result.literacyInstruction[i])) {
         result.literacyInstruction[i] = 0
-      } 
+      }
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
-      } 
+      }
       siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
     }
   }
@@ -1019,7 +1031,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-  
+
     let monthsCount = months.length;
     for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
@@ -1030,7 +1042,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         lineChartLabels: months
       };
     }
-  
+
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
@@ -1042,7 +1054,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         results[teacherId].literacyInstruction[rowMonth]++;
       }
     }
-  
+
     let siteBar = {
       name: "Site Average",
       total: new Array(monthsCount).fill(0),
@@ -1050,31 +1062,31 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       noBehaviors: new Array(monthsCount).fill(0),
       lineChartLabels: months
     }
-  
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
-  
+
       for (let i = 0; i < monthsCount; i++) {
         siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
         siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
         result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
         result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-  
+
         if (isNaN(result.literacyInstruction[i])) {
           result.literacyInstruction[i] = 0
-        } 
+        }
         if (isNaN(result.noBehaviors[i])) {
           result.noBehaviors[i] = 0
-        } 
+        }
         siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
       }
     }
-  
+
     for (let i = 0; i < monthsCount; i++) {
       siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
       siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
     }
-  
+
     results.siteBar = siteBar;
     console.log(results)
     return results;
@@ -1095,7 +1107,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-  
+
     let monthsCount = months.length;
     for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
@@ -1106,7 +1118,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         lineChartLabels: months
       };
     }
-  
+
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
@@ -1118,7 +1130,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         results[teacherId].literacyInstruction[rowMonth]++;
       }
     }
-  
+
     let siteBar = {
       name: "Site Average",
       total: new Array(monthsCount).fill(0),
@@ -1126,31 +1138,31 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       noBehaviors: new Array(monthsCount).fill(0),
       lineChartLabels: months
     }
-  
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
-  
+
       for (let i = 0; i < monthsCount; i++) {
         siteBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? siteBar.literacyInstruction[i] + result.literacyInstruction[i] : siteBar.literacyInstruction[i]
         siteBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? siteBar.noBehaviors[i] + result.noBehaviors[i] : siteBar.noBehaviors[i]
         result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
         result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-  
+
         if (isNaN(result.literacyInstruction[i])) {
           result.literacyInstruction[i] = 0
-        } 
+        }
         if (isNaN(result.noBehaviors[i])) {
           result.noBehaviors[i] = 0
-        } 
+        }
         siteBar.total[i] = siteBar.literacyInstruction[i] + siteBar.noBehaviors[i];
       }
     }
-  
+
     for (let i = 0; i < monthsCount; i++) {
       siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
       siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
     }
-  
+
     results.siteBar = siteBar;
     console.log(results)
     return results;
