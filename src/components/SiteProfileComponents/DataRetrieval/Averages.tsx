@@ -317,6 +317,8 @@ class AveragesData {
         shapes: 0,
         patterns: 0,
         measurement: 0,
+        childMathTotal:0,
+        childOtherTotal:0,
       }
     }
 
@@ -344,8 +346,12 @@ class AveragesData {
       results[teacherId].childOtherTotal += row.childOther;
 
       // Calculate the total Number of instructions
-      results[teacherId].totalInstructions +=
-        row.noSupport + row.noOpportunity + row.support
+      results[teacherId].totalInstructions += row.noSupport + row.support
+
+      var tempTotal = row.noSupport + row.noOpportunity + row.support;
+      results[teacherId].totalInstructionsChild += tempTotal;
+
+      results[teacherId].childMathTotal += tempTotal - row.childOther;
     }
 
     // Calculate the averages in percentages
@@ -401,6 +407,9 @@ class AveragesData {
         result.noSupport > 0
           ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100
           : 0
+
+      result.childOtherAverage = result.childOtherTotal > 0 ? (result.childOtherTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
+      result.childMathAverage = result.childMathTotal > 0 ? (result.childMathTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
     }
 
     return results
