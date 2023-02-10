@@ -143,12 +143,15 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       },
     ]
 
+    // Add null to the front and back of the data to account for the gaps
+    let siteToneData = [null];
+    siteToneData = siteToneData.concat(siteToneAverage, [null])
     let toneDataSets = [
       {
         label: 'Site Average',
         borderColor: '#4472C4',
         backgroundColor: 'rgba(255, 99, 132, 0)',
-        data: siteToneAverage,
+        data: siteToneData,
         borderDash: [10,5],
         tension: 0.0,
         pointStyle: 'dash',
@@ -200,7 +203,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
 
         {
-          label: 'Teacher A Behavior Disapproval',
+          label: selectedTeacher.name + ' Behavior Disapproval',
           //data: llqAverage,
           data: teacherDisapprovalAverages,
           backgroundColor: "#ED7D31",
@@ -215,13 +218,16 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       );
 
       // Add the Trends data for the teacher
+      // Add null to the front and back of the data to account for the gaps
+      let toneData = [null];
+      toneData = toneData.concat(selectedTeacher.toneAverage, [null])
 
       toneDataSets.push(
         {
           label: selectedTeacher.name,
           borderColor: '#4472C4',
           backgroundColor: 'rgba(255, 99, 132, 0)',
-          data: selectedTeacher.toneAverage,
+          data: toneData,
           tension: 0.0,
           pointStyle: 'line'
         }
@@ -304,9 +310,15 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
       datasets: this.state.approvalBarGraphData
     };
 
+    // Add null values to month to account for gaps in beginning and end of the graph
+    let toneMonths = [''];
+    toneMonths = toneMonths.concat(this.state.monthLabels, [''])
+
     let toneLineGraphData = {
-      labels: this.state.monthLabels,
+      labels: toneMonths,
+      //labels: ['', 'happ', 'joy', 'apple', ''],
       datasets: this.state.toneLineGraphData
+
     };
 
     // Adds some space between the legend
@@ -330,219 +342,272 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
 
     return (
-      <div style={{
-        padding: '30px 30px 0px 30px',
-        border: 'solid 2px #eee',
-        marginTop: '30px',
-        marginBottom: '30px',
-        overflowX: 'scroll',
-        maxWidth: '70vw',
+      <div className={"CCChartWrap"} style={{position: 'relative'}}>
 
-      }}>
-        <h4 style={{width: '100%', textAlign: 'center', marginTop: 0, fontWeight: 400, fontSize: headingFontSize}}>{this.props.radioValue == "teacherApprovals" ? 'Teacher Behaviors' : 'Teacher Tone'}</h4>
-        <div className={"realChart"} style={{
-          height: 500,
-          width: graphContainerWidth, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
-          minWidth: '100%'
-        }}>
+        {/* The 'Excitement', 'Positive Interest', etc lables on right side of tone graph */}
+        {this.props.radioValue == "teacherTone" ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: '-220px',
+              width: 200,
+              height: 511,
+              marginTop: 92,
+              display: 'flex',
+              flexDirection: 'column',
+              paddingRight: 20,
 
-          {/*
-            Show the Approvals BAR GRAPH
-            */}
-          {this.props.radioValue == "teacherApprovals" ? (
-            <Bar
-            data={approvalBarGraphData}
-            options={{
-              animation: {
-                onComplete: function(): void {
-                  isCompleted ? isCompleted() : null
-                }
-              },
-              global: {
-                responsive: false,
-                maintainAspectRatio: false
-             },
-              scales: {
-                yAxes: [
-                  {
-                    ticks: {
-                      display:true,
-                      min: 0,
-                      max: this.state.maxPercentage,
-                      stepSize: 10,
-                      fixedStepSize: 1,
-                      fontSize: 12,
-                      fontColor: 'black',
-                      padding: 10,
-                      // Include a percent sign in the ticks
-                      callback: function(value, index, values) {
-                          return value + '%';
-                      },
-
-                    },
-                    scaleLabel: {
-                      display: true,
-                      labelString: 'Percentage of each Behavior Type',
-                      fontFamily: 'Arimo',
-                      fontSize: 12,
-                      fontColor: 'black',
-                    },
-                    //stacked: true,
-                    gridLines: {
-                      drawBorder: false,
-                      drawTicks: false,
-                    }
-                  }
-                ],
-                xAxes: [
-                  {
-
-                    ticks: {
-                      fontSize: 12,
-                      fontColor: 'black',
-                      callback: (value, index, values) => {
-                        return value
-                      }
-                    },
-                    scaleLabel: {
-                      display: true,
-                      labelString: 'Month',
-                      fontFamily: 'Arimo',
-                      fontSize: 12,
-                      fontColor: 'black',
-                    },
-                    //stacked: true,
-                    gridLines: {
-                      display: false,
-                      color: "rgba(0,0,0,0)",
-                    }
-                  }
-                ]
-              },
-              legend: {
-                display: true,
-                fontSize: 12,
-                labels: {
-                  padding: 20,
-                  boxWidth: 12,
-                },
-                position: 'right',
-              },
-              plugins: {
-                datalabels: {
-                  display: false,
-                  color: 'black',
-                  font: {
-                    size: 14,
-                    weight: '400'
-                  },
-                  formatter: function(value: number): number | null {
-                    if (value > 0) {
-                      return value + "%";
-                    } else {
-                      return null;
-                    }
-                  }
-                },
-
-              },
-              maintainAspectRatio: false,
-
-              layout: {
-                padding: {
-                  bottom: 50,
-                }
-              }
             }}
-            plugins={[plugin]}
-          />
-          ) : null}
+            className={"toneLabelsSidebar"}
+          >
+            <div
+              style={{flex:1, display:'flex', justifyContent: 'flex-end', alignItems:'center'}}
+            >
+              Excitement
+            </div>
+            <div
+              style={{flex:1, display:'flex', justifyContent: 'flex-end', alignItems:'center', textAlign: 'right'}}
+            >
+              Positive<br/>Interest
+            </div>
+            <div
+              style={{flex:1, display:'flex', justifyContent: 'flex-end', alignItems:'center'}}
+            >
+              Neutral
+            </div>
+            <div
+              style={{flex:1, display:'flex', justifyContent: 'flex-end', alignItems:'center'}}
+            >
+              Irritation
+            </div>
+            <div
+              style={{flex:1, display:'flex', justifyContent: 'flex-end', alignItems:'center'}}
+            >
+              Anger
+            </div>
 
-          {/*
-            Show the Tone LINE GRAPH
-          */}
-          {this.props.radioValue == "teacherTone" ? (
-            <Line
-              data={toneLineGraphData}
-              options={
-                  {
-                  maintainAspectRatio: false,
-                  showScale: true,
-                  pointDot: false,
-                  showLines: true,
-                  legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                      usePointStyle: true,
-                      pointStyle: 'start',
-                      boxWidth: 80,
-                      fontSize: 18
-                    }
-                  },
-                  tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                  },
-                  hover: {
-                    mode: 'nearest',
-                    intersect: true,
-                  },
-                  scales: {
+          </div>
+        ) : null}
 
-                    xAxes: [
-                      {
-                        beginAtZero: true,
-                        display: true,
-                        scaleLabel: {
-                          display: false,
-                        },
-                        ticks: {
-                          fontSize: 18,
-                          align: 'center',
-                        },
-                        gridLines: {
-                          display: false,
-                          color: "rgba(0,0,0,0)",
+
+
+        <div style={{
+          padding: '30px 30px 0px 30px',
+          border: 'solid 2px #eee',
+          marginTop: '30px',
+          marginBottom: '30px',
+          overflowX: 'scroll',
+          maxWidth: '70vw',
+
+        }}>
+          <h4 style={{width: '100%', textAlign: 'center', marginTop: 0, fontWeight: 400, fontSize: headingFontSize}}>{this.props.radioValue == "teacherApprovals" ? 'Teacher Behaviors' : 'Teacher Tone'}</h4>
+          <div className={"realChart"} style={{
+            height: 500,
+            width: graphContainerWidth, // This is the only way I can think of to get the chart to expand past the width of its container when there are too many months
+            minWidth: '100%',
+            position: 'relative'
+          }}>
+
+            {/*
+              Show the Approvals BAR GRAPH
+              */}
+            {this.props.radioValue == "teacherApprovals" ? (
+              <Bar
+              data={approvalBarGraphData}
+              options={{
+                animation: {
+                  onComplete: function(): void {
+                    isCompleted ? isCompleted() : null
+                  }
+                },
+                global: {
+                  responsive: false,
+                  maintainAspectRatio: false
+               },
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        display:true,
+                        min: 0,
+                        max: this.state.maxPercentage,
+                        stepSize: 10,
+                        fixedStepSize: 1,
+                        fontSize: 12,
+                        fontColor: 'black',
+                        padding: 10,
+                        // Include a percent sign in the ticks
+                        callback: function(value, index, values) {
+                            return value + '%';
                         },
 
                       },
-                    ],
-                    yAxes: [
-                      {
-                        ticks: {
-                          beginAtZero: true,
-                          min: 1,
-                          max: 5,
-                          stepSize: 1,
-                          callback: function(value: number): string {
-                            return value + '.0'
-                          },
-                          fontSize: 18,
-                          padding: 20,
-                          fontColor: 'black',
+                      scaleLabel: {
+                        display: true,
+                        labelString: 'Percentage of each Behavior Type',
+                        fontFamily: 'Arimo',
+                        fontSize: 12,
+                        fontColor: 'black',
+                      },
+                      //stacked: true,
+                      gridLines: {
+                        drawBorder: false,
+                        drawTicks: false,
+                      }
+                    }
+                  ],
+                  xAxes: [
+                    {
 
-                        },
-                        gridLines: {
-                          drawBorder: false,
-                          drawTicks: false,
+                      ticks: {
+                        fontSize: 12,
+                        fontColor: 'black',
+                        callback: (value, index, values) => {
+                          return value
                         }
                       },
-                    ],
-                    grid: {
-                      //lineWidth: 5,
+                      scaleLabel: {
+                        display: true,
+                        labelString: 'Month',
+                        fontFamily: 'Arimo',
+                        fontSize: 12,
+                        fontColor: 'black',
+                      },
+                      //stacked: true,
+                      gridLines: {
+                        display: false,
+                        color: "rgba(0,0,0,0)",
+                      }
+                    }
+                  ]
+                },
+                legend: {
+                  display: true,
+                  fontSize: 12,
+                  labels: {
+                    padding: 20,
+                    boxWidth: 12,
+                  },
+                  position: 'right',
+                },
+                plugins: {
+                  datalabels: {
+                    display: false,
+                    color: 'black',
+                    font: {
+                      size: 14,
+                      weight: '400'
+                    },
+                    formatter: function(value: number): number | null {
+                      if (value > 0) {
+                        return value + "%";
+                      } else {
+                        return null;
+                      }
                     }
                   },
-                  plugins: {
-                    datalabels: {
-                      display: false,
-                    },
-                  },
-                }
-              }
-            />
-          ) : null}
 
+                },
+                maintainAspectRatio: false,
+
+                layout: {
+                  padding: {
+                    bottom: 50,
+                  }
+                }
+              }}
+              plugins={[plugin]}
+            />
+            ) : null}
+
+            {/*
+              Show the Tone LINE GRAPH
+            */}
+            {this.props.radioValue == "teacherTone" ? (
+              <Line
+                data={toneLineGraphData}
+                options={
+                    {
+                    maintainAspectRatio: false,
+                    showScale: true,
+                    pointDot: false,
+                    showLines: true,
+                    legend: {
+                      display: true,
+                      position: 'bottom',
+                      labels: {
+                        usePointStyle: true,
+                        pointStyle: 'start',
+                        boxWidth: 80,
+                        fontSize: 18
+                      }
+                    },
+                    tooltips: {
+                      mode: 'index',
+                      intersect: false,
+                    },
+                    hover: {
+                      mode: 'nearest',
+                      intersect: true,
+                    },
+                    scales: {
+
+                      xAxes: [
+                        {
+                          beginAtZero: false,
+                          display: true,
+                          scaleLabel: {
+                            display: false,
+                          },
+                          ticks: {
+                            fontSize: 18,
+                            fontColor: 'black',
+                            align: 'center',
+                          },
+                          gridLines: {
+                            display: false,
+                            color: "rgba(0,0,0,0)",
+                          },
+
+
+                        },
+                      ],
+                      yAxes: [
+                        {
+                          ticks: {
+                            beginAtZero: true,
+                            min: 1,
+                            max: 5,
+                            stepSize: 1,
+                            callback: function(value: number): string {
+                              return value + '.0'
+                            },
+                            fontSize: 18,
+                            padding: 20,
+                            fontColor: 'black',
+
+                          },
+                          gridLines: {
+                            drawBorder: false,
+                            drawTicks: false,
+                          }
+                        },
+                      ],
+                      grid: {
+                        //lineWidth: 5,
+                      }
+                    },
+                    plugins: {
+                      datalabels: {
+                        display: false,
+                      },
+                    },
+                  }
+                }
+              />
+            ) : null}
+
+          </div>
         </div>
       </div>
     );
