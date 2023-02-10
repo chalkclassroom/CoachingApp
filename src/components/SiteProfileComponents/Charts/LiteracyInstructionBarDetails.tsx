@@ -179,9 +179,9 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
     };
 
     return (
-      <div style={{padding: '30px 30px 0px 30px', overflowX: 'scroll'}}>
-        <h2 style={{textAlign: 'center', marginTop: 0}}>Literacy Instruction</h2>
-        <div className={"realChart"} style={{height: 500, minWidth: '800px'}}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Literacy Instruction</h2>
+        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{

@@ -49,6 +49,16 @@ import AveragesData from './DataRetrieval/Averages'
 import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
+const StyledSelect = withStyles({
+  root: {
+    padding: '11px 14px',
+    width: '200px',
+  },
+  disabled: {
+    opacity: 0.3,
+  },
+})(Select)
+
 const centerRow = {
   display: 'flex',
   alignItems: 'center',
@@ -820,7 +830,25 @@ class ProgramProfileResults extends React.Component {
                 <h1>{this.state.errorMessage}</h1>
               ) : null}
               {(this.state.tabState == 1 &&
-                Object.keys(this.state.averages).length > 0) == 1 ? (
+                Object.keys(this.state.averages).length > 0) == 1 ? (<>
+                  <FormControl variant="outlined">
+                  <StyledSelect
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={this.state.selectedTeacher}
+                  onChange={this.handleTrendsDropdown}
+                  name="selectedProgram"
+
+                >
+                  <MenuItem value="None">Select Site</MenuItem>
+                  {/* {this.state.teacherInfo.map(
+                            (teacher, index)=>{
+                              return <MenuItem value={teacher.id} key={index}>
+                                    {`${teacher.firstName} ${teacher.lastName}`}
+                                  </MenuItem>
+                              })} */}
+                </StyledSelect>
+                </FormControl>
                 <Grid
                   container
                   justify={'center'}
@@ -832,7 +860,7 @@ class ProgramProfileResults extends React.Component {
                     options={LineGraphOptions}
                   />
                 </Grid>
-              ) : this.state.tabState == 0 &&
+              </>) : this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 ? (
                 <Grid
                   container
