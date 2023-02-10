@@ -172,42 +172,42 @@ class RadioSets extends React.Component<Props, {}> {
     }
 
     if (this.props.type === 'levelOfInstruction') {
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Asks High-Level Question"
-                  value="hlqAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Child Answers High-Level Question"
-                  value="hlqResponseAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Asks Low-Level Question"
-                  value="llqAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Child Answers Low-Level Question"
-                  value="llqResponseAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      )
+      return ( <></>)
+      //   <Grid container style={centerRow}>
+      //     <Grid item xs={6}>
+      //       <FormControl component="fieldset" className={'checkboxesform'}>
+      //         <FormGroup>
+      //           <FormControlLabel
+      //             control={<Radio />}
+      //             label="Teacher Asks High-Level Question"
+      //             value="hlqAverage"
+      //           />
+      //           <FormControlLabel
+      //             control={<Radio />}
+      //             label="Child Answers High-Level Question"
+      //             value="hlqResponseAverage"
+      //           />
+      //         </FormGroup>
+      //       </FormControl>
+      //     </Grid>
+      //     <Grid item xs={6}>
+      //       <FormControl component="fieldset" className={'checkboxesform'}>
+      //         <FormGroup>
+      //           <FormControlLabel
+      //             control={<Radio />}
+      //             label="Teacher Asks Low-Level Question"
+      //             value="llqAverage"
+      //           />
+      //           <FormControlLabel
+      //             control={<Radio />}
+      //             label="Child Answers Low-Level Question"
+      //             value="llqResponseAverage"
+      //           />
+      //         </FormGroup>
+      //       </FormControl>
+      //     </Grid>
+      //   </Grid>
+      // )
     }
 
     if (this.props.type === 'studentEngagement') {

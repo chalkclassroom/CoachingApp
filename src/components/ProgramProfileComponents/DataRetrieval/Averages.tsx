@@ -238,8 +238,8 @@ class AveragesData {
   /*
    * Level of Instructions
    */
-  calculateLevelInstructionAverages = (data, sites) => {
-
+  calculateLevelInstructionAverages = (data, sites, names) => {
+    console.log(sites, names)
     // Initialize the array that will hold all the data
     var results = {};
 
@@ -251,7 +251,7 @@ class AveragesData {
     {
 
       results[siteIndex] = {
-        name: "",
+        name: names[siteIndex].name,
         totalInstructions: 0,
         hlq: 0,
         hlqResponse: 0,
@@ -277,6 +277,17 @@ class AveragesData {
       }
     }
 
+    var programBar = {
+      name: 'Program Average',
+
+      total: 0,
+
+      hlq: 0,
+      hlqResponse: 0,
+      llq: 0,
+      llqResponse: 0,
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -289,8 +300,49 @@ class AveragesData {
       result.hlqResponseAverage = result.hlqResponse > 0 ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqAverage = result.llq > 0 ? (result.llq / tempTotalInstructions).toFixed(2) * 100 : 0;
       result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+      // Gather info for the site bar
+      programBar.hlq += result.hlqAverage
+      programBar.hlqResponse += result.hlqResponseAverage
+      programBar.llq += result.llqAverage
+      programBar.llqResponse += result.llqResponseAverage
+
+      programBar.total += tempTotalInstructions
     }
 
+    // Calculate the site bar averages
+    programBar.hlqAverage =
+      programBar.hlq > 0
+        ? Math.round(
+            parseFloat((programBar.hlq / Object.keys(results).length).toFixed(2))
+          )
+        : 0
+    programBar.hlqResponseAverage =
+      programBar.hlqResponse > 0
+        ? Math.round(
+            parseFloat(
+              (programBar.hlqResponse / Object.keys(results).length).toFixed(2)
+            )
+          )
+        : 0
+    programBar.llqAverage =
+      programBar.llq > 0
+        ? Math.round(
+            parseFloat((programBar.llq / Object.keys(results).length).toFixed(2))
+          )
+        : 0
+    programBar.llqResponseAverage =
+      programBar.llqResponse > 0
+        ? Math.round(
+            parseFloat(
+              (programBar.llqResponse / Object.keys(results).length).toFixed(2)
+            )
+          )
+        : 0
+
+    results.programBar = programBar
+
+    console.log(results)
     return results;
 
   }

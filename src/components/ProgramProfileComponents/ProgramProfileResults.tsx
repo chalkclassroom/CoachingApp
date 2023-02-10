@@ -49,6 +49,8 @@ import AveragesData from './DataRetrieval/Averages'
 import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
+import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
+
 const StyledSelect = withStyles({
   root: {
     padding: '11px 14px',
@@ -229,6 +231,7 @@ class ProgramProfileResults extends React.Component {
 
       showErrorMessage: false,
       errorMessage: '',
+      selectedSite: []
     }
   }
 
@@ -536,7 +539,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'levelOfInstruction':
-        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers )
+        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'studentEngagement':
@@ -577,12 +580,18 @@ class ProgramProfileResults extends React.Component {
     }
     this.setState({ averages: averages, trends: trends })
 
+    if (this.state.selectedSite === 'None') {
+      teachers = []
+    }
+
+
     // Build data for line graph
     this.setLineGraphData(teachers, this.state.radioValue)
   }
 
   // Set Line Graph data
   setLineGraphData = (sites, type) => {
+    console.log(sites)
     var trends = this.state.trends
 
     var tempDataSet = []
@@ -597,9 +606,9 @@ class ProgramProfileResults extends React.Component {
       var chosenData = trends[siteIndex][type]
 
       // Round off all the numbers
-      chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
+      // chosenData = chosenData.map(function(each_element) {
+      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+      // })
 
       // If there isn't a color set for this teacher, set it
       if (!lineColors[i]) {
@@ -700,6 +709,12 @@ class ProgramProfileResults extends React.Component {
     this.setState({ radioValue: event.target.value })
 
     this.setLineGraphData(this.state.siteNames, event.target.value)
+
+    // let modifiedInfo = this.state.teacherInfo.filter(teacher => {
+    //   return teacher.id == this.state.selectedTeacher
+    // })
+
+    // this.setLineGraphData(modifiedInfo, event.target.value)
   }
 
   // When any of the date dropdowns are changed
@@ -729,7 +744,94 @@ class ProgramProfileResults extends React.Component {
     return Math.floor(Math.random() * (max + 1))
   }
 
+  // handleTrendsDropdown = (event: SelectChangeEvent) => {
+  //   this.setState({ selectedTeacher: event.target.value })
+  //   let modifiedInfo = this.state.teacherInfo.filter(teacher => {
+  //     return teacher.id == event.target.value
+  //   })
+  //   if (this.props.observationType === "studentEngagement") {
+  //     if (event.target.value != 'None') {
+  //       LineGraphOptions.legend.display = true
+  //       LineGraphOptions.legend.position = 'bottom'
+  //     } else {
+  //       LineGraphOptions.legend.display = false
+  //     }
+  //   } else {
+  //     LineGraphOptions.legend.display = true
+  //     LineGraphOptions.legend.position = 'bottom'
+  //   }
+
+  //   this.setLineGraphData(modifiedInfo, this.state.radioValue)
+  // }
+
   render() {
+
+    const radioObservationTypes = [
+      'mathInstruction',
+      'sequentialActivities',
+      'associativeAndCooperative',
+    ]
+
+    /*
+     * List of observation types that have their own custom average chart
+     */
+    const customAveragesObservationTypes = [
+      'classroomClimate',
+      'levelOfInstruction',
+      "studentEngagement",
+      'mathInstruction',
+      'listeningToChildren',
+      'sequentialActivities',
+      'associativeAndCooperative',
+      'transitionTime',
+      'foundationSkills',
+      'writing',
+      'bookReading',
+      'languageEnvironment',
+    ]
+
+    if (this.props.observationType === 'studentEngagement') {
+      LineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top',
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold',
+        },
+      }
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 3
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(
+        value: number
+      ): string {
+        if (value == 0) {
+          return 'Off Task  0  '
+        }
+        if (value == 1) {
+          return 'Mildly Engaged  1  '
+        }
+        if (value == 2) {
+          return 'Engaged  2  '
+        }
+        if (value == 3) {
+          return 'Highly Engaged  3  '
+        }
+      }
+    } else {
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 100
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(
+        value: number
+      ): string {
+        return value + '%'
+      }
+    }
+
     return (
       <div id="ProgramProfileResultsContainer">
         <Grid
@@ -862,27 +964,96 @@ class ProgramProfileResults extends React.Component {
                 </Grid>
               </>) : this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 ? (
-                <Grid
+                  <Grid
                   container
                   justify={'center'}
                   direction={'column'}
                   style={{
-                    height: 450,
+                    width: '85%',
+                    minHeight: 500,
                     flexWrap: 'nowrap',
-                    padding: '30px 0px',
+                    padding: '0px',
+                    position: 'relative',
+                    border: 'solid 2px #eee',
+                    marginTop: 20,
                   }}
                 >
                   <GraphHeader
                     graphTitle={chartTitleArr[this.state.radioValue]}
-                  />
+                  />{!customAveragesObservationTypes.includes(
+                    this.props.observationType
+                  ) ? (
+                    <div style={{ padding: 30 }}>
+                    <ProgramProfileBarDetails
+                      totalVisits={10}
+                      labels={this.state.siteNames}
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      barColors={this.state.lineColors}
+                    />
+                    </div>
+                  ) : null}
 
-                  <ProgramProfileBarDetails
-                    totalVisits={10}
-                    labels={this.state.siteNames}
-                    data={this.state.averages}
-                    type={this.state.radioValue}
-                    barColors={this.state.lineColors}
-                  />
+                  {/* Classroom Climate Chart */}
+                  {/* {this.props.observationType === 'classroomClimate' ? (
+                    <ClassroomClimateBarDetails data={this.state.averages} />
+                  ) : null} */}
+
+                  {/* Level of Instruction Chart */}
+                  {this.props.observationType === 'levelOfInstruction' ? (
+                    <LevelOfInstructionBarDetails data={this.state.averages} />
+                  ) : null}
+
+                  {/* Student Engagement Chart */}
+                  {/* {this.props.observationType === 'studentEngagement' ? (
+                    <StudentEngagementBarDetails data={this.state.averages} />
+                  ) : null} */}
+
+                  {/* Math Instruction Chart */}
+                  {/* {this.props.observationType === "mathInstruction" ? (
+                    <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null} */}
+
+                  {/* Listening to Children Chart */}
+                  {/* {this.props.observationType === "listeningToChildren" ? (
+                    <ListeningToChildrenBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null} */}
+
+                  {/* Sequesntial Activities Chart */}
+                  {/* {this.props.observationType === "sequentialActivities" ? (
+                    <SequentialActivitiesBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null} */}
+
+                  {/* Associative and Cooperative Chart */}
+                  {/* {this.props.observationType === "associativeAndCooperative" ? (
+                    <ACBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null} */}
+
+
+                  {/* {this.props.observationType === 'transitionTime' ? (
+                    <TransitionAverageBarDetails data={this.state.averages} />
+                  ) : null} */}
+
+                  {/* Literacy Instruction Charts */}
+                  {/* {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                    <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                    />
+                  ) : null} */}
+
                 </Grid>
               ) : null}
             </Grid>
