@@ -230,15 +230,14 @@ const radioValueArr = {
 
 const radioValueArr = {
   mathInstruction: 'teacherBehavior',
-  bookReading: 'bookReading',
 
   transitionTime: 'line',
   listeningToChildren: 'eyeLevel',
   sequentialActivities: 'sequentialActivities',
   foundationSkills: 'teacherAverage',
-  writing: 'writingSkills',
-  bookReading: 'bookReading',
-  languageEnvironment: 'languageEnvironment',
+  writing: 'teacherAverage',
+  bookReading: 'teacherAverage',
+  languageEnvironment: 'teacherAverage',
   associativeAndCooperative: 'childrensPlay',
 }
 
@@ -433,7 +432,7 @@ class TeacherProfileResults extends React.Component {
       toneCount: 0,
       toneAverage: 0,
 
-      chartsTitle: 'Teacher Behaviors',
+      chartsTitle: '',
     }
   }
 
@@ -738,7 +737,6 @@ class TeacherProfileResults extends React.Component {
       // Get the actual data for this line
       var trendData = trends[teacher.id][trendIndex]
 
-      console.log(trendData)
 
       // Round off all the numbers
       trendData = trendData.map(function(each_element) {
@@ -814,7 +812,6 @@ class TeacherProfileResults extends React.Component {
       datasets: tempDataSet,
     }
 
-    console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -972,8 +969,6 @@ class TeacherProfileResults extends React.Component {
       'sequentialActivities',
       'foundationSkills',
       'writing',
-      'bookReading',
-      'languageEnvironment',
       'associativeAndCooperative',
       'mathInstruction',
     ]
@@ -985,10 +980,17 @@ class TeacherProfileResults extends React.Component {
       'transitionTime',
       'listeningToChildren',
       'sequentialActivities',
+      'associativeAndCooperative',
+    ]
+
+    /*
+     * List of which observation types use the Literacy Instruction component
+     */
+    const literacyInstructionObservationTypes = [
       'writing',
       'bookReading',
       'languageEnvironment',
-      'associativeAndCooperative',
+      'foundationSkills',
     ]
 
     var lineGraphOptions = LineGraphOptions
@@ -1149,7 +1151,7 @@ class TeacherProfileResults extends React.Component {
             </Grid>
 
             <h3
-              style={{ textAlign: 'center', width: '100%', marginBottom: 20 }}
+              style={{ textAlign: 'center', width: '100%', marginBottom: 0 }}
             >
               {this.state.chartsTitle}
             </h3>
@@ -1235,7 +1237,7 @@ class TeacherProfileResults extends React.Component {
                   style={{
                     minHeight: 450,
                     flexWrap: 'nowrap',
-                    padding: '30px 0px',
+                    padding: '10px 0px',
                   }}
                 >
                   {/*
@@ -1253,7 +1255,7 @@ class TeacherProfileResults extends React.Component {
                   {/*
                     Show pie chart for Foundational Skills
                   */}
-                  {this.props.observationType == "foundationSkills" ? (
+                  {literacyInstructionObservationTypes.includes(this.props.observationType) ? (
                     <LiteracyInstructionAverages
                       data={this.state.averages}
                       type={this.state.radioValue}
@@ -1329,7 +1331,7 @@ class TeacherProfileResults extends React.Component {
             {/*
               Total Length of Observation (Book Reading)
             */}
-
+            {/*
             <Grid item xs={12} style={centerColumn}>
               {this.state.observationTime !== '' ? (
                 <span style={{ fontSize: '24px', marginBottom: '20px' }}>
@@ -1337,7 +1339,7 @@ class TeacherProfileResults extends React.Component {
                 </span>
               ) : null}
             </Grid>
-
+            */}
             {/*
                   Download PDF button
                   */}

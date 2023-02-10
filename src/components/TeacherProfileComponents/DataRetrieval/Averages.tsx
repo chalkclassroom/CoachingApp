@@ -776,6 +776,7 @@ class AveragesData {
     results[teacher.id] = {
       name: tempName,
       totalIntervals: 0,
+      totalChildIntervals: 0,
       //totalInstructions: 0,
       phonological: 0,
       alphabetic: 0,
@@ -793,47 +794,58 @@ class AveragesData {
       var teacherId = teacher.id
 
       // Add to total # of intervals
-      results[teacherId].totalIntervals++
 
-      // Add to behavior types
+      // If this is a child observation
+      if(row.isChild)
+      {
+        results[teacherId].totalChildIntervals++;
 
-      // If this observation has a phonal answer.
-      if (row.foundational1 || row.foundational2) {
-        results[teacherId].phonological++
-      }
-      // If this observation has a alphabetic answer
-      if (
-        row.foundational3 ||
-        row.foundational4 ||
-        row.foundational5 ||
-        row.foundational6 ||
-        row.foundational7
-      ) {
-        results[teacherId].alphabetic++
-      }
-      // If this observation has a open ended question
-      if (row.foundational8) {
-        results[teacherId].openEndedQuestions++
-      }
-      // If this observation has a realistic Reading
-      if (row.foundational9) {
-        results[teacherId].realisticReading++
-      }
-      // If this observation has a Multi Modal
-      if (row.foundational10) {
-        results[teacherId].multimodalInstruction++
-      }
-      // If this observation has anything
-      if (!row.foundational11) {
-        if(row.isChild)
+        if(!row.foundational10)
         {
           results[teacherId].childFoundationalSkills++;
         }
-        else
-        {
+      }
+
+      // If this is a teacher observation
+      else
+      {
+        results[teacherId].totalIntervals++
+
+        // Add to behavior types
+
+        // If this observation has a phonal answer.
+        if (row.foundational1 || row.foundational2) {
+          results[teacherId].phonological++
+        }
+        // If this observation has a alphabetic answer
+        if (
+          row.foundational3 ||
+          row.foundational4 ||
+          row.foundational5 ||
+          row.foundational6 ||
+          row.foundational7
+        ) {
+          results[teacherId].alphabetic++
+        }
+        // If this observation has a open ended question
+        if (row.foundational8) {
+          results[teacherId].openEndedQuestions++
+        }
+        // If this observation has a realistic Reading
+        if (row.foundational9) {
+          results[teacherId].realisticReading++
+        }
+        // If this observation has a Multi Modal
+        if (row.foundational10) {
+          results[teacherId].multimodalInstruction++
+        }
+        // If this observation has anything
+        if (!row.foundational11) {
           results[teacherId].foundationalSkills++
         }
       }
+
+
     }
 
     // Calculate the averages in percentages
@@ -872,7 +884,7 @@ class AveragesData {
 
       result.childAverage =
         result.childFoundationalSkills > 0
-          ? (result.childFoundationalSkills / tempTotalIntervals).toFixed(2) * 100
+          ? (result.childFoundationalSkills / result.totalChildIntervals).toFixed(2) * 100
           : 0
     }
 
@@ -895,6 +907,8 @@ class AveragesData {
       writingSkills: 0,
       meaning: 0,
       printProcesses: 0,
+      totalChildIntervals: 0,
+      childWritingSkills: 0,
     }
 
     // Get number of instances for each type of data
@@ -903,29 +917,44 @@ class AveragesData {
 
       var teacherId = teacher.id
 
-      // Add to total # of intervals
-      results[teacherId].totalIntervals++
+      // If this is a child observation
+      if(row.isChild)
+      {
+        results[teacherId].totalChildIntervals++;
 
-      // Add to behavior types
-      // Count each observation interval that has a meaning in it.
-      if (row.writing1 || row.writing2) {
-        results[teacherId].meaning++
-      }
-      // Count each observation interval that has a Print Process in it
-      if (
-        row.writing3 ||
-        row.writing4 ||
-        row.writing5 ||
-        row.writing6 ||
-        row.writing7 ||
-        row.writing8
-      ) {
-        results[teacherId].printProcesses++
+        if(!row.writingChild9)
+        {
+          results[teacherId].childWritingSkills++;
+        }
       }
 
-      // Count each observation interval that has anything in it
-      if (!row.writing9) {
-        results[teacherId].writingSkills++
+      // If this is a teacher observation
+      else
+      {
+        // Add to total # of intervals
+        results[teacherId].totalIntervals++
+
+        // Add to behavior types
+        // Count each observation interval that has a meaning in it.
+        if (row.writing1 || row.writing2) {
+          results[teacherId].meaning++
+        }
+        // Count each observation interval that has a Print Process in it
+        if (
+          row.writing3 ||
+          row.writing4 ||
+          row.writing5 ||
+          row.writing6 ||
+          row.writing7 ||
+          row.writing8
+        ) {
+          results[teacherId].printProcesses++
+        }
+
+        // Count each observation interval that has anything in it
+        if (!row.writing9) {
+          results[teacherId].writingSkills++
+        }
       }
     }
 
@@ -945,10 +974,14 @@ class AveragesData {
           ? (result.printProcesses / tempTotalIntervals).toFixed(2) * 100
           : 0
 
-      // THIS ONE ISN'T RIGHT FOR NOW
-      result.writingSkillsAverage =
+      result.teacherAverage =
         result.writingSkills > 0
           ? (result.writingSkills / tempTotalIntervals).toFixed(2) * 100
+          : 0
+
+      result.childAverage =
+        result.childWritingSkills > 0
+          ? (result.childWritingSkills / result.totalChildIntervals).toFixed(2) * 100
           : 0
     }
 
@@ -1046,7 +1079,7 @@ class AveragesData {
           ? (result.multimodalInstruction / tempTotalIntervals).toFixed(2) * 100
           : 0
 
-      result.bookReadingAverage =
+      result.teacherAverage =
         result.bookReading > 0
           ? (result.bookReading / tempTotalIntervals).toFixed(2) * 100
           : 0
@@ -1139,7 +1172,7 @@ class AveragesData {
           ? (result.respondChildren / tempTotalIntervals).toFixed(2) * 100
           : 0
 
-      result.languageEnvironmentAverage =
+      result.teacherAverage =
         result.languageEnvironment > 0
           ? (result.languageEnvironment / tempTotalIntervals).toFixed(2) * 100
           : 0

@@ -51,14 +51,8 @@ class LiteracyInstructionAverages extends React.Component<Props, {}> {
     }
 
     // Get the values for the chart
-    console.log("Teacher : ", this.props.teacherId);
-
-    console.log("key : ", firstValueKeyName[this.props.observationType]);
-    console.log("value : ", this.props.data[this.props.teacherId][this.props.type]);
-
     var firstValue = Math.round(this.props.data[this.props.teacherId][this.props.type]);
 
-    // Need to check if we should be using total interval, total instruction, or total
     var secondValue = 100 - firstValue;
 
 
@@ -75,8 +69,25 @@ class LiteracyInstructionAverages extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const isCompleted = this.props.completed;
+    const labelArrays = {
+      foundationSkills: {
+        teacherAverage: ["Foundational Skills Instruction", "No Target Behaviors Observed"],
+        childAverage: ["Engaged in Foundational Skills Activities", "Engaged in Other Activities"]
+      },
+      bookReading: {
+        teacherAverage: ["Book Reading Instruction", "No Target Behaviors Observed"],
+      },
+      languageEnvironment: {
+        teacherAverage: ["Supporting Language Development", "No Target Behaviors Observed"],
+      },
+      writing: {
+        teacherAverage: ["Writing Instruction", "No Target Behaviors Observed"],
+        childAverage: ["Engaged in Writing Activities", "Engaged in Other Activities"]
+      },
+    }
+    let labels = labelArrays[this.props.observationType][this.props.type];
     const instructionResponseData = {
-      labels: this.state.labels,
+      labels: labels ? labels : ["Literacy Instruction", "No Target Behaviors Observed"],
       datasets: [
         {
           data: this.state.dataValues,
@@ -86,64 +97,73 @@ class LiteracyInstructionAverages extends React.Component<Props, {}> {
       ]
     };
 
-    return (
-        <Pie
-          data={instructionResponseData}
-          options={{
-            animation: {
-              onComplete: function(): void {
-                isCompleted ? isCompleted() : null
-              }
-            },
-            tooltips: {
-              callbacks: {
-                label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
-                  const dataset = data.datasets[tooltipItem.datasetIndex];
-                  var currentValue = dataset.data[tooltipItem.index];
-                  const percentage = parseFloat(
-                    //((currentValue) * 100).toFixed(1)
-                  );
-                  currentValue = usingTime ? convertMillisecondsToMinutes(currentValue) : currentValue;
-                  return currentValue + " (" + percentage + "%)";
-                },
-                title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
-                  return data.labels[tooltipItem[0].index];
-                }
-              }
-            },
-            legend: {
-              display: true,
-              position: 'bottom',
-              onClick: null,
-              labels: {
-                padding: 20,
-                fontColor: "black",
-                fontSize: 14,
-                fontFamily: 'Arimo'
-              }
-            },
-            title: {
-              display: this.props.title,
-              text: "Summary",
-              fontSize: 20,
-              fontColor: 'black',
-              fontFamily: 'Arimo',
-              fontStyle: "bold"
-            },
-            plugins: {
-              datalabels: {
-                display: 'auto',
-                color: 'white',
-                font: {
-                  size: 20
-                },
+    let teacherData = this.props.data[this.props.teacherId];
 
-              }
-            },
-            maintainAspectRatio: false
-          }}
-        />
+    return (
+      <>
+        {/* If there is No data for the selected type, show message */}
+        {(this.props.type == "teacherAverage" && teacherData['totalIntervals'] == 0) || (this.props.type == "childAverage" && teacherData['totalChildIntervals'] == 0) ? (
+          <h1 style={{textAlign: 'center'}}>No reports available</h1>
+        ) : null}
+
+        {(this.props.type == "teacherAverage" && teacherData['totalIntervals'] > 0) || (this.props.type == "childAverage" && teacherData['totalChildIntervals'] > 0) ? (
+          <Pie
+            data={instructionResponseData}
+            options={{
+              animation: {
+                onComplete: function(): void {
+                  isCompleted ? isCompleted() : null
+                }
+              },
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem: { datasetIndex: number, index: number },
+                    data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
+                    const dataset = data.datasets[tooltipItem.datasetIndex];
+                    var currentValue = dataset.data[tooltipItem.index];
+                    return currentValue + "%";
+                  },
+                }
+              },
+              legend: {
+                display: true,
+                position: 'bottom',
+                onClick: null,
+
+                labels: {
+                  padding: 20,
+                  fontColor: "black",
+                  fontSize: 14,
+                  fontFamily: 'Arimo',
+                  boxWidth: 14,
+                }
+              },
+              title: {
+                display: true,
+                text: "Literacy Instruction",
+                fontSize: 26,
+                fontColor: 'black',
+                fontFamily: 'Arimo',
+                fontStyle: "bold",
+                padding: 40
+              },
+              plugins: {
+                datalabels: {
+                  display: 'auto',
+                  color: 'white',
+                  font: {
+                    size: 20
+                  },
+                  formatter: function(value) {
+                    return value + '%';
+                  }
+                }
+              },
+              maintainAspectRatio: false
+            }}
+          />
+        ) : null}
+      </>
     );
   }
 }

@@ -244,7 +244,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
                       COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
-                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational1' ELSE NULL END) AS foundational11,
                       COUNT (sessionStart) AS total,
                       teacher,
                       time
@@ -296,8 +296,6 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
-
-                      //child[0] = child[0].map(obj => ({ ...obj, isChild: true }))
 
                       for(var childIndex in child[0])
                       {
@@ -384,6 +382,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
+
+                      for(var childIndex in child[0])
+                      {
+                        let tempChild = child[0][childIndex];
+                        tempChild.isChild = true;
+                      }
 
                       console.log(teacher, child)
 
