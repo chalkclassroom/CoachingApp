@@ -857,6 +857,23 @@ class SiteProfileResults extends React.Component {
           color2 = "#E20000"
         }
       }
+      if (this.props.observationType === "mathInstruction") {
+        if (type === "teacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Teacher Support"
+          label2 = "No Support"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        } else {
+          type = "math"
+          type2 = "otherActivities"
+          label1 = "Math"
+          label2 = "Other Activities"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        }
+      }
     }
 
 
