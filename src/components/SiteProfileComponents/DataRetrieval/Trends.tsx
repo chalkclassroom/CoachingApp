@@ -215,6 +215,7 @@ class TrendData {
     for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
         name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+        totalSupport: new Array(monthsCount).fill(0),
         totalIntervals: new Array(monthsCount).fill(0),
         teacherSupport: new Array(monthsCount).fill(0),
         math: new Array(monthsCount).fill(0),
@@ -227,13 +228,14 @@ class TrendData {
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
-      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
-
+      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));      
       results[teacherId].totalIntervals[rowMonth]++;
       if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
         results[teacherId].teacherSupport[rowMonth]++
+        results[teacherId].totalSupport[rowMonth]++
       } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
         results[teacherId].noSupport[rowMonth]++
+        results[teacherId].totalSupport[rowMonth]++
       }
       if (row.counting || row.shapes || row.patterns || row.measurement) {
         results[teacherId].math[rowMonth]++
@@ -245,6 +247,7 @@ class TrendData {
   
     let siteBar = {
       name: "Site Average",
+      totalSupport: new Array(monthsCount).fill(0),
       totalIntervals: new Array(monthsCount).fill(0),
       teacherSupport: new Array(monthsCount).fill(0),
       math: new Array(monthsCount).fill(0),
@@ -263,9 +266,9 @@ class TrendData {
         siteBar.math[i] += result.math[i]
         siteBar.otherActivities[i] += result.otherActivities[i]
 
-        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.math[i] = parseFloat((result.math[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100; 
+        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100; 
         result.otherActivities[i] = parseFloat((result.otherActivities[i] / result.totalIntervals[i]).toFixed(2)) * 100;
   
         if (isNaN(result.teacherSupport[i])) {
@@ -281,13 +284,14 @@ class TrendData {
           result.otherActivities[i] = 0
         } 
         siteBar.totalIntervals[i] += result.totalIntervals[i]
+        siteBar.totalSupport[i] += result.totalSupport[i]
       }
     }
   
     for (let i = 0; i < monthsCount; i++) {
-      siteBar.teacherSupport[i] = parseFloat((siteBar.teacherSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.teacherSupport[i] = parseFloat((siteBar.teacherSupport[i] / siteBar.totalSupport[i]).toFixed(2)) * 100;
       siteBar.math[i] = parseFloat((siteBar.math[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
-      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100; 
+      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalSupport[i]).toFixed(2)) * 100; 
       siteBar.otherActivities[i] = parseFloat((siteBar.otherActivities[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
   
       if (isNaN(siteBar.teacherSupport[i])) {
