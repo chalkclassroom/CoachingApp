@@ -163,7 +163,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
         <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Student Engagement</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
 
-          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 0, left: '-150px'}}>
+          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 77, left: '-150px'}}>
             <div style={{flex:1}}>Highly Engaged</div>
             <div style={{flex:1}}>Engaged</div>
             <div style={{flex:1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -268,7 +268,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                     } else {
                       return null;
                     }
-                    
+
                   }
                 },
 

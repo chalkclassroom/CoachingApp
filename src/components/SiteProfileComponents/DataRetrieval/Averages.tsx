@@ -409,7 +409,8 @@ class AveragesData {
           : 0
 
       result.childOtherAverage = result.childOtherTotal > 0 ? (result.childOtherTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
-      result.childMathAverage = result.childMathTotal > 0 ? (result.childMathTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
+      //result.childMathAverage = result.childMathTotal > 0 ? (result.childMathTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
+      result.childMathAverage = 100 - result.childOtherAverage
     }
 
     return results
@@ -467,6 +468,7 @@ class AveragesData {
 
     // Calculate the averages in percentages
     // Go through each teacher
+    let numberOfTeachersWithData = 0;
     for (var resultsIndex in results) {
       var result = results[resultsIndex]
 
@@ -496,6 +498,13 @@ class AveragesData {
       siteBar.llqResponse += result.llqResponseAverage
 
       siteBar.total += tempTotalInstructions
+
+      // Get number of teachers with data to use for siteBar calculateiong
+      if(tempTotalInstructions > 0)
+      {
+        numberOfTeachersWithData++;
+      }
+
     }
 
     // Calculate the site bar averages
@@ -508,28 +517,28 @@ class AveragesData {
     siteBar.hlqAverage =
       siteBar.hlq > 0
         ? Math.round(
-            parseFloat((siteBar.hlq / Object.keys(results).length).toFixed(2))
+            parseFloat((siteBar.hlq / numberOfTeachersWithData).toFixed(2))
           )
         : 0
     siteBar.hlqResponseAverage =
       siteBar.hlqResponse > 0
         ? Math.round(
             parseFloat(
-              (siteBar.hlqResponse / Object.keys(results).length).toFixed(2)
+              (siteBar.hlqResponse / numberOfTeachersWithData).toFixed(2)
             )
           )
         : 0
     siteBar.llqAverage =
       siteBar.llq > 0
         ? Math.round(
-            parseFloat((siteBar.llq / Object.keys(results).length).toFixed(2))
+            parseFloat((siteBar.llq / numberOfTeachersWithData).toFixed(2))
           )
         : 0
     siteBar.llqResponseAverage =
       siteBar.llqResponse > 0
         ? Math.round(
             parseFloat(
-              (siteBar.llqResponse / Object.keys(results).length).toFixed(2)
+              (siteBar.llqResponse / numberOfTeachersWithData).toFixed(2)
             )
           )
         : 0
@@ -1125,6 +1134,8 @@ class AveragesData {
         support: 0,
         noSupport: 0,
         notAtCenter: 0,
+
+        childNoInteraction: 0,
       }
     }
 
@@ -1200,48 +1211,52 @@ class AveragesData {
       var tempTotalInstructions = result.totalInstructions
       var tempTotalIntervals = result.totalIntervals
 
+      let tempTotalIntervalsTeacherPresent = result.totalIntervals - result.notAtCenter;
+
       result.childrensPlayAverage =
         result.childrensPlay > 0
-          ? (result.childrensPlay / tempTotalIntervals).toFixed(2) * 100
+          ? (result.childrensPlay / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.askingQuestionsAverage =
         result.askingQuestions > 0
-          ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100
+          ? (result.askingQuestions / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.encouragingChildrenAverage =
         result.encouraging > 0
-          ? (result.encouraging / tempTotalIntervals).toFixed(2) * 100
+          ? (result.encouraging / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.helpingChildrenAverage =
         result.helpingChildren > 0
-          ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100
+          ? (result.helpingChildren / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
 
       result.noSequenceAverage =
         result.noSequence > 0
-          ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100
+          ? (result.noSequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.formalRulesAverage =
         result.formalRules > 0
-          ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100
+          ? (result.formalRules / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.sequenceAverage =
         result.sequence > 0
-          ? (result.sequence / tempTotalIntervals).toFixed(2) * 100
+          ? (result.sequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
 
       result.supportAverage =
         result.support > 0
-          ? (result.support / tempTotalIntervals).toFixed(2) * 100
+          ? (result.support / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.noSupportAverage =
         result.noSupport > 0
-          ? (result.noSupport / tempTotalIntervals).toFixed(2) * 100
+          ? (result.noSupport / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
       result.notAtCenterAverage =
         result.notAtCenter > 0
-          ? (result.notAtCenter / tempTotalIntervals).toFixed(2) * 100
+          ? (result.notAtCenter / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
           : 0
+
+      result.childNoInteractionAverage = result.childNoInteraction > 0 ? (result.childNoInteraction / tempTotalIntervals).toFixed(2) * 100 : 0;
     }
 
     return results

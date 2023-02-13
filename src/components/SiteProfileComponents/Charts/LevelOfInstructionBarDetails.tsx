@@ -91,16 +91,21 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       }
 
 
-      hlqAverage.push(Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100);
-      llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
+      if(teacher.totalInstructions > 0)
+      {
+        let tempHlqAverage = Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100;
+        let tempLlqAverage = 100 - tempHlqAverage;
 
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
+        hlqAverage.push(tempHlqAverage);
+        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
+        llqAverage.push(tempLlqAverage);
 
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
+      }
+      else
+      {
+        hlqAverage.push(0);
+        llqAverage.push(0);
+      }
 
     }
 
@@ -113,7 +118,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
 
     var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = Math.round((data.siteBar.llqAverage + data.siteBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
+    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
 
 
     // Use that data to create our dataset
