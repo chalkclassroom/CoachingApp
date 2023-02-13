@@ -599,98 +599,54 @@ class AveragesData {
   /*
   * Foundational Skills
   */
-  calculateFoundationalSkillsAverages = (data, sites) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Add each teacher to the object
-    for(var siteIndex in sites)
-    {
-
-      results[siteIndex] = {
-        name: "",
+  calculateFoundationalSkillsAverages = (data, sites, names) => {
+    let results = {};
+    for (let siteIndex in sites) {
+        results[siteIndex] = {
+        name: names[siteIndex].name,
         totalIntervals: 0,
-        totalInstructions: 0,
-        phonological: 0,
-        alphabetic: 0,
-        openEndedQuestions: 0,
-        realisticReading: 0,
-        multimodalInstruction: 0,
-        foundationalSkills: 0
+        totalInstruction: 0,
+        noBehaviors: 0
       };
-
     }
 
-    // Get number of instances for each type of data
-    for(var siteIndex in sites)
-    {
-      for(var rowIndex in sites[siteIndex])
-      {
-        var row = sites[siteIndex][rowIndex];
+    let programBar = {
+      name: "Program Average",
+      total: 0,
+      totalInstruction: 0,
+      noBehaviors: 0,
+    }
 
-        // Add to total # of intervals
-        //results[siteIndex].totalIntervals += row.total;
+    console.log(data)
+
+    for (let siteIndex in sites) {
+      for (let rowIndex in sites[siteIndex]) {
+        let row = sites[siteIndex][rowIndex];
+
         results[siteIndex].totalIntervals++;
-
-        // Add to behavior types
-
-        // If this observation has a phonal answer.
-        if(row.foundational1 || row.foundational2)
-        {
-          results[siteIndex].phonological++;
+        if (row.foundational11) {
+          results[siteIndex].noBehaviors++;
+        } else {
+          results[siteIndex].totalInstruction++;
         }
-        // If this observation has a alphabetic answer
-        if(row.foundational3 || row.foundational4 || row.foundational5 || row.foundational6 || row.foundational7)
-        {
-          results[siteIndex].alphabetic++;
-        }
-        // If this observation has a open ended question
-        if(row.foundational8)
-        {
-          results[siteIndex].openEndedQuestions++;
-        }
-        // If this observation has a realistic Reading
-        if(row.foundational9)
-        {
-          results[siteIndex].realisticReading++;
-        }
-        // If this observation has a Multi Modal
-        if(row.foundational10)
-        {
-          results[siteIndex].multimodalInstruction++;
-        }
-        // If this observation has anything
-        if(!row.foundational11)
-        {
-          results[siteIndex].foundationalSkills++;
-        }
-
-        // Calculate the total Number of instructions
-        results[siteIndex].totalInstructions += row.foundational1 + row.foundational2 + row.foundational3 + row.foundational4 + row.foundational5 + row.foundational6 + row.foundational7 + row.foundational8 + row.foundational9 + row.foundational10;
       }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
 
-      var tempTotalInstructions = result.totalInstructions;
-      var tempTotalIntervals = result.totalIntervals;
+      programBar.totalInstruction += result.totalInstruction;
+      programBar.noBehaviors += result.noBehaviors;
 
-      result.phonologicalAverage = result.phonological > 0 ? (result.phonological / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.alphabeticAverage = result.alphabetic > 0 ? (result.alphabetic / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.openEndedQuestionsAverage = result.openEndedQuestions > 0 ? (result.openEndedQuestions / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.realisticReadingAverage = result.realisticReading > 0 ? (result.realisticReading / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.multimodalInstructionAverage = result.multimodalInstruction > 0 ? (result.multimodalInstruction / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      // THIS ONE ISN'T RIGHT FOR NOW
-      result.foundationalSkillsAverage = result.foundationalSkills > 0 ? (result.foundationalSkills / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
+
+    programBar.total = programBar.totalInstruction + programBar.noBehaviors;
+
+    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    results.programBar = programBar;
 
     return results;
 
@@ -701,81 +657,56 @@ class AveragesData {
   /*
   * Writing
   */
-  calculateWritingSkillsAverages = (data, sites) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Add each teacher to the object
-    for(var siteIndex in sites)
-    {
-
-      results[siteIndex] = {
-        name: "",
+  calculateWritingSkillsAverages = (data, sites, names) => {
+    let results = {};
+    for (let siteIndex in sites) {
+        results[siteIndex] = {
+        name: names[siteIndex].name,
         totalIntervals: 0,
-        totalInstructions: 0,
-        writingSkills: 0,
-        meaning: 0,
-        printProcesses: 0,
+        totalInstruction: 0,
+        noBehaviors: 0
       };
-
     }
 
-    // Get number of instances for each type of data
-    for(var siteIndex in sites)
-    {
-      for(var rowIndex in sites[siteIndex])
-      {
-        var row = sites[siteIndex][rowIndex];
+    let programBar = {
+      name: "Program Average",
+      total: 0,
+      totalInstruction: 0,
+      noBehaviors: 0,
+    }
 
-        // Add to total # of intervals
-        //results[siteIndex].totalIntervals += row.total;
+    console.log(data)
+
+    for (let siteIndex in sites) {
+      for (let rowIndex in sites[siteIndex]) {
+        let row = sites[siteIndex][rowIndex];
+
         results[siteIndex].totalIntervals++;
-
-        // Add to behavior types
-        // Count each observation interval that has a meaning in it.
-        if(row.writing1 || row.writing2)
-        {
-          results[siteIndex].meaning++;
+        if (row.writing9) {
+          results[siteIndex].noBehaviors++;
+        } else {
+          results[siteIndex].totalInstruction++;
         }
-        // Count each observation interval that has a Print Process in it
-        if(row.writing3 || row.writing4 || row.writing5 || row.writing6 || row.writing7 || row.writing8)
-        {
-          results[siteIndex].printProcesses++;
-        }
-
-        // Count each observation interval that has anything in it
-        if(!row.writing9)
-        {
-          results[siteIndex].writingSkills++;
-        }
-
-        // Calculate the total Number of instructions
-        results[siteIndex].totalInstructions += row.writing1 + row.writing2 + row.writing3 + row.writing4 + row.writing5 + row.writing6 + row.writing7 + row.writing8;
       }
     }
 
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
+      programBar.totalInstruction += result.totalInstruction;
+      programBar.noBehaviors += result.noBehaviors;
 
-      var tempTotalInstructions = result.totalInstructions;
-      var tempTotalIntervals = result.totalIntervals;
-
-      result.meaningAverage = result.meaning > 0 ? (result.meaning / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.printProcessesAverage = result.printProcesses > 0 ? (result.printProcesses / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      // THIS ONE ISN'T RIGHT FOR NOW
-      result.writingSkillsAverage = result.writingSkills > 0 ? (result.writingSkills / tempTotalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
-    return results;
+    programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
+    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    results.programBar = programBar;
+
+    return results;
   }
 
 
@@ -783,104 +714,56 @@ class AveragesData {
   /*
    * Book Reading
    */
-  calculateBookReadingAverages = (data, sites) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Add each teacher to the object
-    for(var siteIndex in sites)
-    {
-
-      results[siteIndex] = {
-        name: "",
+  calculateBookReadingAverages = (data, sites, names) => {
+    let results = {};
+    for (let siteIndex in sites) {
+        results[siteIndex] = {
+        name: names[siteIndex].name,
         totalIntervals: 0,
-        totalInstructions: 0,
-        bookReading: 0,
-        vocabFocus: 0,
-        languageConnections: 0,
-        childrenSupport: 0,
-        fairnessDiscussions: 0,
-        multimodalInstruction: 0
+        totalInstruction: 0,
+        noBehaviors: 0
       };
-
     }
 
-    // Get number of instances for each type of data
-    for(var siteIndex in sites)
-    {
-      for(var rowIndex in sites[siteIndex])
-      {
-        var row = sites[siteIndex][rowIndex];
+    let programBar = {
+      name: "Program Average",
+      total: 0,
+      totalInstruction: 0,
+      noBehaviors: 0,
+    }
 
-        // Add to total # of intervals
-        //results[siteIndex].totalIntervals += row.total;
+    console.log(data)
+
+    for (let siteIndex in sites) {
+      for (let rowIndex in sites[siteIndex]) {
+        let row = sites[siteIndex][rowIndex];
+
         results[siteIndex].totalIntervals++;
-
-        // Add to behavior types
-        // Calculate the total Number of instructions
-        results[siteIndex].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8 + row.literacy9 + row.literacy10;
-
-        // If there were any vocabanswers in this observation
-        if( row.literacy1 || row.literacy2 || row.literacy3 )
-        {
-          results[siteIndex].vocabFocus++;
+        if (row.literacy11) {
+          results[siteIndex].noBehaviors++;
+        } else {
+          results[siteIndex].totalInstruction++;
         }
-        // If there were any Language Connection answers in this observation
-        if( row.literacy4 || row.literacy5 )
-        {
-          results[siteIndex].languageConnections++;
-        }
-        // If there were any Children Support answers in this observation
-        if( row.literacy6 || row.literacy7 || row.literacy8 )
-        {
-          results[siteIndex].childrenSupport++;
-        }
-        // If there were any Fairness Discussion answers in this observation
-        if( row.literacy9 )
-        {
-          results[siteIndex].fairnessDiscussions++;
-        }
-        // If there were any Fairness Discussion answers in this observation
-        if( row.literacy10 )
-        {
-          results[siteIndex].multimodalInstruction++;
-        }
-        // If there were any answers in this observation
-        if( !row.literacy11 )
-        {
-          results[siteIndex].bookReading++;
-        }
-
       }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
 
-      var result = results[resultsIndex];
+      programBar.totalInstruction += result.totalInstruction;
+      programBar.noBehaviors += result.noBehaviors;
 
-      var tempTotalInstructions = result.totalInstructions;
-      var tempTotalIntervals = result.totalIntervals;
-
-      result.vocabFocusAverage = result.vocabFocus > 0 ? (result.vocabFocus / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.languageConnectionsAverage = result.languageConnections > 0 ? (result.languageConnections / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.childrenSupportAverage = result.childrenSupport > 0 ? (result.childrenSupport / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.fairnessDiscussionsAverage = result.fairnessDiscussions > 0 ? (result.fairnessDiscussions / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.multimodalInstructionAverage = result.multimodalInstruction > 0 ? (result.multimodalInstruction / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      result.bookReadingAverage = result.bookReading > 0 ? (result.bookReading / tempTotalIntervals).toFixed(2) * 100 : 0;
-
+      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
+    programBar.total = programBar.totalInstruction + programBar.noBehaviors;
+
+    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    results.programBar = programBar;
+
     return results;
-
-
-
   }
 
 
@@ -888,93 +771,56 @@ class AveragesData {
   /*
    * Language Environment
    */
-  calculateLanguageEnvironmentAverages = (data, sites) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Add each teacher to the object
-    for(var siteIndex in sites)
-    {
-
-      results[siteIndex] = {
-        name: "",
+  calculateLanguageEnvironmentAverages = (data, sites, names) => {
+    let results = {};
+    for (let siteIndex in sites) {
+        results[siteIndex] = {
+        name: names[siteIndex].name,
         totalIntervals: 0,
-        totalInstructions: 0,
-        languageEnvironment: 0,
-        talk: 0,
-        encourageChildren: 0,
-        respondChildren: 0,
+        totalInstruction: 0,
+        noBehaviors: 0
       };
-
     }
 
-    // Get number of instances for each type of data
-    for(var siteIndex in sites)
-    {
-      for(var rowIndex in sites[siteIndex])
-      {
-        var row = sites[siteIndex][rowIndex];
+    let programBar = {
+      name: "Program Average",
+      total: 0,
+      totalInstruction: 0,
+      noBehaviors: 0,
+    }
 
+    console.log(data)
 
-        // Add to total # of intervals
-        //results[siteIndex].totalIntervals += row.total;
+    for (let siteIndex in sites) {
+      for (let rowIndex in sites[siteIndex]) {
+        let row = sites[siteIndex][rowIndex];
+
         results[siteIndex].totalIntervals++;
-
-        // Add to behavior types
-
-        // Calculate the total Number of instructions
-        results[siteIndex].totalInstructions += row.literacy1 + row.literacy2 + row.literacy3 + row.literacy4 + row.literacy5 + row.literacy6 + row.literacy7 + row.literacy8;
-
-        // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
-        if( row.literacy1 || row.literacy2)
-        {
-          results[siteIndex].talk++;
+        if (row.literacy9) {
+          results[siteIndex].noBehaviors++;
+        } else {
+          results[siteIndex].totalInstruction++;
         }
-        // If there were any "Encourage Children to talk" answers in this observation
-        if( row.literacy3 || row.literacy4 || row.literacy5 )
-        {
-          results[siteIndex].encourageChildren++;
-        }
-        // If there were any "Respond to children" answers in this observation
-        if( row.literacy6 || row.literacy7 || row.literacy8 )
-        {
-          results[siteIndex].respondChildren++;
-        }
-
-        // If there were any answers in this observation
-        if( !row.literacy9 )
-        {
-          results[siteIndex].languageEnvironment++;
-        }
-
       }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
 
-      var result = results[resultsIndex];
+      programBar.totalInstruction += result.totalInstruction;
+      programBar.noBehaviors += result.noBehaviors;
 
-      var tempTotalInstructions = result.totalInstructions;
-      var tempTotalIntervals = result.totalIntervals;
-
-      result.talkAverage = result.talk > 0 ? (result.talk / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.encourageChildrenAverage = result.encourageChildren > 0 ? (result.encourageChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.respondChildrenAverage = result.respondChildren > 0 ? (result.respondChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      result.languageEnvironmentAverage = result.languageEnvironment > 0 ? (result.languageEnvironment / tempTotalIntervals).toFixed(2) * 100 : 0;
-
+      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
+    programBar.total = programBar.totalInstruction + programBar.noBehaviors;
+
+    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    results.programBar = programBar;
+
     return results;
-
-
-
   }
 
 

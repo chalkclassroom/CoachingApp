@@ -79,6 +79,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     var teacherSupportAverage = [];
     var noSupportTotal = 0;
     var teacherSupportTotal = 0;
+    let numberOfTeachersWithData = 0;
     for(var teacherIndex in data)
     {
 
@@ -96,16 +97,26 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       if(type == "teacherAverage")
       {
         var tempNoSupport = Math.round((teacher['noSupportAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = Math.round((teacher['supportAverage'] + Number.EPSILON) * 100) / 100;
+        var tempTeacherSupport = 100 - tempNoSupport;
       }
       else
       {
         var tempNoSupport = Math.round((teacher['childOtherAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = Math.round((teacher['childMathAverage'] + Number.EPSILON) * 100) / 100;
+        var tempTeacherSupport = 100 - tempNoSupport;
       }
 
-      noSupportAverage.push(tempNoSupport);
-      teacherSupportAverage.push(tempTeacherSupport);
+      // Only push this data if there are actually observation done
+      if(teacher.totalInstructions > 0)
+      {
+        noSupportAverage.push(tempNoSupport);
+        teacherSupportAverage.push(tempTeacherSupport);
+        numberOfTeachersWithData++;
+      }
+      else
+      {
+        noSupportAverage.push(0);
+        teacherSupportAverage.push(0);
+      }
 
       noSupportTotal += tempNoSupport;
       teacherSupportTotal += tempTeacherSupport;
@@ -129,12 +140,13 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
     var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
     //siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
-    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / dataSize + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    //siteAverageLlqAverage[dataSize - 1] = Math.round((data.siteBar.llqAverage + data.siteBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
-    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
+    //siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
+    siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Use that data to create our dataset
     var dataSets = [

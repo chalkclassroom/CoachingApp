@@ -173,41 +173,6 @@ class RadioSets extends React.Component<Props, {}> {
 
     if (this.props.type === 'levelOfInstruction') {
       return ( <></>)
-      //   <Grid container style={centerRow}>
-      //     <Grid item xs={6}>
-      //       <FormControl component="fieldset" className={'checkboxesform'}>
-      //         <FormGroup>
-      //           <FormControlLabel
-      //             control={<Radio />}
-      //             label="Teacher Asks High-Level Question"
-      //             value="hlqAverage"
-      //           />
-      //           <FormControlLabel
-      //             control={<Radio />}
-      //             label="Child Answers High-Level Question"
-      //             value="hlqResponseAverage"
-      //           />
-      //         </FormGroup>
-      //       </FormControl>
-      //     </Grid>
-      //     <Grid item xs={6}>
-      //       <FormControl component="fieldset" className={'checkboxesform'}>
-      //         <FormGroup>
-      //           <FormControlLabel
-      //             control={<Radio />}
-      //             label="Teacher Asks Low-Level Question"
-      //             value="llqAverage"
-      //           />
-      //           <FormControlLabel
-      //             control={<Radio />}
-      //             label="Child Answers Low-Level Question"
-      //             value="llqResponseAverage"
-      //           />
-      //         </FormGroup>
-      //       </FormControl>
-      //     </Grid>
-      //   </Grid>
-      // )
     }
 
     if (this.props.type === 'studentEngagement') {
@@ -363,174 +328,19 @@ class RadioSets extends React.Component<Props, {}> {
     }
 
     if (this.props.type === 'foundationSkills') {
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Literacy Instruction - Total Instruction"
-                  value="foundationalSkillsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Phonological awareness or the sounds of language"
-                  value="phonologicalAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="The alphabetic principle and print concepts"
-                  value="alphabeticAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Open-ended questions or prompts"
-                  value="openEndedQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Realistic reading and writing"
-                  value="realisticReadingAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Multimodal Instruction"
-                  value="multimodalInstructionAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      )
+      return (<></>)
     }
 
     if (this.props.type === 'writing') {
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Writing Instruction - Total Instruction"
-                  value="writingSkillsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="The content or meaning of the writing"
-                  value="meaningAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Print processes (e.g., letter forms, demonstrations, sounds/spelling)"
-                  value="printProcessesAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      )
+      return (<></>)
     }
 
     if (this.props.type === 'bookReading') {
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Book Reading - Total Instruction"
-                  value="bookReadingAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Focus on vocabulary, concepts, or comprehension"
-                  value="vocabFocusAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Make connections to children's language, cultural backgrounds, and experiences"
-                  value="languageConnectionsAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support children's speaking and listening skills"
-                  value="childrenSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Facilitate discussions around equity and fairness"
-                  value="fairnessDiscussionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Use Multimodal Instruction"
-                  value="multimodalInstructionAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      )
+      return (<></>)
     }
 
     if (this.props.type === 'languageEnvironment') {
-      return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Language Environment - Total Instruction"
-                  value="languageEnvironmentAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Talk with children about vocabulary or social-emotional topics"
-                  value="talkAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Encourage children to talk"
-                  value="encourageChildrenAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Respond to children"
-                  value="respondChildrenAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-      )
+      return (<></>)
     }
 
     if (this.props.type === 'associativeAndCooperative') {

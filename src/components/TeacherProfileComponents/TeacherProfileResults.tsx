@@ -46,6 +46,7 @@ import ReadingTrendsTable from './ResultsComponents/ReadingTrendsTable'
 import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
 import ClimateToneSliderAverages from './ResultsComponents/ClimateToneSliderAverages'
 import LiteracyInstructionAverages from './ResultsComponents/LiteracyInstructionAverages'
+import SequentialActivitiesAverages from './ResultsComponents/SequentialActivitiesAverages'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -233,7 +234,7 @@ const radioValueArr = {
 
   transitionTime: 'line',
   listeningToChildren: 'eyeLevel',
-  sequentialActivities: 'sequentialActivities',
+  sequentialActivities: 'teacherAverage',
   foundationSkills: 'teacherAverage',
   writing: 'teacherAverage',
   bookReading: 'teacherAverage',
@@ -966,11 +967,11 @@ class TeacherProfileResults extends React.Component {
     const radioObservationTypes = [
       'transitionTime',
       'listeningToChildren',
-      'sequentialActivities',
       'foundationSkills',
       'writing',
       'associativeAndCooperative',
       'mathInstruction',
+      'sequentialActivities',
     ]
 
     /*
@@ -979,7 +980,6 @@ class TeacherProfileResults extends React.Component {
     const pieChartObservationTypes = [
       'transitionTime',
       'listeningToChildren',
-      'sequentialActivities',
       'associativeAndCooperative',
     ]
 
@@ -1082,8 +1082,8 @@ class TeacherProfileResults extends React.Component {
             </Grid>
 
             {/*
-                  Profile information section
-                */}
+                Profile information section
+              */}
             <Grid container item xs={12} style={startColumn}>
               <Grid style={startRow}>
                 Teacher: {this.props.selectedTeacherName}
@@ -1157,8 +1157,8 @@ class TeacherProfileResults extends React.Component {
             </h3>
 
             {/*
-                  The "averages" bar graph and "trends" line graph
-                */}
+                The "averages" bar graph and "trends" line graph
+              */}
             <Grid item xs={12} style={centerColumn}>
               {/* Show loading logo */}
               {Object.keys(this.state.averages).length <= 0 &&
@@ -1210,7 +1210,10 @@ class TeacherProfileResults extends React.Component {
                     />
                   ) : null}
                 </Grid>
-              ) : this.state.tabState == 1 &&
+              ) : null}
+
+              {/* Show trends table if it is book reading type */}
+              { this.state.tabState == 1 &&
                 Object.keys(this.state.averages).length > 0 &&
                 this.props.observationType == 'bookReading' &&
                 !this.state.showErrorMessage ? (
@@ -1220,14 +1223,19 @@ class TeacherProfileResults extends React.Component {
                   direction={'column'}
                   style={{ flexWrap: 'nowrap', padding: '30px 0px' }}
                 >
-                  {/* Show trends line graph if trends tab is clicked and it IS not book reading type */}
+
                   <ReadingTrendsTable
                     data={this.state.teacherTrends}
                     who={'Teacher'}
                     widenTable={this.state.widenTable}
                   />
                 </Grid>
-              ) : this.state.tabState == 0 &&
+              ) : null}
+
+              {/*
+                AVERAGES
+              */}
+              { this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 &&
                 !this.state.showErrorMessage ? (
                 <Grid
@@ -1257,6 +1265,19 @@ class TeacherProfileResults extends React.Component {
                   */}
                   {literacyInstructionObservationTypes.includes(this.props.observationType) ? (
                     <LiteracyInstructionAverages
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      observationType={this.props.observationType}
+                      teacherId={this.props.selectedTeacherId}
+                      usingTime={this.state.usingTime}
+                    />
+                  ) : null}
+
+                  {/*
+                    Sequential Activities
+                  */}
+                  {this.props.observationType == "sequentialActivities" ? (
+                    <SequentialActivitiesAverages
                       data={this.state.averages}
                       type={this.state.radioValue}
                       observationType={this.props.observationType}
@@ -1314,6 +1335,8 @@ class TeacherProfileResults extends React.Component {
                           </Grid>
                         </>
                       ) : null}
+
+                      {/* Classroom Climate tone slider chart */}
                       {this.props.observationType == 'classroomClimate' ? (
                         <>
                           <ClimateToneSliderAverages
