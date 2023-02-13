@@ -612,6 +612,8 @@ class AveragesData {
       total: 0,
 
       totalPoints: 0,
+
+      totalInstructions: 0
     }
 
     // Calculate the averages in percentages
@@ -643,12 +645,13 @@ class AveragesData {
           ? (result.totalPoints / tempTotalInstructions).toFixed(2)
           : 0
 
-      siteBar.totalPoints += parseFloat(result.totalPointsAverage)
+      siteBar.totalPoints += result.totalPoints
+      siteBar.totalInstructions += result.totalInstructions
     }
 
     siteBar.totalPointsAverage =
       siteBar.totalPoints > 0
-        ? (siteBar.totalPoints / Object.keys(results).length).toFixed(2)
+        ? (siteBar.totalPoints / siteBar.totalInstructions).toFixed(2)
         : 0
 
     results.siteBar = siteBar
