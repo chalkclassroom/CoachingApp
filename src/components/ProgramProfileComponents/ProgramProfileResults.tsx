@@ -50,6 +50,7 @@ import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
+import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -555,19 +556,19 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'foundationSkills':
-        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teachers )
+        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'writing':
-        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers )
+        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'bookReading':
-        averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers )
+        averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateBookReadingTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'languageEnvironment':
-        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers )
+        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
@@ -1047,12 +1048,12 @@ class ProgramProfileResults extends React.Component {
                   ) : null} */}
 
                   {/* Literacy Instruction Charts */}
-                  {/* {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
                     <LiteracyInstructionBarDetails
                       data={this.state.averages}
                       LI={this.props.observationType}
                     />
-                  ) : null} */}
+                  ) : null}
 
                 </Grid>
               ) : null}
