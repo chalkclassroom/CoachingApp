@@ -192,6 +192,7 @@ class AveragesData {
 
     // Calculate the averages in percentages
     // Go through each teacher
+    let numberOfTeachersWithData = 0;
     for (var resultsIndex in results) {
       var result = results[resultsIndex]
 
@@ -230,6 +231,11 @@ class AveragesData {
       siteBar.toneTotal += result.toneTotal
 
       siteBar.total += result.total
+
+      if(result.total > 0)
+      {
+        numberOfTeachersWithData++;
+      }
     }
 
     // Calculate the site bar averages
@@ -243,7 +249,7 @@ class AveragesData {
         ? Math.round(
             parseFloat(
               (
-                siteBar.nonspecificapproval / Object.keys(results).length
+                siteBar.nonspecificapproval / numberOfTeachersWithData
               ).toFixed(2)
             )
           )
@@ -252,7 +258,7 @@ class AveragesData {
       siteBar.specificapproval > 0
         ? Math.round(
             parseFloat(
-              (siteBar.specificapproval / Object.keys(results).length).toFixed(
+              (siteBar.specificapproval / numberOfTeachersWithData).toFixed(
                 2
               )
             )
@@ -262,7 +268,7 @@ class AveragesData {
       siteBar.disapproval > 0
         ? Math.round(
             parseFloat(
-              (siteBar.disapproval / Object.keys(results).length).toFixed(2)
+              (siteBar.disapproval / numberOfTeachersWithData).toFixed(2)
             )
           )
         : 0
@@ -270,7 +276,7 @@ class AveragesData {
       siteBar.redirection > 0
         ? Math.round(
             parseFloat(
-              (siteBar.redirection / Object.keys(results).length).toFixed(2)
+              (siteBar.redirection / numberOfTeachersWithData).toFixed(2)
             )
           )
         : 0

@@ -60,6 +60,7 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     var listeningAverage = [];
     let noBehaviorsTotal = 0;
     let listeningTotal = 0;
+    let numberOfTeachersWithData = 0;
     for(var teacherIndex in data)
     {
 
@@ -81,6 +82,12 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
       {
         noBehaviorsAverage.push(tempNoBehavior);
         listeningAverage.push(tempListening);
+
+        // To calculate the site bar
+        noBehaviorsTotal += tempNoBehavior;
+        listeningTotal += tempListening;
+
+        numberOfTeachersWithData++;
       }
       else
       {
@@ -88,9 +95,7 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
         listeningAverage.push(0);
       }
 
-      // To calculate the site bar
-      noBehaviorsTotal += tempNoBehavior;
-      listeningTotal += tempListening;
+
 
     }
 
@@ -98,12 +103,13 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
+    console.log("number of teachers ", numberOfTeachersWithData);
 
     var siteAverageNoBehaviors = new Array(dataSize + 1).fill(0);
-    siteAverageNoBehaviors[dataSize] = Math.round(( noBehaviorsTotal / dataSize + Number.EPSILON) * 100) / 100;
+    siteAverageNoBehaviors[dataSize] = Math.round(( noBehaviorsTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
 
     var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize] = Math.round(( listeningTotal / dataSize + Number.EPSILON) * 100) / 100;
+    siteAverageListening[dataSize] = Math.round(( listeningTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
 
     // Add site average to the list of names
     teacherNames.push("Site Average");
