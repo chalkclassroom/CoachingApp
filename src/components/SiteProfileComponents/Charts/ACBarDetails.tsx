@@ -127,13 +127,10 @@ class ACBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
 
     var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    //siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
     siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
 
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    //siteAverageLlqAverage[dataSize - 1] = Math.round((data.siteBar.llqAverage + data.siteBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
-    //siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
     siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
