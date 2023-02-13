@@ -745,13 +745,15 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
   for (let rowIndex in data) {
     let row = data[rowIndex];
     let teacherId = row.teacher.split("/")[2];
-    let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
+    let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
     results[teacherId].support[rowMonth] = row.support; //transition time
     results[teacherId].noSupport[rowMonth] = row.noSupport;
     results[teacherId].sequentialActivities[rowMonth] = row.sequentialActivities; //transition time
     results[teacherId].childNonSequential[rowMonth] = row.childNonSequential;
     results[teacherId].total[rowMonth] = row.total;
+    console.log(row)
   }
+  console.log(results);
   let siteBar = {
     name: "Site Average",
     total: new Array(monthsCount).fill(0),
@@ -820,6 +822,18 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
     siteBar.noSupport[i] = 100 - siteBar.support[i];
     siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] / siteBar.total[i];
     siteBar.childNonSequential[i] = 100 - siteBar.sequentialActivities[i];
+    if (isNaN(siteBar.support[i])) {
+        siteBar.support[i] = 0
+      } 
+    if (isNaN(siteBar.noSupport[i])) {
+      siteBar.noSupport[i] = 0
+    } 
+    if (isNaN(siteBar.sequentialActivities[i])) {
+      siteBar.sequentialActivities[i] = 0
+    } 
+    if (isNaN(siteBar.childNonSequential[i])) {
+      siteBar.childNonSequential[i] = 0
+    } 
   }
 
 
