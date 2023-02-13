@@ -76,6 +76,12 @@ class TrendData {
     for (let i = 0; i < monthsCount; i++) {
       siteBar.total[i] = siteBar.total[i] / siteBar.sessionTotal[i];
       siteBar.sessionTotal[i] = 100 - siteBar.total[i];
+      if (isNaN(siteBar.total[i])) {
+        siteBar.total[i] = 0
+      }
+      if (isNaN(siteBar.sessionTotal[i])) {
+        siteBar.sessionTotal[i] = 0
+      }
     }
 
     results.siteBar = siteBar;
