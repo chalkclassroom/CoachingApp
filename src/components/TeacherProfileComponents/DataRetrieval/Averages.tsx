@@ -673,6 +673,7 @@ class AveragesData {
       drawing: 0,
       playing: 0,
       speaking: 0,
+      observations: [data[0].id],
     }
 
     // Get number of instances for each type of data
@@ -699,6 +700,11 @@ class AveragesData {
       // Calculate the total Number of instructions
       results[teacherId].totalInstructions +=
         row.noSupport + row.notAtCenter + row.support
+
+      // Add all the unique id's of the observations so we can calculate how many observations there are.
+      if (!results[teacherId].observations.includes(row.id)) {
+        results[teacherId].observations.push(row.id)
+      }
     }
 
     // Calculate the averages in percentages
@@ -706,54 +712,54 @@ class AveragesData {
     for (var resultsIndex in results) {
       var result = results[resultsIndex]
 
-      var tempTotalInstructions = result.totalInstructions
+      //var tempTotalInstructions = result.totalInstructions
+      var tempTotalInstructions = result.observations.length
 
       result.sequentialActivitiesAverage =
         result.sequentialActivities > 0
-          ? (result.sequentialActivities / tempTotalInstructions).toFixed(2) *
-            100
+          ? Math.round(result.sequentialActivities / tempTotalInstructions)
           : 0
       result.drawImagesAverage =
         result.drawImages > 0
-          ? (result.drawImages / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.drawImages / tempTotalInstructions)
           : 0
       result.actOutAverage =
         result.actOut > 0
-          ? (result.actOut / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.actOut / tempTotalInstructions)
           : 0
       result.demonstrateStepsAverage =
         result.demonstrateSteps > 0
-          ? (result.demonstrateSteps / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.demonstrateSteps / tempTotalInstructions)
           : 0
 
       result.materialsAverage =
         result.materials > 0
-          ? (result.materials / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.materials / tempTotalInstructions)
           : 0
       result.drawingAverage =
         result.drawing > 0
-          ? (result.drawing / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.drawing / tempTotalInstructions)
           : 0
       result.playingAverage =
         result.playing > 0
-          ? (result.playing / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.playing / tempTotalInstructions)
           : 0
       result.speakingAverage =
         result.speaking > 0
-          ? (result.speaking / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.speaking / tempTotalInstructions)
           : 0
 
       result.notAtCenterAverage =
         result.notAtCenter > 0
-          ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.notAtCenter / tempTotalInstructions)
           : 0
       result.supportAverage =
         result.support > 0
-          ? (result.support / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.support / tempTotalInstructions)
           : 0
       result.noSupportAverage =
         result.noSupport > 0
-          ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.noSupport / tempTotalInstructions)
           : 0
     }
 
