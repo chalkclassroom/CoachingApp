@@ -1149,6 +1149,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
         name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+        totalSupport: new Array(monthsCount).fill(0),
         totalIntervals: new Array(monthsCount).fill(0),
         teacherSupport: new Array(monthsCount).fill(0),
         ac: new Array(monthsCount).fill(0),
@@ -1167,8 +1168,10 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       results[teacherId].totalIntervals[rowMonth]++;
       if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
         results[teacherId].teacherSupport[rowMonth]++
+        results[teacherId].totalSupport[rowMonth]++
       } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
         results[teacherId].noSupport[rowMonth]++
+        results[teacherId].totalSupport[rowMonth]++
       }
       if (row.child1 || row.child2 || row.child3 || row.child4) {
         results[teacherId].ac[rowMonth]++
@@ -1180,6 +1183,7 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
   
     let siteBar = {
       name: "Site Average",
+      totalSupport: new Array(monthsCount).fill(0),
       totalIntervals: new Array(monthsCount).fill(0),
       teacherSupport: new Array(monthsCount).fill(0),
       ac: new Array(monthsCount).fill(0),
@@ -1198,9 +1202,9 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
         siteBar.ac[i] += result.ac[i]
         siteBar.noAC[i] += result.noAC[i]
 
-        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.ac[i] = parseFloat((result.ac[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalIntervals[i]).toFixed(2)) * 100; 
+        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100; 
         result.noAC[i] = parseFloat((result.noAC[i] / result.totalIntervals[i]).toFixed(2)) * 100;
   
         if (isNaN(result.teacherSupport[i])) {
@@ -1216,13 +1220,14 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
           result.noAC[i] = 0
         } 
         siteBar.totalIntervals[i] += result.totalIntervals[i]
+        siteBar.totalSupport[i] += result.totalSupport[i]
       }
     }
   
     for (let i = 0; i < monthsCount; i++) {
-      siteBar.teacherSupport[i] = parseFloat((siteBar.teacherSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.teacherSupport[i] = parseFloat((siteBar.teacherSupport[i] / siteBar.totalSupport[i]).toFixed(2)) * 100;
       siteBar.ac[i] = parseFloat((siteBar.ac[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
-      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100; 
+      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalSupport[i]).toFixed(2)) * 100; 
       siteBar.noAC[i] = parseFloat((siteBar.noAC[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
   
       if (isNaN(siteBar.teacherSupport[i])) {
