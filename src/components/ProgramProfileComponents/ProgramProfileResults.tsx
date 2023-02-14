@@ -50,6 +50,7 @@ import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
+import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
 
 const StyledSelect = withStyles({
@@ -1027,12 +1028,12 @@ class ProgramProfileResults extends React.Component {
                   ) : null} */}
 
                   {/* Sequesntial Activities Chart */}
-                  {/* {this.props.observationType === "sequentialActivities" ? (
+                  {this.props.observationType === "sequentialActivities" ? (
                     <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Associative and Cooperative Chart */}
                   {/* {this.props.observationType === "associativeAndCooperative" ? (

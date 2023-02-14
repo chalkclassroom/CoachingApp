@@ -1,3 +1,6 @@
+import { resetWarningCache } from "prop-types";
+import { ResourceCardSkeleton } from "../../../views/protected/CoachingResourcesViews/Common";
+
 // Array used to match the name of a practice to the teacher Column name
 const teacherColumnArr = {
   "transitionTime": "siteIndex",
@@ -525,16 +528,10 @@ class AveragesData {
           name: "",
           totalInstructions: 0,
           sequentialActivities: 0,
-          drawImages: 0,
-          demonstrateSteps: 0,
-          actOut: 0,
-          notAtCenter: 0,
+          childNonSequential: 0,
+          totalSupport: 0,
           noSupport: 0,
           support: 0,
-          materials: 0,
-          drawing: 0,
-          playing: 0,
-          speaking: 0
         };
 
       }
@@ -548,49 +545,102 @@ class AveragesData {
 
           // Add to behavior types
           results[siteIndex].sequentialActivities += row.sequentialActivities;
-          results[siteIndex].drawImages += row.drawImages;
-          results[siteIndex].actOut += row.actOut;
-          results[siteIndex].demonstrateSteps += row.demonstrateSteps;
-
-          results[siteIndex].materials += row.materials;
-          results[siteIndex].drawing += row.drawing;
-          results[siteIndex].playing += row.playing;
-          results[siteIndex].speaking += row.speaking;
-
-          results[siteIndex].notAtCenter += row.notAtCenter;
+          results[siteIndex].childNonSequential += row.childNonSequential;
           results[siteIndex].support += row.support;
           results[siteIndex].noSupport += row.noSupport;
-
-          // Calculate the total Number of instructions
-          results[siteIndex].totalInstructions += row.noSupport + row.notAtCenter + row.support;
+          results[siteIndex].totalInstructions += row.total;
+          results[siteIndex].totalSupport += row.support + row.noSupport;
         }
+      }
+
+      let programBar = {
+        name: 'Program Average',
+        totalInstructions: 0,
+        totalSupport: 0,
+        sequentialActivities: 0,
+        childNonSequential: 0,
+        support: 0,
+        noSupport: 0,
       }
 
       // Calculate the averages in percentages
       // Go through each teacher
+      console.log(programBar)
       for(var resultsIndex in results)
       {
-        var result = results[resultsIndex];
+      var result = results[resultsIndex];
 
-        var tempTotalInstructions = result.totalInstructions;
+      console.log(result.noSupport);
 
-        result.sequentialActivitiesAverage = result.sequentialActivities > 0 ? (result.sequentialActivities / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.drawImagesAverage = result.drawImages > 0 ? (result.drawImages / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.actOutAverage = result.actOut > 0 ? (result.actOut / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.demonstrateStepsAverage = result.demonstrateSteps > 0 ? (result.demonstrateSteps / tempTotalInstructions).toFixed(2) * 100 : 0;
+      console.log(programBar)
+      programBar.sequentialActivities += result.sequentialActivities
+      programBar.childNonSequential += result.childNonSequential
+      programBar.support += result.support
+      programBar.noSupport += result.noSupport
+      programBar.totalInstructions += result.totalInstructions
+      programBar.totalSupport += result.totalSupport;
 
-        result.materialsAverage = result.materials > 0 ? (result.materials / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.drawingAverage = result.drawing > 0 ? (result.drawing / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.playingAverage = result.playing > 0 ? (result.playing / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.speakingAverage = result.speaking > 0 ? (result.speaking / tempTotalInstructions).toFixed(2) * 100 : 0;
+      console.log(programBar)
+      console.log(result)
+      // result.sequentialActivities = result.sequentialActivities > 0 ? (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100 : 0;
+      // result.childNonSequential = 100 - result.sequentialActivities;
+      result.support = (result.support / result.totalSupport).toFixed(2) * 100;
+      result.noSupport = (result.noSupport / result.totalSupport).toFixed(2) * 100;
 
-        result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.supportAverage = result.support > 0 ? (result.support / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100 : 0;
-
+      if (isNaN(result.support)) {
+        result.support = 0
+      } 
+      if (isNaN(result.noSupport)) {
+        result.noSupport = 0
+      }
+      if (isNaN(result.sequentialActivities)) {
+        result.sequentialActivities = 0
+      } 
+      if (isNaN(result.childNonSequential)) {
+        result.childNonSequential = 0
+      } 
+      // Gather info for the site bar
+      
+      if (isNaN(programBar.support)) {
+        programBar.support = 0
+      } 
+      if (isNaN(programBar.noSupport)) {
+        programBar.noSupport = 0
+      }
+      if (isNaN(programBar.sequentialActivities)) {
+        programBar.sequentialActivities = 0
+      } 
+      if (isNaN(programBar.childNonSequential)) {
+        programBar.childNonSequential = 0
+      }
       }
 
-      return results;
+    programBar.childNonSequential = (programBar.childNonSequential / programBar.totalInstructions).toFixed(2) * 100;
+
+    programBar.sequentialActivities = (programBar.sequentialActivities / programBar.totalInstructions).toFixed(2) * 100;
+
+    programBar.support = (programBar.support / programBar.totalSupport).toFixed(2) * 100;
+
+    programBar.noSupport = (programBar.noSupport / programBar.totalSupport).toFixed(2) * 100;
+    
+      if (isNaN(programBar.support)) {
+        programBar.support = 0
+      } 
+      if (isNaN(programBar.noSupport)) {
+        programBar.noSupport = 0
+      }
+      if (isNaN(programBar.sequentialActivities)) {
+        programBar.sequentialActivities = 0
+      } 
+      if (isNaN(programBar.childNonSequential)) {
+        programBar.childNonSequential = 0
+      } 
+
+    results.programBar = programBar
+
+    console.log(results)
+
+    return results;
 
     }
 
