@@ -403,7 +403,7 @@ class TrendData {
     {
 
       results[siteIndex] = {
-        name: tempName,
+        name: sites[siteIndex].name,
         totalInstructions: new Array(monthsCount).fill(0),
         hlq: new Array(monthsCount).fill(0),
         hlqResponse: new Array(monthsCount).fill(0),
@@ -417,8 +417,19 @@ class TrendData {
 
         lineChartLabels: months,
 
+        highLevel: new Array(monthsCount).fill(0),
+        lowLevel: new Array(monthsCount).fill(0),
+
       };
 
+    }
+
+    let programBar = {
+      name: "Program Average",
+      totalInstructions: new Array(monthsCount).fill(0),
+      highLevel: new Array(monthsCount).fill(0),
+      lowLevel: new Array(monthsCount).fill(0),
+      lineChartLabels: months
     }
 
 
@@ -458,8 +469,13 @@ class TrendData {
         result.llqAverage[i] = result.llq[i] > 0 ? (result.llq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
         result.llqResponseAverage[i] = result.llqResponse[i] > 0 ? (result.llqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
+        result.highLevel[i] = result.hlqAverage[i] + result.hlqResponseAverage[i]
+        result.lowLevel[i] = result.llqAverage[i] + result.llqResponseAverage[i]
+
       }
     }
+
+    results.programBar = programBar;
 
     return results;
 

@@ -705,15 +705,15 @@ class ProgramProfileResults extends React.Component {
 
 
     for (var siteIndex in sites) {
-      var site = site[siteIndex]
+      var site = sites[siteIndex]
       var fullName = site.name
 
       var chosenData = trends[siteIndex][type]
 
       // Round off all the numbers
-      chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
+      // chosenData = chosenData.map(function(each_element) {
+      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+      // })
 
       // If there isn't a color set for this teacher, set it
       if (color1 === "") {
@@ -746,9 +746,9 @@ class ProgramProfileResults extends React.Component {
         var chosenData = trends[siteIndex][type2]
 
         // Round off all the numbers
-        chosenData = chosenData.map(function(each_element) {
-          return Math.round((each_element + Number.EPSILON) * 100) / 100
-        })
+        // chosenData = chosenData.map(function(each_element) {
+        //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+        // })
 
         // If there isn't a color set for this teacher, set it
         if (color2 === "") {
@@ -776,9 +776,9 @@ class ProgramProfileResults extends React.Component {
 
     chosenData = trends["programBar"][type]
     // Round off all the numbers
-    chosenData = chosenData.map(function(each_element) {
-    return Math.round((each_element + Number.EPSILON) * 100) / 100
-    })
+    // chosenData = chosenData.map(function(each_element) {
+    // return Math.round((each_element + Number.EPSILON) * 100) / 100
+    // })
 
     var tempData = {
       label: `Site Average ${label1}`,
@@ -795,9 +795,9 @@ class ProgramProfileResults extends React.Component {
       chosenData = trends["programBar"][type2]
 
       // Round off all the numbers
-      chosenData = chosenData.map(function(each_element) {
-        return Math.round((each_element + Number.EPSILON) * 100) / 100
-      })
+      // chosenData = chosenData.map(function(each_element) {
+      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+      // })
 
       // If there isn't a color set for this teacher, set it
       //// ADD YOUR SECOND COLOR HERE
