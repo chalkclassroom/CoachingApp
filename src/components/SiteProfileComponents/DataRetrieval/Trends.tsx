@@ -417,7 +417,6 @@ class TrendData {
     var months = [];
     while(tempDate !== endDatePlusOneMonth)
     {
-      console.log(tempDate)
       months.push(tempDate);
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
@@ -445,7 +444,6 @@ class TrendData {
 
    }
 
-   console.log(months)
 
    // Get number of instances for each type of data
    var tempIntervalData = 0;
@@ -459,7 +457,7 @@ class TrendData {
     //var rowMonth = new Date(row.startDate).getMonth();
     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
-    results[teacherId].totalPoints[rowMonth] += row.point
+    results[teacherId].totalPoints[rowMonth] += row.point * row.count
     results[teacherId].totalIntervals[rowMonth] += row.count
 
    }
@@ -470,6 +468,7 @@ class TrendData {
     dailyAverage: new Array(monthsCount).fill(0),
 
     totalPoints: new Array(monthsCount).fill(0),
+    totalIntervals: new Array(monthsCount).fill(0),
 
     lineChartLabels: months,
   }
@@ -490,20 +489,21 @@ class TrendData {
         result.dailyAverage[i] = 0
       }
 
-      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i]
+      siteBar.totalPoints[i] += result.totalPoints[i];
+      siteBar.totalIntervals[i] += result.totalIntervals[i];
 
      }
    }
 
    for(var i = 0; i < monthsCount; i++)
    {
-    siteBar.dailyAverage[i] = siteBar.totalPoints[i] > 0 ? parseFloat((siteBar.totalPoints[i] / Object.keys(results).length).toFixed(2)) : 0;
+    siteBar.dailyAverage[i] = siteBar.totalPoints[i] / siteBar.totalIntervals[i];
+    if (isNaN(siteBar.dailyAverage[i])) {
+      siteBar.dailyAverage[i] = 0
+    }
    }
 
    results.siteBar = siteBar;
-
-   console.log(results)
-
    return results;
 
  }

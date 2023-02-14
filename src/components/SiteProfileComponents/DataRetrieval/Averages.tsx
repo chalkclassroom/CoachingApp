@@ -661,7 +661,6 @@ class AveragesData {
         : 0
 
     results.siteBar = siteBar
-
     return results
   }
 
