@@ -94,8 +94,8 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
       support.push(Math.round((teacher['support'] + Number.EPSILON) * 100) / 100);
       noSupport.push(Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
-      // sequentialActivities.push(Math.round((teacher['sequentialActivities'] + Number.EPSILON) * 100) / 100);
-      // childNonSequential.push(Math.round((teacher['childNonSequential'] + Number.EPSILON) * 100) / 100);
+      sequentialActivities.push(Math.round((teacher['sequentialActivities'] + Number.EPSILON) * 100) / 100);
+      childNonSequential.push(Math.round((teacher['childNonSequential'] + Number.EPSILON) * 100) / 100);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -126,33 +126,63 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
 
     // Use that data to create our dataset
-    var dataSets = [
-      {
-        label: 'Support',
-        data: support,
-        backgroundColor: "#38761D",
-      },
-      {
-        label: 'No Support',
-        data: noSupport,
-        backgroundColor: "#1155CC",
-      },
-      // The total Site Averages
-      {
-        label: 'Support Average',
-        data: siteSupportAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#38761D",
-        borderWidth: 4,
-      },
-      {
-        label: 'No Support Average',
-        data: siteNoSupportAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#1155CC",
-        borderWidth: 4,
-      },
-    ]
+    if (type === "teacherAverage") {
+      var dataSets = [
+        {
+          label: 'Support',
+          data: support,
+          backgroundColor: "#FF0000",
+        },
+        {
+          label: 'No Support',
+          data: noSupport,
+          backgroundColor: "#1155CC",
+        },
+        // The total Site Averages
+        {
+          label: 'Support Average',
+          data: siteSupportAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#FF0000",
+          borderWidth: 4,
+        },
+        {
+          label: 'No Support Average',
+          data: siteNoSupportAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#1155CC",
+          borderWidth: 4,
+        },
+      ]
+    } else {
+      var dataSets = [
+        {
+          label: 'Sequential',
+          data: sequentialActivities,
+          backgroundColor: "#FFCE33",
+        },
+        {
+          label: 'Non Sequential',
+          data: childNonSequential,
+          backgroundColor: "#E20000",
+        },
+        // The total Site Averages
+        {
+          label: 'Sequential Site Average',
+          data: siteSequentialActivitiesAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#FFCE33",
+          borderWidth: 4,
+        },
+        {
+          label: 'Non Sequential Site Average',
+          data: siteChildNonSequentialAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#E20000",
+          borderWidth: 4,
+        },
+      ]
+    }
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
 

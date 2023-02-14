@@ -277,48 +277,23 @@ class RadioSets extends React.Component<Props, {}> {
       return (
         <Grid container style={centerRow}>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Helping children do sequential activities with manipulatives or toys"
-                  value="sequentialActivitiesAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Supporting children as they draw images or write messages"
-                  value="drawImagesAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Demonstrating the steps to an activity or game"
-                  value="demonstrateStepsAverage"
+                  label="Teacher Behaviors"
+                  value="teacherAverage"
                 />
               </FormGroup>
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Supporting children as they act out a dramatic play scenario or book"
-                  value="actOutAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
+                  label="Child Behaviors"
+                  value="childAverage"
                 />
               </FormGroup>
             </FormControl>
