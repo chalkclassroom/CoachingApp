@@ -593,48 +593,237 @@ class ProgramProfileResults extends React.Component {
 
   // Set Line Graph data
   setLineGraphData = (sites, type) => {
-    console.log(sites)
+    console.log(type)
+    let oneType = ["studentEngagement"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren", 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative'];
+    let radioType = [ 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative']
+    let type2 = "";
+    let label1 = "";
+    let label2 = "";
+    let color1 = "";
+    let color2 = "";
+
     var trends = this.state.trends
+    console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
-    var tempLineChartLabels = [];
+    var tempMonths = [];
+
+    /** CHANGE YOUR ATTRIBUTES HERE */
+    if (this.props.observationType === "studentEngagement") {
+      type = "dailyAverage"
+      color1 = "#FF7F00"
+      label1 = "Daily Average"
+    }
+    if (["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType)) {
+      type = "literacyInstruction"
+      type2 = "noBehaviors"
+      label1 = "Literacy Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#C4395A"
+      color2 = "#E5E5E5"
+    }
+    if (this.props.observationType === "transitionTime") {
+      type = "total"
+      type2 = "sessionTotal"
+      label1 = "Transition Time"
+      label2 = "Learning Activity"
+      color1 = "#fc8c03"
+      color2 = "#03b1fc"
+    }
+    if (this.props.observationType === "levelOfInstruction") {
+      type = "highLevel"
+      type2 = "lowLevel"
+      label1 = "High-Level Instruction"
+      label2 = "Low-Level Instruction"
+      color1 = "#38761D"
+      color2 = '#1155CC'
+    }
+    if (this.props.observationType === "listeningToChildren") {
+      type = "listeningInstruction"
+      type2 = "noBehaviors"
+      label1 = "Listening Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#07DFBB"
+      color2 = "#E20000"
+    }
+    if (radioType.includes(this.props.observationType)) {
+      if (this.props.observationType === "associativeAndCooperative") {
+        if (type === "teacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Support for Associative and Cooperative Interactions"
+          label2 = "No Support"
+          color1 = "#2EB9EB"
+          color2 = "#E20000"
+        } else {
+          type = "ac"
+          type2 = "noAC"
+          label1 = "Associative and Cooperative Interactions"
+          label2 = "No Associative and Cooperative Interactions"
+          color1 = "#7030A0"
+          color2 = "#E20000"
+        }
+      }
+      if (this.props.observationType === "sequentialActivities") {
+        if (type === "teacherAverage") {
+          type = "support"
+          type2 = "noSupport"
+          label1 = "Teacher Support"
+          label2 = "No Support"
+          color1 = "#2EB9EB"
+          color2 = "#E20000"
+        } else {
+          type = "sequentialActivities"
+          type2 = "childNonSequential"
+          label1 = "Sequential Activities"
+          label2 = "Non-Sequential Activities"
+          color1 = "#FFCE33"
+          color2 = "#E20000"
+        }
+      }
+      if (this.props.observationType === "mathInstruction") {
+        if (type === "teacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Teacher Support"
+          label2 = "No Support"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        } else {
+          type = "math"
+          type2 = "otherActivities"
+          label1 = "Math"
+          label2 = "Other Activities"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        }
+      }
+    }
+
+
     for (var siteIndex in sites) {
-      var site = sites[siteIndex]
-      //var siteName = site.name
-      var siteName = this.state.siteNames[siteIndex].name
+      var site = site[siteIndex]
+      var fullName = site.name
 
       var chosenData = trends[siteIndex][type]
 
       // Round off all the numbers
-      // chosenData = chosenData.map(function(each_element) {
-      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-      // })
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
 
       // If there isn't a color set for this teacher, set it
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+      if (color1 === "") {
+        color1 = this.randomRgbColor()
       }
+
       var tempData = {
-        label: siteName,
+        label: `${fullName} ${label1}`,
         data: chosenData,
-        borderColor: lineColors[i],
+        borderColor: color1,
         fill: false,
         tension: 0.0,
       }
 
-      // Get the labels for the Trends charts
+      // Add the months so we can set the right labels for the trends chart
       if(trends[siteIndex].lineChartLabels)
       {
-        tempLineChartLabels = trends[siteIndex].lineChartLabels
+        tempMonths = trends[siteIndex].lineChartLabels;
       }
 
       tempDataSet.push(tempData)
       i++
     }
 
-    var labels = [
+    if (twoType.includes(this.props.observationType)) {
+      for (var siteIndex in sites) {
+        var site = sites[siteIndex]
+        var fullName = site.name
+
+        var chosenData = trends[siteIndex][type2]
+
+        // Round off all the numbers
+        chosenData = chosenData.map(function(each_element) {
+          return Math.round((each_element + Number.EPSILON) * 100) / 100
+        })
+
+        // If there isn't a color set for this teacher, set it
+        if (color2 === "") {
+          color2 = this.randomRgbColor()
+        }
+
+        var tempData = {
+          label: `${fullName} ${label2}`,
+          data: chosenData,
+          borderColor: color2,
+          fill: false,
+          tension: 0.0,
+        }
+
+        // Add the months so we can set the right labels for the trends chart
+        if(trends[siteIndex].lineChartLabels)
+        {
+          tempMonths = trends[siteIndex].lineChartLabels;
+        }
+
+        tempDataSet.push(tempData)
+        i++
+      }
+    }
+
+    chosenData = trends["programBar"][type]
+    // Round off all the numbers
+    chosenData = chosenData.map(function(each_element) {
+    return Math.round((each_element + Number.EPSILON) * 100) / 100
+    })
+
+    var tempData = {
+      label: `Site Average ${label1}`,
+      data: chosenData,
+      borderColor: color1,
+      borderDash: [10,5],
+      fill: false,
+      tension: 0.0,
+    }
+
+    tempDataSet.push(tempData)
+
+    if (twoType.includes(this.props.observationType)) {
+      chosenData = trends["programBar"][type2]
+
+      // Round off all the numbers
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      //// ADD YOUR SECOND COLOR HERE
+      if (color2 === "") {
+        color2 = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: `Site Average ${label2}`,
+        data: chosenData,
+        borderColor: color2,
+        borderDash: [10,5],
+        fill: false,
+        tension: 0.0,
+      }
+
+      tempDataSet.push(tempData)
+    }
+
+    // Add the months so we can set the right labels for the trends chart
+    if(trends["programBar"].lineChartLabels)
+    {
+      tempMonths = trends["programBar"].lineChartLabels;
+    }
+    // Get the months from the data
+    const monthOptions = [
       'January',
       'February',
       'March',
@@ -649,17 +838,91 @@ class ProgramProfileResults extends React.Component {
       'December',
     ]
 
-    if(tempLineChartLabels.length > 0)
+
+    var labels = monthOptions;
+    if(tempMonths.length > 0)
     {
-      labels = tempLineChartLabels;
+      labels = tempMonths
     }
+
 
     const lineData = {
       labels,
       datasets: tempDataSet,
     }
 
+    console.log(lineData)
+
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
+    // console.log(sites)
+    // var trends = this.state.trends
+
+    // console.log(trends)
+
+    // var tempDataSet = []
+    // var lineColors = this.state.lineColors
+    // var i = 0
+    // var tempLineChartLabels = [];
+    // for (var siteIndex in sites) {
+    //   var site = sites[siteIndex]
+    //   //var siteName = site.name
+    //   var siteName = this.state.siteNames[siteIndex].name
+
+    //   var chosenData = trends[siteIndex][type]
+
+    //   // Round off all the numbers
+    //   // chosenData = chosenData.map(function(each_element) {
+    //   //   return Math.round((each_element + Number.EPSILON) * 100) / 100
+    //   // })
+
+    //   // If there isn't a color set for this teacher, set it
+    //   if (!lineColors[i]) {
+    //     lineColors[i] = this.randomRgbColor()
+    //   }
+    //   var tempData = {
+    //     label: siteName,
+    //     data: chosenData,
+    //     borderColor: lineColors[i],
+    //     fill: false,
+    //     tension: 0.0,
+    //   }
+
+    //   // Get the labels for the Trends charts
+    //   if(trends[siteIndex].lineChartLabels)
+    //   {
+    //     tempLineChartLabels = trends[siteIndex].lineChartLabels
+    //   }
+
+    //   tempDataSet.push(tempData)
+    //   i++
+    // }
+
+    // var labels = [
+    //   'January',
+    //   'February',
+    //   'March',
+    //   'April',
+    //   'May',
+    //   'June',
+    //   'July',
+    //   'August',
+    //   'September',
+    //   'October',
+    //   'November',
+    //   'December',
+    // ]
+
+    // if(tempLineChartLabels.length > 0)
+    // {
+    //   labels = tempLineChartLabels;
+    // }
+
+    // const lineData = {
+    //   labels,
+    //   datasets: tempDataSet,
+    // }
+
+    // this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
 
   // Handle downloading the PDF
