@@ -598,7 +598,8 @@ class AveragesData {
       //results[teacherId].totalInstructions += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
       results[teacherId].totalInstructions += row.count
 
-      results[teacherId].totalObserved += row.count
+      // Calculate the total number of observations by getting all the unique observation ids and counting them
+      results[teacherId].totalObserved = [...new Set(data.map(item => item.id))].length
     }
 
     // Calculate the averages in percentages
@@ -611,36 +612,36 @@ class AveragesData {
 
       result.eyeLevelAverage =
         result.eyeLevel > 0
-          ? (result.eyeLevel / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.eyeLevel / tempTotalObserved)
           : 0
       result.positiveExpressionAverage =
         result.positiveExpression > 0
-          ? (result.positiveExpression / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.positiveExpression / tempTotalObserved)
           : 0
       result.repeatsAverage =
         result.repeats > 0
-          ? (result.repeats / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.repeats / tempTotalObserved)
           : 0
       result.openEndedQuestionsAverage =
         result.openEndedQuestions > 0
-          ? (result.openEndedQuestions / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.openEndedQuestions / tempTotalObserved)
           : 0
       result.extendsPlayAverage =
         result.extendsPlay > 0
-          ? (result.extendsPlay / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.extendsPlay / tempTotalObserved)
           : 0
       result.encouragesPeerTalkAverage =
         result.encouragesPeerTalk > 0
-          ? (result.encouragesPeerTalk / tempTotalInstructions).toFixed(2) * 100
+          ? Math.round(result.encouragesPeerTalk / tempTotalObserved)
           : 0
 
       result.noBehaviorsAverage =
         result.noBehaviors > 0
-          ? (result.noBehaviors / tempTotalObserved).toFixed(2) * 100
+          ? Math.round(result.noBehaviors / tempTotalObserved)
           : 0
       result.encouragingAverage =
         result.encouraging > 0
-          ? (result.encouraging / tempTotalObserved).toFixed(2) * 100
+          ? Math.round(result.encouraging / tempTotalObserved)
           : 0
     }
 

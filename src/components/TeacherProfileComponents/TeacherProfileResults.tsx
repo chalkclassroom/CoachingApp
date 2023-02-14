@@ -47,6 +47,7 @@ import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
 import ClimateToneSliderAverages from './ResultsComponents/ClimateToneSliderAverages'
 import LiteracyInstructionAverages from './ResultsComponents/LiteracyInstructionAverages'
 import SequentialActivitiesAverages from './ResultsComponents/SequentialActivitiesAverages'
+import ListeningToChildrenAverages from './ResultsComponents/ListeningToChildrenAverages'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -966,7 +967,6 @@ class TeacherProfileResults extends React.Component {
      */
     const radioObservationTypes = [
       'transitionTime',
-      'listeningToChildren',
       'foundationSkills',
       'writing',
       'associativeAndCooperative',
@@ -979,7 +979,6 @@ class TeacherProfileResults extends React.Component {
      */
     const pieChartObservationTypes = [
       'transitionTime',
-      'listeningToChildren',
       'associativeAndCooperative',
     ]
 
@@ -1257,6 +1256,7 @@ class TeacherProfileResults extends React.Component {
                       type={this.state.radioValue}
                       teacherId={this.props.selectedTeacherId}
                       usingTime={this.state.usingTime}
+                      observationType={this.props.observationType}
                     />
                   ) : null}
 
@@ -1278,6 +1278,19 @@ class TeacherProfileResults extends React.Component {
                   */}
                   {this.props.observationType == "sequentialActivities" ? (
                     <SequentialActivitiesAverages
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      observationType={this.props.observationType}
+                      teacherId={this.props.selectedTeacherId}
+                      usingTime={this.state.usingTime}
+                    />
+                  ) : null}
+
+                  {/*
+                    Listening to Children
+                  */}
+                  {this.props.observationType == "listeningToChildren" ? (
+                    <ListeningToChildrenAverages
                       data={this.state.averages}
                       type={this.state.radioValue}
                       observationType={this.props.observationType}
