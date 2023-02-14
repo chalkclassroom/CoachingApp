@@ -186,7 +186,7 @@ const radioValueArr = {
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
-  sequentialActivities: 'sequentialActivitiesAverage',
+  sequentialActivities: 'teacherAverage',
   foundationSkills: 'foundationalSkillsAverage',
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
@@ -215,7 +215,7 @@ class ProgramProfileResults extends React.Component {
       sites: [],
       teacherInfo: {},
       siteNames: [],
-      radioValue: '',
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : '',
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -553,7 +553,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'sequentialActivities':
-        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teachers )
+        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'foundationSkills':

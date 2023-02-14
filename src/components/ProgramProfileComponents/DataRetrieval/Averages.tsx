@@ -513,7 +513,7 @@ class AveragesData {
     /*
      * Sequential Activities
      */
-    calculateSequentialActivitiesAverages = (data, sites) => {
+    calculateSequentialActivitiesAverages = (data, sites, names) => {
 
       // Initialize the array that will hold all the data
       var results = {};
@@ -525,7 +525,7 @@ class AveragesData {
       {
 
         results[siteIndex] = {
-          name: "",
+          name: names[siteIndex].name,
           totalInstructions: 0,
           sequentialActivities: 0,
           childNonSequential: 0,
@@ -582,9 +582,13 @@ class AveragesData {
 
       console.log(programBar)
       console.log(result)
-      // result.sequentialActivities = result.sequentialActivities > 0 ? (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100 : 0;
-      // result.childNonSequential = 100 - result.sequentialActivities;
+
+      result.sequentialActivities = (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100;
+
+      result.childNonSequential = (100 - result.sequentialActivities);
+
       result.support = (result.support / result.totalSupport).toFixed(2) * 100;
+
       result.noSupport = (result.noSupport / result.totalSupport).toFixed(2) * 100;
 
       if (isNaN(result.support)) {
@@ -615,9 +619,9 @@ class AveragesData {
       }
       }
 
-    programBar.childNonSequential = (programBar.childNonSequential / programBar.totalInstructions).toFixed(2) * 100;
-
     programBar.sequentialActivities = (programBar.sequentialActivities / programBar.totalInstructions).toFixed(2) * 100;
+
+    programBar.childNonSequential = (100 - programBar.sequentialActivities);
 
     programBar.support = (programBar.support / programBar.totalSupport).toFixed(2) * 100;
 
