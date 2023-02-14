@@ -582,8 +582,8 @@ class AveragesData {
 
       console.log(programBar)
       console.log(result)
-      // result.sequentialActivities = result.sequentialActivities > 0 ? (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100 : 0;
-      // result.childNonSequential = 100 - result.sequentialActivities;
+      result.sequentialActivities = result.sequentialActivities > 0 ? (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100 : 0;
+      result.childNonSequential = 100 - result.sequentialActivities;
       result.support = (result.support / result.totalSupport).toFixed(2) * 100;
       result.noSupport = (result.noSupport / result.totalSupport).toFixed(2) * 100;
 
