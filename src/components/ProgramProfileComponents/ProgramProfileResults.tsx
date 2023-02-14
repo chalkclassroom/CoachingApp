@@ -233,7 +233,8 @@ class ProgramProfileResults extends React.Component {
 
       showErrorMessage: false,
       errorMessage: '',
-      selectedSite: []
+      selectedSite: 'None',
+      siteInfo: []
     }
   }
 
@@ -311,6 +312,7 @@ class ProgramProfileResults extends React.Component {
     // Grab results data
     var averagesList = {}
     var siteNames = {}
+    let siteInfo = []
 
     // Go through each site
     for (var siteIndex in sites) {
@@ -393,15 +395,15 @@ class ProgramProfileResults extends React.Component {
             o.teacher !== tempUserId 
         )
       }
-
       // Set the site names
       var siteData = await firebase.getUserProgramOrSite({ siteId: siteIndex })
 
       siteNames[siteData.id] = { name: siteData.name }
+      siteInfo.push({id: siteData.id, name:siteData.name})
     }
 
     this.setState({ BQData: averagesList })
-    this.setState({ siteNames: siteNames })
+    this.setState({ siteNames: siteNames, siteInfo: siteInfo })
 
     // If there are no sites in this program, we have to let them know
     if (Object.values(siteNames).length <= 0) {
@@ -410,8 +412,6 @@ class ProgramProfileResults extends React.Component {
         errorMessage: 'There are no sites in this Program!',
       })
     }
-
-
 
     this.calculateResultsForCharts(averagesList, averagesList)
   }
@@ -712,11 +712,14 @@ class ProgramProfileResults extends React.Component {
 
     this.setLineGraphData(this.state.siteNames, event.target.value)
 
-    // let modifiedInfo = this.state.teacherInfo.filter(teacher => {
-    //   return teacher.id == this.state.selectedTeacher
-    // })
+    let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
+      key.includes(event.target.value)).reduce((obj, key) => {
+        return Object.assign(obj, {
+          [key]: this.state.BQData[key]
+        })
+      }, {})
 
-    // this.setLineGraphData(modifiedInfo, event.target.value)
+    this.setLineGraphData(modifiedInfo, event.target.value)
   }
 
   // When any of the date dropdowns are changed
@@ -746,25 +749,32 @@ class ProgramProfileResults extends React.Component {
     return Math.floor(Math.random() * (max + 1))
   }
 
-  // handleTrendsDropdown = (event: SelectChangeEvent) => {
-  //   this.setState({ selectedTeacher: event.target.value })
-  //   let modifiedInfo = this.state.teacherInfo.filter(teacher => {
-  //     return teacher.id == event.target.value
-  //   })
-  //   if (this.props.observationType === "studentEngagement") {
-  //     if (event.target.value != 'None') {
-  //       LineGraphOptions.legend.display = true
-  //       LineGraphOptions.legend.position = 'bottom'
-  //     } else {
-  //       LineGraphOptions.legend.display = false
-  //     }
-  //   } else {
-  //     LineGraphOptions.legend.display = true
-  //     LineGraphOptions.legend.position = 'bottom'
-  //   }
+  handleTrendsDropdown = (event: SelectChangeEvent) => {
+    this.setState({ selectedSite: event.target.value })
+    let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
+      key.includes(event.target.value)).reduce((obj, key) => {
+        return Object.assign(obj, {
+          [key]: this.state.BQData[key]
+        })
+      }, {})
 
-  //   this.setLineGraphData(modifiedInfo, this.state.radioValue)
-  // }
+    // let modifiedInfo = this.state.BQData.filter(site => {
+    //   return site.id == event.target.value
+    // })
+    // if (this.props.observationType === "studentEngagement") {
+    //   if (event.target.value != 'None') {
+    //     LineGraphOptions.legend.display = true
+    //     LineGraphOptions.legend.position = 'bottom'
+    //   } else {
+    //     LineGraphOptions.legend.display = false
+    //   }
+    // } else {
+    //   LineGraphOptions.legend.display = true
+    //   LineGraphOptions.legend.position = 'bottom'
+    // }
+
+    this.setLineGraphData(modifiedInfo, this.state.radioValue)
+  }
 
   render() {
 
@@ -939,18 +949,18 @@ class ProgramProfileResults extends React.Component {
                   <StyledSelect
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  value={this.state.selectedTeacher}
+                  value={this.state.selectedSite}
                   onChange={this.handleTrendsDropdown}
                   name="selectedProgram"
 
                 >
                   <MenuItem value="None">Select Site</MenuItem>
-                  {/* {this.state.teacherInfo.map(
-                            (teacher, index)=>{
-                              return <MenuItem value={teacher.id} key={index}>
-                                    {`${teacher.firstName} ${teacher.lastName}`}
+                  {this.state.siteInfo.map(
+                            (site, index)=>{
+                              return <MenuItem value={site.id} key={index}>
+                                    {`${site.name}`}
                                   </MenuItem>
-                              })} */}
+                              })}
                 </StyledSelect>
                 </FormControl>
                 <Grid
