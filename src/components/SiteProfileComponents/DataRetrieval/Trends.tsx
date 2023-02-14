@@ -317,117 +317,6 @@ class TrendData {
     results.siteBar = siteBar;
     console.log(results)
     return results;
-    // // Initialize the array that will hold all the data
-    // var results = {};
-
-    // var totalIntervals = 0;
-
-    // // Get start month and year
-    // const startMonth = startDate.getMonth();
-
-    // const endMonth = endDate.getMonth();
-
-
-    // // Build list of month between start date and end date
-    // var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // // Set the month after the end date, formatted like Nov 21, 2022
-    // var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    // var months = [];
-    // while(tempDate !== endDatePlusOneMonth)
-    // {
-    //   months.push(tempDate);
-    //   tempDate = new Date(tempDate);
-    //   tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    // }
-
-    // var monthsCount = months.length;
-
-    // // Add each teacher to the object
-    // var tempName = "";
-    // for(var teacherIndex in teachers)
-    // {
-
-    //   tempName = teachers[teacherIndex].firstName + " " + teachers[teacherIndex].lastName;
-
-    //   results[teachers[teacherIndex].id] = {
-    //     name: tempName,
-    //     totalInstructions: new Array(monthsCount).fill(0),
-    //     mathVocabulary: new Array(monthsCount).fill(0),
-    //     askingQuestions: new Array(monthsCount).fill(0),
-    //     mathConcepts: new Array(monthsCount).fill(0),
-    //     helpingChildren: new Array(monthsCount).fill(0),
-
-    //     notAtCenter: new Array(monthsCount).fill(0),
-    //     noSupport: new Array(monthsCount).fill(0),
-    //     support: new Array(monthsCount).fill(0),
-
-    //     totalInstructionsAverage: new Array(monthsCount).fill(0),
-    //     mathVocabularyAverage: new Array(monthsCount).fill(0),
-    //     askingQuestionsAverage: new Array(monthsCount).fill(0),
-    //     mathConceptsAverage: new Array(monthsCount).fill(0),
-    //     helpingChildrenAverage: new Array(monthsCount).fill(0),
-
-    //     notAtCenterAverage: new Array(monthsCount).fill(0),
-    //     noSupportAverage: new Array(monthsCount).fill(0),
-    //     supportAverage: new Array(monthsCount).fill(0),
-
-    //     lineChartLabels: months,
-    //   };
-
-    // }
-
-
-    // // Get number of instances for each type of data
-    // var tempIntervalData = 0;
-    // //var rowMonth = startMonth;
-    // for(var rowIndex in data)
-    // {
-    //   var row = data[rowIndex];
-
-    //   var teacherId = row.teacher.split("/")[2];
-
-    //   var rowMonth = months.indexOf(new Date(row.timestamp).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-    //   // Add to total # of intervals
-    //   results[teacherId].totalInstructions[rowMonth] += row.noOpportunity + row.support + row.noSupport;
-
-    //   // Add to behavior types
-    //   results[teacherId].mathVocabulary[rowMonth] += row.mathVocabulary;
-    //   results[teacherId].askingQuestions[rowMonth] += row.askingQuestions;
-    //   results[teacherId].mathConcepts[rowMonth] += row.mathConcepts;
-    //   results[teacherId].helpingChildren[rowMonth] += row.helpingChildren;
-
-    //   results[teacherId].notAtCenter[rowMonth] += row.noOpportunity;
-    //   results[teacherId].support[rowMonth] += row.support;
-    //   results[teacherId].noSupport[rowMonth] += row.noSupport;
-    // }
-
-    // // Calculate the averages in percentages
-    // // Go through each teacher
-    // for(var resultsIndex in results)
-    // {
-    //   var result = results[resultsIndex];
-
-    //   // Go through the months
-    //   for(var i = 0; i < monthsCount; i++)
-    //   {
-    //     var tempTotalInstructions = result.totalInstructions[i];
-
-    //     result.mathVocabularyAverage[i] = result.mathVocabulary[i] > 0 ? (result.mathVocabulary[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.askingQuestionsAverage[i] = result.askingQuestions[i] > 0 ? (result.askingQuestions[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.mathConceptsAverage[i] = result.mathConcepts[i] > 0 ? (result.mathConcepts[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.helpingChildrenAverage[i] = result.helpingChildren[i] > 0 ? (result.helpingChildren[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-    //     result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.supportAverage[i] = result.support[i] > 0 ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-    //     result.noSupportAverage[i] = result.noSupport[i] > 0 ? (result.noSupport[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-    //   }
-    // }
-
-    // return results;
-
   }
 
    /*
@@ -528,7 +417,6 @@ class TrendData {
     var months = [];
     while(tempDate !== endDatePlusOneMonth)
     {
-      console.log(tempDate)
       months.push(tempDate);
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
@@ -556,7 +444,6 @@ class TrendData {
 
    }
 
-   console.log(months)
 
    // Get number of instances for each type of data
    var tempIntervalData = 0;
@@ -570,7 +457,7 @@ class TrendData {
     //var rowMonth = new Date(row.startDate).getMonth();
     var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
-    results[teacherId].totalPoints[rowMonth] += row.point
+    results[teacherId].totalPoints[rowMonth] += row.point * row.count
     results[teacherId].totalIntervals[rowMonth] += row.count
 
    }
@@ -581,6 +468,7 @@ class TrendData {
     dailyAverage: new Array(monthsCount).fill(0),
 
     totalPoints: new Array(monthsCount).fill(0),
+    totalIntervals: new Array(monthsCount).fill(0),
 
     lineChartLabels: months,
   }
@@ -601,20 +489,21 @@ class TrendData {
         result.dailyAverage[i] = 0
       }
 
-      siteBar.totalPoints[i] = result.dailyAverage[i] > 0 ? siteBar.totalPoints[i] + result.dailyAverage[i] : siteBar.totalPoints[i]
+      siteBar.totalPoints[i] += result.totalPoints[i];
+      siteBar.totalIntervals[i] += result.totalIntervals[i];
 
      }
    }
 
    for(var i = 0; i < monthsCount; i++)
    {
-    siteBar.dailyAverage[i] = siteBar.totalPoints[i] > 0 ? parseFloat((siteBar.totalPoints[i] / Object.keys(results).length).toFixed(2)) : 0;
+    siteBar.dailyAverage[i] = siteBar.totalPoints[i] / siteBar.totalIntervals[i];
+    if (isNaN(siteBar.dailyAverage[i])) {
+      siteBar.dailyAverage[i] = 0
+    }
    }
 
    results.siteBar = siteBar;
-
-   console.log(results)
-
    return results;
 
  }
