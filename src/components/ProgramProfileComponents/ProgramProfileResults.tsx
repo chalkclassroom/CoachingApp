@@ -542,7 +542,7 @@ class ProgramProfileResults extends React.Component {
         break
       case 'levelOfInstruction':
         averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers, this.state.siteNames )
-        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate )
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate, this.state.siteNames )
         break
       case 'studentEngagement':
         averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers )
@@ -706,14 +706,13 @@ class ProgramProfileResults extends React.Component {
 
     for (var siteIndex in sites) {
       var site = sites[siteIndex]
-      var fullName = site.name
+      var fullName = this.state.siteNames[siteIndex]['name']
 
       var chosenData = trends[siteIndex][type]
 
-      // Round off all the numbers
-      // chosenData = chosenData.map(function(each_element) {
-      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-      // })
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
 
       // If there isn't a color set for this teacher, set it
       if (color1 === "") {
@@ -741,14 +740,14 @@ class ProgramProfileResults extends React.Component {
     if (twoType.includes(this.props.observationType)) {
       for (var siteIndex in sites) {
         var site = sites[siteIndex]
-        var fullName = site.name
+        var fullName = this.state.siteNames[siteIndex]['name']
 
         var chosenData = trends[siteIndex][type2]
 
         // Round off all the numbers
-        // chosenData = chosenData.map(function(each_element) {
-        //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-        // })
+        chosenData = chosenData.map(function(each_element) {
+          return Math.round((each_element + Number.EPSILON) * 100) / 100
+        })
 
         // If there isn't a color set for this teacher, set it
         if (color2 === "") {
@@ -776,9 +775,9 @@ class ProgramProfileResults extends React.Component {
 
     chosenData = trends["programBar"][type]
     // Round off all the numbers
-    // chosenData = chosenData.map(function(each_element) {
-    // return Math.round((each_element + Number.EPSILON) * 100) / 100
-    // })
+    chosenData = chosenData.map(function(each_element) {
+    return Math.round((each_element + Number.EPSILON) * 100) / 100
+    })
 
     var tempData = {
       label: `Site Average ${label1}`,
@@ -795,9 +794,9 @@ class ProgramProfileResults extends React.Component {
       chosenData = trends["programBar"][type2]
 
       // Round off all the numbers
-      // chosenData = chosenData.map(function(each_element) {
-      //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-      // })
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
 
       // If there isn't a color set for this teacher, set it
       //// ADD YOUR SECOND COLOR HERE
@@ -854,75 +853,6 @@ class ProgramProfileResults extends React.Component {
     console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
-    // console.log(sites)
-    // var trends = this.state.trends
-
-    // console.log(trends)
-
-    // var tempDataSet = []
-    // var lineColors = this.state.lineColors
-    // var i = 0
-    // var tempLineChartLabels = [];
-    // for (var siteIndex in sites) {
-    //   var site = sites[siteIndex]
-    //   //var siteName = site.name
-    //   var siteName = this.state.siteNames[siteIndex].name
-
-    //   var chosenData = trends[siteIndex][type]
-
-    //   // Round off all the numbers
-    //   // chosenData = chosenData.map(function(each_element) {
-    //   //   return Math.round((each_element + Number.EPSILON) * 100) / 100
-    //   // })
-
-    //   // If there isn't a color set for this teacher, set it
-    //   if (!lineColors[i]) {
-    //     lineColors[i] = this.randomRgbColor()
-    //   }
-    //   var tempData = {
-    //     label: siteName,
-    //     data: chosenData,
-    //     borderColor: lineColors[i],
-    //     fill: false,
-    //     tension: 0.0,
-    //   }
-
-    //   // Get the labels for the Trends charts
-    //   if(trends[siteIndex].lineChartLabels)
-    //   {
-    //     tempLineChartLabels = trends[siteIndex].lineChartLabels
-    //   }
-
-    //   tempDataSet.push(tempData)
-    //   i++
-    // }
-
-    // var labels = [
-    //   'January',
-    //   'February',
-    //   'March',
-    //   'April',
-    //   'May',
-    //   'June',
-    //   'July',
-    //   'August',
-    //   'September',
-    //   'October',
-    //   'November',
-    //   'December',
-    // ]
-
-    // if(tempLineChartLabels.length > 0)
-    // {
-    //   labels = tempLineChartLabels;
-    // }
-
-    // const lineData = {
-    //   labels,
-    //   datasets: tempDataSet,
-    // }
-
-    // this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
 
   // Handle downloading the PDF

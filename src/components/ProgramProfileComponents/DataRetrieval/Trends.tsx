@@ -371,57 +371,24 @@ class TrendData {
     * Level of Instructions
     */
   calculateLevelInstructionTrends = (data, sites, startDate, endDate) => {
-
-    // Initialize the array that will hold all the data
-    var results = {};
-
-    var totalIntervals = 0;
-
-    // Get start month and year
-    const startMonth = startDate.getMonth();
-
-    const endMonth = endDate.getMonth();
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
-    var months = [];
-    while(tempDate !== endDatePlusOneMonth)
-    {
+    let results = {}
+    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
+    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
+    let months = [];
+    while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate);
       tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year:"numeric", month:"short"});
+      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-
-    var monthsCount = months.length;
-
-    // Add each teacher to the object
-    var tempName = "";
-    for(var siteIndex in sites)
-    {
-
+    let monthsCount = months.length;
+    for (let siteIndex in sites) {
       results[siteIndex] = {
-        name: sites[siteIndex].name,
+        name: '',
         totalInstructions: new Array(monthsCount).fill(0),
-        hlq: new Array(monthsCount).fill(0),
-        hlqResponse: new Array(monthsCount).fill(0),
-        llq: new Array(monthsCount).fill(0),
-        llqResponse: new Array(monthsCount).fill(0),
-
-        hlqAverage: new Array(monthsCount).fill(0),
-        hlqResponseAverage: new Array(monthsCount).fill(0),
-        llqAverage: new Array(monthsCount).fill(0),
-        llqResponseAverage: new Array(monthsCount).fill(0),
-
-        lineChartLabels: months,
-
         highLevel: new Array(monthsCount).fill(0),
         lowLevel: new Array(monthsCount).fill(0),
-
+        lineChartLabels: months,
       };
-
     }
 
     let programBar = {
@@ -432,53 +399,45 @@ class TrendData {
       lineChartLabels: months
     }
 
-
-    // Get number of instances for each type of data
-    var tempIntervalData = 0;
-
-    for(var siteIndex in sites)
-    {
-      for(var rowIndex in sites[siteIndex])
-      {
-        var row = sites[siteIndex][rowIndex];
-
-        //var rowMonth = new Date(row.startDate.value).getMonth();
-        var rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-        // Add to total # of intervals
+    for (let siteIndex in sites) {
+      for(let rowIndex in sites[siteIndex]) {
+        let row = sites[siteIndex][rowIndex];
+        let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
         results[siteIndex].totalInstructions[rowMonth] += row.count;
-
-        // Add to behavior types
-        results[siteIndex][row.instructionType][rowMonth] += row.count;
+        if (["hlq", "hlqResonse"].includes(row.instructionType)) {
+          results[siteIndex].highLevel[rowMonth] += row.count;
+        } else {
+          results[siteIndex].lowLevel[rowMonth] += row.count;
+        }
       }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for(var resultsIndex in results)
-    {
-      var result = results[resultsIndex];
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+      for (let i = 0; i < monthsCount; i++) {
 
-      // Go through the months
-      for(var i = 0; i < monthsCount; i++)
-      {
-        var tempTotalInstructions = result.totalInstructions[i];
-
-        result.hlqAverage[i] = result.hlq[i] > 0 ? (result.hlq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.hlqResponseAverage[i] = result.hlqResponse[i] > 0 ? (result.hlqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.llqAverage[i] = result.llq[i] > 0 ? (result.llq[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-        result.llqResponseAverage[i] = result.llqResponse[i] > 0 ? (result.llqResponse[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-        result.highLevel[i] = result.hlqAverage[i] + result.hlqResponseAverage[i]
-        result.lowLevel[i] = result.llqAverage[i] + result.llqResponseAverage[i]
+        programBar.highLevel[i] += result.highLevel[i]
+        programBar.lowLevel[i] += result.lowLevel[i]
+        result.highLevel[i] = parseFloat((result.highLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
+        result.lowLevel[i] = parseFloat((result.lowLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
+        if (isNaN(result.highLevel[i])) {
+          result.highLevel[i] = 0
+        }
+        if (isNaN(result.lowLevel[i])) {
+          result.lowLevel[i] = 0
+        }
+        programBar.totalInstructions[i] = programBar.highLevel[i] + programBar.lowLevel[i]
 
       }
+    }
+
+    for (let i = 0; i < monthsCount; i++) {
+      programBar.highLevel[i] = programBar.highLevel[i] > 0 ? parseFloat((programBar.highLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
+      programBar.lowLevel[i] = programBar.lowLevel[i] > 0 ? parseFloat((programBar.lowLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
     }
 
     results.programBar = programBar;
-
     return results;
-
   }
 
   /*
