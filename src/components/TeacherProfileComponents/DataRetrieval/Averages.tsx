@@ -55,7 +55,7 @@ class AveragesData {
 
       // Calculate the total Number of instructions
       //results[teacherId].total += row.total;
-      results[teacherId].total += row.observationTotalTime
+      results[teacherId].total += row.total
       results[teacherId].totalTime += row.observationTotalTime
     }
 
@@ -241,7 +241,9 @@ class AveragesData {
       shapes: 0,
       patterns: 0,
       measurement: 0,
-      observation: [data[0].id],
+
+      teacherObservationIds: [],
+      allObservationIds: [],
     }
 
     // Get number of instances for each type of data
@@ -269,9 +271,20 @@ class AveragesData {
       //results[teacherId].total += row.noSupport + row.noOpportunity + row.support;
       results[teacherId].total += row.count
 
-      if (!results[teacherId].observation.includes(row.id)) {
-        results[teacherId].observation.push(row.id)
+      /*
+       * We need to keep track of all the observations that a teacher participated in, so we know what to use as the demominator during calculations of teacher behaviors
+       */
+      if (!results[teacherId].teacherObservationIds.includes(row.id) && row.peopletype == 3) {
+        results[teacherId].teacherObservationIds.push(row.id)
       }
+
+      /*
+       * Keep track of all the observations for other calculations if needed
+       */
+       if ( !results[teacherId].allObservationIds.includes(row.id) ) {
+         results[teacherId].allObservationIds.push(row.id)
+       }
+
     }
 
     // Calculate the averages in percentages
@@ -281,49 +294,51 @@ class AveragesData {
 
       //var tempTotalInstructions = result.total;
       var tempTotalInstructions = data.length
-      let observations_count = result.observation.length
+
+      let teacherObservationsCount = result.teacherObservationIds.length > 0 ? result.teacherObservationIds.length : 1; // If there are no observations of this type we need to set it to 1 to prevent dividing by zero
+      let allObservationsCount = result.allObservationIds.length
 
       result.mathVocabularyAverage =
         result.mathVocabulary > 0
-          ? Math.round(result.mathVocabulary / observations_count)
+          ? Math.round(result.mathVocabulary / teacherObservationsCount)
           : 0
       result.askingQuestionsAverage =
         result.askingQuestions > 0
-          ? Math.round(result.askingQuestions / observations_count)
+          ? Math.round(result.askingQuestions / teacherObservationsCount)
           : 0
       result.mathConceptsAverage =
         result.mathConcepts > 0
-          ? Math.round(result.mathConcepts / observations_count)
+          ? Math.round(result.mathConcepts / teacherObservationsCount)
           : 0
       result.helpingChildrenAverage =
         result.helpingChildren > 0
-          ? Math.round(result.helpingChildren / observations_count)
+          ? Math.round(result.helpingChildren / teacherObservationsCount)
           : 0
 
       result.countingAverage =
         result.counting > 0
-          ? Math.round(result.counting / observations_count)
+          ? Math.round(result.counting / allObservationsCount)
           : 0
       result.shapesAverage =
-        result.shapes > 0 ? Math.round(result.shapes / observations_count) : 0
+        result.shapes > 0 ? Math.round(result.shapes / allObservationsCount) : 0
       result.patternsAverage =
         result.patterns > 0
-          ? Math.round(result.patterns / observations_count)
+          ? Math.round(result.patterns / allObservationsCount)
           : 0
       result.measurementAverage =
         result.measurement > 0
-          ? Math.round(result.measurement / observations_count)
+          ? Math.round(result.measurement / allObservationsCount)
           : 0
 
       result.notAtCenterAverage =
         result.notAtCenter > 0
-          ? Math.round(result.notAtCenter / observations_count)
+          ? Math.round(result.notAtCenter / allObservationsCount)
           : 0
       result.supportAverage =
-        result.support > 0 ? Math.round(result.support / observations_count) : 0
+        result.support > 0 ? Math.round(result.support / allObservationsCount) : 0
       result.noSupportAverage =
         result.noSupport > 0
-          ? Math.round(result.noSupport / observations_count)
+          ? Math.round(result.noSupport / allObservationsCount)
           : 0
     }
 
@@ -1217,6 +1232,11 @@ class AveragesData {
       support: 0,
       noSupport: 0,
       notAtCenter: 0,
+
+      teacherObservationIds: [],
+      childObservationIds: [],
+      allObservationIds: [],
+
     }
 
     // Get number of instances for each type of data
@@ -1277,9 +1297,33 @@ class AveragesData {
       else {
         results[teacherId].notAtCenter++
       }
+
+      /*
+       * We need to keep track of all the observations that a teacher participated in, so we know what to use as the demominator during calculations of teacher behaviors
+       */
+      if (!results[teacherId].teacherObservationIds.includes(row.id) && row.peopleType == 3) {
+        results[teacherId].teacherObservationIds.push(row.id)
+      }
+
+      /*
+       * We need to keep track of all the observations where a teacher wasn't alone, so we know what to use as the demominator during calculations of child behaviors
+       */
+       if ( !results[teacherId].childObservationIds.includes(row.id) && (row.peopleType == 3 || row.peopleType == 2) ) {
+         results[teacherId].childObservationIds.push(row.id)
+       }
+
+      /*
+       * We need to keep track of all the observations where a teacher wasn't alone, so we know what to use as the demominator during calculations of child behaviors
+       */
+       if ( !results[teacherId].allObservationIds.includes(row.id) ) {
+         results[teacherId].allObservationIds.push(row.id)
+       }
+
     }
 
-    // Calculate the averages in percentages
+
+
+    // Calculate the averages
     // Go through each teacher
     for (var resultsIndex in results) {
       var result = results[resultsIndex]
@@ -1287,34 +1331,38 @@ class AveragesData {
       var tempTotalInstructions = result.totalInstructions
       var tempTotalIntervals = result.totalIntervals
 
+      let teacherObservationsCount = result.teacherObservationIds.length > 0 ? result.teacherObservationIds.length : 1; // If there are no observations of this type we need to set it to 1 to prevent dividing by zero
+      let childObservationsCount = result.childObservationIds.length > 0 ? result.childObservationIds.length : 1; // If there are no observations of this type we need to set it to 1 to prevent dividing by zero
+      let allObservationsCount = result.allObservationIds.length
+
       result.childrensPlayAverage =
         result.childrensPlay > 0
-          ? (result.childrensPlay / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.childrensPlay / teacherObservationsCount)
           : 0
       result.askingQuestionsAverage =
         result.askingQuestions > 0
-          ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.askingQuestions / teacherObservationsCount)
           : 0
       result.encouragingChildrenAverage =
-        result.encouraging > 0
-          ? (result.encouraging / tempTotalIntervals).toFixed(2) * 100
+        result.encouragingChildren > 0
+          ? Math.round(result.encouragingChildren / teacherObservationsCount)
           : 0
       result.helpingChildrenAverage =
         result.helpingChildren > 0
-          ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.helpingChildren / teacherObservationsCount)
           : 0
 
       result.noSequenceAverage =
         result.noSequence > 0
-          ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.noSequence / childObservationsCount)
           : 0
       result.formalRulesAverage =
         result.formalRules > 0
-          ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.formalRules / childObservationsCount)
           : 0
       result.sequenceAverage =
         result.sequence > 0
-          ? (result.sequence / tempTotalIntervals).toFixed(2) * 100
+          ? Math.round(result.sequence / childObservationsCount)
           : 0
 
       result.supportAverage =

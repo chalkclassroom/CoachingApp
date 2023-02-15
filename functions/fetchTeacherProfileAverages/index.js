@@ -468,6 +468,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "ac")
     {
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      id,
                       DATE(sessionStart) as GroupDate,
                       COUNT(id) as total,
                       COUNT(CASE WHEN (checklist.teacher1) THEN 'teacher1' ELSE NULL END) AS teacher1,
@@ -486,7 +487,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
-                      GROUP BY timestamp, GroupDate, peopleType, startDate, teacher
+                      GROUP BY timestamp, GroupDate, peopleType, startDate, teacher, id
                       ORDER BY GroupDate DESC;`;
     }
 
