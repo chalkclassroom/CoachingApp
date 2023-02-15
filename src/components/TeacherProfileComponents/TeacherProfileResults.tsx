@@ -47,6 +47,7 @@ import ClimateToneTrends from './ResultsComponents/ClimateToneTrends'
 import ClimateToneSliderAverages from './ResultsComponents/ClimateToneSliderAverages'
 import LiteracyInstructionAverages from './ResultsComponents/LiteracyInstructionAverages'
 import SequentialActivitiesAverages from './ResultsComponents/SequentialActivitiesAverages'
+import ACAverages from './ResultsComponents/ACAverages'
 import ListeningToChildrenAverages from './ResultsComponents/ListeningToChildrenAverages'
 
 import { Line } from 'react-chartjs-2'
@@ -240,7 +241,7 @@ const radioValueArr = {
   writing: 'teacherAverage',
   bookReading: 'teacherAverage',
   languageEnvironment: 'teacherAverage',
-  associativeAndCooperative: 'childrensPlay',
+  associativeAndCooperative: 'teacherAverage',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -528,7 +529,6 @@ class TeacherProfileResults extends React.Component {
           this.props.startDate,
           endDate
         )
-        usingTime = true
         break
       case 'classroomClimate':
         averages = this.state.averagesClass.calculateClimateAverage(
@@ -966,7 +966,6 @@ class TeacherProfileResults extends React.Component {
      * List of which observation types will display the radio buttons
      */
     const radioObservationTypes = [
-      'transitionTime',
       'foundationSkills',
       'writing',
       'associativeAndCooperative',
@@ -979,7 +978,6 @@ class TeacherProfileResults extends React.Component {
      */
     const pieChartObservationTypes = [
       'transitionTime',
-      'associativeAndCooperative',
     ]
 
     /*
@@ -1278,6 +1276,19 @@ class TeacherProfileResults extends React.Component {
                   */}
                   {this.props.observationType == "sequentialActivities" ? (
                     <SequentialActivitiesAverages
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      observationType={this.props.observationType}
+                      teacherId={this.props.selectedTeacherId}
+                      usingTime={this.state.usingTime}
+                    />
+                  ) : null}
+
+                  {/*
+                    Associative and Cooperative
+                  */}
+                  {this.props.observationType == "associativeAndCooperative" ? (
+                    <ACAverages
                       data={this.state.averages}
                       type={this.state.radioValue}
                       observationType={this.props.observationType}

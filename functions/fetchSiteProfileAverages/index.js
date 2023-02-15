@@ -106,12 +106,13 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
                       SUM(CASE WHEN type = 'other' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS other,
                       TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) AS total,
                       TIMESTAMP_DIFF(sessionEnd ,sessionStart, millisecond) AS sessionTotal,
+                      sessionStart,
                       teacher
                       FROM ${functions.config().env.bq_project}.${
         functions.config().env.bq_dataset
       }.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY startDate, teacher, total, sessionTotal
+                      GROUP BY startDate, teacher, total, sessionTotal, sessionStart
                       ORDER BY startDate ASC;`
     }
 

@@ -32,6 +32,7 @@ class AveragesData {
 
       results[teachers[teacherIndex].id] = {
         name: tempName,
+        startDate: [],
         total: 0,
         line: 0,
         traveling: 0,
@@ -60,7 +61,11 @@ class AveragesData {
       results[teacherId].other += row.other
 
       // Calculate the total Number of instructions
-      results[teacherId].total += row.sessionTotal
+      if (!results[teacherId].startDate.includes(row.sessionStart)) {
+        results[teacherId].startDate.push(row.sessionStart)
+        results[teacherId].total += row.sessionTotal
+      }
+
       results[teacherId].totalTransitionTime += row.total
     }
 

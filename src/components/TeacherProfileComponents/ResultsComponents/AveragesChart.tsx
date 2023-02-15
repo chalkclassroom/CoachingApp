@@ -104,6 +104,7 @@ class AveragesPieChart extends React.Component<Props, {}> {
     this.state= {
       dataValues: [0,0],
       labels: ["", ""],
+      chartTitle: "",
     }
   }
 
@@ -150,19 +151,50 @@ class AveragesPieChart extends React.Component<Props, {}> {
       secondValue = this.props.data[this.props.teacherId]["total"] - firstValue;
     }
 
+    const teacherData = this.props.data[this.props.teacherId]
+
+    // Round all the numbers in the data object just in case
+    for(var propertyName in teacherData){
+      if(typeof teacherData[propertyName] === 'number'){
+          teacherData[propertyName] = Math.round(teacherData[propertyName]);
+      }
+    }
+
+    // Determine what values to put in the graph based on observation type
+    let dataValues;
+    let chartTitle;
+    // Set the default values of the charts' colors and labels (based on how it was set when this component was originally created)
+    let pieChartColors = ["#C4395A","#BABABA"];
+    let labels = labelsArr[this.props.type];
 
 
-    this.setState({dataValues: [firstValue, secondValue], labels: labelsArr[this.props.type]});
+    switch(this.props.observationType) {
+      default:
+        dataValues = [firstValue, secondValue];
+        break;
+      case "transitionTime":
+        dataValues = [teacherData.lineAverage, teacherData.travelingAverage, teacherData.waitingAverage, teacherData.routinesAverage, teacherData.behaviorManagementAverage, teacherData.otherAverage];
+        chartTitle = "Transition Types";
+        pieChartColors = ["#92D050", "#FFC000", "#EA7150", "#5B9BD5","#E94635","#6666FF"]
+        labels = ["Waiting in Line", "Traveling", "Children Waiting", "Classroom Routines", "Behavior Management", "Other"]
+        break;
+      case "listeningToChildren":
+        dataValues = [teacherData.eyeLevel, teacherData.positiveExpression, teacherData.repeats, teacherData.openEndedQuestions, teacherData.extendsPlay, teacherData.encouragesPeerTalk];
+        chartTitle = "Listening to Children";
+        pieChartColors = ["#4FD9B3", "#4FD9B3", "#4FD9B3", "#4FD9B3","#4FD9B3","#4FD9B3"]
+        labels = ["At Eye Level", "Uses positive or interested expression to encourage child talk", "Repeats or clarifies", "Asks open-ended questions", "Expands on children's play or talk", "Encourages peer talk"]
+        break;
+    }
+
+    this.setState({
+      dataValues: dataValues,
+      labels: labels,
+      pieChartColors: pieChartColors,
+      chartTitle: chartTitle,
+    });
 
   }
 
-
-  static propTypes = {
-    lowLevel: PropTypes.number.isRequired,
-    highLevel: PropTypes.number.isRequired,
-    completed: PropTypes.func,
-    title: PropTypes.bool
-  }
 
   /**
    * render function
@@ -175,8 +207,8 @@ class AveragesPieChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: this.state.dataValues,
-          backgroundColor: ["#C4395A","#BABABA"],
-          hoverBackgroundColor: ["#C4395A", "#BABABA"]
+          backgroundColor: this.state.pieChartColors,
+          hoverBackgroundColor: this.state.pieChartColors,
         }
       ]
     };
@@ -189,6 +221,8 @@ class AveragesPieChart extends React.Component<Props, {}> {
     }
 
     return (
+      <div style={{border: 'solid 1px #eee', padding: 30, width: '85%', minHeight: 450}}>
+        <h3 style={{textAlign: 'center'}}>{this.state.chartTitle}</h3>
         <Pie
           data={instructionResponseData}
           options={{
@@ -207,7 +241,7 @@ class AveragesPieChart extends React.Component<Props, {}> {
                     ((currentValue / total) * 100).toFixed(1)
                   );
                   currentValue = usingTime ? convertMillisecondsToMinutes(currentValue) : currentValue;
-                  return currentValue + " (" + percentage + "%)";
+                  return currentValue + "%";
                 },
                 title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                   return data.labels[tooltipItem[0].index];
@@ -222,7 +256,8 @@ class AveragesPieChart extends React.Component<Props, {}> {
                 padding: 20,
                 fontColor: "black",
                 fontSize: 14,
-                fontFamily: 'Arimo'
+                fontFamily: 'Arimo',
+                boxWidth: 14,
               }
             },
             title: {
@@ -236,14 +271,14 @@ class AveragesPieChart extends React.Component<Props, {}> {
             plugins: {
               datalabels: {
                 display: 'auto',
-                color: 'white',
+                color: 'black',
                 font: {
                   size: 20
                 },
                 formatter: function(value: number): number | null {
                   if (value > 0) {
-                    value = usingTime ? convertMillisecondsToMinutes(value) : value;
-                    return value;
+                    //value = usingTime ? convertMillisecondsToMinutes(value) : value;
+                    return value + '%';
                   } else {
                     return null;
                   }
@@ -253,6 +288,7 @@ class AveragesPieChart extends React.Component<Props, {}> {
             maintainAspectRatio: false
           }}
         />
+      </div>
     );
   }
 }
