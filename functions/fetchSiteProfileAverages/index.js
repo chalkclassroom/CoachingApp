@@ -150,6 +150,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
                       COUNT(CASE WHEN (checklist.child5) THEN 'math5' ELSE NULL END) AS childOther,
                       teacher,
                       peopletype,
+                      COUNT (sessionStart) AS total,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp
                       FROM ${functions.config().env.bq_project}.${
         functions.config().env.bq_dataset

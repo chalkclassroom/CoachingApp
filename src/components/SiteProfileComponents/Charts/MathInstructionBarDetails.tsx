@@ -96,13 +96,18 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round((teacher['noSupportAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = 100 - tempNoSupport;
+        var tempNoSupport = Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['support'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
+        // var tempTeacherSupport = 100 - tempNoSupport;
       }
       else
       {
-        var tempNoSupport = Math.round((teacher['childOtherAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = 100 - tempNoSupport;
+        var tempNoSupport = Math.round((teacher['noInteraction'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['engaged'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
       }
 
       // Only push this data if there are actually observation done
@@ -145,8 +150,9 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    //siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
-    siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
+    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
+    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize])
+    // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Use that data to create our dataset
     var dataSets = [

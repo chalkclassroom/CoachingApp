@@ -300,125 +300,70 @@ class AveragesData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
-
-    // Add each teacher to the object
-    var tempName = ''
-    for (var teacherIndex in teachers) {
-      tempName =
-        teachers[teacherIndex].firstName + ' ' + teachers[teacherIndex].lastName
-
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalInstructions: 0,
-        totalInstructionsChild: 0,
-        mathVocabulary: 0,
-        askingQuestions: 0,
-        mathConcepts: 0,
-        helpingChildren: 0,
-        notAtCenter: 0,
-        noSupport: 0,
+        name: `${teachers[teacherIndex]. firstName} ${teachers[teacherIndex].lastName}`,
+        teacherDenominator: 0,
+        childDenominator: 0,
         support: 0,
-        counting: 0,
-        shapes: 0,
-        patterns: 0,
-        measurement: 0,
-        childMathTotal:0,
-        childOtherTotal:0,
+        noSupport: 0,
+        engaged: 0,
+        noInteraction: 0,
+        totalInstructions: 0
       }
     }
 
-    // Get number of instances for each type of data
-    for (var rowIndex in data) {
-      var row = data[rowIndex]
-
-      var teacherId = row.teacher.split('/')[2]
-
-      // Add to behavior types
-      results[teacherId].mathVocabulary += row.mathVocabulary
-      results[teacherId].askingQuestions += row.askingQuestions
-      results[teacherId].mathConcepts += row.mathConcepts
-      results[teacherId].helpingChildren += row.helpingChildren
-
-      results[teacherId].counting += row.counting
-      results[teacherId].shapes += row.shapes
-      results[teacherId].patterns += row.patterns
-      results[teacherId].measurement += row.measurement
-
-      results[teacherId].notAtCenter += row.noOpportunity
-      results[teacherId].support += row.support
-      results[teacherId].noSupport += row.noSupport
-
-      results[teacherId].childOtherTotal += row.childOther;
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions += row.noSupport + row.support
-
-      var tempTotal = row.noSupport + row.noOpportunity + row.support;
-      results[teacherId].totalInstructionsChild += tempTotal;
-
-      results[teacherId].childMathTotal += tempTotal - row.childOther;
+    for (let rowIndex in data) {
+      let row = data[rowIndex]
+      let teacherId = row.teacher.split('/')[2]
+      results[teacherId].totalInstructions++
+      if (row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+        results[teacherId].noInteraction += row.childOther
+        results[teacherId].childDenominator += row.total
+      }
+      if (row.peopletype === 3) {
+        results[teacherId].support += row.support
+        results[teacherId].noSupport += row.noSupport
+        results[teacherId].teacherDenominator += row.support + row.noSupport
+      }
+      // if (row.peopletype === 2 || row.peopletype === 3) {
+      //   if (row.counting || row.shapes || row.patterns || row.measurement) {
+      //     results[teacherId].engaged++
+      //   } else if (row.counting === 0 && row.shapes === 0 && row.patterns === 0 && row.measurement === 0) {
+      //     results[teacherId].noInteraction++
+      //   }
+      //   results[teacherId].childDenominator++
+      // }
+      // if (row.peopletype === 3) {
+      //   if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
+      //     results[teacherId].support++
+      //   } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
+      //     results[teacherId].noSupport++
+      //   }
+      //   results[teacherId].teacherDenominator++
+      // }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for (var resultsIndex in results) {
-      var result = results[resultsIndex]
-
-      var tempTotalInstructions = result.totalInstructions
-
-      result.mathVocabularyAverage =
-        result.mathVocabulary > 0
-          ? (result.mathVocabulary / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.askingQuestionsAverage =
-        result.askingQuestions > 0
-          ? (result.askingQuestions / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.mathConceptsAverage =
-        result.mathConcepts > 0
-          ? (result.mathConcepts / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.helpingChildrenAverage =
-        result.helpingChildren > 0
-          ? (result.helpingChildren / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-      result.countingAverage =
-        result.counting > 0
-          ? (result.counting / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.shapesAverage =
-        result.shapes > 0
-          ? (result.shapes / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.patternsAverage =
-        result.patterns > 0
-          ? (result.patterns / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.measurementAverage =
-        result.measurement > 0
-          ? (result.measurement / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-      result.notAtCenterAverage =
-        result.notAtCenter > 0
-          ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.supportAverage =
-        result.support > 0
-          ? (result.support / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.noSupportAverage =
-        result.noSupport > 0
-          ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-      result.childOtherAverage = result.childOtherTotal > 0 ? (result.childOtherTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
-      //result.childMathAverage = result.childMathTotal > 0 ? (result.childMathTotal / result.totalInstructionsChild).toFixed(2) * 100 : 0;
-      result.childMathAverage = 100 - result.childOtherAverage
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex]
+      
+      if (result.teacherDenominator > 0) {
+        result.support = result.support/result.teacherDenominator * 100
+        result.noSupport = result.noSupport/result.teacherDenominator * 100
+      } else {
+        result.support = 0
+        result.noSupport = 0
+      }
+      if (result.totalInstructions > 0) {
+        result.engaged = result.engaged/result.childDenominator * 100
+        result.noInteraction = result.noInteraction/result.childDenominator * 100
+      } else {
+        result.engaged = 0
+        result.noInteraction = 0
+      }
     }
-
+    
     return results
   }
 
@@ -777,121 +722,54 @@ class AveragesData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
-
-    // Add each teacher to the object
-    var tempName = ''
-    for (var teacherIndex in teachers) {
-      tempName =
-        teachers[teacherIndex].firstName + ' ' + teachers[teacherIndex].lastName
-
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalInstructions: 0,
-        sequentialActivities: 0,
-        drawImages: 0,
-        demonstrateSteps: 0,
-        actOut: 0,
-        notAtCenter: 0,
-        noSupport: 0,
+        name: `${teachers[teacherIndex]. firstName} ${teachers[teacherIndex].lastName}`,
+        teacherDenominator: 0,
+        childDenominator: 0,
         support: 0,
-        materials: 0,
-        drawing: 0,
-        playing: 0,
-        speaking: 0,
-        childNonSequential:0,
-        totalChildInstructions:0,
+        noSupport: 0,
+        engaged: 0,
+        noInteraction: 0,
+        totalInstructions: 0
       }
     }
 
-    // Get number of instances for each type of data
-    for (var rowIndex in data) {
-      var row = data[rowIndex]
-
-      var teacherId = row.teacher.split('/')[2]
-
-      // Add to behavior types
-      results[teacherId].sequentialActivities += row.sequentialActivities
-      results[teacherId].drawImages += row.drawImages
-      results[teacherId].actOut += row.actOut
-      results[teacherId].demonstrateSteps += row.demonstrateSteps
-
-      results[teacherId].materials += row.materials
-      results[teacherId].drawing += row.drawing
-      results[teacherId].playing += row.playing
-      results[teacherId].speaking += row.speaking
-
-      results[teacherId].notAtCenter += row.notAtCenter
-      results[teacherId].support += row.support
-      results[teacherId].noSupport += row.noSupport
-
-      results[teacherId].childNonSequential += row.childNonSequential;
-
-      // Calculate the total Number of instructions
-      //results[teacherId].totalInstructions += row.noSupport + row.notAtCenter + row.support
-      results[teacherId].totalInstructions += row.noSupport + row.support;
-      results[teacherId].totalChildInstructions += row.notAtCenter + row.noSupport + row.support;
-
+    for (let rowIndex in data) {
+      let row = data[rowIndex]
+      let teacherId = row.teacher.split('/')[2]
+      results[teacherId].totalInstructions++
+      if (row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].engaged += Math.max(row.materials, row.drawing, row.playing, row.speaking)
+        results[teacherId].noInteraction += row.childNonSequential
+        results[teacherId].childDenominator += row.total
+      }
+      if (row.peopletype === 3) {
+        results[teacherId].support += row.support
+        results[teacherId].noSupport += row.noSupport
+        results[teacherId].teacherDenominator += row.support + row.noSupport
+      }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for (var resultsIndex in results) {
-      var result = results[resultsIndex]
-
-      var tempTotalInstructions = result.totalInstructions
-
-      result.sequentialActivitiesAverage =
-        result.sequentialActivities > 0
-          ? (result.sequentialActivities / tempTotalInstructions).toFixed(2) *
-            100
-          : 0
-      result.drawImagesAverage =
-        result.drawImages > 0
-          ? (result.drawImages / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.actOutAverage =
-        result.actOut > 0
-          ? (result.actOut / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.demonstrateStepsAverage =
-        result.demonstrateSteps > 0
-          ? (result.demonstrateSteps / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-      result.materialsAverage =
-        result.materials > 0
-          ? (result.materials / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.drawingAverage =
-        result.drawing > 0
-          ? (result.drawing / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.playingAverage =
-        result.playing > 0
-          ? (result.playing / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.speakingAverage =
-        result.speaking > 0
-          ? (result.speaking / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-      result.notAtCenterAverage =
-        result.notAtCenter > 0
-          ? (result.notAtCenter / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.supportAverage =
-        result.support > 0
-          ? (result.support / tempTotalInstructions).toFixed(2) * 100
-          : 0
-      result.noSupportAverage =
-        result.noSupport > 0
-          ? (result.noSupport / tempTotalInstructions).toFixed(2) * 100
-          : 0
-
-        result.childNonSequentialAverage = result.childNonSequential > 0 ? (result.childNonSequential / result.totalChildInstructions).toFixed(2) * 100 : 0;
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex]
+      
+      if (result.teacherDenominator > 0) {
+        result.support = result.support/result.teacherDenominator * 100
+        result.noSupport = result.noSupport/result.teacherDenominator * 100
+      } else {
+        result.support = 0
+        result.noSupport = 0
+      }
+      if (result.childDenominator > 0) {
+        result.engaged = result.engaged/result.childDenominator * 100
+        result.noInteraction = result.noInteraction/result.childDenominator * 100
+      } else {
+        result.engaged = 0
+        result.noInteraction = 0
+      }
     }
-
+    
     return results
   }
 
@@ -1115,158 +993,63 @@ class AveragesData {
    */
   calculateACAverages = (data, teachers) => {
     // Initialize the array that will hold all the data
+    console.log(data)
     var results = {}
 
-    var totalIntervals = 0
-
-    // Add each teacher to the object
-    var tempName = ''
-    for (var teacherIndex in teachers) {
-      tempName =
-        teachers[teacherIndex].firstName + ' ' + teachers[teacherIndex].lastName
-
+    for (let teacherIndex in teachers) {
       results[teachers[teacherIndex].id] = {
-        name: tempName,
-        totalIntervals: 0,
-        totalInstructions: 0,
-
-        childrensPlay: 0,
-        askingQuestions: 0,
-        encouragingChildren: 0,
-        helpingChildren: 0,
-
-        noSequence: 0,
-        formalRules: 0,
-        sequence: 0,
-
+        name: `${teachers[teacherIndex]. firstName} ${teachers[teacherIndex].lastName}`,
+        teacherDenominator: 0,
+        childDenominator: 0,
         support: 0,
         noSupport: 0,
-        notAtCenter: 0,
-
-        childNoInteraction: 0,
+        engaged: 0,
+        noInteraction: 0,
+        totalInstructions: 0
       }
     }
 
-    // Get number of instances for each type of data
-    for (var rowIndex in data) {
-      var row = data[rowIndex]
-
-      var teacherId = row.teacher.split('/')[2]
-
-      // Add to total # of intervals
-      //results[teacherId].totalIntervals += row.total;
-      results[teacherId].totalIntervals++
-
-      // Add to behavior types
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions +=
-        row.teacher1 + row.teacher2 + row.teacher3 + row.teacher4
-
-      // If there were any "Participating in children's play" in this observation
-      if (row.teacher1) {
-        results[teacherId].childrensPlay++
+    for (let rowIndex in data) {
+      let row = data[rowIndex]
+      let teacherId = row.teacher.split('/')[2]
+      results[teacherId].totalInstructions++
+      if (row.peopleType === 2 || row.peopleType === 3) {
+        if (row.child1 || row.child2 || row.child3 || row.child4) {
+          results[teacherId].engaged++
+        } else if (row.child1 === 0 && row.child2 === 0 && row.child3 === 0 && row.child4 === 0) {
+          results[teacherId].noInteraction++
+        }
+        results[teacherId].childDenominator++
       }
-      // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
-      if (row.teacher2) {
-        results[teacherId].askingQuestions++
-      }
-      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-      if (row.teacher3) {
-        results[teacherId].encouragingChildren++
-      }
-      // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-      if (row.teacher4) {
-        results[teacherId].helpingChildren++
-      }
-      if (row.child2) {
-        results[teacherId].noSequence++
-      }
-      if (row.child3) {
-        results[teacherId].formalRules++
-      }
-      if (row.child4) {
-        results[teacherId].sequence++
-      }
-      if( row.childNoInteraction )
-      {
-        results[teacherId].childNoInteraction++;
-      }
-
-      // Check for act types
-      // If teacher was there
-      if (row.peopleType == 3) {
-        // Check for support
+      if (row.peopleType === 3) {
         if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
           results[teacherId].support++
-        }
-        // If there was no support
-        else {
+        } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
           results[teacherId].noSupport++
         }
-      }
-      // Teacher not there
-      else {
-        results[teacherId].notAtCenter++
+        results[teacherId].teacherDenominator++
       }
     }
 
-    // Calculate the averages in percentages
-    // Go through each teacher
-    for (var resultsIndex in results) {
-      var result = results[resultsIndex]
-
-      var tempTotalInstructions = result.totalInstructions
-      var tempTotalIntervals = result.totalIntervals
-
-      let tempTotalIntervalsTeacherPresent = result.totalIntervals - result.notAtCenter;
-
-      result.childrensPlayAverage =
-        result.childrensPlay > 0
-          ? (result.childrensPlay / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.askingQuestionsAverage =
-        result.askingQuestions > 0
-          ? (result.askingQuestions / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.encouragingChildrenAverage =
-        result.encouraging > 0
-          ? (result.encouraging / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.helpingChildrenAverage =
-        result.helpingChildren > 0
-          ? (result.helpingChildren / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-
-      result.noSequenceAverage =
-        result.noSequence > 0
-          ? (result.noSequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.formalRulesAverage =
-        result.formalRules > 0
-          ? (result.formalRules / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.sequenceAverage =
-        result.sequence > 0
-          ? (result.sequence / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-
-      result.supportAverage =
-        result.support > 0
-          ? (result.support / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.noSupportAverage =
-        result.noSupport > 0
-          ? (result.noSupport / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-      result.notAtCenterAverage =
-        result.notAtCenter > 0
-          ? (result.notAtCenter / tempTotalIntervalsTeacherPresent).toFixed(2) * 100
-          : 0
-
-      result.childNoInteractionAverage = result.childNoInteraction > 0 ? (result.childNoInteraction / tempTotalIntervals).toFixed(2) * 100 : 0;
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex]
+      
+      if (result.teacherDenominator > 0) {
+        result.support = result.support/result.teacherDenominator * 100
+        result.noSupport = result.noSupport/result.teacherDenominator * 100
+      } else {
+        result.support = 0
+        result.noSupport = 0
+      }
+      if (result.childDenominator > 0) {
+        result.engaged = result.engaged/result.childDenominator * 100
+        result.noInteraction = result.noInteraction/result.childDenominator * 100
+      } else {
+        result.engaged = 0
+        result.noInteraction = 0
+      }
     }
-
+    
     return results
   }
 }

@@ -316,31 +316,23 @@ class AveragesData {
     // Calculate the site bar averages
     programBar.hlqAverage =
       programBar.hlq > 0
-        ? Math.round(
-            parseFloat((programBar.hlq / Object.keys(results).length).toFixed(2))
-          )
+        ? parseFloat((programBar.hlq / programBar.total).toFixed(2))
         : 0
     programBar.hlqResponseAverage =
       programBar.hlqResponse > 0
-        ? Math.round(
-            parseFloat(
-              (programBar.hlqResponse / Object.keys(results).length).toFixed(2)
+        ? parseFloat(
+              (programBar.hlqResponse / programBar.total).toFixed(2)
             )
-          )
         : 0
     programBar.llqAverage =
       programBar.llq > 0
-        ? Math.round(
-            parseFloat((programBar.llq / Object.keys(results).length).toFixed(2))
-          )
+        ? parseFloat((programBar.llq / programBar.total).toFixed(2))
         : 0
     programBar.llqResponseAverage =
       programBar.llqResponse > 0
-        ? Math.round(
-            parseFloat(
-              (programBar.llqResponse / Object.keys(results).length).toFixed(2)
+        ? parseFloat(
+              (programBar.llqResponse / programBar.total).toFixed(2)
             )
-          )
         : 0
 
     results.programBar = programBar

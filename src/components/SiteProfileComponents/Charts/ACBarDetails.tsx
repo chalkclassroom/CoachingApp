@@ -91,13 +91,15 @@ class ACBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round((teacher['noSupportAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = Math.round((teacher['supportAverage'] + Number.EPSILON) * 100) / 100;
+        var tempNoSupport = Math.round(((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
+        var tempTeacherSupport = Math.round(((teacher['support'] + Number.EPSILON) * 100) / 100);
       }
       else
       {
-        var tempNoSupport = Math.round((teacher['childNoInteractionAverage'] + Number.EPSILON) * 100) / 100;
-        var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
+        var tempNoSupport = Math.round(((teacher['noInteraction'] + Number.EPSILON) * 100) / 100);
+        var tempTeacherSupport = Math.round(((teacher['engaged'] + Number.EPSILON) * 100) / 100);
+    
+        // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
       }
 
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
@@ -128,10 +130,12 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
     siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
+    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;;
+    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
     // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
     let topBarBackgroundColor = "#E20000";

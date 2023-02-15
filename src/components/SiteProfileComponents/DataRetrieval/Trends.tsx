@@ -236,18 +236,28 @@ class TrendData {
       let teacherId = row.teacher.split("/")[2];
       let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));      
       results[teacherId].totalIntervals[rowMonth]++;
-      if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
-        results[teacherId].teacherSupport[rowMonth]++
-        results[teacherId].totalSupport[rowMonth]++
-      } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
-        results[teacherId].noSupport[rowMonth]++
-        results[teacherId].totalSupport[rowMonth]++
+      if (row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].math[rowMonth] += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+        results[teacherId].otherActivities[rowMonth] += row.childOther
+        results[teacherId].totalIntervals[rowMonth] += row.total
       }
-      if (row.counting || row.shapes || row.patterns || row.measurement) {
-        results[teacherId].math[rowMonth]++
-      } else if (row.counting === 0 && row.shapes === 0 && row.patterns === 0 && row.measurement === 0) {
-        results[teacherId].otherActivities[rowMonth]++
+      if (row.peopletype === 3) {
+        results[teacherId].teacherSupport[rowMonth] += row.support
+        results[teacherId].noSupport[rowMonth] += row.noSupport
+        results[teacherId].totalSupport[rowMonth] += row.support + row.noSupport
       }
+      // if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
+      //   results[teacherId].teacherSupport[rowMonth]++
+      //   results[teacherId].totalSupport[rowMonth]++
+      // } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
+      //   results[teacherId].noSupport[rowMonth]++
+      //   results[teacherId].totalSupport[rowMonth]++
+      // }
+      // if (row.counting || row.shapes || row.patterns || row.measurement) {
+      //   results[teacherId].math[rowMonth]++
+      // } else if (row.counting === 0 && row.shapes === 0 && row.patterns === 0 && row.measurement === 0) {
+      //   results[teacherId].otherActivities[rowMonth]++
+      // }
       
     }
   
@@ -614,83 +624,87 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
     tempDate = new Date(tempDate);
     tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
   }
-  
-  console.log(months)
+
   let monthsCount = months.length;
-  for (let teacherIndex in teachers) {
-    results[teachers[teacherIndex].id] = {
-      name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+    for (let teacherIndex in teachers) {
+      results[teachers[teacherIndex].id] = {
+        name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+        totalSupport: new Array(monthsCount).fill(0),
+        totalIntervals: new Array(monthsCount).fill(0),
+        support: new Array(monthsCount).fill(0),
+        sequentialActivities: new Array(monthsCount).fill(0),
+        noSupport: new Array(monthsCount).fill(0),
+        childNonSequential: new Array(monthsCount).fill(0),
+        lineChartLabels: months
+      };
+    }
+  
+    for (let rowIndex in data) {
+      let row = data[rowIndex];
+      let teacherId = row.teacher.split("/")[2];
+      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
+      
+      if (row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].sequentialActivities[rowMonth] += Math.max(row.materials, row.drawing, row.playing, row.speaking)
+        results[teacherId].childNonSequential[rowMonth] += row.childNonSequential
+        results[teacherId].totalIntervals[rowMonth] += row.total
+      }
+      if (row.peopletype === 3) {
+        results[teacherId].support[rowMonth] += row.support
+        results[teacherId].noSupport[rowMonth] += row.noSupport
+        results[teacherId].totalSupport[rowMonth] += row.support + row.noSupport
+      }
+    }
+  
+    let siteBar = {
+      name: "Site Average",
+      totalSupport: new Array(monthsCount).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
       support: new Array(monthsCount).fill(0),
-      noSupport: new Array(monthsCount).fill(0),
       sequentialActivities: new Array(monthsCount).fill(0),
+      noSupport: new Array(monthsCount).fill(0),
       childNonSequential: new Array(monthsCount).fill(0),
-      total: new Array(monthsCount).fill(0),
       lineChartLabels: months
-    };
-  }
+    }
+  
+    console.log(results)
+    for (let resultsIndex in results) {
+      let result = results[resultsIndex];
+  
+      for (let i = 0; i < monthsCount; i++) {
+        siteBar.support[i] += result.support[i]
+        siteBar.noSupport[i] += result.noSupport[i]
+        siteBar.sequentialActivities[i] += result.sequentialActivities[i]
+        siteBar.childNonSequential[i] += result.childNonSequential[i]
 
-  console.log(results)
-
-  for (let rowIndex in data) {
-    let row = data[rowIndex];
-    let teacherId = row.teacher.split("/")[2];
-    let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
-    results[teacherId].support[rowMonth] = row.support; //transition time
-    results[teacherId].noSupport[rowMonth] = row.noSupport;
-    results[teacherId].sequentialActivities[rowMonth] = row.sequentialActivities; //transition time
-    results[teacherId].childNonSequential[rowMonth] = row.childNonSequential;
-    results[teacherId].total[rowMonth] = row.total;
-    console.log(row)
-  }
-  console.log(results);
-  let siteBar = {
-    name: "Site Average",
-    total: new Array(monthsCount).fill(0),
-    support: new Array(monthsCount).fill(0),
-    noSupport: new Array(monthsCount).fill(0),
-    sequentialActivities: new Array(monthsCount).fill(0),
-    childNonSequential: new Array(monthsCount).fill(0),
-  }
-
-  // Calculate the averages in percentages
-  // Go through each teacher
-  for(var resultsIndex in results)
-  {
-    var result = results[resultsIndex];
-
-    // Go through the months
-    for(var i = 0; i < monthsCount; i++)
-    {
-
-      // result.sequentialActivitiesAverage[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.drawImagesAverage[i] = result.drawImages[i] > 0 ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.demonstrateStepsAverage[i] = result.demonstrateSteps[i] > 0 ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.actOutAverage[i] = result.actOut[i] > 0 ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
-      // result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.support[i] = result.support[i] > 0 ? (result.support[i] / result.total[i]) : 0;
-      result.noSupport[i] = result.noSupport[i] > 0 ? (100 - result.support[i]) : 0;
-      result.sequentialActivities[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / result.total[i]) : 0;
-      result.childNonSequential[i] = result.childNonSequential[i] > 0 ? (100 - result.sequentialActivities[i]) : 0;
-      if (isNaN(result.support[i])) {
-        result.support[i] = 0
-      } 
-      if (isNaN(result.noSupport[i])) {
-        result.noSupport[i] = 0
-      } 
-      if (isNaN(result.sequentialActivities[i])) {
-        result.sequentialActivities[i] = 0
-      } 
-      if (isNaN(result.childNonSequential[i])) {
-        result.childNonSequential[i] = 0
-      } 
-
-      siteBar.support[i] = siteBar.support[i] + result.support[i];
-      siteBar.noSupport[i] = siteBar.noSupport[i] + result.noSupport[i]
-      siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] + result.sequentialActivities[i];
-      siteBar.noSupport[i] = siteBar.childNonSequential[i] + result.childNonSequential[i]
-      siteBar.total[i] += result.total[i];
-
+        result.support[i] = parseFloat((result.support[i] / result.totalSupport[i]).toFixed(2)) * 100;
+        result.sequentialActivities[i] = parseFloat((result.sequentialActivities[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100; 
+        result.childNonSequential[i] = parseFloat((result.childNonSequential[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+  
+        if (isNaN(result.support[i])) {
+          result.support[i] = 0
+        } 
+        if (isNaN(result.noSupport[i])) {
+          result.noSupport[i] = 0
+        } 
+        if (isNaN(result.sequentialActivities[i])) {
+          result.sequentialActivities[i] = 0
+        } 
+        if (isNaN(result.childNonSequential[i])) {
+          result.childNonSequential[i] = 0
+        } 
+        siteBar.totalIntervals[i] += result.totalIntervals[i]
+        siteBar.totalSupport[i] += result.totalSupport[i]
+      }
+    }
+  
+    for (let i = 0; i < monthsCount; i++) {
+      siteBar.support[i] = parseFloat((siteBar.support[i] / siteBar.totalSupport[i]).toFixed(2)) * 100;
+      siteBar.sequentialActivities[i] = parseFloat((siteBar.sequentialActivities[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+      siteBar.noSupport[i] = parseFloat((siteBar.noSupport[i] / siteBar.totalSupport[i]).toFixed(2)) * 100; 
+      siteBar.childNonSequential[i] = parseFloat((siteBar.childNonSequential[i] / siteBar.totalIntervals[i]).toFixed(2)) * 100;
+  
       if (isNaN(siteBar.support[i])) {
         siteBar.support[i] = 0
       } 
@@ -704,31 +718,136 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
         siteBar.childNonSequential[i] = 0
       } 
     }
-  }
+  
+    results.siteBar = siteBar;
+    console.log(results)
+    return results;
+  
+  // console.log(months)
+  // let monthsCount = months.length;
+  // for (let teacherIndex in teachers) {
+  //   results[teachers[teacherIndex].id] = {
+  //     name: `${teachers[teacherIndex].firstName} ${teachers[teacherIndex].lastName}`,
+  //     support: new Array(monthsCount).fill(0),
+  //     noSupport: new Array(monthsCount).fill(0),
+  //     sequentialActivities: new Array(monthsCount).fill(0),
+  //     childNonSequential: new Array(monthsCount).fill(0),
+  //     total: new Array(monthsCount).fill(0),
+  //     totalChild: new Array(monthsCount).fill(0),
+  //     lineChartLabels: months
+  //   };
+  // }
 
-  for (let i = 0; i < monthsCount; i++) {
-    siteBar.support[i] = siteBar.support[i] / siteBar.total[i];
-    siteBar.noSupport[i] = 100 - siteBar.support[i];
-    siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] / siteBar.total[i];
-    siteBar.childNonSequential[i] = 100 - siteBar.sequentialActivities[i];
-    if (isNaN(siteBar.support[i])) {
-        siteBar.support[i] = 0
-      } 
-    if (isNaN(siteBar.noSupport[i])) {
-      siteBar.noSupport[i] = 0
-    } 
-    if (isNaN(siteBar.sequentialActivities[i])) {
-      siteBar.sequentialActivities[i] = 0
-    } 
-    if (isNaN(siteBar.childNonSequential[i])) {
-      siteBar.childNonSequential[i] = 0
-    } 
-  }
+  // console.log(results)
+
+  // for (let rowIndex in data) {
+  //   let row = data[rowIndex];
+  //   let teacherId = row.teacher.split("/")[2];
+  //   let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
+  //   if (row.peopleType === 3) {
+  //     results[teacherId].support[rowMonth] = row.support; //transition time
+  //     results[teacherId].noSupport[rowMonth] = row.noSupport;
+  //     results[teacherId].total[rowMonth] = row.total;
+  //   }
+  //   if (row.peopleType === 2 || row.peopleType === 3) {
+  //   results[teacherId].sequentialActivities[rowMonth] = row.sequentialActivities; //transition time
+  //   results[teacherId].childNonSequential[rowMonth] = row.childNonSequential;
+  //   results[teacherId].totalChild[rowMonth] = row.total;
+  //   }
+
+  //   console.log(row)
+  // }
+  // console.log(results);
+  // let siteBar = {
+  //   name: "Site Average",
+  //   total: new Array(monthsCount).fill(0),
+  //   totalChild: new Array(monthsCount).fill(0),
+  //   support: new Array(monthsCount).fill(0),
+  //   noSupport: new Array(monthsCount).fill(0),
+  //   sequentialActivities: new Array(monthsCount).fill(0),
+  //   childNonSequential: new Array(monthsCount).fill(0),
+  //   lineChartLabels: months
+  // }
+
+  // // Calculate the averages in percentages
+  // // Go through each teacher
+  // for(var resultsIndex in results)
+  // {
+  //   var result = results[resultsIndex];
+
+  //   // Go through the months
+  //   for(var i = 0; i < monthsCount; i++)
+  //   {
+
+  //     // result.sequentialActivitiesAverage[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //     // result.drawImagesAverage[i] = result.drawImages[i] > 0 ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //     // result.demonstrateStepsAverage[i] = result.demonstrateSteps[i] > 0 ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //     // result.actOutAverage[i] = result.actOut[i] > 0 ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+
+  //     // result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+  //     result.support[i] = result.support[i] > 0 ? (result.support[i] / result.total[i]) : 0;
+  //     result.noSupport[i] = result.noSupport[i] > 0 ? (100 - result.support[i]) : 0;
+  //     result.sequentialActivities[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / result.totalChild[i]) : 0;
+  //     result.childNonSequential[i] = result.childNonSequential[i] > 0 ? (100 - result.sequentialActivities[i]) : 0;
+  //     if (isNaN(result.support[i])) {
+  //       result.support[i] = 0
+  //     } 
+  //     if (isNaN(result.noSupport[i])) {
+  //       result.noSupport[i] = 0
+  //     } 
+  //     if (isNaN(result.sequentialActivities[i])) {
+  //       result.sequentialActivities[i] = 0
+  //     } 
+  //     if (isNaN(result.childNonSequential[i])) {
+  //       result.childNonSequential[i] = 0
+  //     } 
+
+  //     siteBar.support[i] = siteBar.support[i] + result.support[i];
+  //     siteBar.noSupport[i] = siteBar.noSupport[i] + result.noSupport[i]
+  //     siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] + result.sequentialActivities[i];
+  //     siteBar.noSupport[i] = siteBar.childNonSequential[i] + result.childNonSequential[i]
+  //     siteBar.total[i] += result.total[i];
+  //     siteBar.total[i] += result.totalChild[i];
 
 
-  results.siteBar = siteBar;
-  console.log(results)
-  return results;
+  //     if (isNaN(siteBar.support[i])) {
+  //       siteBar.support[i] = 0
+  //     } 
+  //     if (isNaN(siteBar.noSupport[i])) {
+  //       siteBar.noSupport[i] = 0
+  //     } 
+  //     if (isNaN(siteBar.sequentialActivities[i])) {
+  //       siteBar.sequentialActivities[i] = 0
+  //     } 
+  //     if (isNaN(siteBar.childNonSequential[i])) {
+  //       siteBar.childNonSequential[i] = 0
+  //     } 
+  //   }
+  // }
+
+  // for (let i = 0; i < monthsCount; i++) {
+  //   siteBar.support[i] = siteBar.support[i] / siteBar.total[i];
+  //   siteBar.noSupport[i] = 100 - siteBar.support[i];
+  //   siteBar.sequentialActivities[i] = siteBar.sequentialActivities[i] / siteBar.totalChild[i];
+  //   siteBar.childNonSequential[i] = 100 - siteBar.sequentialActivities[i];
+  //   if (isNaN(siteBar.support[i])) {
+  //       siteBar.support[i] = 0
+  //     } 
+  //   if (isNaN(siteBar.noSupport[i])) {
+  //     siteBar.noSupport[i] = 0
+  //   } 
+  //   if (isNaN(siteBar.sequentialActivities[i])) {
+  //     siteBar.sequentialActivities[i] = 0
+  //   } 
+  //   if (isNaN(siteBar.childNonSequential[i])) {
+  //     siteBar.childNonSequential[i] = 0
+  //   } 
+  // }
+
+
+  // results.siteBar = siteBar;
+  // console.log(results)
+  // return results;
 
 }
 
@@ -1074,18 +1193,21 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
       let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
       console.log(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}))
 
-      results[teacherId].totalIntervals[rowMonth]++;
-      if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
-        results[teacherId].teacherSupport[rowMonth]++
-        results[teacherId].totalSupport[rowMonth]++
-      } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
-        results[teacherId].noSupport[rowMonth]++
+      if (row.peopleType === 3) {
+        if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
+          results[teacherId].teacherSupport[rowMonth]++
+        } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
+          results[teacherId].noSupport[rowMonth]++
+        }
         results[teacherId].totalSupport[rowMonth]++
       }
-      if (row.child1 || row.child2 || row.child3 || row.child4) {
-        results[teacherId].ac[rowMonth]++
-      } else if (row.child1 === 0 && row.child2 === 0 && row.child3 === 0 && row.child4 === 0) {
-        results[teacherId].noAC[rowMonth]++
+      if (row.peopleType === 2 || row.peopleType === 3) {
+        if (row.child1 || row.child2 || row.child3 || row.child4) {
+          results[teacherId].ac[rowMonth]++
+        } else if (row.child1 === 0 && row.child2 === 0 && row.child3 === 0 && row.child4 === 0) {
+          results[teacherId].noAC[rowMonth]++
+        }
+        results[teacherId].totalIntervals[rowMonth]++
       }
       
     }
