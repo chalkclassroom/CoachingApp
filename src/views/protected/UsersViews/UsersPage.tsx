@@ -140,6 +140,16 @@ class UsersPage extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * @brief This function builds an Array of objects containing information for each teacher with a coach and then repeats
+   * the process for each teacher without a coach, joins the arrays, and sorts by teacher last name to be passed as props
+   * 
+   * @param {Array<Objects>} sites - an array of site objects pulled from firestore
+   * @param {Array<Objects>} programs - an array of program objects pulled from firestore
+   * @param {Array<Objects>} teachers - an array of teacher objects pulled from firestore
+   * @param {Array<Objects>} coaches - an arrray of coach objects pulled from firestore
+   * @returns {Array<Objects>} result - an array of all teacher information objects
+   */
   buildTeacherData = async (sites, programs, teachers, coaches) => {
     let result = []
     let seen = []
@@ -328,6 +338,20 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
+  /**
+  * @brief This function takes coachData, siteData, programData and filter as inputs. It then creates an empty array called seen and data. 
+  * The function then maps over coachData and filters the coaches based on the user role (siteLeader or programleader) and filters the coach based on the filter.
+  * If the coach is not archived, the coach data is pushed to the data array with site and program details. 
+  * The function then maps over siteData and filters the site based on the seen array and pushes the site data to the data array with coach and program details. 
+  * The data array is sorted based on siteName.
+  * 
+  * @param {Object} coachData - list of coach data
+  * @param {Object} siteData - list of site data
+  * @param {Object} programData - list of program data
+  * @param {Array} filter - Array of id's (Site/Program) based on user role
+  * @return {Array} data - Array of final data containing site and coach information
+  * 
+  */
   buildSiteData = (coachData, siteData, programData, filter?) => {
     let seen = [];
     let data = [];
@@ -374,6 +398,8 @@ class UsersPage extends React.Component<Props, State> {
     return data;
   }
 
+  //BEGIN - the following functions get data from firebase and store in state variables
+
   setSites = async () => {
     var siteData = await this.context.getSites();
     this.setState({siteData: siteData});
@@ -395,6 +421,8 @@ class UsersPage extends React.Component<Props, State> {
     const coaches = await this.context.getAllCoachesPartners();
     return coaches;
   }
+
+  // END
 
   /** lifecycle method invoked after component mounts */
   componentDidMount = async () => {
@@ -483,7 +511,9 @@ class UsersPage extends React.Component<Props, State> {
 
   }
 
-  // So we can update teacher data in coaches
+  // The following functions are to update the data located in the other child components
+  // by updating the state in this component
+
   updateTeacherData = (teacherData) => {
     this.setState({teacherData: teacherData});
   }

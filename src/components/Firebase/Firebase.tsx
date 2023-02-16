@@ -4345,7 +4345,11 @@ class Firebase {
     }
   }
 
-
+  /**
+   * @brief Retrieves all coaches associated with a specific site
+   * @param siteId Id of the site to retrieve coaches for
+   * @returns Array of objects containing coach name and id
+   */
   fetchSiteCoaches = async (siteId: string) => {
     this.query = this.db.collection('users').where('role', '==', 'coach').where('sites', 'array-contains', siteId);
     const collection = await this.query.get();
@@ -4358,6 +4362,14 @@ class Firebase {
     }));
   }
 
+  /**
+   * 
+   * @brief Retrieves the sites associated with a coach based on the coach's ID
+   * 
+   * @param coachId the ID of the coach whose sites are to be retrieved
+   * 
+   * @return Returns an array of objects containing the name and ID of each site associated with the coach
+   */
   fetchSitesForCoach = async (coachId: string) => {
     let result = []
     if(coachId) {
@@ -4378,7 +4390,14 @@ class Firebase {
     }
     return result;
   }
-
+  
+  /**
+   * @brief Retrieves a list of teachers by their associated site name
+   * 
+   * @param siteName The name of the site to filter teachers by
+   * 
+   * @returns A promise that resolves to an array of objects containing the first name, last name, and id of each teacher associated with the given site name
+   */
   getTeacherBySiteName = async (siteName: string) => {
     this.query = this.db.collection('users').where('school', '==', siteName);
     const collection = await this.query.get();
@@ -4392,6 +4411,15 @@ class Firebase {
     }))
   }
 
+  /**
+   *  @brief  Retrieves all coaches and their respective partners (teachers) from the Firebase Firestore.
+   * 
+   *  This function retrieves all coaches in the 'users' collection where the 'role' field is equal to 'coach'.
+   *  It then retrieves all of the partners (teachers) of each coach through the 'partners' sub-collection.
+   *  The coach and partner data is then added to a result array and returned.
+   * 
+   *  @return Array of objects representing coaches and their partners.
+   */
   getAllCoachesPartners = async () => {
     let result = []
     this.query = this.db.collection('users').where('role', '==', 'coach');
@@ -4422,6 +4450,11 @@ class Firebase {
     return result
   }
 
+  /** 
+  * @brief Retrieves all teachers in the "users" collection in the database, and pushes each teacher's data to the result array.
+  *
+  * @returns {Array} - Result array containing all teachers' data.
+  */
   getAllTeachers = async () => {
     let result = []
     this.query = this.db.collection('users').where('role', '==', 'teacher');
@@ -4446,6 +4479,11 @@ class Firebase {
     return result
   }
 
+  /**
+   * @brief This function gets all the data of teachers from the Firebase Firestore database.
+   * 
+   * @returns {Array} arr - An array of objects containing the coach and teacher data
+   */
   getTeacherData = async () => {
     let arr = []
     let seen = []
@@ -4457,7 +4495,7 @@ class Firebase {
     const allTeachers = await this.query.get()
 
 
-
+    // Iterate over the coaches and get their partners (teachers) from the 'partners' subcollection
     await Promise.all(collection.docs.map(async (coach) => {
       this.query = this.db.collection('users').doc(coach.id).collection('partners');
       const subCollection = await this.query.get();
@@ -4481,6 +4519,7 @@ class Firebase {
       }}))
     }))
 
+    // add the teachers who do not have coaches to the array
     Promise.all(allTeachers.docs.map(async teacher => {
       if (seen.includes(teacher.id) || teacher.id === "rJxNhJmzjRZP7xg29Ko6") {} else {
         arr.push({
@@ -4498,6 +4537,19 @@ class Firebase {
     return arr
   }
 
+  /**
+  * @brief  This function updates the first name, last name, and email of a user in the "users" collection of the Firestore database.
+  * If the role of the user is "coach" and the "archives" flag is set to true, the user will be updated in the "archived" subcollection of the "users" collection.
+  * If the "archives" flag is set to true, the user will also be updated in the "archives" collection.
+  *
+  * @param id (string) The id of the user to be updated
+  * @param changeFirst (string) The new first name of the user
+  * @param changeLast (string) The new last name of the user
+  * @param changeEmail (string) The new email of the user
+  * @param role (string) The role of the user ("teacher" or "coach")
+  * @param archives (boolean) Optional parameter that indicates if the user is archived. Default is false.
+  * @returns void
+  */
   editUserName = async (id: string, changeFirst: string, changeLast: string, changeEmail: string, role: string, archives?: boolean) => {
     if (role === "teacher" || (role === "coach" && archives === false)) {
       this.db.collection("users").doc(id).update({firstName: changeFirst, lastName: changeLast, email: changeEmail})
@@ -4529,6 +4581,18 @@ class Firebase {
     }
   }
 
+  
+  /**
+  * 
+  * @brief This function is used to transfer a teacher from the original coach to a new coach. 
+  * @param teacherId is the id of the teacher to be transferred.
+  * @param originalCoach is the id of the original coach.
+  * @param newCoach is the id of the new coach.
+  * @param siteName is the name of the site where the teacher will be transferred.
+  * @param programId is the id of the program to which the teacher will be transferred.
+  * @returns void
+  *
+  */
   transferTeacher = async (teacherId: string, originalCoach: string, newCoach: string, siteName: string, programId: string ) => {
     if(originalCoach !== "") {
       this.db.collection("users").doc(originalCoach).collection("partners").doc(teacherId).delete()
@@ -4606,6 +4670,18 @@ class Firebase {
     })
   }
 
+  /**
+  * @brief Archives a coach and moves their data from the users collection to the archives
+  * @param coachId - ID of the coach to archive
+  * @param firstName - First name of the coach
+  * @param lastName - Last name of the coach
+  * @param programName - Name of the program the coach is associated with
+  * @param programId - ID of the program the coach is associated with
+  * @param email - Email of the coach
+  * @param userSites - Sites the coach is associated with in the user collection
+  * @param archiveSites - Sites the coach is associated with in the archive collection
+  * @returns void
+  */
   archiveCoach = async (coachId: string, firstName: string, lastName: string, programName: string, programId: string, email: string, userSites, archiveSites) => {
     const collection = await this.db.collection('users').doc(coachId).collection('partners').get()
     const collection2 = await this.db.collection('users').doc(coachId).collection('transferLogs').get()
@@ -4704,6 +4780,11 @@ class Firebase {
     })
   }
 
+  /**
+  * @brief Unarchives a coach and moves their data from the archives to the users collection
+  * @param coachId - ID of the coach to unarchive
+  * @returns void
+  */
   unarchiveCoach = async (coachId: string) => {
     this.db.collection("archives").doc(coachId).delete()
     .catch((error: Error) => {
@@ -4772,6 +4853,18 @@ class Firebase {
 
   }
 
+  /**
+  * @brief Archives a teacher and removes them from a coach's partners list
+  * @param teacherId - ID of the teacher to archive
+  * @param coachId - ID of the coach to remove the teacher from
+  * @param firstName - first name of the teacher
+  * @param lastName - last name of the teacher
+  * @param siteName - name of the teacher's site
+  * @param programName - name of the teacher's program
+  * @param siteId - ID of the teacher's site
+  * @param programId - ID of the teacher's program
+  * @returns void
+  */
   archiveTeacher = async (teacherId: string, coachId: string, firstName: string, lastName: string, siteName: string, programName: string, siteId: string, programId: string) => {
     if (coachId !== "") {
       this.db.collection("users").doc(coachId).collection("partners").doc(teacherId).delete()
@@ -4803,6 +4896,12 @@ class Firebase {
 
   }
 
+  /**
+  * @brief Unarchives a teacher and adds them to a coach's partners list
+  * @param teacherId - ID of the teacher to unarchive
+  * @param coachId - ID of the coach to add the teacher to
+  * @returns the ID of the teacher that has been unarchived
+  */
   unarchiveTeacher = async (teacherId: string, coachId: string) => {
     this.db.collection("archives").doc(teacherId).delete()
     .catch((error: Error) => {
@@ -4824,6 +4923,10 @@ class Firebase {
     }
   }
 
+  /**
+  * @brief Retrieves the list of archived users
+  * @returns Array of archived users objects
+  */
   getArchives = async () => {
     let archives = await this.db.collection('archives').get();
 
@@ -6622,6 +6725,13 @@ class Firebase {
 
   }
 
+  /**
+  * @brief check if the email already exists in the database.
+  * @param email - The email address to check
+  * @param id - The user id if checking archived user also
+  * @param archives - A flag to check if the user is archived or not
+  * @returns true if the email already exists, false otherwise
+  */
   emailExists = async (email: string, id?: string, archives?: boolean) => {
     if (id) {
       let check
@@ -6710,6 +6820,12 @@ class Firebase {
         )
   }
 
+
+  /**
+  * @brief Retrieves the literacy type of a conference plan
+  * @param planId - ID of the plan for which the literacy type is to be retrieved
+  * @returns  the literacy type of the plan
+  */
   getLiteracyType = async (planId: string) => {
     let plan = await this.db.collection("conferencePlans").doc(planId).get().then(async (p) => {
       if (p.exists) {

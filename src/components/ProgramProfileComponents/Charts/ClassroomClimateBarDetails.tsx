@@ -87,7 +87,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
       teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Program Average")
       {
         continue;
       }
@@ -114,16 +114,16 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
 
     var siteAverageSpecificeApproval = new Array(dataSize).fill(0);
-    siteAverageSpecificeApproval[dataSize - 1] = Math.round((data.siteBar.specificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageSpecificeApproval[dataSize - 1] = Math.round((data.programBar.specificapprovalAverage + Number.EPSILON) * 100) / 100;
 
     var siteAverageGeneralApproval = new Array(dataSize).fill(0);
-    siteAverageGeneralApproval[dataSize - 1] = Math.round((data.siteBar.nonspecificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageGeneralApproval[dataSize - 1] = Math.round((data.programBar.nonspecificapprovalAverage + Number.EPSILON) * 100) / 100;
 
     var siteAverageRedirectionAverage = new Array(dataSize).fill(0);
-    siteAverageRedirectionAverage[dataSize - 1] = Math.round((data.siteBar.redirectionAverage + Number.EPSILON) * 100) / 100;
+    siteAverageRedirectionAverage[dataSize - 1] = Math.round((data.programBar.redirectionAverage + Number.EPSILON) * 100) / 100;
 
     var siteAverageDisapprovalAverage = new Array(dataSize).fill(0);
-    siteAverageDisapprovalAverage[dataSize - 1] = Math.round((data.siteBar.disapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageDisapprovalAverage[dataSize - 1] = Math.round((data.programBar.disapprovalAverage + Number.EPSILON) * 100) / 100;
 
 
     // Use that data to create our dataset

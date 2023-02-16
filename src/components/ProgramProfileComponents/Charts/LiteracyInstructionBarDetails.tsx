@@ -1,39 +1,40 @@
 import * as React from "react";
-import * as PropTypes from "prop-types";
-import { HorizontalBar, Bar } from "react-chartjs-2";
-import * as Constants from "../../constants/Constants";
+import { Bar } from "react-chartjs-2";
 
-import {withStyles} from '@material-ui/core'
-
-// Set array so we can edit the label on top of the Chart based on type
-const chartTitleArr = {
-  bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
-  childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
+interface Props {
+    data: Array<Object>
+    LI: String
 }
 
-const averageLine = {
-    width: '80%',
-    marginRight: '15px',
-    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
+interface State {
+    teacherNames: Array<String>
+    chartTitle: String
+    barColors: Array<String>
+    averageLineWrapStyle: {
+        display: String
+        alignItems: String
+        justifyContent: String
+        marginBottom: Number
+        height: String
+        width: String
+        position: String
+        left: String
+        top: String
+    }
+    dataSets: Array<Object>
 }
-
-
 
 
 /**
- * Horizontal Bar Graph for Math Child Behaviors
- * @class EngagementBarDetails
+ * Horizontal Bar Graph for LiteracyInstructionBarDetails
+ * @class LiteracyInstructionBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class LiteracyInstructionBarDetails extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       teacherNames: [],
@@ -56,9 +57,9 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
   // What to do when the data is recieved
   componentDidUpdate(nextProps) {
-    const { data, type } = this.props
+    const { data} = this.props
 
-    if (nextProps.data !== data || nextProps.type !== type) {
+    if (nextProps.data !== data) {
       this.setData();
     }
   }
@@ -68,100 +69,86 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
   }
 
   setData = () => {
-    const { data, type } = this.props
+    const { data } = this.props
 
+    let teacherNames = [];
+    let literacyInstruction = [];
+    let noBehaviors = [];
 
-    var teacherNames = [];
-    var graphData = {};
-
-
-    var hlqAverage = [];
-    var llqAverage = [];
-    for(var teacherIndex in data)
+    for(let teacherIndex in data)
     {
-
-      // Create Names to display as labels
-      var teacher = data[teacherIndex];
+      let teacher = data[teacherIndex];
       teacherNames.push(teacher.name);
-
-      // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Program Average")
       {
         continue;
       }
 
-
-      if(teacher.totalInstructions > 0)
-      {
-        let tempHlqAverage = Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100;
-        let tempLlqAverage = 100 - tempHlqAverage;
-
-        hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        llqAverage.push(tempLlqAverage);
-
-      }
-      else
-      {
-        hlqAverage.push(0);
-        llqAverage.push(0);
-      }
-
+      literacyInstruction.push(Math.round((teacher['totalInstruction'] + Number.EPSILON) * 100) / 100);
+      noBehaviors.push(Math.round((teacher['noBehaviors'] + Number.EPSILON) * 100) / 100);
     }
 
+    let dataSize = Object.keys(data).length
+    let siteAverageLiteracyInstruction = new Array(dataSize).fill(0)
+    let siteAverageNoBehaviors = new Array(dataSize).fill(0)
+    
+    siteAverageLiteracyInstruction[dataSize - 1] = Math.round((data.programBar.totalInstruction + Number.EPSILON) * 100) / 100;
+    siteAverageNoBehaviors[dataSize - 1] = Math.round((data.programBar.noBehaviors + Number.EPSILON) * 100) / 100;
 
-    // We need to set the site average data
-    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    var dataSize = Object.keys(data).length;
+    let instructionLabel = "";
+    let siteAverageInstructionLabel = "";
 
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
-
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
-
+    switch(this.props.LI) {
+        case  "foundationSkills":
+            instructionLabel = "Foundational Skills Instruction";
+            siteAverageInstructionLabel = "Foundational Skills Site Average";
+            break;
+        case  "writing":
+            instructionLabel = "Writing Instruction";
+            siteAverageInstructionLabel = "Writing Site Average";
+            break;
+        case  "bookReading":
+            instructionLabel = "Book Reading Instruction";
+            siteAverageInstructionLabel = "Book Reading Site Average";
+            break;
+        case  "languageEnvironment":
+            instructionLabel = "Supporting Language Development";
+            siteAverageInstructionLabel = "Supporting Language Development Site Average";
+            break;
+    }
 
     // Use that data to create our dataset
     var dataSets = [
       {
-        label: 'High Level Instruction',
-        data: hlqAverage,
-        backgroundColor: "#38761D",
+        label: instructionLabel,
+        data: literacyInstruction,
+        backgroundColor: "#C4395A",
       },
       {
-        label: 'Low Level Instruction',
-        data: llqAverage,
-        backgroundColor: "#1155CC",
+        label: 'No Target Behaviors Observed',
+        data: noBehaviors,
+        backgroundColor: "#E5E5E5",
       },
 
       // The total Site Averages
       {
-        label: 'High Level Instruction Site Average',
-        data: siteAverageHlqAverage,
+        label: siteAverageInstructionLabel,
+        data: siteAverageLiteracyInstruction,
         backgroundColor: "#FFF",
-        borderColor: "#38761D",
+        borderColor: "#C4395A",
         borderWidth: 4,
       },
       {
-        label: 'Low Level Instruction Site Average',
-        data: siteAverageLlqAverage,
+        label: 'No Target Behaviors Observed Site Average',
+        data: siteAverageNoBehaviors,
         backgroundColor: "#FFF",
-        borderColor: "#1155CC",
+        borderColor: "#E5E5E5",
         borderWidth: 4,
       },
     ]
 
-    this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
+    this.setState({teacherNames: teacherNames, dataSets: dataSets});
 
-  }
-
-
-  randomRgbColor() {
-    return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
-  }
-
-  randomInteger(max) {
-      return Math.floor(Math.random()*(max + 1));
   }
 
 
@@ -170,7 +157,6 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: this.state.teacherNames,
       datasets: this.state.dataSets
@@ -194,15 +180,12 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
     return (
       <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Level of Instruction</h2>
-      <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Literacy Instruction</h2>
+        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
               animation: {
-                onComplete: function(): void {
-                  isCompleted ? isCompleted() : null
-                }
               },
               scales: {
                 yAxes: [
@@ -263,7 +246,6 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                 position: 'bottom',
               },
               title: {
-                display: this.props.title,
                 text: this.state.chartTitle,
                 fontSize: 14,
                 fontColor: 'black',
@@ -299,4 +281,4 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default LevelOfInstructionBarDetails;
+export default LiteracyInstructionBarDetails;
