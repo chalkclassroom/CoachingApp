@@ -121,48 +121,23 @@ class RadioSets extends React.Component<Props, {}> {
       return (
         <Grid container style={centerRow}>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Using Math Vocabulary"
-                  value="mathVocabularyAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Asking Questions About Math Concepts"
-                  value="askingQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Demonstrating Math Concepts"
-                  value="mathConceptsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping Children Use Math to Problem Solve"
-                  value="helpingChildrenAverage"
+                  label="Teacher Behaviors"
+                  value="teacherAverage"
                 />
               </FormGroup>
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
+                  label="Child Behaviors"
+                  value="childAverage"
                 />
               </FormGroup>
             </FormControl>
@@ -321,55 +296,30 @@ class RadioSets extends React.Component<Props, {}> {
     if (this.props.type === 'associativeAndCooperative') {
       return (
         <Grid container style={centerRow}>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Participating in children's play"
-                  value="childrensPlayAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Asking questions to extend children's thinking about their shared activity"
-                  value="askingQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Encouraging children to share, work, or interact with each other"
-                  value="encouragingChildrenAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping children find the words to communicate"
-                  value="helpingChildrenAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
+        <Grid item xs={6}>
+          <FormControl component="fieldset" className={"checkboxesform"}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Radio />}
+                label="Teacher Behaviors"
+                value="teacherAverage"
+              />
+            </FormGroup>
+          </FormControl>
         </Grid>
-      )
+        <Grid item xs={6}>
+          <FormControl component="fieldset" className={"checkboxesform"}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Radio />}
+                label="Child Behaviors"
+                value="childAverage"
+              />
+            </FormGroup>
+          </FormControl>
+        </Grid>
+      </Grid>
+        )
     }
   }
 }

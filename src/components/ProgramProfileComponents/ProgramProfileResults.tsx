@@ -52,6 +52,10 @@ import RadioSets from './RadioSets'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
+import ACBarDetails from './Charts/ACBarDetails'
+import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
+import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
+import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -109,6 +113,10 @@ const LineGraphOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
+  legend: {
+    display: false,
+    position: 'top',
+  },
   tooltips: {
     mode: 'index',
     intersect: false,
@@ -182,7 +190,7 @@ const practicesArr = {
 const radioValueArr = {
   transitionTime: 'lineAverage',
   classroomClimate: 'nonspecificapprovalAverage',
-  mathInstruction: 'mathVocabularyAverage',
+  mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
@@ -191,7 +199,7 @@ const radioValueArr = {
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
   languageEnvironment: 'languageEnvironmentAverage',
-  associativeAndCooperative: 'childrensPlayAverage',
+  associativeAndCooperative: 'teacherAverage',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -537,7 +545,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'mathInstruction':
-        averages = this.state.averagesClass.calculateMathAverages( data, teachers )
+        averages = this.state.averagesClass.calculateMathAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'levelOfInstruction':
@@ -545,11 +553,11 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate, this.state.siteNames )
         break
       case 'studentEngagement':
-        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers )
+        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'listeningToChildren':
-        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teachers )
+        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'sequentialActivities':
@@ -573,7 +581,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
-        averages = this.state.averagesClass.calculateACAverages(data, teachers)
+        averages = this.state.averagesClass.calculateACAverages(data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, endDate )
         break
 
@@ -903,10 +911,8 @@ class ProgramProfileResults extends React.Component {
   handleRadioChange = (event: SelectChangeEvent) => {
     this.setState({ radioValue: event.target.value })
 
-    this.setLineGraphData(this.state.siteNames, event.target.value)
-
     let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
-      key.includes(event.target.value)).reduce((obj, key) => {
+      key.includes(this.state.selectedSite)).reduce((obj, key) => {
         return Object.assign(obj, {
           [key]: this.state.BQData[key]
         })
@@ -954,17 +960,17 @@ class ProgramProfileResults extends React.Component {
     // let modifiedInfo = this.state.BQData.filter(site => {
     //   return site.id == event.target.value
     // })
-    // if (this.props.observationType === "studentEngagement") {
-    //   if (event.target.value != 'None') {
-    //     LineGraphOptions.legend.display = true
-    //     LineGraphOptions.legend.position = 'bottom'
-    //   } else {
-    //     LineGraphOptions.legend.display = false
-    //   }
-    // } else {
-    //   LineGraphOptions.legend.display = true
-    //   LineGraphOptions.legend.position = 'bottom'
-    // }
+    if (this.props.observationType === "studentEngagement") {
+      if (event.target.value != 'None') {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = 'bottom'
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+    } else {
+      LineGraphOptions.legend.display = true
+      LineGraphOptions.legend.position = 'bottom'
+    }
 
     this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
@@ -1101,6 +1107,7 @@ class ProgramProfileResults extends React.Component {
             {/*
                     The checklists
                 */}
+          {radioObservationTypes.includes(this.props.observationType) ? (
             <RadioGroup
               aria-label="gender"
               name="gender1"
@@ -1110,7 +1117,8 @@ class ProgramProfileResults extends React.Component {
             >
               <RadioSets type={this.props.observationType} />
             </RadioGroup>
-
+            ) : null}
+            
             {/*
                     The chart switcher
                 */}
@@ -1210,25 +1218,25 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
                   {/* Student Engagement Chart */}
-                  {/* {this.props.observationType === 'studentEngagement' ? (
+                  {this.props.observationType === 'studentEngagement' ? (
                     <StudentEngagementBarDetails data={this.state.averages} />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Math Instruction Chart */}
-                  {/* {this.props.observationType === "mathInstruction" ? (
+                  {this.props.observationType === "mathInstruction" ? (
                     <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Listening to Children Chart */}
-                  {/* {this.props.observationType === "listeningToChildren" ? (
+                  {this.props.observationType === "listeningToChildren" ? (
                     <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Sequesntial Activities Chart */}
                   {this.props.observationType === "sequentialActivities" ? (
@@ -1239,12 +1247,12 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
                   {/* Associative and Cooperative Chart */}
-                  {/* {this.props.observationType === "associativeAndCooperative" ? (
+                  {this.props.observationType === "associativeAndCooperative" ? (
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
-                  ) : null} */}
+                  ) : null}
 
 
                   {/* {this.props.observationType === 'transitionTime' ? (

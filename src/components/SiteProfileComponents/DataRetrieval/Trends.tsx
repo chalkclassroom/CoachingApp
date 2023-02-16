@@ -245,19 +245,6 @@ class TrendData {
         results[teacherId].noSupport[rowMonth] += row.noSupport
         results[teacherId].totalSupport[rowMonth] += row.support + row.noSupport
       }
-      // if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
-      //   results[teacherId].teacherSupport[rowMonth]++
-      //   results[teacherId].totalSupport[rowMonth]++
-      // } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
-      //   results[teacherId].noSupport[rowMonth]++
-      //   results[teacherId].totalSupport[rowMonth]++
-      // }
-      // if (row.counting || row.shapes || row.patterns || row.measurement) {
-      //   results[teacherId].math[rowMonth]++
-      // } else if (row.counting === 0 && row.shapes === 0 && row.patterns === 0 && row.measurement === 0) {
-      //   results[teacherId].otherActivities[rowMonth]++
-      // }
-      
     }
   
     let siteBar = {
@@ -551,12 +538,12 @@ class TrendData {
     let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
 
     console.log(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}))
-    results[teacherId].totalIntervals[rowMonth] = row.count
+    results[teacherId].totalIntervals[rowMonth] += row.count
     if (row.listening7) {
-      results[teacherId].noBehaviors[rowMonth]++;
+      results[teacherId].noBehaviors[rowMonth] += row.listening7;
     }
     if (row.listening1 || row.listening2 || row.listening3 || row.listening4 || row.listening5 || row.listening6) {
-      results[teacherId].listeningInstruction[rowMonth] = Math.max(row.listening1, row.listening2, row.listening3, row.listening4, row.listening5, row.listening6)
+      results[teacherId].listeningInstruction[rowMonth] += Math.max(row.listening1, row.listening2, row.listening3, row.listening4, row.listening5, row.listening6)
     }
   }
 

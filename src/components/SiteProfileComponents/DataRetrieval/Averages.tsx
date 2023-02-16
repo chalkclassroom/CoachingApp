@@ -332,22 +332,6 @@ class AveragesData {
         results[teacherId].noSupport += row.noSupport
         results[teacherId].teacherDenominator += row.support + row.noSupport
       }
-      // if (row.peopletype === 2 || row.peopletype === 3) {
-      //   if (row.counting || row.shapes || row.patterns || row.measurement) {
-      //     results[teacherId].engaged++
-      //   } else if (row.counting === 0 && row.shapes === 0 && row.patterns === 0 && row.measurement === 0) {
-      //     results[teacherId].noInteraction++
-      //   }
-      //   results[teacherId].childDenominator++
-      // }
-      // if (row.peopletype === 3) {
-      //   if (row.mathVocabulary || row.askingQuestions || row.mathConcepts || row.helpingChildren) {
-      //     results[teacherId].support++
-      //   } else if (row.mathVocabulary === 0 && row.askingQuestions === 0 && row.mathConcepts === 0 && row.helpingChildren === 0) {
-      //     results[teacherId].noSupport++
-      //   }
-      //   results[teacherId].teacherDenominator++
-      // }
     }
 
     for (let resultsIndex in results) {
