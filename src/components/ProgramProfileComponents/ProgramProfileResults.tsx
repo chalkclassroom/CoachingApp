@@ -56,6 +56,8 @@ import ACBarDetails from './Charts/ACBarDetails'
 import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
 import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
+import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
+import ClassroomClimateTrends from './Charts/ClassroomClimateTrends'
 
 const StyledSelect = withStyles({
   root: {
@@ -189,7 +191,7 @@ const practicesArr = {
 // Array used to match the default radio value based on the type
 const radioValueArr = {
   transitionTime: 'lineAverage',
-  classroomClimate: 'nonspecificapprovalAverage',
+  classroomClimate: 'teacherApprovals',
   mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
@@ -541,7 +543,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
-        averages = this.state.averagesClass.calculateClimateAverage( data, teachers )
+        averages = this.state.averagesClass.calculateClimateAverage( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'mathInstruction':
@@ -788,7 +790,7 @@ class ProgramProfileResults extends React.Component {
     })
 
     var tempData = {
-      label: `Site Average ${label1}`,
+      label: `Program Average ${label1}`,
       data: chosenData,
       borderColor: color1,
       borderDash: [10,5],
@@ -813,7 +815,7 @@ class ProgramProfileResults extends React.Component {
       }
 
       var tempData = {
-        label: `Site Average ${label2}`,
+        label: `Program Average ${label2}`,
         data: chosenData,
         borderColor: color2,
         borderDash: [10,5],
@@ -1118,6 +1120,22 @@ class ProgramProfileResults extends React.Component {
               <RadioSets type={this.props.observationType} />
             </RadioGroup>
             ) : null}
+
+            {/*
+                Radio buttons for the Classrom Climate Trends.
+                Note: gotta do this seperately because the radio buttons only show on trends for this observation type
+            */}
+            {this.props.observationType == "classroomClimate" && this.state.tabState == 1 ? (
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={this.state.radioValue}
+                onChange={this.handleRadioChange}
+                style={{ width: '100%' }}
+              >
+                <RadioSets type={this.props.observationType} />
+              </RadioGroup>
+            ) : null}
             
             {/*
                     The chart switcher
@@ -1144,6 +1162,7 @@ class ProgramProfileResults extends React.Component {
               {this.state.showErrorMessage ? (
                 <h1>{this.state.errorMessage}</h1>
               ) : null}
+
               {(this.state.tabState == 1 &&
                 Object.keys(this.state.averages).length > 0) == 1 ? (<>
                   <FormControl variant="outlined">
@@ -1168,12 +1187,23 @@ class ProgramProfileResults extends React.Component {
                   container
                   justify={'center'}
                   direction={'column'}
-                  style={{ height: 500 }}
+                  style={{ minHeight: 500 }}
                 >
-                  <Line
-                    data={this.state.lineGraphData}
-                    options={LineGraphOptions}
-                  />
+                  {this.props.observationType !== "classroomClimate" ? (
+                    <Line
+                      data={this.state.lineGraphData}
+                      options={LineGraphOptions}
+                    />
+                  ) : null}
+                  {/* Classroom Climate Trends */}
+                  {this.props.observationType === "classroomClimate" ? (
+                    <ClassroomClimateTrends
+                      data={this.state.trends}
+                      options={LineGraphOptions}
+                      selectedTeacher={this.state.selectedSite}
+                      radioValue={this.state.radioValue}
+                    />
+                  ) : null}
                 </Grid>
               </>) : this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 ? (
@@ -1208,9 +1238,9 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
                   {/* Classroom Climate Chart */}
-                  {/* {this.props.observationType === 'classroomClimate' ? (
+                  {this.props.observationType === 'classroomClimate' ? (
                     <ClassroomClimateBarDetails data={this.state.averages} />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Level of Instruction Chart */}
                   {this.props.observationType === 'levelOfInstruction' ? (

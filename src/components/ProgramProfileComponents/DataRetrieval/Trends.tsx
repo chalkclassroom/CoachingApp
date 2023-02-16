@@ -14,12 +14,8 @@ class TrendData {
      // Initialize the array that will hold all the data
      var results = {};
 
-     var totalIntervals = 0;
-
      // Get start month and year
      const startMonth = startDate.getMonth();
-
-     const endMonth = endDate.getMonth();
 
      // Build list of month between start date and end date
      var tempDate = startDate.toLocaleDateString('en-us', {year:"numeric", month:"short"});
@@ -40,27 +36,12 @@ class TrendData {
      var tempName = "";
      for(var siteIndex in sites)
      {
-
        results[siteIndex] = {
          name: tempName,
-         line: new Array(monthsCount).fill(0),
-         traveling: new Array(monthsCount).fill(0),
-         waiting: new Array(monthsCount).fill(0),
-         routines: new Array(monthsCount).fill(0),
-         behaviorManagement: new Array(monthsCount).fill(0),
-         other: new Array(monthsCount).fill(0),
          total: new Array(monthsCount).fill(0),
-
-         lineAverage: new Array(monthsCount).fill(0),
-         travelingAverage: new Array(monthsCount).fill(0),
-         waitingAverage: new Array(monthsCount).fill(0),
-         routinesAverage: new Array(monthsCount).fill(0),
-         behaviorManagementAverage: new Array(monthsCount).fill(0),
-         otherAverage: new Array(monthsCount).fill(0),
-
-         lineChartLabels: months,
+         sessionTotal: new Array(monthsCount).fill(0),
+         lineChartLabels: months
        };
-
      }
 
 
@@ -85,18 +66,17 @@ class TrendData {
          rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
          // Add to behavior types
-         results[siteIndex].line[rowMonth] +=  row.line;
-
-         results[siteIndex].traveling[rowMonth] += row.traveling;
-         results[siteIndex].waiting[rowMonth] += row.waiting;
-         results[siteIndex].routines[rowMonth] += row.routines;
-         results[siteIndex].behaviorManagement[rowMonth] += row.behaviorManagement;
-         results[siteIndex].other[rowMonth] += row.other;
-
-         // Calculate the total Number of instructions
-         results[siteIndex].total[rowMonth] += row.total;
+         results[siteIndex].total[rowMonth] = row.total; //transition time
+         results[siteIndex].sessionTotal[rowMonth] = row.sessionTotal; //activity time
        }
      }
+
+     let programBar = {
+      name: "Program Average",
+      total: new Array(monthsCount).fill(0),
+      sessionTotal: new Array(monthsCount).fill(0),
+      lineChartLabels: months
+    }
 
      // Calculate the averages in percentages
      // Go through each teacher
@@ -109,18 +89,38 @@ class TrendData {
        {
          var tempTotalInstructions = result.total[i];
 
-         result.lineAverage[i] = result.line[i] > 0 ? (result.line[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.travelingAverage[i] = result.traveling[i] > 0 ? (result.traveling[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.waitingAverage[i] = result.waiting[i] > 0 ? (result.waiting[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.routinesAverage[i] = result.routines[i] > 0 ? (result.routines[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.behaviorManagementAverage[i] = result.behaviorManagement[i] > 0 ? (result.behaviorManagement[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.otherAverage[i] = result.other[i] > 0 ? (result.other[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-
+         result.total[i] = result.total[i] / result.sessionTotal[i];
+        result.sessionTotal[i] = 100 - result.total[i];
+        if (isNaN(result.total[i])) {
+          result.total[i] = 0
+        } 
+        if (isNaN(result.sessionTotal[i])) {
+          result.sessionTotal[i] = 0
+        } 
+        programBar.total[i] = programBar.total[i] + result.total[i];
+        programBar.sessionTotal[i] = programBar.sessionTotal[i] + result.sessionTotal[i];
+        if (isNaN(programBar.total[i])) {
+          programBar.total[i] = 0
+        } 
+        if (isNaN(programBar.sessionTotal[i])) {
+          programBar.sessionTotal[i] = 0
+        } 
        }
      }
 
-     return results;
+     for (let i = 0; i < monthsCount; i++) {
+      programBar.total[i] = programBar.total[i] / programBar.sessionTotal[i];
+      programBar.sessionTotal[i] = 100 - programBar.total[i];
+      if (isNaN(programBar.total[i])) {
+        programBar.total[i] = 0
+      }
+      if (isNaN(programBar.sessionTotal[i])) {
+        programBar.sessionTotal[i] = 0
+      }
+    }
 
+    results.programBar = programBar;
+    return results;
    }
 
    /*
@@ -165,11 +165,14 @@ class TrendData {
          specificapproval: new Array(monthsCount).fill(0),
          disapproval: new Array(monthsCount).fill(0),
          redirection: new Array(monthsCount).fill(0),
+         tone: new Array(monthsCount).fill(0),
+         toneCount: new Array(monthsCount).fill(0),
 
          nonspecificapprovalAverage: new Array(monthsCount).fill(0),
          specificapprovalAverage: new Array(monthsCount).fill(0),
          disapprovalAverage: new Array(monthsCount).fill(0),
          redirectionAverage: new Array(monthsCount).fill(0),
+         toneAverage: new Array(monthsCount).fill(0),
 
          lineChartLabels: months,
        };
@@ -191,16 +194,19 @@ class TrendData {
 
          //rowMonth = new Date(row.startDate.value).getMonth();
          rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-
-
-         // Add to behavior types
-         // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+         
          if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
          {
            results[siteIndex][row.behaviorResponse][rowMonth] +=  row.count;
            results[siteIndex].total[rowMonth] += row.count;
          }
-
+         else
+         {
+           console.log("Tone Rating : ", row);
+  
+           results[siteIndex].tone[rowMonth] +=  row.toneRating;
+           results[siteIndex].toneCount[rowMonth]++;
+         }
        }
      }
 
@@ -213,13 +219,14 @@ class TrendData {
        // Go through the months
        for(var i = 0; i < monthsCount; i++)
        {
-         var tempTotalInstructions = result.total[i];
+        var tempTotalInstructions = result.total[i];
 
-         result.nonspecificapprovalAverage[i] = result.nonspecificapproval[i] > 0 ? (result.nonspecificapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.specificapprovalAverage[i] = result.specificapproval[i] > 0 ? (result.specificapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.disapprovalAverage[i] = result.disapproval[i] > 0 ? (result.disapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-         result.redirectionAverage[i] = result.redirection[i] > 0 ? (result.redirection[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.nonspecificapprovalAverage[i] = result.nonspecificapproval[i] > 0 ? (result.nonspecificapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.specificapprovalAverage[i] = result.specificapproval[i] > 0 ? (result.specificapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.disapprovalAverage[i] = result.disapproval[i] > 0 ? (result.disapproval[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+        result.redirectionAverage[i] = result.redirection[i] > 0 ? (result.redirection[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
 
+        result.toneAverage[i] = result.toneCount[i] > 0 ? (result.tone[i] / result.toneCount[i]) : 0;
        }
      }
 

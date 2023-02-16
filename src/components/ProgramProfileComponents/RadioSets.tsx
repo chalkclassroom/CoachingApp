@@ -82,11 +82,12 @@ class RadioSets extends React.Component<Props, {}> {
       return (
         <Grid container style={centerRow}>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
+                {/*
                 <FormControlLabel
                   control={<Radio />}
-                  label="Nonspecific Approval"
+                  label="General Approval"
                   value="nonspecificapprovalAverage"
                 />
                 <FormControlLabel
@@ -94,12 +95,20 @@ class RadioSets extends React.Component<Props, {}> {
                   label="Specific Approval"
                   value="specificapprovalAverage"
                 />
+                */}
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Teacher Approvals/Disapprovals"
+                  value="teacherApprovals"
+                />
+
               </FormGroup>
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
+                {/*
                 <FormControlLabel
                   control={<Radio />}
                   label="Disapproval"
@@ -109,6 +118,12 @@ class RadioSets extends React.Component<Props, {}> {
                   control={<Radio />}
                   label="Redirection"
                   value="redirectionAverage"
+                />
+                */}
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Teacher Tone"
+                  value="teacherTone"
                 />
               </FormGroup>
             </FormControl>
