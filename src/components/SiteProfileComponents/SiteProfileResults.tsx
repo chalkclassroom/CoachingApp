@@ -1496,49 +1496,6 @@ class SiteProfileResults extends React.Component {
               ) : null}
             </Grid>
 
-            {/*
-              The tone rating slider for the classroom climate observations
-            */}
-            {this.props.observationType == 'classroomClimate' &&
-            Object.keys(this.state.averages).length > 0 &&
-            this.state.tabState == AVERAGES_SUBPAGE ? (
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  position: 'relative',
-                  justifyContent: 'center',
-                  marginBottom: 30,
-                }}
-              >
-                <div style={{ position: 'absolute', left: '-40px' }}>
-                  <h4>Teacher Tone</h4>
-                </div>
-                <div
-                  style={{
-                    width: 'calc(81% - 35px)',
-                    display: 'flex',
-                    flexDirection: 'row',
-                  }}
-                >
-                  {Object.values(this.state.averages).map((value, index) => {
-                    return (
-                      <div style={{ flex: '1', alignItems: 'center' }}>
-                        <h4
-                          style={{
-                            color: '#094492',
-                            textAlign: 'center',
-                            fontWeight: '400',
-                          }}
-                        >
-                          {value['toneAverage']}
-                        </h4>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            ) : null}
 
             {/*
                   Download PDF button

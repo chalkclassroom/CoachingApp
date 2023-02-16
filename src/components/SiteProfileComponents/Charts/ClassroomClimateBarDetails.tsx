@@ -251,9 +251,9 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-<div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '71vw',}}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '71vw',}}>
         <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Classroom Climate</h2>
-        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+        <div className={"realChart"} style={{marginLeft: 40, height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -347,6 +347,44 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
             }}
             plugins={[plugin]}
           />
+        </div>
+        <div
+          style={{
+            //width: '100%',
+            width: 300 + this.state.teacherNames.length *160,
+            display: 'flex',
+            position: 'relative',
+            justifyContent: 'center',
+            marginBottom: 30,
+            transform: 'translateX(40px)',
+          }}
+        >
+          <div style={{ position: 'absolute', left: '-40px' }}>
+            <h4>Teacher Tone</h4>
+          </div>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            {Object.values(this.props.data).map((value, index) => {
+              return (
+                <div style={{ flex: '1', alignItems: 'center' }}>
+                  <h4
+                    style={{
+                      color: '#094492',
+                      textAlign: 'center',
+                      fontWeight: '400',
+                    }}
+                  >
+                    {value['toneAverage']}
+                  </h4>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     );
