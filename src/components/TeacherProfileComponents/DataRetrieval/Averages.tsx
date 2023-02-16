@@ -689,7 +689,8 @@ class AveragesData {
       drawing: 0,
       playing: 0,
       speaking: 0,
-      observations: [data[0].id],
+      allObservationIds: [data[0].id],
+      teacherObservationIds: [],
     }
 
     // Get number of instances for each type of data
@@ -717,10 +718,20 @@ class AveragesData {
       results[teacherId].totalInstructions +=
         row.noSupport + row.notAtCenter + row.support
 
-      // Add all the unique id's of the observations so we can calculate how many observations there are.
-      if (!results[teacherId].observations.includes(row.id)) {
-        results[teacherId].observations.push(row.id)
+      /*
+       * We need to keep track of all the observations that a teacher participated in, so we know what to use as the demominator during calculations of teacher behaviors
+       */
+      if (!results[teacherId].teacherObservationIds.includes(row.id) && row.peopletype == 3) {
+        results[teacherId].teacherObservationIds.push(row.id)
       }
+
+      /*
+       * Keep track of all the observations for other calculations if needed
+       */
+       if ( !results[teacherId].allObservationIds.includes(row.id) ) {
+         results[teacherId].allObservationIds.push(row.id)
+       }
+
     }
 
     // Calculate the averages in percentages
@@ -729,53 +740,54 @@ class AveragesData {
       var result = results[resultsIndex]
 
       //var tempTotalInstructions = result.totalInstructions
-      var tempTotalInstructions = result.observations.length
+      var allObservationsCount = result.allObservationIds.length
+      var teacherObservationsCount = result.teacherObservationIds.length
 
       result.sequentialActivitiesAverage =
         result.sequentialActivities > 0
-          ? Math.round(result.sequentialActivities / tempTotalInstructions)
+          ? Math.round(result.sequentialActivities / teacherObservationsCount)
           : 0
       result.drawImagesAverage =
         result.drawImages > 0
-          ? Math.round(result.drawImages / tempTotalInstructions)
+          ? Math.round(result.drawImages / teacherObservationsCount)
           : 0
       result.actOutAverage =
         result.actOut > 0
-          ? Math.round(result.actOut / tempTotalInstructions)
+          ? Math.round(result.actOut / teacherObservationsCount)
           : 0
       result.demonstrateStepsAverage =
         result.demonstrateSteps > 0
-          ? Math.round(result.demonstrateSteps / tempTotalInstructions)
+          ? Math.round(result.demonstrateSteps / teacherObservationsCount)
           : 0
 
       result.materialsAverage =
         result.materials > 0
-          ? Math.round(result.materials / tempTotalInstructions)
+          ? Math.round(result.materials / allObservationsCount)
           : 0
       result.drawingAverage =
         result.drawing > 0
-          ? Math.round(result.drawing / tempTotalInstructions)
+          ? Math.round(result.drawing / allObservationsCount)
           : 0
       result.playingAverage =
         result.playing > 0
-          ? Math.round(result.playing / tempTotalInstructions)
+          ? Math.round(result.playing / allObservationsCount)
           : 0
       result.speakingAverage =
         result.speaking > 0
-          ? Math.round(result.speaking / tempTotalInstructions)
+          ? Math.round(result.speaking / allObservationsCount)
           : 0
 
       result.notAtCenterAverage =
         result.notAtCenter > 0
-          ? Math.round(result.notAtCenter / tempTotalInstructions)
+          ? Math.round(result.notAtCenter / allObservationsCount)
           : 0
       result.supportAverage =
         result.support > 0
-          ? Math.round(result.support / tempTotalInstructions)
+          ? Math.round(result.support / allObservationsCount)
           : 0
       result.noSupportAverage =
         result.noSupport > 0
-          ? Math.round(result.noSupport / tempTotalInstructions)
+          ? Math.round(result.noSupport / allObservationsCount)
           : 0
     }
 
@@ -898,7 +910,6 @@ class AveragesData {
           ? (result.multimodalInstruction / tempTotalIntervals).toFixed(2) * 100
           : 0
 
-      // THIS ONE ISN'T RIGHT FOR NOW
       result.teacherAverage =
         result.foundationalSkills > 0
           ? (result.foundationalSkills / tempTotalIntervals).toFixed(2) * 100

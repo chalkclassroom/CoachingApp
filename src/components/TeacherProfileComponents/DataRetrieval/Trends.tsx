@@ -25,17 +25,27 @@ class TrendData {
 
     const endMonth = endDate.getMonth()
 
-    // Build list of month between start date and end date
+    const tempName = teacher.firstName + ' ' + teacher.lastName
+
+
+    /*
+     * Build list of months between start date and end date
+     */
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(
+      endDate.setMonth(endDate.getMonth() + 1)
+    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
+
+    var months = []
+
+    /*
+     * Note: whether or not we're displaying the year on the chart, we need to include it to make sure data goes in the right spot when the user selects a date range longer than a year
+     */
     var tempDate = startDate.toLocaleDateString('en-us', {
       year: 'numeric',
       month: 'short',
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
     while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate)
       tempDate = new Date(tempDate)
@@ -46,10 +56,7 @@ class TrendData {
 
     var monthsCount = months.length
 
-    // Add each teacher to the object
-    var tempName = ''
-
-    tempName = teacher.firstName + ' ' + teacher.lastName
+    //var observationDatesSize = observationDates.length
 
     results[teacher.id] = {
       name: tempName,
@@ -69,7 +76,13 @@ class TrendData {
       otherAverage: new Array(monthsCount).fill(0),
 
       lineChartLabels: months,
+
+      observationTotalTime: new Array(monthsCount).fill(0),
+
+      transitionTimeAverage: new Array(monthsCount).fill(0),
     }
+
+    console.log("Months => ", months);
 
     // Sort by date just in case
     data.sort(function(a, b) {
@@ -77,21 +90,31 @@ class TrendData {
     })
 
     // Get number of instances for each type of data
-    var prevMonth = 0,
-      rowMonth = startMonth
+    // rowMonth = startMonth
     var teacherId = teacher.id
 
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
+      // var rowMonth = new Date(row.startDate.value).getMonth();
+      var rowMonth = months.indexOf(
+        new Date(row.startDate.value).toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'short',
+        })
+      )
+      console.log("row.startDate.value => ", row.startDate.value);
+
+
       //rowMonth = new Date(row.startDate.value).getMonth();
+      /*
       rowMonth = months.indexOf(
         new Date(row.startDate.value).toLocaleDateString('en-us', {
           year: 'numeric',
           month: 'short',
         })
       )
-
+      */
       // Add to behavior types
       results[teacherId].line[rowMonth] += row.line
 
@@ -103,7 +126,11 @@ class TrendData {
 
       // Calculate the total Number of instructions
       results[teacherId].total[rowMonth] += row.total
+
+      // Calculate the total amount of time for these observations
+      results[teacherId].observationTotalTime[rowMonth] += row.observationTotalTime
     }
+
 
     // Calculate the averages in percentages
     // Go through each teacher
@@ -140,6 +167,12 @@ class TrendData {
           result.other[i] > 0
             ? (result.other[i] / tempTotalInstructions).toFixed(2) * 100
             : 0
+
+        result.transitionTimeAverage[i] =
+          result.total[i] > 0
+            ? (result.total[i] / result.observationTotalTime[i]).toFixed(2) * 100
+            : null
+
       }
     }
 
@@ -166,14 +199,13 @@ class TrendData {
       month: 'short',
     })
 
-    console.log(tempDate)
 
     // Set the month after the end date, formatted like Nov 21, 2022
     var endDatePlusOneMonth = new Date(
       endDate.setMonth(endDate.getMonth() + 1)
     ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
     var months = []
-    console.log(endDatePlusOneMonth)
+
     while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate)
       tempDate = new Date(tempDate)
@@ -469,9 +501,7 @@ class TrendData {
       ),
     ]
 
-    // observationDates.sort(function(a,b){
-    //   return new Date(a) - new Date(b);
-    // });
+
 
     data.map(i => console.log(i.startDate))
     var observationDatesFormatted = observationDates.map(o => {
@@ -481,9 +511,6 @@ class TrendData {
         day: 'numeric',
       })
     })
-
-    console.log('Observation Dates : ', observationDates)
-    console.log('Observation Dates Formatted: ', observationDatesFormatted)
 
     var arraySize = observationDates.length
 
@@ -550,7 +577,6 @@ class TrendData {
       }
     }
 
-    console.log('h: ', results)
     return results
   }
 
@@ -649,17 +675,24 @@ class TrendData {
 
     const endMonth = endDate.getMonth()
 
-    // Build list of month between start date and end date
+    /*
+     * Build list of months between start date and end date
+     */
+    // Set the month after the end date, formatted like Nov 21, 2022
+    var endDatePlusOneMonth = new Date(
+      endDate.setMonth(endDate.getMonth() + 1)
+    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
+
+    var months = []
+
+    /*
+     * Note: whether or not we're displaying the year on the chart, we need to include it to make sure data goes in the right spot when the user selects a date range longer than a year
+     */
     var tempDate = startDate.toLocaleDateString('en-us', {
       year: 'numeric',
       month: 'short',
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
     while (tempDate !== endDatePlusOneMonth) {
       months.push(tempDate)
       tempDate = new Date(tempDate)
@@ -737,7 +770,6 @@ class TrendData {
 
       // Calculate total number of observations
       results[teacherId].totalObserved[rowMonth] += row.count
-      results[teacherId].totalObserved[rowMonth] += row.count
     }
 
     // Calculate the averages in percentages
@@ -788,7 +820,7 @@ class TrendData {
         result.encouragingAverage[i] =
           result.encouraging[i] > 0
             ? (result.encouraging[i] / tempTotalObserved).toFixed(2) * 100
-            : 0
+            : null
       }
     }
 
@@ -836,6 +868,7 @@ class TrendData {
     results[teacher.id] = {
       name: tempName,
       totalInstructions: new Array(monthsCount).fill(0),
+      totalTeacherInstructions: new Array(monthsCount).fill(0),
       sequentialActivities: new Array(monthsCount).fill(0),
       drawImages: new Array(monthsCount).fill(0),
       demonstrateSteps: new Array(monthsCount).fill(0),
@@ -850,6 +883,9 @@ class TrendData {
       drawImagesAverage: new Array(monthsCount).fill(0),
       demonstrateStepsAverage: new Array(monthsCount).fill(0),
       actOutAverage: new Array(monthsCount).fill(0),
+
+      childNonSequentialActivities: new Array(monthsCount).fill(0),
+      childNonSequentialActivitiesAverage: new Array(monthsCount).fill(0),
 
       notAtCenterAverage: new Array(monthsCount).fill(0),
       noSupportAverage: new Array(monthsCount).fill(0),
@@ -877,6 +913,8 @@ class TrendData {
       // Add to total # of intervals
       results[teacherId].totalInstructions[rowMonth] +=
         row.notAtCenter + row.support + row.noSupport
+      results[teacherId].totalTeacherInstructions[rowMonth] +=
+        row.support + row.noSupport
 
       // Add to behavior types
       results[teacherId].sequentialActivities[rowMonth] +=
@@ -888,6 +926,8 @@ class TrendData {
       results[teacherId].notAtCenter[rowMonth] += row.notAtCenter
       results[teacherId].support[rowMonth] += row.support
       results[teacherId].noSupport[rowMonth] += row.noSupport
+
+      results[teacherId].childNonSequentialActivities[rowMonth] += row.childNonSequentialActivities
     }
 
     // Calculate the averages in percentages
@@ -898,6 +938,7 @@ class TrendData {
       // Go through the months
       for (var i = 0; i < monthsCount; i++) {
         var tempTotalInstructions = result.totalInstructions[i]
+        var tempTeacherInstructions = result.totalTeacherInstructions[i]
 
         result.sequentialActivitiesAverage[i] =
           result.sequentialActivities[i] > 0
@@ -929,8 +970,13 @@ class TrendData {
             : 0
         result.noSupportAverage[i] =
           result.noSupport[i] > 0
-            ? (result.noSupport[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
+            ? (result.noSupport[i] / tempTeacherInstructions).toFixed(2) * 100
+            : null
+
+        result.childNonSequentialActivitiesAverage[i] =
+          result.childNonSequentialActivities[i] > 0
+            ? (result.childNonSequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100
+            : null
       }
     }
 
@@ -978,6 +1024,7 @@ class TrendData {
     results[teacher.id] = {
       name: tempName,
       totalIntervals: new Array(monthsCount).fill(0),
+      totalChildIntervals: new Array(monthsCount).fill(0),
       totalInstructions: new Array(monthsCount).fill(0),
       phonological: new Array(monthsCount).fill(0),
       alphabetic: new Array(monthsCount).fill(0),
@@ -985,6 +1032,7 @@ class TrendData {
       realisticReading: new Array(monthsCount).fill(0),
       multimodalInstruction: new Array(monthsCount).fill(0),
       foundationalSkills: new Array(monthsCount).fill(0),
+      childFoundationalSkills: new Array(monthsCount).fill(0),
 
       phonologicalAverage: new Array(monthsCount).fill(0),
       alphabeticAverage: new Array(monthsCount).fill(0),
@@ -992,6 +1040,7 @@ class TrendData {
       realisticReadingAverage: new Array(monthsCount).fill(0),
       multimodalInstructionAverage: new Array(monthsCount).fill(0),
       foundationalSkillsAverage: new Array(monthsCount).fill(0),
+      childEngagedAverage: new Array(monthsCount).fill(0),
 
       lineChartLabels: months,
     }
@@ -1019,54 +1068,67 @@ class TrendData {
         })
       )
 
-      // Add to total # of intervals
-      // results[teacherId].totalIntervals[rowMonth] += row.total;
-      results[teacherId].totalIntervals[rowMonth]++
+      if(row.isChild)
+      {
+        results[teacherId].totalChildIntervals[rowMonth]++;
 
-      // Add to behavior types
-      // If this observation has a phonal answer.
-      if (row.foundational1 || row.foundational2) {
-        results[teacherId].phonological[rowMonth]++
+        if(!row.foundational10)
+        {
+          results[teacherId].childFoundationalSkills[rowMonth]++;
+        }
       }
-      // If this observation has a alphabetic answer
-      if (
-        row.foundational3 ||
-        row.foundational4 ||
-        row.foundational5 ||
-        row.foundational6 ||
-        row.foundational7
-      ) {
-        results[teacherId].alphabetic[rowMonth]++
-      }
-      // If this observation has a open ended question
-      if (row.foundational8) {
-        results[teacherId].openEndedQuestions[rowMonth]++
-      }
-      // If this observation has a realistic Reading
-      if (row.foundational9) {
-        results[teacherId].realisticReading[rowMonth]++
-      }
-      // If this observation has a Multi Modal
-      if (row.foundational10) {
-        results[teacherId].multimodalInstruction[rowMonth]++
-      }
-      // If this observation has anything
-      if (!row.foundational11) {
-        results[teacherId].foundationalSkills[rowMonth]++
-      }
+      else
+      {
 
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] +=
-        row.foundational1 +
-        row.foundational2 +
-        row.foundational3 +
-        row.foundational4 +
-        row.foundational5 +
-        row.foundational6 +
-        row.foundational7 +
-        row.foundational8 +
-        row.foundational9 +
-        row.foundational10
+        // Add to total # of intervals
+        // results[teacherId].totalIntervals[rowMonth] += row.total;
+        results[teacherId].totalIntervals[rowMonth]++
+
+        // Add to behavior types
+        // If this observation has a phonal answer.
+        if (row.foundational1 || row.foundational2) {
+          results[teacherId].phonological[rowMonth]++
+        }
+        // If this observation has a alphabetic answer
+        if (
+          row.foundational3 ||
+          row.foundational4 ||
+          row.foundational5 ||
+          row.foundational6 ||
+          row.foundational7
+        ) {
+          results[teacherId].alphabetic[rowMonth]++
+        }
+        // If this observation has a open ended question
+        if (row.foundational8) {
+          results[teacherId].openEndedQuestions[rowMonth]++
+        }
+        // If this observation has a realistic Reading
+        if (row.foundational9) {
+          results[teacherId].realisticReading[rowMonth]++
+        }
+        // If this observation has a Multi Modal
+        if (row.foundational10) {
+          results[teacherId].multimodalInstruction[rowMonth]++
+        }
+        // If this observation has anything
+        if (!row.foundational11) {
+          results[teacherId].foundationalSkills[rowMonth]++
+        }
+
+        // Calculate the total Number of instructions
+        results[teacherId].totalInstructions[rowMonth] +=
+          row.foundational1 +
+          row.foundational2 +
+          row.foundational3 +
+          row.foundational4 +
+          row.foundational5 +
+          row.foundational6 +
+          row.foundational7 +
+          row.foundational8 +
+          row.foundational9 +
+          row.foundational10
+      }
     }
 
     // Calculate the averages in percentages
@@ -1103,12 +1165,16 @@ class TrendData {
               ) * 100
             : 0
 
-        // THIS ONE ISN'T RIGHT FOR NOW
         result.foundationalSkillsAverage[i] =
           result.foundationalSkills[i] > 0
             ? (result.foundationalSkills[i] / tempTotalIntervals).toFixed(2) *
               100
-            : 0
+            : null
+
+        result.childEngagedAverage[i] =
+          result.childFoundationalSkills[i] > 0
+            ? (result.childFoundationalSkills[i] / result.totalChildIntervals[i]).toFixed(2) * 100
+            : null
       }
     }
 
