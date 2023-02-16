@@ -305,10 +305,10 @@ class AveragesData {
       result.llqResponseAverage = result.llqResponse > 0 ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100 : 0;
 
       // Gather info for the site bar
-      programBar.hlq += result.hlqAverage
-      programBar.hlqResponse += result.hlqResponseAverage
-      programBar.llq += result.llqAverage
-      programBar.llqResponse += result.llqResponseAverage
+      programBar.hlq += result.hlq
+      programBar.hlqResponse += result.hlqResponse
+      programBar.llq += result.llq
+      programBar.llqResponse += result.llqResponse
 
       programBar.total += tempTotalInstructions
     }
@@ -316,23 +316,22 @@ class AveragesData {
     // Calculate the site bar averages
     programBar.hlqAverage =
       programBar.hlq > 0
-        ? parseFloat((programBar.hlq / programBar.total).toFixed(2))
+        ? parseFloat((programBar.hlq / programBar.total).toFixed(2)) * 100
         : 0
     programBar.hlqResponseAverage =
       programBar.hlqResponse > 0
         ? parseFloat(
-              (programBar.hlqResponse / programBar.total).toFixed(2)
+              (programBar.hlqResponse / programBar.total).toFixed(2) * 100
             )
         : 0
     programBar.llqAverage =
       programBar.llq > 0
-        ? parseFloat((programBar.llq / programBar.total).toFixed(2))
+        ? parseFloat((programBar.llq / programBar.total).toFixed(2)) * 100
         : 0
     programBar.llqResponseAverage =
       programBar.llqResponse > 0
         ? parseFloat(
-              (programBar.llqResponse / programBar.total).toFixed(2)
-            )
+              (programBar.llqResponse / programBar.total).toFixed(2)) * 100
         : 0
 
     results.programBar = programBar
@@ -873,7 +872,7 @@ class AveragesData {
   /*
    * Associative Cooperative
    */
-  calculateACAverages = (data, sites) => {
+  calculateACAverages = (data, sites, names) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -885,22 +884,14 @@ class AveragesData {
     {
 
       results[siteIndex] = {
-        name: "",
-        totalIntervals: 0,
-        totalInstructions: 0,
-
-        childrensPlay: 0,
-        askingQuestions: 0,
-        encouragingChildren: 0,
-        helpingChildren: 0,
-
-        noSequence: 0,
-        formalRules: 0,
-        sequence: 0,
-
+        name: names[siteIndex]['name'],
+        teacherDenominator: 0,
+        childDenominator: 0,
         support: 0,
         noSupport: 0,
-        notAtCenter: 0,
+        engaged: 0,
+        noInteraction: 0,
+        totalInstructions: 0
       };
 
     }
@@ -911,68 +902,23 @@ class AveragesData {
       for(var rowIndex in sites[siteIndex])
       {
         var row = sites[siteIndex][rowIndex];
-
-        // Add to total # of intervals
-        results[siteIndex].totalIntervals++;
-
-        // Add to behavior types
-        // Calculate the total Number of instructions
-        results[siteIndex].totalInstructions += row.teacher1 + row.teacher2 + row.teacher3 + row.teacher4;
-
-        // If there were any "Participating in children's play" in this observation
-        if( row.teacher1 )
-        {
-          results[siteIndex].childrensPlay++;
-        }
-        // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
-        if( row.teacher2 )
-        {
-          results[siteIndex].askingQuestions++;
-        }
-        // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-        if( row.teacher3 )
-        {
-          results[siteIndex].encouragingChildren++;
-        }
-        // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-        if( row.teacher4 )
-        {
-          results[siteIndex].helpingChildren++;
-        }
-        if( row.child2 )
-        {
-          results[siteIndex].noSequence++;
-        }
-        if( row.child3 )
-        {
-          results[siteIndex].formalRules++;
-        }
-        if( row.child4 )
-        {
-          results[siteIndex].sequence++;
-        }
-
-        // Check for act types
-        // If teacher was there
-        if(row.peopleType == 3)
-        {
-          // Check for support
-          if(row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4)
-          {
-            results[siteIndex].support++;
+        results[siteIndex].totalInstructions++
+        if (row.peopleType === 2 || row.peopleType === 3) {
+          if (row.child1 || row.child2 || row.child3 || row.child4) {
+            results[siteIndex].engaged++
+          } else if (row.child1 === 0 && row.child2 === 0 && row.child3 === 0 && row.child4 === 0) {
+            results[siteIndex].noInteraction++
           }
-          // If there was no support
-          else
-          {
-            results[siteIndex].noSupport++;
+          results[siteIndex].childDenominator++
+        }
+        if (row.peopleType === 3) {
+          if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
+            results[siteIndex].support++
+          } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
+            results[siteIndex].noSupport++
           }
+          results[siteIndex].teacherDenominator++
         }
-        // Teacher not there
-        else
-        {
-          results[siteIndex].notAtCenter++;
-        }
-
       }
     }
 
@@ -983,28 +929,24 @@ class AveragesData {
 
       var result = results[resultsIndex];
 
-      var tempTotalInstructions = result.totalInstructions;
-      var tempTotalIntervals = result.totalIntervals;
-
-      result.childrensPlayAverage = result.childrensPlay > 0 ? (result.childrensPlay / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.askingQuestionsAverage = result.askingQuestions > 0 ? (result.askingQuestions / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.encouragingChildrenAverage = result.encouragingChildren > 0 ? (result.encouragingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.helpingChildrenAverage = result.helpingChildren > 0 ? (result.helpingChildren / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      result.noSequenceAverage = result.noSequence > 0 ? (result.noSequence / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.formalRulesAverage = result.formalRules > 0 ? (result.formalRules / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.sequenceAverage = result.sequence > 0 ? (result.sequence / tempTotalIntervals).toFixed(2) * 100 : 0;
-
-      result.supportAverage = result.support > 0 ? (result.support / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.noSupportAverage = result.noSupport > 0 ? (result.noSupport / tempTotalIntervals).toFixed(2) * 100 : 0;
-      result.notAtCenterAverage = result.notAtCenter > 0 ? (result.notAtCenter / tempTotalIntervals).toFixed(2) * 100 : 0;
+      if (result.teacherDenominator > 0) {
+        result.support = result.support/result.teacherDenominator * 100
+        result.noSupport = result.noSupport/result.teacherDenominator * 100
+      } else {
+        result.support = 0
+        result.noSupport = 0
+      }
+      if (result.childDenominator > 0) {
+        result.engaged = result.engaged/result.childDenominator * 100
+        result.noInteraction = result.noInteraction/result.childDenominator * 100
+      } else {
+        result.engaged = 0
+        result.noInteraction = 0
+      }
 
     }
-
+    console.log(results)
     return results;
-
-
-
   }
 
 

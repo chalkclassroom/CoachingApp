@@ -52,6 +52,7 @@ import RadioSets from './RadioSets'
 import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
 import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
 import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
+import ACBarDetails from './Charts/ACBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -109,6 +110,10 @@ const LineGraphOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
+  legend: {
+    display: false,
+    position: 'top',
+  },
   tooltips: {
     mode: 'index',
     intersect: false,
@@ -573,7 +578,7 @@ class ProgramProfileResults extends React.Component {
         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
-        averages = this.state.averagesClass.calculateACAverages(data, teachers)
+        averages = this.state.averagesClass.calculateACAverages(data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, endDate )
         break
 
@@ -903,10 +908,8 @@ class ProgramProfileResults extends React.Component {
   handleRadioChange = (event: SelectChangeEvent) => {
     this.setState({ radioValue: event.target.value })
 
-    this.setLineGraphData(this.state.siteNames, event.target.value)
-
     let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
-      key.includes(event.target.value)).reduce((obj, key) => {
+      key.includes(this.state.selectedSite)).reduce((obj, key) => {
         return Object.assign(obj, {
           [key]: this.state.BQData[key]
         })
@@ -954,17 +957,17 @@ class ProgramProfileResults extends React.Component {
     // let modifiedInfo = this.state.BQData.filter(site => {
     //   return site.id == event.target.value
     // })
-    // if (this.props.observationType === "studentEngagement") {
-    //   if (event.target.value != 'None') {
-    //     LineGraphOptions.legend.display = true
-    //     LineGraphOptions.legend.position = 'bottom'
-    //   } else {
-    //     LineGraphOptions.legend.display = false
-    //   }
-    // } else {
-    //   LineGraphOptions.legend.display = true
-    //   LineGraphOptions.legend.position = 'bottom'
-    // }
+    if (this.props.observationType === "studentEngagement") {
+      if (event.target.value != 'None') {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = 'bottom'
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+    } else {
+      LineGraphOptions.legend.display = true
+      LineGraphOptions.legend.position = 'bottom'
+    }
 
     this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
@@ -1101,6 +1104,7 @@ class ProgramProfileResults extends React.Component {
             {/*
                     The checklists
                 */}
+          {radioObservationTypes.includes(this.props.observationType) ? (
             <RadioGroup
               aria-label="gender"
               name="gender1"
@@ -1110,7 +1114,8 @@ class ProgramProfileResults extends React.Component {
             >
               <RadioSets type={this.props.observationType} />
             </RadioGroup>
-
+            ) : null}
+            
             {/*
                     The chart switcher
                 */}
@@ -1239,12 +1244,12 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
                   {/* Associative and Cooperative Chart */}
-                  {/* {this.props.observationType === "associativeAndCooperative" ? (
+                  {this.props.observationType === "associativeAndCooperative" ? (
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
                     />
-                  ) : null} */}
+                  ) : null}
 
 
                   {/* {this.props.observationType === 'transitionTime' ? (
