@@ -29,7 +29,7 @@ const averageLine = {
  * @class EngagementBarDetails
  * @return {void}
  */
-class StudentEngagementBarDetails extends React.Component<Props, {}> {
+class MathInstructionBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -75,18 +75,11 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
     var graphData = {};
 
 
-    var dataSets = [
-      {
-        backgroundColor: [],
-        hoverBackgroundColor: [],
-        data: [],
-        borderColor: [],
-        borderWidth: 5,
-      }
-    ];
-
-
-    var totalPointsAverage = [];
+    var noSupportAverage = [];
+    var teacherSupportAverage = [];
+    var noSupportTotal = 0;
+    var teacherSupportTotal = 0;
+    let numberOfTeachersWithData = 0;
     for(var teacherIndex in data)
     {
 
@@ -100,22 +93,98 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
+      // If we're looking at the teacher graph, get the support data
+      if(type == "teacherAverage")
+      {
+        var tempNoSupport = Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['support'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
+        // var tempTeacherSupport = 100 - tempNoSupport;
+      }
+      else
+      {
+        var tempNoSupport = Math.round((teacher['noInteraction'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['engaged'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
+      }
 
-      var tempTotalPointsAverage = parseFloat(teacher['totalPointsAverage']);
+      // Only push this data if there are actually observation done
+      if(teacher.totalInstructions > 0)
+      {
+        noSupportAverage.push(tempNoSupport);
+        teacherSupportAverage.push(tempTeacherSupport);
+        numberOfTeachersWithData++;
+      }
+      else
+      {
+        noSupportAverage.push(0);
+        teacherSupportAverage.push(0);
+      }
 
-      dataSets[0].backgroundColor.push("#ED7D31");
-      dataSets[0].hoverBackgroundColor.push("#ED7D31");
-      dataSets[0].borderColor.push("rgba(0,0,0,0)");
-      dataSets[0].data.push(tempTotalPointsAverage);
+      noSupportTotal += tempNoSupport;
+      teacherSupportTotal += tempTeacherSupport;
+
+      // Create bar graph data
+      //var tempAvg = teacher[type];
+      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
+
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      //graphData.push(tempAvg);
 
     }
 
-    // Add the Site Average Bar
-    dataSets[0].backgroundColor.push("#FFFFFF");
-    dataSets[0].hoverBackgroundColor.push("#FFFFFF");
-    dataSets[0].borderColor.push("#E94635");
-    dataSets[0].data.push(data.siteBar.totalPointsAverage);
+    teacherNames.push("Program Average");
 
+
+    // We need to set the site average data
+    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+    var dataSize = Object.keys(data).length;
+
+    var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
+    //siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+
+
+    var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
+    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / dataSize + Number.EPSILON) * 100) / 100;;
+    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize])
+    // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
+
+    // Use that data to create our dataset
+    var dataSets = [
+
+      {
+        label: 'Teacher Support',
+        data: teacherSupportAverage,
+        backgroundColor: "#5B9BD5",
+      },
+      {
+        label: 'No Support',
+        data: noSupportAverage,
+        backgroundColor: "#C00000",
+      },
+
+      // The total Site Averages
+      {
+        label: 'Teacher Support Site Average',
+        data: siteAverageTeacherSupport,
+        backgroundColor: "#FFF",
+        borderColor: "#5B9BD5",
+        borderWidth: 4,
+      },
+      {
+        label: 'No Support Site Average',
+        data: siteAverageNoSupport,
+        backgroundColor: "#FFF",
+        borderColor: "#C00000",
+        borderWidth: 4,
+      },
+
+    ]
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
 
@@ -160,26 +229,11 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
 
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Student Engagement</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Math Instruction</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
-
-          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 77, left: '-150px'}}>
-            <div style={{flex:1}}>Highly Engaged</div>
-            <div style={{flex:1}}>Engaged</div>
-            <div style={{flex:1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-              <div>Mildly Engaged</div>
-              <div style={{transform: 'translateY(15px)', textAlign: 'right'}}>Off Task</div>
-            </div>
-          </div>
-
           <Bar
             data={childBehaviorsData}
             options={{
-              layout: {
-                padding: {
-                  top: 20
-                }
-              },
               animation: {
                 onComplete: function(): void {
                   isCompleted ? isCompleted() : null
@@ -191,44 +245,44 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                     ticks: {
                       display:true,
                       min: 0,
-                      max: 3,
-                      stepSize: 1,
+                      max: 100,
+                      stepSize: 10,
                       fixedStepSize: 1,
                       fontSize: 16,
                       fontColor: 'black',
                       padding: 20,
                       // Include a percent sign in the ticks
-                      callback: (value, index, values) => {
-                        return value
-                      }
+                      callback: function(value, index, values) {
+                          return value + '%';
+                      },
                     },
+                    scaleLabel: {
+                      display: false,
+                      labelString: '',
+                      fontSize: 16,
+                      fontColor: 'black'
+                    },
+                    stacked: true,
                     gridLines: {
                       drawBorder: false,
                       drawTicks: false,
-                      tickMarkLength: 20,
-
                     }
                   }
                 ],
                 xAxes: [
                   {
                     ticks: {
-                      display: true,
                       fontSize: 16,
                       fontColor: 'black',
                       callback: (value, index, values) => {
                         return value
                       }
                     },
+                    stacked: true,
                     gridLines: {
                       display: false,
                       color: "rgba(0,0,0,0)",
-                    },
-                    scaleLabel: {
-                      display: false,
-                      fontSize: 16,
-                      fontColor: 'black'
-                    },
+                    }
                   }
                 ]
               },
@@ -236,7 +290,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                 display: true,
                 labels: {
                   filter: function(legendItem, data) {
-                        //return !legendItem.text.includes('Site Average')
+                        return !legendItem.text.includes('Site Average')
                   },
                   padding: 20,
                   boxWidth: 12,
@@ -249,13 +303,10 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                 fontSize: 14,
                 fontColor: 'black',
                 fontFamily: 'Arimo',
-                fontStyle: "bold",
+                fontStyle: "bold"
               },
               plugins: {
                 datalabels: {
-                  anchor: 'end',
-                  align: 'top',
-                  offset: 0,
                   display: 'auto',
                   color: 'black',
                   font: {
@@ -264,16 +315,15 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                   },
                   formatter: function(value: number): number | null {
                     if (value > 0) {
-                      return value;
+                      return value + "%";
                     } else {
                       return null;
                     }
-
                   }
                 },
 
               },
-              maintainAspectRatio: false,
+              maintainAspectRatio: false
             }}
             plugins={[plugin]}
           />
@@ -284,4 +334,4 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default StudentEngagementBarDetails;
+export default MathInstructionBarDetails;

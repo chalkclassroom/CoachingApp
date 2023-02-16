@@ -212,6 +212,14 @@ class Sites extends React.Component<Props, State> {
     return re.test(String(email).toLowerCase());
   };
 
+  /**
+   * @brief This function gets checks all state variables associated with edit for correct input and then uses them to call the firebase instance method editUserName
+   * On success the function will update the firestore and state
+   * On failure the function will throw an error and display an alert message
+   * 
+   * @param {Object} firebase - instance of firebase
+   * @returns 
+   */
   editCoach = async (firebase:Firebase) => {
       firebase
       const {
@@ -398,6 +406,11 @@ class Sites extends React.Component<Props, State> {
     this.handlePageChange(1)
   }
 
+  /**
+   * @brief This function populates the site leader dropdown in the create a site area with valid site leaders
+   * 
+   * @param event - html event
+   */
   handlePopulateSiteLeaders = (event) => {
     this.setState({addProgramId: event.target.value, saved: false})
     let leaders = this.state.originalSiteLeaders
@@ -406,6 +419,16 @@ class Sites extends React.Component<Props, State> {
     this.setState({addSiteLeaderList: leaders})
   }
 
+  /**
+   * @brief The function creates a new site in the system by taking in the necessary information from the state.
+   * The function checks if the site name, program, and site leader is provided.
+   * If not, it alerts the user.
+   * Otherwise, it creates a new site in the system, assigns the program to the site leader and assigns the site to the site leader
+   * The new site is also added to the 'sitesList' and 'siteData' state for further use.
+   * 
+   * @param {Object} firebase - an instance of firebase
+   * @returns 
+   */
   async createSite(firebase:Firebase){
 
     const {
@@ -537,6 +560,17 @@ class Sites extends React.Component<Props, State> {
       })
   }
 
+  /**
+   * 
+   * @brief function for archiving a coach by updating coachData and teacherData in the component's props
+   * This function takes an instance of firebase as an input. It retrieves the editCoachId, editCoachFirstName, editCoachLastName, editCoachProgramName, editCoachProgramId, and editCoachEmail from the component's state.
+   * The function then creates two arrays, userSites and archiveSites, and populates them with the coach's site information.
+   * The function then calls the archiveCoach method from the firebase instance, passing in the editCoachId, editCoachFirstName, editCoachLastName, editCoachProgramName, editCoachProgramId, editCoachEmail, userSites, and archiveSites as arguments.
+   * If the call is successful, the function updates the coachData and teacherData in the component's props, and sets the state of several other properties.
+   * If the call is not successful, it will throw an error and display an alert message, and set the state of success to false.
+   * 
+   * @param {Object} firebase - an instance of firebase
+   */
   async archiveCoach(firebase:Firebase) {
     firebase
     const {

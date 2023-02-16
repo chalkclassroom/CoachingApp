@@ -95,7 +95,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
       teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Program Average")
       {
         continue;
       }
@@ -114,7 +114,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
     dataSets[0].backgroundColor.push("#FFFFFF");
     dataSets[0].hoverBackgroundColor.push("#FFFFFF");
     dataSets[0].borderColor.push("#E94635");
-    dataSets[0].data.push(data.siteBar.totalPointsAverage);
+    dataSets[0].data.push(data.programBar.totalPointsAverage);
 
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
