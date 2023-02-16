@@ -235,11 +235,10 @@ class TrendData {
       let row = data[rowIndex];
       let teacherId = row.teacher.split("/")[2];
       let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));      
-      results[teacherId].totalIntervals[rowMonth]++;
       if (row.peopletype === 2 || row.peopletype === 3) {
         results[teacherId].math[rowMonth] += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
         results[teacherId].otherActivities[rowMonth] += row.childOther
-        results[teacherId].totalIntervals[rowMonth] += row.total
+        results[teacherId].totalIntervals[rowMonth] += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
       }
       if (row.peopletype === 3) {
         results[teacherId].teacherSupport[rowMonth] += row.support

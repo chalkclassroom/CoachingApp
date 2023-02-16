@@ -325,7 +325,7 @@ class AveragesData {
       if (row.peopletype === 2 || row.peopletype === 3) {
         results[teacherId].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
         results[teacherId].noInteraction += row.childOther
-        results[teacherId].childDenominator += row.total
+        results[teacherId].childDenominator += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
       }
       if (row.peopletype === 3) {
         results[teacherId].support += row.support
@@ -360,7 +360,7 @@ class AveragesData {
         result.support = 0
         result.noSupport = 0
       }
-      if (result.totalInstructions > 0) {
+      if (result.childDenominator > 0) {
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -368,7 +368,7 @@ class AveragesData {
         result.noInteraction = 0
       }
     }
-    
+    console.log(results)
     return results
   }
 
