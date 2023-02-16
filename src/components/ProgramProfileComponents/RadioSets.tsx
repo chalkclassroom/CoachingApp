@@ -121,48 +121,23 @@ class RadioSets extends React.Component<Props, {}> {
       return (
         <Grid container style={centerRow}>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Using Math Vocabulary"
-                  value="mathVocabularyAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Asking Questions About Math Concepts"
-                  value="askingQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Demonstrating Math Concepts"
-                  value="mathConceptsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping Children Use Math to Problem Solve"
-                  value="helpingChildrenAverage"
+                  label="Teacher Behaviors"
+                  value="teacherAverage"
                 />
               </FormGroup>
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl component="fieldset" className={'checkboxesform'}>
+            <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
                   control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
+                  label="Child Behaviors"
+                  value="childAverage"
                 />
               </FormGroup>
             </FormControl>
