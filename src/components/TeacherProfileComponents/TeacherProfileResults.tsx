@@ -49,6 +49,7 @@ import LiteracyInstructionAverages from './ResultsComponents/LiteracyInstruction
 import SequentialActivitiesAverages from './ResultsComponents/SequentialActivitiesAverages'
 import ACAverages from './ResultsComponents/ACAverages'
 import ListeningToChildrenAverages from './ResultsComponents/ListeningToChildrenAverages'
+import TrendsLineChart from './ResultsComponents/TrendsLineChart'
 
 import { Line } from 'react-chartjs-2'
 import TwoTabbedSwitch from '../LayoutComponents/TwoTabbedSwitch'
@@ -990,6 +991,16 @@ class TeacherProfileResults extends React.Component {
       'foundationSkills',
     ]
 
+    /*
+     * List of which observation types use the original line graph for trends
+     */
+    const originalLineGraphsObservationTypes = [
+      'studentEngagement',
+      'levelOfInstruction',
+      'mathInstruction',
+      'classroomClimate',
+    ]
+
     var lineGraphOptions = LineGraphOptions
 
     // Trends for some of the observation types need to have the percent showing for each dot
@@ -1183,11 +1194,22 @@ class TeacherProfileResults extends React.Component {
                     alignItems: 'center',
                   }}
                 >
-                  <Grid container style={{ height: 500, width: '86%' }}>
+                  <Grid container style={{ minHeight: 500, width: '86%' }}>
+
+                  {/* Use the original line graph or the new one (TrensLineChart) */}
+                  {originalLineGraphsObservationTypes.includes(this.props.observationType) ?
                     <Line
                       data={this.state.lineGraphData}
                       options={lineGraphOptions}
                     />
+                    :
+                    <TrendsLineChart
+                      data={this.state.trends}
+                      teacherId={this.props.selectedTeacherId}
+                      observationType={this.props.observationType}
+                      radioValue={this.state.radioValue}
+                    />
+                  }
                   </Grid>
 
                   {/*
