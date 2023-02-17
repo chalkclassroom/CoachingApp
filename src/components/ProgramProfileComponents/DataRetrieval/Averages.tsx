@@ -91,7 +91,7 @@ class AveragesData {
   /*
    * Classroom Climate
    */
-  calculateClimateAverage = (data, sites) => {
+  calculateClimateAverage = (data, sites, names) => {
 
     // Initialize the array that will hold all the data
     var results = {};
@@ -101,12 +101,14 @@ class AveragesData {
     {
 
       results[siteIndex] = {
-        name: "",
+        name: names[siteIndex]['name'],
         total: 0,
         nonspecificapproval: 0,
         specificapproval: 0,
         disapproval: 0,
         redirection: 0,
+        toneTotal: 0,
+        toneCount: 0,
       };
 
     }
@@ -120,29 +122,130 @@ class AveragesData {
 
         // Add to behavior types
         // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
-        if(row.behaviorResponse === "nonspecificapproval" || row.behaviorResponse === "specificapproval" || row.behaviorResponse === "disapproval" || row.behaviorResponse === "redirection")
-        {
-          results[siteIndex][row.behaviorResponse] +=  row.count;
-          results[siteIndex].total += row.count;
+        if (
+          row.behaviorResponse === 'nonspecificapproval' ||
+          row.behaviorResponse === 'specificapproval' ||
+          row.behaviorResponse === 'disapproval' ||
+          row.behaviorResponse === 'redirection'
+        ) {
+          results[siteIndex][row.behaviorResponse] += row.count
+          results[siteIndex].total += row.count
         }
-
+  
+        // Get tone rating
+        if (row.toneRating !== null) {
+          results[siteIndex].toneTotal += row.toneRating
+          results[siteIndex].toneCount++
+        }
       }
+    }
+
+    var programBar = {
+      name: 'Program Average',
+
+      total: 0,
+
+      nonspecificapproval: 0,
+      specificapproval: 0,
+      disapproval: 0,
+      redirection: 0,
+
+      toneTotal: 0,
+      toneCount: 0,
     }
 
     // Calculate the averages in percentages
     // Go through each teacher
+    let numberOfTeachersWithData = 0;
     for(var resultsIndex in results)
     {
       var result = results[resultsIndex];
 
       var tempTotalInstructions = result.total;
 
-      result.nonspecificapprovalAverage = result.nonspecificapproval > 0 ? (result.nonspecificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.specificapprovalAverage = result.specificapproval > 0 ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.nonspecificapprovalAverage =
+        result.nonspecificapproval > 0
+          ? (result.nonspecificapproval / tempTotalInstructions).toFixed(2) *
+            100
+          : 0
+      result.specificapprovalAverage =
+        result.specificapproval > 0
+          ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100
+          : 0
+      result.disapprovalAverage =
+        result.disapproval > 0
+          ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100
+          : 0
+      result.redirectionAverage =
+        result.redirection > 0
+          ? (result.redirection / tempTotalInstructions).toFixed(2) * 100
+          : 0
+
+      result.toneAverage =
+        result.toneCount > 0
+          ? (result.toneTotal / result.toneCount).toFixed(1)
+          : 0
+
+      // Gather info for the site bar
+      programBar.nonspecificapproval += result.nonspecificapprovalAverage
+      programBar.specificapproval += result.specificapprovalAverage
+      programBar.disapproval += result.disapprovalAverage
+      programBar.redirection += result.redirectionAverage
+
+      programBar.toneCount += result.toneCount
+      programBar.toneTotal += result.toneTotal
+
+      programBar.total += result.total
+
+      if(result.total > 0)
+      {
+        numberOfTeachersWithData++;
+      }
     }
 
+    programBar.nonspecificapprovalAverage =
+      programBar.nonspecificapproval > 0
+        ? Math.round(
+            parseFloat(
+              (
+                programBar.nonspecificapproval / numberOfTeachersWithData
+              ).toFixed(2)
+            )
+          )
+        : 0
+    programBar.specificapprovalAverage =
+      programBar.specificapproval > 0
+        ? Math.round(
+            parseFloat(
+              (programBar.specificapproval / numberOfTeachersWithData).toFixed(
+                2
+              )
+            )
+          )
+        : 0
+    programBar.disapprovalAverage =
+      programBar.disapproval > 0
+        ? Math.round(
+            parseFloat(
+              (programBar.disapproval / numberOfTeachersWithData).toFixed(2)
+            )
+          )
+        : 0
+    programBar.redirectionAverage =
+      programBar.redirection > 0
+        ? Math.round(
+            parseFloat(
+              (programBar.redirection / numberOfTeachersWithData).toFixed(2)
+            )
+          )
+        : 0
+
+    programBar.toneAverage =
+      programBar.toneCount > 0
+        ? (programBar.toneTotal / programBar.toneCount).toFixed(1)
+        : 0
+
+    results.programBar = programBar
     return results;
 
   }
