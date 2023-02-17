@@ -118,8 +118,8 @@ const LineGraphOptions = {
   pointDot: true,
   showLines: true,
   legend: {
-    display: false,
-    position: 'top',
+    display: true,
+    position: 'bottom',
   },
   tooltips: {
     mode: 'index',
@@ -134,12 +134,23 @@ const LineGraphOptions = {
       {
         display: true,
         scaleLabel: {
-          display: true,
-          labelString: 'Date',
+          display: false,
+          labelString: '',
           fontFamily: 'Arimo',
           fontSize: 18,
           fontColor: 'black',
         },
+        ticks: {
+          fontSize: 16,
+          fontColor: 'black',
+          callback: (value, index, values) => {
+            return value
+          }
+        },
+        gridLines: {
+          display: false,
+          color: "rgba(0,0,0,0)",
+        }
       },
     ],
     yAxes: [
@@ -151,13 +162,20 @@ const LineGraphOptions = {
           callback: function(value: number): string {
             return value + '%'
           },
+          fontSize: 18,
+          fontColor: 'black',
+          padding: 20,
         },
         scaleLabel: {
-          display: true,
-          labelString: '% of 1-minute Intervals',
+          display: false,
+          //labelString: '% of 1-minute Intervals',
           fontFamily: 'Arimo',
           fontSize: 18,
           fontColor: 'black',
+        },
+        gridLines: {
+          drawBorder: false,
+          drawTicks: false,
         },
       },
     ],
@@ -214,6 +232,15 @@ const chartTitleArr = {
   childrenSupportAverage: "Book Reading: Support Children's Speaking",
   fairnessDiscussionsAverage: 'Book Reading: Facilitate Discussions',
   multimodalInstructionAverage: 'Book Reading: Use Multimodal Instruction',
+
+  transitionTime: "Transition Time",
+  studentEngagement: ""
+}
+
+const chartTitleArrTemp = {
+  transitionTime: "Transition Time",
+  levelOfInstruction: "Level of Instruction",
+  studentEngagement: "Engagement Rating",
 }
 
 // Different observation types are going to show different data. This will be used to tell the program which ones to show for each type
@@ -895,7 +922,7 @@ class SiteProfileResults extends React.Component {
 
       var tempData = {
         label: `${fullName} ${label1}`,
-        data: chosenData,
+        data: [null].concat(chosenData, [null]),
         borderColor: color1,
         fill: false,
         tension: 0.0,
@@ -930,7 +957,7 @@ class SiteProfileResults extends React.Component {
 
         var tempData = {
           label: `${fullName} ${label2}`,
-          data: chosenData,
+          data: [null].concat(chosenData, [null]),
           borderColor: color2,
           fill: false,
           tension: 0.0,
@@ -955,7 +982,7 @@ class SiteProfileResults extends React.Component {
 
     var tempData = {
       label: `Site Average ${label1}`,
-      data: chosenData,
+      data: [null].concat(chosenData, [null]),
       borderColor: color1,
       borderDash: [10,5],
       fill: false,
@@ -980,7 +1007,7 @@ class SiteProfileResults extends React.Component {
 
       var tempData = {
         label: `Site Average ${label2}`,
-        data: chosenData,
+        data: [null].concat(chosenData, [null]),
         borderColor: color2,
         borderDash: [10,5],
         fill: false,
@@ -1018,6 +1045,11 @@ class SiteProfileResults extends React.Component {
       labels = tempMonths
     }
 
+    // Set the labels to only show the month
+    labels = labels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'long' }) } )
+
+    // Add spaces to the beginning and end of the labels
+    labels = [null].concat(labels, [null]);
 
     const lineData = {
       labels,
@@ -1223,8 +1255,15 @@ class SiteProfileResults extends React.Component {
       }
     }
 
+    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, height: 620, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
+
+    if(this.props.observationType == "classroomClimate")
+    {
+      lineContainerStyles = {minHeight: 500, marginTop: 20}
+    }
+
     return (
-      <div id="siteProfileResultsContainer">
+      <div id="siteProfileResultsContainer" >
         <Grid
           container
           style={{
@@ -1365,8 +1404,33 @@ class SiteProfileResults extends React.Component {
                   container
                   justify={'center'}
                   direction={'column'}
-                  style={{ minHeight: 500 }}
+                  style={lineContainerStyles}
                 >
+
+                  {/* Add label if this practice has one */}
+                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
+
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Sequential Activities</h3> : ""}
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> : ""}
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {
+                    this.props.observationType == "listeningToChildren"  ||
+                    this.props.observationType == "foundationSkills"  ||
+                    this.props.observationType == "writing"  ||
+                    this.props.observationType == "bookReading"  ||
+                    this.props.observationType == "languageEnvironment" ||
+                    this.props.observationType == "foundationSkills"
+                  ?
+                  <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3>
+                  :
+                  ""}
+
+
                   {this.props.observationType !== "classroomClimate" ? (
                     <Line
                       data={this.state.lineGraphData}
