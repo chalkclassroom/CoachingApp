@@ -120,6 +120,14 @@ const LineGraphOptions = {
   legend: {
     display: true,
     position: 'bottom',
+    boxWidth: 12,
+    usePointStyle: true,
+    labels: {
+      usePointStyle: true,
+      pointStyle: 'start',
+      padding: 10,
+      boxWidth: 12,
+    }
   },
   tooltips: {
     mode: 'index',
@@ -134,12 +142,13 @@ const LineGraphOptions = {
       {
         display: true,
         scaleLabel: {
-          display: false,
-          labelString: '',
+          display: true,
+          labelString: 'Date',
           fontFamily: 'Arimo',
           fontSize: 18,
           fontColor: 'black',
         },
+        /*
         ticks: {
           fontSize: 16,
           fontColor: 'black',
@@ -151,6 +160,7 @@ const LineGraphOptions = {
           display: false,
           color: "rgba(0,0,0,0)",
         }
+        */
       },
     ],
     yAxes: [
@@ -162,9 +172,11 @@ const LineGraphOptions = {
           callback: function(value: number): string {
             return value + '%'
           },
+          /*
           fontSize: 18,
           fontColor: 'black',
           padding: 20,
+          */
         },
         scaleLabel: {
           display: false,
@@ -174,15 +186,15 @@ const LineGraphOptions = {
           fontColor: 'black',
         },
         gridLines: {
-          drawBorder: false,
-          drawTicks: false,
+          //drawBorder: false,
+          //drawTicks: false,
         },
       },
     ],
   },
   plugins: {
     datalabels: {
-      display: 'auto',
+      display: true,
       color: 'gray',
       align: 'right',
       formatter: function(value: number): string {
@@ -922,10 +934,13 @@ class SiteProfileResults extends React.Component {
 
       var tempData = {
         label: `${fullName} ${label1}`,
-        data: [null].concat(chosenData, [null]),
+        data: chosenData,
         borderColor: color1,
+        backgroundColor: color1,
+        borderWidth: 4,
         fill: false,
         tension: 0.0,
+        pointStyle: 'circle',
       }
 
       // Add the months so we can set the right labels for the trends chart
@@ -957,10 +972,13 @@ class SiteProfileResults extends React.Component {
 
         var tempData = {
           label: `${fullName} ${label2}`,
-          data: [null].concat(chosenData, [null]),
+          data: chosenData,
           borderColor: color2,
+          backgroundColor: color2,
+          borderWidth: 4,
           fill: false,
           tension: 0.0,
+          pointStyle: 'circle',
         }
 
         // Add the months so we can set the right labels for the trends chart
@@ -982,11 +1000,14 @@ class SiteProfileResults extends React.Component {
 
     var tempData = {
       label: `Site Average ${label1}`,
-      data: [null].concat(chosenData, [null]),
+      data: chosenData,
       borderColor: color1,
+      backgroundColor: color1,
+      borderWidth: 4,
       borderDash: [10,5],
       fill: false,
       tension: 0.0,
+      pointStyle: 'circle',
     }
 
     tempDataSet.push(tempData)
@@ -1007,11 +1028,14 @@ class SiteProfileResults extends React.Component {
 
       var tempData = {
         label: `Site Average ${label2}`,
-        data: [null].concat(chosenData, [null]),
+        data: chosenData,
         borderColor: color2,
+        backgroundColor: color2,
+        borderWidth: 4,
         borderDash: [10,5],
         fill: false,
         tension: 0.0,
+        pointStyle: 'circle',
       }
 
       tempDataSet.push(tempData)
@@ -1045,11 +1069,8 @@ class SiteProfileResults extends React.Component {
       labels = tempMonths
     }
 
-    // Set the labels to only show the month
-    labels = labels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'long' }) } )
-
-    // Add spaces to the beginning and end of the labels
-    labels = [null].concat(labels, [null]);
+    // Set the labels to only show month formatted like Sep 2022
+    labels = labels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'short', year: 'numeric' }) } )
 
     const lineData = {
       labels,

@@ -1651,10 +1651,10 @@ class TrendData {
             : 0
 
         result.languageEnvironmentAverage[i] =
-          result.languageEnvironment[i] > 0
+          tempTotalIntervals > 0
             ? (result.languageEnvironment[i] / tempTotalIntervals).toFixed(2) *
               100
-            : 0
+            : null
       }
     }
 
@@ -1674,7 +1674,7 @@ class TrendData {
       tempDate = new Date(tempDate);
       tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
     }
-  
+
     let monthsCount = months.length;
     results[teacher.id] = {
       name: `${teacher.firstName} ${teacher.lastName}`,
@@ -1686,7 +1686,7 @@ class TrendData {
       noAC: new Array(monthsCount).fill(0),
       lineChartLabels: months
     };
-  
+
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = teacher.id;
@@ -1708,33 +1708,33 @@ class TrendData {
         }
         results[teacherId].totalIntervals[rowMonth]++
       }
-      
+
     }
 
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
-  
+
       for (let i = 0; i < monthsCount; i++) {
         result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.ac[i] = parseFloat((result.ac[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100; 
+        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.noAC[i] = parseFloat((result.noAC[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-  
+
         if (isNaN(result.teacherSupport[i])) {
           result.teacherSupport[i] = 0
-        } 
+        }
         if (isNaN(result.noSupport[i])) {
           result.noSupport[i] = 0
-        } 
+        }
         if (isNaN(result.ac[i])) {
           result.ac[i] = 0
-        } 
+        }
         if (isNaN(result.noAC[i])) {
           result.noAC[i] = 0
-        } 
+        }
       }
     }
-    
+
     console.log(results)
     return results;
     // // Initialize the array that will hold all the data
