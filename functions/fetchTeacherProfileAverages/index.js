@@ -354,6 +354,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
 
+                      for(var teacherIndex in teacher[0])
+                      {
+                        let tempTeacher = teacher[0][teacherIndex];
+                        tempTeacher.isChild = false;
+                      }
+
 
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       DATE(sessionStart) as GroupDate,

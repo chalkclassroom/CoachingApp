@@ -66,23 +66,37 @@ class TrendsLineChart extends React.Component<Props, {}> {
         trendsData = [0]
         lineColors = ["#ff0000"]
         break;
+
       case "transitionTime":
         trendsLabels = ["Transition Time", "Learning Activity"]
         trendsData = [teacherData.transitionTimeAverage, teacherData.transitionTimeAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = ["#EA7150", "#00AAE6"]
         break;
+
       case "listeningToChildren":
         trendsLabels = ["Listening/Encouraging", "No Target Behaviors Observed"]
         trendsData = [teacherData.encouragingAverage, teacherData.encouragingAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = ["#07DFBB", "#E94635"]
         break;
+
       case "foundationSkills":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Foundational Skills Instruction", "No Target Behaviors Observed"] : ["Engaged in Foundational Skills Activities", "Engaged in Other Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
-          [teacherData.foundationalSkillsAverage, teacherData.foundationalSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
+          [teacherData.writingSkillsAverage, teacherData.foundationalSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
           :
           [teacherData.childEngagedAverage, teacherData.childEngagedAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = ["#C00000", "#BFBFBF"]
+        break;
+
+      case "writing":
+        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Writing Instruction", "No Target Behaviors Observed"] : ["Engaged in Writing Activities", "Engaged in Other Activities"];
+        trendsData = this.props.radioValue == "teacherAverage" ?
+          [teacherData.writingSkillsAverage, teacherData.writingSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
+          :
+          [teacherData.childWritingSkillsAverage, teacherData.childWritingSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
+        lineColors = ["#C00000", "#BFBFBF"]
+        break;
+
       case "sequentialActivities":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Teacher Support", "No Suppoort"] : ["Sequential Activities", "Non-Sequential Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
@@ -91,6 +105,8 @@ class TrendsLineChart extends React.Component<Props, {}> {
           [teacherData.childNonSequentialActivitiesAverage.map(x => {return x !== null ?  100 - x : null}), teacherData.childNonSequentialActivitiesAverage]
         lineColors = this.props.radioValue == "teacherAverage" ? ["#5B9BD5", "#FF0000"] : ["#FFCE33", "#FF0000"]
         borderDash = [10, 5]
+        break;
+
       case "associativeAndCooperative":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Support for Associative and Cooperative Interactions", "No Suppoort"] : ["Engaged in Associative and Cooperative Interactions", "Did Not Interact"];
         trendsData = this.props.radioValue == "teacherAverage" ?
@@ -99,6 +115,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
           [teacherData.ac.map(x => {return x !== null ?  100 - x : null}), teacherData.ac]
         lineColors = this.props.radioValue == "teacherAverage" ? ["#E20000", "#2EB9EB"] : ["#E20000", "#7030A0"]
         borderDash = [10, 5]
+        break;
     }
 
 
@@ -127,7 +144,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
       dataSets.push(tempData);
     }
 
-    // Convert the labels to show only the month
+    // Convert the labels to show year and shortened month
     const labels = teacherData.lineChartLabels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'short', year: 'numeric' }) } )
 
     const lineData = {

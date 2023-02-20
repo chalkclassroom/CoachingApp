@@ -1200,7 +1200,7 @@ class TrendData {
       month: 'short',
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
+    // Set the month after the end date, formatted like Nov 2022
     var endDatePlusOneMonth = new Date(
       endDate.setMonth(endDate.getMonth() + 1)
     ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
@@ -1221,11 +1221,15 @@ class TrendData {
     results[teacher.id] = {
       name: tempName,
       totalIntervals: new Array(monthsCount).fill(0),
+      totalTeacherIntervals: new Array(monthsCount).fill(0),
+      totalChildIntervals: new Array(monthsCount).fill(0),
       writingSkills: new Array(monthsCount).fill(0),
+      childWritingSkills: new Array(monthsCount).fill(0),
       meaning: new Array(monthsCount).fill(0),
       printProcesses: new Array(monthsCount).fill(0),
 
       writingSkillsAverage: new Array(monthsCount).fill(0),
+      childWritingSkillsAverage: new Array(monthsCount).fill(0),
       meaningAverage: new Array(monthsCount).fill(0),
       printProcessesAverage: new Array(monthsCount).fill(0),
 
@@ -1275,10 +1279,47 @@ class TrendData {
         results[teacherId].printProcesses[rowMonth]++
       }
 
-      // Count each observation interval that has anything in it
-      if (!row.writing9) {
+      // Count each teacher interval that has a writing instruction in it
+      if (!row.writing9 && !row.isChild) {
         results[teacherId].writingSkills[rowMonth]++
       }
+
+      // Count each child interval that has a writing instruction in it
+      if (!row.writingChild9 && row.isChild) {
+        results[teacherId].childWritingSkills[rowMonth]++
+      }
+
+      // Count total number of teacher intervalse
+      if (
+        row.writing1 ||
+        row.writing2 ||
+        row.writing3 ||
+        row.writing4 ||
+        row.writing5 ||
+        row.writing6 ||
+        row.writing7 ||
+        row.writing8 ||
+        row.writing9
+      ) {
+        results[teacherId].totalTeacherIntervals[rowMonth]++
+      }
+
+      // Count total number of child intervalse
+      if (
+        row.writingChild1 ||
+        row.writingChild2 ||
+        row.writingChild3 ||
+        row.writingChild4 ||
+        row.writingChild5 ||
+        row.writingChild6 ||
+        row.writingChild7 ||
+        row.writingChild8 ||
+        row.writingChild9
+      ) {
+        results[teacherId].totalChildIntervals[rowMonth]++
+      }
+
+
     }
 
     // Calculate the averages in percentages
@@ -1289,6 +1330,8 @@ class TrendData {
       // Go through the months
       for (var i = 0; i < monthsCount; i++) {
         var tempTotalIntervals = result.totalIntervals[i]
+        var tempTotalTeacherIntervals = result.totalTeacherIntervals[i]
+        var tempTotalChildIntervals = result.totalChildIntervals[i]
 
         result.meaningAverage[i] =
           result.meaning[i] > 0
@@ -1299,11 +1342,15 @@ class TrendData {
             ? (result.printProcesses[i] / tempTotalIntervals).toFixed(2) * 100
             : 0
 
-        // THIS ONE ISN'T RIGHT FOR NOW
         result.writingSkillsAverage[i] =
-          result.writingSkills[i] > 0
-            ? (result.writingSkills[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
+          tempTotalTeacherIntervals > 0
+            ? (result.writingSkills[i] / tempTotalTeacherIntervals).toFixed(2) * 100
+            : null
+
+        result.childWritingSkillsAverage[i] =
+          tempTotalChildIntervals > 0
+            ? (result.childWritingSkills[i] / tempTotalChildIntervals).toFixed(2) * 100
+            : null
       }
     }
 
