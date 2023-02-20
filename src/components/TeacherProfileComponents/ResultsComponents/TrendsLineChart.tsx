@@ -91,6 +91,14 @@ class TrendsLineChart extends React.Component<Props, {}> {
           [teacherData.childNonSequentialActivitiesAverage.map(x => {return x !== null ?  100 - x : null}), teacherData.childNonSequentialActivitiesAverage]
         lineColors = this.props.radioValue == "teacherAverage" ? ["#5B9BD5", "#FF0000"] : ["#FFCE33", "#FF0000"]
         borderDash = [10, 5]
+      case "associativeAndCooperative":
+        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Support for Associative and Cooperative Interactions", "No Suppoort"] : ["Engaged in Associative and Cooperative Interactions", "Did Not Interact"];
+        trendsData = this.props.radioValue == "teacherAverage" ?
+          [teacherData.teacherSupport.map(x => {return x !== null ?  100 - x : null}), teacherData.teacherSupport]
+          :
+          [teacherData.ac.map(x => {return x !== null ?  100 - x : null}), teacherData.ac]
+        lineColors = this.props.radioValue == "teacherAverage" ? ["#E20000", "#2EB9EB"] : ["#E20000", "#7030A0"]
+        borderDash = [10, 5]
     }
 
 
