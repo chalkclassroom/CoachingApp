@@ -97,6 +97,12 @@ class TrendsLineChart extends React.Component<Props, {}> {
         lineColors = ["#C00000", "#BFBFBF"]
         break;
 
+      case "languageEnvironment":
+        trendsLabels = ["Supporting Language Development", "No Target Behaviors Observed"]
+        trendsData = [teacherData.languageEnvironmentAverage, teacherData.languageEnvironmentAverage.map(x => {return x !== null ?  100 - x : null})]
+        lineColors = ["#C00000", "#BFBFBF"]
+        break;
+
       case "sequentialActivities":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Teacher Support", "No Suppoort"] : ["Sequential Activities", "Non-Sequential Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
