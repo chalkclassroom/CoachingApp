@@ -105,7 +105,8 @@ class TrendsLineChart extends React.Component<Props, {}> {
       // Save the data
       var tempData = {
         label: trendsLabels[i],
-        data: [null].concat(trendsData[i], [null]),
+        //data: [null].concat(trendsData[i], [null]),
+        data: trendsData[i],
         borderColor: lineColors[i],
         borderWidth: 4,
         borderDash: borderDash,
@@ -119,10 +120,11 @@ class TrendsLineChart extends React.Component<Props, {}> {
     }
 
     // Convert the labels to show only the month
-    const labels = teacherData.lineChartLabels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'long' }) } )
+    const labels = teacherData.lineChartLabels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'short', year: 'numeric' }) } )
 
     const lineData = {
-      labels: [''].concat(labels, ['']),
+      // labels: [''].concat(labels, ['']),
+      labels: labels,
       datasets: dataSets,
     }
 
@@ -177,11 +179,11 @@ class TrendsLineChart extends React.Component<Props, {}> {
 
                         },
                         ticks: {
-                          fontSize: 18,
-                          fontColor: 'black',
+                          //fontSize: 18,
+                          //fontColor: 'black',
                         },
                         gridLines: {
-                          drawOnChartArea: false,
+                          //drawOnChartArea: false,
                         },
                       },
                     ],
@@ -194,9 +196,9 @@ class TrendsLineChart extends React.Component<Props, {}> {
                           callback: function(value: number): string {
                             return value + '%'
                           },
-                          fontSize: 18,
-                          fontColor: 'black',
-                          padding: 20,
+                          //fontSize: 18,
+                          //fontColor: 'black',
+                          // padding: 20,
                         },
                         scaleLabel: {
                           display: true,
@@ -205,8 +207,8 @@ class TrendsLineChart extends React.Component<Props, {}> {
 
                         },
                         gridLines: {
-                          drawBorder: false,
-                          drawTicks: false,
+                          //drawBorder: false,
+                          //drawTicks: false,
                         }
                       },
                     ],
@@ -225,7 +227,11 @@ class TrendsLineChart extends React.Component<Props, {}> {
                   },
                   plugins: {
                     datalabels: {
-                      display: false,
+                      display: true,
+                      formatter: function(value: number): string {
+                        return value + '%'
+                      },
+                      align: 'right',
                     },
                     legend: {
                       display: true,

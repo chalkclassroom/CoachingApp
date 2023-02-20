@@ -969,12 +969,13 @@ class TrendData {
             ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100
             : 0
         result.noSupportAverage[i] =
-          result.noSupport[i] > 0
+          (result.noSupport[i] > 0 || result.support[i] > 0) && tempTeacherInstructions > 0
             ? (result.noSupport[i] / tempTeacherInstructions).toFixed(2) * 100
             : null
 
+        // If there are any instructions for this month at all, then there will be child data.
         result.childNonSequentialActivitiesAverage[i] =
-          result.childNonSequentialActivities[i] > 0
+          tempTotalInstructions > 0
             ? (result.childNonSequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100
             : null
       }
