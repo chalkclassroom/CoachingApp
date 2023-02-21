@@ -133,11 +133,11 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
 
     var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageNoSupport[dataSize] = noSupportTotal / (noSupportTotal + teacherSupportTotal) * 100;
     siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageTeacherSupport[dataSize] = teacherSupportTotal / (noSupportTotal + teacherSupportTotal) * 100;
     siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
     // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];

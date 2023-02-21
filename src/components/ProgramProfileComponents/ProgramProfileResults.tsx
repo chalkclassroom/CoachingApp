@@ -58,6 +58,7 @@ import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetail
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import ClassroomClimateTrends from './Charts/ClassroomClimateTrends'
+import TransitionAverageBarDetails from './Charts/TransitionAverageBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -539,7 +540,7 @@ class ProgramProfileResults extends React.Component {
     var averages, trends
     switch (this.props.observationType) {
       case 'transitionTime':
-        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers )
+        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
@@ -1285,9 +1286,9 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
 
-                  {/* {this.props.observationType === 'transitionTime' ? (
+                  {this.props.observationType === 'transitionTime' ? (
                     <TransitionAverageBarDetails data={this.state.averages} />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Literacy Instruction Charts */}
                   {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
