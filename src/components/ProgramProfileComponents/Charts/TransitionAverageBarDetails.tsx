@@ -120,26 +120,26 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
         {
           label: 'Transition Time',
           data: transitionTimeAverage,
-          backgroundColor: "#FF0000",
+          backgroundColor: "#fc8c03",
         },
         {
           label: 'Learning Activity',
           data: learningActivityAverage,
-          backgroundColor: "#1155CC",
+          backgroundColor: "#03b1fc",
         },
         // The total Site Averages
         {
-          label: 'Transition Time',
+          label: 'Transition Time Program Average',
           data: siteAverageTransitionTimeAverage,
           backgroundColor: "#FFF",
-          borderColor: "#FF0000",
+          borderColor: "#fc8c03",
           borderWidth: 4,
         },
         {
-          label: 'Learning Activity',
+          label: 'Learning Activity Program Average',
           data: siteAverageLearningActivityAverage,
           backgroundColor: "#FFF",
-          borderColor: "#1155CC",
+          borderColor: "#03b1fc",
           borderWidth: 4,
         },
       ]

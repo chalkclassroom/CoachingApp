@@ -416,7 +416,7 @@ class TrendData {
       let teacherId = row.teacher.split("/")[2];
       let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
       results[teacherId].totalInstructions[rowMonth] += row.count;
-      if (["hlq", "hlqResonse"].includes(row.instructionType)) {
+      if (["hlq", "hlqResponse"].includes(row.instructionType)) {
         results[teacherId].highLevel[rowMonth] += row.count;
       } else {
         results[teacherId].lowLevel[rowMonth] += row.count;
@@ -608,13 +608,9 @@ class TrendData {
     let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
 
     console.log(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}))
-    results[teacherId].totalIntervals[rowMonth] += row.count
-    if (row.listening7) {
-      results[teacherId].noBehaviors[rowMonth] += row.listening7;
-    }
-    if (row.listening1 || row.listening2 || row.listening3 || row.listening4 || row.listening5 || row.listening6) {
-      results[teacherId].listeningInstruction[rowMonth] += Math.max(row.listening1, row.listening2, row.listening3, row.listening4, row.listening5, row.listening6)
-    }
+    results[teacherId].totalIntervals[rowMonth] += row.count;
+    results[teacherId].noBehaviors[rowMonth] += row.listening7;
+    results[teacherId].listeningInstruction[rowMonth] +=  (row.count - row.listening7);
   }
 
   let siteBar = {
@@ -642,7 +638,7 @@ class TrendData {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       }
-      siteBar.totalIntervals[i] = siteBar.listeningInstruction[i] + siteBar.noBehaviors[i];
+      siteBar.totalIntervals[i] += result.totalIntervals[i];
     }
   }
 
@@ -700,8 +696,8 @@ calculateSequentialActivitiesTrends = (data, teachers, startDate, endDate) => {
       let teacherId = row.teacher.split("/")[2];
       let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
 
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[teacherId].sequentialActivities[rowMonth] += Math.max(row.materials, row.drawing, row.playing, row.speaking)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].sequentialActivities[rowMonth] += (row.total - row.childNonSequential)
         results[teacherId].childNonSequential[rowMonth] += row.childNonSequential
         results[teacherId].totalIntervals[rowMonth] += row.total
       }

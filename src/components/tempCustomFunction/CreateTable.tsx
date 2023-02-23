@@ -172,7 +172,7 @@ class CreateTable extends React.Component<Props, State> {
   createTables = () => {
     const firebase = this.context;
 
-    firebase.createTables();
+    firebase.populateFirebase();
 
   }
 
@@ -189,8 +189,8 @@ class CreateTable extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
 
         <div className="content-wrap">
-          <h1>Create the results tables by clicking the button below: </h1>
-          <button onClick={this.createTables}>Create Tables</button>
+          <h1>Populate by clicking the button below: </h1>
+          <button onClick={this.createTables}>Populate</button>
         </div>
 
         {this.state.teacherModal ? (

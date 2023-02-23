@@ -93,7 +93,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
       if(teacher.totalInstructions > 0)
       {
-        let tempHlqAverage = Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100;
+        let tempHlqAverage = Math.round(teacher['highLevel']);
         let tempLlqAverage = 100 - tempHlqAverage;
 
         hlqAverage.push(tempHlqAverage);
@@ -115,7 +115,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
 
     var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
+    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
 
     var siteAverageLlqAverage = new Array(dataSize).fill(0);
     siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];

@@ -413,6 +413,9 @@ class AveragesData {
         result.hlqResponse > 0
           ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100
           : 0
+
+      result.highLevel = tempTotalInstructions > 0 ? ((result.hlq + result.hlqResponse) / tempTotalInstructions) * 100 : 0
+
       result.llqAverage =
         result.llq > 0
           ? (result.llq / tempTotalInstructions).toFixed(2) * 100
@@ -422,11 +425,13 @@ class AveragesData {
           ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100
           : 0
 
+      result.lowLevel = tempTotalInstructions > 0 ? ((result.llq + result.llqResponse) / tempTotalInstructions) : 0
+
       // Gather info for the site bar
-      siteBar.hlq += result.hlqAverage
-      siteBar.hlqResponse += result.hlqResponseAverage
-      siteBar.llq += result.llqAverage
-      siteBar.llqResponse += result.llqResponseAverage
+      siteBar.hlq += result.hlq
+      siteBar.hlqResponse += result.hlqResponse
+      siteBar.llq += result.llq
+      siteBar.llqResponse += result.llqResponse
 
       siteBar.total += tempTotalInstructions
 
@@ -459,6 +464,9 @@ class AveragesData {
             )
           )
         : 0
+
+    siteBar.highLevel = siteBar.total > 0 ? ((siteBar.hlq + siteBar.hlqResponse) / siteBar.total) * 100 : 0
+
     siteBar.llqAverage =
       siteBar.llq > 0
         ? Math.round(
@@ -473,6 +481,9 @@ class AveragesData {
             )
           )
         : 0
+
+    siteBar.lowLevel = siteBar.total > 0 ? ((siteBar.llq + siteBar.llqResponse) / siteBar.total) : 0
+
 
     results.siteBar = siteBar
 
@@ -719,8 +730,8 @@ class AveragesData {
       let row = data[rowIndex]
       let teacherId = row.teacher.split('/')[2]
       results[teacherId].totalInstructions++
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[teacherId].engaged += Math.max(row.materials, row.drawing, row.playing, row.speaking)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].engaged += (row.total - row.childNonSequential)
         results[teacherId].noInteraction += row.childNonSequential
         results[teacherId].childDenominator += row.total
       }
@@ -731,8 +742,26 @@ class AveragesData {
       }
     }
 
+    let siteBar = {
+      name: "Site Average",
+      teacherDenominator: 0,
+      childDenominator: 0,
+      support: 0,
+      noSupport: 0,
+      engaged: 0,
+      noInteraction: 0,
+      totalInstructions: 0
+    }
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex]
+
+      siteBar.support += result.support;
+      siteBar.noSupport += result.noSupport;
+      siteBar.engaged += result.engaged;
+      siteBar.noInteraction += result.noInteraction;
+      siteBar.teacherDenominator += result.teacherDenominator;
+      siteBar.childDenominator += result.childDenominator;
 
       if (result.teacherDenominator > 0) {
         result.support = result.support/result.teacherDenominator * 100
@@ -750,6 +779,10 @@ class AveragesData {
       }
     }
 
+    siteBar.noSupport = siteBar.teacherDenominator > 0 ? siteBar.noSupport / siteBar.teacherDenominator * 100 : 0
+    siteBar.noInteraction = siteBar.childDenominator > 0 ? siteBar.noInteraction / siteBar.childDenominator * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 
