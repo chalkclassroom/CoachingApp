@@ -154,12 +154,12 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Colors and data labels are going to change as we switch between Child and Teacher
-    let topBarBackgroundColor = "#5B9BD5";
-    let topBorderColor = "#0070C0";
+    let topBarBackgroundColor = "#FF0000";
+    let topBorderColor = "#FF0000";
     let topBarLabel = 'No Support';
 
-    let bottomBarBackgroundColor = "#FF0000";
-    let bottomBorderColor = "#FF0000";
+    let bottomBarBackgroundColor = "#5B9BD5";
+    let bottomBorderColor = "#0070C0";
     let bottomBarLabel = 'Teacher Support';
 
 

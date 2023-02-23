@@ -105,15 +105,15 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
     console.log("number of teachers ", numberOfTeachersWithData);
 
-    var siteAverageNoBehaviors = new Array(dataSize + 1).fill(0);
-    siteAverageNoBehaviors[dataSize] = Math.round(( noBehaviorsTotal / numberOfTeachersWithData));
+    var siteAverageNoBehaviors = new Array(dataSize).fill(0);
+    siteAverageNoBehaviors[dataSize - 1] = Math.round(data.siteBar.nb);
 
     var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize] = 100 - siteAverageNoBehaviors[dataSize];
+    siteAverageListening[dataSize - 1] = 100 - siteAverageNoBehaviors[dataSize - 1];
     // siteAverageListening[dataSize] = Math.round(( listeningTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
 
     // Add site average to the list of names
-    teacherNames.push("Site Average");
+    // teacherNames.push("Site Average");
 
     // Use that data to create our dataset
     var dataSets = [

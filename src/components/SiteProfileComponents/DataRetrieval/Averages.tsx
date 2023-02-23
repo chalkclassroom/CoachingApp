@@ -660,6 +660,12 @@ class AveragesData {
       results[teacherId].totalObserved += row.count
     }
 
+    let siteBar = {
+      name: "Site Average",
+      nb: 0,
+      t: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for (var resultsIndex in results) {
@@ -667,6 +673,8 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions
       var tempTotalObserved = result.totalObserved
+      siteBar.nb += result.noBehaviors
+      siteBar.t += tempTotalObserved
 
       result.eyeLevelAverage =
         result.eyeLevel > 0
@@ -703,6 +711,9 @@ class AveragesData {
           : 0
     }
 
+    siteBar.nb = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 
@@ -826,14 +837,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -880,14 +891,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -934,14 +945,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;

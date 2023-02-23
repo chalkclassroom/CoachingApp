@@ -1266,14 +1266,42 @@ class SiteProfileResults extends React.Component {
         }
       }
     } else {
-      LineGraphOptions.scales.yAxes[0].ticks.min = 0
-      LineGraphOptions.scales.yAxes[0].ticks.max = 100
-      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
-      LineGraphOptions.scales.yAxes[0].ticks.callback = function(
-        value: number
-      ): string {
-        return value + '%'
+      LineGraphOptions.plugins.datalabels = {
+        display: true,
+        color: 'gray',
+        align: 'right',
+        formatter: function(value: number): string {
+          return value + '%'
+        }
       }
+      LineGraphOptions.scales.yAxes = [
+        {
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            callback: function(value: number): string {
+              return value + '%'
+            },
+            /*
+            fontSize: 18,
+            fontColor: 'black',
+            padding: 20,
+            */
+          },
+          scaleLabel: {
+            display: false,
+            //labelString: '% of 1-minute Intervals',
+            fontFamily: 'Arimo',
+            fontSize: 18,
+            fontColor: 'black',
+          },
+          gridLines: {
+            //drawBorder: false,
+            //drawTicks: false,
+          },
+        },
+      ]
     }
 
     let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, height: 620, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
