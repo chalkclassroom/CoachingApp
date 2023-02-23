@@ -241,8 +241,10 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
      * Find the highest percentage number to show on graph. (10 above highest value)
      */
     // Find the highest number from all the arrays
-    let maxArr = [...siteApprovalAverage, ...siteDisapprovalAverage, ...teacherApprovalAverages, ...teacherApprovalAverages]
+    let maxArr = [...siteApprovalAverage, ...siteDisapprovalAverage, ...teacherApprovalAverages, ...teacherDisapprovalAverages]
     let maxValue = Math.max.apply(Math, maxArr);
+    console.log("MAX VALUE : ", maxValue);
+
     // Round to the next highest 10 (add 10 so if the highest is 70, we'll get 80)
     maxValue = Math.floor( (maxValue + 10) / 10) * 10;
 

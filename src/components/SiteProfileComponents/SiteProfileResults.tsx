@@ -838,8 +838,8 @@ class SiteProfileResults extends React.Component {
       color2 = "#E5E5E5"
     }
     if (this.props.observationType === "transitionTime") {
-      type = "total"
-      type2 = "sessionTotal"
+      type = "transitionAverage"
+      type2 = "learningAverage"
       label1 = "Transition Time"
       label2 = "Learning Activity"
       color1 = "#fc8c03"
@@ -898,15 +898,15 @@ class SiteProfileResults extends React.Component {
       }
       if (this.props.observationType === "mathInstruction") {
         if (type === "teacherAverage") {
-          type = "teacherSupport"
-          type2 = "noSupport"
+          type = "teacherSupportAverage"
+          type2 = "teacherNoSupportAverage"
           label1 = "Teacher Support"
           label2 = "No Support"
           color1 = "#5B9BD5"
           color2 = "#C00000"
         } else {
-          type = "math"
-          type2 = "otherActivities"
+          type = "childMathAverage"
+          type2 = "childOtherActivitiesAverage"
           label1 = "Math"
           label2 = "Other Activities"
           color1 = "#5B9BD5"

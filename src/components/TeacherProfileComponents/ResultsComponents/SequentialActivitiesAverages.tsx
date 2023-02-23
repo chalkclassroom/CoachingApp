@@ -37,8 +37,6 @@ class SequentialActivitiesAverages extends React.Component<Props, {}> {
 
   setData = () => {
 
-    console.log("DATA => ", this.props.data);
-
     // Make sure the data is there
     if( !(this.props.data) || Object.keys(this.props.data).length <= 0 || !(this.props.teacherId) || this.props.teacherId == "" || !(this.props.type) || this.props.type == "" )
     {
@@ -70,11 +68,19 @@ class SequentialActivitiesAverages extends React.Component<Props, {}> {
 
     const sequentialActivityData = {
       //labels: this.state.labels,
-      labels: [
+      labels: this.props.type == "teacherAverage" ?
+      [
         ['Helping children do sequential', 'activities with manipulatives or toys'],
         ['Supporting children as they draw ', 'images or write messages'],
         'Demonstrating the steps to an activity or game',
         ['Supporting children as they act out','a dramatic play scenario or book']
+      ]
+      :
+      [
+        ['Using materials in a step-by-step', 'predictable way'],
+        ['Drawing recognizable images or', 'writing names or messages', '(letters or letter-like forms)'],
+        ['Playing a game with set rules', 'and/or taking turns'],
+        ['Speaking or acting according to', 'a pretend scenario that', 'follows a predictable plot']
       ],
       datasets: [
         {
@@ -83,7 +89,7 @@ class SequentialActivitiesAverages extends React.Component<Props, {}> {
           data: this.props.type == "teacherAverage" ?
             [teacherData.sequentialActivitiesAverage ,teacherData.drawImagesAverage ,teacherData.demonstrateStepsAverage ,teacherData.actOutAverage]
             :
-            [teacherData.materialsAverage, teacherData.drawImagesAverage, teacherData.playingAverage, teacherData.speakingAverage],
+            [teacherData.materialsAverage, teacherData.drawingAverage, teacherData.playingAverage, teacherData.speakingAverage],
           label: 'Average',
           backgroundColor: this.props.type == "teacherAverage" ? ["#459AEB", "#459AEB", "#459AEB","#459AEB"] : ["#FFD300", "#FFD300", "#FFD300", "#FFD300"],
           hoverBackgroundColor: this.state.barColors,
