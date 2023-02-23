@@ -28,12 +28,15 @@ class AveragesData {
    */
   calculateTransitionAverage = (data, sites, names) => {
     var results = {};
+
+    // Initialize sites
     for(var siteIndex in sites)
     {
 
       results[siteIndex] = {
         name: names[siteIndex].name,
-        startDate: [],
+        ids: [],
+        /*
         total: 0,
         line: 0,
         traveling: 0,
@@ -41,31 +44,44 @@ class AveragesData {
         routines: 0,
         behaviorManagement: 0,
         other: 0,
+        */
+        //totalTransitionCount: 0,
         totalTransitionTime: 0,
-        totalTransitionCount: 0,
         sessionTotal: 0,
       };
 
     }
 
-    // Get number of instances for each type of data
+
+
+    // Go through each site
     for(var siteIndex in sites)
     {
+      // Go through each
       for(var rowIndex in sites[siteIndex])
       {
         var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
+
+        /*
         results[siteIndex].line += row.line
         results[siteIndex].traveling += row.traveling
         results[siteIndex].waiting += row.waiting
         results[siteIndex].routines += row.routines
         results[siteIndex].behaviorManagement += row.behaviorManagement
         results[siteIndex].other += row.other
-        if (!results[siteIndex].startDate.includes(row.sessionStart)) {
-          results[siteIndex].startDate.push(row.sessionStart)
-          results[siteIndex].total += row.sessionTotal
+        */
+
+
+        results[siteIndex]
+
+        // Check to see if we already counted the session total for this observation
+        if (!results[siteIndex].ids.includes(row.id)) {
+          results[siteIndex].ids.push(row.id)
+          results[siteIndex].sessionTotal += row.sessionTotal
         }
+
         results[siteIndex].totalTransitionTime += row.total
 
       }
@@ -74,7 +90,7 @@ class AveragesData {
     let programBar = {
       name: 'Program Average',
       total: 0,
-      transitionTimeAverage: 0,
+      transitionTimeAverageTotal: 0,
       learningActivityAverage: 0,
     }
 
@@ -82,27 +98,52 @@ class AveragesData {
     // Go through each teacher
     for(var resultsIndex in results)
     {
-    var result = results[resultsIndex];
+      var result = results[resultsIndex];
 
-    programBar.sequentialActivities += result.sequentialActivities
-    programBar.childNonSequential += result.childNonSequential
-    programBar.support += result.support
-    programBar.noSupport += result.noSupport
-    programBar.totalInstructions += result.totalInstructions
-    programBar.totalSupport += result.totalSupport;
+      /*
+      programBar.sequentialActivities += result.sequentialActivities
+      programBar.childNonSequential += result.childNonSequential
+      programBar.support += result.support
+      programBar.noSupport += result.noSupport
+      programBar.totalInstructions += result.totalInstructions
+      programBar.totalSupport += result.totalSupport;
+      */
 
-    result.transitionTimeAverage =
-    result.total > 0
-      ? (result.totalTransitionTime / result.total).toFixed(2) * 100
-      : 0
-    result.learningActivityAverage =
-    result.totalTransitionTime > 0 ? 100 - result.transitionTimeAverage : 0
+      if (result.sessionTotal > 0)
+      {
+        result.transitionTimeAverage = (result.totalTransitionTime / result.sessionTotal).toFixed(2) * 100;
+        result.learningActivityAverage = 100 - result.transitionTimeAverage;
+
+        // Gather data for the programBar
+        programBar.transitionTimeAverageTotal += result.transitionTimeAverage
+        programBar.total++;
+      }
+      else
+      {
+        result.transitionTimeAverage = 0;
+        result.learningActivityAverage = 0;
+      }
+
+      /*
+      result.transitionTimeAverage = result.total > 0
+        ? (result.totalTransitionTime / result.total).toFixed(2) * 100
+        : 0
+      result.learningActivityAverage =
+      result.totalTransitionTime > 0 ? 100 - result.transitionTimeAverage : 0
+      */
+
 
     }
 
-  programBar.transitionTimeAverage += result.transitionTimeAverage
-  programBar.learningActivityAverage += result.learningActivityAverage
-  
+    // Calculate program bar averages
+    if(programBar.total > 0 )
+    {
+      programBar.transitionTimeAverage = Math.round(programBar.transitionTimeAverageTotal / programBar.total);
+      programBar.learningActivityAverage = 100 - programBar.transitionTimeAverage;
+    }
+
+
+
 
   results.programBar = programBar
 
@@ -155,7 +196,7 @@ class AveragesData {
           results[siteIndex][row.behaviorResponse] += row.count
           results[siteIndex].total += row.count
         }
-  
+
         // Get tone rating
         if (row.toneRating !== null) {
           results[siteIndex].toneTotal += row.toneRating

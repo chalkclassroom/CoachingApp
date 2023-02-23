@@ -416,6 +416,7 @@ class TrendData {
 
       results[teacherId].childNonMath[rowMonth] += row.noMath
       results[teacherId].childMath[rowMonth] += row.count - row.noMath
+
     }
 
     // Calculate the averages in percentages
@@ -1721,13 +1722,13 @@ class TrendData {
         result.noAC[i] = parseFloat((result.noAC[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
         if (isNaN(result.teacherSupport[i])) {
-          result.teacherSupport[i] = 0
+          result.teacherSupport[i] = null
         }
         if (isNaN(result.noSupport[i])) {
           result.noSupport[i] = 0
         }
         if (isNaN(result.ac[i])) {
-          result.ac[i] = 0
+          result.ac[i] = null
         }
         if (isNaN(result.noAC[i])) {
           result.noAC[i] = 0

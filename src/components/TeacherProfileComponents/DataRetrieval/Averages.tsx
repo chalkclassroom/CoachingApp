@@ -125,7 +125,7 @@ class AveragesData {
       var teacherId = teacher.id
 
       // Add to behavior types
-      // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+      // Need to make sure we're not counting the rows with tone rating.
       if (
         row.behaviorResponse === 'nonspecificapproval' ||
         row.behaviorResponse === 'specificapproval' ||
@@ -202,14 +202,6 @@ class AveragesData {
           ? Math.round(result.toneTotal / result.toneCount)
           : -1
 
-      /*
-      var tempTotalInstructions = result.total;
-
-      result.nonspecificapprovalAverage = result.nonspecificapproval > 0 ? (result.nonspecificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.specificapprovalAverage = result.specificapproval > 0 ? (result.specificapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.disapprovalAverage = result.disapproval > 0 ? (result.disapproval / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.redirectionAverage = result.redirection > 0 ? (result.redirection / tempTotalInstructions).toFixed(2) * 100 : 0;
-      */
     }
 
     return results

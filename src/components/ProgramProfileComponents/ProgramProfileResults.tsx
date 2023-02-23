@@ -403,7 +403,7 @@ class ProgramProfileResults extends React.Component {
         averagesList[siteIndex] = averagesList[siteIndex].filter(
           o =>
             (!(tempFromDate < new Date(o.startDate) && tempToDate > new Date(o.startDate)) && !(tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value)) && o.teacher === tempUserId) ||
-            o.teacher !== tempUserId 
+            o.teacher !== tempUserId
         )
       }
       // Set the site names
@@ -615,7 +615,6 @@ class ProgramProfileResults extends React.Component {
     let color2 = "";
 
     var trends = this.state.trends
-    console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
@@ -637,8 +636,8 @@ class ProgramProfileResults extends React.Component {
       color2 = "#E5E5E5"
     }
     if (this.props.observationType === "transitionTime") {
-      type = "total"
-      type2 = "sessionTotal"
+      type = "transitionTimeAverage"
+      type2 = "learningActivityAverage"
       label1 = "Transition Time"
       label2 = "Learning Activity"
       color1 = "#fc8c03"
@@ -861,7 +860,6 @@ class ProgramProfileResults extends React.Component {
       datasets: tempDataSet,
     }
 
-    console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -1137,7 +1135,7 @@ class ProgramProfileResults extends React.Component {
                 <RadioSets type={this.props.observationType} />
               </RadioGroup>
             ) : null}
-            
+
             {/*
                     The chart switcher
                 */}

@@ -82,7 +82,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
       case "foundationSkills":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Foundational Skills Instruction", "No Target Behaviors Observed"] : ["Engaged in Foundational Skills Activities", "Engaged in Other Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
-          [teacherData.writingSkillsAverage, teacherData.foundationalSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
+          [teacherData.foundationalSkillsAverage, teacherData.foundationalSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
           :
           [teacherData.childEngagedAverage, teacherData.childEngagedAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = ["#C00000", "#BFBFBF"]
@@ -104,7 +104,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
         break;
 
       case "sequentialActivities":
-        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Teacher Support", "No Suppoort"] : ["Sequential Activities", "Non-Sequential Activities"];
+        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Teacher Support", "No Support"] : ["Sequential Activities", "Non-Sequential Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
           [teacherData.noSupportAverage.map(x => {return x !== null ?  100 - x : null}), teacherData.noSupportAverage]
           :
@@ -116,10 +116,10 @@ class TrendsLineChart extends React.Component<Props, {}> {
       case "associativeAndCooperative":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Support for Associative and Cooperative Interactions", "No Suppoort"] : ["Engaged in Associative and Cooperative Interactions", "Did Not Interact"];
         trendsData = this.props.radioValue == "teacherAverage" ?
-          [teacherData.teacherSupport.map(x => {return x !== null ?  100 - x : null}), teacherData.teacherSupport]
+          [teacherData.teacherSupport, teacherData.teacherSupport.map(x => {return x !== null ?  100 - x : null})]
           :
-          [teacherData.ac.map(x => {return x !== null ?  100 - x : null}), teacherData.ac]
-        lineColors = this.props.radioValue == "teacherAverage" ? ["#E20000", "#2EB9EB"] : ["#E20000", "#7030A0"]
+          [teacherData.ac, teacherData.ac.map(x => {return x !== null ?  100 - x : null})]
+        lineColors = this.props.radioValue == "teacherAverage" ? ["#2EB9EB", "#E20000"] : ["#7030A0", "#E20000"]
         borderDash = [10, 5]
         break;
     }

@@ -379,7 +379,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
                       fontWeight: '400',
                     }}
                   >
-                    {value['toneAverage']}
+                    {value['toneAverage'] > 0 ? value['toneAverage'] : "N/A"}
                   </h4>
                 </div>
               )
