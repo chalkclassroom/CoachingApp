@@ -93,26 +93,21 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
       transitionTimeAverage.push(Math.round((teacher['transitionTimeAverage'] + Number.EPSILON) * 100) / 100);
       learningActivityAverage.push(Math.round((teacher['learningActivityAverage'] + Number.EPSILON) * 100) / 100);
 
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
-
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
-
     }
 
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+
     var dataSize = Object.keys(data).length;
 
     var siteAverageLearningActivityAverage = new Array(dataSize).fill(0);
-    siteAverageLearningActivityAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
+    siteAverageLearningActivityAverage[dataSize - 1] = data.programBar.learningActivityAverage;
+    //siteAverageLearningActivityAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
 
     var siteAverageTransitionTimeAverage = new Array(dataSize).fill(0);
-    siteAverageTransitionTimeAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
+    siteAverageTransitionTimeAverage[dataSize - 1] = data.programBar.transitionTimeAverage;
+    //siteAverageTransitionTimeAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
 
     // Use that data to create our dataset
 
@@ -120,26 +115,26 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
         {
           label: 'Transition Time',
           data: transitionTimeAverage,
-          backgroundColor: "#fc8c03",
+          backgroundColor: "#EA7150",
         },
         {
           label: 'Learning Activity',
           data: learningActivityAverage,
-          backgroundColor: "#03b1fc",
+          backgroundColor: "#00B0F0",
         },
         // The total Site Averages
         {
           label: 'Transition Time Program Average',
           data: siteAverageTransitionTimeAverage,
           backgroundColor: "#FFF",
-          borderColor: "#fc8c03",
+          borderColor: "#EA7150",
           borderWidth: 4,
         },
         {
           label: 'Learning Activity Program Average',
           data: siteAverageLearningActivityAverage,
           backgroundColor: "#FFF",
-          borderColor: "#03b1fc",
+          borderColor: "#00B0F0",
           borderWidth: 4,
         },
       ]
@@ -187,7 +182,7 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
 
     return (
       <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Sequential Activities</h2>
+      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Transition Time</h2>
       <div className={"realChart"} style={{height: 500, width: 500 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
