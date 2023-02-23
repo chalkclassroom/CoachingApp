@@ -687,21 +687,23 @@ class TrendData {
   for (let siteIndex in sites) {
     results[siteIndex] = {
       name: '',
+      totalSupport: new Array(monthsCount).fill(0),
+      totalIntervals: new Array(monthsCount).fill(0),
       support: new Array(monthsCount).fill(0),
-      noSupport: new Array(monthsCount).fill(0),
       sequentialActivities: new Array(monthsCount).fill(0),
+      noSupport: new Array(monthsCount).fill(0),
       childNonSequential: new Array(monthsCount).fill(0),
-      total: new Array(monthsCount).fill(0),
       lineChartLabels: months
     };
   }
 
   let programBar = {
-    name: "Site Average",
-    total: new Array(monthsCount).fill(0),
+    name: "Program Average",
+    totalSupport: new Array(monthsCount).fill(0),
+    totalIntervals: new Array(monthsCount).fill(0),
     support: new Array(monthsCount).fill(0),
-    noSupport: new Array(monthsCount).fill(0),
     sequentialActivities: new Array(monthsCount).fill(0),
+    noSupport: new Array(monthsCount).fill(0),
     childNonSequential: new Array(monthsCount).fill(0),
     lineChartLabels: months
   }
@@ -711,35 +713,34 @@ class TrendData {
     for (let rowIndex in sites[siteIndex]) {
       let row = sites[siteIndex][rowIndex];
       let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
-      results[siteIndex].support[rowMonth] = row.support; //transition time
-      results[siteIndex].noSupport[rowMonth] = row.noSupport;
-      results[siteIndex].sequentialActivities[rowMonth] = row.sequentialActivities; //transition time
-      results[siteIndex].childNonSequential[rowMonth] = row.childNonSequential;
-      results[siteIndex].total[rowMonth] = row.total;
-      console.log(row)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[siteIndex].sequentialActivities[rowMonth] += (row.total - row.childNonSequential)
+        results[siteIndex].childNonSequential[rowMonth] += row.childNonSequential
+        results[siteIndex].totalIntervals[rowMonth] += row.total
+      }
+      if (row.peopletype === 3) {
+        results[siteIndex].support[rowMonth] += row.support
+        results[siteIndex].noSupport[rowMonth] += row.noSupport
+        results[siteIndex].totalSupport[rowMonth] += row.support + row.noSupport
+      }
     }
   }
-  console.log(results);
   // Calculate the averages in percentages
   // Go through each teacher
-  for(var resultsIndex in results)
-  {
-    var result = results[resultsIndex];
+  for (let resultsIndex in results) {
+    let result = results[resultsIndex];
 
-    // Go through the months
-    for(var i = 0; i < monthsCount; i++)
-    {
+    for (let i = 0; i < monthsCount; i++) {
+      programBar.support[i] += result.support[i]
+      programBar.noSupport[i] += result.noSupport[i]
+      programBar.sequentialActivities[i] += result.sequentialActivities[i]
+      programBar.childNonSequential[i] += result.childNonSequential[i]
 
-      // result.sequentialActivitiesAverage[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.drawImagesAverage[i] = result.drawImages[i] > 0 ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.demonstrateStepsAverage[i] = result.demonstrateSteps[i] > 0 ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      // result.actOutAverage[i] = result.actOut[i] > 0 ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
+      result.support[i] = parseFloat((result.support[i] / result.totalSupport[i]).toFixed(2)) * 100;
+      result.sequentialActivities[i] = parseFloat((result.sequentialActivities[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+      result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100; 
+      result.childNonSequential[i] = parseFloat((result.childNonSequential[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
-      // result.notAtCenterAverage[i] = result.notAtCenter[i] > 0 ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.support[i] = result.support[i] > 0 ? (result.support[i] / result.total[i]) : 0;
-      result.noSupport[i] = result.noSupport[i] > 0 ? (100 - result.support[i]) : 0;
-      result.sequentialActivities[i] = result.sequentialActivities[i] > 0 ? (result.sequentialActivities[i] / result.total[i]) : 0;
-      result.childNonSequential[i] = result.childNonSequential[i] > 0 ? (100 - result.sequentialActivities[i]) : 0;
       if (isNaN(result.support[i])) {
         result.support[i] = 0
       } 
@@ -752,36 +753,20 @@ class TrendData {
       if (isNaN(result.childNonSequential[i])) {
         result.childNonSequential[i] = 0
       } 
-
-      programBar.support[i] = programBar.support[i] + result.support[i];
-      programBar.noSupport[i] = programBar.noSupport[i] + result.noSupport[i]
-      programBar.sequentialActivities[i] = programBar.sequentialActivities[i] + result.sequentialActivities[i];
-      programBar.noSupport[i] = programBar.childNonSequential[i] + result.childNonSequential[i]
-      programBar.total[i] += result.total[i];
-
-      if (isNaN(programBar.support[i])) {
-        programBar.support[i] = 0
-      } 
-      if (isNaN(programBar.noSupport[i])) {
-        programBar.noSupport[i] = 0
-      } 
-      if (isNaN(programBar.sequentialActivities[i])) {
-        programBar.sequentialActivities[i] = 0
-      } 
-      if (isNaN(programBar.childNonSequential[i])) {
-        programBar.childNonSequential[i] = 0
-      } 
+      programBar.totalIntervals[i] += result.totalIntervals[i]
+      programBar.totalSupport[i] += result.totalSupport[i]
     }
   }
 
   for (let i = 0; i < monthsCount; i++) {
-    programBar.support[i] = programBar.support[i] / programBar.total[i];
-    programBar.noSupport[i] = 100 - programBar.support[i];
-    programBar.sequentialActivities[i] = programBar.sequentialActivities[i] / programBar.total[i];
-    programBar.childNonSequential[i] = 100 - programBar.sequentialActivities[i];
+    programBar.support[i] = parseFloat((programBar.support[i] / programBar.totalSupport[i]).toFixed(2)) * 100;
+    programBar.sequentialActivities[i] = parseFloat((programBar.sequentialActivities[i] / programBar.totalIntervals[i]).toFixed(2)) * 100;
+    programBar.noSupport[i] = parseFloat((programBar.noSupport[i] / programBar.totalSupport[i]).toFixed(2)) * 100; 
+    programBar.childNonSequential[i] = parseFloat((programBar.childNonSequential[i] / programBar.totalIntervals[i]).toFixed(2)) * 100;
+
     if (isNaN(programBar.support[i])) {
       programBar.support[i] = 0
-      } 
+    } 
     if (isNaN(programBar.noSupport[i])) {
       programBar.noSupport[i] = 0
     } 
@@ -792,7 +777,6 @@ class TrendData {
       programBar.childNonSequential[i] = 0
     } 
   }
-
 
   results.programBar = programBar;
   console.log(results)

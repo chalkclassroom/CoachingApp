@@ -6886,7 +6886,29 @@ class Firebase {
 
 
     // console.log("Adding partner...")
-    // await this.db.collection('users').doc(user).collection('partners').doc("bathory").set({});
+    const teacherId: Array<string> = [
+      "farraday",
+      "smalls",
+      "jeeter",
+      "pickles",
+      "portland",
+      "pennywise",
+      "phantom",
+      "forts",
+      "callaway",
+      "steed",
+      "dinwiddie",
+      "daniels",
+      "lafayette",
+      "sawmill",
+      "oladue",
+      "perenni",
+      "rJxNhJmzjRZP7xg29Ko6"
+    ];
+    for (let index in teacherId) {
+      await this.db.collection('users').doc(user).collection('partners').doc(teacherId[index]).set({});
+    }
+    
 
     // console.log(`Creating Writing observation for ${user} observing bathory...`)
     // const entryNumber: number = Math.floor(Math.random() * 10);
@@ -8371,8 +8393,11 @@ class Firebase {
     knowledgeCheckReading: true,
     knowledgeCheckWriting: true
   })
-  console.log(`Adding partner to ${user}...`)
-  await this.db.collection('users').doc(user).collection('partners').doc("hanes").set({}).then(() => window.location.reload());
+  console.log(`Adding partners to ${user}...`)
+  for (let index = 0; index < teacherId.length - 1; index++) {
+    await this.db.collection('users').doc(user).collection('partners').doc(teacherId[index]).set({});
+  }
+  await this.db.collection('users').doc(user).collection('partners').doc(teacherId[teacherId.length-1]).set({}).then(() => window.location.reload())
   /** END */
 
     secondFirebase.delete() // Frees resources for any subsequent users created

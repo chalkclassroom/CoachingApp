@@ -1003,8 +1003,8 @@ calculateWritingSkillsTrends = (data, teachers, startDate, endDate) => {
     }
 
     for (let i = 0; i < monthsCount; i++) {
-      siteBar.literacyInstruction[i] = siteBar.literacyInstruction[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
-      siteBar.noBehaviors[i] = siteBar.noBehaviors[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+      siteBar.literacyInstruction[i] = siteBar.total[i] > 0 ? parseFloat((siteBar.literacyInstruction[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
+      siteBar.noBehaviors[i] = siteBar.total[i] > 0 ? parseFloat((siteBar.noBehaviors[i] / siteBar.total[i]).toFixed(2)) * 100 : 0;
     }
 
     results.siteBar = siteBar;

@@ -88,7 +88,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Program Average")
       {
         continue;
       }
@@ -136,21 +136,27 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
     }
 
-    teacherNames.push("Program Average");
+    // teacherNames.push("Program Average");
 
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+    
+    let value = 0;
+
+    if (type === "teacherAverage") {
+       value = data.programBar.noSupport
+    } else {
+      value = data.programBar.noInteraction
+    }
+
     var dataSize = Object.keys(data).length;
 
-    var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    siteAverageNoSupport[dataSize] = noSupportTotal / (noSupportTotal + teacherSupportTotal) * 100;
-    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+    var siteAverageNoSupport = new Array(dataSize).fill(0);
+    siteAverageNoSupport[dataSize - 1] = Math.round(value); // Round isn't working the first time for some reason. Just going to do it again
 
-    var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = teacherSupportTotal / (noSupportTotal + teacherSupportTotal) * 100;
-    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]);
-        // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
+    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
+    siteAverageTeacherSupport[dataSize - 1] = 100 - siteAverageNoSupport[dataSize - 1];
 
     // Use that data to create our dataset
     var dataSets = [

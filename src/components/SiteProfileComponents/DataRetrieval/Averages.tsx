@@ -997,14 +997,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -1053,10 +1053,20 @@ class AveragesData {
       }
     }
 
+    let siteBar = {
+      name: "Site Average",
+      td: 0,
+      cd: 0,
+      ns: 0,
+      ni: 0,
+    }
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex]
       
       if (result.teacherDenominator > 0) {
+        siteBar.td += result.teacherDenominator;
+        siteBar.ns += result.noSupport;
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -1064,6 +1074,8 @@ class AveragesData {
         result.noSupport = 0
       }
       if (result.childDenominator > 0) {
+        siteBar.cd += result.childDenominator;
+        siteBar.ni += result.noInteraction;
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -1071,7 +1083,11 @@ class AveragesData {
         result.noInteraction = 0
       }
     }
-    
+
+    siteBar.ns = siteBar.td > 0 ? (siteBar.ns / siteBar.td) * 100 : 0
+    siteBar.ni = siteBar.cd > 0 ? (siteBar.ni / siteBar.cd) * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 }
