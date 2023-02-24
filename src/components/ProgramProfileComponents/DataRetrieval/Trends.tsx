@@ -305,10 +305,10 @@ class TrendData {
 
         //var rowMonth = new Date(row.timestamp).getMonth();
         var rowMonth = months.indexOf(new Date(row.timestamp).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
-        if (row.peopletype === 2 || row.peopletype === 3) {
-          results[siteIndex].math[rowMonth] += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+        if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+          results[siteIndex].math[rowMonth] += (row.total - row.childOther)
           results[siteIndex].otherActivities[rowMonth] += row.childOther
-          results[siteIndex].totalIntervals[rowMonth] += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
+          results[siteIndex].totalIntervals[rowMonth] += row.total
         }
         if (row.peopletype === 3) {
           results[siteIndex].teacherSupport[rowMonth] += row.support

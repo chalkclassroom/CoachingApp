@@ -349,10 +349,10 @@ class AveragesData {
         var row = sites[siteIndex][rowIndex];
 
         results[siteIndex].totalInstructions++
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[siteIndex].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[siteIndex].engaged += (row.total - row.childOther)
         results[siteIndex].noInteraction += row.childOther
-        results[siteIndex].childDenominator += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
+        results[siteIndex].childDenominator += row.total
       }
       if (row.peopletype === 3) {
         results[siteIndex].support += row.support
