@@ -427,7 +427,7 @@ class TrendData {
         let row = sites[siteIndex][rowIndex];
         let rowMonth = months.indexOf(new Date(row.startDate.value).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
         results[siteIndex].totalInstructions[rowMonth] += row.count;
-        if (["hlq", "hlqResonse"].includes(row.instructionType)) {
+        if (["hlq", "hlqResponse"].includes(row.instructionType)) {
           results[siteIndex].highLevel[rowMonth] += row.count;
         } else {
           results[siteIndex].lowLevel[rowMonth] += row.count;
@@ -623,13 +623,9 @@ class TrendData {
        var rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year:"numeric", month:"short"}) );
 
        // Add to behavior types
-       results[siteIndex].totalIntervals[rowMonth] += row.count
-       if (row.listening7) {
-         results[siteIndex].noBehaviors[rowMonth] += row.listening7;
-       }
-       if (row.listening1 || row.listening2 || row.listening3 || row.listening4 || row.listening5 || row.listening6) {
-         results[siteIndex].listeningInstruction[rowMonth] += Math.max(row.listening1, row.listening2, row.listening3, row.listening4, row.listening5, row.listening6)
-       }
+      results[siteIndex].totalIntervals[rowMonth] += row.count;
+      results[siteIndex].noBehaviors[rowMonth] += row.listening7;
+      results[siteIndex].listeningInstruction[rowMonth] +=  (row.count - row.listening7);
      }
    }
 
@@ -893,8 +889,8 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
   }
 
   for (let i = 0; i < monthsCount; i++) {
-    programBar.literacyInstruction[i] = programBar.literacyInstruction[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors[i] = programBar.noBehaviors[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.literacyInstruction[i] = programBar.total[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors[i] = programBar.total[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
   }
 
   results.programBar = programBar;
@@ -991,8 +987,8 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
   }
 
   for (let i = 0; i < monthsCount; i++) {
-    programBar.literacyInstruction[i] = programBar.literacyInstruction[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors[i] = programBar.noBehaviors[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.literacyInstruction[i] = programBar.total[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors[i] = programBar.total[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
   }
 
   results.programBar = programBar;
@@ -1088,8 +1084,8 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
   }
 
   for (let i = 0; i < monthsCount; i++) {
-    programBar.literacyInstruction[i] = programBar.literacyInstruction[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors[i] = programBar.noBehaviors[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.literacyInstruction[i] = programBar.total[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors[i] = programBar.total[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
   }
 
   results.programBar = programBar;
@@ -1185,8 +1181,8 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
   }
 
   for (let i = 0; i < monthsCount; i++) {
-    programBar.literacyInstruction[i] = programBar.literacyInstruction[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors[i] = programBar.noBehaviors[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.literacyInstruction[i] = programBar.total[i] > 0 ? parseFloat((programBar.literacyInstruction[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors[i] = programBar.total[i] > 0 ? parseFloat((programBar.noBehaviors[i] / programBar.total[i]).toFixed(2)) * 100 : 0;
   }
 
   results.programBar = programBar;

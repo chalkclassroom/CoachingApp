@@ -678,6 +678,12 @@ class AveragesData {
     }
 
 
+    let programBar = {
+      name: "Program Average",
+      nb: 0,
+      t: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -686,6 +692,9 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions;
       var tempTotalObserved = result.totalObserved;
+
+      programBar.nb += result.noBehaviors
+      programBar.t += tempTotalObserved
 
       result.eyeLevelAverage = result.eyeLevel > 0 ? (result.eyeLevel / tempTotalObserved).toFixed(2) * 100 : 0;
       result.positiveExpressionAverage = result.positiveExpression > 0 ? (result.positiveExpression / tempTotalObserved).toFixed(2) * 100 : 0;
@@ -699,6 +708,9 @@ class AveragesData {
 
     }
 
+    programBar.nb = programBar.t > 0 ? (programBar.nb / programBar.t) * 100 : 0
+
+    results.programBar = programBar
     return results;
 
   }
@@ -844,14 +856,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -902,14 +914,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -959,14 +971,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -1016,14 +1028,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -1083,6 +1095,14 @@ class AveragesData {
       }
     }
 
+    let pb = {
+      name: "Program Average",
+      cd: 0,
+      td: 0,
+      ni: 0,
+      ns: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -1091,6 +1111,8 @@ class AveragesData {
       var result = results[resultsIndex];
 
       if (result.teacherDenominator > 0) {
+        pb.td += result.teacherDenominator;
+        pb.ns += result.noSupport;
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -1098,6 +1120,8 @@ class AveragesData {
         result.noSupport = 0
       }
       if (result.childDenominator > 0) {
+        pb.cd += result.childDenominator;
+        pb.ni += result.noInteraction;
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -1106,7 +1130,12 @@ class AveragesData {
       }
 
     }
-    console.log(results)
+    
+    pb.ni = pb.cd > 0 ? (pb.ni/pb.cd) * 100 : 0
+    pb.ns = pb.td > 0 ? (pb.ns/pb.td) * 100 : 0
+
+
+    results.pb = pb
     return results;
   }
 

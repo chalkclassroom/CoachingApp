@@ -133,7 +133,7 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
         {
           label: 'Support',
           data: support,
-          backgroundColor: "#1155CC",
+          backgroundColor: "#5B9BD5",
         },
         {
           label: 'No Support',
@@ -145,7 +145,7 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
           label: 'Support Average',
           data: siteSupportAverage,
           backgroundColor: "#FFF",
-          borderColor: "#1155CC",
+          borderColor: "#5B9BD5",
           borderWidth: 4,
         },
         {
