@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
-
+import { round } from "./../../Shared/Math"
 import {withStyles} from '@material-ui/core'
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -91,13 +91,15 @@ class ACBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round(((teacher['noSupport'])));
-        var tempTeacherSupport = 100 - tempNoSupport;
+        let result = round([teacher['noSupport'], teacher['support']]);
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1];
       }
       else
       {
-        var tempNoSupport = Math.round(((teacher['noInteraction'])));
-        var tempTeacherSupport = 100 - tempNoSupport;
+        let result = round([teacher['noInteraction'], teacher['engaged']]);
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1];
     
         // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
       }
@@ -121,22 +123,23 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     }
 
-    let value = 0;
+    let siteResult = [];
     if (type == "teacherAverage") {
-      value = data.pb.ns
+      siteResult = round([data.pb.ns, data.pb.s])
     } else {
-      value = data.pb.ni
+      siteResult = round([data.pb.ni, data.pb.e])
     }
 
+    
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
     var siteAverageNoSupport = new Array(dataSize).fill(0);
-    siteAverageNoSupport[dataSize - 1] = Math.round(value); // Round isn't working the first time for some reason. Just going to do it again
+    siteAverageNoSupport[dataSize - 1] = siteResult[0]; // Round isn't working the first time for some reason. Just going to do it again
 
     var siteAverageTeacherSupport = new Array(dataSize).fill(0);
-    siteAverageTeacherSupport[dataSize - 1] = 100 - siteAverageNoSupport[dataSize - 1];
+    siteAverageTeacherSupport[dataSize - 1] = siteResult[1];
     
     // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
     let topBarBackgroundColor = "#E20000";

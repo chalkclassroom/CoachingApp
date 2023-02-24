@@ -2,6 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
+
 
 import {withStyles} from '@material-ui/core'
 
@@ -73,9 +75,9 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
       {
         continue;
       }
-
-      let tempNoBehavior = Math.round((teacher['noBehaviorsAverage'] + Number.EPSILON) * 100) / 100;
-      let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
+      let result = round([teacher['noBehaviorsAverage'], teacher['encouragingAverage']])
+      let tempNoBehavior = result[0];
+      let tempListening = result[1];
 
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
       if(teacher['totalObserved'] > 0)
@@ -105,11 +107,13 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
     console.log("number of teachers ", numberOfTeachersWithData);
 
+    let siteResult = round([data.programBar.nb, data.programBar.e])
+
     var siteAverageNoBehaviors = new Array(dataSize).fill(0);
-    siteAverageNoBehaviors[dataSize - 1] = Math.round((data.programBar.nb));
+    siteAverageNoBehaviors[dataSize - 1] = siteResult[0]
 
     var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize - 1] = 100 - siteAverageNoBehaviors[dataSize - 1];
+    siteAverageListening[dataSize - 1] = siteResult[1];
 
     // Add site average to the list of names
     // teacherNames.push("Site Average");

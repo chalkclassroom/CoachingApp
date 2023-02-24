@@ -2,6 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
+
 
 import {withStyles} from '@material-ui/core'
 
@@ -91,19 +93,12 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-
-      noSupport.push(Math.round((teacher['noSupport'])));
-      support.push(100 - noSupport[noSupport.length - 1]);
-      childNonSequential.push(Math.round((teacher['noInteraction'])));
-      sequentialActivities.push(100 - childNonSequential[childNonSequential.length - 1]);
-
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
-
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
+      let result1 = round([teacher['noSupport'], teacher['support']])
+      let result2 = round([teacher['noInteraction'], teacher['engaged']])
+      noSupport.push(result1[0]);
+      support.push(result1[1]);
+      childNonSequential.push(result2[0]);
+      sequentialActivities.push(result2[1]);
 
     }
 
@@ -112,17 +107,21 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
+    let siteResult1 = round([data.programBar.noSupport, data.programBar.support])
+    let siteResult2 = round([data.programBar.noInteraction, data.programBar.engaged])
+
+
     var siteNoSupportAverage = new Array(dataSize).fill(0);
-    siteNoSupportAverage[dataSize - 1] = Math.round((data.programBar.noSupport));
+    siteNoSupportAverage[dataSize - 1] = siteResult1[0];
 
     var siteSupportAverage = new Array(dataSize).fill(0);
-    siteSupportAverage[dataSize - 1] = 100 - siteNoSupportAverage[dataSize - 1];
+    siteSupportAverage[dataSize - 1] = siteResult1[1];
 
     var siteChildNonSequentialAverage = new Array(dataSize).fill(0);
-    siteChildNonSequentialAverage[dataSize - 1] = Math.round((data.programBar.noInteraction));
+    siteChildNonSequentialAverage[dataSize - 1] = siteResult2[0];
 
     var siteSequentialActivitiesAverage = new Array(dataSize).fill(0);
-    siteSequentialActivitiesAverage[dataSize - 1] = 100 - siteChildNonSequentialAverage[dataSize - 1]
+    siteSequentialActivitiesAverage[dataSize - 1] = siteResult2[1]
 
  
 
