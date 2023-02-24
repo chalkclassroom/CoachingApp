@@ -6846,6 +6846,16 @@ class Firebase {
 
   //REMOVE AFTER DEVELOPMENT
 
+  retrieveTableFromFirestore = async () => {
+    const retrieveTable = this.functions.httpsCallable(
+      'retrieveTableFromFirestore'
+    )
+    return retrieveTable().catch((error: Error) => {
+      console.error('An error occured while retrieving table: ', error)
+    })
+  }
+
+
   populateUser = async () => {
     const user = this.auth.currentUser ? this.auth.currentUser.uid : '';
     // console.log(`Completing knowledge checks for ${user}`)
