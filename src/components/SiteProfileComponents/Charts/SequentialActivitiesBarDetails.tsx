@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
 
 import {withStyles} from '@material-ui/core'
 
@@ -90,25 +91,20 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
         continue;
       }
       teacherNames.push(teacher.name);
-      
+
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round(teacher['noSupport']);
-        // tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = 100 - tempNoSupport;
-        // tempTeacherSupport = Math.round(tempTeacherSupport)
+        let roundedData = round([teacher['noSupport'], teacher['support']])
+        var tempNoSupport = roundedData[0];
+        var tempTeacherSupport = roundedData[1];
       }
       else
       {
-        var tempNoSupport = Math.round(teacher['noInteraction']);
-        // tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = 100 - tempNoSupport;
-        // tempTeacherSupport = Math.round(tempTeacherSupport)
-        
-        // var tempTeacherSupport = 100 - tempNoSupport;
+        let roundedData = round([teacher['noInteraction'], teacher['engaged']])
+        var tempNoSupport = roundedData[0];
+        var tempTeacherSupport = roundedData[1];
       }
-
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
       if(teacher['totalInstructions'] > 0)
       {
@@ -137,21 +133,24 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
     let siteBar = 0;
 
-    if (type == "teacherAverage") {
-      siteBar = data.siteBar.noSupport
-    } else {
-      siteBar = data.siteBar.noInteraction
+    // Initialize Site Average bar
+    var siteAverageNoSupport = new Array(teacherNames.length).fill(0);
+    var siteAverageTeacherSupport = new Array(teacherNames.length).fill(0);
+    let siteBarRoundedData;
+
+    // Calculate site averages
+    if (type == "teacherAverage")
+    {
+      siteBarRoundedData = round([data.siteBar.supportAverage, data.siteBar.noSupportAverage])
+    }
+    else
+    {
+      siteBarRoundedData = round([data.siteBar.engagedAverage, data.siteBar.noInteractionAverage])
     }
 
-    var siteAverageNoSupport = new Array(teacherNames.length).fill(0);
-    siteAverageNoSupport[teacherNames.length - 1] = siteBar;
-    siteAverageNoSupport[teacherNames.length - 1] = Math.round(siteAverageNoSupport[teacherNames.length - 1]); // Round isn't working the first time for some reason. Just going to do it again
+    siteAverageTeacherSupport[teacherNames.length - 1] = siteBarRoundedData[0];
+    siteAverageNoSupport[teacherNames.length - 1] = siteBarRoundedData[1];
 
-    var siteAverageTeacherSupport = new Array(teacherNames.length).fill(0);
-    siteAverageTeacherSupport[teacherNames.length - 1] = 100 - siteAverageNoSupport[teacherNames.length - 1];
-    // siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
-
-    // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Colors and data labels are going to change as we switch between Child and Teacher
     let topBarBackgroundColor = "#FF0000";
