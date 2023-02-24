@@ -663,6 +663,7 @@ class AveragesData {
     let siteBar = {
       name: "Site Average",
       nb: 0,
+      encouraging: 0,
       t: 0
     }
 
@@ -674,6 +675,7 @@ class AveragesData {
       var tempTotalInstructions = result.totalInstructions
       var tempTotalObserved = result.totalObserved
       siteBar.nb += result.noBehaviors
+      siteBar.encouraging += result.encouraging
       siteBar.t += tempTotalObserved
 
       result.eyeLevelAverage =
@@ -711,7 +713,8 @@ class AveragesData {
           : 0
     }
 
-    siteBar.nb = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+    siteBar.noBehaviorsAverage = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+    siteBar.encouragingAverage = siteBar.t > 0 ? (siteBar.encouraging / siteBar.t) * 100 : 0
 
     results.siteBar = siteBar
     return results
@@ -790,8 +793,10 @@ class AveragesData {
       }
     }
 
-    siteBar.noSupport = siteBar.teacherDenominator > 0 ? siteBar.noSupport / siteBar.teacherDenominator * 100 : 0
-    siteBar.noInteraction = siteBar.childDenominator > 0 ? siteBar.noInteraction / siteBar.childDenominator * 100 : 0
+    siteBar.supportAverage = siteBar.teacherDenominator > 0 ? siteBar.support / siteBar.teacherDenominator * 100 : 0
+    siteBar.noSupportAverage = siteBar.teacherDenominator > 0 ? siteBar.noSupport / siteBar.teacherDenominator * 100 : 0
+    siteBar.noInteractionAverage = siteBar.childDenominator > 0 ? siteBar.noInteraction / siteBar.childDenominator * 100 : 0
+    siteBar.engagedAverage = siteBar.childDenominator > 0 ? siteBar.engaged / siteBar.childDenominator * 100 : 0
 
     results.siteBar = siteBar
     return results
@@ -1061,6 +1066,8 @@ class AveragesData {
       cd: 0,
       ns: 0,
       ni: 0,
+      support: 0,
+      engaged: 0,
     }
 
     for (let resultsIndex in results) {
@@ -1069,8 +1076,10 @@ class AveragesData {
       if (result.teacherDenominator > 0) {
         siteBar.td += result.teacherDenominator;
         siteBar.ns += result.noSupport;
-        result.support = result.support/result.teacherDenominator * 100
-        result.noSupport = result.noSupport/result.teacherDenominator * 100
+        siteBar.support += result.support;
+
+        result.supportAverage = result.support/result.teacherDenominator * 100
+        result.noSupportAverage = result.noSupport/result.teacherDenominator * 100
       } else {
         result.support = 0
         result.noSupport = 0
@@ -1078,16 +1087,19 @@ class AveragesData {
       if (result.childDenominator > 0) {
         siteBar.cd += result.childDenominator;
         siteBar.ni += result.noInteraction;
-        result.engaged = result.engaged/result.childDenominator * 100
-        result.noInteraction = result.noInteraction/result.childDenominator * 100
+        siteBar.engaged += result.engaged;
+        result.engagedAverage = result.engaged/result.childDenominator * 100
+        result.noInteractionAverage = result.noInteraction/result.childDenominator * 100
       } else {
         result.engaged = 0
         result.noInteraction = 0
       }
     }
 
-    siteBar.ns = siteBar.td > 0 ? (siteBar.ns / siteBar.td) * 100 : 0
-    siteBar.ni = siteBar.cd > 0 ? (siteBar.ni / siteBar.cd) * 100 : 0
+    siteBar.supportAverage = siteBar.td > 0 ? (siteBar.support / siteBar.td) * 100 : 0
+    siteBar.noSupportAverage = siteBar.td > 0 ? (siteBar.ns / siteBar.td) * 100 : 0
+    siteBar.engagedAverage = siteBar.cd > 0 ? (siteBar.engaged / siteBar.cd) * 100 : 0
+    siteBar.noInteractionAverage = siteBar.cd > 0 ? (siteBar.ni / siteBar.cd) * 100 : 0
 
     results.siteBar = siteBar
     return results

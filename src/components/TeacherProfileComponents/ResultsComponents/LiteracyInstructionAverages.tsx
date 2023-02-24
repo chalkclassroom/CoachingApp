@@ -91,8 +91,8 @@ class LiteracyInstructionAverages extends React.Component<Props, {}> {
       datasets: [
         {
           data: this.state.dataValues,
-          backgroundColor: ["#C4395A","#BABABA"],
-          hoverBackgroundColor: ["#C4395A", "#BABABA"]
+          backgroundColor: ["#990033","#BABABA"],
+          hoverBackgroundColor: ["#990033", "#BABABA"]
         }
       ]
     };

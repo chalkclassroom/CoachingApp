@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
 
 import {withStyles} from '@material-ui/core'
 
@@ -92,11 +93,16 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-
-      specificApproval.push(Math.round((teacher['specificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      generalApproval.push(Math.round((teacher['nonspecificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      redirectionAverage.push(Math.round((teacher['redirectionAverage'] + Number.EPSILON) * 100) / 100);
-      disapprovalAverage.push(Math.round((teacher['disapprovalAverage'] + Number.EPSILON) * 100) / 100);
+      let result = round([
+        teacher['specificapprovalAverage'],
+        teacher['nonspecificapprovalAverage'],
+        teacher['redirectionAverage'],
+        teacher['disapprovalAverage']
+      ])
+      specificApproval.push(result[0]);
+      generalApproval.push(result[1]);
+      redirectionAverage.push(result[2]);
+      disapprovalAverage.push(result[3]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -113,17 +119,24 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
+    let siteResult = round([
+      data.programBar.specificapprovalAverage,
+      data.programBar.nonspecificapprovalAverage,
+      data.programBar.redirectionAverage,
+      data.programBar.disapprovalAverage
+    ])
+
     var siteAverageSpecificeApproval = new Array(dataSize).fill(0);
-    siteAverageSpecificeApproval[dataSize - 1] = Math.round((data.programBar.specificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageSpecificeApproval[dataSize - 1] = siteResult[0];
 
     var siteAverageGeneralApproval = new Array(dataSize).fill(0);
-    siteAverageGeneralApproval[dataSize - 1] = Math.round((data.programBar.nonspecificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageGeneralApproval[dataSize - 1] = siteResult[1];
 
     var siteAverageRedirectionAverage = new Array(dataSize).fill(0);
-    siteAverageRedirectionAverage[dataSize - 1] = Math.round((data.programBar.redirectionAverage + Number.EPSILON) * 100) / 100;
+    siteAverageRedirectionAverage[dataSize - 1] = siteResult[2];
 
     var siteAverageDisapprovalAverage = new Array(dataSize).fill(0);
-    siteAverageDisapprovalAverage[dataSize - 1] = Math.round((data.programBar.disapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageDisapprovalAverage[dataSize - 1] = siteResult[3];
 
 
     // Use that data to create our dataset

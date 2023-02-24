@@ -593,6 +593,14 @@ class SiteProfileResults extends React.Component {
       .then(data => {
         this.setState({ BQData: data })
 
+        if (data.length <= 0) {
+          this.setState({
+            showErrorMessage: true,
+            errorMessage: `No reports available for ${
+              practicesArr[this.props.observationType]
+            }`,
+          })
+        } else {
         // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
         // Go through each exclude date item
         for (var excludeDateIndex in datesToExclude) {
@@ -615,7 +623,8 @@ class SiteProfileResults extends React.Component {
         }
 
         this.calculateResultsForCharts(data, teachers)
-      })
+      }
+    })
   }
 
   /*
