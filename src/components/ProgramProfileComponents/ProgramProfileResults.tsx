@@ -389,7 +389,7 @@ class ProgramProfileResults extends React.Component {
         endDate: this.props.endDate,
         teacherIds: teachers,
       })
-
+      
       // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
       // Go through each exclude date item
       for (var excludeDateIndex in datesToExclude) {

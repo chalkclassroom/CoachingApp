@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
 
 import {withStyles} from '@material-ui/core'
 
@@ -89,9 +90,11 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-      let value = Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100;
-      hlqAverage.push(value);
-      llqAverage.push(100 - value);
+      let value = (teacher['hlqAverage'] + teacher['hlqResponseAverage']);
+      let value2 = (teacher['llqAverage'] + teacher['llqResponseAverage'])
+      let result =  round([value, value2])
+      hlqAverage.push(result[0]);
+      llqAverage.push(result[1]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -108,12 +111,14 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    let value = Math.round((data.programBar.hlqAverage + data.programBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
+    let value = data.programBar.hlqAverage + data.programBar.hlqResponseAverage;
+    let value2 = data.programBar.llqAverage + data.programBar.llqResponseAverage;
+    let siteResult = round([value, value2])
     var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = value;
+    siteAverageHlqAverage[dataSize - 1] = siteResult[0];
 
     var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - value
+    siteAverageLlqAverage[dataSize - 1] = siteResult[1]
 
 
     // Use that data to create our dataset

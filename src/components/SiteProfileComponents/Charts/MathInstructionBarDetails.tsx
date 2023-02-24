@@ -1,4 +1,5 @@
 import * as React from "react";
+import { round } from "./../../Shared/Math"
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
@@ -96,18 +97,17 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round((teacher['noSupportAverage'] + Number.EPSILON) * 100) / 100;
-        tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = Math.round((teacher['supportAverage'] + Number.EPSILON) * 100) / 100;
-        tempTeacherSupport = Math.round(tempTeacherSupport)
-        // var tempTeacherSupport = 100 - tempNoSupport;
+        let result = round([teacher['noSupportAverage'], teacher['supportAverage']])
+
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1]
       }
       else
       {
-        var tempNoSupport = Math.round((teacher['childNoInteractionAverage'] + Number.EPSILON) * 100) / 100;
-        tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = Math.round((teacher['engagedAverage'] + Number.EPSILON) * 100) / 100;
-        tempTeacherSupport = Math.round(tempTeacherSupport)
+        let result = round([teacher['childNoInteractionAverage'], teacher['engagedAverage']])
+
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1]
       }
 
       // Only push this data if there are actually observation done
@@ -126,14 +126,6 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       noSupportTotal += tempNoSupport;
       teacherSupportTotal += tempTeacherSupport;
 
-      // Create bar graph data
-      //var tempAvg = teacher[type];
-      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
-
-      // Round the number just in case there are trailing decimals (There were for some reason)
-      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
-      //graphData.push(tempAvg);
-
     }
 
     teacherNames.push("Site Average");
@@ -141,21 +133,22 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     console.log(teacherSupportTotal, noSupportTotal)
     let denominator = teacherSupportTotal + noSupportTotal
 
+    let value1 = denominator > 0 ? (noSupportTotal / denominator) * 100 : 0;
+    let value2 = denominator > 0 ? (teacherSupportTotal / denominator) * 100 : 0;
+
+    let siteResult = round([value1, value2])
+
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
     var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    //siteAverageHlqAverage[dataSize - 1] = Math.round((data.siteBar.hlqAverage + data.siteBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
-    siteAverageNoSupport[dataSize] = (noSupportTotal / denominator) * 100;
-    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+    siteAverageNoSupport[dataSize] = siteResult[0]
 
 
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
-    // siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize])
-    // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
+    siteAverageTeacherSupport[dataSize] = siteResult[1]
 
     // Use that data to create our dataset
     var dataSets = [

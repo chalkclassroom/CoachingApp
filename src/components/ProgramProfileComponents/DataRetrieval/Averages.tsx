@@ -366,7 +366,9 @@ class AveragesData {
       td: 0,
       cd: 0,
       noSupport: 0,
-      noInteraction: 0
+      noInteraction: 0,
+      support: 0,
+      engaged: 0
     }
 
     // Calculate the averages in percentages
@@ -377,6 +379,7 @@ class AveragesData {
 
       if (result.teacherDenominator > 0) {
         programBar.noSupport += result.noSupport
+        programBar.support += result.support
         programBar.td += result.teacherDenominator
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
@@ -386,6 +389,7 @@ class AveragesData {
       }
       if (result.childDenominator > 0) {
         programBar.noInteraction += result.noInteraction
+        programBar.engaged += result.engaged
         programBar.cd += result.childDenominator
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
@@ -396,7 +400,9 @@ class AveragesData {
     }
 
     programBar.noSupport = programBar.td > 0 ? (programBar.noSupport / programBar.td)* 100 : 0
+    programBar.support = programBar.td > 0 ? (programBar.support / programBar.td)* 100 : 0
     programBar.noInteraction = programBar.cd > 0 ? (programBar.noInteraction / programBar.cd)* 100 : 0
+    programBar.engaged = programBar.td > 0 ? (programBar.engaged / programBar.td)* 100 : 0
 
     results.programBar = programBar;
     return results;
@@ -681,6 +687,7 @@ class AveragesData {
     let programBar = {
       name: "Program Average",
       nb: 0,
+      e: 0,
       t: 0
     }
 
@@ -694,6 +701,7 @@ class AveragesData {
       var tempTotalObserved = result.totalObserved;
 
       programBar.nb += result.noBehaviors
+      programBar.e += result.encouraging
       programBar.t += tempTotalObserved
 
       result.eyeLevelAverage = result.eyeLevel > 0 ? (result.eyeLevel / tempTotalObserved).toFixed(2) * 100 : 0;
@@ -709,6 +717,8 @@ class AveragesData {
     }
 
     programBar.nb = programBar.t > 0 ? (programBar.nb / programBar.t) * 100 : 0
+    programBar.e = programBar.t > 0 ? (programBar.e / programBar.t) * 100 : 0
+
 
     results.programBar = programBar
     return results;
@@ -801,7 +811,11 @@ class AveragesData {
       }
 
       programBar.noSupport = programBar.teacherDenominator > 0 ? programBar.noSupport / programBar.teacherDenominator * 100 : 0
+      programBar.support = programBar.teacherDenominator > 0 ? programBar.support / programBar.teacherDenominator * 100 : 0
+
       programBar.noInteraction = programBar.childDenominator > 0 ? programBar.noInteraction / programBar.childDenominator * 100 : 0
+      programBar.engaged = programBar.childDenominator > 0 ? programBar.engaged / programBar.childDenominator * 100 : 0
+
   
 
     results.programBar = programBar
@@ -1100,7 +1114,9 @@ class AveragesData {
       cd: 0,
       td: 0,
       ni: 0,
-      ns: 0
+      e: 0,
+      ns: 0,
+      s: 0
     }
 
     // Calculate the averages in percentages
@@ -1113,6 +1129,7 @@ class AveragesData {
       if (result.teacherDenominator > 0) {
         pb.td += result.teacherDenominator;
         pb.ns += result.noSupport;
+        pb.s += result.support;
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -1122,6 +1139,7 @@ class AveragesData {
       if (result.childDenominator > 0) {
         pb.cd += result.childDenominator;
         pb.ni += result.noInteraction;
+        pb.e += result.engaged
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -1133,6 +1151,8 @@ class AveragesData {
     
     pb.ni = pb.cd > 0 ? (pb.ni/pb.cd) * 100 : 0
     pb.ns = pb.td > 0 ? (pb.ns/pb.td) * 100 : 0
+    pb.e = pb.cd > 0 ? (pb.e/pb.cd) * 100 : 0
+    pb.s = pb.td > 0 ? (pb.s/pb.td) * 100 : 0
 
 
     results.pb = pb

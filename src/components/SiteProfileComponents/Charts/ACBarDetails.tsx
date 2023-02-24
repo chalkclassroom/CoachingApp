@@ -4,6 +4,7 @@ import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
+import { round } from "./../../Shared/Math"
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
@@ -95,14 +96,22 @@ class ACBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round(((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
-        var tempTeacherSupport = Math.round(((teacher['support'] + Number.EPSILON) * 100) / 100);
+        let roundedData = round([teacher['supportAverage'], teacher['noSupportAverage']]);
+        //var tempNoSupport = Math.round(((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
+        //var tempTeacherSupport = Math.round(((teacher['support'] + Number.EPSILON) * 100) / 100);
+        var tempTeacherSupport = roundedData[0];
+        var tempNoSupport = roundedData[1];
+
       }
       else
       {
-        var tempNoSupport = Math.round(((teacher['noInteraction'] + Number.EPSILON) * 100) / 100);
-        var tempTeacherSupport = Math.round(((teacher['engaged'] + Number.EPSILON) * 100) / 100);
-    
+        let roundedData = round([teacher['engagedAverage'], teacher['noInteractionAverage']]);
+        // var tempNoSupport = Math.round(((teacher['noInteraction'] + Number.EPSILON) * 100) / 100);
+        // var tempTeacherSupport = Math.round(((teacher['engaged'] + Number.EPSILON) * 100) / 100);
+
+        var tempTeacherSupport = roundedData[0];
+        var tempNoSupport = roundedData[1];
+
         // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
       }
 
@@ -125,24 +134,25 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     }
 
-    let value = 0;
-    if (type == "teacherAverage") {
-      value = data.siteBar.ns;
-    } else {
-      value = data.siteBar.ni;
+    // Initialize Site averages
+    var dataSize = Object.keys(data).length;
+    var siteAverageNoSupport = new Array(dataSize).fill(0);
+    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
+    let siteBarRoundedData
+
+    // Calculate site averages
+    if (type == "teacherAverage")
+    {
+      siteBarRoundedData = round([data.siteBar.supportAverage, data.siteBar.noSupportAverage])
+    }
+    else
+    {
+      siteBarRoundedData = round([data.siteBar.engagedAverage, data.siteBar.noInteractionAverage])
     }
 
-    // We need to set the site average data
-    // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    var dataSize = Object.keys(data).length;
+    siteAverageTeacherSupport[teacherNames.length - 1] = siteBarRoundedData[0];
+    siteAverageNoSupport[teacherNames.length - 1] = siteBarRoundedData[1];
 
-    var siteAverageNoSupport = new Array(dataSize).fill(0);
-    siteAverageNoSupport[dataSize - 1] = Math.round(value); // Round isn't working the first time for some reason. Just going to do it again
-
-    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
-    siteAverageTeacherSupport[dataSize - 1] = 100 - siteAverageNoSupport[dataSize -  1];
-    
-    // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
     let topBarBackgroundColor = "#E20000";
     let topBorderColor = "#E20000";
     let topBarLabel = 'No Support';
