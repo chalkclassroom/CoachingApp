@@ -91,13 +91,13 @@ class ACBarDetails extends React.Component<Props, {}> {
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round(((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
-        var tempTeacherSupport = Math.round(((teacher['support'] + Number.EPSILON) * 100) / 100);
+        var tempNoSupport = Math.round(((teacher['noSupport'])));
+        var tempTeacherSupport = 100 - tempNoSupport;
       }
       else
       {
-        var tempNoSupport = Math.round(((teacher['noInteraction'] + Number.EPSILON) * 100) / 100);
-        var tempTeacherSupport = Math.round(((teacher['engaged'] + Number.EPSILON) * 100) / 100);
+        var tempNoSupport = Math.round(((teacher['noInteraction'])));
+        var tempTeacherSupport = 100 - tempNoSupport;
     
         // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
       }
@@ -121,22 +121,23 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     }
 
-    teacherNames.push("Program Average");
-
+    let value = 0;
+    if (type == "teacherAverage") {
+      value = data.pb.ns
+    } else {
+      value = data.pb.ni
+    }
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
-    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+    var siteAverageNoSupport = new Array(dataSize).fill(0);
+    siteAverageNoSupport[dataSize - 1] = Math.round(value); // Round isn't working the first time for some reason. Just going to do it again
 
-
-    var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;;
-    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
-
+    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
+    siteAverageTeacherSupport[dataSize - 1] = 100 - siteAverageNoSupport[dataSize - 1];
+    
     // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
     let topBarBackgroundColor = "#E20000";
     let topBorderColor = "#E20000";

@@ -26,17 +26,17 @@ class AveragesData {
   /*
    * Will return an object that holds data for all of the trends data for Book Reading
    */
-  calculateTransitionAverage = (data, sites) => {
-
-    // Initialize the array that will hold all the data
+  calculateTransitionAverage = (data, sites, names) => {
     var results = {};
 
-    // Add each site to the object
+    // Initialize sites
     for(var siteIndex in sites)
     {
 
       results[siteIndex] = {
-        name: "",
+        name: names[siteIndex].name,
+        ids: [],
+        /*
         total: 0,
         line: 0,
         traveling: 0,
@@ -44,28 +44,54 @@ class AveragesData {
         routines: 0,
         behaviorManagement: 0,
         other: 0,
+        */
+        //totalTransitionCount: 0,
+        totalTransitionTime: 0,
+        sessionTotal: 0,
       };
 
     }
 
-    // Get number of instances for each type of data
+
+
+    // Go through each site
     for(var siteIndex in sites)
     {
+      // Go through each
       for(var rowIndex in sites[siteIndex])
       {
         var row = sites[siteIndex][rowIndex];
 
         // Add to behavior types
-        results[siteIndex].line +=  row.line;
-        results[siteIndex].traveling += row.traveling;
-        results[siteIndex].waiting += row.waiting;
-        results[siteIndex].routines += row.routines;
-        results[siteIndex].behaviorManagement += row.behaviorManagement;
-        results[siteIndex].other += row.other;
 
-        // Calculate the total Number of instructions
-        results[siteIndex].total += row.total;
+        /*
+        results[siteIndex].line += row.line
+        results[siteIndex].traveling += row.traveling
+        results[siteIndex].waiting += row.waiting
+        results[siteIndex].routines += row.routines
+        results[siteIndex].behaviorManagement += row.behaviorManagement
+        results[siteIndex].other += row.other
+        */
+
+
+        results[siteIndex]
+
+        // Check to see if we already counted the session total for this observation
+        if (!results[siteIndex].ids.includes(row.id)) {
+          results[siteIndex].ids.push(row.id)
+          results[siteIndex].sessionTotal += row.sessionTotal
+        }
+
+        results[siteIndex].totalTransitionTime += row.total
+
       }
+    }
+
+    let programBar = {
+      name: 'Program Average',
+      total: 0,
+      transitionTimeAverageTotal: 0,
+      learningActivityAverage: 0,
     }
 
     // Calculate the averages in percentages
@@ -74,17 +100,56 @@ class AveragesData {
     {
       var result = results[resultsIndex];
 
-      var tempTotalInstructions = result.total;
+      /*
+      programBar.sequentialActivities += result.sequentialActivities
+      programBar.childNonSequential += result.childNonSequential
+      programBar.support += result.support
+      programBar.noSupport += result.noSupport
+      programBar.totalInstructions += result.totalInstructions
+      programBar.totalSupport += result.totalSupport;
+      */
 
-      result.lineAverage = result.line > 0 ? (result.line / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.travelingAverage = result.traveling > 0 ? (result.traveling / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.waitingAverage = result.waiting > 0 ? (result.waiting / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.routinesAverage = result.routines > 0 ? (result.routines / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.behaviorManagementAverage = result.behaviorManagement > 0 ? (result.behaviorManagement / tempTotalInstructions).toFixed(2) * 100 : 0;
-      result.otherAverage = result.other > 0 ? (result.other / tempTotalInstructions).toFixed(2) * 100 : 0;
+      if (result.sessionTotal > 0)
+      {
+        result.transitionTimeAverage = (result.totalTransitionTime / result.sessionTotal).toFixed(2) * 100;
+        result.learningActivityAverage = 100 - result.transitionTimeAverage;
+
+        // Gather data for the programBar
+        programBar.transitionTimeAverageTotal += result.transitionTimeAverage
+        programBar.total++;
+      }
+      else
+      {
+        result.transitionTimeAverage = 0;
+        result.learningActivityAverage = 0;
+      }
+
+      /*
+      result.transitionTimeAverage = result.total > 0
+        ? (result.totalTransitionTime / result.total).toFixed(2) * 100
+        : 0
+      result.learningActivityAverage =
+      result.totalTransitionTime > 0 ? 100 - result.transitionTimeAverage : 0
+      */
+
+
     }
 
-    return results;
+    // Calculate program bar averages
+    if(programBar.total > 0 )
+    {
+      programBar.transitionTimeAverage = Math.round(programBar.transitionTimeAverageTotal / programBar.total);
+      programBar.learningActivityAverage = 100 - programBar.transitionTimeAverage;
+    }
+
+
+
+
+  results.programBar = programBar
+
+  console.log(results)
+
+  return results;
 
   }
 
@@ -131,7 +196,7 @@ class AveragesData {
           results[siteIndex][row.behaviorResponse] += row.count
           results[siteIndex].total += row.count
         }
-  
+
         // Get tone rating
         if (row.toneRating !== null) {
           results[siteIndex].toneTotal += row.toneRating
@@ -284,10 +349,10 @@ class AveragesData {
         var row = sites[siteIndex][rowIndex];
 
         results[siteIndex].totalInstructions++
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[siteIndex].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[siteIndex].engaged += (row.total - row.childOther)
         results[siteIndex].noInteraction += row.childOther
-        results[siteIndex].childDenominator += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
+        results[siteIndex].childDenominator += row.total
       }
       if (row.peopletype === 3) {
         results[siteIndex].support += row.support
@@ -295,6 +360,13 @@ class AveragesData {
         results[siteIndex].teacherDenominator += row.support + row.noSupport
       }
       }
+    }
+    
+    let programBar = {
+      td: 0,
+      cd: 0,
+      noSupport: 0,
+      noInteraction: 0
     }
 
     // Calculate the averages in percentages
@@ -304,6 +376,8 @@ class AveragesData {
       var result = results[resultsIndex];
 
       if (result.teacherDenominator > 0) {
+        programBar.noSupport += result.noSupport
+        programBar.td += result.teacherDenominator
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -311,6 +385,8 @@ class AveragesData {
         result.noSupport = 0
       }
       if (result.childDenominator > 0) {
+        programBar.noInteraction += result.noInteraction
+        programBar.cd += result.childDenominator
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -319,6 +395,10 @@ class AveragesData {
       }
     }
 
+    programBar.noSupport = programBar.td > 0 ? (programBar.noSupport / programBar.td)* 100 : 0
+    programBar.noInteraction = programBar.cd > 0 ? (programBar.noInteraction / programBar.cd)* 100 : 0
+
+    results.programBar = programBar;
     return results;
   }
 
@@ -598,6 +678,12 @@ class AveragesData {
     }
 
 
+    let programBar = {
+      name: "Program Average",
+      nb: 0,
+      t: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -606,6 +692,9 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions;
       var tempTotalObserved = result.totalObserved;
+
+      programBar.nb += result.noBehaviors
+      programBar.t += tempTotalObserved
 
       result.eyeLevelAverage = result.eyeLevel > 0 ? (result.eyeLevel / tempTotalObserved).toFixed(2) * 100 : 0;
       result.positiveExpressionAverage = result.positiveExpression > 0 ? (result.positiveExpression / tempTotalObserved).toFixed(2) * 100 : 0;
@@ -619,6 +708,9 @@ class AveragesData {
 
     }
 
+    programBar.nb = programBar.t > 0 ? (programBar.nb / programBar.t) * 100 : 0
+
+    results.programBar = programBar
     return results;
 
   }
@@ -641,119 +733,76 @@ class AveragesData {
 
         results[siteIndex] = {
           name: names[siteIndex].name,
-          totalInstructions: 0,
-          sequentialActivities: 0,
-          childNonSequential: 0,
-          totalSupport: 0,
+          engaged: 0,
+          noInteraction: 0,
           noSupport: 0,
           support: 0,
+          childDenominator: 0,
+          teacherDenominator: 0
         };
 
       }
 
-      // Get number of instances for each type of data
-      for(var siteIndex in sites)
+        for(var siteIndex in sites)
       {
         for(var rowIndex in sites[siteIndex])
         {
           var row = sites[siteIndex][rowIndex];
-
-          // Add to behavior types
-          results[siteIndex].sequentialActivities += row.sequentialActivities;
-          results[siteIndex].childNonSequential += row.childNonSequential;
-          results[siteIndex].support += row.support;
-          results[siteIndex].noSupport += row.noSupport;
-          results[siteIndex].totalInstructions += row.total;
-          results[siteIndex].totalSupport += row.support + row.noSupport;
+          if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+            results[siteIndex].engaged += (row.total - row.childNonSequential)
+            results[siteIndex].noInteraction += row.childNonSequential
+            results[siteIndex].childDenominator += row.total
+          }
+          if (row.peopletype === 3) {
+            results[siteIndex].support += row.support
+            results[siteIndex].noSupport += row.noSupport
+            results[siteIndex].teacherDenominator += row.support + row.noSupport
+          }
         }
       }
 
       let programBar = {
         name: 'Program Average',
-        totalInstructions: 0,
-        totalSupport: 0,
-        sequentialActivities: 0,
-        childNonSequential: 0,
-        support: 0,
+        engaged: 0,
+        noInteraction: 0,
         noSupport: 0,
+        support: 0,
+        childDenominator: 0,
+        teacherDenominator: 0
       }
 
       // Calculate the averages in percentages
       // Go through each teacher
-      console.log(programBar)
       for(var resultsIndex in results)
       {
-      var result = results[resultsIndex];
+        var result = results[resultsIndex];
 
-      console.log(result.noSupport);
-
-      console.log(programBar)
-      programBar.sequentialActivities += result.sequentialActivities
-      programBar.childNonSequential += result.childNonSequential
-      programBar.support += result.support
-      programBar.noSupport += result.noSupport
-      programBar.totalInstructions += result.totalInstructions
-      programBar.totalSupport += result.totalSupport;
-
-      console.log(programBar)
-      console.log(result)
-
-      result.sequentialActivities = (result.sequentialActivities / result.totalInstructions).toFixed(2) * 100;
-
-      result.childNonSequential = (100 - result.sequentialActivities);
-
-      result.support = (result.support / result.totalSupport).toFixed(2) * 100;
-
-      result.noSupport = (result.noSupport / result.totalSupport).toFixed(2) * 100;
-
-      if (isNaN(result.support)) {
-        result.support = 0
-      } 
-      if (isNaN(result.noSupport)) {
-        result.noSupport = 0
-      }
-      if (isNaN(result.sequentialActivities)) {
-        result.sequentialActivities = 0
-      } 
-      if (isNaN(result.childNonSequential)) {
-        result.childNonSequential = 0
-      } 
-      // Gather info for the site bar
-      
-      if (isNaN(programBar.support)) {
-        programBar.support = 0
-      } 
-      if (isNaN(programBar.noSupport)) {
-        programBar.noSupport = 0
-      }
-      if (isNaN(programBar.sequentialActivities)) {
-        programBar.sequentialActivities = 0
-      } 
-      if (isNaN(programBar.childNonSequential)) {
-        programBar.childNonSequential = 0
-      }
+        programBar.support += result.support;
+        programBar.noSupport += result.noSupport;
+        programBar.engaged += result.engaged;
+        programBar.noInteraction += result.noInteraction;
+        programBar.teacherDenominator += result.teacherDenominator;
+        programBar.childDenominator += result.childDenominator;
+        
+        if (result.teacherDenominator > 0) {
+          result.support = result.support/result.teacherDenominator * 100
+          result.noSupport = result.noSupport/result.teacherDenominator * 100
+        } else {
+          result.support = 0
+          result.noSupport = 0
+        }
+        if (result.childDenominator > 0) {
+          result.engaged = result.engaged/result.childDenominator * 100
+          result.noInteraction = result.noInteraction/result.childDenominator * 100
+        } else {
+          result.engaged = 0
+          result.noInteraction = 0
+        }
       }
 
-    programBar.sequentialActivities = (programBar.sequentialActivities / programBar.totalInstructions).toFixed(2) * 100;
-
-    programBar.childNonSequential = (100 - programBar.sequentialActivities);
-
-    programBar.support = (programBar.support / programBar.totalSupport).toFixed(2) * 100;
-
-    programBar.noSupport = (programBar.noSupport / programBar.totalSupport).toFixed(2) * 100;
-    
-      if (isNaN(programBar.support)) {
-        programBar.support = 0
-      } 
-      if (isNaN(programBar.noSupport)) {
-        programBar.noSupport = 0
-      }
-      if (isNaN(programBar.sequentialActivities)) {
-        programBar.sequentialActivities = 0
-      } 
-      if (isNaN(programBar.childNonSequential)) {
-        programBar.childNonSequential = 0
-      } 
+      programBar.noSupport = programBar.teacherDenominator > 0 ? programBar.noSupport / programBar.teacherDenominator * 100 : 0
+      programBar.noInteraction = programBar.childDenominator > 0 ? programBar.noInteraction / programBar.childDenominator * 100 : 0
+  
 
     results.programBar = programBar
 
@@ -807,14 +856,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -865,14 +914,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -922,14 +971,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -979,14 +1028,14 @@ class AveragesData {
       programBar.totalInstruction += result.totalInstruction;
       programBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     programBar.total = programBar.totalInstruction + programBar.noBehaviors;
 
-    programBar.totalInstruction = programBar.totalInstruction > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
-    programBar.noBehaviors = programBar.noBehaviors > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.totalInstruction = programBar.total > 0 ? parseFloat((programBar.totalInstruction / programBar.total).toFixed(2)) * 100 : 0;
+    programBar.noBehaviors = programBar.total > 0 ? parseFloat((programBar.noBehaviors / programBar.total).toFixed(2)) * 100 : 0;
     results.programBar = programBar;
 
     return results;
@@ -1046,6 +1095,14 @@ class AveragesData {
       }
     }
 
+    let pb = {
+      name: "Program Average",
+      cd: 0,
+      td: 0,
+      ni: 0,
+      ns: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for(var resultsIndex in results)
@@ -1054,6 +1111,8 @@ class AveragesData {
       var result = results[resultsIndex];
 
       if (result.teacherDenominator > 0) {
+        pb.td += result.teacherDenominator;
+        pb.ns += result.noSupport;
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -1061,6 +1120,8 @@ class AveragesData {
         result.noSupport = 0
       }
       if (result.childDenominator > 0) {
+        pb.cd += result.childDenominator;
+        pb.ni += result.noInteraction;
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -1069,7 +1130,12 @@ class AveragesData {
       }
 
     }
-    console.log(results)
+    
+    pb.ni = pb.cd > 0 ? (pb.ni/pb.cd) * 100 : 0
+    pb.ns = pb.td > 0 ? (pb.ns/pb.td) * 100 : 0
+
+
+    results.pb = pb
     return results;
   }
 

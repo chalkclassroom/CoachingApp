@@ -5,13 +5,31 @@ import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
 
+// Set array so we can edit the label on top of the Chart based on type
+const chartTitleArr = {
+  bookReadingAverage: "Book Reading: Total Instruction",
+  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
+  languageConnectionsAverage: "Book Reading: Makes Connections",
+  childrenSupportAverage: "Book Reading: Support Children's Speaking",
+  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
+  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
+}
+
+const averageLine = {
+    width: '80%',
+    marginRight: '15px',
+    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
+}
+
+
+
 
 /**
- * Horizontal Bar Graph for Listening to Children Behaviors
- * @class ListeningToChildrenBarDetails
+ * Horizontal Bar Graph for Math Child Behaviors
+ * @class EngagementBarDetails
  * @return {void}
  */
-class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
+class TransitionAverageBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -54,13 +72,10 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
 
 
     var teacherNames = [];
-    var graphData = {};
 
-    var noBehaviorsAverage = [];
-    var listeningAverage = [];
-    let noBehaviorsTotal = 0;
-    let listeningTotal = 0;
-    let numberOfTeachersWithData = 0;
+    console.log(data)
+    var transitionTimeAverage = []
+    var learningActivityAverage = []
     for(var teacherIndex in data)
     {
 
@@ -74,78 +89,57 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-      let tempNoBehavior = Math.round((teacher['noBehaviorsAverage'] + Number.EPSILON) * 100) / 100;
-      let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
 
-      // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
-      if(teacher['totalObserved'] > 0)
-      {
-        noBehaviorsAverage.push(tempNoBehavior);
-        listeningAverage.push(tempListening);
-
-        // To calculate the site bar
-        noBehaviorsTotal += tempNoBehavior;
-        listeningTotal += tempListening;
-
-        numberOfTeachersWithData++;
-      }
-      else
-      {
-        noBehaviorsAverage.push(0);
-        listeningAverage.push(0);
-      }
-
-
+      transitionTimeAverage.push(Math.round((teacher['transitionTimeAverage'] + Number.EPSILON) * 100) / 100);
+      learningActivityAverage.push(Math.round((teacher['learningActivityAverage'] + Number.EPSILON) * 100) / 100);
 
     }
 
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+
     var dataSize = Object.keys(data).length;
-    console.log("number of teachers ", numberOfTeachersWithData);
 
-    var siteAverageNoBehaviors = new Array(dataSize).fill(0);
-    siteAverageNoBehaviors[dataSize - 1] = Math.round((data.programBar.nb));
+    var siteAverageLearningActivityAverage = new Array(dataSize).fill(0);
+    siteAverageLearningActivityAverage[dataSize - 1] = data.programBar.learningActivityAverage;
+    //siteAverageLearningActivityAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
 
-    var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize - 1] = 100 - siteAverageNoBehaviors[dataSize - 1];
-
-    // Add site average to the list of names
-    // teacherNames.push("Site Average");
+    var siteAverageTransitionTimeAverage = new Array(dataSize).fill(0);
+    siteAverageTransitionTimeAverage[dataSize - 1] = data.programBar.transitionTimeAverage;
+    //siteAverageTransitionTimeAverage[dataSize - 1] = Math.round((data.programBar.transitionTimeAverage + Number.EPSILON) * 100) / 100;
 
     // Use that data to create our dataset
-    var dataSets = [
-      {
-        label: 'Listening/Encouraging',
-        data: listeningAverage,
-        backgroundColor: "#07DFBB",
-      },
-      {
-        label: 'No target Behaviors Observed',
-        data: noBehaviorsAverage,
-        backgroundColor: "#E20000",
-      },
 
-      // The total Site Averages
-      {
-        label: 'Listening/Encouraging Site Average',
-        data: siteAverageListening,
-        backgroundColor: "#FFF",
-        borderColor: "#07DFBB",
-        borderWidth: 4,
-      },
-      {
-        label: 'No target Behaviors Observed Site Average',
-        data: siteAverageNoBehaviors,
-        backgroundColor: "#FFF",
-        borderColor: "#E20000",
-        borderWidth: 4,
-      },
+      var dataSets = [
+        {
+          label: 'Transition Time',
+          data: transitionTimeAverage,
+          backgroundColor: "#EA7150",
+        },
+        {
+          label: 'Learning Activity',
+          data: learningActivityAverage,
+          backgroundColor: "#00B0F0",
+        },
+        // The total Site Averages
+        {
+          label: 'Transition Time Program Average',
+          data: siteAverageTransitionTimeAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#EA7150",
+          borderWidth: 4,
+        },
+        {
+          label: 'Learning Activity Program Average',
+          data: siteAverageLearningActivityAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#00B0F0",
+          borderWidth: 4,
+        },
+      ]
 
-    ]
-
-    this.setState({teacherNames: teacherNames, dataSets: dataSets, barColors: this.props.barColors});
+    this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
 
   }
 
@@ -187,9 +181,9 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-<div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Listening to Children</h2>
-        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Transition Time</h2>
+      <div className={"realChart"} style={{height: 500, width: 500 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -293,4 +287,4 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default ListeningToChildrenBarDetails;
+export default TransitionAverageBarDetails;

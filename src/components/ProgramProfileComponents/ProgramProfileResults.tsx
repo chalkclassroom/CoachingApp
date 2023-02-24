@@ -58,6 +58,7 @@ import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetail
 import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
 import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
 import ClassroomClimateTrends from './Charts/ClassroomClimateTrends'
+import TransitionAverageBarDetails from './Charts/TransitionAverageBarDetails'
 
 const StyledSelect = withStyles({
   root: {
@@ -206,7 +207,7 @@ const radioValueArr = {
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
-  bookReadingAverage: 'Book Reading: Total Instruction',
+  bookReadingAverage: '',
   vocabFocusAverage: 'Book Reading: Focuses on Vocabulary',
   languageConnectionsAverage: 'Book Reading: Makes Connections',
   childrenSupportAverage: "Book Reading: Support Children's Speaking",
@@ -402,7 +403,7 @@ class ProgramProfileResults extends React.Component {
         averagesList[siteIndex] = averagesList[siteIndex].filter(
           o =>
             (!(tempFromDate < new Date(o.startDate) && tempToDate > new Date(o.startDate)) && !(tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value)) && o.teacher === tempUserId) ||
-            o.teacher !== tempUserId 
+            o.teacher !== tempUserId
         )
       }
       // Set the site names
@@ -539,7 +540,7 @@ class ProgramProfileResults extends React.Component {
     var averages, trends
     switch (this.props.observationType) {
       case 'transitionTime':
-        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers )
+        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
@@ -614,7 +615,6 @@ class ProgramProfileResults extends React.Component {
     let color2 = "";
 
     var trends = this.state.trends
-    console.log(trends)
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
@@ -636,8 +636,8 @@ class ProgramProfileResults extends React.Component {
       color2 = "#E5E5E5"
     }
     if (this.props.observationType === "transitionTime") {
-      type = "total"
-      type2 = "sessionTotal"
+      type = "transitionTimeAverage"
+      type2 = "learningActivityAverage"
       label1 = "Transition Time"
       label2 = "Learning Activity"
       color1 = "#fc8c03"
@@ -860,7 +860,6 @@ class ProgramProfileResults extends React.Component {
       datasets: tempDataSet,
     }
 
-    console.log(lineData)
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -1035,14 +1034,42 @@ class ProgramProfileResults extends React.Component {
         }
       }
     } else {
-      LineGraphOptions.scales.yAxes[0].ticks.min = 0
-      LineGraphOptions.scales.yAxes[0].ticks.max = 100
-      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 10
-      LineGraphOptions.scales.yAxes[0].ticks.callback = function(
-        value: number
-      ): string {
-        return value + '%'
+      LineGraphOptions.plugins.datalabels = {
+        display: true,
+        color: 'gray',
+        align: 'right',
+        formatter: function(value: number): string {
+          return value + '%'
+        }
       }
+      LineGraphOptions.scales.yAxes = [
+        {
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            callback: function(value: number): string {
+              return value + '%'
+            },
+            /*
+            fontSize: 18,
+            fontColor: 'black',
+            padding: 20,
+            */
+          },
+          scaleLabel: {
+            display: false,
+            //labelString: '% of 1-minute Intervals',
+            fontFamily: 'Arimo',
+            fontSize: 18,
+            fontColor: 'black',
+          },
+          gridLines: {
+            //drawBorder: false,
+            //drawTicks: false,
+          },
+        },
+      ]
     }
 
     return (
@@ -1136,7 +1163,7 @@ class ProgramProfileResults extends React.Component {
                 <RadioSets type={this.props.observationType} />
               </RadioGroup>
             ) : null}
-            
+
             {/*
                     The chart switcher
                 */}
@@ -1285,9 +1312,9 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
 
-                  {/* {this.props.observationType === 'transitionTime' ? (
+                  {this.props.observationType === 'transitionTime' ? (
                     <TransitionAverageBarDetails data={this.state.averages} />
-                  ) : null} */}
+                  ) : null}
 
                   {/* Literacy Instruction Charts */}
                   {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (

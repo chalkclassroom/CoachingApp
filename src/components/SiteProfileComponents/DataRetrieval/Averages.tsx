@@ -61,8 +61,8 @@ class AveragesData {
       results[teacherId].other += row.other
 
       // Calculate the total Number of instructions
-      if (!results[teacherId].startDate.includes(row.sessionStart)) {
-        results[teacherId].startDate.push(row.sessionStart)
+      if (!results[teacherId].startDate.includes(row.sessionStart.value)) {
+        results[teacherId].startDate.push(row.sessionStart.value)
         results[teacherId].total += row.sessionTotal
       }
 
@@ -72,6 +72,7 @@ class AveragesData {
     var siteBar = {
       name: 'Site Average',
       total: 0,
+      transitionTimeTotal: 0,
       transitionTimeAverage: 0,
       learningActivityAverage: 0,
     }
@@ -83,49 +84,29 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions
 
-      result.transitionTimeAverage =
-        result.total > 0
-          ? (result.totalTransitionTime / result.total).toFixed(2) * 100
-          : 0
-      result.learningActivityAverage =
-        result.totalTransitionTime > 0 ? 100 - result.transitionTimeAverage : 0
+      if(result.total > 0)
+      {
+        result.transitionTimeAverage = (result.totalTransitionTime / result.total).toFixed(2) * 100;
+        result.learningActivityAverage = 100 - result.transitionTimeAverage;
+        siteBar.total++;
 
-      // Gather info for the site bar
-      siteBar.transitionTimeAverage += result.transitionTimeAverage
-      siteBar.learningActivityAverage += result.learningActivityAverage
+        siteBar.transitionTimeTotal += result.transitionTimeAverage
+      }
+      else
+      {
+        result.transitionTimeAverage = null;
+        result.totalTransitionTime = null;
+      }
+
     }
 
     // Calculate the site bar averages
-    // siteBar.hlqAverage = siteBar.hlq > 0 ? (siteBar.hlq / siteBar.total).toFixed(2) * 100 : 0;
-    // siteBar.hlqResponseAverage = siteBar.hlqResponse > 0 ? (siteBar.hlqResponse / siteBar.total).toFixed(2) * 100 : 0;
-    // siteBar.llqAverage = siteBar.llq > 0 ? (siteBar.llq / siteBar.total).toFixed(2) * 100 : 0;
-    // siteBar.llqResponseAverage = siteBar.llqResponse > 0 ? (siteBar.llqResponse / siteBar.total).toFixed(2) * 100 : 0;
+    siteBar.transitionTimeAverage = siteBar.total > 0 ? Math.round(siteBar.transitionTimeTotal / siteBar.total) : null;
+    siteBar.learningActivityAverage = siteBar.total > 0 ? 100 - siteBar.transitionTimeAverage : null;
 
-    // Calculate the site bar averages
-    // siteBar.transitionTimeAverage =
-    //   siteBar.transitionTimeAverage > 0
-    //     ? Math.round(
-    //         parseFloat(
-    //           (
-    //             siteBar.transitionTimeAverage / Object.keys(results).length
-    //           ).toFixed(2)
-    //         )
-    //       )
-    //     : 0
-    // siteBar.learningActivityAverage =
-    //   siteBar.learningActivityAverage > 0
-    //     ? Math.round(
-    //         parseFloat(
-    //           (
-    //             siteBar.learningActivityAverage / Object.keys(results).length
-    //           ).toFixed(2)
-    //         )
-    //       )
-    //     : 0
+
 
     results.siteBar = siteBar
-
-    console.log('RESULTS ======>>> ', results)
 
     return results
   }
@@ -312,8 +293,8 @@ class AveragesData {
         childDenominator: 0,
         support: 0,
         noSupport: 0,
-        engaged: 0,
-        noInteraction: 0,
+        childEngaged: 0,
+        childNoInteraction: 0,
         totalInstructions: 0
       }
     }
@@ -322,11 +303,20 @@ class AveragesData {
       let row = data[rowIndex]
       let teacherId = row.teacher.split('/')[2]
       results[teacherId].totalInstructions++
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[teacherId].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
-        results[teacherId].noInteraction += row.childOther
-        results[teacherId].childDenominator += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
+
+      // Gather data for child behaviors
+      // results[teacherId].engaged += Math.max(row.counting, row.shapes, row.patterns, row.measurement)
+
+      if(row.counting > 0 || row.shapes > 0 || row.patterns > 0 || row.measurement)
+      {
+        results[teacherId].childEngaged += row.total;
       }
+
+      results[teacherId].childNoInteraction += row.childOther
+      //results[teacherId].childDenominator += Math.max(row.counting, row.shapes, row.patterns, row.measurement) + row.childOther
+      results[teacherId].childDenominator += row.total;
+
+      // Gather data for teacher behaviors
       if (row.peopletype === 3) {
         results[teacherId].support += row.support
         results[teacherId].noSupport += row.noSupport
@@ -336,20 +326,21 @@ class AveragesData {
 
     for (let resultsIndex in results) {
       let result = results[resultsIndex]
-      
+
       if (result.teacherDenominator > 0) {
-        result.support = result.support/result.teacherDenominator * 100
-        result.noSupport = result.noSupport/result.teacherDenominator * 100
+        result.supportAverage = Math.round(result.support/result.teacherDenominator * 100)
+        result.noSupportAverage = 100 - result.supportAverage;
       } else {
-        result.support = 0
-        result.noSupport = 0
+        result.supportAverage = 0
+        result.noSupportAverage = 0
       }
       if (result.childDenominator > 0) {
-        result.engaged = result.engaged/result.childDenominator * 100
-        result.noInteraction = result.noInteraction/result.childDenominator * 100
+        result.childNoInteractionAverage = Math.round(result.childNoInteraction/result.childDenominator * 100);
+        /// result.engagedAverage = result.childEngaged/result.childDenominator * 100
+        result.engagedAverage = 100 - result.childNoInteractionAverage;
       } else {
-        result.engaged = 0
-        result.noInteraction = 0
+        result.engagedAverage = 0
+        result.childNoInteractionAverage = 0
       }
     }
     console.log(results)
@@ -422,6 +413,9 @@ class AveragesData {
         result.hlqResponse > 0
           ? (result.hlqResponse / tempTotalInstructions).toFixed(2) * 100
           : 0
+
+      result.highLevel = tempTotalInstructions > 0 ? ((result.hlq + result.hlqResponse) / tempTotalInstructions) * 100 : 0
+
       result.llqAverage =
         result.llq > 0
           ? (result.llq / tempTotalInstructions).toFixed(2) * 100
@@ -431,11 +425,13 @@ class AveragesData {
           ? (result.llqResponse / tempTotalInstructions).toFixed(2) * 100
           : 0
 
+      result.lowLevel = tempTotalInstructions > 0 ? ((result.llq + result.llqResponse) / tempTotalInstructions) : 0
+
       // Gather info for the site bar
-      siteBar.hlq += result.hlqAverage
-      siteBar.hlqResponse += result.hlqResponseAverage
-      siteBar.llq += result.llqAverage
-      siteBar.llqResponse += result.llqResponseAverage
+      siteBar.hlq += result.hlq
+      siteBar.hlqResponse += result.hlqResponse
+      siteBar.llq += result.llq
+      siteBar.llqResponse += result.llqResponse
 
       siteBar.total += tempTotalInstructions
 
@@ -468,6 +464,9 @@ class AveragesData {
             )
           )
         : 0
+
+    siteBar.highLevel = siteBar.total > 0 ? ((siteBar.hlq + siteBar.hlqResponse) / siteBar.total) * 100 : 0
+
     siteBar.llqAverage =
       siteBar.llq > 0
         ? Math.round(
@@ -482,6 +481,9 @@ class AveragesData {
             )
           )
         : 0
+
+    siteBar.lowLevel = siteBar.total > 0 ? ((siteBar.llq + siteBar.llqResponse) / siteBar.total) : 0
+
 
     results.siteBar = siteBar
 
@@ -658,6 +660,12 @@ class AveragesData {
       results[teacherId].totalObserved += row.count
     }
 
+    let siteBar = {
+      name: "Site Average",
+      nb: 0,
+      t: 0
+    }
+
     // Calculate the averages in percentages
     // Go through each teacher
     for (var resultsIndex in results) {
@@ -665,6 +673,8 @@ class AveragesData {
 
       var tempTotalInstructions = result.totalInstructions
       var tempTotalObserved = result.totalObserved
+      siteBar.nb += result.noBehaviors
+      siteBar.t += tempTotalObserved
 
       result.eyeLevelAverage =
         result.eyeLevel > 0
@@ -701,6 +711,9 @@ class AveragesData {
           : 0
     }
 
+    siteBar.nb = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 
@@ -728,8 +741,8 @@ class AveragesData {
       let row = data[rowIndex]
       let teacherId = row.teacher.split('/')[2]
       results[teacherId].totalInstructions++
-      if (row.peopletype === 2 || row.peopletype === 3) {
-        results[teacherId].engaged += Math.max(row.materials, row.drawing, row.playing, row.speaking)
+      if (row.peopletype === 1 || row.peopletype === 2 || row.peopletype === 3) {
+        results[teacherId].engaged += (row.total - row.childNonSequential)
         results[teacherId].noInteraction += row.childNonSequential
         results[teacherId].childDenominator += row.total
       }
@@ -740,9 +753,27 @@ class AveragesData {
       }
     }
 
+    let siteBar = {
+      name: "Site Average",
+      teacherDenominator: 0,
+      childDenominator: 0,
+      support: 0,
+      noSupport: 0,
+      engaged: 0,
+      noInteraction: 0,
+      totalInstructions: 0
+    }
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex]
-      
+
+      siteBar.support += result.support;
+      siteBar.noSupport += result.noSupport;
+      siteBar.engaged += result.engaged;
+      siteBar.noInteraction += result.noInteraction;
+      siteBar.teacherDenominator += result.teacherDenominator;
+      siteBar.childDenominator += result.childDenominator;
+
       if (result.teacherDenominator > 0) {
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
@@ -758,7 +789,11 @@ class AveragesData {
         result.noInteraction = 0
       }
     }
-    
+
+    siteBar.noSupport = siteBar.teacherDenominator > 0 ? siteBar.noSupport / siteBar.teacherDenominator * 100 : 0
+    siteBar.noInteraction = siteBar.childDenominator > 0 ? siteBar.noInteraction / siteBar.childDenominator * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 
@@ -802,14 +837,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -856,14 +891,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -910,14 +945,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -964,14 +999,14 @@ class AveragesData {
       siteBar.totalInstruction += result.totalInstruction;
       siteBar.noBehaviors += result.noBehaviors;
 
-      result.totalInstruction = result.totalInstruction > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
-      result.noBehaviors = result.noBehaviors > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.totalInstruction = result.totalIntervals > 0 ? (result.totalInstruction / result.totalIntervals).toFixed(2) * 100 : 0;
+      result.noBehaviors = result.totalIntervals > 0 ? (result.noBehaviors / result.totalIntervals).toFixed(2) * 100 : 0;
     }
 
     siteBar.total = siteBar.totalInstruction + siteBar.noBehaviors;
 
-    siteBar.totalInstruction = siteBar.totalInstruction > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
-    siteBar.noBehaviors = siteBar.noBehaviors > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.totalInstruction = siteBar.total > 0 ? parseFloat((siteBar.totalInstruction / siteBar.total).toFixed(2)) * 100 : 0;
+    siteBar.noBehaviors = siteBar.total > 0 ? parseFloat((siteBar.noBehaviors / siteBar.total).toFixed(2)) * 100 : 0;
     results.siteBar = siteBar;
 
     return results;
@@ -1020,10 +1055,20 @@ class AveragesData {
       }
     }
 
+    let siteBar = {
+      name: "Site Average",
+      td: 0,
+      cd: 0,
+      ns: 0,
+      ni: 0,
+    }
+
     for (let resultsIndex in results) {
       let result = results[resultsIndex]
-      
+
       if (result.teacherDenominator > 0) {
+        siteBar.td += result.teacherDenominator;
+        siteBar.ns += result.noSupport;
         result.support = result.support/result.teacherDenominator * 100
         result.noSupport = result.noSupport/result.teacherDenominator * 100
       } else {
@@ -1031,6 +1076,8 @@ class AveragesData {
         result.noSupport = 0
       }
       if (result.childDenominator > 0) {
+        siteBar.cd += result.childDenominator;
+        siteBar.ni += result.noInteraction;
         result.engaged = result.engaged/result.childDenominator * 100
         result.noInteraction = result.noInteraction/result.childDenominator * 100
       } else {
@@ -1038,7 +1085,11 @@ class AveragesData {
         result.noInteraction = 0
       }
     }
-    
+
+    siteBar.ns = siteBar.td > 0 ? (siteBar.ns / siteBar.td) * 100 : 0
+    siteBar.ni = siteBar.cd > 0 ? (siteBar.ni / siteBar.cd) * 100 : 0
+
+    results.siteBar = siteBar
     return results
   }
 }
