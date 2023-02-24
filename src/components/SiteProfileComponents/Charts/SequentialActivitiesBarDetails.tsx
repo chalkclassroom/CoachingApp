@@ -85,23 +85,26 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
+      if(teacher.name === "Site Average")
+      {
+        continue;
+      }
       teacherNames.push(teacher.name);
-
-
+      
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
       {
-        var tempNoSupport = Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100;
-        tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = Math.round((teacher['support'] + Number.EPSILON) * 100) / 100;
-        tempTeacherSupport = Math.round(tempTeacherSupport)
+        var tempNoSupport = Math.round(teacher['noSupport']);
+        // tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = 100 - tempNoSupport;
+        // tempTeacherSupport = Math.round(tempTeacherSupport)
       }
       else
       {
-        var tempNoSupport = Math.round((teacher['noInteraction'] + Number.EPSILON) * 100) / 100;
-        tempNoSupport = Math.round(tempNoSupport)
-        var tempTeacherSupport = Math.round((teacher['engaged'] + Number.EPSILON) * 100) / 100;
-        tempTeacherSupport = Math.round(tempTeacherSupport)
+        var tempNoSupport = Math.round(teacher['noInteraction']);
+        // tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = 100 - tempNoSupport;
+        // tempTeacherSupport = Math.round(tempTeacherSupport)
         
         // var tempTeacherSupport = 100 - tempNoSupport;
       }
@@ -132,23 +135,31 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    var siteAverageNoSupport = new Array(dataSize + 1).fill(0);
-    siteAverageNoSupport[dataSize] = Math.round((noSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
-    siteAverageNoSupport[dataSize] = Math.round(siteAverageNoSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+    let siteBar = 0;
 
-    var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
-    siteAverageTeacherSupport[dataSize] = Math.round((teacherSupportTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
-    siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
+    if (type == "teacherAverage") {
+      siteBar = data.siteBar.noSupport
+    } else {
+      siteBar = data.siteBar.noInteraction
+    }
+
+    var siteAverageNoSupport = new Array(teacherNames.length).fill(0);
+    siteAverageNoSupport[teacherNames.length - 1] = siteBar;
+    siteAverageNoSupport[teacherNames.length - 1] = Math.round(siteAverageNoSupport[teacherNames.length - 1]); // Round isn't working the first time for some reason. Just going to do it again
+
+    var siteAverageTeacherSupport = new Array(teacherNames.length).fill(0);
+    siteAverageTeacherSupport[teacherNames.length - 1] = 100 - siteAverageNoSupport[teacherNames.length - 1];
+    // siteAverageTeacherSupport[dataSize] = Math.round(siteAverageTeacherSupport[dataSize]); // Round isn't working the first time for some reason. Just going to do it again
 
     // siteAverageTeacherSupport[dataSize] = 100 - siteAverageNoSupport[dataSize];
 
     // Colors and data labels are going to change as we switch between Child and Teacher
-    let topBarBackgroundColor = "#5B9BD5";
-    let topBorderColor = "#0070C0";
+    let topBarBackgroundColor = "#FF0000";
+    let topBorderColor = "#FF0000";
     let topBarLabel = 'No Support';
 
-    let bottomBarBackgroundColor = "#FF0000";
-    let bottomBorderColor = "#FF0000";
+    let bottomBarBackgroundColor = "#5B9BD5";
+    let bottomBorderColor = "#0070C0";
     let bottomBarLabel = 'Teacher Support';
 
 

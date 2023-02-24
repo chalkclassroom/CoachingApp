@@ -89,9 +89,9 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-
-      hlqAverage.push(Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100);
-      llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
+      let value = Math.round((teacher['hlqAverage'] + teacher['hlqResponseAverage'] + Number.EPSILON) * 100) / 100;
+      hlqAverage.push(value);
+      llqAverage.push(100 - value);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -108,11 +108,12 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
+    let value = Math.round((data.programBar.hlqAverage + data.programBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
     var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round((data.programBar.hlqAverage + data.programBar.hlqResponseAverage + Number.EPSILON) * 100) / 100;
+    siteAverageHlqAverage[dataSize - 1] = value;
 
     var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = Math.round((data.programBar.llqAverage + data.programBar.llqResponseAverage + Number.EPSILON) * 100) / 100;
+    siteAverageLlqAverage[dataSize - 1] = 100 - value
 
 
     // Use that data to create our dataset

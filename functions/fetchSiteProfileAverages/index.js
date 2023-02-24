@@ -97,6 +97,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
      */
     if (observationType == 'transition') {
       sqlQuery = `SELECT
+                      id,
                       DATE(sessionStart) AS startDate,
                       SUM(CASE WHEN type = 'waiting' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS line,
                       SUM(CASE WHEN type = 'traveling' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS traveling,
@@ -112,7 +113,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
         functions.config().env.bq_dataset
       }.${observationType}
                       where (${teacherSqlQuery}) and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY startDate, teacher, total, sessionTotal, sessionStart
+                      GROUP BY startDate, teacher, total, sessionTotal, sessionStart, id
                       ORDER BY startDate ASC;`
     }
 
@@ -426,7 +427,7 @@ exports.fetchSiteProfileAverages = functions.https.onCall(
     const [job] = await bigquery.createQueryJob(options)
     console.log(`Job ${job.id} started.`)
     const rows = await job.getQueryResults()
-    console.log(rows)
+    //console.log(rows)
     return rows
   }
 )

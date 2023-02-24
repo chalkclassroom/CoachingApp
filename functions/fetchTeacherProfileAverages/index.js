@@ -99,11 +99,13 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "climate")
     {
       sqlQuery = `SELECT
-                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher, toneRating,
+                      id,
+                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher,
+                      toneRating,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY behaviorResponse, teacher, startDate, toneRating
+                      GROUP BY behaviorResponse, teacher, startDate, toneRating, id
                       ORDER BY startDate ASC;`;
     }
 
@@ -353,6 +355,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       let [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
+
+                      for(var teacherIndex in teacher[0])
+                      {
+                        let tempTeacher = teacher[0][teacherIndex];
+                        tempTeacher.isChild = false;
+                      }
 
 
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,

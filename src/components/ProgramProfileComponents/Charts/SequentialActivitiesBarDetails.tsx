@@ -92,10 +92,10 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
       }
 
 
-      support.push(Math.round((teacher['support'] + Number.EPSILON) * 100) / 100);
-      noSupport.push(Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100);
-      sequentialActivities.push(Math.round((teacher['sequentialActivities'] + Number.EPSILON) * 100) / 100);
-      childNonSequential.push(Math.round((teacher['childNonSequential'] + Number.EPSILON) * 100) / 100);
+      noSupport.push(Math.round((teacher['noSupport'])));
+      support.push(100 - noSupport[noSupport.length - 1]);
+      childNonSequential.push(Math.round((teacher['noInteraction'])));
+      sequentialActivities.push(100 - childNonSequential[childNonSequential.length - 1]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -112,17 +112,19 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    var siteSupportAverage = new Array(dataSize).fill(0);
-    siteSupportAverage[dataSize - 1] = Math.round((data.programBar.support + Number.EPSILON) * 100) / 100;
-
     var siteNoSupportAverage = new Array(dataSize).fill(0);
-    siteNoSupportAverage[dataSize - 1] = Math.round((data.programBar.noSupport + Number.EPSILON) * 100) / 100;
+    siteNoSupportAverage[dataSize - 1] = Math.round((data.programBar.noSupport));
 
-    var siteSequentialActivitiesAverage = new Array(dataSize).fill(0);
-    siteSequentialActivitiesAverage[dataSize - 1] = Math.round((data.programBar.sequentialActivities + Number.EPSILON) * 100) / 100;
+    var siteSupportAverage = new Array(dataSize).fill(0);
+    siteSupportAverage[dataSize - 1] = 100 - siteNoSupportAverage[dataSize - 1];
 
     var siteChildNonSequentialAverage = new Array(dataSize).fill(0);
-    siteChildNonSequentialAverage[dataSize - 1] = Math.round((data.programBar.childNonSequential + Number.EPSILON) * 100) / 100;
+    siteChildNonSequentialAverage[dataSize - 1] = Math.round((data.programBar.noInteraction));
+
+    var siteSequentialActivitiesAverage = new Array(dataSize).fill(0);
+    siteSequentialActivitiesAverage[dataSize - 1] = 100 - siteChildNonSequentialAverage[dataSize - 1]
+
+ 
 
 
     // Use that data to create our dataset
@@ -131,26 +133,26 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
         {
           label: 'Support',
           data: support,
-          backgroundColor: "#FF0000",
+          backgroundColor: "#5B9BD5",
         },
         {
           label: 'No Support',
           data: noSupport,
-          backgroundColor: "#1155CC",
+          backgroundColor: "#FF0000",
         },
         // The total Site Averages
         {
           label: 'Support Average',
           data: siteSupportAverage,
           backgroundColor: "#FFF",
-          borderColor: "#FF0000",
+          borderColor: "#5B9BD5",
           borderWidth: 4,
         },
         {
           label: 'No Support Average',
           data: siteNoSupportAverage,
           backgroundColor: "#FFF",
-          borderColor: "#1155CC",
+          borderColor: "#FF0000",
           borderWidth: 4,
         },
       ]

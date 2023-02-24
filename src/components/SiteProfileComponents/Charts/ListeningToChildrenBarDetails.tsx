@@ -74,7 +74,7 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-      let tempNoBehavior = Math.round((teacher['noBehaviorsAverage'] + Number.EPSILON) * 100) / 100;
+      let tempNoBehavior = Math.round((teacher['noBehaviorsAverage']));
       let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
 
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
@@ -105,14 +105,15 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     var dataSize = Object.keys(data).length;
     console.log("number of teachers ", numberOfTeachersWithData);
 
-    var siteAverageNoBehaviors = new Array(dataSize + 1).fill(0);
-    siteAverageNoBehaviors[dataSize] = Math.round(( noBehaviorsTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    var siteAverageNoBehaviors = new Array(dataSize).fill(0);
+    siteAverageNoBehaviors[dataSize - 1] = Math.round(data.siteBar.nb);
 
     var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize] = Math.round(( listeningTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageListening[dataSize - 1] = 100 - siteAverageNoBehaviors[dataSize - 1];
+    // siteAverageListening[dataSize] = Math.round(( listeningTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
 
     // Add site average to the list of names
-    teacherNames.push("Site Average");
+    // teacherNames.push("Site Average");
 
     // Use that data to create our dataset
     var dataSets = [
