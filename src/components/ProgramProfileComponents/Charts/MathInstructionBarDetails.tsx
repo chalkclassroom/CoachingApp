@@ -2,6 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
+
 
 import {withStyles} from '@material-ui/core'
 
@@ -142,21 +144,21 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     
-    let value = 0;
+    let siteResult = [];
 
     if (type === "teacherAverage") {
-       value = data.programBar.noSupport
+       siteResult = round([data.programBar.noSupport, data.programBar.support])
     } else {
-      value = data.programBar.noInteraction
+      siteResult = round([data.programBar.noInteraction, data.programBar.engaged])
     }
 
     var dataSize = Object.keys(data).length;
 
     var siteAverageNoSupport = new Array(dataSize).fill(0);
-    siteAverageNoSupport[dataSize - 1] = Math.round(value); // Round isn't working the first time for some reason. Just going to do it again
+    siteAverageNoSupport[dataSize - 1] = siteResult[0]; // Round isn't working the first time for some reason. Just going to do it again
 
     var siteAverageTeacherSupport = new Array(dataSize).fill(0);
-    siteAverageTeacherSupport[dataSize - 1] = 100 - siteAverageNoSupport[dataSize - 1];
+    siteAverageTeacherSupport[dataSize - 1] = siteResult[1];
 
     // Use that data to create our dataset
     var dataSets = [
