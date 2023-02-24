@@ -4,7 +4,7 @@ import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
 
 import {withStyles} from '@material-ui/core'
-
+import { round } from "./../../Shared/Math"
 
 /**
  * Horizontal Bar Graph for Listening to Children Behaviors
@@ -74,8 +74,12 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
         continue;
       }
 
-      let tempNoBehavior = Math.round((teacher['noBehaviorsAverage']));
-      let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
+      let result = round([teacher['noBehaviorsAverage'], teacher['encouragingAverage']])
+
+      //let tempNoBehavior = Math.round((teacher['noBehaviorsAverage']));
+      //let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
+      let tempNoBehavior = result[0];
+      let tempListening = result[1];
 
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
       if(teacher['totalObserved'] > 0)
@@ -103,14 +107,14 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
-    console.log("number of teachers ", numberOfTeachersWithData);
+
+    let siteResult = round([data.siteBar.noBehaviorsAverage, data.siteBar.encouragingAverage])
 
     var siteAverageNoBehaviors = new Array(dataSize).fill(0);
-    siteAverageNoBehaviors[dataSize - 1] = Math.round(data.siteBar.nb);
+    siteAverageNoBehaviors[dataSize - 1] = siteResult[0];
 
     var siteAverageListening = new Array(dataSize).fill(0);
-    siteAverageListening[dataSize - 1] = 100 - siteAverageNoBehaviors[dataSize - 1];
-    // siteAverageListening[dataSize] = Math.round(( listeningTotal / numberOfTeachersWithData + Number.EPSILON) * 100) / 100;
+    siteAverageListening[dataSize - 1] = siteResult[1];
 
     // Add site average to the list of names
     // teacherNames.push("Site Average");

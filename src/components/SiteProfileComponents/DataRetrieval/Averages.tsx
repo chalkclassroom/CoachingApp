@@ -663,6 +663,7 @@ class AveragesData {
     let siteBar = {
       name: "Site Average",
       nb: 0,
+      encouraging: 0,
       t: 0
     }
 
@@ -674,6 +675,7 @@ class AveragesData {
       var tempTotalInstructions = result.totalInstructions
       var tempTotalObserved = result.totalObserved
       siteBar.nb += result.noBehaviors
+      siteBar.encouraging += result.encouraging
       siteBar.t += tempTotalObserved
 
       result.eyeLevelAverage =
@@ -711,7 +713,8 @@ class AveragesData {
           : 0
     }
 
-    siteBar.nb = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+    siteBar.noBehaviorsAverage = siteBar.t > 0 ? (siteBar.nb / siteBar.t) * 100 : 0
+    siteBar.encouragingAverage = siteBar.t > 0 ? (siteBar.encouraging / siteBar.t) * 100 : 0
 
     results.siteBar = siteBar
     return results
