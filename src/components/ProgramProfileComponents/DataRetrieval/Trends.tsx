@@ -1217,6 +1217,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
 
     var monthsCount = months.length;
 
+    console.log(monthsCount)
     // Add each teacher to the object
     var tempName = "";
     for(var siteIndex in sites)
@@ -1247,6 +1248,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
         var row = sites[siteIndex][rowIndex];
         let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
         console.log(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}))
+        console.log(rowMonth)
 
         if (row.peopleType === 3) {
           if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
@@ -1285,7 +1287,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
       var result = results[resultsIndex];
 
       // Go through the months
-      for(var i = 0; i < 12; i++)
+      for(var i = 0; i < monthsCount; i++)
       {
         programBar.teacherSupport[i] += result.teacherSupport[i]
         programBar.noSupport[i] += result.noSupport[i]
@@ -1335,6 +1337,7 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     }
 
     results.programBar = programBar;
+    console.log(results)
     return results;
 
   }
