@@ -388,15 +388,6 @@ class ProgramProfileResults extends React.Component {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
         teacherIds: teachers,
-      }).then(data => {
-        if (data.length <= 0) {
-          this.setState({
-            showErrorMessage: true,
-            errorMessage: `No reports available for ${
-              practicesArr[this.props.observationType]
-            }`,
-          })
-        }
       })
       
       // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
@@ -1197,7 +1188,7 @@ class ProgramProfileResults extends React.Component {
               ) : null}
               {this.state.showErrorMessage ? (
                 <h1>{this.state.errorMessage}</h1>
-              ) : (<>
+              ) : null}
 
               {(this.state.tabState == 1 &&
                 Object.keys(this.state.averages).length > 0) == 1 ? (<>
@@ -1334,7 +1325,7 @@ class ProgramProfileResults extends React.Component {
                   ) : null}
 
                 </Grid>
-              ) : null}</>)}
+              ) : null}
             </Grid>
 
             {/*
