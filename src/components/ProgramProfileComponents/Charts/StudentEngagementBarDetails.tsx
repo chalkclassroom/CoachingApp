@@ -70,7 +70,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
-
+    let for_sorting = [];
     var teacherNames = [];
     var graphData = {};
 
@@ -92,23 +92,36 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Program Average")
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
 
       var tempTotalPointsAverage = parseFloat(teacher['totalPointsAverage']);
+      for_sorting.push([teacher.name, tempTotalPointsAverage])
 
+      // dataSets[0].backgroundColor.push("#ED7D31");
+      // dataSets[0].hoverBackgroundColor.push("#ED7D31");
+      // dataSets[0].borderColor.push("rgba(0,0,0,0)");
+      // dataSets[0].data.push(tempTotalPointsAverage);
+
+    }
+
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
       dataSets[0].backgroundColor.push("#ED7D31");
       dataSets[0].hoverBackgroundColor.push("#ED7D31");
       dataSets[0].borderColor.push("rgba(0,0,0,0)");
-      dataSets[0].data.push(tempTotalPointsAverage);
+      dataSets[0].data.push(for_sorting[index][1]);
 
     }
+
+    teacherNames.push("Program Average")
 
     // Add the Site Average Bar
     dataSets[0].backgroundColor.push("#FFFFFF");

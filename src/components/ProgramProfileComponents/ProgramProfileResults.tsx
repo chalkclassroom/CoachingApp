@@ -412,7 +412,7 @@ class ProgramProfileResults extends React.Component {
       siteNames[siteData.id] = { name: siteData.name }
       siteInfo.push({id: siteData.id, name:siteData.name})
     }
-
+    siteInfo.sort((a,b) => (b['name'].charAt(0) < a['name'].charAt(0)) ? 1 : ((a['name'].charAt(0) < b['name'].charAt(0)) ? -1 : 0))
     this.setState({ BQData: averagesList })
     this.setState({ siteNames: siteNames, siteInfo: siteInfo })
 

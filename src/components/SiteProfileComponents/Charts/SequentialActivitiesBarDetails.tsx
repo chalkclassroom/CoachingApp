@@ -75,7 +75,7 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-
+    let for_sorting = [];
     var noSupportAverage = [];
     var teacherSupportAverage = [];
     var noSupportTotal = 0;
@@ -86,11 +86,11 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // If we're looking at the teacher graph, get the support data
       if(type == "teacherAverage")
@@ -108,14 +108,16 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
       if(teacher['totalInstructions'] > 0)
       {
-        noSupportAverage.push(tempNoSupport);
-        teacherSupportAverage.push(tempTeacherSupport);
+        for_sorting.push([teacher.name, tempNoSupport, tempTeacherSupport])
+        // noSupportAverage.push(tempNoSupport);
+        // teacherSupportAverage.push(tempTeacherSupport);
         numberOfTeachersWithData++;
       }
       else
       {
-        noSupportAverage.push(0);
-        teacherSupportAverage.push(0);
+        for_sorting.push([teacher.name, 0, 0])
+        // noSupportAverage.push(0);
+        // teacherSupportAverage.push(0);
       }
 
       noSupportTotal += tempNoSupport;
@@ -124,6 +126,12 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
     }
 
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      noSupportAverage.push(for_sorting[index][1])
+      teacherSupportAverage.push(for_sorting[index][2])
+    }
     teacherNames.push("Site Average");
 
 

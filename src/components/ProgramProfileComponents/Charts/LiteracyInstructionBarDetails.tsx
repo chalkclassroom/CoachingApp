@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Bar } from "react-chartjs-2";
+import { round } from "./../../Shared/Math"
+
 
 interface Props {
     data: Array<Object>
@@ -71,6 +73,7 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
   setData = () => {
     const { data } = this.props
 
+    let for_sorting = [];
     let teacherNames = [];
     let literacyInstruction = [];
     let noBehaviors = [];
@@ -78,22 +81,38 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
     for(let teacherIndex in data)
     {
       let teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
-      if(teacher.name === "Program Average")
+      // teacherNames.push(teacher.name);
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
-      literacyInstruction.push(Math.round((teacher['totalInstruction'] + Number.EPSILON) * 100) / 100);
-      noBehaviors.push(Math.round((teacher['noBehaviors'] + Number.EPSILON) * 100) / 100);
+      
+      let result = round([teacher['totalInstruction'], teacher['noBehaviors']])
+      let literacy = result[0];
+      let no = result[1];
+
+      for_sorting.push([teacher.name, literacy, no])
+
     }
+
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      literacyInstruction.push(for_sorting[index][1])
+      noBehaviors.push(for_sorting[index][2])
+    }
+
+    teacherNames.push("Program Average")
 
     let dataSize = Object.keys(data).length
     let siteAverageLiteracyInstruction = new Array(dataSize).fill(0)
     let siteAverageNoBehaviors = new Array(dataSize).fill(0)
+
+    let programResult = round([data.programBar.totalInstruction, data.programBar.noBehaviors])
     
-    siteAverageLiteracyInstruction[dataSize - 1] = Math.round((data.programBar.totalInstruction + Number.EPSILON) * 100) / 100;
-    siteAverageNoBehaviors[dataSize - 1] = Math.round((data.programBar.noBehaviors + Number.EPSILON) * 100) / 100;
+    siteAverageLiteracyInstruction[dataSize - 1] = programResult[0];
+    siteAverageNoBehaviors[dataSize - 1] = programResult[1];
 
     let instructionLabel = "";
     let siteAverageInstructionLabel = "";

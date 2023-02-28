@@ -74,7 +74,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-
+    let for_sorting = [];
     var hlqAverage = [];
     var llqAverage = [];
     for(var teacherIndex in data)
@@ -82,10 +82,10 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
@@ -96,19 +96,30 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
         let tempHlqAverage = Math.round(teacher['highLevel']);
         let tempLlqAverage = 100 - tempHlqAverage;
 
-        hlqAverage.push(tempHlqAverage);
+        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
+
+        // hlqAverage.push(tempHlqAverage);
         //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        llqAverage.push(tempLlqAverage);
+        // llqAverage.push(tempLlqAverage);
 
       }
       else
       {
-        hlqAverage.push(0);
-        llqAverage.push(0);
+        for_sorting.push([teacher.name, 0, 0])
+        // hlqAverage.push(0);
+        // llqAverage.push(0);
       }
 
     }
 
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      hlqAverage.push(for_sorting[index][1])
+      llqAverage.push(for_sorting[index][2])
+    }
+
+    teacherNames.push("Site Average")
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data

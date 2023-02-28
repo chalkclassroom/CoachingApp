@@ -490,7 +490,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
                     padding: 20,
                     boxWidth: 12,
                   },
-                  position: 'right',
+                  position: 'bottom',
                 },
                 plugins: {
                   datalabels: {
