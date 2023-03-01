@@ -75,7 +75,7 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
     var teacherNames = [];
 
-    console.log(data)
+    let for_sorting = [];
     var sequentialActivities = [];
     var childNonSequential = [];
     var support = [];
@@ -85,22 +85,34 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Program Average")
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
       let result1 = round([teacher['noSupport'], teacher['support']])
       let result2 = round([teacher['noInteraction'], teacher['engaged']])
-      noSupport.push(result1[0]);
-      support.push(result1[1]);
-      childNonSequential.push(result2[0]);
-      sequentialActivities.push(result2[1]);
+      for_sorting.push([teacher.name, result1[0], result1[1], result2[0], result2[1]])
+      // noSupport.push(result1[0]);
+      // support.push(result1[1]);
+      // childNonSequential.push(result2[0]);
+      // sequentialActivities.push(result2[1]);
 
     }
+
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      noSupport.push(for_sorting[index][1])
+      support.push(for_sorting[index][2])
+      childNonSequential.push(for_sorting[index][3])
+      sequentialActivities.push(for_sorting[index][4])
+    }
+
+    teacherNames.push("Program Average")
 
 
     // We need to set the site average data

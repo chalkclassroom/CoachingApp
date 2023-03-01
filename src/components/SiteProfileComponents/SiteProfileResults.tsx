@@ -461,6 +461,7 @@ class SiteProfileResults extends React.Component {
       transferredTeachersInfo,
       transferLogs
     )
+    teacherResults.sort((a,b) => (b['lastName'].charAt(0) < a['lastName'].charAt(0)) ? 1 : ((a['lastName'].charAt(0) < b['lastName'].charAt(0)) ? -1 : 0))
 
     this.setState({ teacherInfo: teacherResults })
     this.setState({ teacherNames: teacherNames })

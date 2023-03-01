@@ -71,6 +71,7 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
   setData = () => {
     const { data } = this.props
 
+    let for_sorting = [];
     let teacherNames = [];
     let literacyInstruction = [];
     let noBehaviors = [];
@@ -78,15 +79,28 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
     for(let teacherIndex in data)
     {
       let teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
-      if(teacher.name === "Site Average")
+      // teacherNames.push(teacher.name);
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
 
-      literacyInstruction.push(Math.round((teacher['totalInstruction'] + Number.EPSILON) * 100) / 100);
-      noBehaviors.push(Math.round((teacher['noBehaviors'] + Number.EPSILON) * 100) / 100);
+
+      let literacy = (Math.round((teacher['totalInstruction'] + Number.EPSILON) * 100) / 100);
+      let noB = (Math.round((teacher['noBehaviors'] + Number.EPSILON) * 100) / 100);
+
+      for_sorting.push([teacher.name, literacy, noB])
+
     }
+
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      literacyInstruction.push(for_sorting[index][1])
+      noBehaviors.push(for_sorting[index][2])
+    }
+
+    teacherNames.push("Site Average")
 
     let dataSize = Object.keys(data).length
     let siteAverageLiteracyInstruction = new Array(dataSize).fill(0)

@@ -87,46 +87,22 @@ class RadioSets extends React.Component<Props, {}> {
     if(this.props.type === "classroomClimate")
     {
       return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+          <Grid item xs></Grid>
+          <Grid item xs={3}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="General Approval"
-                  value="nonspecificapprovalAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Specific Approval"
-                  value="specificapprovalAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Approvals/Disapprovals"
                   value="teacherApprovals"
                 />
-
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Disapproval"
-                  value="disapprovalAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Redirection"
-                  value="redirectionAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Tone"
@@ -135,6 +111,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs></Grid>
         </Grid>
       )
     }
@@ -143,61 +120,22 @@ class RadioSets extends React.Component<Props, {}> {
     if(this.props.type === "mathInstruction")
     {
       return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+          <Grid item xs></Grid>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Using Math Vocabulary"
-                  value="mathVocabularyAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Asking Questions About Math Concepts"
-                  value="askingQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Demonstrating Math Concepts"
-                  value="mathConceptsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping Children Use Math to Problem Solve"
-                  value="helpingChildrenAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Behaviors"
                   value="teacherAverage"
                 />
-
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-              {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
-                />
-              */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Child Behaviors"
@@ -206,6 +144,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs></Grid>
         </Grid>
       )
     }
@@ -368,71 +307,31 @@ class RadioSets extends React.Component<Props, {}> {
     if(this.props.type === "sequentialActivities")
     {
       return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+          <Grid item xs></Grid>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping children do sequential activities with manipulatives or toys"
-                  value="sequentialActivitiesAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Supporting children as they draw images or write messages"
-                  value="drawImagesAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Demonstrating the steps to an activity or game"
-                  value="demonstrateStepsAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Behaviors"
                   value="teacherAverage"
                 />
-
-
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Supporting children as they act out a dramatic play scenario or book"
-                  value="actOutAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Child Behaviors"
                   value="childAverage"
                 />
-
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs></Grid>
         </Grid>
       )
     }
@@ -643,61 +542,22 @@ class RadioSets extends React.Component<Props, {}> {
     if(this.props.type === "associativeAndCooperative")
     {
       return (
-        <Grid container style={centerRow}>
-          <Grid item xs={6}>
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+          <Grid item xs></Grid>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Participating in children's play"
-                  value="childrensPlayAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Asking questions to extend children's thinking about their shared activity"
-                  value="askingQuestionsAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Encouraging children to share, work, or interact with each other"
-                  value="encouragingChildrenAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Helping children find the words to communicate"
-                  value="helpingChildrenAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Teacher Behaviors"
                   value="teacherAverage"
                 />
-
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
-                {/*
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Support"
-                  value="supportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="No Support"
-                  value="noSupportAverage"
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Teacher Not at Center"
-                  value="notAtCenterAverage"
-                />
-                */}
                 <FormControlLabel
                   control={<Radio />}
                   label="Child Behaviors"
@@ -706,6 +566,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs></Grid>
         </Grid>
       )
     }

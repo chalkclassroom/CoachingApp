@@ -61,6 +61,7 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
+    let for_sorting = [];
     var teacherNames = []
     var graphData = {}
 
@@ -69,10 +70,10 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
     for (var teacherIndex in data) {
       // Create Names to display as labels
       var teacher = data[teacherIndex]
-      teacherNames.push(teacher.name)
+      // teacherNames.push(teacher.name)
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if (teacher.name === 'Site Average') {
+      if (teacher.name === 'Site Average' || teacher.name === undefined) {
         continue
       }
       if (teacher.totalTransitionTime === 0) {
@@ -84,10 +85,10 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
             (teacher['learningActivityAverage'] + Number.EPSILON) * 100
           ) / 100
 
-        transitionTimeAverage.push(100 - tempAverage)
-        learningActivityAverage.push(tempAverage)
-        console.log(transitionTimeAverage)
-        console.log(learningActivityAverage)
+        let transitionTime = (100 - tempAverage)
+        let learningActivity = (tempAverage)
+
+        for_sorting.push([teacher.name, transitionTime, learningActivity])
       }
 
       // let tempAverage =
@@ -108,6 +109,16 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
       //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
       //graphData.push(tempAvg);
     }
+
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      transitionTimeAverage.push(for_sorting[index][1])
+      learningActivityAverage.push(for_sorting[index][2])
+
+    }
+
+    teacherNames.push("Site Average")
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data

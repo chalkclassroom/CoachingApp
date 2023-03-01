@@ -76,7 +76,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-
+    let for_sorting = [];
     var noSupportAverage = [];
     var teacherSupportAverage = [];
     var noSupportTotal = 0;
@@ -87,10 +87,10 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Program Average")
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
@@ -115,14 +115,16 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       // Only push this data if there are actually observation done
       if(teacher.totalInstructions > 0)
       {
-        noSupportAverage.push(tempNoSupport);
-        teacherSupportAverage.push(tempTeacherSupport);
+        // noSupportAverage.push(tempNoSupport);
+        // teacherSupportAverage.push(tempTeacherSupport);
+        for_sorting.push([teacher.name, tempNoSupport, tempTeacherSupport]);
         numberOfTeachersWithData++;
       }
       else
       {
-        noSupportAverage.push(0);
-        teacherSupportAverage.push(0);
+        for_sorting.push([teacher.name, 0, 0])
+        // noSupportAverage.push(0);
+        // teacherSupportAverage.push(0);
       }
 
       noSupportTotal += tempNoSupport;
@@ -137,8 +139,14 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       //graphData.push(tempAvg);
 
     }
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      noSupportAverage.push(for_sorting[index][1])
+      teacherSupportAverage.push(for_sorting[index][2])
+    }
 
-    // teacherNames.push("Program Average");
+    teacherNames.push("Program Average");
 
 
     // We need to set the site average data
