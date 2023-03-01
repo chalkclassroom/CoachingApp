@@ -75,7 +75,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-
+    let for_sorting = [];
     var specificApproval = [];
     var generalApproval = [];
     var redirectionAverage = [];
@@ -85,10 +85,10 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Program Average")
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
@@ -99,10 +99,11 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
         teacher['redirectionAverage'],
         teacher['disapprovalAverage']
       ])
-      specificApproval.push(result[0]);
-      generalApproval.push(result[1]);
-      redirectionAverage.push(result[2]);
-      disapprovalAverage.push(result[3]);
+      for_sorting.push([teacher.name, result[0], result[1], result[2], result[3]])
+      // specificApproval.push(result[0]);
+      // generalApproval.push(result[1]);
+      // redirectionAverage.push(result[2]);
+      // disapprovalAverage.push(result[3]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -114,6 +115,16 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
 
     }
 
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      specificApproval.push(for_sorting[index][1])
+      generalApproval.push(for_sorting[index][2])
+      redirectionAverage.push(for_sorting[index][3])
+      disapprovalAverage.push(for_sorting[index][4])
+    }
+
+    teacherNames.push("Program Average")
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data

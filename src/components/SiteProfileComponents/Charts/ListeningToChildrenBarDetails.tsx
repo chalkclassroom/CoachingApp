@@ -56,6 +56,7 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
+    let for_sorting = [];
     var noBehaviorsAverage = [];
     var listeningAverage = [];
     let noBehaviorsTotal = 0;
@@ -66,26 +67,28 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
 
       let result = round([teacher['noBehaviorsAverage'], teacher['encouragingAverage']])
 
-      //let tempNoBehavior = Math.round((teacher['noBehaviorsAverage']));
-      //let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
+      // let tempNoBehavior = Math.round((teacher['noBehaviorsAverage']));
+      // let tempListening = Math.round(( ( 100 - teacher['noBehaviorsAverage'] ) + Number.EPSILON) * 100) / 100;
       let tempNoBehavior = result[0];
       let tempListening = result[1];
 
       // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
       if(teacher['totalObserved'] > 0)
       {
-        noBehaviorsAverage.push(tempNoBehavior);
-        listeningAverage.push(tempListening);
+        for_sorting.push([teacher.name, tempNoBehavior, tempListening])
+
+        // noBehaviorsAverage.push(tempNoBehavior);
+        // listeningAverage.push(tempListening);
 
         // To calculate the site bar
         noBehaviorsTotal += tempNoBehavior;
@@ -95,13 +98,22 @@ class ListeningToChildrenBarDetails extends React.Component<Props, {}> {
       }
       else
       {
-        noBehaviorsAverage.push(0);
-        listeningAverage.push(0);
+      for_sorting.push([teacher.name, 0, 0])
+
+        // noBehaviorsAverage.push(0);
+        // listeningAverage.push(0);
       }
 
-
-
     }
+
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      noBehaviorsAverage.push(for_sorting[index][1])
+      listeningAverage.push(for_sorting[index][2])
+    }
+
+    teacherNames.push("Site Average")
 
 
     // We need to set the site average data

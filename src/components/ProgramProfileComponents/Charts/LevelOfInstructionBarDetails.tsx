@@ -74,7 +74,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
     var teacherNames = [];
 
-    console.log(data)
+    let for_sorting = [];
     var hlqAverage = [];
     var llqAverage = [];
     for(var teacherIndex in data)
@@ -82,10 +82,10 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Program Average")
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
@@ -93,8 +93,9 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       let value = (teacher['hlqAverage'] + teacher['hlqResponseAverage']);
       let value2 = (teacher['llqAverage'] + teacher['llqResponseAverage'])
       let result =  round([value, value2])
-      hlqAverage.push(result[0]);
-      llqAverage.push(result[1]);
+      for_sorting.push([teacher.name, result[0], result[1]])
+      // hlqAverage.push(result[0]);
+      // llqAverage.push(result[1]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -105,6 +106,15 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       //graphData.push(tempAvg);
 
     }
+
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      hlqAverage.push(for_sorting[index][1])
+      llqAverage.push(for_sorting[index][2])
+    }
+
+    teacherNames.push("Program Average")
 
 
     // We need to set the site average data

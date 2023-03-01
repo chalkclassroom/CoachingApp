@@ -338,10 +338,6 @@ class TrendData {
       // Go through the months
       for(var i = 0; i < monthsCount; i++)
       {
-        programBar.teacherSupport[i] += result.teacherSupport[i]
-        programBar.noSupport[i] += result.noSupport[i]
-        programBar.math[i] += result.math[i]
-        programBar.otherActivities[i] += result.otherActivities[i]
 
         result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.math[i] = parseFloat((result.math[i] / result.totalIntervals[i]).toFixed(2)) * 100;
@@ -360,8 +356,14 @@ class TrendData {
         if (isNaN(result.otherActivities[i])) {
           result.otherActivities[i] = 0
         }
-        programBar.totalIntervals[i] += result.totalIntervals[i]
-        programBar.totalSupport[i] += result.totalSupport[i]
+
+        programBar.teacherSupport[i] += result.teacherSupport[i]
+        programBar.noSupport[i] += result.noSupport[i]
+        programBar.math[i] += result.math[i]
+        programBar.otherActivities[i] += result.otherActivities[i]
+
+        programBar.totalIntervals[i] += result.math[i] + result.otherActivities[i]
+        programBar.totalSupport[i] += result.teacherSupport[i] + result.noSupport[i]
       }
     }
 
@@ -439,8 +441,6 @@ class TrendData {
       let result = results[resultsIndex];
       for (let i = 0; i < monthsCount; i++) {
 
-        programBar.highLevel[i] += result.highLevel[i]
-        programBar.lowLevel[i] += result.lowLevel[i]
         result.highLevel[i] = parseFloat((result.highLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
         result.lowLevel[i] = parseFloat((result.lowLevel[i]/result.totalInstructions[i]).toFixed(2)) * 100
         if (isNaN(result.highLevel[i])) {
@@ -449,14 +449,17 @@ class TrendData {
         if (isNaN(result.lowLevel[i])) {
           result.lowLevel[i] = 0
         }
-        programBar.totalInstructions[i] = programBar.highLevel[i] + programBar.lowLevel[i]
+        
+        programBar.highLevel[i] += result.highLevel[i]
+        programBar.lowLevel[i] += result.lowLevel[i]
+        programBar.totalInstructions[i] += result.highLevel[i] + result.lowLevel[i]
 
       }
     }
 
     for (let i = 0; i < monthsCount; i++) {
-      programBar.highLevel[i] = programBar.highLevel[i] > 0 ? parseFloat((programBar.highLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
-      programBar.lowLevel[i] = programBar.lowLevel[i] > 0 ? parseFloat((programBar.lowLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
+      programBar.highLevel[i] = programBar.totalInstructions[i] > 0 ? parseFloat((programBar.highLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
+      programBar.lowLevel[i] = programBar.totalInstructions[i] > 0 ? parseFloat((programBar.lowLevel[i] / programBar.totalInstructions[i]).toFixed(2)) * 100 : 0;
     }
 
     results.programBar = programBar;
@@ -646,8 +649,6 @@ class TrendData {
      // Go through the months
      for(var i = 0; i < monthsCount; i++)
      {
-        programBar.listeningInstruction[i] += result.listeningInstruction[i];
-        programBar.noBehaviors[i] += result.noBehaviors[i];
 
         result.listeningInstruction[i] = parseFloat((result.listeningInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
         result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
@@ -658,7 +659,9 @@ class TrendData {
         if (isNaN(result.noBehaviors[i])) {
           result.noBehaviors[i] = 0
         }
-        programBar.totalIntervals[i] = programBar.listeningInstruction[i] + programBar.noBehaviors[i];
+        programBar.listeningInstruction[i] += result.listeningInstruction[i];
+        programBar.noBehaviors[i] += result.noBehaviors[i];
+        programBar.totalIntervals[i] += result.listeningInstruction[i] + result.noBehaviors[i];
      }
    }
 
@@ -747,10 +750,6 @@ class TrendData {
     let result = results[resultsIndex];
 
     for (let i = 0; i < monthsCount; i++) {
-      programBar.support[i] += result.support[i]
-      programBar.noSupport[i] += result.noSupport[i]
-      programBar.sequentialActivities[i] += result.sequentialActivities[i]
-      programBar.childNonSequential[i] += result.childNonSequential[i]
 
       result.support[i] = parseFloat((result.support[i] / result.totalSupport[i]).toFixed(2)) * 100;
       result.sequentialActivities[i] = parseFloat((result.sequentialActivities[i] / result.totalIntervals[i]).toFixed(2)) * 100;
@@ -769,8 +768,14 @@ class TrendData {
       if (isNaN(result.childNonSequential[i])) {
         result.childNonSequential[i] = 0
       } 
-      programBar.totalIntervals[i] += result.totalIntervals[i]
-      programBar.totalSupport[i] += result.totalSupport[i]
+
+      programBar.support[i] += result.support[i]
+      programBar.noSupport[i] += result.noSupport[i]
+      programBar.sequentialActivities[i] += result.sequentialActivities[i]
+      programBar.childNonSequential[i] += result.childNonSequential[i]
+
+      programBar.totalIntervals[i] += result.sequentialActivities[i] + result.childNonSequential[i]
+      programBar.totalSupport[i] += result.support[i] + result.noSupport[i]
     }
   }
 
@@ -873,8 +878,6 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < monthsCount; i++)
     {
-      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
-      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
       result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
       result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
@@ -884,7 +887,10 @@ calculateFoundationalSkillsTrends = (data, sites, startDate, endDate) => {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       }
-      programBar.total[i] = programBar.literacyInstruction[i] + programBar.noBehaviors[i];
+
+      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
+      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
+      programBar.total[i] += result.literacyInstruction[i] + result.noBehaviors[i];
     }
   }
 
@@ -971,8 +977,6 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < monthsCount; i++)
     {
-      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
-      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
       result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
       result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
@@ -982,7 +986,9 @@ calculateWritingSkillsTrends = (data, sites, startDate, endDate) => {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       }
-      programBar.total[i] = programBar.literacyInstruction[i] + programBar.noBehaviors[i];
+      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
+      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
+      programBar.total[i] += result.literacyInstruction[i] + result.noBehaviors[i];
     }
   }
 
@@ -1068,8 +1074,6 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < monthsCount; i++)
     {
-      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
-      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
       result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
       result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
@@ -1079,7 +1083,9 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       }
-      programBar.total[i] = programBar.literacyInstruction[i] + programBar.noBehaviors[i];
+      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
+      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
+      programBar.total[i] += result.literacyInstruction[i] + result.noBehaviors[i];
     }
   }
 
@@ -1165,8 +1171,6 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     // Go through the months
     for(var i = 0; i < monthsCount; i++)
     {
-      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
-      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
       result.literacyInstruction[i] = parseFloat((result.literacyInstruction[i] / result.totalIntervals[i]).toFixed(2)) * 100;
       result.noBehaviors[i] = parseFloat((result.noBehaviors[i] / result.totalIntervals[i]).toFixed(2)) * 100;
 
@@ -1176,7 +1180,9 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
       if (isNaN(result.noBehaviors[i])) {
         result.noBehaviors[i] = 0
       }
-      programBar.total[i] = programBar.literacyInstruction[i] + programBar.noBehaviors[i];
+      programBar.literacyInstruction[i] = result.literacyInstruction[i] > 0 ? programBar.literacyInstruction[i] + result.literacyInstruction[i] : programBar.literacyInstruction[i]
+      programBar.noBehaviors[i] = result.noBehaviors[i] > 0 ? programBar.noBehaviors[i] + result.noBehaviors[i] : programBar.noBehaviors[i]
+      programBar.total[i] += result.literacyInstruction[i] + result.noBehaviors[i];
     }
   }
 
@@ -1289,10 +1295,6 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
       // Go through the months
       for(var i = 0; i < monthsCount; i++)
       {
-        programBar.teacherSupport[i] += result.teacherSupport[i]
-        programBar.noSupport[i] += result.noSupport[i]
-        programBar.ac[i] += result.ac[i]
-        programBar.noAC[i] += result.noAC[i]
 
         result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
         result.ac[i] = parseFloat((result.ac[i] / result.totalIntervals[i]).toFixed(2)) * 100;
@@ -1311,8 +1313,13 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
         if (isNaN(result.noAC[i])) {
           result.noAC[i] = 0
         }
-        programBar.totalIntervals[i] += result.totalIntervals[i]
-        programBar.totalSupport[i] += result.totalSupport[i]
+        programBar.teacherSupport[i] += result.teacherSupport[i]
+        programBar.noSupport[i] += result.noSupport[i]
+        programBar.ac[i] += result.ac[i]
+        programBar.noAC[i] += result.noAC[i]
+
+        programBar.totalIntervals[i] += result.ac[i] + result.noAC[i]
+        programBar.totalSupport[i] += result.teacherSupport[i] + result.noSupport[i]
       }
     }
 
@@ -1341,10 +1348,6 @@ calculateBookReadingTrends = (data, sites, startDate, endDate) => {
     return results;
 
   }
-
-
-
-
 }
 
 
