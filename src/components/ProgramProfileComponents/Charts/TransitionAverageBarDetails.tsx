@@ -253,7 +253,7 @@ class TransitionAverageBarDetails extends React.Component<Props, {}> {
                 display: true,
                 labels: {
                   filter: function(legendItem, data) {
-                        return !legendItem.text.includes('Site Average')
+                        return !legendItem.text.includes('Program Average')
                   },
                   padding: 20,
                   boxWidth: 12,
