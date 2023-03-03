@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
 
 import {withStyles} from '@material-ui/core'
 
@@ -72,7 +73,6 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
 
     var teacherNames = [];
-    var graphData = {};
 
     let for_sorting = [];
     var hlqAverage = [];
@@ -85,51 +85,50 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average" || teacher.name === undefined)
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
+      let value = (teacher['hlqAverage'] + teacher['hlqResponseAverage']);
+      let value2 = (teacher['llqAverage'] + teacher['llqResponseAverage'])
+      let result =  round([value, value2])
+      for_sorting.push([teacher.name, result[0], result[1]])
+      // hlqAverage.push(result[0]);
+      // llqAverage.push(result[1]);
 
-      if(teacher.totalInstructions > 0)
-      {
-        let tempHlqAverage = Math.round(teacher['highLevel']);
-        let tempLlqAverage = 100 - tempHlqAverage;
+      // Create bar graph data
+      //var tempAvg = teacher[type];
+      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
 
-        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
-
-        // hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        // llqAverage.push(tempLlqAverage);
-
-      }
-      else
-      {
-        for_sorting.push([teacher.name, 0, 0])
-        // hlqAverage.push(0);
-        // llqAverage.push(0);
-      }
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      //graphData.push(tempAvg);
 
     }
 
-    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
     for (let index = 0; index < for_sorting.length; index++) {
       teacherNames.push(for_sorting[index][0])
       hlqAverage.push(for_sorting[index][1])
       llqAverage.push(for_sorting[index][2])
     }
 
-    teacherNames.push("Site Average")
+    teacherNames.push("Program Average")
+
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
+    let value = data.programBar.hlqAverage + data.programBar.hlqResponseAverage;
+    let value2 = data.programBar.llqAverage + data.programBar.llqResponseAverage;
+    let siteResult = round([value, value2])
     var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
+    siteAverageHlqAverage[dataSize - 1] = siteResult[0];
 
     var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
+    siteAverageLlqAverage[dataSize - 1] = siteResult[1]
 
 
     // Use that data to create our dataset

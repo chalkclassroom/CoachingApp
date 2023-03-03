@@ -70,7 +70,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
-
+    let for_sorting = [];
     var teacherNames = [];
     var graphData = {};
 
@@ -92,10 +92,10 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
@@ -103,12 +103,26 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
 
       var tempTotalPointsAverage = parseFloat(teacher['totalPointsAverage']);
 
+      for_sorting.push([teacher.name, tempTotalPointsAverage])
+
+      // dataSets[0].backgroundColor.push("#ED7D31");
+      // dataSets[0].hoverBackgroundColor.push("#ED7D31");
+      // dataSets[0].borderColor.push("rgba(0,0,0,0)");
+      // dataSets[0].data.push(tempTotalPointsAverage);
+
+    }
+
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
       dataSets[0].backgroundColor.push("#ED7D31");
       dataSets[0].hoverBackgroundColor.push("#ED7D31");
       dataSets[0].borderColor.push("rgba(0,0,0,0)");
-      dataSets[0].data.push(tempTotalPointsAverage);
+      dataSets[0].data.push(for_sorting[index][1]);
 
     }
+
+    teacherNames.push("Site Average")
 
     // Add the Site Average Bar
     dataSets[0].backgroundColor.push("#FFFFFF");
@@ -159,11 +173,11 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <div style={{padding: '30px 30px 0px 30px'}}>
-        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Engagement Rating</h2>
-        <div className={"realChart"} style={{height: 500, position: 'relative'}}>
+<div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Student Engagement</h2>
+        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
 
-          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 0, left: '-150px'}}>
+          <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 77, left: '-150px'}}>
             <div style={{flex:1}}>Highly Engaged</div>
             <div style={{flex:1}}>Engaged</div>
             <div style={{flex:1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -268,7 +282,7 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
                     } else {
                       return null;
                     }
-                    
+
                   }
                 },
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
-
+import { round } from "./../../Shared/Math"
 import {withStyles} from '@material-ui/core'
 
 // Set array so we can edit the label on top of the Chart based on type
@@ -29,7 +29,7 @@ const averageLine = {
  * @class EngagementBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class ACBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -70,96 +70,140 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
-
+    console.log(data)
     var teacherNames = [];
     var graphData = {};
 
     let for_sorting = [];
-    var hlqAverage = [];
-    var llqAverage = [];
+    var noSupportAverage = [];
+    var teacherSupportAverage = [];
+    var noSupportTotal = 0;
+    var teacherSupportTotal = 0;
+    let numberOfTeachersWithData = 0;
     for(var teacherIndex in data)
     {
-
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      // teacherNames.push(teacher.name);
-
-      // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average" || teacher.name === undefined)
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
-
-
-      if(teacher.totalInstructions > 0)
+      // If we're looking at the teacher graph, get the support data
+      if(type == "teacherAverage")
       {
-        let tempHlqAverage = Math.round(teacher['highLevel']);
-        let tempLlqAverage = 100 - tempHlqAverage;
+        let result = round([teacher['noSupport'], teacher['support']]);
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1];
+      }
+      else
+      {
+        let result = round([teacher['noInteraction'], teacher['engaged']]);
+        var tempNoSupport = result[0];
+        var tempTeacherSupport = result[1];
+    
+        // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
+      }
 
-        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
-
-        // hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        // llqAverage.push(tempLlqAverage);
-
+      // We need to make sure this teacher has actually done an observation. If not we want to just push a zero so it doesn't show as 100% Listening.
+      if(teacher['totalInstructions'] > 0)
+      {
+        for_sorting.push([teacher.name, tempNoSupport, tempTeacherSupport])
+        numberOfTeachersWithData++;
       }
       else
       {
         for_sorting.push([teacher.name, 0, 0])
-        // hlqAverage.push(0);
-        // llqAverage.push(0);
       }
 
+      noSupportTotal += tempNoSupport;
+      teacherSupportTotal += tempTeacherSupport;
+
+
     }
 
-    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
     for (let index = 0; index < for_sorting.length; index++) {
       teacherNames.push(for_sorting[index][0])
-      hlqAverage.push(for_sorting[index][1])
-      llqAverage.push(for_sorting[index][2])
+      noSupportAverage.push(for_sorting[index][1])
+      teacherSupportAverage.push(for_sorting[index][2])
     }
 
-    teacherNames.push("Site Average")
+    teacherNames.push("Program Average")
 
+    let siteResult = [];
+    if (type == "teacherAverage") {
+      siteResult = round([data.pb.ns, data.pb.s])
+    } else {
+      siteResult = round([data.pb.ni, data.pb.e])
+    }
+
+    
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
+    var siteAverageNoSupport = new Array(dataSize).fill(0);
+    siteAverageNoSupport[dataSize - 1] = siteResult[0]; // Round isn't working the first time for some reason. Just going to do it again
 
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
+    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
+    siteAverageTeacherSupport[dataSize - 1] = siteResult[1];
+    
+    // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
+    let topBarBackgroundColor = "#E20000";
+    let topBorderColor = "#E20000";
+    let topBarLabel = 'No Support';
 
+    let bottomBarBackgroundColor = "#2EB9EB";
+    let bottomBorderColor = "#2EB9EB";
+    let bottomBarLabel = 'Teacher Support for Associative and Cooperative Interactions';
+
+
+
+    if(type == "childAverage")
+    {
+      topBarBackgroundColor = "#E20000";
+      topBorderColor = "#E20000";
+      topBarLabel = 'Did Not Interact';
+
+      bottomBarBackgroundColor = "#7030A0";
+      bottomBorderColor = "#7030A0";
+      bottomBarLabel = 'Engaged in Associative and Cooperative Interactions';
+    }
 
     // Use that data to create our dataset
     var dataSets = [
+
       {
-        label: 'High Level Instruction',
-        data: hlqAverage,
-        backgroundColor: "#38761D",
+        label: bottomBarLabel,
+        data: teacherSupportAverage,
+        backgroundColor: bottomBarBackgroundColor,
+        borderColor: bottomBorderColor,
       },
       {
-        label: 'Low Level Instruction',
-        data: llqAverage,
-        backgroundColor: "#1155CC",
+        label: topBarLabel,
+        data: noSupportAverage,
+        backgroundColor: topBarBackgroundColor,
+        borderColor: topBorderColor,
+        borderWidth: 2,
       },
 
       // The total Site Averages
       {
-        label: 'High Level Instruction Site Average',
-        data: siteAverageHlqAverage,
+        label: bottomBarLabel + ' Site Average',
+        data: siteAverageTeacherSupport,
         backgroundColor: "#FFF",
-        borderColor: "#38761D",
+        borderColor: bottomBorderColor,
         borderWidth: 4,
       },
       {
-        label: 'Low Level Instruction Site Average',
-        data: siteAverageLlqAverage,
+        label: topBarLabel + ' Site Average',
+        data: siteAverageNoSupport,
         backgroundColor: "#FFF",
-        borderColor: "#1155CC",
+        borderColor: topBorderColor,
         borderWidth: 4,
       },
+
+
     ]
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
@@ -203,10 +247,12 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let dataSize = this.state.teacherNames.length;
+
     return (
-      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Level of Instruction</h2>
-      <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+<div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Associative and Cooperative</h2>
+        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -284,7 +330,15 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
               plugins: {
                 datalabels: {
                   display: 'auto',
-                  color: 'black',
+                  color: function (context) {
+                    var index = context.dataIndex;
+                    var value = context.dataset.data[index];
+                    if (index === dataSize - 1) {
+                      return (value = 'black');
+                    } else {
+                      return (value = '#fff');
+                    }
+                  },
                   font: {
                     size: 14,
                     weight: '400'
@@ -310,4 +364,4 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default LevelOfInstructionBarDetails;
+export default ACBarDetails;

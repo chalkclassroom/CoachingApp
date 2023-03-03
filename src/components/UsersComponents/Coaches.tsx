@@ -905,6 +905,15 @@ class Coaches extends React.Component<Props, State> {
 
   }
 
+  /**
+  * @brief function for archiving a teacher by updating the teacherData in the component's props
+  * This function takes an instance of firebase as an input. It retrieves the editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, and editProgramId from the component's state.
+  * The function then calls the archiveTeacher method from the firebase instance, passing in the editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, and editProgramId as arguments.
+  * If the call is successful, the function updates the teacherData in the component's props and sets the state of several other properties.
+  * If the call is not successful, it will throw an error and display an alert message, and set the state of success to false.
+  * 
+  * @param {Object} firebase - instance of firebase
+  */
   async archiveTeacher(firebase:Firebase) {
     firebase
     const {

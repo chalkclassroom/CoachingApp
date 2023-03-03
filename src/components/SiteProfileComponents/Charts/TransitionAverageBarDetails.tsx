@@ -1,56 +1,47 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { HorizontalBar, Bar } from "react-chartjs-2";
-import * as Constants from "../../constants/Constants";
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import { HorizontalBar, Bar } from 'react-chartjs-2'
+import * as Constants from '../../constants/Constants'
 
-import {withStyles} from '@material-ui/core'
+import { withStyles } from '@material-ui/core'
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
-  bookReadingAverage: "Book Reading: Total Instruction",
-  vocabFocusAverage: "Book Reading: Focuses on Vocabulary",
-  languageConnectionsAverage: "Book Reading: Makes Connections",
+  bookReadingAverage: 'Book Reading: Total Instruction',
+  vocabFocusAverage: 'Book Reading: Focuses on Vocabulary',
+  languageConnectionsAverage: 'Book Reading: Makes Connections',
   childrenSupportAverage: "Book Reading: Support Children's Speaking",
-  fairnessDiscussionsAverage: "Book Reading: Facilitate Discussions",
-  multimodalInstructionAverage: "Book Reading: Use Multimodal Instruction",
+  fairnessDiscussionsAverage: 'Book Reading: Facilitate Discussions',
+  multimodalInstructionAverage: 'Book Reading: Use Multimodal Instruction',
 }
-
-const averageLine = {
-    width: '80%',
-    marginRight: '15px',
-    borderBottom: 'dashed 8px rgba(69, 129, 142, 0.6)'
-}
-
-
-
 
 /**
  * Horizontal Bar Graph for Math Child Behaviors
  * @class EngagementBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class TransitionAverageBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       teacherNames: [],
-      chartTitle: "",
+      chartTitle: '',
       barColors: [],
       averageLineWrapStyle: {
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'flex-start',
-          marginBottom: 8,
-          height: '20px',
-          width: '96%',
-          position: 'absolute',
-          left: '95px',
-          top: '36px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginBottom: 8,
+        height: '20px',
+        width: '96%',
+        position: 'absolute',
+        left: '95px',
+        top: '36px',
       },
-      dataSets: []
+      dataSets: [],
     }
   }
 
@@ -59,153 +50,175 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     const { data, type } = this.props
 
     if (nextProps.data !== data || nextProps.type !== type) {
-      this.setData();
+      this.setData()
     }
   }
 
   componentDidMount = () => {
-    this.setData();
+    this.setData()
   }
 
   setData = () => {
     const { data, type } = this.props
 
-
-    var teacherNames = [];
-    var graphData = {};
-
     let for_sorting = [];
-    var hlqAverage = [];
-    var llqAverage = [];
-    for(var teacherIndex in data)
-    {
+    var teacherNames = []
+    var graphData = {}
 
+    var transitionTimeAverage = []
+    var learningActivityAverage = []
+    for (var teacherIndex in data) {
       // Create Names to display as labels
-      var teacher = data[teacherIndex];
-      // teacherNames.push(teacher.name);
+      var teacher = data[teacherIndex]
+      // teacherNames.push(teacher.name)
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average" || teacher.name === undefined)
-      {
-        continue;
+      if (teacher.name === 'Site Average' || teacher.name === undefined) {
+        continue
+      }
+      if (teacher.totalTransitionTime === 0) {
+        transitionTimeAverage.push(0)
+        learningActivityAverage.push(0)
+      } else {
+        let tempAverage =
+          Math.round(
+            (teacher['learningActivityAverage'] + Number.EPSILON) * 100
+          ) / 100
+
+        let transitionTime = (100 - tempAverage)
+        let learningActivity = (tempAverage)
+
+        for_sorting.push([teacher.name, transitionTime, learningActivity])
       }
 
+      // let tempAverage =
+      //   Math.round(
+      //     (teacher['learningActivityAverage'] + Number.EPSILON) * 100
+      //   ) / 100
 
-      if(teacher.totalInstructions > 0)
-      {
-        let tempHlqAverage = Math.round(teacher['highLevel']);
-        let tempLlqAverage = 100 - tempHlqAverage;
+      // transitionTimeAverage.push(100 - tempAverage)
+      // learningActivityAverage.push(tempAverage)
+      // console.log(transitionTimeAverage)
+      // console.log(learningActivityAverage)
 
-        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
+      // Create bar graph data
+      //var tempAvg = teacher[type];
+      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
 
-        // hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        // llqAverage.push(tempLlqAverage);
-
-      }
-      else
-      {
-        for_sorting.push([teacher.name, 0, 0])
-        // hlqAverage.push(0);
-        // llqAverage.push(0);
-      }
-
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      //graphData.push(tempAvg);
     }
 
     for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
     for (let index = 0; index < for_sorting.length; index++) {
       teacherNames.push(for_sorting[index][0])
-      hlqAverage.push(for_sorting[index][1])
-      llqAverage.push(for_sorting[index][2])
+      transitionTimeAverage.push(for_sorting[index][1])
+      learningActivityAverage.push(for_sorting[index][2])
+
     }
 
     teacherNames.push("Site Average")
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    var dataSize = Object.keys(data).length;
+    var dataSize = Object.keys(data).length
 
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
+    var siteAverageTransitionTimeAverage = new Array(dataSize).fill(0)
+    siteAverageTransitionTimeAverage[dataSize - 1] =
+      Math.round((data.siteBar.transitionTimeAverage + Number.EPSILON) * 100) /
+      100
 
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
-
+    var siteAverageLearningActivityAverage = new Array(dataSize).fill(0)
+    siteAverageLearningActivityAverage[dataSize - 1] =
+      Math.round(
+        (data.siteBar.learningActivityAverage + Number.EPSILON) * 100
+      ) / 100
 
     // Use that data to create our dataset
     var dataSets = [
       {
-        label: 'High Level Instruction',
-        data: hlqAverage,
-        backgroundColor: "#38761D",
+        label: 'Transition Time',
+        data: transitionTimeAverage,
+        backgroundColor: '#fc8c03',
       },
       {
-        label: 'Low Level Instruction',
-        data: llqAverage,
-        backgroundColor: "#1155CC",
+        label: 'Learning Activity',
+        data: learningActivityAverage,
+        backgroundColor: '#03b1fc',
       },
 
       // The total Site Averages
       {
-        label: 'High Level Instruction Site Average',
-        data: siteAverageHlqAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#38761D",
+        label: 'Transition Time Site Average',
+        data: siteAverageTransitionTimeAverage,
+        backgroundColor: '#FFF',
+        borderColor: '#fc8c03',
         borderWidth: 4,
       },
       {
-        label: 'Low Level Instruction Site Average',
-        data: siteAverageLlqAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#1155CC",
+        label: 'Learning Activity Site Average',
+        data: siteAverageLearningActivityAverage,
+        backgroundColor: '#FFF',
+        borderColor: '#03b1fc',
         borderWidth: 4,
       },
     ]
 
-    this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
-
+    this.setState({
+      teacherNames: teacherNames,
+      dataSets: dataSets,
+      chartTitle: chartTitleArr[type],
+      barColors: this.props.barColors,
+    })
   }
 
-
   randomRgbColor() {
-    return "rgba(" + this.randomInteger(255) + ", " + this.randomInteger(255) + ", " + this.randomInteger(255) + ")";
+    return (
+      'rgba(' +
+      this.randomInteger(255) +
+      ', ' +
+      this.randomInteger(255) +
+      ', ' +
+      this.randomInteger(255) +
+      ')'
+    )
   }
 
   randomInteger(max) {
-      return Math.floor(Math.random()*(max + 1));
+    return Math.floor(Math.random() * (max + 1))
   }
-
 
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const isCompleted = this.props.completed;
+    const isCompleted = this.props.completed
     const childBehaviorsData = {
       labels: this.state.teacherNames,
-      datasets: this.state.dataSets
-    };
+      datasets: this.state.dataSets,
+    }
 
     // Adds some space between the legend
     const plugin = {
       beforeInit(chart) {
         // Get reference to the original fit function
-        const originalFit = chart.legend.fit;
+        const originalFit = chart.legend.fit
 
         // Override the fit function
         chart.legend.fit = function fit() {
           // Call original function and bind scope in order to use `this` correctly inside it
-          originalFit.bind(chart.legend)();
+          originalFit.bind(chart.legend)()
           // Change the height as suggested in another answers
-          this.height += 30;
-        };
-      }
-    };
+          this.height += 30
+        }
+      },
+    }
 
     return (
       <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Level of Instruction</h2>
+      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Transition Time</h2>
       <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
@@ -213,13 +226,13 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
               animation: {
                 onComplete: function(): void {
                   isCompleted ? isCompleted() : null
-                }
+                },
               },
               scales: {
                 yAxes: [
                   {
                     ticks: {
-                      display:true,
+                      display: true,
                       min: 0,
                       max: 100,
                       stepSize: 10,
@@ -229,21 +242,21 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                       padding: 20,
                       // Include a percent sign in the ticks
                       callback: function(value, index, values) {
-                          return value + '%';
+                        return value + '%'
                       },
                     },
                     scaleLabel: {
                       display: false,
                       labelString: '',
                       fontSize: 16,
-                      fontColor: 'black'
+                      fontColor: 'black',
                     },
                     stacked: true,
                     gridLines: {
                       drawBorder: false,
                       drawTicks: false,
-                    }
-                  }
+                    },
+                  },
                 ],
                 xAxes: [
                   {
@@ -252,21 +265,21 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                       fontColor: 'black',
                       callback: (value, index, values) => {
                         return value
-                      }
+                      },
                     },
                     stacked: true,
                     gridLines: {
                       display: false,
-                      color: "rgba(0,0,0,0)",
-                    }
-                  }
-                ]
+                      color: 'rgba(0,0,0,0)',
+                    },
+                  },
+                ],
               },
               legend: {
                 display: true,
                 labels: {
                   filter: function(legendItem, data) {
-                        return !legendItem.text.includes('Site Average')
+                    return !legendItem.text.includes('Site Average')
                   },
                   padding: 20,
                   boxWidth: 12,
@@ -279,7 +292,7 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                 fontSize: 14,
                 fontColor: 'black',
                 fontFamily: 'Arimo',
-                fontStyle: "bold"
+                fontStyle: 'bold',
               },
               plugins: {
                 datalabels: {
@@ -287,27 +300,25 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
                   color: 'black',
                   font: {
                     size: 14,
-                    weight: '400'
+                    weight: '400',
                   },
                   formatter: function(value: number): number | null {
                     if (value > 0) {
-                      return value + "%";
+                      return value + '%'
                     } else {
-                      return null;
+                      return null
                     }
-                  }
+                  },
                 },
-
               },
-              maintainAspectRatio: false
+              maintainAspectRatio: false,
             }}
             plugins={[plugin]}
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
-
-export default LevelOfInstructionBarDetails;
+export default TransitionAverageBarDetails

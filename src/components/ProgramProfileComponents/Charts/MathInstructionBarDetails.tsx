@@ -2,6 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
+
 
 import {withStyles} from '@material-ui/core'
 
@@ -29,7 +31,7 @@ const averageLine = {
  * @class EngagementBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class MathInstructionBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -75,8 +77,11 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     var graphData = {};
 
     let for_sorting = [];
-    var hlqAverage = [];
-    var llqAverage = [];
+    var noSupportAverage = [];
+    var teacherSupportAverage = [];
+    var noSupportTotal = 0;
+    var teacherSupportTotal = 0;
+    let numberOfTeachersWithData = 0;
     for(var teacherIndex in data)
     {
 
@@ -85,81 +90,117 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average" || teacher.name === undefined)
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
+      // If we're looking at the teacher graph, get the support data
+      if(type == "teacherAverage")
+      {
+        var tempNoSupport = Math.round((teacher['noSupport'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['support'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
+        // var tempTeacherSupport = 100 - tempNoSupport;
+      }
+      else
+      {
+        var tempNoSupport = Math.round((teacher['noInteraction'] + Number.EPSILON) * 100) / 100;
+        tempNoSupport = Math.round(tempNoSupport)
+        var tempTeacherSupport = Math.round((teacher['engaged'] + Number.EPSILON) * 100) / 100;
+        tempTeacherSupport = Math.round(tempTeacherSupport)
+      }
 
+      // Only push this data if there are actually observation done
       if(teacher.totalInstructions > 0)
       {
-        let tempHlqAverage = Math.round(teacher['highLevel']);
-        let tempLlqAverage = 100 - tempHlqAverage;
-
-        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
-
-        // hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        // llqAverage.push(tempLlqAverage);
-
+        // noSupportAverage.push(tempNoSupport);
+        // teacherSupportAverage.push(tempTeacherSupport);
+        for_sorting.push([teacher.name, tempNoSupport, tempTeacherSupport]);
+        numberOfTeachersWithData++;
       }
       else
       {
         for_sorting.push([teacher.name, 0, 0])
-        // hlqAverage.push(0);
-        // llqAverage.push(0);
+        // noSupportAverage.push(0);
+        // teacherSupportAverage.push(0);
       }
 
-    }
+      noSupportTotal += tempNoSupport;
+      teacherSupportTotal += tempTeacherSupport;
 
-    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+      // Create bar graph data
+      //var tempAvg = teacher[type];
+      //var tempAvg = [specificApproval, generalApproval, redirectionAverage, disapprovalAverage];
+
+      // Round the number just in case there are trailing decimals (There were for some reason)
+      //tempAvg = Math.round((tempAvg + Number.EPSILON) * 100) / 100
+      //graphData.push(tempAvg);
+
+    }
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
     for (let index = 0; index < for_sorting.length; index++) {
       teacherNames.push(for_sorting[index][0])
-      hlqAverage.push(for_sorting[index][1])
-      llqAverage.push(for_sorting[index][2])
+      noSupportAverage.push(for_sorting[index][1])
+      teacherSupportAverage.push(for_sorting[index][2])
     }
 
-    teacherNames.push("Site Average")
+    teacherNames.push("Program Average");
+
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
+    
+    let siteResult = [];
+    let labels = []
+
+    if (type === "teacherAverage") {
+       siteResult = round([data.programBar.noSupport, data.programBar.support])
+       labels = ["Teacher Support", "No Support"]
+    } else {
+      siteResult = round([data.programBar.noInteraction, data.programBar.engaged])
+      labels = ["Math", "Other Activities"]
+    }
+
     var dataSize = Object.keys(data).length;
 
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
+    var siteAverageNoSupport = new Array(dataSize).fill(0);
+    siteAverageNoSupport[dataSize - 1] = siteResult[0]; // Round isn't working the first time for some reason. Just going to do it again
 
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
-
+    var siteAverageTeacherSupport = new Array(dataSize).fill(0);
+    siteAverageTeacherSupport[dataSize - 1] = siteResult[1];
 
     // Use that data to create our dataset
     var dataSets = [
+
       {
-        label: 'High Level Instruction',
-        data: hlqAverage,
-        backgroundColor: "#38761D",
+        label: labels[0],
+        data: teacherSupportAverage,
+        backgroundColor: "#5B9BD5",
       },
       {
-        label: 'Low Level Instruction',
-        data: llqAverage,
-        backgroundColor: "#1155CC",
+        label: labels[1],
+        data: noSupportAverage,
+        backgroundColor: "#C00000",
       },
 
       // The total Site Averages
       {
-        label: 'High Level Instruction Site Average',
-        data: siteAverageHlqAverage,
+        label: 'Teacher Support Site Average',
+        data: siteAverageTeacherSupport,
         backgroundColor: "#FFF",
-        borderColor: "#38761D",
+        borderColor: "#5B9BD5",
         borderWidth: 4,
       },
       {
-        label: 'Low Level Instruction Site Average',
-        data: siteAverageLlqAverage,
+        label: 'No Support Site Average',
+        data: siteAverageNoSupport,
         backgroundColor: "#FFF",
-        borderColor: "#1155CC",
+        borderColor: "#C00000",
         borderWidth: 4,
       },
+
     ]
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
@@ -204,9 +245,9 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Level of Instruction</h2>
-      <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+<div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Math Instruction</h2>
+        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -310,4 +351,4 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default LevelOfInstructionBarDetails;
+export default MathInstructionBarDetails;

@@ -99,11 +99,13 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "climate")
     {
       sqlQuery = `SELECT
-                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher, toneRating,
+                      id,
+                      behaviorResponse, COUNT(behaviorResponse) AS count, teacher,
+                      toneRating,
                       EXTRACT(DATE FROM sessionStart) as startDate,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY behaviorResponse, teacher, startDate, toneRating
+                      GROUP BY behaviorResponse, teacher, startDate, toneRating, id
                       ORDER BY startDate ASC;`;
     }
 
@@ -180,6 +182,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "listening")
     {
       sqlQuery = `SELECT
+                      id,
                       FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       DATE(timestamp) as GroupDate,
                       COUNT(CASE WHEN (checklist.teacher1) THEN 'listening1' ELSE NULL END) AS listening1,
@@ -193,7 +196,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(timestamp) as count,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
-                      GROUP BY startDate, teacher, GroupDate
+                      GROUP BY startDate, teacher, GroupDate, id
                       ORDER BY startDate ASC;`;
     }
 
@@ -205,6 +208,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "sequential")
     {
       sqlQuery = `SELECT
+                      id,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'notAtCenter' ELSE NULL END) AS notAtCenter,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -216,12 +220,13 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.child2) THEN 'sequential2' ELSE NULL END) AS drawing,
                       COUNT(CASE WHEN (checklist.child3) THEN 'sequential3' ELSE NULL END) AS playing,
                       COUNT(CASE WHEN (checklist.child4) THEN 'sequential4' ELSE NULL END) AS speaking,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'sequential5' ELSE NULL END) AS childNonSequentialActivities,
                       teacher,
                       peopletype,
                       COUNT (sessionStart) AS total,
                       FORMAT_DATETIME("%b-%Y", timestamp) as timestamp  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
-                      GROUP BY teacher, timestamp, peopletype
+                      GROUP BY teacher, timestamp, peopletype, id
                       ORDER BY timestamp ASC;`;
     }
 
@@ -244,7 +249,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.item8) THEN 'foundational8' ELSE NULL END) AS foundational8,
                       COUNT(CASE WHEN (checklist.item9) THEN 'foundational9' ELSE NULL END) AS foundational9,
                       COUNT(CASE WHEN (checklist.item10) THEN 'foundational0' ELSE NULL END) AS foundational10,
-                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational0' ELSE NULL END) AS foundational11,
+                      COUNT(CASE WHEN (checklist.item11) THEN 'foundational1' ELSE NULL END) AS foundational11,
                       COUNT (sessionStart) AS total,
                       teacher,
                       time
@@ -297,11 +302,19 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
 
-                      console.log(teacher, child)
+                      for(var childIndex in child[0])
+                      {
+                        let tempChild = child[0][childIndex];
+                        tempChild.isChild = true;
+                      }
+
+                      console.log("Child => ", child);
+
+                      //console.log(teacher, child)
 
                       const rows = teacher.concat(child)
 
-                      console.log(rows)
+                      //console.log(rows)
 
                       return rows
     }
@@ -343,6 +356,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       console.log(`Job ${job.id} started.`);
                       let teacher = await job.getQueryResults();
 
+                      for(var teacherIndex in teacher[0])
+                      {
+                        let tempTeacher = teacher[0][teacherIndex];
+                        tempTeacher.isChild = false;
+                      }
+
 
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
                       DATE(sessionStart) as GroupDate,
@@ -374,6 +393,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       [job] = await bigquery.createQueryJob(options);
                       console.log(`Job ${job.id} started.`);
                       child = await job.getQueryResults();
+
+                      for(var childIndex in child[0])
+                      {
+                        let tempChild = child[0][childIndex];
+                        tempChild.isChild = true;
+                      }
 
                       console.log(teacher, child)
 
@@ -452,6 +477,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
     if(observationType == "ac")
     {
       sqlQuery = `SELECT FORMAT_DATE('%D', DATE(sessionStart)) AS startDate,
+                      id,
                       DATE(sessionStart) as GroupDate,
                       COUNT(id) as total,
                       COUNT(CASE WHEN (checklist.teacher1) THEN 'teacher1' ELSE NULL END) AS teacher1,
@@ -470,7 +496,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
-                      GROUP BY timestamp, GroupDate, peopleType, startDate, teacher
+                      GROUP BY timestamp, GroupDate, peopleType, startDate, teacher, id
                       ORDER BY GroupDate DESC;`;
     }
 

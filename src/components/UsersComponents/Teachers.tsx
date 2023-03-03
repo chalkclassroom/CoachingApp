@@ -408,6 +408,15 @@ class Teachers extends React.Component<Props, State> {
       })
   }
 
+   /**
+  * @brief function for archiving a teacher by updating the teacherData in the component's props
+  * This function takes an instance of firebase as an input. It retrieves the editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, and editProgramId from the component's state.
+  * The function then calls the archiveTeacher method from the firebase instance, passing in the editTeacherId, editCoachId, editTeacherFirstName, editTeacherLastName, editSite, editProgram, editSiteId, and editProgramId as arguments.
+  * If the call is successful, the function updates the teacherData in the component's props and sets the state of several other properties.
+  * If the call is not successful, it will throw an error and display an alert message, and set the state of success to false.
+  * 
+  * @param {Object} firebase - instance of firebase
+  */
   async archiveTeacher(firebase:Firebase) {
     firebase
     const {
@@ -458,6 +467,14 @@ class Teachers extends React.Component<Props, State> {
     });
   }
 
+  /**
+   * @brief This function gets checks all state variables associated with transfer for correct input and then uses them to call the firebase instance method transferTeacher
+   * On success the function will update the firestore and state
+   * On failure the function will throw an error and display an alert message
+   * 
+   * @param {Object} firebase - instance of firebase
+   * @returns 
+   */
   async transferTeacher(firebase:Firebase) {
     firebase
     const {
@@ -534,6 +551,14 @@ class Teachers extends React.Component<Props, State> {
     return re.test(String(email).toLowerCase());
   };
 
+  /**
+   * @brief This function gets checks all state variables associated with edit for correct input and then uses them to call the firebase instance method editUserName
+   * On success the function will update the firestore and state
+   * On failure the function will throw an error and display an alert message
+   * 
+   * @param {Object} firebase - instance of firebase
+   * @returns void
+   */
 editTeacher = async (firebase:Firebase) => {
     firebase
     const {
@@ -595,6 +620,14 @@ editTeacher = async (firebase:Firebase) => {
       });
   }
 
+  /**
+   * @brief This function gets checks all state variables associated with add for correct input and then uses them to call the firebase instance method addTeacherToCoach
+   * On success the function will update the firestore and state, and call a callback function to update the parent state
+   * On failure the function will throw an error and display an alert message
+   * 
+   * @param {Object} firebase - instance of firebase
+   * @returns 
+   */
   async addTeacher(firebase:Firebase){
 
     firebase
@@ -759,6 +792,7 @@ editTeacher = async (firebase:Firebase) => {
     })
   }
 
+  // handlePopulate* functions are for populating dropdowns in the add teacher section
   handlePopulateProgram = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({addSite: event.target.value, saved: false})
     let site = this.props.siteData.filter((doc) => {return doc.id === event.target.value})[0].name
@@ -787,6 +821,7 @@ editTeacher = async (firebase:Firebase) => {
 
   }
 
+  //handleTransfer* are for populating dropdowns in the transfer teacher section
   handleTransferSite = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({changeCoachId: event.target.value, saved: false})
     const sites = this.props.siteData.map(item => {return item.id})

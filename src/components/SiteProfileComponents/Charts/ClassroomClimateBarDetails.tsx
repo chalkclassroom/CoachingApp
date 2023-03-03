@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
 
 import {withStyles} from '@material-ui/core'
 
@@ -74,7 +75,7 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     var teacherNames = [];
     var graphData = {};
 
-
+    let for_sorting = [];
     var specificApproval = [];
     var generalApproval = [];
     var redirectionAverage = [];
@@ -84,19 +85,27 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
 
       // Create Names to display as labels
       var teacher = data[teacherIndex];
-      teacherNames.push(teacher.name);
+      // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average")
+      if(teacher.name === "Site Average" || teacher.name === undefined)
       {
         continue;
       }
 
 
-      specificApproval.push(Math.round((teacher['specificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      generalApproval.push(Math.round((teacher['nonspecificapprovalAverage'] + Number.EPSILON) * 100) / 100);
-      redirectionAverage.push(Math.round((teacher['redirectionAverage'] + Number.EPSILON) * 100) / 100);
-      disapprovalAverage.push(Math.round((teacher['disapprovalAverage'] + Number.EPSILON) * 100) / 100);
+      let result = round([
+        teacher['specificapprovalAverage'],
+        teacher['nonspecificapprovalAverage'],
+        teacher['redirectionAverage'],
+        teacher['disapprovalAverage']
+      ])
+      for_sorting.push([teacher.name, result[0], result[1], result[2], result[3]])
+
+      // specificApproval.push(result[0]);
+      // generalApproval.push(result[1]);
+      // redirectionAverage.push(result[2]);
+      // disapprovalAverage.push(result[3]);
 
       // Create bar graph data
       //var tempAvg = teacher[type];
@@ -108,22 +117,40 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
 
     }
 
+    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for (let index = 0; index < for_sorting.length; index++) {
+      teacherNames.push(for_sorting[index][0])
+      specificApproval.push(for_sorting[index][1])
+      generalApproval.push(for_sorting[index][2])
+      redirectionAverage.push(for_sorting[index][3])
+      disapprovalAverage.push(for_sorting[index][4])
+    }
+
+    teacherNames.push("Site Average")
+
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
+    let siteResult = round([
+      data.siteBar.specificapprovalAverage,
+      data.siteBar.nonspecificapprovalAverage,
+      data.siteBar.redirectionAverage,
+      data.siteBar.disapprovalAverage
+    ])
+
     var siteAverageSpecificeApproval = new Array(dataSize).fill(0);
-    siteAverageSpecificeApproval[dataSize - 1] = Math.round((data.siteBar.specificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageSpecificeApproval[dataSize - 1] = siteResult[0];
 
     var siteAverageGeneralApproval = new Array(dataSize).fill(0);
-    siteAverageGeneralApproval[dataSize - 1] = Math.round((data.siteBar.nonspecificapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageGeneralApproval[dataSize - 1] = siteResult[1];
 
     var siteAverageRedirectionAverage = new Array(dataSize).fill(0);
-    siteAverageRedirectionAverage[dataSize - 1] = Math.round((data.siteBar.redirectionAverage + Number.EPSILON) * 100) / 100;
+    siteAverageRedirectionAverage[dataSize - 1] = siteResult[2];
 
     var siteAverageDisapprovalAverage = new Array(dataSize).fill(0);
-    siteAverageDisapprovalAverage[dataSize - 1] = Math.round((data.siteBar.disapprovalAverage + Number.EPSILON) * 100) / 100;
+    siteAverageDisapprovalAverage[dataSize - 1] = siteResult[3];
 
 
     // Use that data to create our dataset
@@ -159,7 +186,6 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
       },
       {
         label: 'General Approval Site Average',
-        data: siteAverageGeneralApproval,
         data: siteAverageGeneralApproval,
         backgroundColor: "#FFF",
         borderColor: "#094492",
@@ -252,9 +278,9 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
     };
 
     return (
-      <div style={{padding: 30}}>
-        <h2 style={{width: '100%', textAlign: 'center', marginTop: 0}}>Teacher Behaviors</h2>
-        <div className={"realChart"} style={{height: 500}}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '71vw',}}>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Classroom Climate</h2>
+        <div className={"realChart"} style={{marginLeft: 40, height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -348,6 +374,44 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
             }}
             plugins={[plugin]}
           />
+        </div>
+        <div
+          style={{
+            //width: '100%',
+            width: 300 + this.state.teacherNames.length *160,
+            display: 'flex',
+            position: 'relative',
+            justifyContent: 'center',
+            marginBottom: 30,
+            transform: 'translateX(40px)',
+          }}
+        >
+          <div style={{ position: 'absolute', left: '-40px' }}>
+            <h4>Teacher Tone</h4>
+          </div>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            {Object.values(this.props.data).map((value, index) => {
+              return (
+                <div style={{ flex: '1', alignItems: 'center' }}>
+                  <h4
+                    style={{
+                      color: '#094492',
+                      textAlign: 'center',
+                      fontWeight: '400',
+                    }}
+                  >
+                    {value['toneAverage'] > 0 ? value['toneAverage'] : "N/A"}
+                  </h4>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     );

@@ -13,9 +13,7 @@ import Firebase from '../../../components/Firebase'
 import MenuBar from './MenuBar'
 import ReportsIcon from '../../../assets/icons/ReportsIcon.png';
 import Reports from './Reports';
-import ReportsList from "./ReportsList";
-import ReportDesc from "./ReportDesc";
-import ReportImages from "./ReportImages";
+
 import Sidebar from "./Sidebar";
 import { Switch, Route,} from "react-router-dom";
 import ReportsImages from "./ReportImages";
@@ -77,7 +75,7 @@ class ReportsPage extends React.Component<Props, State> {
       type: "",
       coachName: "",
       currentPage: "",
-      pageHistory: [{url: "Reports", title: "Reports"}],
+      pageHistory: [{title: 'Leaders Dashboard', url: 'leadersDashboard' }, {url: "Reports", title: "Reports"}],
       subPage: 1,
     }
   }
@@ -115,6 +113,7 @@ class ReportsPage extends React.Component<Props, State> {
 
   changePage = (pageUrl) => {
     const pageUrlToName = {
+      leadersDashboard: 'Leaders Dashboard',
       TeacherProfile: 'Teacher Profile',
       SiteProfile: 'Site Profile',
       ProgramProfile: 'Program Profile',
@@ -133,7 +132,7 @@ class ReportsPage extends React.Component<Props, State> {
 
 
     var pageHistory = [...this.state.pageHistory];
-
+    
     // We need to add to page history. If the current page is already in the list that means we went back
     if(pageHistory.find(o => o.url === pageUrl))
     {
@@ -162,6 +161,10 @@ class ReportsPage extends React.Component<Props, State> {
 
       pageHistory.push({url: pageUrl, title: pageUrlToName[pageUrl]});
     }
+
+    if (!pageHistory.find(o => o.url === 'leadersDashboard')) {
+      pageHistory = [{title: 'Leaders Dashboard', url: 'leadersDashboard' },...pageHistory]
+    }
     this.setState({
       currentPage: pageUrl,
       pageHistory: pageHistory,
@@ -179,6 +182,7 @@ class ReportsPage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes, userRole, coachName } = this.props;
+    console.log(this.state.pageHistory)
 
     return (
       <div className={classes.root}>
@@ -192,7 +196,7 @@ class ReportsPage extends React.Component<Props, State> {
         </Grid>
         <MenuBar
           page={this.state.currentPage}
-          pageHistory={this.props.location.pathname === '/Reports' ? [{title: 'Reports', url: 'Reports'}] : this.state.pageHistory}
+          pageHistory={this.props.location.pathname === '/Reports' ? [{title: 'Leaders Dashboard', url: 'leadersDashboard' }, {title: 'Reports', url: 'Reports'}] : this.state.pageHistory}
           changePage={(pageName) => this.changePage(pageName)}
         />
         <div style={{display: "flex"}}>
@@ -202,9 +206,6 @@ class ReportsPage extends React.Component<Props, State> {
           />
           <Switch location={location} key={location.pathname}>
             <Route path="/Reports" component={Reports} />
-            <Route path="/ReportsList" component={ReportsList} />
-            <Route path="/ReportImages" component={ReportImages} />
-            <Route path="/ReportDesc" component={ReportDesc} />
             <Route path="/TeacherProfile" render={(props) =>
               <TeacherProfile
                 changePage={(pageName) => this.changePage(pageName)}

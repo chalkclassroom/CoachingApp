@@ -49,6 +49,27 @@ import AveragesData from './DataRetrieval/Averages'
 import TrendData from './DataRetrieval/Trends'
 import RadioSets from './RadioSets'
 
+import LevelOfInstructionBarDetails from './Charts/LevelOfInstructionBarDetails'
+import SequentialActivitiesBarDetails from './Charts/SequentialActivitiesBarDetails'
+import LiteracyInstructionBarDetails from './Charts/LiteracyInstructionBarDetails'
+import ACBarDetails from './Charts/ACBarDetails'
+import MathInstructionBarDetails from './Charts/MathInstructionBarDetails'
+import ListeningToChildrenBarDetails from './Charts/ListeningToChildrenBarDetails'
+import StudentEngagementBarDetails from './Charts/StudentEngagementBarDetails'
+import ClassroomClimateBarDetails from './Charts/ClassroomClimateBarDetails'
+import ClassroomClimateTrends from './Charts/ClassroomClimateTrends'
+import TransitionAverageBarDetails from './Charts/TransitionAverageBarDetails'
+
+const StyledSelect = withStyles({
+  root: {
+    padding: '11px 14px',
+    width: '200px',
+  },
+  disabled: {
+    opacity: 0.3,
+  },
+})(Select)
+
 const centerRow = {
   display: 'flex',
   alignItems: 'center',
@@ -95,6 +116,10 @@ const LineGraphOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
+  legend: {
+    display: false,
+    position: 'top',
+  },
   tooltips: {
     mode: 'index',
     intersect: false,
@@ -167,22 +192,22 @@ const practicesArr = {
 // Array used to match the default radio value based on the type
 const radioValueArr = {
   transitionTime: 'lineAverage',
-  classroomClimate: 'nonspecificapprovalAverage',
-  mathInstruction: 'mathVocabularyAverage',
+  classroomClimate: 'teacherApprovals',
+  mathInstruction: 'teacherAverage',
   levelOfInstruction: 'hlqAverage',
   studentEngagement: 'offTaskAverage',
   listeningToChildren: 'eyeLevelAverage',
-  sequentialActivities: 'sequentialActivitiesAverage',
+  sequentialActivities: 'teacherAverage',
   foundationSkills: 'foundationalSkillsAverage',
   writing: 'writingSkillsAverage',
   bookReading: 'bookReadingAverage',
   languageEnvironment: 'languageEnvironmentAverage',
-  associativeAndCooperative: 'childrensPlayAverage',
+  associativeAndCooperative: 'teacherAverage',
 }
 
 // Set array so we can edit the label on top of the Chart based on type
 const chartTitleArr = {
-  bookReadingAverage: 'Book Reading: Total Instruction',
+  bookReadingAverage: '',
   vocabFocusAverage: 'Book Reading: Focuses on Vocabulary',
   languageConnectionsAverage: 'Book Reading: Makes Connections',
   childrenSupportAverage: "Book Reading: Support Children's Speaking",
@@ -201,7 +226,7 @@ class ProgramProfileResults extends React.Component {
       sites: [],
       teacherInfo: {},
       siteNames: [],
-      radioValue: '',
+      radioValue: radioValueArr[this.props.observationType] ? radioValueArr[this.props.observationType] : '',
       BQData: [],
       averagesClass: new AveragesData(),
       trendsClass: new TrendData(),
@@ -219,6 +244,8 @@ class ProgramProfileResults extends React.Component {
 
       showErrorMessage: false,
       errorMessage: '',
+      selectedSite: 'None',
+      siteInfo: []
     }
   }
 
@@ -296,6 +323,7 @@ class ProgramProfileResults extends React.Component {
     // Grab results data
     var averagesList = {}
     var siteNames = {}
+    let siteInfo = []
 
     // Go through each site
     for (var siteIndex in sites) {
@@ -361,7 +389,7 @@ class ProgramProfileResults extends React.Component {
         endDate: this.props.endDate,
         teacherIds: teachers,
       })
-
+      
       // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
       // Go through each exclude date item
       for (var excludeDateIndex in datesToExclude) {
@@ -375,18 +403,18 @@ class ProgramProfileResults extends React.Component {
         averagesList[siteIndex] = averagesList[siteIndex].filter(
           o =>
             (!(tempFromDate < new Date(o.startDate) && tempToDate > new Date(o.startDate)) && !(tempFromDate < new Date(o.startDate.value) && tempToDate > new Date(o.startDate.value)) && o.teacher === tempUserId) ||
-            o.teacher !== tempUserId 
+            o.teacher !== tempUserId
         )
       }
-
       // Set the site names
       var siteData = await firebase.getUserProgramOrSite({ siteId: siteIndex })
 
       siteNames[siteData.id] = { name: siteData.name }
+      siteInfo.push({id: siteData.id, name:siteData.name})
     }
-
+    siteInfo.sort((a,b) => (b['name'].charAt(0) < a['name'].charAt(0)) ? 1 : ((a['name'].charAt(0) < b['name'].charAt(0)) ? -1 : 0))
     this.setState({ BQData: averagesList })
-    this.setState({ siteNames: siteNames })
+    this.setState({ siteNames: siteNames, siteInfo: siteInfo })
 
     // If there are no sites in this program, we have to let them know
     if (Object.values(siteNames).length <= 0) {
@@ -395,8 +423,6 @@ class ProgramProfileResults extends React.Component {
         errorMessage: 'There are no sites in this Program!',
       })
     }
-
-
 
     this.calculateResultsForCharts(averagesList, averagesList)
   }
@@ -514,51 +540,51 @@ class ProgramProfileResults extends React.Component {
     var averages, trends
     switch (this.props.observationType) {
       case 'transitionTime':
-        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers )
+        averages = this.state.averagesClass.calculateTransitionAverage( data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateTransitionTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'classroomClimate':
-        averages = this.state.averagesClass.calculateClimateAverage( data, teachers )
+        averages = this.state.averagesClass.calculateClimateAverage( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateClimateTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'mathInstruction':
-        averages = this.state.averagesClass.calculateMathAverages( data, teachers )
+        averages = this.state.averagesClass.calculateMathAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateMathTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'levelOfInstruction':
-        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers )
-        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate )
+        averages = this.state.averagesClass.calculateLevelInstructionAverages( data, teachers, this.state.siteNames )
+        trends = this.state.trendsClass.calculateLevelInstructionTrends( data, teachers, this.props.startDate, endDate, this.state.siteNames )
         break
       case 'studentEngagement':
-        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers )
+        averages = this.state.averagesClass.calculateStudentEngagementAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateStudentEngagementTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'listeningToChildren':
-        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teachers )
+        averages = this.state.averagesClass.calculateListeningToChildrenAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateListeningToChildrenTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'sequentialActivities':
-        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teachers )
+        averages = this.state.averagesClass.calculateSequentialActivitiesAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateSequentialActivitiesTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'foundationSkills':
-        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teachers )
+        averages = this.state.averagesClass.calculateFoundationalSkillsAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateFoundationalSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'writing':
-        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers )
+        averages = this.state.averagesClass.calculateWritingSkillsAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateWritingSkillsTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'bookReading':
-        averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers )
+        averages = this.state.averagesClass.calculateBookReadingAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateBookReadingTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'languageEnvironment':
-        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers )
+        averages = this.state.averagesClass.calculateLanguageEnvironmentAverages( data, teachers, this.state.siteNames )
         trends = this.state.trendsClass.calculateLanguageEnvironmentTrends( data, teachers, this.props.startDate, endDate )
         break
       case 'associativeAndCooperative':
-        averages = this.state.averagesClass.calculateACAverages(data, teachers)
+        averages = this.state.averagesClass.calculateACAverages(data, teachers, this.state.siteNames)
         trends = this.state.trendsClass.calculateACTrends( data, teachers, this.props.startDate, endDate )
         break
 
@@ -567,24 +593,215 @@ class ProgramProfileResults extends React.Component {
     }
     this.setState({ averages: averages, trends: trends })
 
+    if (this.state.selectedSite === 'None') {
+      teachers = []
+    }
+
+
     // Build data for line graph
     this.setLineGraphData(teachers, this.state.radioValue)
   }
 
   // Set Line Graph data
   setLineGraphData = (sites, type) => {
+    console.log(type)
+    let oneType = ["studentEngagement"];
+    let twoType = ["foundationSkills", "writing", "bookReading", "languageEnvironment", "transitionTime", "levelOfInstruction", "listeningToChildren", 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative'];
+    let radioType = [ 'mathInstruction', 'sequentialActivities', 'associativeAndCooperative']
+    let type2 = "";
+    let label1 = "";
+    let label2 = "";
+    let color1 = "";
+    let color2 = "";
+
     var trends = this.state.trends
 
     var tempDataSet = []
     var lineColors = this.state.lineColors
     var i = 0
-    var tempLineChartLabels = [];
+    var tempMonths = [];
+
+    /** CHANGE YOUR ATTRIBUTES HERE */
+    if (this.props.observationType === "studentEngagement") {
+      type = "dailyAverage"
+      color1 = "#FF7F00"
+      label1 = "Daily Average"
+    }
+    if (["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType)) {
+      type = "literacyInstruction"
+      type2 = "noBehaviors"
+      label1 = "Literacy Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#C4395A"
+      color2 = "#E5E5E5"
+    }
+    if (this.props.observationType === "transitionTime") {
+      type = "transitionTimeAverage"
+      type2 = "learningActivityAverage"
+      label1 = "Transition Time"
+      label2 = "Learning Activity"
+      color1 = "#fc8c03"
+      color2 = "#03b1fc"
+    }
+    if (this.props.observationType === "levelOfInstruction") {
+      type = "highLevel"
+      type2 = "lowLevel"
+      label1 = "High-Level Instruction"
+      label2 = "Low-Level Instruction"
+      color1 = "#38761D"
+      color2 = '#1155CC'
+    }
+    if (this.props.observationType === "listeningToChildren") {
+      type = "listeningInstruction"
+      type2 = "noBehaviors"
+      label1 = "Listening Instruction"
+      label2 = "No Target Behaviors Observed"
+      color1 = "#07DFBB"
+      color2 = "#E20000"
+    }
+    if (radioType.includes(this.props.observationType)) {
+      if (this.props.observationType === "associativeAndCooperative") {
+        if (type === "teacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Support for Associative and Cooperative Interactions"
+          label2 = "No Support"
+          color1 = "#2EB9EB"
+          color2 = "#E20000"
+        } else {
+          type = "ac"
+          type2 = "noAC"
+          label1 = "Associative and Cooperative Interactions"
+          label2 = "No Associative and Cooperative Interactions"
+          color1 = "#7030A0"
+          color2 = "#E20000"
+        }
+      }
+      if (this.props.observationType === "sequentialActivities") {
+        if (type === "teacherAverage") {
+          type = "support"
+          type2 = "noSupport"
+          label1 = "Teacher Support"
+          label2 = "No Support"
+          color1 = "#2EB9EB"
+          color2 = "#E20000"
+        } else {
+          type = "sequentialActivities"
+          type2 = "childNonSequential"
+          label1 = "Sequential Activities"
+          label2 = "Non-Sequential Activities"
+          color1 = "#FFCE33"
+          color2 = "#E20000"
+        }
+      }
+      if (this.props.observationType === "mathInstruction") {
+        if (type === "teacherAverage") {
+          type = "teacherSupport"
+          type2 = "noSupport"
+          label1 = "Teacher Support"
+          label2 = "No Support"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        } else {
+          type = "math"
+          type2 = "otherActivities"
+          label1 = "Math"
+          label2 = "Other Activities"
+          color1 = "#5B9BD5"
+          color2 = "#C00000"
+        }
+      }
+    }
+
+
     for (var siteIndex in sites) {
       var site = sites[siteIndex]
-      //var siteName = site.name
-      var siteName = this.state.siteNames[siteIndex].name
+      var fullName = this.state.siteNames[siteIndex]['name']
 
       var chosenData = trends[siteIndex][type]
+
+      chosenData = chosenData.map(function(each_element) {
+        return Math.round((each_element + Number.EPSILON) * 100) / 100
+      })
+
+      // If there isn't a color set for this teacher, set it
+      if (color1 === "") {
+        color1 = this.randomRgbColor()
+      }
+
+      var tempData = {
+        label: `${fullName} ${label1}`,
+        data: chosenData,
+        borderColor: color1,
+        fill: false,
+        tension: 0.0,
+      }
+
+      // Add the months so we can set the right labels for the trends chart
+      if(trends[siteIndex].lineChartLabels)
+      {
+        tempMonths = trends[siteIndex].lineChartLabels;
+      }
+
+      tempDataSet.push(tempData)
+      i++
+    }
+
+    if (twoType.includes(this.props.observationType)) {
+      for (var siteIndex in sites) {
+        var site = sites[siteIndex]
+        var fullName = this.state.siteNames[siteIndex]['name']
+
+        var chosenData = trends[siteIndex][type2]
+
+        // Round off all the numbers
+        chosenData = chosenData.map(function(each_element) {
+          return Math.round((each_element + Number.EPSILON) * 100) / 100
+        })
+
+        // If there isn't a color set for this teacher, set it
+        if (color2 === "") {
+          color2 = this.randomRgbColor()
+        }
+
+        var tempData = {
+          label: `${fullName} ${label2}`,
+          data: chosenData,
+          borderColor: color2,
+          fill: false,
+          tension: 0.0,
+        }
+
+        // Add the months so we can set the right labels for the trends chart
+        if(trends[siteIndex].lineChartLabels)
+        {
+          tempMonths = trends[siteIndex].lineChartLabels;
+        }
+
+        tempDataSet.push(tempData)
+        i++
+      }
+    }
+
+    chosenData = trends["programBar"][type]
+    // Round off all the numbers
+    chosenData = chosenData.map(function(each_element) {
+    return Math.round((each_element + Number.EPSILON) * 100) / 100
+    })
+
+    var tempData = {
+      label: `Program Average ${label1}`,
+      data: chosenData,
+      borderColor: color1,
+      borderDash: [10,5],
+      fill: false,
+      tension: 0.0,
+    }
+
+    tempDataSet.push(tempData)
+
+    if (twoType.includes(this.props.observationType)) {
+      chosenData = trends["programBar"][type2]
 
       // Round off all the numbers
       chosenData = chosenData.map(function(each_element) {
@@ -592,28 +809,30 @@ class ProgramProfileResults extends React.Component {
       })
 
       // If there isn't a color set for this teacher, set it
-      if (!lineColors[i]) {
-        lineColors[i] = this.randomRgbColor()
+      //// ADD YOUR SECOND COLOR HERE
+      if (color2 === "") {
+        color2 = this.randomRgbColor()
       }
+
       var tempData = {
-        label: siteName,
+        label: `Program Average ${label2}`,
         data: chosenData,
-        borderColor: lineColors[i],
+        borderColor: color2,
+        borderDash: [10,5],
         fill: false,
         tension: 0.0,
       }
 
-      // Get the labels for the Trends charts
-      if(trends[siteIndex].lineChartLabels)
-      {
-        tempLineChartLabels = trends[siteIndex].lineChartLabels
-      }
-
       tempDataSet.push(tempData)
-      i++
     }
 
-    var labels = [
+    // Add the months so we can set the right labels for the trends chart
+    if(trends["programBar"].lineChartLabels)
+    {
+      tempMonths = trends["programBar"].lineChartLabels;
+    }
+    // Get the months from the data
+    const monthOptions = [
       'January',
       'February',
       'March',
@@ -628,15 +847,19 @@ class ProgramProfileResults extends React.Component {
       'December',
     ]
 
-    if(tempLineChartLabels.length > 0)
+
+    var labels = monthOptions;
+    if(tempMonths.length > 0)
     {
-      labels = tempLineChartLabels;
+      labels = tempMonths
     }
+
 
     const lineData = {
       labels,
       datasets: tempDataSet,
     }
+
 
     this.setState({ lineGraphData: lineData, lineColors: lineColors })
   }
@@ -689,7 +912,14 @@ class ProgramProfileResults extends React.Component {
   handleRadioChange = (event: SelectChangeEvent) => {
     this.setState({ radioValue: event.target.value })
 
-    this.setLineGraphData(this.state.siteNames, event.target.value)
+    let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
+      key.includes(this.state.selectedSite)).reduce((obj, key) => {
+        return Object.assign(obj, {
+          [key]: this.state.BQData[key]
+        })
+      }, {})
+
+    this.setLineGraphData(modifiedInfo, event.target.value)
   }
 
   // When any of the date dropdowns are changed
@@ -719,7 +949,129 @@ class ProgramProfileResults extends React.Component {
     return Math.floor(Math.random() * (max + 1))
   }
 
+  handleTrendsDropdown = (event: SelectChangeEvent) => {
+    this.setState({ selectedSite: event.target.value })
+    let modifiedInfo = Object.keys(this.state.BQData).filter(key =>
+      key.includes(event.target.value)).reduce((obj, key) => {
+        return Object.assign(obj, {
+          [key]: this.state.BQData[key]
+        })
+      }, {})
+
+    // let modifiedInfo = this.state.BQData.filter(site => {
+    //   return site.id == event.target.value
+    // })
+    if (this.props.observationType === "studentEngagement") {
+      if (event.target.value != 'None') {
+        LineGraphOptions.legend.display = true
+        LineGraphOptions.legend.position = 'bottom'
+      } else {
+        LineGraphOptions.legend.display = false
+      }
+    } else {
+      LineGraphOptions.legend.display = true
+      LineGraphOptions.legend.position = 'bottom'
+    }
+
+    this.setLineGraphData(modifiedInfo, this.state.radioValue)
+  }
+
   render() {
+
+    const radioObservationTypes = [
+      'mathInstruction',
+      'sequentialActivities',
+      'associativeAndCooperative',
+    ]
+
+    /*
+     * List of observation types that have their own custom average chart
+     */
+    const customAveragesObservationTypes = [
+      'classroomClimate',
+      'levelOfInstruction',
+      "studentEngagement",
+      'mathInstruction',
+      'listeningToChildren',
+      'sequentialActivities',
+      'associativeAndCooperative',
+      'transitionTime',
+      'foundationSkills',
+      'writing',
+      'bookReading',
+      'languageEnvironment',
+    ]
+
+    if (this.props.observationType === 'studentEngagement') {
+      LineGraphOptions.plugins.datalabels = {
+        display: 'auto',
+        align: 'top',
+        anchor: 'end',
+        color: '#444',
+        font: {
+          size: 14,
+          weight: 'bold',
+        },
+      }
+      LineGraphOptions.scales.yAxes[0].scaleLabel.display = false
+      LineGraphOptions.scales.yAxes[0].ticks.min = 0
+      LineGraphOptions.scales.yAxes[0].ticks.max = 3
+      LineGraphOptions.scales.yAxes[0].ticks.stepSize = 1
+      LineGraphOptions.scales.yAxes[0].ticks.callback = function(
+        value: number
+      ): string {
+        if (value == 0) {
+          return 'Off Task  0  '
+        }
+        if (value == 1) {
+          return 'Mildly Engaged  1  '
+        }
+        if (value == 2) {
+          return 'Engaged  2  '
+        }
+        if (value == 3) {
+          return 'Highly Engaged  3  '
+        }
+      }
+    } else {
+      LineGraphOptions.plugins.datalabels = {
+        display: true,
+        color: 'gray',
+        align: 'right',
+        formatter: function(value: number): string {
+          return value + '%'
+        }
+      }
+      LineGraphOptions.scales.yAxes = [
+        {
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            callback: function(value: number): string {
+              return value + '%'
+            },
+            /*
+            fontSize: 18,
+            fontColor: 'black',
+            padding: 20,
+            */
+          },
+          scaleLabel: {
+            display: false,
+            //labelString: '% of 1-minute Intervals',
+            fontFamily: 'Arimo',
+            fontSize: 18,
+            fontColor: 'black',
+          },
+          gridLines: {
+            //drawBorder: false,
+            //drawTicks: false,
+          },
+        },
+      ]
+    }
+
     return (
       <div id="ProgramProfileResultsContainer">
         <Grid
@@ -784,6 +1136,7 @@ class ProgramProfileResults extends React.Component {
             {/*
                     The checklists
                 */}
+          {radioObservationTypes.includes(this.props.observationType) ? (
             <RadioGroup
               aria-label="gender"
               name="gender1"
@@ -793,6 +1146,23 @@ class ProgramProfileResults extends React.Component {
             >
               <RadioSets type={this.props.observationType} />
             </RadioGroup>
+            ) : null}
+
+            {/*
+                Radio buttons for the Classrom Climate Trends.
+                Note: gotta do this seperately because the radio buttons only show on trends for this observation type
+            */}
+            {this.props.observationType == "classroomClimate" && this.state.tabState == 1 ? (
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={this.state.radioValue}
+                onChange={this.handleRadioChange}
+                style={{ width: '100%' }}
+              >
+                <RadioSets type={this.props.observationType} />
+              </RadioGroup>
+            ) : null}
 
             {/*
                     The chart switcher
@@ -819,42 +1189,141 @@ class ProgramProfileResults extends React.Component {
               {this.state.showErrorMessage ? (
                 <h1>{this.state.errorMessage}</h1>
               ) : null}
+
               {(this.state.tabState == 1 &&
-                Object.keys(this.state.averages).length > 0) == 1 ? (
+                Object.keys(this.state.averages).length > 0) == 1 ? (<>
+                  <FormControl variant="outlined">
+                  <StyledSelect
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={this.state.selectedSite}
+                  onChange={this.handleTrendsDropdown}
+                  name="selectedProgram"
+
+                >
+                  <MenuItem value="None">Select Site</MenuItem>
+                  {this.state.siteInfo.map(
+                            (site, index)=>{
+                              return <MenuItem value={site.id} key={index}>
+                                    {`${site.name}`}
+                                  </MenuItem>
+                              })}
+                </StyledSelect>
+                </FormControl>
                 <Grid
                   container
                   justify={'center'}
                   direction={'column'}
-                  style={{ height: 500 }}
+                  style={{ minHeight: 500 }}
                 >
-                  <Line
-                    data={this.state.lineGraphData}
-                    options={LineGraphOptions}
-                  />
+                  {this.props.observationType !== "classroomClimate" ? (
+                    <Line
+                      data={this.state.lineGraphData}
+                      options={LineGraphOptions}
+                    />
+                  ) : null}
+                  {/* Classroom Climate Trends */}
+                  {this.props.observationType === "classroomClimate" ? (
+                    <ClassroomClimateTrends
+                      data={this.state.trends}
+                      options={LineGraphOptions}
+                      selectedTeacher={this.state.selectedSite}
+                      radioValue={this.state.radioValue}
+                    />
+                  ) : null}
                 </Grid>
-              ) : this.state.tabState == 0 &&
+              </>) : this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 ? (
-                <Grid
+                  <Grid
                   container
                   justify={'center'}
                   direction={'column'}
                   style={{
-                    height: 450,
+                    width: '85%',
+                    minHeight: 500,
                     flexWrap: 'nowrap',
-                    padding: '30px 0px',
+                    padding: '0px',
+                    position: 'relative',
+                    border: 'solid 2px #eee',
+                    marginTop: 20,
                   }}
                 >
                   <GraphHeader
                     graphTitle={chartTitleArr[this.state.radioValue]}
-                  />
+                  />{!customAveragesObservationTypes.includes(
+                    this.props.observationType
+                  ) ? (
+                    <div style={{ padding: 30 }}>
+                    <ProgramProfileBarDetails
+                      totalVisits={10}
+                      labels={this.state.siteNames}
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      barColors={this.state.lineColors}
+                    />
+                    </div>
+                  ) : null}
 
-                  <ProgramProfileBarDetails
-                    totalVisits={10}
-                    labels={this.state.siteNames}
-                    data={this.state.averages}
-                    type={this.state.radioValue}
-                    barColors={this.state.lineColors}
-                  />
+                  {/* Classroom Climate Chart */}
+                  {this.props.observationType === 'classroomClimate' ? (
+                    <ClassroomClimateBarDetails data={this.state.averages} />
+                  ) : null}
+
+                  {/* Level of Instruction Chart */}
+                  {this.props.observationType === 'levelOfInstruction' ? (
+                    <LevelOfInstructionBarDetails data={this.state.averages} />
+                  ) : null}
+
+                  {/* Student Engagement Chart */}
+                  {this.props.observationType === 'studentEngagement' ? (
+                    <StudentEngagementBarDetails data={this.state.averages} />
+                  ) : null}
+
+                  {/* Math Instruction Chart */}
+                  {this.props.observationType === "mathInstruction" ? (
+                    <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Listening to Children Chart */}
+                  {this.props.observationType === "listeningToChildren" ? (
+                    <ListeningToChildrenBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Sequesntial Activities Chart */}
+                  {this.props.observationType === "sequentialActivities" ? (
+                    <SequentialActivitiesBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+                  {/* Associative and Cooperative Chart */}
+                  {this.props.observationType === "associativeAndCooperative" ? (
+                    <ACBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                    />
+                  ) : null}
+
+
+                  {this.props.observationType === 'transitionTime' ? (
+                    <TransitionAverageBarDetails data={this.state.averages} />
+                  ) : null}
+
+                  {/* Literacy Instruction Charts */}
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                    <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                    />
+                  ) : null}
+
                 </Grid>
               ) : null}
             </Grid>

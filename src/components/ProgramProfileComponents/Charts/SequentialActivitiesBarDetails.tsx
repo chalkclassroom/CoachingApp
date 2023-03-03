@@ -2,6 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar, Bar } from "react-chartjs-2";
 import * as Constants from "../../constants/Constants";
+import { round } from "./../../Shared/Math"
+
 
 import {withStyles} from '@material-ui/core'
 
@@ -29,7 +31,7 @@ const averageLine = {
  * @class EngagementBarDetails
  * @return {void}
  */
-class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
+class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props
    */
@@ -72,11 +74,12 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
 
     var teacherNames = [];
-    var graphData = {};
 
     let for_sorting = [];
-    var hlqAverage = [];
-    var llqAverage = [];
+    var sequentialActivities = [];
+    var childNonSequential = [];
+    var support = [];
+    var noSupport = [];
     for(var teacherIndex in data)
     {
 
@@ -85,82 +88,114 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
       // teacherNames.push(teacher.name);
 
       // We only need the name for the site Average Bar. We'll take care of the data after this loop.
-      if(teacher.name === "Site Average" || teacher.name === undefined)
+      if(teacher.name === "Program Average" || teacher.name === undefined)
       {
         continue;
       }
 
-
-      if(teacher.totalInstructions > 0)
-      {
-        let tempHlqAverage = Math.round(teacher['highLevel']);
-        let tempLlqAverage = 100 - tempHlqAverage;
-
-        for_sorting.push([teacher.name, tempHlqAverage, tempLlqAverage])
-
-        // hlqAverage.push(tempHlqAverage);
-        //llqAverage.push(Math.round((teacher['llqAverage'] + teacher['llqResponseAverage'] + Number.EPSILON) * 100) / 100);
-        // llqAverage.push(tempLlqAverage);
-
-      }
-      else
-      {
-        for_sorting.push([teacher.name, 0, 0])
-        // hlqAverage.push(0);
-        // llqAverage.push(0);
-      }
+      let result1 = round([teacher['noSupport'], teacher['support']])
+      let result2 = round([teacher['noInteraction'], teacher['engaged']])
+      for_sorting.push([teacher.name, result1[0], result1[1], result2[0], result2[1]])
+      // noSupport.push(result1[0]);
+      // support.push(result1[1]);
+      // childNonSequential.push(result2[0]);
+      // sequentialActivities.push(result2[1]);
 
     }
 
-    for_sorting.sort((a,b) => (b[0].split(' ')[1].charAt(0) < a[0].split(' ')[1].charAt(0)) ? 1 : ((a[0].split(' ')[1].charAt(0) < b[0].split(' ')[1].charAt(0)) ? -1 : 0))
+    for_sorting.sort((a,b) => (b[0].charAt(0) < a[0].charAt(0)) ? 1 : ((a[0].charAt(0) < b[0].charAt(0)) ? -1 : 0))
     for (let index = 0; index < for_sorting.length; index++) {
       teacherNames.push(for_sorting[index][0])
-      hlqAverage.push(for_sorting[index][1])
-      llqAverage.push(for_sorting[index][2])
+      noSupport.push(for_sorting[index][1])
+      support.push(for_sorting[index][2])
+      childNonSequential.push(for_sorting[index][3])
+      sequentialActivities.push(for_sorting[index][4])
     }
 
-    teacherNames.push("Site Average")
+    teacherNames.push("Program Average")
+
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
 
-    var siteAverageHlqAverage = new Array(dataSize).fill(0);
-    siteAverageHlqAverage[dataSize - 1] = Math.round(data.siteBar.highLevel);
+    let siteResult1 = round([data.programBar.noSupport, data.programBar.support])
+    let siteResult2 = round([data.programBar.noInteraction, data.programBar.engaged])
 
-    var siteAverageLlqAverage = new Array(dataSize).fill(0);
-    siteAverageLlqAverage[dataSize - 1] = 100 - siteAverageHlqAverage[dataSize - 1];
+
+    var siteNoSupportAverage = new Array(dataSize).fill(0);
+    siteNoSupportAverage[dataSize - 1] = siteResult1[0];
+
+    var siteSupportAverage = new Array(dataSize).fill(0);
+    siteSupportAverage[dataSize - 1] = siteResult1[1];
+
+    var siteChildNonSequentialAverage = new Array(dataSize).fill(0);
+    siteChildNonSequentialAverage[dataSize - 1] = siteResult2[0];
+
+    var siteSequentialActivitiesAverage = new Array(dataSize).fill(0);
+    siteSequentialActivitiesAverage[dataSize - 1] = siteResult2[1]
+
+ 
 
 
     // Use that data to create our dataset
-    var dataSets = [
-      {
-        label: 'High Level Instruction',
-        data: hlqAverage,
-        backgroundColor: "#38761D",
-      },
-      {
-        label: 'Low Level Instruction',
-        data: llqAverage,
-        backgroundColor: "#1155CC",
-      },
-
-      // The total Site Averages
-      {
-        label: 'High Level Instruction Site Average',
-        data: siteAverageHlqAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#38761D",
-        borderWidth: 4,
-      },
-      {
-        label: 'Low Level Instruction Site Average',
-        data: siteAverageLlqAverage,
-        backgroundColor: "#FFF",
-        borderColor: "#1155CC",
-        borderWidth: 4,
-      },
-    ]
+    if (type === "teacherAverage") {
+      var dataSets = [
+        {
+          label: 'Support',
+          data: support,
+          backgroundColor: "#5B9BD5",
+        },
+        {
+          label: 'No Support',
+          data: noSupport,
+          backgroundColor: "#FF0000",
+        },
+        // The total Site Averages
+        {
+          label: 'Support Average Site Average',
+          data: siteSupportAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#5B9BD5",
+          borderWidth: 4,
+        },
+        {
+          label: 'No Support Average Site Average',
+          data: siteNoSupportAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#FF0000",
+          borderWidth: 4,
+        },
+      ]
+    } else {
+      var dataSets = [
+        {
+          label: 'Sequential',
+          data: sequentialActivities,
+          backgroundColor: "#FFCE33",
+        },
+        {
+          label: 'Non Sequential',
+          data: childNonSequential,
+          backgroundColor: "#E20000",
+        },
+        // The total Site Averages
+        {
+          label: 'Sequential Site Average',
+          data: siteSequentialActivitiesAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#FFCE33",
+          borderWidth: 4,
+        },
+        {
+          label: 'Non Sequential Site Average',
+          data: siteChildNonSequentialAverage,
+          backgroundColor: "#FFF",
+          borderColor: "#E20000",
+          borderWidth: 4,
+        },
+      ]
+    }
 
     this.setState({teacherNames: teacherNames, dataSets: dataSets, chartTitle: chartTitleArr[type], barColors: this.props.barColors});
 
@@ -205,8 +240,8 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 
     return (
       <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Level of Instruction</h2>
-      <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+      <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Sequential Activities</h2>
+      <div className={"realChart"} style={{height: 500, width: 500 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
             options={{
@@ -310,4 +345,4 @@ class LevelOfInstructionBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default LevelOfInstructionBarDetails;
+export default SequentialActivitiesBarDetails;
