@@ -171,7 +171,7 @@ class TrendData {
         result.transitionTimeAverage[i] =
           result.total[i] > 0
             ? (result.total[i] / result.observationTotalTime[i]).toFixed(2) * 100
-            : null
+            : 0
 
       }
     }
@@ -821,7 +821,7 @@ class TrendData {
         result.encouragingAverage[i] =
           result.encouraging[i] > 0
             ? (result.encouraging[i] / tempTotalObserved).toFixed(2) * 100
-            : null
+            : 0
       }
     }
 
@@ -972,13 +972,13 @@ class TrendData {
         result.noSupportAverage[i] =
           (result.noSupport[i] > 0 || result.support[i] > 0) && tempTeacherInstructions > 0
             ? (result.noSupport[i] / tempTeacherInstructions).toFixed(2) * 100
-            : null
+            : 0
 
         // If there are any instructions for this month at all, then there will be child data.
         result.childNonSequentialActivitiesAverage[i] =
           tempTotalInstructions > 0
             ? (result.childNonSequentialActivities[i] / tempTotalInstructions).toFixed(2) * 100
-            : null
+            : 0
       }
     }
 
@@ -1171,12 +1171,12 @@ class TrendData {
           result.foundationalSkills[i] > 0
             ? (result.foundationalSkills[i] / tempTotalIntervals).toFixed(2) *
               100
-            : null
+            : 0
 
         result.childEngagedAverage[i] =
           result.childFoundationalSkills[i] > 0
             ? (result.childFoundationalSkills[i] / result.totalChildIntervals[i]).toFixed(2) * 100
-            : null
+            : 0
       }
     }
 
@@ -1346,12 +1346,12 @@ class TrendData {
         result.writingSkillsAverage[i] =
           tempTotalTeacherIntervals > 0
             ? (result.writingSkills[i] / tempTotalTeacherIntervals).toFixed(2) * 100
-            : null
+            : 0
 
         result.childWritingSkillsAverage[i] =
           tempTotalChildIntervals > 0
             ? (result.childWritingSkills[i] / tempTotalChildIntervals).toFixed(2) * 100
-            : null
+            : 0
       }
     }
 
@@ -1655,7 +1655,7 @@ class TrendData {
           tempTotalIntervals > 0
             ? (result.languageEnvironment[i] / tempTotalIntervals).toFixed(2) *
               100
-            : null
+            : 0
       }
     }
 

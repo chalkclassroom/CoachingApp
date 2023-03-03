@@ -153,14 +153,14 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
         },
         // The total Site Averages
         {
-          label: 'Support Average',
+          label: 'Support Average Site Average',
           data: siteSupportAverage,
           backgroundColor: "#FFF",
           borderColor: "#5B9BD5",
           borderWidth: 4,
         },
         {
-          label: 'No Support Average',
+          label: 'No Support Average Site Average',
           data: siteNoSupportAverage,
           backgroundColor: "#FFF",
           borderColor: "#FF0000",

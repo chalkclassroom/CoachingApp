@@ -153,11 +153,14 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     
     let siteResult = [];
+    let labels = []
 
     if (type === "teacherAverage") {
        siteResult = round([data.programBar.noSupport, data.programBar.support])
+       labels = ["Teacher Support", "No Support"]
     } else {
       siteResult = round([data.programBar.noInteraction, data.programBar.engaged])
+      labels = ["Math", "Other Activities"]
     }
 
     var dataSize = Object.keys(data).length;
@@ -172,12 +175,12 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     var dataSets = [
 
       {
-        label: 'Teacher Support',
+        label: labels[0],
         data: teacherSupportAverage,
         backgroundColor: "#5B9BD5",
       },
       {
-        label: 'No Support',
+        label: labels[1],
         data: noSupportAverage,
         backgroundColor: "#C00000",
       },
