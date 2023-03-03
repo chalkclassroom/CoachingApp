@@ -192,11 +192,11 @@ class CreateTable extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
         </FirebaseContext.Consumer>
-{/* 
+
         <div className="content-wrap">
           <h1>Create the results tables by clicking the button below: </h1>
           <button onClick={this.createTables}>Create Tables</button>
-        </div> */}
+        </div>
 
 
         {this.state.teacherModal ? (

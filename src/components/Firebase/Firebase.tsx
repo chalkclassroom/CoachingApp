@@ -7737,7 +7737,7 @@ class Firebase {
      await firebase.firestore().collection("sites").doc(programInfo.id).set(programInfo);
    }
 
-   const do_observations:boolean = false;
+   const do_observations:boolean = true;
    if (do_observations) {
     const create = {
       "transitionTime": false,
@@ -7745,13 +7745,13 @@ class Firebase {
       "mathInstruction": false,
       "levelOfInstruction": false,
       "studentEngagement": false,
-      "listeningToChildren": false,
+      "listeningToChildren": true,
       "sequentialActivities": false,
       "foundationalSkills": false,
       "writing": false,
       "bookReading": false,
       "languageEnvironment": false,
-      "associativeAndCooperative": false
+      "associativeAndCooperative": true
     }
     console.log("Creating Observations...")
     //Create Observations
@@ -7857,11 +7857,11 @@ class Firebase {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
             for (let month = 0; month < 7; month++) {
               if (![7].includes(month)) {
-                const documents: number = Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1 //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 3) + 1;
+                  const entryNumber: number = 30; //Math.floor(Math.random() * 4) + 1;
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
@@ -7902,11 +7902,11 @@ class Firebase {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
             for (let month = 0; month < 7; month++) {
               if (![7].includes(month)) {
-                const documents: number = 3; //Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1; //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 3) + 1;
+                  const entryNumber: number = 30; //Math.floor(Math.random() * 10) + 1;
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
@@ -7969,11 +7969,11 @@ class Firebase {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
             for (let month = 0; month < 7; month++) {
               if (![7].includes(month)) {
-                const documents: number = 3; //Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1; //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 3) + 1;
+                  const entryNumber: number = 30; //Math.floor(Math.random() * 4) + 1;
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
@@ -8045,13 +8045,13 @@ class Firebase {
         /* Listening to Children Observation BEGIN */
         if (create['listeningToChildren']) {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
-            for (let month = 0; month < 7; month++) {
+            for (let month = 0; month < 4; month++) {
               if (![7].includes(month)) {
-                const documents: number = 3; //Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1; //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 3) + 1;
+                  const entryNumber: number = 50; //Math.floor(Math.random() * 4) + 1;
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
@@ -8094,11 +8094,11 @@ class Firebase {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
             for (let month = 0; month < 7; month++) {
               if (![7].includes(month)) {
-                const documents: number = 3; //Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1; //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 10);
+                  const entryNumber: number = 30; //Math.floor(Math.random() * 10);
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
@@ -8350,13 +8350,13 @@ class Firebase {
         /** Associative and Cooperative Observation BEGIN */
         if (create['associativeAndCooperative']) {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
-            for (let month = 0; month < 7; month++) {
+            for (let month = 0; month < 4; month++) {
               if (![7].includes(month)) {
-                const documents: number = 3; //Math.floor(Math.random() * 3) + 1;
+                const documents: number = 1; //Math.floor(Math.random() * 3) + 1;
                 for (let documentIndex = 0; documentIndex < documents; documentIndex++) {
                   let date = new Date();
                   date.setMonth(date.getMonth()-month)
-                  const entryNumber: number = Math.floor(Math.random() * 10);
+                  const entryNumber: number = 50; //Math.floor(Math.random() * 30);
                   const observationInfo = {
                       start: firebase.firestore.Timestamp.fromDate(date),
                       end: firebase.firestore.Timestamp.fromDate(date),
