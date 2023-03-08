@@ -20,111 +20,51 @@ class TrendData {
 
     var totalIntervals = 0
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
-
-    const endMonth = endDate.getMonth()
-
     const tempName = teacher.firstName + ' ' + teacher.lastName
 
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(data.map(item => item.startDate.value))]
 
-    /*
-     * Build list of months between start date and end date
-     */
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    });
 
-    var months = []
+    var monthsCount = observationDates.length;
 
-    /*
-     * Note: whether or not we're displaying the year on the chart, we need to include it to make sure data goes in the right spot when the user selects a date range longer than a year
-     */
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
-    })
-
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
-
-    var monthsCount = months.length
-
-    //var observationDatesSize = observationDates.length
-
+    // Initialize the results
     results[teacher.id] = {
       name: tempName,
-      line: new Array(monthsCount).fill(0),
-      traveling: new Array(monthsCount).fill(0),
-      waiting: new Array(monthsCount).fill(0),
-      routines: new Array(monthsCount).fill(0),
-      behaviorManagement: new Array(monthsCount).fill(0),
-      other: new Array(monthsCount).fill(0),
+
       total: new Array(monthsCount).fill(0),
 
-      lineAverage: new Array(monthsCount).fill(0),
-      travelingAverage: new Array(monthsCount).fill(0),
-      waitingAverage: new Array(monthsCount).fill(0),
-      routinesAverage: new Array(monthsCount).fill(0),
-      behaviorManagementAverage: new Array(monthsCount).fill(0),
-      otherAverage: new Array(monthsCount).fill(0),
-
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
 
       observationTotalTime: new Array(monthsCount).fill(0),
 
       transitionTimeAverage: new Array(monthsCount).fill(0),
     }
 
-    console.log("Months => ", months);
 
     // Sort by date just in case
     data.sort(function(a, b) {
       return new Date(b.startDate.value) - new Date(a.startDate.value)
     })
 
-    // Get number of instances for each type of data
-    // rowMonth = startMonth
     var teacherId = teacher.id
 
+    // Go through all the data from BQ
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
-      // var rowMonth = new Date(row.startDate.value).getMonth();
-      var rowMonth = months.indexOf(
-        new Date(row.startDate.value).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
-      console.log("row.startDate.value => ", row.startDate.value);
+      let formattedDate = new Date(row.startDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric', })
+      var rowMonth = observationDatesFormatted.indexOf(formattedDate)
 
-
-      //rowMonth = new Date(row.startDate.value).getMonth();
-      /*
-      rowMonth = months.indexOf(
-        new Date(row.startDate.value).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
-      */
-      // Add to behavior types
-      results[teacherId].line[rowMonth] += row.line
-
-      results[teacherId].traveling[rowMonth] += row.traveling
-      results[teacherId].waiting[rowMonth] += row.waiting
-      results[teacherId].routines[rowMonth] += row.routines
-      results[teacherId].behaviorManagement[rowMonth] += row.behaviorManagement
-      results[teacherId].other[rowMonth] += row.other
-
-      // Calculate the total Number of instructions
+      // Calculate the total amount of transition time
       results[teacherId].total[rowMonth] += row.total
 
       // Calculate the total amount of time for these observations
@@ -140,33 +80,6 @@ class TrendData {
       // Go through the months
       for (var i = 0; i < monthsCount; i++) {
         var tempTotalInstructions = result.total[i]
-
-        result.lineAverage[i] =
-          result.line[i] > 0
-            ? (result.line[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.travelingAverage[i] =
-          result.traveling[i] > 0
-            ? (result.traveling[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.waitingAverage[i] =
-          result.waiting[i] > 0
-            ? (result.waiting[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.routinesAverage[i] =
-          result.routines[i] > 0
-            ? (result.routines[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.behaviorManagementAverage[i] =
-          result.behaviorManagement[i] > 0
-            ? (result.behaviorManagement[i] / tempTotalInstructions).toFixed(
-                2
-              ) * 100
-            : 0
-        result.otherAverage[i] =
-          result.other[i] > 0
-            ? (result.other[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
 
         result.transitionTimeAverage[i] =
           result.total[i] > 0
@@ -188,38 +101,22 @@ class TrendData {
 
     var totalIntervals = 0
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
+    // Get all the dates that have data
+    var observationDates = [...new Set(data.map(item => {return item.startDate.value}))];
 
-    const endMonth = endDate.getMonth()
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
-
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
-
-    var monthsCount = months.length
-
-    var tempName = teacher.firstName + ' ' + teacher.lastName
+    const monthsCount = observationDates.length;
 
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + ' ' + teacher.lastName,
       total: new Array(monthsCount).fill(0),
       nonspecificapproval: new Array(monthsCount).fill(0),
       specificapproval: new Array(monthsCount).fill(0),
@@ -235,28 +132,22 @@ class TrendData {
       toneCount: new Array(monthsCount).fill(0),
       toneAverage: new Array(monthsCount).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
     }
 
-    // Get number of instances for each type of data
-    var prevMonth = 0,
-      rowMonth = startMonth
-
+    // Go through the data from BQ
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
       var teacherId = teacher.id
 
       //rowMonth = months.indexOf(new Date(row.startDate.value).getMonth());
-      rowMonth = months.indexOf(
-        new Date(row.startDate.value).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
+      let formattedDate = new Date(row.startDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {year: 'numeric', month: 'short', day: 'numeric', })
+
+      let rowMonth = observationDatesFormatted.indexOf(formattedDate);
 
       // Add to behavior types
-      // There's a problem where an extra row is being saved where the behaviorResponse is being saved as a number. No idea why but we have to make sure we don't use that row
+      // Make sure we're not reading the tone rows
       if (
         row.behaviorResponse === 'nonspecificapproval' ||
         row.behaviorResponse === 'specificapproval' ||
@@ -323,24 +214,14 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
-
-    // Get start month and year
-    const startMonth = startDate.getMonth()
-
-    const endMonth = endDate.getMonth()
-
-    // Add each teacher to the object
-    var tempName = teacher.firstName + ' ' + teacher.lastName
+    // Seperate the teacher data so if 'teacher behaviors' is selected, it only shows dates where teacher observations were conducted
+    var teacherData = data.filter(item => {return item.peopletype == 3});
 
     // Get all the dates that had an observation
     var observationDates = [...new Set(data.map(item => item.timestamp))]
+    var teacherObservationDates = [...new Set(teacherData.map(item => item.timestamp))]
 
-    // Sort by date just in case
-    // observationDates.sort(function(a,b){
-    //   return new Date(a) - new Date(b);
-    // });
-
+    // Format the dates
     var observationDatesFormatted = observationDates.map(o => {
       return new Date(o).toLocaleDateString('en-us', {
         year: 'numeric',
@@ -348,18 +229,20 @@ class TrendData {
         day: 'numeric',
       })
     })
+    var teacherObservationDatesFormatted = teacherObservationDates.map(o => {
+      return new Date(o).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
 
-    console.log(
-      'Observatoin Dates : ',
-      observationDates,
-      observationDatesFormatted
-    )
 
     var arraySize = observationDates.length
     console.log(arraySize)
 
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + ' ' + teacher.lastName,
       totalInstructions: new Array(arraySize).fill(0),
       mathVocabulary: new Array(arraySize).fill(0),
       askingQuestions: new Array(arraySize).fill(0),
@@ -387,6 +270,7 @@ class TrendData {
       childMathAverage: new Array(arraySize).fill(0),
 
       lineChartLabels: observationDatesFormatted,
+      teacherLineChartLabels: teacherObservationDatesFormatted,
     }
 
     // Get number of instances for each type of data
@@ -494,17 +378,10 @@ class TrendData {
     // Add each teacher to the object
     var tempName = teacher.firstName + ' ' + teacher.lastName
 
-    var observationDates = [
-      ...new Set(
-        data.map(item => {
-          return item.startDate.value
-        })
-      ),
-    ]
+    // Get all the dates that have data
+    var observationDates = [...new Set(data.map(item => { return item.startDate.value})),]
 
-
-
-    data.map(i => console.log(i.startDate))
+    // Format the dates
     var observationDatesFormatted = observationDates.map(o => {
       return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
         year: 'numeric',
@@ -669,46 +546,23 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(data.map(item => item.startDate))]
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
-
-    const endMonth = endDate.getMonth()
-
-    /*
-     * Build list of months between start date and end date
-     */
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-
-    var months = []
-
-    /*
-     * Note: whether or not we're displaying the year on the chart, we need to include it to make sure data goes in the right spot when the user selects a date range longer than a year
-     */
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
-
-    var monthsCount = months.length
+    var monthsCount = observationDates.length
 
     // Add each teacher to the object
-    var tempName = teacher.firstName + ' ' + teacher.lastName
-
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + ' ' + teacher.lastName,
       eyeLevel: new Array(monthsCount).fill(0),
       positiveExpression: new Array(monthsCount).fill(0),
       repeats: new Array(monthsCount).fill(0),
@@ -735,7 +589,7 @@ class TrendData {
       totalInstructionsAverage: new Array(monthsCount).fill(0),
       totalObservedAverage: new Array(monthsCount).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
     }
 
     // Get number of instances for each type of data
@@ -747,12 +601,14 @@ class TrendData {
       var teacherId = teacher.id
 
       //var rowMonth = new Date(row.startDate).getMonth();
-      var rowMonth = months.indexOf(
-        new Date(row.startDate).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
+
+      let formattedDate = new Date(row.startDate).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+
+      var rowMonth = observationDatesFormatted.indexOf(formattedDate)
 
       // Add to behavior types
       results[teacherId].eyeLevel[rowMonth] += row.listening1
@@ -766,7 +622,6 @@ class TrendData {
       results[teacherId].encouraging[rowMonth] += row.count - row.listening7
 
       // Calculate the total Number of instructions
-      //results[teacherId].totalInstructions[rowMonth] += row.listening1 + row.listening2 + row.listening3 + row.listening4 + row.listening5 + row.listening6 + row.listening7;
       results[teacherId].totalInstructions[rowMonth] += row.count
 
       // Calculate total number of observations
@@ -835,64 +690,49 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
+    // Seperate the teacher data so if 'teacher behaviors' is selected, it only shows dates where teacher observations were conducted
+    var teacherData = data.filter(item => {return item.peopletype == 3});
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(data.map(item => item.timestamp))]
+    var teacherObservationDates = [...new Set(teacherData.map(item => item.timestamp))]
 
-    const endMonth = endDate.getMonth()
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
+    var teacherObservationDatesFormatted = teacherObservationDates.map(o => {
+      return new Date(o).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
+    console.log("Teacher dates : ", teacherObservationDatesFormatted);
 
-    var monthsCount = months.length
+
+    var monthsCount = observationDates.length
 
     // Add each teacher to the object
-    var tempName = teacher.firstName + ' ' + teacher.lastName
-
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + ' ' + teacher.lastName,
       totalInstructions: new Array(monthsCount).fill(0),
       totalTeacherInstructions: new Array(monthsCount).fill(0),
-      sequentialActivities: new Array(monthsCount).fill(0),
-      drawImages: new Array(monthsCount).fill(0),
-      demonstrateSteps: new Array(monthsCount).fill(0),
-      actOut: new Array(monthsCount).fill(0),
-
-      notAtCenter: new Array(monthsCount).fill(0),
-      noSupport: new Array(monthsCount).fill(0),
-      support: new Array(monthsCount).fill(0),
-
-      totalInstructionsAverage: new Array(monthsCount).fill(0),
-      sequentialActivitiesAverage: new Array(monthsCount).fill(0),
-      drawImagesAverage: new Array(monthsCount).fill(0),
-      demonstrateStepsAverage: new Array(monthsCount).fill(0),
-      actOutAverage: new Array(monthsCount).fill(0),
 
       childNonSequentialActivities: new Array(monthsCount).fill(0),
       childNonSequentialActivitiesAverage: new Array(monthsCount).fill(0),
 
-      notAtCenterAverage: new Array(monthsCount).fill(0),
+      support: new Array(monthsCount).fill(0),
+      noSupport: new Array(monthsCount).fill(0),
       noSupportAverage: new Array(monthsCount).fill(0),
-      supportAverage: new Array(monthsCount).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
+      teacherLineChartLabels: teacherObservationDatesFormatted,
     }
 
     // Get number of instances for each type of data
@@ -903,28 +743,19 @@ class TrendData {
 
       var teacherId = teacher.id
 
-      //var rowMonth = new Date(row.timestamp).getMonth();
-      var rowMonth = months.indexOf(
-        new Date(row.timestamp).toLocaleDateString('en-us', {
+      var formattedDate = new Date(row.timestamp).toLocaleDateString('en-us', {
           year: 'numeric',
           month: 'short',
+          day: 'numeric',
         })
-      )
+
+      var rowMonth = observationDatesFormatted.indexOf(formattedDate)
 
       // Add to total # of intervals
-      results[teacherId].totalInstructions[rowMonth] +=
-        row.notAtCenter + row.support + row.noSupport
-      results[teacherId].totalTeacherInstructions[rowMonth] +=
-        row.support + row.noSupport
+      results[teacherId].totalInstructions[rowMonth] += row.notAtCenter + row.support + row.noSupport
+      results[teacherId].totalTeacherInstructions[rowMonth] += row.support + row.noSupport
 
       // Add to behavior types
-      results[teacherId].sequentialActivities[rowMonth] +=
-        row.sequentialActivities
-      results[teacherId].drawImages[rowMonth] += row.drawImages
-      results[teacherId].demonstrateSteps[rowMonth] += row.demonstrateSteps
-      results[teacherId].actOut[rowMonth] += row.actOut
-
-      results[teacherId].notAtCenter[rowMonth] += row.notAtCenter
       results[teacherId].support[rowMonth] += row.support
       results[teacherId].noSupport[rowMonth] += row.noSupport
 
@@ -941,34 +772,6 @@ class TrendData {
         var tempTotalInstructions = result.totalInstructions[i]
         var tempTeacherInstructions = result.totalTeacherInstructions[i]
 
-        result.sequentialActivitiesAverage[i] =
-          result.sequentialActivities[i] > 0
-            ? (result.sequentialActivities[i] / tempTotalInstructions).toFixed(
-                2
-              ) * 100
-            : 0
-        result.drawImagesAverage[i] =
-          result.drawImages[i] > 0
-            ? (result.drawImages[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.demonstrateStepsAverage[i] =
-          result.demonstrateSteps[i] > 0
-            ? (result.demonstrateSteps[i] / tempTotalInstructions).toFixed(2) *
-              100
-            : 0
-        result.actOutAverage[i] =
-          result.actOut[i] > 0
-            ? (result.actOut[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-
-        result.notAtCenterAverage[i] =
-          result.notAtCenter[i] > 0
-            ? (result.notAtCenter[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
-        result.supportAverage[i] =
-          result.support[i] > 0
-            ? (result.support[i] / tempTotalInstructions).toFixed(2) * 100
-            : 0
         result.noSupportAverage[i] =
           (result.noSupport[i] > 0 || result.support[i] > 0) && tempTeacherInstructions > 0
             ? (result.noSupport[i] / tempTeacherInstructions).toFixed(2) * 100
@@ -992,59 +795,46 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
+    // Seperate the teacher data from the children data so we can have correct months for each
+    const teacherData = data.filter(item => {return !item.isChild});
+    const childData = data.filter(item => {return item.isChild});
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(teacherData.map(item => item.GroupDate.value))]
+    var childObservationDates = [...new Set(childData.map(item => item.GroupDate.value))]
 
-    const endMonth = endDate.getMonth()
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
+    var childObservationDatesFormatted = childObservationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
-
-    var monthsCount = months.length
+    var monthsCount = observationDates.length
 
     // Add each teacher to the object
-    var tempName = teacher.firstName + ' ' + teacher.lastName
-
     results[teacher.id] = {
-      name: tempName,
+      name: teacher.firstName + ' ' + teacher.lastName,
       totalIntervals: new Array(monthsCount).fill(0),
-      totalChildIntervals: new Array(monthsCount).fill(0),
-      totalInstructions: new Array(monthsCount).fill(0),
-      phonological: new Array(monthsCount).fill(0),
-      alphabetic: new Array(monthsCount).fill(0),
-      openEndedQuestions: new Array(monthsCount).fill(0),
-      realisticReading: new Array(monthsCount).fill(0),
-      multimodalInstruction: new Array(monthsCount).fill(0),
+      totalChildIntervals: new Array(childObservationDatesFormatted.length).fill(0),
+
       foundationalSkills: new Array(monthsCount).fill(0),
-      childFoundationalSkills: new Array(monthsCount).fill(0),
+      childFoundationalSkills: new Array(childObservationDatesFormatted.length).fill(0),
 
-      phonologicalAverage: new Array(monthsCount).fill(0),
-      alphabeticAverage: new Array(monthsCount).fill(0),
-      openEndedQuestionsAverage: new Array(monthsCount).fill(0),
-      realisticReadingAverage: new Array(monthsCount).fill(0),
-      multimodalInstructionAverage: new Array(monthsCount).fill(0),
       foundationalSkillsAverage: new Array(monthsCount).fill(0),
-      childEngagedAverage: new Array(monthsCount).fill(0),
+      childEngagedAverage: new Array(childObservationDatesFormatted.length).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
+      childLineChartLabels: childObservationDatesFormatted,
     }
 
     // Sort by date just in case
@@ -1053,25 +843,23 @@ class TrendData {
     })
 
     // Get number of instances for each type of data
-    var tempIntervalData = 0
-    var prevMonth = 0,
-      rowMonth = startMonth
-
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
       var teacherId = teacher.id
 
-      //rowMonth = new Date(row.GroupDate.value).getMonth();
-      rowMonth = months.indexOf(
-        new Date(row.GroupDate.value).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
+      let formatDate = new Date(row.GroupDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
 
+
+      let rowMonth
       if(row.isChild)
       {
+        rowMonth = childObservationDatesFormatted.indexOf(formatDate);
+
         results[teacherId].totalChildIntervals[rowMonth]++;
 
         if(!row.foundational10)
@@ -1081,55 +869,16 @@ class TrendData {
       }
       else
       {
-
+        rowMonth = observationDatesFormatted.indexOf(formatDate);
         // Add to total # of intervals
-        // results[teacherId].totalIntervals[rowMonth] += row.total;
         results[teacherId].totalIntervals[rowMonth]++
 
-        // Add to behavior types
-        // If this observation has a phonal answer.
-        if (row.foundational1 || row.foundational2) {
-          results[teacherId].phonological[rowMonth]++
-        }
-        // If this observation has a alphabetic answer
-        if (
-          row.foundational3 ||
-          row.foundational4 ||
-          row.foundational5 ||
-          row.foundational6 ||
-          row.foundational7
-        ) {
-          results[teacherId].alphabetic[rowMonth]++
-        }
-        // If this observation has a open ended question
-        if (row.foundational8) {
-          results[teacherId].openEndedQuestions[rowMonth]++
-        }
-        // If this observation has a realistic Reading
-        if (row.foundational9) {
-          results[teacherId].realisticReading[rowMonth]++
-        }
-        // If this observation has a Multi Modal
-        if (row.foundational10) {
-          results[teacherId].multimodalInstruction[rowMonth]++
-        }
+
         // If this observation has anything
         if (!row.foundational11) {
           results[teacherId].foundationalSkills[rowMonth]++
         }
 
-        // Calculate the total Number of instructions
-        results[teacherId].totalInstructions[rowMonth] +=
-          row.foundational1 +
-          row.foundational2 +
-          row.foundational3 +
-          row.foundational4 +
-          row.foundational5 +
-          row.foundational6 +
-          row.foundational7 +
-          row.foundational8 +
-          row.foundational9 +
-          row.foundational10
       }
     }
 
@@ -1138,46 +887,26 @@ class TrendData {
     for (var resultsIndex in results) {
       var result = results[resultsIndex]
 
-      // Go through the months
+      // Go through the teacher months
       for (var i = 0; i < monthsCount; i++) {
-        var tempTotalInstructions = result.totalInstructions[i]
+        //var tempTotalInstructions = result.totalInstructions[i]
         var tempTotalIntervals = result.totalIntervals[i]
-
-        result.phonologicalAverage[i] =
-          result.phonological[i] > 0
-            ? (result.phonological[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
-        result.alphabeticAverage[i] =
-          result.alphabetic[i] > 0
-            ? (result.alphabetic[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
-        result.openEndedQuestionsAverage[i] =
-          result.openEndedQuestions[i] > 0
-            ? (result.openEndedQuestions[i] / tempTotalIntervals).toFixed(2) *
-              100
-            : 0
-        result.realisticReadingAverage[i] =
-          result.realisticReading[i] > 0
-            ? (result.realisticReading[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
-        result.multimodalInstructionAverage[i] =
-          result.multimodalInstruction[i] > 0
-            ? (result.multimodalInstruction[i] / tempTotalIntervals).toFixed(
-                2
-              ) * 100
-            : 0
 
         result.foundationalSkillsAverage[i] =
           result.foundationalSkills[i] > 0
             ? (result.foundationalSkills[i] / tempTotalIntervals).toFixed(2) *
               100
             : 0
+      }
 
+      // Go through the child months
+      for (var i = 0; i < childObservationDatesFormatted.length; i++) {
         result.childEngagedAverage[i] =
           result.childFoundationalSkills[i] > 0
             ? (result.childFoundationalSkills[i] / result.totalChildIntervals[i]).toFixed(2) * 100
             : 0
       }
+
     }
 
     return results
@@ -1190,138 +919,94 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
+    // Seperate the teacher data from the children data so we can have correct months for each
+    const teacherData = data.filter(item => {return !item.isChild});
+    const childData = data.filter(item => {return item.isChild});
 
-    const endMonth = endDate.getMonth()
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(teacherData.map(item => item.GroupDate.value))]
+    var childObservationDates = [...new Set(childData.map(item => item.GroupDate.value))]
 
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
+    var childObservationDatesFormatted = childObservationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-    // Set the month after the end date, formatted like Nov 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
 
-    var monthsCount = months.length
+    var monthsCount = observationDates.length
 
     // Add each teacher to the object
     var tempName = teacher.firstName + ' ' + teacher.lastName
 
     results[teacher.id] = {
       name: tempName,
-      totalIntervals: new Array(monthsCount).fill(0),
       totalTeacherIntervals: new Array(monthsCount).fill(0),
-      totalChildIntervals: new Array(monthsCount).fill(0),
+      totalChildIntervals: new Array(childObservationDatesFormatted.length).fill(0),
       writingSkills: new Array(monthsCount).fill(0),
-      childWritingSkills: new Array(monthsCount).fill(0),
-      meaning: new Array(monthsCount).fill(0),
-      printProcesses: new Array(monthsCount).fill(0),
+      childWritingSkills: new Array(childObservationDatesFormatted.length).fill(0),
 
       writingSkillsAverage: new Array(monthsCount).fill(0),
-      childWritingSkillsAverage: new Array(monthsCount).fill(0),
-      meaningAverage: new Array(monthsCount).fill(0),
-      printProcessesAverage: new Array(monthsCount).fill(0),
+      childWritingSkillsAverage: new Array(childObservationDatesFormatted.length).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
+      childLineChartLabels: childObservationDatesFormatted,
     }
 
-    // Sort by date just in case
-    data.sort(function(a, b) {
-      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value)
-    })
 
-    // Get number of instances for each type of data
-    var tempIntervalData = 0
-    var prevMonth = 0,
-      rowMonth = startMonth
 
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
       var teacherId = teacher.id
 
-      //rowMonth = new Date(row.GroupDate.value).getMonth();
-      rowMonth = months.indexOf(
-        new Date(row.GroupDate.value).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-        })
-      )
+      let formatDate = new Date(row.GroupDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
 
-      // Add to total # of intervals
-      results[teacherId].totalIntervals[rowMonth]++
 
-      // Add to behavior types
-      // Count each observation interval that has a meaning in it.
-      if (row.writing1 || row.writing2) {
-        results[teacherId].meaning[rowMonth]++
-      }
-      // Count each observation interval that has a Print Process in it
-      if (
-        row.writing3 ||
-        row.writing4 ||
-        row.writing5 ||
-        row.writing6 ||
-        row.writing7 ||
-        row.writing8
-      ) {
-        results[teacherId].printProcesses[rowMonth]++
-      }
-
+      let rowMonth;
       // Count each teacher interval that has a writing instruction in it
-      if (!row.writing9 && !row.isChild) {
-        results[teacherId].writingSkills[rowMonth]++
+      if (!row.isChild) {
+        rowMonth = observationDatesFormatted.indexOf(formatDate);
+
+        // Count total number of teacher intervalse
+        results[teacherId].totalTeacherIntervals[rowMonth]++
+
+        if(!row.writing9)
+        {
+          results[teacherId].writingSkills[rowMonth]++
+        }
       }
 
       // Count each child interval that has a writing instruction in it
-      if (!row.writingChild9 && row.isChild) {
-        results[teacherId].childWritingSkills[rowMonth]++
-      }
+      if (row.isChild) {
+        rowMonth = childObservationDatesFormatted.indexOf(formatDate);
 
-      // Count total number of teacher intervalse
-      if (
-        row.writing1 ||
-        row.writing2 ||
-        row.writing3 ||
-        row.writing4 ||
-        row.writing5 ||
-        row.writing6 ||
-        row.writing7 ||
-        row.writing8 ||
-        row.writing9
-      ) {
-        results[teacherId].totalTeacherIntervals[rowMonth]++
-      }
-
-      // Count total number of child intervalse
-      if (
-        row.writingChild1 ||
-        row.writingChild2 ||
-        row.writingChild3 ||
-        row.writingChild4 ||
-        row.writingChild5 ||
-        row.writingChild6 ||
-        row.writingChild7 ||
-        row.writingChild8 ||
-        row.writingChild9
-      ) {
+        // Count total number of child intervalse
         results[teacherId].totalChildIntervals[rowMonth]++
-      }
 
+        if(!row.writingChild9)
+        {
+          results[teacherId].childWritingSkills[rowMonth]++
+        }
+      }
 
     }
+
+
 
     // Calculate the averages in percentages
     // Go through each teacher
@@ -1330,29 +1015,25 @@ class TrendData {
 
       // Go through the months
       for (var i = 0; i < monthsCount; i++) {
-        var tempTotalIntervals = result.totalIntervals[i]
         var tempTotalTeacherIntervals = result.totalTeacherIntervals[i]
-        var tempTotalChildIntervals = result.totalChildIntervals[i]
-
-        result.meaningAverage[i] =
-          result.meaning[i] > 0
-            ? (result.meaning[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
-        result.printProcessesAverage[i] =
-          result.printProcesses[i] > 0
-            ? (result.printProcesses[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
 
         result.writingSkillsAverage[i] =
           tempTotalTeacherIntervals > 0
             ? (result.writingSkills[i] / tempTotalTeacherIntervals).toFixed(2) * 100
             : 0
 
+      }
+
+      // Go through the child months
+      for (var i = 0; i < childObservationDates.length; i++) {
+        var tempTotalChildIntervals = result.totalChildIntervals[i];
+
         result.childWritingSkillsAverage[i] =
           tempTotalChildIntervals > 0
             ? (result.childWritingSkills[i] / tempTotalChildIntervals).toFixed(2) * 100
             : 0
       }
+
     }
 
     return results
@@ -1435,39 +1116,6 @@ class TrendData {
       results[teacherId].multimodalInstruction[rowMonth] += row.multimodal
 
       results[teacherId].bookReading[rowMonth] += row.total - row.literacy11
-
-      // If there were any vocabanswers in this observation
-      /*
-      if( row.literacy1 || row.literacy2 || row.literacy3 )
-      {
-        results[teacherId].vocabFocus[rowMonth]++;
-      }
-      // If there were any Language Connection answers in this observation
-      if( row.literacy4 || row.literacy5 )
-      {
-        results[teacherId].languageConnections[rowMonth]++;
-      }
-      // If there were any Children Support answers in this observation
-      if( row.literacy6 || row.literacy7 || row.literacy8 )
-      {
-        results[teacherId].childrenSupport[rowMonth]++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy9 )
-      {
-        results[teacherId].fairnessDiscussions[rowMonth]++;
-      }
-      // If there were any Fairness Discussion answers in this observation
-      if( row.literacy10 )
-      {
-        results[teacherId].multimodalInstruction[rowMonth]++;
-      }
-      // If there were any answers in this observation
-      if( !row.literacy11 )
-      {
-        results[teacherId].bookReading[rowMonth]++;
-      }
-      */
     }
 
     // Calculate the averages in percentages
@@ -1522,33 +1170,19 @@ class TrendData {
     // Initialize the array that will hold all the data
     var results = {}
 
-    var totalIntervals = 0
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(data.map(item => item.GroupDate.value))];
 
-    // Get start month and year
-    const startMonth = startDate.getMonth()
-
-    const endMonth = endDate.getMonth()
-
-    // Build list of month between start date and end date
-    var tempDate = startDate.toLocaleDateString('en-us', {
-      year: 'numeric',
-      month: 'short',
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     })
 
-    // Set the month after the end date, formatted like Nov 21, 2022
-    var endDatePlusOneMonth = new Date(
-      endDate.setMonth(endDate.getMonth() + 1)
-    ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    var months = []
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate)
-      tempDate = new Date(tempDate)
-      tempDate = new Date(
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    }
-
-    var monthsCount = months.length
+    var monthsCount = observationDates.length
 
     // Add each teacher to the object
     var tempName = teacher.firstName + ' ' + teacher.lastName
@@ -1556,40 +1190,26 @@ class TrendData {
     results[teacher.id] = {
       name: tempName,
       totalIntervals: new Array(monthsCount).fill(0),
-      totalInstructions: new Array(monthsCount).fill(0),
       languageEnvironment: new Array(monthsCount).fill(0),
-      talk: new Array(monthsCount).fill(0),
-      encourageChildren: new Array(monthsCount).fill(0),
-      respondChildren: new Array(monthsCount).fill(0),
 
       languageEnvironmentAverage: new Array(monthsCount).fill(0),
-      talkAverage: new Array(monthsCount).fill(0),
-      encourageChildrenAverage: new Array(monthsCount).fill(0),
-      respondChildrenAverage: new Array(monthsCount).fill(0),
 
-      lineChartLabels: months,
+      lineChartLabels: observationDatesFormatted,
     }
 
-    // Sort by date just in case
-    data.sort(function(a, b) {
-      return new Date(b.GroupDate.value) - new Date(a.GroupDate.value)
-    })
 
-    // Get number of instances for each type of data
-    var tempIntervalData = 0
-    var prevMonth = 0,
-      rowMonth = startMonth
 
+    // Go through data from BQ
     for (var rowIndex in data) {
       var row = data[rowIndex]
 
       var teacherId = teacher.id
 
-      //rowMonth = new Date(row.GroupDate.value).getMonth();
-      rowMonth = months.indexOf(
-        new Date(row.GroupDate.value).toLocaleDateString('en-us', {
+      let rowMonth = observationDatesFormatted.indexOf(
+        new Date(row.GroupDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {
           year: 'numeric',
           month: 'short',
+          day: 'numeric',
         })
       )
 
@@ -1597,29 +1217,6 @@ class TrendData {
       results[teacherId].totalIntervals[rowMonth] += row.total
 
       // Add to behavior types
-
-      // Calculate the total Number of instructions
-      results[teacherId].totalInstructions[rowMonth] +=
-        row.literacy1 +
-        row.literacy2 +
-        row.literacy3 +
-        row.literacy4 +
-        row.literacy5 +
-        row.literacy6 +
-        row.literacy7
-
-      // If there were any "Talk with children about vocabulary or social-emotional topics" in this observation
-      if (row.literacy1 || row.literacy2) {
-        results[teacherId].talk[rowMonth]++
-      }
-      // If there were any "Encourage Children to talk" answers in this observation
-      if (row.literacy3 || row.literacy4 || row.literacy5) {
-        results[teacherId].encourageChildren[rowMonth]++
-      }
-      // If there were any "Respond to children" answers in this observation
-      if (row.literacy6 || row.literacy7 || row.literacy8) {
-        results[teacherId].respondChildren[rowMonth]++
-      }
 
       // If there were any answers in this observation
       if (!row.literacy9) {
@@ -1634,22 +1231,7 @@ class TrendData {
 
       // Go through the months
       for (var i = 0; i < monthsCount; i++) {
-        var tempTotalInstructions = result.totalInstructions[i]
         var tempTotalIntervals = result.totalIntervals[i]
-
-        result.talkAverage[i] =
-          result.talk[i] > 0
-            ? (result.talk[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
-        result.encourageChildrenAverage[i] =
-          result.encourageChildren[i] > 0
-            ? (result.encourageChildren[i] / tempTotalIntervals).toFixed(2) *
-              100
-            : 0
-        result.respondChildrenAverage[i] =
-          result.respondChildren[i] > 0
-            ? (result.respondChildren[i] / tempTotalIntervals).toFixed(2) * 100
-            : 0
 
         result.languageEnvironmentAverage[i] =
           tempTotalIntervals > 0
@@ -1663,51 +1245,101 @@ class TrendData {
   }
 
   /*
-   * Language Environment
+   * Associative and Cooperative
    */
   calculateACTrends = (data, teacher, startDate, endDate) => {
     let results = {};
-    let tempDate = startDate.toLocaleDateString('enm-us', {year: "numeric", month: "short"});
-    let endDatePlusOneMonth = new Date(endDate.setMonth(endDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
-    let months = [];
-    while (tempDate !== endDatePlusOneMonth) {
-      months.push(tempDate);
-      tempDate = new Date(tempDate);
-      tempDate = new Date(tempDate.setMonth(tempDate.getMonth() + 1)).toLocaleDateString('en-us', {year: "numeric", month: "short"});
-    }
 
-    let monthsCount = months.length;
+    // Seperate the teacher data so if 'teacher behaviors' is selected, it only shows dates where teacher observations were conducted
+    var teacherData = data.filter(item => {return item.peopleType == 3});
+    var childData = data.filter(item => {return item.peopleType == 2 || item.peopleType == 3});
+
+    // Get all the dates that had an observation
+    var observationDates = [...new Set(childData.map(item => item.GroupDate.value))]
+    var teacherObservationDates = [...new Set(teacherData.map(item => item.GroupDate.value))]
+
+    // Format the dates
+    var observationDatesFormatted = observationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
+    var teacherObservationDatesFormatted = teacherObservationDates.map(o => {
+      return new Date(o.replace(/-/g, '/')).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    })
+
+
+    let monthsCount = observationDates.length;
     results[teacher.id] = {
       name: `${teacher.firstName} ${teacher.lastName}`,
       totalSupport: new Array(monthsCount).fill(0),
-      totalIntervals: new Array(monthsCount).fill(0),
-      teacherSupport: new Array(monthsCount).fill(0),
-      ac: new Array(monthsCount).fill(0),
-      noSupport: new Array(monthsCount).fill(0),
-      noAC: new Array(monthsCount).fill(0),
-      lineChartLabels: months
+
+      teacherIntervals: new Array(teacherObservationDates.length).fill(0),
+      teacherSupport: new Array(teacherObservationDates.length).fill(0),
+      teacherSupportAverage: new Array(teacherObservationDates.length).fill(0),
+
+      childIntervals: new Array(monthsCount).fill(0),
+      childSupport: new Array(monthsCount).fill(0),
+      childSupportAverage: new Array(monthsCount).fill(0),
+
+      lineChartLabels: observationDatesFormatted,
+      teacherLineChartLabels: teacherObservationDatesFormatted
     };
 
+    let rowMonth;
     for (let rowIndex in data) {
       let row = data[rowIndex];
       let teacherId = teacher.id;
-      let rowMonth = months.indexOf(new Date(row.startDate).toLocaleDateString('en-us', {year: "numeric", month: "short"}));
 
-      if (row.peopleType === 3) {
-        if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
-          results[teacherId].teacherSupport[rowMonth]++
-        } else if (row.teacher1 === 0 && row.teacher2 === 0 && row.teacher3 === 0 && row.teacher4 === 0) {
-          results[teacherId].noSupport[rowMonth]++
-        }
-        results[teacherId].totalSupport[rowMonth]++
+      var formattedDate = new Date(row.GroupDate.value.replace(/-/g, '/')).toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
+
+      if (row.peopleType == 3)
+      {
+          rowMonth = teacherObservationDatesFormatted.indexOf(formattedDate);
+
+          // Increment teacher interval count
+          results[teacher.id].teacherIntervals[rowMonth]++;
+
+          // If there is any data increment the support
+          if(!row.teacher5)
+          {
+            results[teacher.id].teacherSupport[rowMonth]++;
+          }
+
+          // Switch to get the index of the child month
+          rowMonth = observationDatesFormatted.indexOf(formattedDate);
+
+          // Increment teacher interval count
+          results[teacher.id].childIntervals[rowMonth]++
+
+          // If there is any data increment the child support
+          if(!row.child5)
+          {
+            results[teacher.id].childSupport[rowMonth]++;
+          }
       }
-      if (row.peopleType === 2 || row.peopleType === 3) {
-        if (row.child1 || row.child2 || row.child3 || row.child4) {
-          results[teacherId].ac[rowMonth]++
-        } else if (row.child1 === 0 && row.child2 === 0 && row.child3 === 0 && row.child4 === 0) {
-          results[teacherId].noAC[rowMonth]++
+      if (row.peopleType == 2)
+      {
+        rowMonth = observationDatesFormatted.indexOf(formattedDate);
+
+        // Increment just child count
+        results[teacher.id].childIntervals[rowMonth]++;
+
+        // If there is any data increment the support
+        if(!row.child5)
+        {
+          results[teacher.id].childSupport[rowMonth]++;
         }
-        results[teacherId].totalIntervals[rowMonth]++
       }
 
     }
@@ -1715,205 +1347,22 @@ class TrendData {
     for (let resultsIndex in results) {
       let result = results[resultsIndex];
 
-      for (let i = 0; i < monthsCount; i++) {
-        result.teacherSupport[i] = parseFloat((result.teacherSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
-        result.ac[i] = parseFloat((result.ac[i] / result.totalIntervals[i]).toFixed(2)) * 100;
-        result.noSupport[i] = parseFloat((result.noSupport[i] / result.totalSupport[i]).toFixed(2)) * 100;
-        result.noAC[i] = parseFloat((result.noAC[i] / result.totalIntervals[i]).toFixed(2)) * 100;
+      // Calculate the teacher average for each month availabe
+      for (let i = 0; i < teacherObservationDates.length; i++) {
+        result.teacherSupportAverage[i] = parseFloat((result.teacherSupport[i] / result.teacherIntervals[i]).toFixed(2)) * 100;
 
-        if (isNaN(result.teacherSupport[i])) {
-          result.teacherSupport[i] = null
-        }
-        if (isNaN(result.noSupport[i])) {
-          result.noSupport[i] = 0
-        }
-        if (isNaN(result.ac[i])) {
-          result.ac[i] = null
-        }
-        if (isNaN(result.noAC[i])) {
-          result.noAC[i] = 0
-        }
+      }
+
+      // Calculate the child average for each month availabe
+      for (let i = 0; i < monthsCount; i++)
+      {
+        result.childSupportAverage[i] = parseFloat((result.childSupport[i] / result.childIntervals[i]).toFixed(2)) * 100;
       }
     }
 
     console.log(results)
     return results;
-    // // Initialize the array that will hold all the data
-    // var results = {}
 
-    // // Get start month and year
-    // const startMonth = startDate.getMonth()
-
-    // const endMonth = endDate.getMonth()
-
-    // // Build list of month between start date and end date
-    // var tempDate = startDate.toLocaleDateString('en-us', {
-    //   year: 'numeric',
-    //   month: 'short',
-    // })
-
-    // // Set the month after the end date, formatted like Nov 21, 2022
-    // var endDatePlusOneMonth = new Date(
-    //   endDate.setMonth(endDate.getMonth() + 1)
-    // ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    // var months = []
-    // while (tempDate !== endDatePlusOneMonth) {
-    //   months.push(tempDate)
-    //   tempDate = new Date(tempDate)
-    //   tempDate = new Date(
-    //     tempDate.setMonth(tempDate.getMonth() + 1)
-    //   ).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
-    // }
-
-    // var monthsCount = months.length
-
-    // // Add each teacher to the object
-    // var tempName = teacher.firstName + ' ' + teacher.lastName
-
-    // results[teacher.id] = {
-    //   name: tempName,
-    //   totalIntervals: new Array(monthsCount).fill(0),
-    //   totalInstructions: new Array(monthsCount).fill(0),
-
-    //   childrensPlay: new Array(monthsCount).fill(0),
-    //   askingQuestions: new Array(monthsCount).fill(0),
-    //   encouragingChildren: new Array(monthsCount).fill(0),
-    //   helpingChildren: new Array(monthsCount).fill(0),
-
-    //   support: new Array(monthsCount).fill(0),
-    //   noSupport: new Array(monthsCount).fill(0),
-    //   notAtCenter: new Array(monthsCount).fill(0),
-
-    //   childrensPlayAverage: new Array(monthsCount).fill(0),
-    //   askingQuestionsAverage: new Array(monthsCount).fill(0),
-    //   encouragingChildrenAverage: new Array(monthsCount).fill(0),
-    //   helpingChildrenAverage: new Array(monthsCount).fill(0),
-
-    //   supportAverage: new Array(monthsCount).fill(0),
-    //   noSupportAverage: new Array(monthsCount).fill(0),
-    //   notAtCenterAverage: new Array(monthsCount).fill(0),
-
-    //   lineChartLabels: months,
-    // }
-
-    // // Sort by date just in case
-    // data.sort(function(a, b) {
-    //   return new Date(b.GroupDate.value) - new Date(a.GroupDate.value)
-    // })
-
-    // // Get number of instances for each type of data
-    // var tempIntervalData = 0
-    // var prevMonth = 0,
-    //   rowMonth = startMonth
-
-    // for (var rowIndex in data) {
-    //   var row = data[rowIndex]
-
-    //   var teacherId = teacher.id
-
-    //   //rowMonth = new Date(row.GroupDate.value).getMonth();
-    //   rowMonth = months.indexOf(
-    //     new Date(row.GroupDate.value).toLocaleDateString('en-us', {
-    //       year: 'numeric',
-    //       month: 'short',
-    //     })
-    //   )
-
-    //   // Add to total # of intervals
-    //   results[teacherId].totalIntervals[rowMonth] += row.total
-    //   //results[teacherId].totalIntervals[rowMonth]++;
-
-    //   // Add to behavior types
-
-    //   // Calculate the total Number of instructions
-    //   results[teacherId].totalInstructions[rowMonth] +=
-    //     row.literacy1 +
-    //     row.literacy2 +
-    //     row.literacy3 +
-    //     row.literacy4 +
-    //     row.literacy5 +
-    //     row.literacy6 +
-    //     row.literacy7
-
-    //   // If there were any "Participating in children's play" in this observation
-    //   if (row.teacher1) {
-    //     results[teacherId].childrensPlay[rowMonth]++
-    //   }
-    //   // If there were any "Asking questions to extend children's thinking about their shared activity" answers in this observation
-    //   if (row.teacher2) {
-    //     results[teacherId].askingQuestions[rowMonth]++
-    //   }
-    //   // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-    //   if (row.teacher3) {
-    //     results[teacherId].encouragingChildren[rowMonth]++
-    //   }
-    //   // If there were any "Encouraging children to share, work, or interact with each other" answers in this observation
-    //   if (row.teacher4) {
-    //     results[teacherId].helpingChildren[rowMonth]++
-    //   }
-
-    //   // Check for act types
-    //   // If teacher was there
-    //   if (row.peopleType == 3) {
-    //     // Check for support
-    //     if (row.teacher1 || row.teacher2 || row.teacher3 || row.teacher4) {
-    //       results[teacherId].support[rowMonth]++
-    //     }
-    //     // If there was no support
-    //     else {
-    //       results[teacherId].noSupport[rowMonth]++
-    //     }
-    //   }
-    //   // Teacher not there
-    //   else {
-    //     results[teacherId].notAtCenter[rowMonth]++
-    //   }
-    // }
-
-    // // Calculate the averages in percentages
-    // // Go through each teacher
-    // for (var resultsIndex in results) {
-    //   var result = results[resultsIndex]
-
-    //   // Go through the months
-    //   for (var i = 0; i < monthsCount; i++) {
-    //     var tempTotalInstructions = result.totalInstructions[i]
-    //     var tempTotalIntervals = result.totalIntervals[i]
-
-    //     result.childrensPlayAverage[i] =
-    //       result.childrensPlay[i] > 0
-    //         ? (result.childrensPlay[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-    //     result.askingQuestionsAverage[i] =
-    //       result.askingQuestions[i] > 0
-    //         ? (result.askingQuestions[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-    //     result.encouragingChildrenAverage[i] =
-    //       result.encouragingChildren[i] > 0
-    //         ? (result.encouragingChildren[i] / tempTotalIntervals).toFixed(2) *
-    //           100
-    //         : 0
-    //     result.helpingChildrenAverage[i] =
-    //       result.helpingChildren[i] > 0
-    //         ? (result.helpingChildren[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-
-    //     result.supportAverage[i] =
-    //       result.support[i] > 0
-    //         ? (result.support[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-    //     result.noSupportAverage[i] =
-    //       result.noSupport[i] > 0
-    //         ? (result.noSupport[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-    //     result.notAtCenterAverage[i] =
-    //       result.notAtCenter[i] > 0
-    //         ? (result.notAtCenter[i] / tempTotalIntervals).toFixed(2) * 100
-    //         : 0
-    //   }
-    // }
-
-    // return results
   }
 }
 

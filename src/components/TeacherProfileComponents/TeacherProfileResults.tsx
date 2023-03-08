@@ -551,7 +551,6 @@ class TeacherProfileResults extends React.Component {
           this.props.startDate,
           endDate
         )
-        this.setState({ chartsTitle: 'Teacher Support for Math' })
         break
       case 'levelOfInstruction':
         averages = this.state.averagesClass.calculateLevelInstructionAverages(
@@ -997,7 +996,6 @@ class TeacherProfileResults extends React.Component {
     const originalLineGraphsObservationTypes = [
       'studentEngagement',
       'levelOfInstruction',
-      'mathInstruction',
       'classroomClimate',
     ]
 
