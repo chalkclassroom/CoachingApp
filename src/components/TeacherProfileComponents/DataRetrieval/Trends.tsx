@@ -85,7 +85,7 @@ class TrendData {
           result.total[i] > 0
             ? (result.total[i] / result.observationTotalTime[i]).toFixed(2) * 100
             : 0
-
+        result.transitionTimeAverage[i] = Math.round(result.transitionTimeAverage[i])
       }
     }
 

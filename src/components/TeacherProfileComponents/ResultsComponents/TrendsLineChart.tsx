@@ -211,7 +211,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
       <>
         <div style={
           {
-            border: 'solid 1px #eee',
+            // border: 'solid 1px #eee',
             padding: 20,
             width: '100%',
             minHeight:500,

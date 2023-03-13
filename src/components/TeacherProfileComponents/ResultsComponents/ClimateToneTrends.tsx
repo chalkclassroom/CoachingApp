@@ -12,9 +12,9 @@ class ClimateToneTrends extends React.Component {
 
   render(){
     return(
-      <div style={{width: '86%', display: 'flex', position: 'relative', justifyContent: 'flex-start'}}>
-        <div style={{position: 'absolute', left: '-80px'}}>
-          <h4>Teacher Tone</h4>
+      <div style={{width: '100%', display: 'flex', position: 'relative', justifyContent: 'flex-start'}}>
+        <div style={{position: 'absolute', left: '-25px'}}>
+          <h4>Tone</h4>
         </div>
         <div style={{width: 'calc(100% - 67px)', display: 'flex', flexDirection: 'row', transform: 'translateX(42px)'}}>
           {this.props.toneAverageTrend.map(
