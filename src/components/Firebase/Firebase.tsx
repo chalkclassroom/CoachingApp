@@ -4429,6 +4429,9 @@ class Firebase {
       let docSnapshot = await this.db.collection('users').doc(coach.id).get()
       if(docSnapshot.exists)
       {
+        if (coach.data().sites === undefined) {
+          await this.db.collection('users').doc(coach.id).update({sites: []})
+        }
         const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
         let draft = {
           id: coach.id,

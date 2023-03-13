@@ -1195,14 +1195,37 @@ class TeacherProfileResults extends React.Component {
                   }}
                 >
                   <Grid container style={{ minHeight: 500, width: '86%' }}>
+                  <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: this.state.lineGraphData.labels.length > 12 ? 'scroll' : 'hidden', maxWidth: '70vw', border: 'solid 1px #eee'}}>
+                    <div className={"realChart"} style={{width: this.state.lineGraphData.labels.length > 12 ? 300 + this.state.lineGraphData.labels.length * 80 : '70vw'}}>
 
                   {/* Use the original line graph or the new one (TrensLineChart) */}
-                  {originalLineGraphsObservationTypes.includes(this.props.observationType) ?
-                    <Line
-                      data={this.state.lineGraphData}
-                      options={lineGraphOptions}
-                    />
-                    :
+                  {originalLineGraphsObservationTypes.includes(this.props.observationType) ? (
+                    <div style={
+                      {
+                        // border: 'solid 1px #eee',
+                        padding: 20,
+                        width: '100%',
+                        minHeight:500,
+                      }
+                    }>
+                      {/* <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> */}
+                      <div style={{width: '100%', minHeight:500, marginBottom: 20}}>
+                        <Line
+                          data={this.state.lineGraphData}
+                          options={lineGraphOptions}
+                        />
+                        {/*
+                          The tone ratings for the classroom climate observations Trends chart
+                        */}
+                        {this.props.observationType == 'classroomClimate' ? (
+                          <ClimateToneTrends
+                            toneAverageTrend={this.state.toneAverageTrend}
+                            toneCount={this.state.toneCount}
+                          />
+                        ) : null}
+                      </div>
+                    </div>
+                  ) :
                     <TrendsLineChart
                       data={this.state.trends}
                       teacherId={this.props.selectedTeacherId}
@@ -1210,6 +1233,8 @@ class TeacherProfileResults extends React.Component {
                       radioValue={this.state.radioValue}
                     />
                   }
+                    </div>
+                  </div>
                   </Grid>
 
                   {/*
@@ -1219,15 +1244,7 @@ class TeacherProfileResults extends React.Component {
                     <h4 style={{ fontWeight: 400 }}>{titleUnderTrendsChart}</h4>
                   ) : null}
 
-                  {/*
-                    The tone ratings for the classroom climate observations Trends chart
-                  */}
-                  {this.props.observationType == 'classroomClimate' ? (
-                    <ClimateToneTrends
-                      toneAverageTrend={this.state.toneAverageTrend}
-                      toneCount={this.state.toneCount}
-                    />
-                  ) : null}
+                  
                 </Grid>
               ) : null}
 
