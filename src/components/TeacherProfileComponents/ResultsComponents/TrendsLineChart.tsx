@@ -57,6 +57,10 @@ class TrendsLineChart extends React.Component<Props, {}> {
 
     let teacherData = this.props.data[this.props.teacherId];
 
+    let labels = teacherData.lineChartLabels
+
+    let heading = "Teacher Behaviors";
+
     let trendsLabels, trendsData, lineColors;
     let borderDash = [0,0];
     switch (this.props.observationType)
@@ -79,6 +83,22 @@ class TrendsLineChart extends React.Component<Props, {}> {
         lineColors = ["#07DFBB", "#E94635"]
         break;
 
+      case "mathInstruction":
+        trendsLabels = this.props.radioValue == "teacherMathBehavior" ?
+          ["Teacher Not at Center", "No Support", "Teacher Support"] :
+          ["Non-Math Activities", "Math"]
+        trendsData = this.props.radioValue == "teacherMathBehavior" ?
+          [teacherData.notAtCenterMathAverage, teacherData.noSupportMathAverage, teacherData.supportMathAverage] :
+          [teacherData.childNonMathAverage, teacherData.childMathAverage]
+        lineColors = this.props.radioValue == "teacherMathBehavior" ?
+          ["#BABABA", "#EC2409", "#459AEB"] :
+          ["#EC2409", "#094492"];
+        heading = "Teacher Support for Math";
+        labels = this.props.radioValue == "teacherMathBehavior" ?
+          teacherData.teacherLineChartLabels :
+          teacherData.lineChartLabels;
+        break;
+
       case "foundationSkills":
         trendsLabels = this.props.radioValue == "teacherAverage" ? ["Foundational Skills Instruction", "No Target Behaviors Observed"] : ["Engaged in Foundational Skills Activities", "Engaged in Other Activities"];
         trendsData = this.props.radioValue == "teacherAverage" ?
@@ -86,6 +106,10 @@ class TrendsLineChart extends React.Component<Props, {}> {
           :
           [teacherData.childEngagedAverage, teacherData.childEngagedAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = ["#C00000", "#BFBFBF"]
+
+        labels = this.props.radioValue == "teacherAverage" ?
+          teacherData.lineChartLabels :
+          teacherData.childLineChartLabels;
         break;
 
       case "writing":
@@ -94,7 +118,10 @@ class TrendsLineChart extends React.Component<Props, {}> {
           [teacherData.writingSkillsAverage, teacherData.writingSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
           :
           [teacherData.childWritingSkillsAverage, teacherData.childWritingSkillsAverage.map(x => {return x !== null ?  100 - x : null})]
-        lineColors = ["#C00000", "#BFBFBF"]
+        lineColors = ["#C00000", "#BFBFBF"];
+        labels = this.props.radioValue == "teacherAverage" ?
+          teacherData.lineChartLabels :
+          teacherData.childLineChartLabels;
         break;
 
       case "languageEnvironment":
@@ -111,16 +138,22 @@ class TrendsLineChart extends React.Component<Props, {}> {
           [teacherData.childNonSequentialActivitiesAverage.map(x => {return x !== null ?  100 - x : null}), teacherData.childNonSequentialActivitiesAverage]
         lineColors = this.props.radioValue == "teacherAverage" ? ["#5B9BD5", "#FF0000"] : ["#FFCE33", "#FF0000"]
         borderDash = [10, 5]
+        labels = this.props.radioValue == "teacherAverage" ?
+          teacherData.teacherLineChartLabels :
+          teacherData.lineChartLabels;
         break;
 
       case "associativeAndCooperative":
-        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Support for Associative and Cooperative Interactions", "No Suppoort"] : ["Engaged in Associative and Cooperative Interactions", "Did Not Interact"];
+        trendsLabels = this.props.radioValue == "teacherAverage" ? ["Support for Associative and Cooperative Interactions", "No Support"] : ["Engaged in Associative and Cooperative Interactions", "Did Not Interact"];
         trendsData = this.props.radioValue == "teacherAverage" ?
-          [teacherData.teacherSupport, teacherData.teacherSupport.map(x => {return x !== null ?  100 - x : null})]
+          [teacherData.teacherSupportAverage, teacherData.teacherSupportAverage.map(x => {return x !== null ?  100 - x : null})]
           :
-          [teacherData.ac, teacherData.ac.map(x => {return x !== null ?  100 - x : null})]
+          [teacherData.childSupportAverage, teacherData.childSupportAverage.map(x => {return x !== null ?  100 - x : null})]
         lineColors = this.props.radioValue == "teacherAverage" ? ["#2EB9EB", "#E20000"] : ["#7030A0", "#E20000"]
-        borderDash = [10, 5]
+        borderDash = [10, 5];
+        labels = this.props.radioValue == "teacherAverage" ?
+          teacherData.teacherLineChartLabels :
+          teacherData.lineChartLabels;
         break;
     }
 
@@ -150,8 +183,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
       dataSets.push(tempData);
     }
 
-    // Convert the labels to show year and shortened month
-    const labels = teacherData.lineChartLabels.map(x => { return new Date(x).toLocaleDateString('en-us', { month: 'short', year: 'numeric' }) } )
+
 
     const lineData = {
       // labels: [''].concat(labels, ['']),
@@ -159,7 +191,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
       datasets: dataSets,
     }
 
-    this.setState({data: lineData});
+    this.setState({data: lineData, heading: heading});
   }
 
 
@@ -181,7 +213,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
             minHeight:500,
           }
         }>
-          <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3>
+          <h3 style={{textAlign: 'center', width: '100%'}}>{this.state.heading}</h3>
           <div style={{width: '100%', minHeight:500, marginBottom: 20}}>
             <Line
               data={this.state.data}

@@ -224,7 +224,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       teacher,
                       peopletype,
                       COUNT (sessionStart) AS total,
-                      FORMAT_DATETIME("%b-%Y", timestamp) as timestamp  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
+                      FORMAT_DATETIME("%b-%d-%Y", timestamp) as timestamp  FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and sessionStart <= '${endDate}' and sessionStart >= '${startDate}'
                       GROUP BY teacher, timestamp, peopletype, id
                       ORDER BY timestamp ASC;`;
@@ -484,10 +484,12 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       COUNT(CASE WHEN (checklist.teacher2) THEN 'teacher2' ELSE NULL END) AS teacher2,
                       COUNT(CASE WHEN (checklist.teacher3) THEN 'teacher3' ELSE NULL END) AS teacher3,
                       COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
+                      COUNT(CASE WHEN (checklist.teacher5) THEN 'teacher5' ELSE NULL END) AS teacher5,
                       COUNT(CASE WHEN (checklist.child1) THEN 'child1' ELSE NULL END) AS child1,
                       COUNT(CASE WHEN (checklist.child2) THEN 'child2' ELSE NULL END) AS child2,
                       COUNT(CASE WHEN (checklist.child3) THEN 'child3' ELSE NULL END) AS child3,
                       COUNT(CASE WHEN (checklist.child4) THEN 'child4' ELSE NULL END) AS child4,
+                      COUNT(CASE WHEN (checklist.child5) THEN 'child5' ELSE NULL END) AS child5,
                       COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
                       COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
@@ -497,7 +499,7 @@ exports.fetchTeacherProfileAverages = functions.https.onCall(async (data, contex
                       FROM ${functions.config().env.bq_project}.${functions.config().env.bq_dataset}.${observationType}
                       where teacher = '${teacherId}' and timestamp <= '${endDate}' and timestamp >= '${startDate}'
                       GROUP BY timestamp, GroupDate, peopleType, startDate, teacher, id
-                      ORDER BY GroupDate DESC;`;
+                      ORDER BY GroupDate ASC;`;
     }
 
     console.log("QUERY: ", sqlQuery);
