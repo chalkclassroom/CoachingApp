@@ -153,6 +153,7 @@ class RadioSets extends React.Component<Props, {}> {
                 </FormGroup>
               </FormControl>
             </Grid>
+            <Grid item xs={2}></Grid>
             <Grid item xs={2}>
               <FormControl component="fieldset" className={"checkboxesform"}>
                 <FormGroup>
@@ -175,7 +176,7 @@ class RadioSets extends React.Component<Props, {}> {
         return (
           <Grid container direction="row" justifyContent="center" alignItems="center">
           <Grid item xs></Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
                 <FormControlLabel
@@ -186,6 +187,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs={1}></Grid>
           <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
@@ -374,6 +376,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
@@ -407,6 +410,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
@@ -439,6 +443,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
@@ -571,6 +576,7 @@ class RadioSets extends React.Component<Props, {}> {
               </FormGroup>
             </FormControl>
           </Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={2}>
             <FormControl component="fieldset" className={"checkboxesform"}>
               <FormGroup>
