@@ -3261,201 +3261,118 @@ class Firebase {
     let arr = []
     let observations = {}
     let notes = [];
+    let observationsWithNotesIds = [];
 
-    // Get all the observations and save them to the 'observations' object so we don't have to query them while cycling through the notes
-    await this.db.collection("observations").get().then(async (querySnapshot) => {
-      console.log("[Firebase] Observations Size :: ", querySnapshot.size);
 
-      for(var observationIndex in querySnapshot.docs)
-      {
-          var observationDoc = querySnapshot.docs[observationIndex];
-
-          if(!observationDoc.exists)
-          {
-            continue;
-          }
-
-          const {observedBy, start, teacher, type} = observationDoc.data();
-
-          observations[observationDoc.id] = {
-            id: observationDoc.id,
-            observedBy: observedBy,
-            start: this.convertFirestoreTimestamp(start),
-            teacher: teacher,
-            type: type,
-          }
-      }
-
-    });
-
-    console.log("observations ===> ", observations);
-
-    // Go through all the notes and save all the notes.
     var startTimer = new Date().getTime();
-    return this.db.collectionGroup('notes').get().then( async (querySnapshot) => {
 
-      // Go through each note
-      for(var noteIndex in querySnapshot.docs)
-      {
-          var noteDoc = querySnapshot.docs[noteIndex];
+    // Fetch all the notes to go in the 'notes' array
+    console.log("[Firebase] Fetching Notes...");
+    await this.db.collectionGroup('notes').get()
+      .then( async (querySnapshot) => {
 
-          if(!noteDoc.exists)
-          {
-            console.log("[Firebase] Note doesn't exist.");
-            continue;
-          }
+        // Go through each note
+        for(var noteIndex in querySnapshot.docs)
+        {
+            var noteDoc = querySnapshot.docs[noteIndex];
 
-          // Get the id of the parent observation document
-          var observationId = noteDoc.ref.parent.parent.id;
-
-          // Check to see if we have this observation saved
-          if(!observations[observationId])
-          {
-            continue;
-          }
-
-          // Get the observation info
-          var observation = observations[observationId];
-
-          const { Note, Timestamp } = noteDoc.data();
-
-          // Push info to notes array
-          /*
-          notes.push({
-            content: Note,
-            timestamp: timestamp: this.convertFirestoreTimestamp(Timestamp),
-            observationId: observationId,
-          })
-          */
-
-          // Push the info to the results array
-
-          arr.push({
-            observationId: observation.id,
-            coachId: observation.observedBy,
-            teacherId: observation.teacher,
-            dateModified: observation.start,
-            tool: observation.type,
-            noteId: noteDoc.id,
-            timestamp: this.convertFirestoreTimestamp(Timestamp),
-            content: Note,
-          })
-
-
-
-       }
-
-        var end = new Date().getTime();
-        var time = end - startTimer;
-        console.warn('[Firebase] Query execution time :: ' + time);
-        //console.warn('[Firebase] Note Count 1 :: ' + notesCount);
-        console.warn('[Firebase] Array :: ', arr);
-
-        return arr;
-      });
-
-
-    /*
-    this.query = this.db.collection('observations');
-    const collection = await this.query.get();
-
-    var observationCount = 0;
-    Promise.all(collection.docs.map(async (obs) => {
-      observationCount++;
-      const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = obs.data();
-      const docId = obs.id;
-      this.query = this.db.collection('observations').doc(obs.id).collection('notes');
-      const subCollection = await this.query.get();
-      Promise.all(subCollection.docs.map(async (notes) => {
-        const { Note, Timestamp } = notes.data();
-        const noteId = notes.id;
-        arr.push({
-          observationId: docId,
-          coachId: observedBy,
-          teacherId: teacher,
-          dateModified: this.convertFirestoreTimestamp(start),
-          tool: type,
-          noteId: noteId,
-          timestamp: this.convertFirestoreTimestamp(Timestamp),
-          content: Note,
-        })
-      }))
-    }))
-
-    console.warn("[Firebase] Observation Count :: ", observationCount)
-    console.warn("[Firebase] Array :: ", arr)
-    return arr;
-    */
-
-    // Get all the notes
-
-
-
-
-
-    /*
-    this.query = this.db.collection('observations');
-    let notes = await this.query.get().then( async collection => {
-      let arr: Array<Object> = [];
-      //collection.forEach(doc => {
-      for(var docIndex in collection.docs)
-      {
-        var doc = collection.docs[docIndex];
-
-        const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = doc.data();
-        const docId = doc.id;
-
-        console.log("Doc ID => ", doc.id);
-
-
-        var startParent = new Date().getTime();
-
-        await this.db.collection('observations').doc(docId).collection('notes').get().then(sub => {
-          console.log("sub.docs => ", sub.docs);
-
-          if (sub.docs.length > 0) {
-            for(var subIndex in sub.docs) {
-              var subDoc = sub.docs[subIndex];
-            //sub.forEach(subDoc => {
-              const { Note, Timestamp } = subDoc.data();
-              const noteId = subDoc.id;
-              arr.push({
-                observationId: docId,
-                coachId: observedBy,
-                teacherId: teacher,
-                dateModified: this.convertFirestoreTimestamp(start),
-                tool: type,
-                noteId: noteId,
-                timestamp: this.convertFirestoreTimestamp(Timestamp),
-                content: Note,
-              });
+            if(!noteDoc.exists)
+            {
+              continue;
             }
-            //});
+
+            // Get the id of the parent observation document
+            var observationId = noteDoc.ref.parent.parent.id;
+
+            // Add to the list of observations we need to query
+            observationsWithNotesIds.push(observationId);
+
+            // Get the observation info
+            var observation = observations[observationId];
+
+            const { Note, Timestamp } = noteDoc.data();
+            // Push info to notes array
+            notes.push({
+              content: Note,
+              timestamp: this.convertFirestoreTimestamp(Timestamp),
+              observationId: observationId,
+              noteId: noteDoc.id,
+            })
 
           }
+
+        })
+        .catch(err => {
+          console.error("[Firebase] ERROR :: ", err)
+          return ;
         });
 
-        var endParent = new Date().getTime();
-        var timeParent = endParent - startParent;
-        console.warn('[Firebase] Parent Fetch execution time :: ' + timeParent);
+      // Remove duplicate ids from observationsWithNotesIds
+      observationsWithNotesIds = [...new Set(observationsWithNotesIds)];
 
-        console.log("Arr => ", arr);
+      // Get all the documents with a note in it and put its info in 'observations' array
+      const batches = [];
+      while (observationsWithNotesIds.length) {
 
-      }
-      //});
+       // firestore limits batches to 10
+       const batch = observationsWithNotesIds.splice(0, 10);
+
+       // add the batch request to to a queue
+       batches.push(
+         this.db.collection('observations')
+           .where(firebase.firestore.FieldPath.documentId(), 'in', [...batch] )
+           .get()
+           .then(results => {
+               for(var observationIndex in results.docs)
+               {
+                 let observationDoc = results.docs[observationIndex];
+
+                 if(!observationDoc.exists)
+                 {
+                   continue;
+                 }
+
+                 let observationData = observationDoc.data();
+
+                 // Put info in the observations object
+                 observations[observationDoc.id] = {
+                   coachId: observationData.observedBy,
+                   teacherId: observationData.teacher,
+                   dateModified: this.convertFirestoreTimestamp(observationData.start),
+                   tool: observationData.type,
+                 }
+
+               }
+          })
+      )}
+
+      // Execute all the observation queries
+      await Promise.all(batches);
+
+      // Combine info from the notes and observations to the returning array
+      arr = notes.map( note => {
+
+        var tempObservation = observations[note.observationId];
+
+        return {
+          observationId: note.observationId,
+          coachId: tempObservation.coachId,
+          teacherId: tempObservation.teacherId,
+          dateModified: tempObservation.dateModified,
+          tool: tempObservation.tool,
+          noteId: note.noteId,
+          timestamp: note.timestamp,
+          content: note.content,
+        }
+      });
+
+      var end = new Date().getTime();
+      var time = end - startTimer;
+
+      console.warn('[Firebase] Fetched ' + arr.length + ' notes in :: ' + time + 'ms');
+
       return arr;
-    });
 
-    return notes;
-    */
-
-  }
-
-  getNotesSize = async () => {
-    return this.db.collectionGroup('notes').get().then(function(querySnapshot) {
-      console.log("[Firebase] notes size :: ", querySnapshot.size);
-      return querySnapshot.size;
-    });
   }
 
   getEmailForExport = async () =>  {
@@ -7546,7 +7463,7 @@ class Firebase {
     // })
   }
 
-
+  /*
   observationBomb = async () => {
     let observationCount = 300;
 
@@ -7558,6 +7475,9 @@ class Firebase {
     {
       // Create new doc
       this.sessionRef = this.db.collection('observations').doc();
+
+      console.log("Creating Observation [" + i + "]");
+
 
       // Set the date
       let month = Math.floor(Math.random() * 13);
@@ -7608,6 +7528,7 @@ class Firebase {
 
 
   }
+  */
 
   populateFirebase = async () => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
