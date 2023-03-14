@@ -319,10 +319,16 @@ class NewSitePage extends React.Component<Props, State>{
             </div> )}
 
             {!revelio && (
-                <h2>Please use the site creation located in the Users page site tab. 
-                    Site creation in the Users page requires a program, and site leaders to exist.</h2>
+            <div style={{textAlign: 'center'}}>
+                <h2>Please use the site creation tool located in the Users page site tab. <br/>
+                    Site creation in the Users page requires the following to exist: <br/>
+                    <ul style={{display: 'inline-block', textAlign: 'left'}}>
+                        <li>Program</li>
+                        <li>Site Leader</li>
+                    </ul>
+                </h2>
+            </div>
             )}
-
         </div> 
     }
 }

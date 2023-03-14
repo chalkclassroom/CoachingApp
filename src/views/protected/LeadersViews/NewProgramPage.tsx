@@ -115,7 +115,7 @@ class NewProgramPage extends React.Component<Props, State>{
 
     async save(firebase:Firebase){
 
-        const {
+        let {
           programName,
           selectedSites,
           selectedProgramLeaderList,
@@ -127,6 +127,35 @@ class NewProgramPage extends React.Component<Props, State>{
             alert("Program name is required");
             return;
         }
+
+        let editName = ""
+        let trimName = programName.trim()
+        let splitName = trimName.split(' ')
+        splitName = splitName.filter(word => {return word !== ""})
+        for (let wordIndex in splitName) {
+          let word = splitName[wordIndex]
+          editName += word + ' '
+        }
+        editName = editName.substring(0, editName.length - 1)
+        programName = editName
+
+        let proceed = true;
+        let programs = await firebase.getPrograms()
+
+        if (programs !== undefined) {
+          for (let i = 0; i < programs.length; i++) {
+            if (programs[i]['name'].toLowerCase() === programName.toLowerCase()) {
+              proceed = false;
+              i = programs.length;
+            }
+          }
+        }
+
+        if (!proceed) {
+          alert("Program name already exists")
+          return;
+        }
+
 
         // Create the program
         await firebase.createProgram({ programName, selectedSites: selectedSites})

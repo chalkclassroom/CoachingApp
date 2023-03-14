@@ -462,7 +462,26 @@ class TeacherListPage extends React.Component<Props, State> {
         })
       })
     })
-    const sites = await firebase.getSites()
+    let sites = await firebase.getSites()
+    let user = await firebase.getUserInformation()
+
+    if (['coach', 'siteLeader'].includes(user['role'])) {
+      sites = sites.filter(site => { return user.sites.includes(site['id'])})
+    }
+
+    if (user['role'] == 'programLeader') {
+      let programs = await firebase.getPrograms()
+      programs = programs.filter(program => { return user.programs.includes(program.id)})
+      let checkSites = []
+
+      programs.map(program => {
+        program['sites'].map((site) => checkSites.push(site))
+      })
+
+      sites = sites.filter(site => {return checkSites.includes(site['id'])})
+
+    }
+    
     this.setState({
       teachers: this.props.teacherList,
       sites: sites
