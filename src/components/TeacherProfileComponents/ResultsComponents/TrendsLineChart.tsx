@@ -157,7 +157,11 @@ class TrendsLineChart extends React.Component<Props, {}> {
         break;
     }
 
-
+    // Round off the trends data just in case
+    for(var dataArrIndex in trendsData)
+    {
+        trendsData[dataArrIndex] = trendsData[dataArrIndex].map(i => {return Math.round(i)});
+    }
 
     // Add a zero to the beginning and end of each trends data to account for the space at beginning and end of the graph
     // teacherData = teacherData.map(item => {return [0].concat(item, [0])} );
