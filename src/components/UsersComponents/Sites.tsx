@@ -431,7 +431,7 @@ class Sites extends React.Component<Props, State> {
    */
   async createSite(firebase:Firebase){
 
-    const {
+    let {
       addSiteName,
       addProgramId,
       addSiteLeader
@@ -455,6 +455,17 @@ class Sites extends React.Component<Props, State> {
       alert("Site Leader is required");
       return;
     }
+
+    let editName = ""
+    let trimName = addSiteName.trim()
+    let splitName = trimName.split(' ')
+    splitName = splitName.filter(word => {return word !== ""})
+    for (let wordIndex in splitName) {
+      let word = splitName[wordIndex]
+      editName += word + ' '
+    }
+    editName = editName.substring(0, editName.length - 1)
+    addSiteName = editName
 
     let siteInfo = {
       siteName: addSiteName,

@@ -3256,32 +3256,123 @@ class Firebase {
 
   getNotesForExport = async () => {
 
+    console.log("Start Notes export...");
+
     let arr = []
-    this.query = this.db.collection('observations');
-    const collection = await this.query.get();
+    let observations = {}
+    let notes = [];
+    let observationsWithNotesIds = [];
 
-    Promise.all(collection.docs.map(async (obs) => {
-      const { activitySetting, checklist, completed, end, observedBy, start, teacher, timezone, type} = obs.data();
-      const docId = obs.id;
-      this.query = this.db.collection('observations').doc(obs.id).collection('notes');
-      const subCollection = await this.query.get();
-      Promise.all(subCollection.docs.map(async (notes) => {
-        const { Note, Timestamp } = notes.data();
-        const noteId = notes.id;
-        arr.push({
-          observationId: docId,
-          coachId: observedBy,
-          teacherId: teacher,
-          dateModified: this.convertFirestoreTimestamp(start),
-          tool: type,
-          noteId: noteId,
-          timestamp: this.convertFirestoreTimestamp(Timestamp),
-          content: Note,
+
+    var startTimer = new Date().getTime();
+
+    // Fetch all the notes to go in the 'notes' array
+    console.log("[Firebase] Fetching Notes...");
+    await this.db.collectionGroup('notes').get()
+      .then( async (querySnapshot) => {
+
+        // Go through each note
+        for(var noteIndex in querySnapshot.docs)
+        {
+            var noteDoc = querySnapshot.docs[noteIndex];
+
+            if(!noteDoc.exists)
+            {
+              continue;
+            }
+
+            // Get the id of the parent observation document
+            var observationId = noteDoc.ref.parent.parent.id;
+
+            // Add to the list of observations we need to query
+            observationsWithNotesIds.push(observationId);
+
+            // Get the observation info
+            var observation = observations[observationId];
+
+            const { Note, Timestamp } = noteDoc.data();
+            // Push info to notes array
+            notes.push({
+              content: Note,
+              timestamp: this.convertFirestoreTimestamp(Timestamp),
+              observationId: observationId,
+              noteId: noteDoc.id,
+            })
+
+          }
+
         })
-      }))
-    }))
+        .catch(err => {
+          console.error("[Firebase] ERROR :: ", err)
+          return ;
+        });
 
-    return await arr
+      // Remove duplicate ids from observationsWithNotesIds
+      observationsWithNotesIds = [...new Set(observationsWithNotesIds)];
+
+      // Get all the documents with a note in it and put its info in 'observations' array
+      const batches = [];
+      while (observationsWithNotesIds.length) {
+
+       // firestore limits batches to 10
+       const batch = observationsWithNotesIds.splice(0, 10);
+
+       // add the batch request to to a queue
+       batches.push(
+         this.db.collection('observations')
+           .where(firebase.firestore.FieldPath.documentId(), 'in', [...batch] )
+           .get()
+           .then(results => {
+               for(var observationIndex in results.docs)
+               {
+                 let observationDoc = results.docs[observationIndex];
+
+                 if(!observationDoc.exists)
+                 {
+                   continue;
+                 }
+
+                 let observationData = observationDoc.data();
+
+                 // Put info in the observations object
+                 observations[observationDoc.id] = {
+                   coachId: observationData.observedBy,
+                   teacherId: observationData.teacher,
+                   dateModified: this.convertFirestoreTimestamp(observationData.start),
+                   tool: observationData.type,
+                 }
+
+               }
+          })
+      )}
+
+      // Execute all the observation queries
+      await Promise.all(batches);
+
+      // Combine info from the notes and observations to the returning array
+      arr = notes.map( note => {
+
+        var tempObservation = observations[note.observationId];
+
+        return {
+          observationId: note.observationId,
+          coachId: tempObservation.coachId,
+          teacherId: tempObservation.teacherId,
+          dateModified: tempObservation.dateModified,
+          tool: tempObservation.tool,
+          noteId: note.noteId,
+          timestamp: note.timestamp,
+          content: note.content,
+        }
+      });
+
+      var end = new Date().getTime();
+      var time = end - startTimer;
+
+      console.warn('[Firebase] Fetched ' + arr.length + ' notes in :: ' + time + 'ms');
+
+      return arr;
+
   }
 
   getEmailForExport = async () =>  {
@@ -4363,11 +4454,11 @@ class Firebase {
   }
 
   /**
-   * 
+   *
    * @brief Retrieves the sites associated with a coach based on the coach's ID
-   * 
+   *
    * @param coachId the ID of the coach whose sites are to be retrieved
-   * 
+   *
    * @return Returns an array of objects containing the name and ID of each site associated with the coach
    */
   fetchSitesForCoach = async (coachId: string) => {
@@ -4390,12 +4481,12 @@ class Firebase {
     }
     return result;
   }
-  
+
   /**
    * @brief Retrieves a list of teachers by their associated site name
-   * 
+   *
    * @param siteName The name of the site to filter teachers by
-   * 
+   *
    * @returns A promise that resolves to an array of objects containing the first name, last name, and id of each teacher associated with the given site name
    */
   getTeacherBySiteName = async (siteName: string) => {
@@ -4413,11 +4504,11 @@ class Firebase {
 
   /**
    *  @brief  Retrieves all coaches and their respective partners (teachers) from the Firebase Firestore.
-   * 
+   *
    *  This function retrieves all coaches in the 'users' collection where the 'role' field is equal to 'coach'.
    *  It then retrieves all of the partners (teachers) of each coach through the 'partners' sub-collection.
    *  The coach and partner data is then added to a result array and returned.
-   * 
+   *
    *  @return Array of objects representing coaches and their partners.
    */
   getAllCoachesPartners = async () => {
@@ -4429,6 +4520,9 @@ class Firebase {
       let docSnapshot = await this.db.collection('users').doc(coach.id).get()
       if(docSnapshot.exists)
       {
+        if (coach.data().sites === undefined) {
+          await this.db.collection('users').doc(coach.id).update({sites: []})
+        }
         const subCollection = await this.db.collection('users').doc(coach.id).collection('partners').get();
         let draft = {
           id: coach.id,
@@ -4450,7 +4544,7 @@ class Firebase {
     return result
   }
 
-  /** 
+  /**
   * @brief Retrieves all teachers in the "users" collection in the database, and pushes each teacher's data to the result array.
   *
   * @returns {Array} - Result array containing all teachers' data.
@@ -4481,7 +4575,7 @@ class Firebase {
 
   /**
    * @brief This function gets all the data of teachers from the Firebase Firestore database.
-   * 
+   *
    * @returns {Array} arr - An array of objects containing the coach and teacher data
    */
   getTeacherData = async () => {
@@ -4581,10 +4675,10 @@ class Firebase {
     }
   }
 
-  
+
   /**
-  * 
-  * @brief This function is used to transfer a teacher from the original coach to a new coach. 
+  *
+  * @brief This function is used to transfer a teacher from the original coach to a new coach.
   * @param teacherId is the id of the teacher to be transferred.
   * @param originalCoach is the id of the original coach.
   * @param newCoach is the id of the new coach.
@@ -6918,7 +7012,7 @@ class Firebase {
     for (let index in teacherId) {
       await this.db.collection('users').doc(user).collection('partners').doc(teacherId[index]).set({});
     }
-    
+
 
     // console.log(`Creating Writing observation for ${user} observing bathory...`)
     // const entryNumber: number = Math.floor(Math.random() * 10);
@@ -6953,7 +7047,7 @@ class Firebase {
     // }
     // this.sessionRef.set(observationInfo)
     // this.sessionRef = null;
-    
+
     // console.log(`Creating Foundational observation for ${user} observing bathory...`)
     // const entryNumber: number = Math.floor(Math.random() * 10);
     // const observationInfo = {
@@ -7021,7 +7115,7 @@ class Firebase {
     // }
     // this.sessionRef.set(observationInfo)
     // this.sessionRef = null;
-    
+
     // console.log(`Creating AC observation for ${user} observing bathory...`)
     // const entryNumber: number = Math.floor(Math.random() * 10);
     // const observationInfo = {
@@ -7044,7 +7138,7 @@ class Firebase {
 
     //   maxChild = customType == 1 ? 0 : Math.floor(Math.random() * 3) + 1
 
-    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1
 
     //   let choicesChild: Array<number> = [2, 3, 4]
     //   let choicesTeacher: Array<number> = [6, 7, 8, 9]
@@ -7097,7 +7191,7 @@ class Firebase {
 
     //   maxChild = Math.floor(Math.random() * 5)
 
-    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1
 
     //   let choicesChild: Array<number> = [1, 2, 3, 4]
     //   let choicesTeacher: Array<number> = [6, 7, 8, 9]
@@ -7276,7 +7370,7 @@ class Firebase {
 
     //   maxChild = Math.floor(Math.random() * 5)
 
-    //   maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+    //   maxTeacher = customType !== 3 ? 0 : Mgath.floor(Math.random() * 4) + 1
 
     //   let choicesChild: Array<number> = [1, 2, 3, 4]
     //   let choicesTeacher: Array<number> = [6, 7, 8, 9]
@@ -7368,6 +7462,73 @@ class Firebase {
     //   window.location.reload()
     // })
   }
+
+  /*
+  observationBomb = async () => {
+    let observationCount = 300;
+
+    // Array to get random observation type
+    const observationTypes = ['transition', 'math', 'listening', 'climate', 'AC', 'level', 'LI'];
+
+    // Set the new documents
+    for(var i = 0; i < observationCount; i++)
+    {
+      // Create new doc
+      this.sessionRef = this.db.collection('observations').doc();
+
+      console.log("Creating Observation [" + i + "]");
+
+
+      // Set the date
+      let month = Math.floor(Math.random() * 13);
+      const entryNumber: number = Math.floor(Math.random() * 10);
+      let date = new Date();
+      date.setMonth(date.getMonth() - month)
+
+      let endDate = new Date();
+      endDate.setMonth(endDate.getMonth() - month)
+      endDate.setMinutes(endDate.getMinutes() + ((Math.random() * 6) + entryNumber ))
+
+      // Set the notes for this document
+      let noteCollection = this.sessionRef.collection('notes')
+      let noteCount = Math.floor(Math.random() * 5);
+      for(let j = 0; j < noteCount; j++)
+      {
+        let timeStamp = new Date()
+        timeStamp = endDate
+        timeStamp.setMinutes(date.getMinutes())
+        let TrnStart = date.toISOString()
+        date.setMinutes(date.getMinutes() + 1)
+        let TrnEnd = date.toISOString()
+        noteCollection.add({
+          Timestamp:  firebase.firestore.Timestamp.fromDate(timeStamp),
+          Note: `This is a note! [${i}][${j}]`
+        });
+      }
+
+      const observationInfo = {
+        start: firebase.firestore.Timestamp.fromDate(date),
+        end: firebase.firestore.Timestamp.fromDate(endDate),
+        type: observationTypes[Math.floor(Math.random() * observationTypes.length)],
+        activitySetting: null,
+        checklist: null,
+        completed: true,
+        observedBy: "/user/MadeupCoach",
+        teacher: "/user/MadeupTeacher",
+        timezone: "America/New_York"
+      };
+
+      this.sessionRef.set(observationInfo).then( (doc) => {
+        console.log(`Observations { ${doc.id} } created.`);
+      } )
+
+      this.sessionRef = null;
+
+    }
+
+
+  }
+  */
 
   populateFirebase = async () => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
@@ -7848,7 +8009,7 @@ class Firebase {
                 }
               }
             }
-          } 
+          }
         }
         /** Transition Time Observation Generator END */
 
@@ -7927,7 +8088,7 @@ class Firebase {
 
                   maxChild = Math.floor(Math.random() * 5)
 
-                  maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+                  maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1
 
                   let choicesChild: Array<number> = [1, 2, 3, 4]
                   let choicesTeacher: Array<number> = [6, 7, 8, 9]
@@ -8119,7 +8280,7 @@ class Firebase {
 
                     maxChild = Math.floor(Math.random() * 5)
 
-                    maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+                    maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1
 
                     let choicesChild: Array<number> = [1, 2, 3, 4]
                     let choicesTeacher: Array<number> = [6, 7, 8, 9]
@@ -8298,7 +8459,7 @@ class Firebase {
           }
         }
         /** Book Reading Observations END **/
-        
+
         /** Language Environment Observation BEGIN */
         if (create['languageEnvironment']) {
           for (let teacherIndex = 0; teacherIndex < coach.teachers.length; teacherIndex++) {
@@ -8377,7 +8538,7 @@ class Firebase {
 
                     maxChild = customType == 1 ? 0 : Math.floor(Math.random() * 3) + 1
 
-                    maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1 
+                    maxTeacher = customType !== 3 ? 0 : Math.floor(Math.random() * 4) + 1
 
                     let choicesChild: Array<number> = [2, 3, 4]
                     let choicesTeacher: Array<number> = [6, 7, 8, 9]
