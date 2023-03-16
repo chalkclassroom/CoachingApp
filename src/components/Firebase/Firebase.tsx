@@ -3293,10 +3293,10 @@ class Firebase {
             const { Note, Timestamp } = noteDoc.data();
             // Push info to notes array
             notes.push({
-              content: Note,
-              timestamp: this.convertFirestoreTimestamp(Timestamp),
-              observationId: observationId,
-              noteId: noteDoc.id,
+              content: Note ? Note : "N/A",
+              timestamp: Timestamp ? this.convertFirestoreTimestamp(Timestamp) : "N/A",
+              observationId: observationId ? observationId : "N/A",
+              noteId: noteDoc.id ? noteDoc.id : "N/A",
             })
 
           }
@@ -3307,8 +3307,78 @@ class Firebase {
           return ;
         });
 
+      console.log("[Firebase] Notes :: ", notes);
+      console.log("[Firebase] observationsWithNotesIds :: ", observationsWithNotesIds);
+
+    // Get all observations and add them to the returning list if they have a note in them
+    //  - I originally hod it set so it'd query only observations that were included in observationsWithNotesIds
+    //      but it was querying observations that didn't exist which slowed down the function greatly. So we have to query them all...
+    var startTimer2 = new Date().getTime();
+    var observationCount;
+    await this.db.collection('observations')
+            .get()
+            .then( (snapshot) => {
+              for(var observationIndex in snapshot.docs)
+              {
+                var observationDoc = snapshot.docs[observationIndex];
+                observationCount = snapshot.docs.length;
+
+                // Check to see if this has an note in it
+                if(!observationsWithNotesIds.includes(observationDoc.id) || !observationDoc.exists)
+                {
+                  console.log("[Firebase] Observation with id [" + observationDoc.id + "] not found.");
+
+                  continue;
+                }
+
+                // Get the notes for this observation
+                var observationNotes = notes.filter( note => {return note.observationId == observationDoc.id})
+
+                let observationDocData = observationDoc.data();
+                // Add info for each note to the returning array
+                for(var noteIndex in observationNotes)
+                {
+                  var tempNote = observationNotes[noteIndex];
+
+                  arr.push({
+                    observationId: tempNote.observationId ? tempNote.observationId : "N/A",
+                    coachId: observationDocData.observedBy ? observationDocData.observedBy : "N/A",
+                    teacherId: observationDocData.teacher ? observationDocData.teacher : "N/A",
+                    dateModified: observationDocData.start ? this.convertFirestoreTimestamp(observationDocData.start) : "N/A",
+                    tool: observationDocData.type ? observationDocData.type : "N/A",
+                    noteId: tempNote.noteId ? tempNote.noteId : "N/A",
+                    timestamp: tempNote.timestamp ? tempNote.timestamp : "N/A",
+                    content: tempNote.content ? tempNote.content : "N/A",
+
+                  });
+                }
+
+              }
+            });
+    var end2 = new Date().getTime();
+    var time2 = end2 - startTimer2;
+
+    console.warn('[Firebase] Fetched ' + observationCount + ' Observations in :: ' + time2 + 'ms');
+    /*
+    var startTimer2 = new Date().getTime();
+    var allObservationIds = await this.db.collection('observations').get();
+    console.log("[Firebase] All observation IDs 2 :: ", allObservationIds);
+    allObservationIds = allObservationIds.docs.map( observation => {return observation.id;} );
+    console.log("[Firebase] All observation IDs :: ", allObservationIds);
+    var end2 = new Date().getTime();
+    var time2 = end2 - startTimer2;
+
+    console.warn('[Firebase] Fetched obs ids in :: ' + time2 + 'ms');
+
+      console.log("[Firebase] observationsWithNotesIds :: ", observationsWithNotesIds);
+
       // Remove duplicate ids from observationsWithNotesIds
       observationsWithNotesIds = [...new Set(observationsWithNotesIds)];
+      console.log("[Firebase] observationsWithNotesIds 2 :: ", observationsWithNotesIds);
+
+      // Remove any id's from observations that don't exist
+      observationsWithNotesIds = observationsWithNotesIds.filter(element => allObservationIds.includes(element));
+      console.log("[Firebase] observationsWithNotesIds 3 :: ", observationsWithNotesIds);
 
       // Get all the documents with a note in it and put its info in 'observations' array
       const batches = [];
@@ -3327,8 +3397,11 @@ class Firebase {
                {
                  let observationDoc = results.docs[observationIndex];
 
+                 //console.log("Observation doc => ", observationDoc);
+
                  if(!observationDoc.exists)
                  {
+                   console.log("OBSERVATION DOESN'T EXIST :: ", observationIndex);
                    continue;
                  }
 
@@ -3336,10 +3409,10 @@ class Firebase {
 
                  // Put info in the observations object
                  observations[observationDoc.id] = {
-                   coachId: observationData.observedBy,
-                   teacherId: observationData.teacher,
-                   dateModified: this.convertFirestoreTimestamp(observationData.start),
-                   tool: observationData.type,
+                   coachId: observationData.observedBy ? observationData.observedBy : "N/A",
+                   teacherId: observationData.teacher ? observationData.teacher : "N/A",
+                   dateModified: observationData.start ? this.convertFirestoreTimestamp(observationData.start) : "N/A",
+                   tool: observationData.type ? observationData.type : "N/A",
                  }
 
                }
@@ -3349,22 +3422,42 @@ class Firebase {
       // Execute all the observation queries
       await Promise.all(batches);
 
+      console.log("[Firebase] Observations With Notes :: ", observations);
+
       // Combine info from the notes and observations to the returning array
       arr = notes.map( note => {
 
         var tempObservation = observations[note.observationId];
 
+        //console.log("temp Observation => ", tempObservation);
+
+        // Need to check if the observation was undefined for some reason...
+        if(!tempObservation)
+        {
+          return {
+            observationId: "N/A",
+            coachId: "N/A",
+            teacherId: "N/A",
+            dateModified: "N/A",
+            tool: "N/A",
+            noteId: "N/A",
+            timestamp: "N/A",
+            content: "N/A",
+          }
+        }
+
         return {
-          observationId: note.observationId,
-          coachId: tempObservation.coachId,
-          teacherId: tempObservation.teacherId,
-          dateModified: tempObservation.dateModified,
-          tool: tempObservation.tool,
-          noteId: note.noteId,
-          timestamp: note.timestamp,
-          content: note.content,
+          observationId: note.observationId ? note.observationId : "",
+          coachId: tempObservation.coachId ? tempObservation.coachId : "",
+          teacherId: tempObservation.teacherId ? tempObservation.teacherId : "",
+          dateModified: tempObservation.dateModified ? tempObservation.dateModified : "",
+          tool: tempObservation.tool ? tempObservation.tool : "",
+          noteId: note.noteId ? tempObservation.noteId : "",
+          timestamp: note.timestamp ? tempObservation.timestamp : "",
+          content: note.content ? tempObservation.content : "",
         }
       });
+      */
 
       var end = new Date().getTime();
       var time = end - startTimer;
@@ -7465,7 +7558,7 @@ class Firebase {
 
   /*
   observationBomb = async () => {
-    let observationCount = 300;
+    let observationCount = 500;
 
     // Array to get random observation type
     const observationTypes = ['transition', 'math', 'listening', 'climate', 'AC', 'level', 'LI'];
@@ -7491,7 +7584,7 @@ class Firebase {
 
       // Set the notes for this document
       let noteCollection = this.sessionRef.collection('notes')
-      let noteCount = Math.floor(Math.random() * 5);
+      let noteCount = Math.floor(Math.random() * 3);
       for(let j = 0; j < noteCount; j++)
       {
         let timeStamp = new Date()
@@ -7529,6 +7622,7 @@ class Firebase {
 
   }
   */
+
 
   populateFirebase = async () => {
     const secondFirebase = firebase.initializeApp(config, 'secondary')
