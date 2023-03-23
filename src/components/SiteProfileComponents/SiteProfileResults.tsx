@@ -118,16 +118,8 @@ const LineGraphOptions = {
   pointDot: true,
   showLines: true,
   legend: {
-    display: true,
-    position: 'bottom',
-    boxWidth: 12,
-    usePointStyle: true,
-    labels: {
-      usePointStyle: true,
-      pointStyle: 'start',
-      padding: 10,
-      boxWidth: 12,
-    }
+    display: false,
+    position: 'top',
   },
   tooltips: {
     mode: 'index',
