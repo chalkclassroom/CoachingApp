@@ -29,24 +29,48 @@ type ROW = {
 
 const NotesExport: FunctionComponent<Props> = (props) => {
   const {classes, setLoading} = props
+  const [exportNotReady, setExportNotReady] = useState<bool>(true)
   const [notesList, setNotesList] = useState<ROW[]>([])
+  const didMount = React.useRef(false);
   const firebase = useContext(FirebaseContext)
 
   useEffect( () => {
+
     (async () =>{
-     setNotesList( await firebase.getNotesForExport())
+      var notes = await firebase.getNotesForExport()
+      setNotesList(notes)
     })()
     return () => {
     }
+
   },[])
+
+
+  // Activate the export button when the data is ready
+  useEffect( () => {
+
+    // Don't run on initial render
+    if (!didMount.current) {
+      didMount.current = true;
+      return;
+    }
+
+    // The data isn't quite finished saving to state. Wait til it is
+    var checker = setInterval(() => {
+      if(notesList.length > 0)
+      {
+        setExportNotReady(false);
+        clearInterval(checker);
+      }
+    }, 100);
+
+  },[notesList]);
 
   const handleExport = async () => {
     setLoading(true)
-    console.log(notesList)
     let wb = generateNotesXlsx(notesList)
     xlsx.writeFile(wb, 'Notes.xlsx')
     setLoading(false)
-
   }
 
 
@@ -62,7 +86,9 @@ const NotesExport: FunctionComponent<Props> = (props) => {
     <Button
       variant="contained"
       color="primary"
-      onClick={() => handleExport()}>
+      onClick={() => handleExport()}
+      disabled={exportNotReady}
+      >
       Export
     </Button>
       </Grid>

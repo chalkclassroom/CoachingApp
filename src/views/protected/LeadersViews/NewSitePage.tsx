@@ -210,6 +210,8 @@ class NewSitePage extends React.Component<Props, State>{
           },
         }
 
+        const revelio = false;
+
         return <div className={classes.root}>
             <FirebaseContext.Consumer>
                 {(firebase: Firebase): React.ReactNode => <AppBar firebase={firebase} />}
@@ -217,7 +219,7 @@ class NewSitePage extends React.Component<Props, State>{
             {savedSiteName  &&
             <Alert severity={'success'}>Site has been created with the name "{savedSiteName}"</Alert>}
             
-
+            {revelio && (
             <div className={classes.formContainer}>
                 <Grid container
                       direction="column"
@@ -314,9 +316,20 @@ class NewSitePage extends React.Component<Props, State>{
                         </FirebaseContext.Consumer>
                     </Grid>
                 </Grid>
-            </div>
+            </div> )}
 
-        </div>
+            {!revelio && (
+            <div style={{textAlign: 'center'}}>
+                <h2>Please use the site creation tool located in the Users page site tab. <br/>
+                    Site creation in the Users page requires the following to exist: <br/>
+                    <ul style={{display: 'inline-block', textAlign: 'left'}}>
+                        <li>Program</li>
+                        <li>Site Leader</li>
+                    </ul>
+                </h2>
+            </div>
+            )}
+        </div> 
     }
 }
 
