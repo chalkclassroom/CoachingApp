@@ -59,7 +59,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
 
     let labels = teacherData.lineChartLabels
 
-    let heading = "Teacher Behaviors";
+    let heading = this.props.radioValue.includes('child') ? "Child Behaviors" : "Teacher Behaviors";
 
     let trendsLabels, trendsData, lineColors;
     let borderDash = [0,0];
@@ -93,7 +93,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
         lineColors = this.props.radioValue == "teacherMathBehavior" ?
           ["#BABABA", "#EC2409", "#459AEB"] :
           ["#EC2409", "#094492"];
-        heading = "Teacher Support for Math";
+        heading = this.props.radioValue == "teacherMathBehavior" ? "Teacher Support for Math" : "Child Math Behaviors";
         labels = this.props.radioValue == "teacherMathBehavior" ?
           teacherData.teacherLineChartLabels :
           teacherData.lineChartLabels;
@@ -110,6 +110,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
         labels = this.props.radioValue == "teacherAverage" ?
           teacherData.lineChartLabels :
           teacherData.childLineChartLabels;
+        heading = "Literacy Instruction";
         break;
 
       case "writing":
@@ -122,12 +123,14 @@ class TrendsLineChart extends React.Component<Props, {}> {
         labels = this.props.radioValue == "teacherAverage" ?
           teacherData.lineChartLabels :
           teacherData.childLineChartLabels;
+        heading = "Literacy Instruction";
         break;
 
       case "languageEnvironment":
         trendsLabels = ["Supporting Language Development", "No Target Behaviors Observed"]
         trendsData = [teacherData.languageEnvironmentAverage, teacherData.languageEnvironmentAverage.map(x => {return x !== null ?  100 - x : null})]
-        lineColors = ["#C00000", "#BFBFBF"]
+        lineColors = ["#C00000", "#BFBFBF"];
+        heading = "Literacy Instruction";
         break;
 
       case "sequentialActivities":
@@ -141,6 +144,7 @@ class TrendsLineChart extends React.Component<Props, {}> {
         labels = this.props.radioValue == "teacherAverage" ?
           teacherData.teacherLineChartLabels :
           teacherData.lineChartLabels;
+        heading = this.props.radioValue == "teacherAverage" ? "Teacher Support for Sequential Activities" : "Child Behaviors";
         break;
 
       case "associativeAndCooperative":
