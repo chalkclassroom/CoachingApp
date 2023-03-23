@@ -154,13 +154,16 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     
     let siteResult = [];
     let labels = []
+    let blue = ""
 
     if (type === "teacherAverage") {
        siteResult = round([data.programBar.noSupport, data.programBar.support])
        labels = ["Teacher Support", "No Support"]
+       blue = "#5B9BD5"
     } else {
       siteResult = round([data.programBar.noInteraction, data.programBar.engaged])
       labels = ["Math", "Other Activities"]
+      blue = "#094492"
     }
 
     var dataSize = Object.keys(data).length;
@@ -177,7 +180,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       {
         label: labels[0],
         data: teacherSupportAverage,
-        backgroundColor: "#5B9BD5",
+        backgroundColor: blue,
       },
       {
         label: labels[1],
@@ -187,14 +190,14 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
       // The total Site Averages
       {
-        label: 'Teacher Support Site Average',
+        label: `${labels[0]} Site Average`,
         data: siteAverageTeacherSupport,
         backgroundColor: "#FFF",
-        borderColor: "#5B9BD5",
+        borderColor: blue,
         borderWidth: 4,
       },
       {
-        label: 'No Support Site Average',
+        label: `${labels[1]} Site Average`,
         data: siteAverageNoSupport,
         backgroundColor: "#FFF",
         borderColor: "#C00000",

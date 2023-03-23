@@ -31,7 +31,7 @@ const barColorChoices = {
     childBehavior: ['#094492', '#094492', '#094492', '#094492'],
   },
   levelOfInstruction: ['#38761D', '#38761D', '#1155CC', '#1155CC'],
-  studentEngagement: ['#E99C2E', '#E55529', '#FFD300', '#BABABA'],
+  studentEngagement: ['#E99C2E', '#E55529', '#BABABA', '#FFD300'],
   averageEngagement: ['#FFF'],
 }
 
