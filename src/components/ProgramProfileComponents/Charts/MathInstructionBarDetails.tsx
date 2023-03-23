@@ -151,7 +151,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    
+
     let siteResult = [];
     let labels = []
     let blue = ""
@@ -247,9 +247,10 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let heading = this.props.type == "teacherAverage" ? "Teacher Support for Math" : "Child Behaviors";
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Math Instruction</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>{heading}</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}

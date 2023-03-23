@@ -215,6 +215,14 @@ const chartTitleArr = {
   multimodalInstructionAverage: 'Book Reading: Use Multimodal Instruction',
 }
 
+
+const chartTitleArrTemp = {
+  transitionTime: "Transition Time",
+  levelOfInstruction: "Level of Instruction",
+  //studentEngagement: "Engagement Rating",
+}
+
+
 class ProgramProfileResults extends React.Component {
   constructor(props) {
     super(props)
@@ -389,7 +397,7 @@ class ProgramProfileResults extends React.Component {
         endDate: this.props.endDate,
         teacherIds: teachers,
       })
-      
+
       // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
       // Go through each exclude date item
       for (var excludeDateIndex in datesToExclude) {
@@ -1216,6 +1224,33 @@ class ProgramProfileResults extends React.Component {
                   direction={'column'}
                   style={{ minHeight: 500 }}
                 >
+
+                  {/* Add label if this practice has one */}
+                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
+
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Sequential Activities</h3> : ""}
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> : ""}
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "studentEngagement" && this.state.selectedSite == "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Engagement Rating</h3> : ""}
+                  {this.props.observationType == "studentEngagement" && this.state.selectedSite !== "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Student Engagement</h3> : ""}
+
+                  {
+                    this.props.observationType == "listeningToChildren"  ||
+                    this.props.observationType == "foundationSkills"  ||
+                    this.props.observationType == "writing"  ||
+                    this.props.observationType == "bookReading"  ||
+                    this.props.observationType == "languageEnvironment" ||
+                    this.props.observationType == "foundationSkills"
+                  ?
+                  <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3>
+                  :
+                  ""}
+
                   {this.props.observationType !== "classroomClimate" ? (
                     <Line
                       data={this.state.lineGraphData}

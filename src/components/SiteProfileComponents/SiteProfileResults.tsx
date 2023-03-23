@@ -252,7 +252,7 @@ const chartTitleArr = {
 const chartTitleArrTemp = {
   transitionTime: "Transition Time",
   levelOfInstruction: "Level of Instruction",
-  studentEngagement: "Engagement Rating",
+  //studentEngagement: "Engagement Rating",
 }
 
 // Different observation types are going to show different data. This will be used to tell the program which ones to show for each type
@@ -1476,6 +1476,9 @@ class SiteProfileResults extends React.Component {
 
                   {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> : ""}
                   {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "studentEngagement" && this.state.selectedTeacher == "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Engagement Rating</h3> : ""}
+                  {this.props.observationType == "studentEngagement" && this.state.selectedTeacher !== "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Student Engagement</h3> : ""}
 
                   {
                     this.props.observationType == "listeningToChildren"  ||
