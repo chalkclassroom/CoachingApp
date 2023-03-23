@@ -707,7 +707,7 @@ class ProgramProfileResults extends React.Component {
           type2 = "otherActivities"
           label1 = "Math"
           label2 = "Other Activities"
-          color1 = "#5B9BD5"
+          color1 = "#094492"
           color2 = "#C00000"
         }
       }
