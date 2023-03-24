@@ -259,9 +259,11 @@ class SequentialActivitiesBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let heading = this.props.type == "teacherAverage" ? "Teacher Support for Sequential Activities" : "Child Behaviors"
+
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Sequential Activities</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>{heading}</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}

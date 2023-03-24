@@ -71,7 +71,6 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
   setData = () => {
     const { data, type } = this.props
 
-
     var teacherNames = [];
     var graphData = {};
 
@@ -159,30 +158,41 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
     var siteAverageTeacherSupport = new Array(dataSize + 1).fill(0);
     siteAverageTeacherSupport[dataSize] = siteResult[1]
 
+    let labels = []
+    let blue = ""
+
+    if (type === "teacherAverage") {
+       labels = ["Teacher Support", "No Support"]
+       blue = "#5B9BD5"
+    } else {
+      labels = ["Math", "Other Activities"]
+      blue = "#094492"
+    }
+
     // Use that data to create our dataset
     var dataSets = [
 
       {
-        label: 'Teacher Support',
+        label: labels[0],
         data: teacherSupportAverage,
-        backgroundColor: "#5B9BD5",
+        backgroundColor: blue,
       },
       {
-        label: 'No Support',
+        label: labels[1],
         data: noSupportAverage,
         backgroundColor: "#C00000",
       },
 
       // The total Site Averages
       {
-        label: 'Teacher Support Site Average',
+        label: `${labels[0]} Site Average`,
         data: siteAverageTeacherSupport,
         backgroundColor: "#FFF",
-        borderColor: "#5B9BD5",
+        borderColor: blue,
         borderWidth: 4,
       },
       {
-        label: 'No Support Site Average',
+        label: `${labels[1]} Site Average`,
         data: siteAverageNoSupport,
         backgroundColor: "#FFF",
         borderColor: "#C00000",
@@ -232,9 +242,10 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let heading = this.props.type == "teacherAverage" ? "Teacher Support for Math" : "Child Behaviors";
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Math Instruction</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>{heading}</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}
