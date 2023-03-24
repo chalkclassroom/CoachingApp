@@ -31,7 +31,7 @@ const barColorChoices = {
     childBehavior: ['#094492', '#094492', '#094492', '#094492'],
   },
   levelOfInstruction: ['#38761D', '#38761D', '#1155CC', '#1155CC'],
-  studentEngagement: ['#E99C2E', '#E55529', '#FFD300', '#BABABA'],
+  studentEngagement: ['#E99C2E', '#E55529', '#BABABA', '#FFD300'],
   averageEngagement: ['#FFF'],
 }
 
@@ -113,6 +113,14 @@ const barDataVariableName = {
     'centersGroupAverage',
   ],
   averageEngagement: ['totalAverage'],
+}
+
+const chartHeader = {
+  mathInstruction: {
+    teacherBehavior: "Teacher Support for Math",
+    childBehavior: "Child Math Behaviors",
+  },
+
 }
 
 /**
@@ -295,21 +303,6 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     })
   }
 
-  randomRgbColor() {
-    return (
-      'rgba(' +
-      this.randomInteger(255) +
-      ', ' +
-      this.randomInteger(255) +
-      ', ' +
-      this.randomInteger(255) +
-      ')'
-    )
-  }
-
-  randomInteger(max) {
-    return Math.floor(Math.random() * (max + 1))
-  }
 
   /**
    * render function
@@ -423,102 +416,112 @@ class TeacherProfileBarDetails extends React.Component<Props, {}> {
     console.log(this.state.graphData)
 
     return (
-      <HorizontalBar
-        data={childBehaviorsData}
-        // plugins={[ChartDataLabels, topLabels]}
-        options={{
-          tooltips: {
-            enabled: false,
-          },
-          animation: {
-            onComplete: function(): void {
-              isCompleted ? isCompleted() : null
+      <>
+      {/* Set the heading of the chart if we need one */}
+      {chartHeader[this.props.observationType] ? (
+          <h3 style={{ textAlign: 'center', width: '100%' }} >
+            {chartHeader[this.props.observationType][this.props.type]}
+          </h3>
+        ) : null}
+
+        <HorizontalBar
+          data={childBehaviorsData}
+          // plugins={[ChartDataLabels, topLabels]}
+          options={{
+            tooltips: {
+              enabled: false,
             },
-          },
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  min: 0,
-                  max: this.state.axisMax,
-                  stepSize: this.state.axisStepSize,
-                  fixedStepSize: 1,
-                  fontSize: 16,
-                  fontColor: 'black',
-                  // Include a percent sign in the ticks
-                  callback: (value, index, values) => {
-                    if (this.props.observationType === 'studentEngagement') {
-                      const x_label = [
-                        'Off Task',
-                        'Mildly Engaged',
-                        'Engaged',
-                        'Highly Engaged',
-                      ]
-                      return [value, x_label[value]]
-                    }
-                    return value
+            animation: {
+              onComplete: function(): void {
+                isCompleted ? isCompleted() : null
+              },
+            },
+            scales: {
+              xAxes: [
+                {
+                  ticks: {
+                    min: 0,
+                    max: this.state.axisMax,
+                    stepSize: this.state.axisStepSize,
+                    fixedStepSize: 1,
+                    fontSize: 16,
+                    fontColor: 'black',
+                    // Include a percent sign in the ticks
+                    callback: (value, index, values) => {
+                      if (this.props.observationType === 'studentEngagement') {
+                        const x_label = [
+                          'Off Task',
+                          'Mildly Engaged',
+                          'Engaged',
+                          'Highly Engaged',
+                        ]
+                        return [value, x_label[value]]
+                      }
+                      return value
+                    },
+                  },
+                  stacked: false,
+                  scaleLabel: {
+                    display: true,
+                    labelString: this.state.axisLabel,
+                    fontSize: 16,
+                    fontColor: 'black',
                   },
                 },
-                stacked: false,
-                scaleLabel: {
-                  display: true,
-                  labelString: this.state.axisLabel,
-                  fontSize: 16,
-                  fontColor: 'black',
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    fontSize: 16,
+                    fontColor: 'black',
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString:
+                      this.props.observationType == 'studentEngagement'
+                        ? 'Activity Type'
+                        : '',
+                    fontSize: 16,
+                    fontColor: 'black',
+                  },
+                  stacked: true,
                 },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  fontSize: 16,
-                  fontColor: 'black',
-                },
-                scaleLabel: {
-                  display: true,
-                  labelString:
-                    this.props.observationType == 'studentEngagement'
-                      ? 'Activity Type'
-                      : '',
-                  fontSize: 16,
-                  fontColor: 'black',
-                },
-                stacked: true,
-              },
-            ],
-          },
-          legend: {
-            display: false,
-          },
-          title: {
-            display: this.props.title,
-            text: this.state.chartTitle,
-            fontSize: 14,
-            fontColor: 'black',
-            fontFamily: 'Arimo',
-            fontStyle: 'bold',
-          },
+              ],
+            },
+            legend: {
+              display: false,
+            },
+            title: {
+              display: this.props.title,
+              text: this.state.chartTitle,
+              fontSize: 14,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
+              fontStyle: 'bold',
+            },
 
-          plugins: {
-            datalabels: {
-              display: 'auto',
-              color: 'black',
-              font: {
-                size: 14,
-                weight: 'bold',
-              },
-              formatter: function(value: number): number | null {
-                if (value > 0) {
-                  return value
-                } else {
-                  return null
-                }
+            plugins: {
+              datalabels: {
+                display: 'auto',
+                color: 'black',
+                font: {
+                  size: 14,
+                  weight: 'bold',
+                },
+                formatter: function(value: number): number | null {
+                  if (value > 0) {
+                    return value
+                  } else {
+                    return null
+                  }
+                },
               },
             },
-          },
-          maintainAspectRatio: false,
-        }}
-      />
+            maintainAspectRatio: false,
+          }}
+        />
+
+      </>
     )
   }
 }

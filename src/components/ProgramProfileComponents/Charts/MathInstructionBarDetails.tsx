@@ -151,16 +151,19 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
-    
+
     let siteResult = [];
     let labels = []
+    let blue = ""
 
     if (type === "teacherAverage") {
        siteResult = round([data.programBar.noSupport, data.programBar.support])
        labels = ["Teacher Support", "No Support"]
+       blue = "#5B9BD5"
     } else {
       siteResult = round([data.programBar.noInteraction, data.programBar.engaged])
       labels = ["Math", "Other Activities"]
+      blue = "#094492"
     }
 
     var dataSize = Object.keys(data).length;
@@ -177,7 +180,7 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       {
         label: labels[0],
         data: teacherSupportAverage,
-        backgroundColor: "#5B9BD5",
+        backgroundColor: blue,
       },
       {
         label: labels[1],
@@ -187,14 +190,14 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
 
       // The total Site Averages
       {
-        label: 'Teacher Support Site Average',
+        label: `${labels[0]} Site Average`,
         data: siteAverageTeacherSupport,
         backgroundColor: "#FFF",
-        borderColor: "#5B9BD5",
+        borderColor: blue,
         borderWidth: 4,
       },
       {
-        label: 'No Support Site Average',
+        label: `${labels[1]} Site Average`,
         data: siteAverageNoSupport,
         backgroundColor: "#FFF",
         borderColor: "#C00000",
@@ -244,9 +247,10 @@ class MathInstructionBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let heading = this.props.type == "teacherAverage" ? "Teacher Support for Math" : "Child Behaviors";
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Math Instruction</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>{heading}</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}

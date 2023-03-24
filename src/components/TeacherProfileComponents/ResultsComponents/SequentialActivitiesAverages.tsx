@@ -99,94 +99,97 @@ class SequentialActivitiesAverages extends React.Component<Props, {}> {
 
 
 
-
+    let heading = this.props.type == "teacherAverage" ? "Teacher Behaviors" : "Child Behaviors";
 
     return (
-      <div style={{transform: 'translateX(-100px)', width: '100%', minHeight:450}}>
-        <HorizontalBar
-          data={sequentialActivityData}
-          // plugins={[ChartDataLabels, topLabels]}
-          options={{
-            tooltips: {
-              enabled: false,
-            },
-            animation: {
-              onComplete: function(): void {
-                isCompleted ? isCompleted() : null
+      <>
+        <h3 style={{ textAlign: 'center', width: '100%', marginBottom: 0 }} >{heading}</h3>
+        <div style={{transform: 'translateX(-100px)', width: '100%', minHeight:450}}>
+          <HorizontalBar
+            data={sequentialActivityData}
+            // plugins={[ChartDataLabels, topLabels]}
+            options={{
+              tooltips: {
+                enabled: false,
               },
-            },
-            scales: {
-              xAxes: [
-                {
-                  ticks: {
-                    min: 0,
-                    max: 30,
-                    stepSize: 1,
-                    fixedStepSize: 1,
-                    fontSize: 16,
-                    fontColor: 'black',
-                  },
-                  stacked: false,
-                  scaleLabel: {
-                    display: true,
-                    labelString: "Average Number across Observations",
-                    fontSize: 16,
-                    fontColor: 'black',
-                  },
+              animation: {
+                onComplete: function(): void {
+                  isCompleted ? isCompleted() : null
                 },
-              ],
-              yAxes: [
-                {
-                  ticks: {
-                    fontSize: 16,
-                    fontColor: 'black',
+              },
+              scales: {
+                xAxes: [
+                  {
+                    ticks: {
+                      min: 0,
+                      max: 30,
+                      stepSize: 1,
+                      fixedStepSize: 1,
+                      fontSize: 16,
+                      fontColor: 'black',
+                    },
+                    stacked: false,
+                    scaleLabel: {
+                      display: true,
+                      labelString: "Average Number across Observations",
+                      fontSize: 16,
+                      fontColor: 'black',
+                    },
                   },
-                  scaleLabel: {
-                    display: true,
-                    labelString:
-                      this.props.observationType == 'studentEngagement'
-                        ? 'Activity Type'
-                        : '',
-                    fontSize: 16,
-                    fontColor: 'black',
+                ],
+                yAxes: [
+                  {
+                    ticks: {
+                      fontSize: 16,
+                      fontColor: 'black',
+                    },
+                    scaleLabel: {
+                      display: true,
+                      labelString:
+                        this.props.observationType == 'studentEngagement'
+                          ? 'Activity Type'
+                          : '',
+                      fontSize: 16,
+                      fontColor: 'black',
+                    },
+                    stacked: true,
                   },
-                  stacked: true,
-                },
-              ],
-            },
-            legend: {
-              display: false,
-            },
-            title: {
-              display: this.props.title,
-              text: this.state.chartTitle,
-              fontSize: 14,
-              fontColor: 'black',
-              fontFamily: 'Arimo',
-              fontStyle: 'bold',
-            },
+                ],
+              },
+              legend: {
+                display: false,
+              },
+              title: {
+                display: this.props.title,
+                text: this.state.chartTitle,
+                fontSize: 14,
+                fontColor: 'black',
+                fontFamily: 'Arimo',
+                fontStyle: 'bold',
+              },
 
-            plugins: {
-              datalabels: {
-                display: 'auto',
-                color: 'black',
-                font: {
-                  size: 14,
-                  weight: 'bold',
-                },
-                formatter: function(value: number): number | null {
-                  if (value > 0) {
-                    return value
-                  } else {
-                    return null
-                  }
+              plugins: {
+                datalabels: {
+                  display: 'auto',
+                  color: 'black',
+                  font: {
+                    size: 14,
+                    weight: 'bold',
+                  },
+                  formatter: function(value: number): number | null {
+                    if (value > 0) {
+                      return value
+                    } else {
+                      return null
+                    }
+                  },
                 },
               },
-            },
-            maintainAspectRatio: false,
-          }}
-        />
-      </div>
+              maintainAspectRatio: false,
+            }}
+          />
+        </div>
+      </>
     );
   }
 }
