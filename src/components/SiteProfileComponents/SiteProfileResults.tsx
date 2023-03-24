@@ -194,6 +194,7 @@ const LineGraphOptions = {
       },
     },
   },
+
 }
 
 // Array used to match the name of a practice to the value that's saved
@@ -341,6 +342,8 @@ class SiteProfileResults extends React.Component {
 
       toneCount: 0,
       toneAverage: 0,
+      pdf: false,
+      addLegendImage: this.addLegendImage,
     }
   }
 
@@ -1104,8 +1107,16 @@ class SiteProfileResults extends React.Component {
     var average = averageTotal / totalData
   }
 
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   // Handle downloading the PDF
   downloadPDF = () => {
+    if (this.state.pdf) {
+    this.sleep(1000)
     console.log('Downloading!')
     const input = document.getElementById('siteProfileResultsContainer')
     html2canvas(input).then(canvas => {
@@ -1132,6 +1143,7 @@ class SiteProfileResults extends React.Component {
           1}_${currDate.getDate()}_${currDate.getFullYear()}.pdf`
       )
     })
+  }
   }
 
   handleTrendsDropdown = (event: SelectChangeEvent) => {
@@ -1207,6 +1219,35 @@ class SiteProfileResults extends React.Component {
   randomInteger = max => {
     return Math.floor(Math.random() * (max + 1))
   }
+
+
+
+
+  /*
+   * Place an image of the legend below the scrollable window
+   *
+   * You shouldn't have to scroll back and forth to view the legend.
+   * This function will take a screensshot of the averages chart once it's loaded.
+   * It will the add the image as the background-image of a div under the scvrollable window to only show the legend.
+   *
+   * This function gets passed as a prop to the various bar chart components
+   */
+  addLegendImage = (chart) => {
+    const screenshotTarget = document.getElementsByClassName("line-chart")[0].getElementsByTagName('canvas')[0];
+
+    html2canvas(screenshotTarget).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const legendContainer = document.getElementsByClassName("legend-container")[0];
+
+        legendContainer.style.backgroundImage = `url('${imgData}')`;
+        legendContainer.style.backgroundPosition = `bottom center`;
+        legendContainer.style.height = `75px`;
+        legendContainer.style.width = `100%`;
+
+    });
+  }
+
 
   render() {
     /*
@@ -1306,12 +1347,15 @@ class SiteProfileResults extends React.Component {
       ]
     }
 
-    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, height: 620, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
+    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
 
     if(this.props.observationType == "classroomClimate")
     {
       lineContainerStyles = {minHeight: 500, marginTop: 20}
     }
+
+
+
 
     return (
       <div id="siteProfileResultsContainer" >
@@ -1459,7 +1503,7 @@ class SiteProfileResults extends React.Component {
                 >
 
                   {/* Add label if this practice has one */}
-                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {chartTitleArrTemp[this.props.observationType] && chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
 
@@ -1486,10 +1530,16 @@ class SiteProfileResults extends React.Component {
 
 
                   {this.props.observationType !== "classroomClimate" ? (
-                    <Line
-                      data={this.state.lineGraphData}
-                      options={LineGraphOptions}
-                    />
+                    <div style={{
+                      width: '100%',
+                      minHeight:500,
+                      marginBottom: 20,
+                    }} className="line-chart">
+                      <Line
+                        data={this.state.lineGraphData}
+                        options={LineGraphOptions}
+                      />
+                    </div>
                   ) : null}
                   {/* Classroom Climate Trends */}
                   {this.props.observationType === "classroomClimate" ? (
@@ -1513,6 +1563,7 @@ class SiteProfileResults extends React.Component {
               */}
               {this.state.tabState == 0 &&
               Object.keys(this.state.averages).length > 0 ? (
+                <>
                 <Grid
                   container
                   justify={'center'}
@@ -1551,66 +1602,143 @@ class SiteProfileResults extends React.Component {
                   ) : null}
 
                   {/* Classroom Climate Chart */}
-                  {this.props.observationType === 'classroomClimate' ? (
-                    <ClassroomClimateBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'classroomClimate' ? (<>
+                    {this.state.pdf ? (
+                    <ClassroomClimateBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"}/>
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <ClassroomClimateBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"actual"}/>
+                    ) : null}
+                  </>) : null}
 
                   {/* Level of Instruction Chart */}
-                  {this.props.observationType === 'levelOfInstruction' ? (
-                    <LevelOfInstructionBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'levelOfInstruction' ? (<>
+                    {this.state.pdf ? (
+                    <LevelOfInstructionBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"}/>
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <LevelOfInstructionBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"actual"}/>
+                    ) : null}
+                  </>) : null}
 
                   {/* Student Engagement Chart */}
-                  {this.props.observationType === 'studentEngagement' ? (
-                    <StudentEngagementBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'studentEngagement' ? (<>
+                    {this.state.pdf ? (
+                    <StudentEngagementBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"}/>
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <StudentEngagementBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"actual"}/>
+                    ) : null}
+                  </>) : null}
 
                   {/* Math Instruction Chart */}
-                  {this.props.observationType === "mathInstruction" ? (
+                  {this.props.observationType === "mathInstruction" ? (<>
+                    {this.state.pdf ? (
                     <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <MathInstructionBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      id={"actual"}
+                    />
+                    ) : null}
+                  </>) : null}
 
                   {/* Listening to Children Chart */}
-                  {this.props.observationType === "listeningToChildren" ? (
+                  {this.props.observationType === "listeningToChildren" ? (<>
+                    {this.state.pdf ? (
                     <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <ListeningToChildrenBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      id={"actual"}
+                    />
+                    ) : null}
+                  </>) : null}
 
                   {/* Sequesntial Activities Chart */}
-                  {this.props.observationType === "sequentialActivities" ? (
+                  {this.props.observationType === "sequentialActivities" ? (<>
+                    {this.state.pdf ? (
                     <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <SequentialActivitiesBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      id={"actual"}
+                    />
+                    ) : null}
+                  </>) : null}
 
                   {/* Associative and Cooperative Chart */}
-                  {this.props.observationType === "associativeAndCooperative" ? (
+                  {this.props.observationType === "associativeAndCooperative" ? (<>
+                    {this.state.pdf ? (
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
-                    />
-                  ) : null}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
+                    />) : null}
+                    {!this.state.pdf ? (
+                      <ACBarDetails
+                      data={this.state.averages}
+                      type={this.state.radioValue}
+                      id={"actual"}
+                      loadLegend={this.state.addLegendImage}
+                    />) : null}
+                  </>) : null}
 
 
-                  {this.props.observationType === 'transitionTime' ? (
-                    <TransitionAverageBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'transitionTime' ? (<>
+                  {this.state.pdf ? (
+                    <TransitionAverageBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"} />
+                  ) : (null)}
+                  {!this.state.pdf ? (
+                    <TransitionAverageBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"actual"}/>
+                  ) : (null)}
+                  </>) : null}
 
                   {/* Literacy Instruction Charts */}
-                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (<>
+                    {this.state.pdf ? (
                     <LiteracyInstructionBarDetails
                       data={this.state.averages}
                       LI={this.props.observationType}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                    ) : null}
+                    {!this.state.pdf ? (
+                      <LiteracyInstructionBarDetails
+                      data={this.state.averages}
+                      LI={this.props.observationType}
+                      id={"actual"}
+                    />
+                    ) : null}
+                  </>) : null}
 
                 </Grid>
+
+                <div className={"legend-container"}></div>
+              </>
               ) : null}
             </Grid>
 
@@ -1620,9 +1748,15 @@ class SiteProfileResults extends React.Component {
                   */}
             <Grid item xs={12} style={centerRow}>
               <Button
+                id={"pdfButton"}
                 variant="contained"
                 color="primary"
-                onClick={() => this.downloadPDF()}
+                onMouseEnter={() => {this.setState({pdf: true})}}
+                onMouseUp={() => {
+                  this.downloadPDF()
+                  this.setState({pdf: false})
+                }}
+                onMouseLeave={() => {this.setState({pdf: false})}}
                 disabled={
                   Object.keys(this.state.teacherNames).length <= 0
                     ? true
