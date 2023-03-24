@@ -172,10 +172,13 @@ class StudentEngagementBarDetails extends React.Component<Props, {}> {
       }
     };
 
+    let width = this.props.id == "actual" ? 300 + this.state.teacherNames.length *160 : "100%"
+
+
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
         <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Engagement Rating</h2>
-        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+        <div className={"realChart"} style={{height: 500, width: width}}>
 
           <div style={{height: 415, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', top: 77, left: '-150px'}}>
             <div style={{flex:1}}>Highly Engaged</div>
