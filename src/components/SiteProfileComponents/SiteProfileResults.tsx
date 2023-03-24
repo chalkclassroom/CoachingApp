@@ -1107,9 +1107,16 @@ class SiteProfileResults extends React.Component {
     var average = averageTotal / totalData
   }
 
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   // Handle downloading the PDF
   downloadPDF = () => {
     if (this.state.pdf) {
+    this.sleep(1000)
     console.log('Downloading!')
     const input = document.getElementById('siteProfileResultsContainer')
     html2canvas(input).then(canvas => {
