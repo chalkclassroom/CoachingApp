@@ -194,6 +194,7 @@ const LineGraphOptions = {
       },
     },
   },
+
 }
 
 // Array used to match the name of a practice to the value that's saved
@@ -341,6 +342,8 @@ class SiteProfileResults extends React.Component {
 
       toneCount: 0,
       toneAverage: 0,
+
+      addLegendImage: this.addLegendImage,
     }
   }
 
@@ -1208,6 +1211,35 @@ class SiteProfileResults extends React.Component {
     return Math.floor(Math.random() * (max + 1))
   }
 
+
+
+
+  /*
+   * Place an image of the legend below the scrollable window
+   *
+   * You shouldn't have to scroll back and forth to view the legend.
+   * This function will take a screensshot of the averages chart once it's loaded.
+   * It will the add the image as the background-image of a div under the scvrollable window to only show the legend.
+   *
+   * This function gets passed as a prop to the various bar chart components
+   */
+  addLegendImage = (chart) => {
+    const screenshotTarget = document.getElementsByClassName("line-chart")[0].getElementsByTagName('canvas')[0];
+
+    html2canvas(screenshotTarget).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const legendContainer = document.getElementsByClassName("legend-container")[0];
+
+        legendContainer.style.backgroundImage = `url('${imgData}')`;
+        legendContainer.style.backgroundPosition = `bottom center`;
+        legendContainer.style.height = `75px`;
+        legendContainer.style.width = `100%`;
+
+    });
+  }
+
+
   render() {
     /*
      * List of which observation types will display the radio buttons
@@ -1306,12 +1338,15 @@ class SiteProfileResults extends React.Component {
       ]
     }
 
-    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, height: 620, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
+    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
 
     if(this.props.observationType == "classroomClimate")
     {
       lineContainerStyles = {minHeight: 500, marginTop: 20}
     }
+
+
+
 
     return (
       <div id="siteProfileResultsContainer" >
@@ -1459,7 +1494,7 @@ class SiteProfileResults extends React.Component {
                 >
 
                   {/* Add label if this practice has one */}
-                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {chartTitleArrTemp[this.props.observationType] && chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
 
@@ -1486,10 +1521,16 @@ class SiteProfileResults extends React.Component {
 
 
                   {this.props.observationType !== "classroomClimate" ? (
-                    <Line
-                      data={this.state.lineGraphData}
-                      options={LineGraphOptions}
-                    />
+                    <div style={{
+                      width: '100%',
+                      minHeight:500,
+                      marginBottom: 20,
+                    }} className="line-chart">
+                      <Line
+                        data={this.state.lineGraphData}
+                        options={LineGraphOptions}
+                      />
+                    </div>
                   ) : null}
                   {/* Classroom Climate Trends */}
                   {this.props.observationType === "classroomClimate" ? (
@@ -1513,6 +1554,7 @@ class SiteProfileResults extends React.Component {
               */}
               {this.state.tabState == 0 &&
               Object.keys(this.state.averages).length > 0 ? (
+                <>
                 <Grid
                   container
                   justify={'center'}
@@ -1552,17 +1594,26 @@ class SiteProfileResults extends React.Component {
 
                   {/* Classroom Climate Chart */}
                   {this.props.observationType === 'classroomClimate' ? (
-                    <ClassroomClimateBarDetails data={this.state.averages} />
+                    <ClassroomClimateBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                     />
                   ) : null}
 
                   {/* Level of Instruction Chart */}
                   {this.props.observationType === 'levelOfInstruction' ? (
-                    <LevelOfInstructionBarDetails data={this.state.averages} />
+                    <LevelOfInstructionBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                     />
                   ) : null}
 
                   {/* Student Engagement Chart */}
                   {this.props.observationType === 'studentEngagement' ? (
-                    <StudentEngagementBarDetails data={this.state.averages} />
+                    <StudentEngagementBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                     />
                   ) : null}
 
                   {/* Math Instruction Chart */}
@@ -1570,6 +1621,7 @@ class SiteProfileResults extends React.Component {
                     <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1578,6 +1630,7 @@ class SiteProfileResults extends React.Component {
                     <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1586,6 +1639,7 @@ class SiteProfileResults extends React.Component {
                     <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1594,12 +1648,16 @@ class SiteProfileResults extends React.Component {
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
 
                   {this.props.observationType === 'transitionTime' ? (
-                    <TransitionAverageBarDetails data={this.state.averages} />
+                    <TransitionAverageBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                    />
                   ) : null}
 
                   {/* Literacy Instruction Charts */}
@@ -1607,10 +1665,14 @@ class SiteProfileResults extends React.Component {
                     <LiteracyInstructionBarDetails
                       data={this.state.averages}
                       LI={this.props.observationType}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
                 </Grid>
+
+                <div className={"legend-container"}></div>
+              </>
               ) : null}
             </Grid>
 

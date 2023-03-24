@@ -253,7 +253,9 @@ class ProgramProfileResults extends React.Component {
       showErrorMessage: false,
       errorMessage: '',
       selectedSite: 'None',
-      siteInfo: []
+      siteInfo: [],
+      
+      addLegendImage: this.addLegendImage,
     }
   }
 
@@ -984,6 +986,31 @@ class ProgramProfileResults extends React.Component {
     this.setLineGraphData(modifiedInfo, this.state.radioValue)
   }
 
+  /*
+   * Place an image of the legend below the scrollable window
+   *
+   * You shouldn't have to scroll back and forth to view the legend.
+   * This function will take a screensshot of the averages chart once it's loaded.
+   * It will the add the image as the background-image of a div under the scvrollable window to only show the legend.
+   *
+   * This function gets passed as a prop to the various bar chart components
+   */
+  addLegendImage = (chart) => {
+    const screenshotTarget = document.getElementsByClassName("line-chart")[0].getElementsByTagName('canvas')[0];
+
+    html2canvas(screenshotTarget).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const legendContainer = document.getElementsByClassName("legend-container")[0];
+
+        legendContainer.style.backgroundImage = `url('${imgData}')`;
+        legendContainer.style.backgroundPosition = `bottom center`;
+        legendContainer.style.height = `75px`;
+        legendContainer.style.width = `100%`;
+
+    });
+  }
+
   render() {
 
     const radioObservationTypes = [
@@ -1269,6 +1296,7 @@ class ProgramProfileResults extends React.Component {
                 </Grid>
               </>) : this.state.tabState == 0 &&
                 Object.keys(this.state.averages).length > 0 ? (
+                  <>
                   <Grid
                   container
                   justify={'center'}
@@ -1301,17 +1329,26 @@ class ProgramProfileResults extends React.Component {
 
                   {/* Classroom Climate Chart */}
                   {this.props.observationType === 'classroomClimate' ? (
-                    <ClassroomClimateBarDetails data={this.state.averages} />
+                    <ClassroomClimateBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                      />
                   ) : null}
 
                   {/* Level of Instruction Chart */}
                   {this.props.observationType === 'levelOfInstruction' ? (
-                    <LevelOfInstructionBarDetails data={this.state.averages} />
+                    <LevelOfInstructionBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                      />
                   ) : null}
 
                   {/* Student Engagement Chart */}
                   {this.props.observationType === 'studentEngagement' ? (
-                    <StudentEngagementBarDetails data={this.state.averages} />
+                    <StudentEngagementBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                      />
                   ) : null}
 
                   {/* Math Instruction Chart */}
@@ -1319,6 +1356,7 @@ class ProgramProfileResults extends React.Component {
                     <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1327,6 +1365,7 @@ class ProgramProfileResults extends React.Component {
                     <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1335,6 +1374,7 @@ class ProgramProfileResults extends React.Component {
                     <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
@@ -1343,12 +1383,16 @@ class ProgramProfileResults extends React.Component {
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
 
                   {this.props.observationType === 'transitionTime' ? (
-                    <TransitionAverageBarDetails data={this.state.averages} />
+                    <TransitionAverageBarDetails
+                      data={this.state.averages}
+                      loadLegend={this.state.addLegendImage}
+                    />
                   ) : null}
 
                   {/* Literacy Instruction Charts */}
@@ -1356,10 +1400,14 @@ class ProgramProfileResults extends React.Component {
                     <LiteracyInstructionBarDetails
                       data={this.state.averages}
                       LI={this.props.observationType}
+                      loadLegend={this.state.addLegendImage}
                     />
                   ) : null}
 
                 </Grid>
+
+                <div className={"legend-container"}></div>
+              </>
               ) : null}
             </Grid>
 
