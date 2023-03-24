@@ -118,8 +118,8 @@ const LineGraphOptions = {
   pointDot: true,
   showLines: true,
   legend: {
-    display: false,
-    position: 'top',
+    display: true,
+    position: 'bottom',
   },
   tooltips: {
     mode: 'index',
