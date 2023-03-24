@@ -100,7 +100,7 @@ class ACBarDetails extends React.Component<Props, {}> {
         let result = round([teacher['noInteraction'], teacher['engaged']]);
         var tempNoSupport = result[0];
         var tempTeacherSupport = result[1];
-    
+
         // var tempTeacherSupport = Math.round(( (100 - tempNoSupport) + Number.EPSILON) * 100) / 100;
       }
 
@@ -137,7 +137,7 @@ class ACBarDetails extends React.Component<Props, {}> {
       siteResult = round([data.pb.ni, data.pb.e])
     }
 
-    
+
     // We need to set the site average data
     // NOTE: I couldn't find a way to  modify style of just the 'Site Averages' bar so I'm setting the data to an array of all 0's except the last item in the array will hold the site average data
     var dataSize = Object.keys(data).length;
@@ -147,7 +147,7 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     var siteAverageTeacherSupport = new Array(dataSize).fill(0);
     siteAverageTeacherSupport[dataSize - 1] = siteResult[1];
-    
+
     // Colors and data labels are going to change as we switch between Child and Teacher (Default is teacher)
     let topBarBackgroundColor = "#E20000";
     let topBorderColor = "#E20000";
@@ -249,9 +249,11 @@ class ACBarDetails extends React.Component<Props, {}> {
 
     let dataSize = this.state.teacherNames.length;
 
+    let heading = this.props.type == "teacherAverage" ? "Teacher Behaviors" : "Child Behaviors";
+
     return (
 <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
-        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Associative and Cooperative</h2>
+        <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>{heading}</h2>
         <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
           <Bar
             data={childBehaviorsData}

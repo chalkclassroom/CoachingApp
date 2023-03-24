@@ -120,14 +120,6 @@ const LineGraphOptions = {
   legend: {
     display: true,
     position: 'bottom',
-    boxWidth: 12,
-    usePointStyle: true,
-    labels: {
-      usePointStyle: true,
-      pointStyle: 'start',
-      padding: 10,
-      boxWidth: 12,
-    }
   },
   tooltips: {
     mode: 'index',
@@ -252,7 +244,7 @@ const chartTitleArr = {
 const chartTitleArrTemp = {
   transitionTime: "Transition Time",
   levelOfInstruction: "Level of Instruction",
-  studentEngagement: "Engagement Rating",
+  //studentEngagement: "Engagement Rating",
 }
 
 // Different observation types are going to show different data. This will be used to tell the program which ones to show for each type
@@ -919,7 +911,7 @@ class SiteProfileResults extends React.Component {
           type2 = "childOtherActivitiesAverage"
           label1 = "Math"
           label2 = "Other Activities"
-          color1 = "#5B9BD5"
+          color1 = "#094492"
           color2 = "#C00000"
         }
       }
@@ -1476,6 +1468,9 @@ class SiteProfileResults extends React.Component {
 
                   {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> : ""}
                   {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "studentEngagement" && this.state.selectedTeacher == "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Engagement Rating</h3> : ""}
+                  {this.props.observationType == "studentEngagement" && this.state.selectedTeacher !== "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Student Engagement</h3> : ""}
 
                   {
                     this.props.observationType == "listeningToChildren"  ||

@@ -117,8 +117,8 @@ const LineGraphOptions = {
   pointDot: true,
   showLines: true,
   legend: {
-    display: false,
-    position: 'top',
+    display: true,
+    position: 'bottom',
   },
   tooltips: {
     mode: 'index',
@@ -214,6 +214,14 @@ const chartTitleArr = {
   fairnessDiscussionsAverage: 'Book Reading: Facilitate Discussions',
   multimodalInstructionAverage: 'Book Reading: Use Multimodal Instruction',
 }
+
+
+const chartTitleArrTemp = {
+  transitionTime: "Transition Time",
+  levelOfInstruction: "Level of Instruction",
+  //studentEngagement: "Engagement Rating",
+}
+
 
 class ProgramProfileResults extends React.Component {
   constructor(props) {
@@ -389,7 +397,7 @@ class ProgramProfileResults extends React.Component {
         endDate: this.props.endDate,
         teacherIds: teachers,
       })
-      
+
       // We need to filter out data based on what's in excluded data (data from a teacher that wasn't a part of this site during a certain period)
       // Go through each exclude date item
       for (var excludeDateIndex in datesToExclude) {
@@ -707,7 +715,7 @@ class ProgramProfileResults extends React.Component {
           type2 = "otherActivities"
           label1 = "Math"
           label2 = "Other Activities"
-          color1 = "#5B9BD5"
+          color1 = "#094492"
           color2 = "#C00000"
         }
       }
@@ -1216,6 +1224,33 @@ class ProgramProfileResults extends React.Component {
                   direction={'column'}
                   style={{ minHeight: 500 }}
                 >
+
+                  {/* Add label if this practice has one */}
+                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
+                  {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
+
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Sequential Activities</h3> : ""}
+                  {this.props.observationType == "sequentialActivities" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3> : ""}
+                  {this.props.observationType == "associativeAndCooperative" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Child Behaviors</h3> : ""}
+
+                  {this.props.observationType == "studentEngagement" && this.state.selectedSite == "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Engagement Rating</h3> : ""}
+                  {this.props.observationType == "studentEngagement" && this.state.selectedSite !== "None" ? <h3 style={{textAlign: 'center', width: '100%'}}>Student Engagement</h3> : ""}
+
+                  {
+                    this.props.observationType == "listeningToChildren"  ||
+                    this.props.observationType == "foundationSkills"  ||
+                    this.props.observationType == "writing"  ||
+                    this.props.observationType == "bookReading"  ||
+                    this.props.observationType == "languageEnvironment" ||
+                    this.props.observationType == "foundationSkills"
+                  ?
+                  <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Behaviors</h3>
+                  :
+                  ""}
+
                   {this.props.observationType !== "classroomClimate" ? (
                     <Line
                       data={this.state.lineGraphData}
