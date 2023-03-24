@@ -1590,6 +1590,7 @@ class SiteProfileResults extends React.Component {
                         data={this.state.averages}
                         type={this.state.radioValue}
                         barColors={this.state.lineColors}
+                        loadLegend={this.state.addLegendImage}
                       />
                     </div>
                   ) : null}
@@ -1638,6 +1639,7 @@ class SiteProfileResults extends React.Component {
                       <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                       id={"actual"}
                     />
                     ) : null}
@@ -1658,6 +1660,7 @@ class SiteProfileResults extends React.Component {
                       data={this.state.averages}
                       type={this.state.radioValue}
                       id={"actual"}
+                      loadLegend={this.state.addLegendImage}
                     />
                     ) : null}
                   </>) : null}
@@ -1677,6 +1680,7 @@ class SiteProfileResults extends React.Component {
                       data={this.state.averages}
                       type={this.state.radioValue}
                       id={"actual"}
+                      loadLegend={this.state.addLegendImage}
                     />
                     ) : null}
                   </>) : null}
@@ -1724,6 +1728,7 @@ class SiteProfileResults extends React.Component {
                       data={this.state.averages}
                       LI={this.props.observationType}
                       id={"actual"}
+                      loadLegend={this.state.addLegendImage}
                     />
                     ) : null}
                   </>) : null}
