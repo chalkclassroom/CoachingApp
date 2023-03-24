@@ -380,7 +380,8 @@ class ClassroomClimateBarDetails extends React.Component<Props, {}> {
         <div
           style={{
             //width: '100%',
-            width: 300 + this.state.teacherNames.length *160,
+            //width: 300 + this.state.teacherNames.length *160,
+            width: width,
             display: 'flex',
             position: 'relative',
             justifyContent: 'center',
