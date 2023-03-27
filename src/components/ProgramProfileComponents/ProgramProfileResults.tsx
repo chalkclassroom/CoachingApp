@@ -1380,6 +1380,7 @@ class ProgramProfileResults extends React.Component {
                       <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                       id={"actual"}
                     />
                     ) : null}
@@ -1399,6 +1400,7 @@ class ProgramProfileResults extends React.Component {
                       <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                       id={"actual"}
                     />
                     ) : null}
@@ -1418,6 +1420,7 @@ class ProgramProfileResults extends React.Component {
                       <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      loadLegend={this.state.addLegendImage}
                       id={"actual"}
                     />
                     ) : null}
@@ -1466,6 +1469,7 @@ class ProgramProfileResults extends React.Component {
                       data={this.state.averages}
                       LI={this.props.observationType}
                       id={"actual"}
+                      loadLegend={this.state.addLegendImage}
                     />
                     ) : null}
                   </>) : null}
