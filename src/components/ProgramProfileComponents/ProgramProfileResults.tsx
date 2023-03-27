@@ -1013,6 +1013,7 @@ class ProgramProfileResults extends React.Component {
         const legendContainer = document.getElementsByClassName("legend-container")[0];
 
         legendContainer.style.backgroundImage = `url('${imgData}')`;
+        legendContainer.style.backgroundRepeat = `no-repeat`;
         legendContainer.style.backgroundPosition = `bottom center`;
         legendContainer.style.height = `75px`;
         legendContainer.style.width = `100%`;
@@ -1234,8 +1235,10 @@ class ProgramProfileResults extends React.Component {
                 <h1>{this.state.errorMessage}</h1>
               ) : null}
 
-              {(this.state.tabState == 1 &&
-                Object.keys(this.state.averages).length > 0) == 1 ? (<>
+              {
+                this.state.tabState == 1 &&
+                Object.keys(this.state.averages).length > 1 &&
+                !this.state.showErrorMessage ? (<>
                   <FormControl variant="outlined">
                   <StyledSelect
                   labelId="demo-simple-select-outlined-label"
@@ -1303,8 +1306,11 @@ class ProgramProfileResults extends React.Component {
                     />
                   ) : null}
                 </Grid>
-              </>) : this.state.tabState == 0 &&
-                Object.keys(this.state.averages).length > 0 ? (
+              </>) :
+                this.state.tabState == 0 &&
+                Object.keys(this.state.averages).length > 1 &&
+                !this.state.showErrorMessage ?
+                (
                   <>
                   <Grid
                   container
