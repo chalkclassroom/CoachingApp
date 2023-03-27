@@ -782,20 +782,6 @@ class SiteProfileResults extends React.Component {
     }
 
     // Set the tones for averages
-    /*
-    if(averages[this.props.selectedTeacherId].toneCount)
-    {
-      this.setState({toneCount: averages[this.props.selectedTeacherId].toneCount, toneAverage: averages[this.props.selectedTeacherId].toneAverage})
-    }
-
-    // Set the tones for trends
-    if(trends[this.props.selectedTeacherId].toneCount)
-    {
-      this.setState({toneCountTrend: trends[this.props.selectedTeacherId].toneCount, toneAverageTrend: trends[this.props.selectedTeacherId].toneAverage})
-    }
-    */
-
-    console.log(trends)
 
     this.setState({ averages: averages, trends: trends })
 
