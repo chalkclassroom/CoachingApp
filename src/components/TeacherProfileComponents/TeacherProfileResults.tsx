@@ -1452,6 +1452,7 @@ class TeacherProfileResults extends React.Component {
               <Button
                 variant="contained"
                 color="primary"
+                style={{marginTop: this.props.observationType == "mathInstruction" && this.state.tabState == AVERAGES_SUBPAGE ? '50px' : '0px'}}
                 onClick={() => this.downloadPDF()}
                 disabled={
                   this.state.showErrorMessage &&
