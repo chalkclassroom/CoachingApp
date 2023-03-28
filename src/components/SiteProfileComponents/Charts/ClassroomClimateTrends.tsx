@@ -344,7 +344,7 @@ class ClassroomClimateTrends extends React.Component<Props, {}> {
 
 
     return (
-      <div className={"CCChartWrap"} style={{position: 'relative'}}>
+      <div className={"CCChartWrap line-chart"} style={{position: 'relative'}}>
 
         {/* The 'Excitement', 'Positive Interest', etc lables on right side of tone graph */}
         {this.props.radioValue == "teacherTone" ? (
