@@ -194,6 +194,7 @@ const LineGraphOptions = {
       },
     },
   },
+
 }
 
 // Array used to match the name of a practice to the value that's saved
@@ -341,6 +342,8 @@ class SiteProfileResults extends React.Component {
 
       toneCount: 0,
       toneAverage: 0,
+      pdf: false,
+      addLegendImage: this.addLegendImage,
     }
   }
 
@@ -779,20 +782,6 @@ class SiteProfileResults extends React.Component {
     }
 
     // Set the tones for averages
-    /*
-    if(averages[this.props.selectedTeacherId].toneCount)
-    {
-      this.setState({toneCount: averages[this.props.selectedTeacherId].toneCount, toneAverage: averages[this.props.selectedTeacherId].toneAverage})
-    }
-
-    // Set the tones for trends
-    if(trends[this.props.selectedTeacherId].toneCount)
-    {
-      this.setState({toneCountTrend: trends[this.props.selectedTeacherId].toneCount, toneAverageTrend: trends[this.props.selectedTeacherId].toneAverage})
-    }
-    */
-
-    console.log(trends)
 
     this.setState({ averages: averages, trends: trends })
 
@@ -1104,35 +1093,81 @@ class SiteProfileResults extends React.Component {
     var average = averageTotal / totalData
   }
 
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   // Handle downloading the PDF
-  downloadPDF = () => {
-    console.log('Downloading!')
-    const input = document.getElementById('siteProfileResultsContainer')
-    html2canvas(input).then(canvas => {
-      const imgData = canvas.toDataURL('image/png')
-      const imgWidth = 190
-      const pageHeight = 265
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-      let heightLeft = imgHeight
-      const pdf = new jsPDF('p', 'mm', 'a4', true) // true compresses the pdf
-      let position = 10
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
+  downloadPDF = async () => {
+      console.log("Downloading PDF");
+      const elementsToInclude = ["report-header", "report-info-container", "report-checklist-container", "chart-switcher"];
+
+      // Initialize PDF
+      const pdf = new jsPDF('l', 'mm', 'a4', true) // true compresses the pdf
+      let positionY = 10
+
+      // Grab iamge of each element and add it to the pdf
+      for(var className in elementsToInclude)
+      {
+        var element = document.getElementsByClassName(elementsToInclude[className])[0];
+
+        // If the element isn't there, just keep going
+        if(!element)
+        {
+          continue;
+        }
+
+        await html2canvas(element).then(canvas => {
+
+          const imgData = canvas.toDataURL('image/png')
+          const imgWidth = 190
+          const pageHeight = 265
+          const imgHeight = (canvas.height * imgWidth) / canvas.width
+          let heightLeft = imgHeight
+
+          pdf.addImage(imgData, 'PNG', 10, positionY, imgWidth, imgHeight)
+
+          // Set the vertical position to be 10 below previous image
+          positionY += 10 + imgHeight;
+
+        });
       }
 
-      const currDate = new Date()
 
-      pdf.save(
-        `Site_Profile_Results_${currDate.getMonth() +
-          1}_${currDate.getDate()}_${currDate.getFullYear()}.pdf`
-      )
-    })
+      // Add the averages or trends chart (Note: this is done seperately from the rest so we can capture the whole averages chart that's in a scrollable view)
+      let screenshotTarget = document.getElementsByClassName("line-chart")[0].getElementsByTagName('canvas')[0];
+
+      await html2canvas(screenshotTarget).then((canvas) => {
+
+          const imgData = canvas.toDataURL("image/png");
+
+          let imgWidth = 150;
+          // Set the width depending on how many users there are if we're printing the averages chart (max 280, min 150)
+          if(this.state.tabState == AVERAGES_SUBPAGE || this.props.observationType == "classroomClimate")
+          {
+            imgWidth = this.state.teacherNames.length * 20
+            if(imgWidth > 280){imgWidth = 280;}
+            if(imgWidth < 150){imgWidth = 150;}
+          }
+
+          const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+          pdf.addImage(imgData, 'PNG', 10, positionY, imgWidth, imgHeight)
+
+          const currDate = new Date()
+
+          pdf.save(
+            `Site_Profile_Results_${currDate.getMonth() +
+              1}_${currDate.getDate()}_${currDate.getFullYear()}.pdf`
+          )
+
+      });
+
+
   }
+
 
   handleTrendsDropdown = (event: SelectChangeEvent) => {
     this.setState({ selectedTeacher: event.target.value })
@@ -1207,6 +1242,42 @@ class SiteProfileResults extends React.Component {
   randomInteger = max => {
     return Math.floor(Math.random() * (max + 1))
   }
+
+
+
+
+  /*
+   * Place an image of the legend below the scrollable window
+   *
+   * You shouldn't have to scroll back and forth to view the legend.
+   * This function will take a screensshot of the averages chart once it's loaded.
+   * It will the add the image as the background-image of a div under the scvrollable window to only show the legend.
+   *
+   * This function gets passed as a prop to the various bar chart components
+   */
+  addLegendImage = (chart) => {
+    const screenshotTarget = document.getElementsByClassName("line-chart")[0].getElementsByTagName('canvas')[0];
+
+    // We need to calculate the size of the image manually because the images are appearing double the size on iPads
+    const targetHeight = screenshotTarget.offsetHeight;
+    const targetWidth = screenshotTarget.offsetWidth;
+
+    html2canvas(screenshotTarget, {width: targetWidth, height: targetHeight}).then((canvas) => {
+
+        const imgData = canvas.toDataURL("image/png");
+
+        const legendContainer = document.getElementsByClassName("legend-container")[0];
+
+        legendContainer.style.backgroundImage = `url('${imgData}')`;
+        legendContainer.style.backgroundPosition = `bottom center`;
+        legendContainer.style.backgroundRepeat = `no-repeat`;
+        legendContainer.style.backgroundSize = `${targetWidth}px ${targetHeight}px`;
+        legendContainer.style.height = `75px`;
+        legendContainer.style.width = `100%`;
+
+    });
+  }
+
 
   render() {
     /*
@@ -1306,12 +1377,15 @@ class SiteProfileResults extends React.Component {
       ]
     }
 
-    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, height: 620, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
+    let lineContainerStyles = {border: 'solid 1px #eee', padding: 20, minHeight: 500, marginTop: 20, display: 'flex', flexDirection: 'column', flexWrap: 'nowrap', marginBottom: 60,}
 
     if(this.props.observationType == "classroomClimate")
     {
       lineContainerStyles = {minHeight: 500, marginTop: 20}
     }
+
+
+
 
     return (
       <div id="siteProfileResultsContainer" >
@@ -1334,13 +1408,13 @@ class SiteProfileResults extends React.Component {
             </Grid>
 
             <Grid item xs={12}>
-              <h2>Site Profile</h2>
+              <h2 className={"report-header"}>Site Profile</h2>
             </Grid>
 
             {/*
                   Profile information section
                 */}
-            <Grid container item xs={12} style={startColumn}>
+            <Grid container item xs={12} style={startColumn} className={"report-info-container"}>
               <Grid style={startRow}>Site: {this.props.selectedSiteName}</Grid>
               <Grid style={startRow}>
                 CHALK Practice: {practicesArr[this.props.selectedPractices]}
@@ -1382,6 +1456,7 @@ class SiteProfileResults extends React.Component {
                 value={this.state.radioValue}
                 onChange={this.handleRadioChange}
                 style={{ width: '100%' }}
+                className={"report-checklist-container"}
               >
                 <RadioSets type={this.props.observationType} />
               </RadioGroup>
@@ -1406,7 +1481,7 @@ class SiteProfileResults extends React.Component {
             {/*
                 The chart switcher
             */}
-            <Grid container style={centerRow}>
+            <Grid container style={centerRow} className={"chart-switcher"}>
               <Grid xs={8}>
                 <TabBarWrapper
                   handleChange={this.handleTabChange}
@@ -1459,7 +1534,7 @@ class SiteProfileResults extends React.Component {
                 >
 
                   {/* Add label if this practice has one */}
-                  {chartTitleArrTemp[this.props.observationType] || chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
+                  {chartTitleArrTemp[this.props.observationType] && chartTitleArrTemp[this.props.observationType] !== "" ? <h3 style={{textAlign: 'center', width: '100%'}}>{chartTitleArrTemp[this.props.observationType]}</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "teacherAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Teacher Support for Math</h3> : ""}
                   {this.props.observationType == "mathInstruction" && this.state.radioValue == "childAverage" ? <h3 style={{textAlign: 'center', width: '100%'}}>Math Behaviors</h3> : ""}
 
@@ -1486,10 +1561,16 @@ class SiteProfileResults extends React.Component {
 
 
                   {this.props.observationType !== "classroomClimate" ? (
-                    <Line
-                      data={this.state.lineGraphData}
-                      options={LineGraphOptions}
-                    />
+                    <div style={{
+                      width: '100%',
+                      minHeight:500,
+                      marginBottom: 20,
+                    }} className="line-chart">
+                      <Line
+                        data={this.state.lineGraphData}
+                        options={LineGraphOptions}
+                      />
+                    </div>
                   ) : null}
                   {/* Classroom Climate Trends */}
                   {this.props.observationType === "classroomClimate" ? (
@@ -1513,6 +1594,7 @@ class SiteProfileResults extends React.Component {
               */}
               {this.state.tabState == 0 &&
               Object.keys(this.state.averages).length > 0 ? (
+                <>
                 <Grid
                   container
                   justify={'center'}
@@ -1546,71 +1628,85 @@ class SiteProfileResults extends React.Component {
                         data={this.state.averages}
                         type={this.state.radioValue}
                         barColors={this.state.lineColors}
+                        loadLegend={this.state.addLegendImage}
                       />
                     </div>
                   ) : null}
 
                   {/* Classroom Climate Chart */}
-                  {this.props.observationType === 'classroomClimate' ? (
-                    <ClassroomClimateBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'classroomClimate' ? (<>
+                    <ClassroomClimateBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} />
+                  </>) : null}
 
                   {/* Level of Instruction Chart */}
-                  {this.props.observationType === 'levelOfInstruction' ? (
-                    <LevelOfInstructionBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'levelOfInstruction' ? (<>
+                    <LevelOfInstructionBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"}/>
+                  </>) : null}
 
                   {/* Student Engagement Chart */}
-                  {this.props.observationType === 'studentEngagement' ? (
-                    <StudentEngagementBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'studentEngagement' ? (<>
+                    <StudentEngagementBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} />
+                  </>) : null}
 
                   {/* Math Instruction Chart */}
-                  {this.props.observationType === "mathInstruction" ? (
+                  {this.props.observationType === "mathInstruction" ? (<>
                     <MathInstructionBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                  </>) : null}
 
                   {/* Listening to Children Chart */}
-                  {this.props.observationType === "listeningToChildren" ? (
+                  {this.props.observationType === "listeningToChildren" ? (<>
                     <ListeningToChildrenBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                  </>) : null}
 
                   {/* Sequesntial Activities Chart */}
-                  {this.props.observationType === "sequentialActivities" ? (
+                  {this.props.observationType === "sequentialActivities" ? (<>
                     <SequentialActivitiesBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                  </>) : null}
 
                   {/* Associative and Cooperative Chart */}
-                  {this.props.observationType === "associativeAndCooperative" ? (
+                  {this.props.observationType === "associativeAndCooperative" ? (<>
                     <ACBarDetails
                       data={this.state.averages}
                       type={this.state.radioValue}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                  </>) : null}
 
 
-                  {this.props.observationType === 'transitionTime' ? (
-                    <TransitionAverageBarDetails data={this.state.averages} />
-                  ) : null}
+                  {this.props.observationType === 'transitionTime' ? (<>
+                    <TransitionAverageBarDetails data={this.state.averages} loadLegend={this.state.addLegendImage} id={"hidden"} />
+                  </>) : null}
 
                   {/* Literacy Instruction Charts */}
-                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (
+                  {["foundationSkills", "writing", "bookReading", "languageEnvironment"].includes(this.props.observationType) ? (<>
                     <LiteracyInstructionBarDetails
                       data={this.state.averages}
                       LI={this.props.observationType}
+                      id={"hidden"}
+                      loadLegend={this.state.addLegendImage}
                     />
-                  ) : null}
+                  </>) : null}
 
                 </Grid>
+
+                <div className={"legend-container"}></div>
+              </>
               ) : null}
             </Grid>
 
@@ -1620,14 +1716,17 @@ class SiteProfileResults extends React.Component {
                   */}
             <Grid item xs={12} style={centerRow}>
               <Button
+                id={"pdfButton"}
                 variant="contained"
                 color="primary"
-                onClick={() => this.downloadPDF()}
                 disabled={
                   Object.keys(this.state.teacherNames).length <= 0
                     ? true
                     : false
                 }
+                onClick={() => {
+                  this.downloadPDF()
+                }}
               >
                 Download as PDF
               </Button>

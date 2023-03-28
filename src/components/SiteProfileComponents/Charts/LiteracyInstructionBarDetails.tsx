@@ -105,7 +105,7 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
     let dataSize = Object.keys(data).length
     let siteAverageLiteracyInstruction = new Array(dataSize).fill(0)
     let siteAverageNoBehaviors = new Array(dataSize).fill(0)
-    
+
     siteAverageLiteracyInstruction[dataSize - 1] = Math.round((data.siteBar.totalInstruction + Number.EPSILON) * 100) / 100;
     siteAverageNoBehaviors[dataSize - 1] = Math.round((data.siteBar.noBehaviors + Number.EPSILON) * 100) / 100;
 
@@ -192,14 +192,21 @@ class LiteracyInstructionBarDetails extends React.Component<Props, State> {
       }
     };
 
+    let width = 300 + this.state.teacherNames.length * 160 
+    let loadLegend = this.props.loadLegend;
+
     return (
-      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxWidth: '70vw',}}>
+      <div style={{padding: '30px 30px 0px 30px', marginTop: '30px', overflowX: 'scroll', maxHeight: '440px', overflowY: 'hidden', maxWidth: '70vw',}}>
         <h2 style={{width: '100%', textAlign: 'center', position: 'absolute', top: '0'}}>Literacy Instruction</h2>
-        <div className={"realChart"} style={{height: 500, width: 300 + this.state.teacherNames.length *160}}>
+        <div className={"realChart line-chart"} style={{height: 500, width: width}}>
           <Bar
             data={childBehaviorsData}
             options={{
               animation: {
+                onComplete: function(chart): void {
+                  // Set the chart legend to appear below graph
+                  loadLegend(chart);
+                }
               },
               scales: {
                 yAxes: [
