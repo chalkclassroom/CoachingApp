@@ -198,14 +198,9 @@ class TrainingPage extends React.Component<Props, State> {
             {this.state.view === 'observe' ? (
               <ToolIcons type={'Observe'} training={true} history={this.props.history} />
             ) : this.state.view === 'navigation' ? (
-              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+              <Grid container direction="column" justify="center" alignItems="center" style={{ width: '100%', height: '100%', paddingTop: '3em'}}>
                 <Grid item>
-                  <img src={LogoImage} alt="CHALK" height="100vh" />
-                </Grid>
-                <Grid item style={{paddingTop: '3em'}}>
-                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-                    Navigation Training coming soon!
-                  </Typography>
+                  <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Navigating%20the%20App%206.14.23-720p-230707.mp4?alt=media&token=41a2f729-615a-4122-bbdb-8fa2950911b5'}/>
                 </Grid>
               </Grid>
             ) : this.state.view === 'results' ? (
@@ -217,14 +212,9 @@ class TrainingPage extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             ) : (
-              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+              <Grid container direction="column" justify="center" alignItems="center" style={{ width: '100%', height: '100%', paddingTop: '3em'}}>
                 <Grid item>
-                  <img src={LogoImage} alt="CHALK" height="100vh" />
-                </Grid>
-                <Grid item style={{paddingTop: '3em'}}>
-                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-                    Action Plan Training coming soon!
-                  </Typography>
+                  <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Action%20Plan%20How%20To%20(CC)-720p-230707.mp4?alt=media&token=073ce922-86eb-4bf8-a5fa-1ac9b46b2a82'}/>
                 </Grid>
               </Grid>
             )}
