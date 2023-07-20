@@ -100,11 +100,7 @@ class TeamMemberCard extends React.Component<Props, State> {
           className={classes.imageBox}
           onClick={this.props.handleClick}
         >
-          <img
-            src={this.state.image}
-            alt={this.props.person.name}
-            className={classes.image}
-          />
+
           <div style={{ padding: 8 }}>
             <Typography variant="subtitle1" style={{fontFamily: "Arimo"}}>
               <strong>{this.props.person.name}</strong>
