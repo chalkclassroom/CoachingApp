@@ -213,8 +213,8 @@ class TrainingPage extends React.Component<Props, State> {
               </Grid>
             ) : (
               <Grid container direction="column" justify="center" alignItems="center" style={{ width: '100%', height: '100%', paddingTop: '3em'}}>
-                <Grid item>
-                  <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Action%20Plan%20How%20To%20(CC)-720p-230707.mp4?alt=media&token=073ce922-86eb-4bf8-a5fa-1ac9b46b2a82'}/>
+                <Grid item style={{maxWidth: '900px'}}>
+                  <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Action%20Plan%207.20.23.mp4?alt=media&token=d1c0ed26-6f66-4149-86d6-b0daa17d6db4'}/>
                 </Grid>
               </Grid>
             )}
