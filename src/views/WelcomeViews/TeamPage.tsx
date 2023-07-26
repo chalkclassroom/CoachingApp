@@ -150,11 +150,33 @@ class TeamPage extends React.Component<Props, State> {
             justify="center"
             alignItems="center"
           >
+            <div
+              style={{
+                width: "100%",
+                maxWidth: '1060px',
+                paddingTop: 15,
+                paddingBottom: 15,
+                paddingLeft: 30,
+                paddingRight: 30,
+                boxSizing: 'border-box',
+              }}
+            >
+              <Grid item>
+                <Typography variant="h3" className={classes.titleText}>
+                  CHALK’s Commitment to Educators and Students
+                </Typography>
+              </Grid>
+              <Typography variant="subtitle1" style={{fontFamily: "Arimo", paddingTop: 10}}>
+                As a resource for educators, CHALK is committed to promoting high quality instruction for all students.  To that end, CHALK was developed through a collaboration between researchers and a diverse group of teachers, instructional coaches, and administrators from a variety of early education settings.  We believe that all educators and students should have access to valuable resources designed to improve teaching practices, regardless of race, ethnicity, gender, abilities, or socioeconomic status.
+              </Typography>
+            </div>
+
             <Grid item>
               <Typography variant="h3" className={classes.titleText}>
                 Our Team
               </Typography>
             </Grid>
+
             <Grid item>
               <Grid
                 container
@@ -486,6 +508,28 @@ class TeamPage extends React.Component<Props, State> {
             justify="center"
             alignItems="center"
           >
+
+            <div
+              style={{
+                width: "100%",
+                maxWidth: '1060px',
+                paddingTop: 15,
+                paddingBottom: 15,
+                paddingLeft: 30,
+                paddingRight: 30,
+                boxSizing: 'border-box',
+              }}
+            >
+              <Grid item>
+                <Typography variant="h3" className={classes.titleText}>
+                  CHALK’s Commitment to Educators and Students
+                </Typography>
+              </Grid>
+              <Typography variant="subtitle1" style={{fontFamily: "Arimo", paddingTop: 10}}>
+                As a resource for educators, CHALK is committed to promoting high quality instruction for all students.  To that end, CHALK was developed through a collaboration between researchers and a diverse group of teachers, instructional coaches, and administrators from a variety of early education settings.  We believe that all educators and students should have access to valuable resources designed to improve teaching practices, regardless of race, ethnicity, gender, abilities, or socioeconomic status.
+              </Typography>
+            </div>
+
             <Grid item>
               <Typography variant="h3" className={classes.titleText}>
                 Our Team
