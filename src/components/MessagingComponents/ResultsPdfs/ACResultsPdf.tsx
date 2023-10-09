@@ -242,7 +242,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             {data && data.childSummary && data.teacherSummary ? (
-              <Grid item style={{paddingTop: '1em'}}>
+              <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
                 <ChildBehaviorsPie
                   ac={data.childSummary.ac}
                   noAc={data.childSummary.noac}
@@ -253,7 +253,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.teacherSummary ? (
-              <Grid item style={{paddingTop: '8em'}}>
+              <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
                 <TeacherBehaviorsPie
                   support={data.teacherSummary.support}
                   noSupport={data.teacherSummary.noSupport}
@@ -264,9 +264,9 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.childDetails ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {data.teacherSummary ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: '1em'}}>
+                <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
                   <ChildBehaviorsDetailsHorizontalBar
                     ac1={data.childDetails.ac1}
                     ac2={data.childDetails.ac2}
@@ -284,7 +284,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
               </div>
             ) : (null)}
             {data && data.teacherDetails ? (
-              <Grid item style={{paddingTop: '8em', paddingBottom: '3em'}}>
+              <Grid item style={{paddingTop: '4em', paddingBottom: '3em', width: '100%', height: '450px'}}>
                 <TeacherBehaviorsDetailsHorizontalBar
                   teacher1={data.teacherDetails.teacher1}
                   teacher2={data.teacherDetails.teacher2}
@@ -303,7 +303,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.childTrends ? (
               <div>
                 {(data.teacherSummary || data.childDetails) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: '1em'}}>
+                <Grid item style={{paddingTop: '4em'}}>
                   <ChildLineTrends
                     data={(): {
                       labels: Array<string>;
@@ -323,7 +323,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
               </div>
             ) : (null)}
             {data && data.teacherTrends ? (
-              <Grid item style={{paddingTop: '8em'}}>
+              <Grid item style={{paddingTop: '4em'}}>
                 <TeacherLineTrends
                   data={(): {
                     labels: Array<string>;

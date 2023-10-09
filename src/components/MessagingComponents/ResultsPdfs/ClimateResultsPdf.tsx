@@ -159,7 +159,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '4em', width: '100%', minHeight: '450px'}}>
               {data && data.summary && data.details ? (
                 <BehaviorResponsesSummaryPie
                   positiveResponses={data.details.specificCount + data.details.nonspecificCount}
@@ -169,7 +169,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
+            <Grid item style={{paddingTop: '4em', width: '100%', minHeight: '450px'}}>
               {data && data.summary && data.summary.toneRating ? (
                 <AverageTone
                   averageToneRating={data.summary.toneRating}
@@ -178,9 +178,9 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
               ) : (null)}
             </Grid>
             {data && data.details && data.details.detailsChecked ? (
-            <div>
+            <div style={{width: '100%'}}>
               {(data.summary && data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
-              <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating) || !data.summary) ? '1em' : '8em'}}>
+              <Grid item style={{width: '100%', minHeight: '450px', paddingTop: ((data.summary && data.summary.toneRating) || !data.summary) ? '4em' : '8em'}}>
                 <BehaviorResponsesDetailsChart
                   specificBehaviorCount={data.details.specificCount}
                   nonspecificBehaviorCount={data.details.nonspecificCount}
@@ -193,9 +193,9 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             </div>
             ) : (null)}
             {data && data.trends ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {((data.summary && data.summary.toneRating && data.details && !data.details.detailsChecked) || (data.summary && !data.summary.toneRating && data.details && data.details.detailsChecked)) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating && data.details && !data.details.detailsChecked) || (data.summary && !data.summary.toneRating && data.details && data.details.detailsChecked)) ? '1em' : '8em'}}>
+                <Grid item style={{width: '100%', minHeight: '450px', paddingTop: ((data.summary && data.summary.toneRating && data.details && !data.details.detailsChecked) || (data.summary && !data.summary.toneRating && data.details && data.details.detailsChecked)) ? '1em' : '8em'}}>
                   <ClimateTrendsGraph
                     data={(): {
                       labels: Array<string>;

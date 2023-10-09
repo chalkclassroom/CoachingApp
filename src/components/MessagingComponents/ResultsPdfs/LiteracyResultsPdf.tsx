@@ -136,7 +136,7 @@ const LiteracyResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             {data && data.summary ? (
-              <Grid item style={{paddingTop: '1em'}}>
+              <Grid item style={{paddingTop: '1em', width: '100%', height: '450px'}}>
                 <LiteracySummaryChart
                   literacy={data.summary.literacy}
                   noLiteracy={data.summary.noLiteracy}
@@ -147,9 +147,9 @@ const LiteracyResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.details ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {data.summary ? (<Grid item style={{height: '50px'}} />) : null}
-                <Grid item style={{paddingTop: '1em'}}>
+                <Grid item style={{paddingTop: '1em', width: '100%', height: '450px'}}>
                   {(data.type === 'FoundationalTeacher' || data.type === 'FoundationalChild') ? (
                     <LiteracyDetailsFoundationalChart
                       literacy1={data.details.literacy1}
