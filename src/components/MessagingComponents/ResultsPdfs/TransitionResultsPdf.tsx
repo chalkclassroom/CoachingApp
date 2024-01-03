@@ -211,7 +211,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '4em', width: '100%', minHeight: '450px'}}>
               {data && data.summary ? (
                 <TransitionTimePie
                   transitionTime={data.summary[0].total}
@@ -222,7 +222,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
               ) : (null)}
             </Grid>
             {data && data.details ? (
-              <Grid item style={{paddingTop: data.summary ? '8em' : '1em'}}>
+              <Grid item style={{width: '100%', minHeight: '450px', paddingTop: data.summary ? '4em' : '1em'}}>
                 <TransitionBarChart
                   line={data.details[0].line}
                   traveling={data.details[0].traveling}
@@ -236,9 +236,9 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.trends ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '4em' : '12em'}}>
+                <Grid item style={{width: '100%', minHeight: '500px', paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '4em' : '12em'}}>
                   <TransitionTrendsGraph
                     data={(): {
                       labels: Array<Array<string>>;
