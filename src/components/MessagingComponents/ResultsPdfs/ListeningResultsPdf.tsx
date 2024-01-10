@@ -159,7 +159,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
               {data && data.summary ? (
                 <ListeningSummaryChart
                   listening={data.summary.listening}
@@ -170,7 +170,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
               ) : (null)}
             </Grid>
             {data && data.details ? (
-              <Grid item style={{paddingTop: data.summary ? '8em' : '1em'}}>
+              <Grid item style={{paddingTop: data.summary ? '4em' : '1em', width: '100%', height: '450px'}}>
                 <ListeningDetailsChart
                   listening1={data.details.listening1}
                   listening2={data.details.listening2}
@@ -184,9 +184,9 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
               </Grid>
             ) : (null)}
             {data && data.trends ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
+                <Grid item style={{width: '100%', minHeight: '450px', paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
                   <ListeningTrendsGraph
                     data={(): {
                       labels: Array<Array<string>>;

@@ -162,7 +162,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
               {data && data.summary ? (
                 <PieSummary
                   offTask={data.summary.offTask}
@@ -173,7 +173,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
               ) : (null)}
             </Grid>
             {data && data.summary ? (
-              <Grid item style={{paddingTop: '8em', height: 500, paddingBottom: '4em'}}>
+              <Grid item style={{paddingTop: '4em', height: 500, paddingBottom: '4em', width: '100%', height: '450px'}}>
                 <AvgBarSummary
                   avgRating={data.summary.avgRating}
                   completed={(): void => {setAvgRating(true)}}
@@ -182,9 +182,9 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
               </Grid>
             ) : (null)}
             {data && data.details ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {data.summary ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: '3em'}}>
+                <Grid item style={{paddingTop: '4em', width: '100%', height: '450px'}}>
                   <EngagementBarDetails
                     offTaskDetailSplit={[data.details.offTask0, data.details.offTask1, data.details.offTask2]}
                     mildlyEngagedDetailSplit={[data.details.mildlyEngaged0, data.details.mildlyEngaged1, data.details.mildlyEngaged2]}
@@ -197,9 +197,9 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
               </div>
             ) : (null)}
             {data && data.trends ? (
-              <div>
+              <div style={{width: '100%'}}>
                 {(data.summary && !data.details) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && !data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
+                <Grid item style={{width: '100%', height: '450px', paddingTop: ((data.summary && !data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
                   <TrendsSlider
                     data={(): {
                       labels: Array<Array<string>>;
