@@ -5150,7 +5150,8 @@ class Firebase {
             name: doc.data().name,
             id: doc.data().id,
             siteLeaderId: doc.data().siteLeaderId,
-            coaches: doc.data().coaches
+            coaches: doc.data().coaches,
+            programs: doc.data().programs,
           }
         }
       }))
