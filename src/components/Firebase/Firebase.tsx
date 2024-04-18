@@ -5324,42 +5324,7 @@ class Firebase {
     }
   }
 
-  /*
-   * Get all users with role 'programLeader'
-   */
-  getProgramLeaders = async (): Promise<void> => {
-    if(this.auth.currentUser) {
 
-      return this.db
-      .collection('users')
-      .where('role', '==', 'programLeader')
-      .get({ source: 'server' })
-      .then(async (querySnapshot) => {
-        let docSnapshot = await this.db.collection('users').doc(querySnapshot.data().id).get()
-        if(docSnapshot.exists)
-        {
-          const leadersArray = []
-          querySnapshot.forEach((doc) => {
-            console.log(doc.data());
-            console.log(doc);
-
-
-              leadersArray.push({
-                firstName: doc.data().firstName,
-                lastName: doc.data().lastName,
-                id: doc.data().id,
-                role: doc.data().role,
-                programs: doc.data().programs,
-                sites: doc.data().sites
-              })
-
-          });
-        }
-
-        return leadersArray;
-      });
-    }
-  }
 
 
   /*
@@ -5576,26 +5541,53 @@ class Firebase {
       .collection('users')
       .where('role', '==', 'siteLeader')
       .get({ source: 'server' })
-      .then((querySnapshot) => {
-        const leadersArray: Array<Types.User> = []
-        querySnapshot.forEach(async (doc) => {
-          let docSnapshot = await this.db.collection('users').doc(doc.data().id).get()
-          if(docSnapshot.exists)
-          {
-            console.log(doc.data());
+      .then(async (querySnapshot) => {
 
+        // Gather the program leader documents from Firestore
+        const queryDocs = querySnapshot.docs;
 
-            leadersArray.push({
-              firstName: doc.data().firstName,
-              lastName: doc.data().lastName,
-              id: doc.data().id,
-              role: doc.data().role,
-              programs: doc.data().programs,
-              sites: doc.data().sites
-            })
+        // Map them to get the information from each that we need
+        let leadersArray = queryDocs.map(function(doc){
+          return {
+            firstName: doc.data().firstName,
+            lastName: doc.data().lastName,
+            id: doc.data().id,
+            role: doc.data().role,
+            programs: doc.data().programs,
+            sites: doc.data().sites
           }
-        });
+        }); 
+        console.log("Site Leaders List =>", leadersArray)
+        return leadersArray;
+      });
 
+    }
+  }
+
+  getProgramLeaders = async (): Promise<void> => {
+    if(this.auth.currentUser) {
+
+      return this.db
+      .collection('users')
+      .where('role', '==', 'programLeader')
+      .get({ source: 'server' })
+      .then(async (querySnapshot) => {
+
+        // Gather the program leader documents from Firestore
+        const queryDocs = querySnapshot.docs;
+
+        // Map them to get the information from each that we need
+        let leadersArray = queryDocs.map(function(doc){
+          return {
+            firstName: doc.data().firstName,
+            lastName: doc.data().lastName,
+            id: doc.data().id,
+            role: doc.data().role,
+            programs: doc.data().programs,
+            sites: doc.data().sites
+          }
+        }); 
+        console.log("Program Leaders List =>", leadersArray)
         return leadersArray;
       });
     }
