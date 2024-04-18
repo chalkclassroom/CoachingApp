@@ -128,8 +128,12 @@ class Sites extends React.Component<Props, State> {
   }
 
   componentDidMount = async () => {
+    // Set list of leaders user can select as a leader of a site
     const siteLeaders = await this.context.getSiteLeaders()
-    this.setState({originalSiteLeaders: siteLeaders});
+    const programLeaders = await this.context.getProgramLeaders()
+    const allLeaders = siteLeaders.concat(programLeaders)
+
+    this.setState({originalSiteLeaders: allLeaders});
   }
 
   handlePageChange = (pageNumber: number) => {
