@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import './App.css'
 import WelcomePage from './views/WelcomeViews/WelcomePage'
+import LoginPage from './views/WelcomeViews/LoginPage'
 import ClassroomClimatePage from './views/protected/ClassroomClimateViews/ClassroomClimatePage'
 import ClassroomClimateResultsPage from './views/protected/ClassroomClimateViews/ClassroomClimateResultsPage'
 import LevelOfInstructionResultsPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage'
@@ -272,7 +273,7 @@ class App extends React.Component<Props, State> {
                 auth === true ? (
                   <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
                 ) : (
-                  <WelcomePage />
+                  <LoginPage />
                 )
               }
             />
