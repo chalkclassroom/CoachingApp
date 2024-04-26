@@ -17,8 +17,10 @@ const styles: object = {
   paper: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
-    padding: '1em'
+    padding: '1em',
+    minHeight: '340px',
   },
   form: {
     width: "100%" // Fix IE 11 issue.
@@ -221,6 +223,8 @@ class LoginForm extends React.Component<Props, State> {
           />
           <br />
           <Link to="/forgot">Forgot your password?</Link>
+          <br />
+          <br />
           <Button
             type="submit"
             fullWidth
