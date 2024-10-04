@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { TextField, Popover, Collapse } from '@material-ui/core'
+import { TextField, Popover, Collapse, Fab } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import InfoIcon from '@material-ui/icons/Info'
@@ -27,6 +27,11 @@ import * as Constants from '../constants/Constants'
 import * as H from 'history'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Firebase from './Firebase'
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
+import ActionPlanForPdf from './MessagingComponents/ActionPlanForPdf'
+import PrintIcon from '@material-ui/icons/Print';
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const styles: object = {
   textField: {
@@ -58,6 +63,7 @@ interface Props {
 }
 
 interface State {
+  tool: string
   goal: string
   goalTimeline: Date | null
   benefit: string
@@ -82,6 +88,7 @@ interface State {
   dialog: boolean
   savedAlert: boolean
   planNumber: Number
+  readOnly: boolean
 }
 
 interface Style {
@@ -101,6 +108,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     super(props)
 
     this.state = {
+      tool: '',
       goal: '',
       goalTimeline: null,
       benefit: '',
@@ -126,7 +134,8 @@ class ActionPlanForm extends React.Component<Props, State> {
       createDialog: false,
       dialog: false,
       savedAlert: false,
-      planNumber: 0
+      planNumber: 0,
+      readOnly: this.props.readOnly
     }
   }
 
@@ -309,6 +318,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             actionPlanData.dateModified,
           )
           this.setState({
+            tool: actionPlanData.tool,
             actionPlanExists: true,
             goal: actionPlanData.goal,
             goalTimeline:
@@ -347,6 +357,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             .then(() => {
               this.setState({
                 actionStepsArray: newActionStepsArray,
+                actionPlanId: actionPlanId
               })
             })
             .catch(() => {
@@ -465,10 +476,14 @@ class ActionPlanForm extends React.Component<Props, State> {
           )
           this.getActionPlan(this.state.actionPlanId)
         })
-        .catch(() => {
+        .catch((e) => {
           console.log('error in saving action step ', index)
         })
     })
+  }
+
+  toggleEdit = (): void => {
+    this.setState({ readOnly: !this.state.readOnly })
   }
 
 
@@ -490,6 +505,49 @@ class ActionPlanForm extends React.Component<Props, State> {
     })
     this.props.firebase.getCoachLastName().then((name: string) => {
       this.setState({ coachLastName: name })
+    })
+  }
+
+  downloadPDF = (): void => {
+    const elementId = "ActionPlanPDFComponent";
+
+    const input: HTMLElement = document.getElementById(elementId);
+    let base64data: string | ArrayBuffer | null = null;
+    let newBase64Data = '';
+    html2canvas(input, {
+      onclone: function (clonedDoc) {
+        clonedDoc.getElementById(elementId).style.visibility = 'visible';
+      },
+    }).then((canvas) => {
+      const link = document.createElement("a");
+      document.body.appendChild(link);
+      link.download = "html_image.png";
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 190;
+      const pageHeight = 265;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+      let position = 10;
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      // use this for downloading pdf
+      pdf.save("download.pdf");
+      const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+      const reader = new FileReader();
+      reader.readAsDataURL(blobPDF);
+      reader.onloadend = function(): void {
+        base64data = reader.result;
+        if (base64data) {
+          newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
+        }
+      }
     })
   }
 
@@ -583,68 +641,125 @@ class ActionPlanForm extends React.Component<Props, State> {
             style={{ width: '100%' }}
           >
             <Grid item style={{ width: '100%' }}>
-              {this.props.history ? ( // if viewing on Action Plan Page
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-between"
-                  alignItems="center"
-                  style={{
-                    width: '100%',
-                    paddingTop: '0.5em',
-                    paddingBottom: '1em',
-                  }}
-                >
-                  <Grid item xs={2} />
-                  <Grid item xs={8}>
-                    <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      style={{ width: '100%' }}
-                    >
-                      <Typography
-                        variant="h4"
-                        style={{
-                          fontFamily: 'Arimo',
-                        }}
-                      >
-                        ACTION PLAN
 
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container justify={'center'} xs={2}>
-                  </Grid>
-                </Grid>
-              ) : (
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-between"
-                  alignItems="center"
-                  style={{ width: '100%' }}
-                >
-                  <Grid item xs={11}>
+                {this.props.history ? ( // if viewing on Action Plan Page
+                  <>
                     <Grid
                       container
                       direction="row"
-                      justify="flex-start"
+                      justify="space-between"
                       alignItems="center"
+                      style={{ width: '100%', paddingTop: '0.5em', paddingBottom: '1em' }}
                     >
-                      <Grid item>
-                        <Typography
-                          variant="h4"
-                          style={{
-                            fontFamily: 'Arimo',
-                          }}
-                        >
-                          {"ACTION PLAN " + this.state.planNumber}
-                        </Typography>
+                      <Grid item xs={12}>
+                        <Grid container direction="row" justify="center" alignItems="center" style={{ width: '100%' }}>
+
+                          <Grid item xs={3}>
+                          </Grid>
+                          <Grid item xs={6} style={{ textAlign: 'center' }}>
+                            <Typography variant="h4" style={{ fontFamily: 'Arimo' }}>
+                              ACTION PLAN
+                            </Typography>
+                          </Grid>
+                          <Grid container direction="row" justifyContent="flex-end" xs={3}>
+                            {this.state.readOnly ? (
+                              <Fab
+                                aria-label="Edit"
+                                name="Edit"
+                                size="small"
+                                onClick={this.toggleEdit}
+                                className={classes.actionButton}
+                                style={{ backgroundColor: '#F9FE49' }}
+                              >
+                                <EditOutlinedIcon style={{ color: '#555555' }} />
+                              </Fab>
+                            ) : (
+                              <Button style={{ width: 40, height: 40 }} onClick={this.handleSave}>
+                                {this.state.saved ? (
+                                  <img alt="Save" src={SaveGrayImage} style={{ width: '100%' }} />
+                                ) : (
+                                  <img alt="Save" src={SaveImage} style={{ width: '100%' }} />
+                                )}
+
+                              </Button>
+                            )}
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              startIcon={<PrintIcon />}
+                              onClick={this.downloadPDF}
+                              style={{
+                                'white-space': 'initial',
+                                'line-height': '20px',
+                                textAlign: 'left',
+                                justifyContent: 'flex-start',
+                                marginBottom: '15px',
+                                padding: '11px 15px',
+                                textTransform: 'none',
+                                marginLeft: '12px',
+                              }}
+                            >
+                              Print
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        {/* <Button
+                    </Grid>
+
+                    {/* Render a hidden component that will be used to print the page*/}
+                    <div
+                      id="ActionPlanPDFComponent"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        width: '210mm',
+                        minHeight: '290mm',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        visibility: 'hidden',
+                        position: 'fixed',
+                        right: -1000,
+                      }}
+                    >
+                      <ActionPlanForPdf
+                        tool={this.state.tool}
+                        apGoal={this.state.goal}
+                        goalTimeline={this.state.goalTimeline}
+                        benefit={this.state.benefit}
+                        date={this.state.date}
+                        actionSteps={this.state.actionStepsArray}
+                        teacher={this.props.teacher}
+                        coachName={this.state.coachFirstName + ' ' + this.state.coachLastName}
+                      />
+                    </div>
+                  </>
+
+                ) : (
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                    style={{ width: '100%' }}
+                  >
+                    <Grid item xs={11}>
+                      <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="center"
+                      >
+                        <Grid item>
+                          <Typography
+                            variant="h4"
+                            style={{
+                              fontFamily: 'Arimo',
+                            }}
+                          >
+                            {'ACTION PLAN ' + this.state.planNumber}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          {/* <Button
                           onClick={
                             this.handleCreate
                           }
@@ -656,32 +771,32 @@ class ActionPlanForm extends React.Component<Props, State> {
                             }}
                           />
                         </Button> */}
+                        </Grid>
                       </Grid>
                     </Grid>
+                    <Grid item xs={1}>
+                      <Button onClick={this.handleSave}>
+                        {this.state.saved ? (
+                          <img
+                            alt="Save"
+                            src={SaveGrayImage}
+                            style={{
+                              width: '100%',
+                            }}
+                          />
+                        ) : (
+                          <img
+                            alt="Save"
+                            src={SaveImage}
+                            style={{
+                              width: '100%',
+                            }}
+                          />
+                        )}
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={1}>
-                    <Button onClick={this.handleSave}>
-                      {this.state.saved ? (
-                        <img
-                          alt="Save"
-                          src={SaveGrayImage}
-                          style={{
-                            width: '100%',
-                          }}
-                        />
-                      ) : (
-                        <img
-                          alt="Save"
-                          src={SaveImage}
-                          style={{
-                            width: '100%',
-                          }}
-                        />
-                      )}
-                    </Button>
-                  </Grid>
-                </Grid>
-              )}
+                )}
             </Grid>
             <Grid item style={{ width: '100%' }}>
               <Grid
@@ -692,8 +807,8 @@ class ActionPlanForm extends React.Component<Props, State> {
               >
                 <Grid item xs={4}>
                   {this.props.teacher.firstName +
-                  ' ' +
-                  this.props.teacher.lastName}
+                    ' ' +
+                    this.props.teacher.lastName}
                 </Grid>
                 <Grid item xs={4}>
                   <Grid
@@ -929,8 +1044,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         }
                         InputProps={{
                           disableUnderline: true,
-                          readOnly: this.props
-                            .readOnly,
+                          readOnly: this.state.readOnly,
                           style: {
                             fontFamily: 'Arimo',
                             width: '98%',
@@ -1100,11 +1214,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                           margin="normal"
                           id="date-picker-inline"
                           readOnly={
-                            this.props.readOnly
+                            this.state.readOnly
                           }
                           inputProps={{
-                            readOnly: this.props
-                              .readOnly,
+                            readOnly: this.state.readOnly,
                           }}
                           autoOk={true} // closes date picker on selection
                           value={
@@ -1327,8 +1440,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         }
                         InputProps={{
                           disableUnderline: true,
-                          readOnly: this.props
-                            .readOnly,
+                          readOnly: this.state.readOnly,
                           style: {
                             fontFamily: 'Arimo',
                             width: '98%',
@@ -1800,9 +1912,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                 }
                                 InputProps={{
                                   disableUnderline: true,
-                                  readOnly: this
-                                    .props
-                                    .readOnly,
+                                  readOnly: this.state.readOnly,
                                   style: {
                                     fontFamily:
                                       'Arimo',
@@ -1851,9 +1961,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   }
                                   InputProps={{
                                     disableUnderline: true,
-                                    readOnly: this
-                                      .props
-                                      .readOnly,
+                                    readOnly: this.state.readOnly,
                                     style: {
                                       fontFamily:
                                         'Arimo',
@@ -1888,14 +1996,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                                       index.toString()
                                     }
                                     readOnly={
-                                      this
-                                        .props
-                                        .readOnly
+                                      this.state.readOnly
                                     }
                                     inputProps={{
-                                      readOnly: this
-                                        .props
-                                        .readOnly,
+                                      readOnly: this.state.readOnly,
                                     }}
                                     autoOk={
                                       true
@@ -1920,8 +2024,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </table>
               <Button
                             disabled={
-                              this.props
-                                .readOnly
+                              this.state.readOnly
                             }
                             onClick={
                               this
@@ -1936,9 +2039,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                           >
                             <AddCircleIcon
                               style={{
-                                fill: this
-                                  .props
-                                  .readOnly
+                                fill: this.state.readOnly
                                   ? '#a9a9a9'
                                   : '#0988ec',
                                 marginRight:

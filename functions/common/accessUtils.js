@@ -46,7 +46,7 @@ const canAccessTeacher = async (teacher, userId) => {
     const role = docData.role;
     if (role === 'admin'){
         return true;
-    }else if (role === 'coach'){
+    }else if (role === 'coach' || role == "programLeader" || role == "siteLeader"){
         const docRef = await getUserDoc(userId);
         const partnerCollection = await docRef.listCollections().then(collections => collections.find(c => c.id === "partners"))
         return (await partnerCollection.doc(teacher).get()).exists

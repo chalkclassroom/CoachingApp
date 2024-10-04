@@ -38,7 +38,7 @@
     "firebase": "^8.8.1",
     "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.16.0",
-    "firebase-tools": "^13.6.0",
+    "firebase-tools": "^9.16.0",
     "html2canvas": "^1.0.0-rc.7",
     "immortal-db": "^1.0.2",
     "jspdf": "^2.2.0",
