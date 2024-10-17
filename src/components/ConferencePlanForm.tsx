@@ -3,11 +3,12 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TextField, Popover } from '@material-ui/core';
+import { TextField, Popover, Fab } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SaveImage from '../assets/images/SaveImage.svg';
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -22,6 +23,10 @@ import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
+import ConferencePlanForPdf from './MessagingComponents/ConferencePlanForPdf'
+import PrintIcon from '@material-ui/icons/Print';
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const BlankTheme = createTheme({
   palette: {
@@ -97,7 +102,8 @@ interface State {
   anchorEl: HTMLElement,
   popover: string,
   dialog: boolean,
-  savedAlert: boolean
+  savedAlert: boolean,
+  readOnly: boolean
 }
 
 interface Style {
@@ -134,7 +140,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
       anchorEl: null,
       popover: '',
       dialog: false,
-      savedAlert: false
+      savedAlert: false,
+      readOnly: this.props.readOnly
     }
   }
 
@@ -334,6 +341,56 @@ class ConferencePlanForm extends React.Component<Props, State> {
     }
   }
 
+  // Toggles the ability to edit. This is for the Conference Plan details page
+  toggleEdit = (): void => {
+    this.setState({ readOnly: !this.state.readOnly })
+  }
+
+  // Download pdf of conference plan
+  downloadPDF = (): void => {
+    const elementId = "ConferencePlanPDFComponent";
+
+    const input: HTMLElement = document.getElementById(elementId);
+    let base64data: string | ArrayBuffer | null = null;
+    let newBase64Data = '';
+    html2canvas(input, {
+      onclone: function (clonedDoc) {
+        clonedDoc.getElementById(elementId).style.visibility = 'visible';
+      },
+    }).then((canvas) => {
+      const link = document.createElement("a");
+      document.body.appendChild(link);
+      link.download = "html_image.png";
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 190;
+      const pageHeight = 265;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+      let position = 10;
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      // use this for downloading pdf
+      pdf.save("download.pdf");
+      const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+      const reader = new FileReader();
+      reader.readAsDataURL(blobPDF);
+      reader.onloadend = function(): void {
+        base64data = reader.result;
+        if (base64data) {
+          newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
+        }
+      }
+    })
+  }
+
+
   /**
    * @param {React.SyntheticEvent} e
    */
@@ -442,8 +499,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
       useFirebase = true
     }
 
-    console.log(this.props.teacher)
-
     if (!useFirebase) {
       this.props.history?.push({pathname: path, state: {view: 'questions'}})
     } else {
@@ -479,24 +534,95 @@ class ConferencePlanForm extends React.Component<Props, State> {
               >
                 <Grid item style={{width: '100%'}}>
                   {this.props.history ? (
-                    // view only page
-                    <Grid
-                      container
-                      direction="row"
-                      justify="space-between"
-                      alignItems="center"
-                      style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
-                    >
-                      <Grid item xs={2} />
-                      <Grid item xs={8}>
-                        <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-                          <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                            CONFERENCE PLAN
-                          </Typography>
+                    // view only page (Conference Plan Details View)
+                    <>
+                      <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                        style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
+                      >
+                        <Grid item xs={12}>
+                          <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
+
+                            <Grid item xs={3}>
+                            </Grid>
+                            <Grid item xs={6} style={{textAlign: "center"}}>
+                              <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                                CONFERENCE PLAN
+                              </Typography>
+                            </Grid>
+                            <Grid container direction="row" justifyContent="flex-end" xs={3}>
+                                {this.state.readOnly ? (
+                                  <Fab
+                                    aria-label="Edit"
+                                    name="Edit"
+                                    size="small"
+                                    onClick={this.toggleEdit}
+                                    className={classes.actionButton}
+                                    style={{ backgroundColor: "#F9FE49" }}
+                                  >
+                                    <EditOutlinedIcon style={{ color: "#555555" }} />
+                                  </Fab>
+                                ) : (
+                                  <Button style={{width:40, height:40}} onClick={this.handleSave}>
+                                    {this.state.saved ? (
+                                      <img alt="Save" src={SaveGrayImage} style={{width: '100%'}}/>
+                                    ) : (
+                                      <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
+                                    )}
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  startIcon={<PrintIcon />}
+                                  onClick={this.downloadPDF}
+                                  style={{
+                                    'white-space': 'initial',
+                                    'line-height': '20px',
+                                    textAlign: 'left',
+                                    justifyContent: 'flex-start',
+                                    marginBottom: '15px',
+                                    padding: '11px 15px',
+                                    textTransform: 'none',
+                                    marginLeft: '12px',
+                                  }}
+                                >
+                                  Print
+                                </Button>
+                            </Grid>
+                          </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item xs={2} />
-                    </Grid>
+                      {/* Render a hidden component that will be used to print the page*/}
+                      <div
+                        id="ConferencePlanPDFComponent"
+                        style={{
+                          backgroundColor: '#ffffff',
+                          width: '210mm',
+                          minHeight: '290mm',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          visibility: 'hidden',
+                          position: 'fixed',
+                          right: -1000,
+                        }}
+                      >
+                        <ConferencePlanForPdf
+                          teacher={this.props.teacher}
+                          coachFirstName={this.state.coachFirstName}
+                          coachLastName={this.state.coachLastName}
+                          date={this.state.date}
+                          feedback={this.state.feedback}
+                          questions={this.state.questions}
+                          addedQuestions={this.state.addedQuestions}
+                          notes={this.state.notes}
+                          tool={this.props.practice}
+                        />
+                      </div>
+                    </>
                   ) : (
                     // results view
                     <Grid
@@ -650,7 +776,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                 multiline
                                 InputProps={{
                                   disableUnderline: true,
-                                  readOnly: this.props.readOnly,
+                                  readOnly: this.state.readOnly,
                                   style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                                 }}
                                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
@@ -660,7 +786,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           )
                         })}
                       </ul>
-                      {!this.props.readOnly ? (
+                      {!this.state.readOnly ? (
                         <Grid item>
                           <Grid container direction="row" justify="flex-start">
                             <Button onClick={this.handleAddFeedback}>
@@ -745,7 +871,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                           }
                                         >
                                           <Button color="primary" size="small" variant="outlined" onClick={() => 
-                                            !this.props.readOnly ? this.props.viewClick('questions') : this.handleConferencePlanClick()
+                                            !this.state.readOnly ? this.props.viewClick('questions') : this.handleConferencePlanClick()
                                             }>
                                             Questions
                                           </Button>
@@ -777,7 +903,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                 multiline
                                 InputProps={{
                                   disableUnderline: true,
-                                  readOnly: this.props.readOnly,
+                                  readOnly: this.state.readOnly,
                                   style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                                 }}
                                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
@@ -806,7 +932,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                 multiline
                                 InputProps={{
                                   disableUnderline: true,
-                                  readOnly: this.props.readOnly,
+                                  readOnly: this.state.readOnly,
                                   style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                                 }}
                                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
@@ -816,7 +942,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           )
                         })}
                       </ul>
-                      {!this.props.readOnly ? (
+                      {!this.state.readOnly ? (
                         <Grid item>
                           <Grid container direction="row" justify="flex-start">
                             <Button onClick={this.handleAddQuestion}>
@@ -901,7 +1027,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                 multiline
                                 InputProps={{
                                   disableUnderline: true,
-                                  readOnly: this.props.readOnly,
+                                  readOnly: this.state.readOnly,
                                   style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                                 }}
                                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
@@ -911,7 +1037,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           )
                         })}
                       </ul>
-                      {!this.props.readOnly ? (
+                      {!this.state.readOnly ? (
                         <Grid item>
                           <Grid container direction="row" justify="flex-start">
                             <Button onClick={this.handleAddNote}>
