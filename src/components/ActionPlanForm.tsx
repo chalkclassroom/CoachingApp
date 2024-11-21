@@ -515,30 +515,33 @@ class ActionPlanForm extends React.Component<Props, State> {
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
     html2canvas(input, {
+      scale: 1,
       onclone: function (clonedDoc) {
         clonedDoc.getElementById(elementId).style.visibility = 'visible';
       },
     }).then((canvas) => {
-      const link = document.createElement("a");
-      document.body.appendChild(link);
-      link.download = "html_image.png";
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 190;
-      const pageHeight = 265;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      let heightLeft = imgHeight;
       const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+
+      const imgData = canvas.toDataURL('image/png');
+
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const imgHeight = canvas.height * pageWidth / canvas.width;
+
       let position = 10;
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      const maxPosition = 0 - imgHeight; // Position needs to be negative but we don't want it exceeding the image height
+
+      // Handle it if it's too big for one page
+      while (position > maxPosition) {
+        pdf.addImage(imgData, 'PNG', 10, position , pageWidth - 20, imgHeight);
+        position -= pageHeight; // This value moves the image up so only the right portion shows on this page
+        if (position > maxPosition) {
+          pdf.addPage();
+        }
       }
+
       // use this for downloading pdf
-      pdf.save("download.pdf");
+      pdf.save("ActionPlanPDF.pdf");
       const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
       const reader = new FileReader();
       reader.readAsDataURL(blobPDF);
