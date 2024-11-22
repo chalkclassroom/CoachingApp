@@ -3,26 +3,10 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TextField, Fab } from '@material-ui/core'
-import InfoIcon from '@material-ui/icons/Info';
-import Button from '@material-ui/core/Button';
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import * as  moment from 'moment';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
-import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
-import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-import { connect } from 'react-redux';
-import { jsPDF } from 'jspdf'
-import html2canvas from 'html2canvas';
-import PrintIcon from '@material-ui/icons/Print'
-import { changeTeacher } from '../../state/actions/teacher'
 import LogoImage from '../../assets/images/LogoImage.png'
 import TransitionTimeImage from '../../assets/images/TransitionTimeImage.png'
 import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.png'
@@ -68,18 +52,6 @@ interface Props {
   notes: Array<string>,
   tool: string,
 
-  // magic8?: string,
-  // sessionId?: string,
-  // readOnly: boolean,
-  // conferencePlanExists: boolean,
-  // editMode: boolean,
-  // chosenQuestions: Array<string>,
-  // conferencePlanId?: string,
-  // history?: H.History,
-  // notesModal: boolean,
-  // viewClick(view:string): void
-  // practice: string
-  // teacherList: Array<Types.Teacher>,
 }
 
 interface State {
@@ -106,65 +78,6 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
     this.state = {
       readOnly: true
     }
-  }
-
-
-  // Download pdf of conference plan
-  downloadPDF = (): void => {
-    const elementId = "ActionPlanPDFComponent";
-
-    const input: HTMLElement = document.getElementById(elementId);
-    let base64data: string | ArrayBuffer | null = null;
-    let newBase64Data = '';
-    html2canvas(input, {
-      onclone: function (clonedDoc) {
-        clonedDoc.getElementById(elementId).style.visibility = 'visible';
-      },
-    }).then((canvas) => {
-      const link = document.createElement("a");
-      document.body.appendChild(link);
-      link.download = "html_image.png";
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 190;
-      const pageHeight = 265;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      let heightLeft = imgHeight;
-      const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
-      let position = 10;
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      // use this for downloading pdf
-      pdf.save("download.pdf");
-      const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
-      const reader = new FileReader();
-      reader.readAsDataURL(blobPDF);
-      reader.onloadend = function(): void {
-        base64data = reader.result;
-        if (base64data) {
-          newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
-        }
-      }
-    })
-  }
-
-
-  /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
-
-  }
-
-  /**
-   * lifecycle method invoked after component updates
-   * @param {Props} prevProps
-   * @param {State} prevState
-   */
-  componentDidUpdate(prevProps: Props, prevState: State): void {
   }
 
   static propTypes = {
@@ -279,7 +192,7 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                 style={{width: '100%'}}
               >
                 <Grid item style={{width: "100%", marginBottom: '0.8em', marginTop: '0.4em', border: '2px solid #094492', borderRadius: '0.5em', overflow: 'auto'}}>
-                  <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
+                  <Grid container direction="column" style={{width: '100%', minHeight: '22vh'}}>
                     <Grid item style={{width: '100%'}}>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -291,25 +204,13 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                       <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                         {this.props.feedback.map((value, index) => {
                           return (
-                            <li key={index}>
-                              <TextField
-                                id={"feedback" + index.toString()}
-                                name={"feedback" + index.toString()}
-                                type="text"
-                                placeholder={"Type your feedback here!"}
-                                value={value}
-                                margin="none"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                InputProps={{
-                                  disableUnderline: true,
-                                  readOnly: this.state.readOnly,
-                                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                                }}
-                                InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                                className={classes.textField}
-                              />
+                            <li key={index} style={{
+                              marginBottom: '0.5em',
+                              fontFamily: 'Arimo',
+                              width: '98%',
+                              marginLeft: '0.5em',
+                            }}>
+                              {value}
                             </li>
                           )
                         })}
@@ -318,8 +219,8 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item style={{width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
-                  <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
+                <Grid item style={{ width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
+                  <Grid container direction="column" style={{width: '100%', minHeight: '22vh'}}>
                     <Grid item style={{width: '100%'}}>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -329,55 +230,10 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                       <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                        {this.props.addedQuestions[0] ? this.props.addedQuestions.map((value, index) => {
-                          return (
-                            <li key={index}>
-                              <TextField
-                                id={"addedQuestions" + index.toString()}
-                                name={"addedQuestions" + index.toString()}
-                                type="text"
-                                placeholder={index===0 ? "Type your questions here, or add them from the Questions tab!": null}
-                                value={value}
-                                margin="none"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                InputProps={{
-                                  disableUnderline: true,
-                                  readOnly: this.state.readOnly,
-                                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                                }}
-                                InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                                className={classes.textField}
-                              />
-                            </li>
-                          )
-                        }) : (<div />)}
                         {this.props.questions.map((value, index) => {
                           return (
-                            <li key={index}>
-                              <TextField
-                                id={"questions" + index.toString()}
-                                name={"questions" + index.toString()}
-                                type="text"
-                                placeholder={
-                                  !this.props.addedQuestions[0] && index===0
-                                    ? "Type your questions here, or add them from the Questions tab!"
-                                    : "Type your question here!"
-                                }
-                                value={value}
-                                margin="none"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                InputProps={{
-                                  disableUnderline: true,
-                                  readOnly: this.state.readOnly,
-                                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                                }}
-                                InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                                className={classes.textField}
-                              />
+                            <li key={index} style={{marginBottom: '0.5em', fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}}>
+                              {value}
                             </li>
                           )
                         })}
@@ -386,7 +242,7 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} style={{width: "100%", border: '2px solid #009365', borderRadius: '0.5em', overflow: 'auto'}}>
-                  <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
+                  <Grid container direction="column" style={{width: '100%', minHeight: '22vh'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -398,25 +254,13 @@ class ConferencePlanForPdf extends React.Component<Props, State> {
                       <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                         {this.props.notes.map((value, index) => {
                           return (
-                            <li key={index}>
-                              <TextField
-                                id={"notes" + index.toString()}
-                                name={"notes" + index.toString()}
-                                type="text"
-                                placeholder={"Type your note here!"}
-                                value={value}
-                                margin="none"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                InputProps={{
-                                  disableUnderline: true,
-                                  readOnly: this.state.readOnly,
-                                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                                }}
-                                InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                                className={classes.textField}
-                              />
+                            <li key={index} style={{
+                              marginBottom: '0.5em',
+                              fontFamily: 'Arimo',
+                              width: '98%',
+                              marginLeft: '0.5em',
+                            }}>
+                              {value}
                             </li>
                           )
                         })}

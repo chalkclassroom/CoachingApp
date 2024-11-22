@@ -354,30 +354,33 @@ class ConferencePlanForm extends React.Component<Props, State> {
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
     html2canvas(input, {
+      scale: 1,
       onclone: function (clonedDoc) {
         clonedDoc.getElementById(elementId).style.visibility = 'visible';
       },
     }).then((canvas) => {
-      const link = document.createElement("a");
-      document.body.appendChild(link);
-      link.download = "html_image.png";
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 190;
-      const pageHeight = 265;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      let heightLeft = imgHeight;
       const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+
+      const imgData = canvas.toDataURL('image/png');
+
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const imgHeight = canvas.height * pageWidth / canvas.width;
+
       let position = 10;
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      const maxPosition = 0 - imgHeight; // Position needs to be negative but we don't want it exceeding the image height
+
+      // Handle it if it's too big for one page
+      while (position > maxPosition) {
+        pdf.addImage(imgData, 'PNG', 10, position , pageWidth - 20, imgHeight);
+        position -= pageHeight; // This value moves the image up so only the right portion shows on this page
+        if (position > maxPosition) {
+          pdf.addPage();
+        }
       }
+
       // use this for downloading pdf
-      pdf.save("download.pdf");
+      pdf.save("ConferencePlanPDF.pdf");
       const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
       const reader = new FileReader();
       reader.readAsDataURL(blobPDF);
@@ -521,6 +524,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     const notesId = notesOpen ? 'notes-popover' : undefined;
     return (
       <ClickAwayListener onClickAway={(e): void => this.onClickAway(e)}>
+
         <div style={{width: '100%'}} id='cp'>
           {
             <div>
@@ -541,57 +545,58 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         direction="row"
                         justify="space-between"
                         alignItems="center"
-                        style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
+                        style={{ width: '100%', paddingTop: '0.5em', paddingBottom: '1em' }}
                       >
                         <Grid item xs={12}>
-                          <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
+                          <Grid container direction="row" justify="center" alignItems="center"
+                                style={{ width: '100%' }}>
 
                             <Grid item xs={3}>
                             </Grid>
-                            <Grid item xs={6} style={{textAlign: "center"}}>
-                              <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                            <Grid item xs={6} style={{ textAlign: 'center' }}>
+                              <Typography variant="h4" style={{ fontFamily: 'Arimo' }}>
                                 CONFERENCE PLAN
                               </Typography>
                             </Grid>
                             <Grid container direction="row" justifyContent="flex-end" xs={3}>
-                                {this.state.readOnly ? (
-                                  <Fab
-                                    aria-label="Edit"
-                                    name="Edit"
-                                    size="small"
-                                    onClick={this.toggleEdit}
-                                    className={classes.actionButton}
-                                    style={{ backgroundColor: "#F9FE49" }}
-                                  >
-                                    <EditOutlinedIcon style={{ color: "#555555" }} />
-                                  </Fab>
-                                ) : (
-                                  <Button style={{width:40, height:40}} onClick={this.handleSave}>
-                                    {this.state.saved ? (
-                                      <img alt="Save" src={SaveGrayImage} style={{width: '100%'}}/>
-                                    ) : (
-                                      <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
-                                    )}
-                                  </Button>
-                                )}
-                                <Button
-                                  variant="outlined"
-                                  color="primary"
-                                  startIcon={<PrintIcon />}
-                                  onClick={this.downloadPDF}
-                                  style={{
-                                    'white-space': 'initial',
-                                    'line-height': '20px',
-                                    textAlign: 'left',
-                                    justifyContent: 'flex-start',
-                                    marginBottom: '15px',
-                                    padding: '11px 15px',
-                                    textTransform: 'none',
-                                    marginLeft: '12px',
-                                  }}
+                              {this.state.readOnly ? (
+                                <Fab
+                                  aria-label="Edit"
+                                  name="Edit"
+                                  size="small"
+                                  onClick={this.toggleEdit}
+                                  className={classes.actionButton}
+                                  style={{ backgroundColor: '#F9FE49' }}
                                 >
-                                  Print
+                                  <EditOutlinedIcon style={{ color: '#555555' }} />
+                                </Fab>
+                              ) : (
+                                <Button style={{ width: 40, height: 40 }} onClick={this.handleSave}>
+                                  {this.state.saved ? (
+                                    <img alt="Save" src={SaveGrayImage} style={{ width: '100%' }} />
+                                  ) : (
+                                    <img alt="Save" src={SaveImage} style={{ width: '100%' }} />
+                                  )}
                                 </Button>
+                              )}
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<PrintIcon />}
+                                onClick={this.downloadPDF}
+                                style={{
+                                  'white-space': 'initial',
+                                  'line-height': '20px',
+                                  textAlign: 'left',
+                                  justifyContent: 'flex-start',
+                                  marginBottom: '15px',
+                                  padding: '11px 15px',
+                                  textTransform: 'none',
+                                  marginLeft: '12px',
+                                }}
+                              >
+                                Print
+                              </Button>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -608,6 +613,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           visibility: 'hidden',
                           position: 'fixed',
                           right: -1000,
+                          zIndex: 9999,
                         }}
                       >
                         <ConferencePlanForPdf
