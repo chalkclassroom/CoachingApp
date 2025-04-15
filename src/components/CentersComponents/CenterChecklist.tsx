@@ -84,10 +84,10 @@ class CenterChecklist extends React.Component<Props, State> {
             align="center"
             style={{ padding: "10px", fontFamily: 'Arimo' }}
           >
-            Which centers are open?
+            Which centers/areas are open?
           </Typography>
           <Typography variant="h5" align="center" style={{padding: 10, fontFamily: 'Arimo'}}>
-            You will have the opportunity to add additional centers if the ones
+            You will have the opportunity to add additional centers/areas if the ones
             in your classroom are not listed here.
           </Typography>
           <Grid
