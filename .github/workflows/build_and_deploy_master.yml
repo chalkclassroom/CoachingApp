@@ -34,7 +34,7 @@ jobs:
         env:
           CXXFLAGS: -Wno-error
       - name: set environment variables
-        uses: w9jds/firebase-action@14.10.1
+        uses: w9jds/firebase-action@v14.10.1
         with:
           args: 'functions:config:set env.bq_project=cqrefpwa env.bq_dataset=observations'
         env:
@@ -47,7 +47,7 @@ jobs:
         run: |
           echo $CHANGED_OUTPUT
       - name: Deploy Functions on Prod Server
-        uses: w9jds/firebase-action@14.10.1
+        uses: w9jds/firebase-action@v14.10.1
         if: steps.changed-functions.outputs.any_changed == 'true'
         with:
           args: deploy --only ${{env.CHANGED_OUTPUT}}
@@ -80,7 +80,7 @@ jobs:
         env:
           CXXFLAGS: -Wno-error
       - name: Deploy on Prod Server
-        uses: w9jds/firebase-action@14.10.1
+        uses: w9jds/firebase-action@v14.10.1
         with:
           args: "deploy --only hosting:cqrefpwa"
         env:
