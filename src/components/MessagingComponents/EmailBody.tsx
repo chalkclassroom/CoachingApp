@@ -9,6 +9,7 @@ import CloseIcon from '@material-ui/icons/Close'
 // import VisibilityIcon from '@material-ui/icons/Visibility';
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 interface EmailBodyProps {
     email: string | undefined
@@ -83,6 +84,18 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (
             <Grid item onClick={(): void => props.handlePreview()} style={{paddingLeft: '1em'}}>
               <VisibilityIcon />
             </Grid> */}
+                      {props.content !== '' ? (
+                        <Grid
+                          item
+                          style={{ paddingLeft: '1em'}}
+                        >
+                          <a download={props.title} href={"data:application/pdf;base64," + props.content}>
+                            <GetAppIcon style={{color: "rgba(33,150,243,1)"}} />
+                          </a>
+                        </Grid>
+                      ) : null}
+
+
                         <Grid
                             item
                             onClick={
@@ -90,7 +103,7 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (
                                     ? undefined
                                     : (): void => props.handleDelete()
                             }
-                            style={{ paddingLeft: '1em' }}
+                            style={{ paddingLeft: '0.5em' }}
                         >
                             <CloseIcon />
                         </Grid>
