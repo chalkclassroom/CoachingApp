@@ -17,6 +17,7 @@ exports.funcTransitionSessionDates = functions.https.onCall( async (data, contex
   console.log(context.auth.uid);
   console.log(data.teacherId);
   if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+    console.log(`User ${context.auth.uid} can NOT access teacher ${data.teacherId}`)
     return [];
   }else{
     console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
