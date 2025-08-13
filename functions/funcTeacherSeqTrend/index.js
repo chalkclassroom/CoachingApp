@@ -15,6 +15,7 @@ const bigquery = new BigQuery();
 exports.funcTeacherSeqTrend = functions.https.onCall(async(data, context) => {
   //SQL query to get child trends for AC
   if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
+    console.log(`User ${context.auth.uid} can NOT access teacher ${data.teacherId}`)
     return [];
   }else{
     console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
