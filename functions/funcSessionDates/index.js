@@ -14,10 +14,11 @@ const bigquery = new BigQuery();
  */
 exports.funcSessionDates = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
+
   console.log(context.auth.uid);
   console.log(data.teacherId);
   if (!await canAccessTeacher(data.teacherId, context.auth.uid)){
-    console.log('cant access teacher')
+    console.log(`User ${context.auth.uid} can NOT access teacher ${data.teacherId}`)
     return [];
   }else{
     console.log(`User ${context.auth.uid} can access teacher ${data.teacherId}`)
