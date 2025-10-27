@@ -199,6 +199,8 @@ class UsersPage extends React.Component<Props, State> {
           continue;
         }
         let program = programs.find(o => o.sites.includes(site.id))
+        let programName = (program) ? program.name : "";
+        let programId = (program) ? program.id : "";
         let draft = {
           coachId: "",
           coachFirstName: "",
@@ -208,8 +210,8 @@ class UsersPage extends React.Component<Props, State> {
           teacherFirstName: teachers[i].firstName,
           teacherLastName: teachers[i].lastName,
           selectedSiteId: site.id,
-          selectedProgramName: program.name,
-          selectedProgramId: program.id,
+          selectedProgramName: programName,
+          selectedProgramId: programId,
           archived: teachers[i].archived,
           email: teachers[i].email
         }

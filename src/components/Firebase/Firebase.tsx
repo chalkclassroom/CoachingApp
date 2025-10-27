@@ -5292,28 +5292,42 @@ class Firebase {
         {
           var docData = doc.data();
 
-          // Make sure this user has an array of program ids
+          // Get programs for the user. Site leaders might not have programs set in their user doc. So need to get it based off their sites
+          let programIds = []
           if(docData.programs)
           {
-            var programIds = docData.programs;
-
-            // Go through each program ID in the list
-            for(let programId of programIds)
-            {
-              // Get the program for this program ID
-              var tempProgram = await this.getProgram({programId: programId});
-
-              // There's a problem with the array being filled with deleted information,
-              //  so we have to check to make sure the data is there
-              //  The problem is most likely a local firestore issue but it couldn't hurt
-              if (tempProgram.id && tempProgram.id !== "")
-              {
-                // Add the program data to the list to return
-                programRes.push(tempProgram);
-              }
-
-            };
+            programIds = docData.programs;
           }
+          else if(docData.sites)
+          {
+            const siteIds = docData.sites;
+            for(let siteId of siteIds)
+            {
+              let site = await this.getUserProgramOrSite({siteId: siteId});
+              if(site.programs)
+              {
+                programIds.push(site.programs);
+              }
+            }
+          }
+
+          // Go through each program ID in the list
+          for(let programId of programIds)
+          {
+            // Get the program for this program ID
+            var tempProgram = await this.getProgram({programId: programId});
+
+            // There's a problem with the array being filled with deleted information,
+            //  so we have to check to make sure the data is there
+            //  The problem is most likely a local firestore issue but it couldn't hurt
+            if (tempProgram.id && tempProgram.id !== "")
+            {
+              // Add the program data to the list to return
+              programRes.push(tempProgram);
+            }
+
+          };
+
         }
 
         return programRes;
