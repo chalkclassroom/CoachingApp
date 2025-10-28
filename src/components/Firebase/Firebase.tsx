@@ -401,7 +401,65 @@ class Firebase {
    * gets list of all teachers linked to current user's account
    */
   getTeacherList = async (): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+
     if (this.auth.currentUser) {
+
+      const userDoc = await this.getUserInformation();
+      const userRole = userDoc.role;
+
+      // Leaders should be getting all teachers that belong to their program/sites. So we need to get their sites first
+      if(userRole === "siteLeader" || userRole === "programLeader") {
+        let allSiteIds = []
+
+        // For program leaders, we need to grab their program first, then use that to get all the sites in the program
+        if (userRole === "programLeader") {
+          const userPrograms = await this.getProgramsForUser({ userId: "user" });
+          for (let programIndex in userPrograms) {
+            let tempProgram = userPrograms[programIndex];
+            // console.log("TEMP PROGRAM", userPrograms[programIndex]);
+            if (tempProgram.sites) {
+              allSiteIds = allSiteIds.concat(tempProgram.sites)
+            }
+          }
+        }
+
+        if (userRole === "siteLeader") {
+          if (userDoc.sites) {
+            allSiteIds = userDoc.sites;
+          }
+        }
+
+        // Get the names of each site
+        const allSiteInfo = await this.getMultipleUserProgramOrSite({ siteIds: allSiteIds });
+
+        let allSiteNames = [];
+        for(let siteIndex in allSiteInfo)
+        {
+          let tempSiteInfo = allSiteInfo[siteIndex];
+          if(tempSiteInfo.name)
+          {
+            allSiteNames.push(tempSiteInfo.name);
+          }
+        }
+
+        // Grab all the teacher docs based on site names
+        const practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
+        const siteTeachers = await this.db.collection('users').where("school", "in", allSiteNames).get()
+
+
+        let teacherList: Array<firebase.firestore.DocumentData> = [];
+
+        teacherList.push(this.getTeacherInfo(practiceTeacher.id))
+
+        siteTeachers.forEach(teacher =>
+          teacherList.push(this.getTeacherInfo(teacher.id))
+        )
+
+        return teacherList;
+
+      }
+
+
       return this.db
         .collection('users')
         .doc(this.auth.currentUser.uid)
