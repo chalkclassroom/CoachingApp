@@ -367,6 +367,9 @@ class CoachProfile extends React.Component {
         // Set the teacher options
         var teacherOptions = await this.setTeachers(event.target.value);
 
+        // As requested, the Coach Profile reports should always show "All Teachers"
+        this.setState({selectedTeacherName: "All Teachers", selectedTeacher: "all"});
+
         // Set errors if there are no coaches in this program
         if(teacherOptions.length <= 1)
         {
@@ -650,37 +653,6 @@ class CoachProfile extends React.Component {
                               })}
                         </StyledSelect>
                         <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-
-                  </Grid>
-
-
-                  {/* Teacher Dropdown */}
-                  <Grid container xs={12} style={centerRow}>
-
-                    <Grid container xs={3} style={endRow}>
-                      <label style={{marginRight: 30}}>Teacher</label>
-                    </Grid>
-
-                    <Grid container xs={6} style={startRow}>
-                      <FormControl variant="outlined" error={this.state.error['teacher']}>
-                        <StyledSelect
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          value={this.state.selectedTeacher}
-                          onChange={this.handleChangeDropdown}
-                          name="selectedTeacher"
-                          disabled={!(this.state.teacherOptions.length > 0) /* Disable if there are no site options */}
-                        >
-                          {this.state.teacherOptions.map(
-                            (teacher, index)=>{
-                              return <MenuItem value={teacher.id} key={teacher.id}>
-                                    {teacher.name}
-                                  </MenuItem>
-                              })}
-                        </StyledSelect>
-                        <FormHelperText>{this.state.errorMessages['teacher']}</FormHelperText>
                       </FormControl>
                     </Grid>
 
