@@ -177,7 +177,7 @@ class TeacherModal extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props;
     console.log('teacher list', this.props.teacherList);
-    const filteredTeachers = this.props.teacherList.filter(teacher => teacher.id !== null);
+    const filteredTeachers = this.props.teacherList.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
     return (
       <div>
         <Modal open={this.state.open}>

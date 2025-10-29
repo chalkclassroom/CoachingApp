@@ -123,7 +123,7 @@ class Coaches extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-
+    this.setInitialTeachers();
   }
 
   componentDidUpdate(prevProps) {
@@ -132,17 +132,21 @@ class Coaches extends React.Component<Props, State> {
     }
 
     if (prevProps.teacherData !== this.props.teacherData) {
-      let result = [];
-      this.props.teacherData.map((doc) => {
-          result.push(doc)
-      })
-
-      this.setState({coachesTeachers: result},
-        // Sort the data
-        function(){
-          this.sortTeachers("lastName");
-        })
+      this.setInitialTeachers();
     }
+  }
+
+  setInitialTeachers() {
+    let result = [];
+    this.props.teacherData.map((doc) => {
+      result.push(doc)
+    })
+
+    this.setState({coachesTeachers: result},
+      // Sort the data
+      function(){
+        this.sortTeachers("lastName");
+      })
   }
 
   sortTeachers = (sortType) => {
