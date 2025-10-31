@@ -121,8 +121,17 @@ class ProgramProfile extends React.Component {
     const isLeader = await firebase.userIsLeader();
     const isAdmin = await firebase.userIsAdmin();
 
-    let allPrograms = await firebase.getProgramsForUser({ userId: "user" });
-    allPrograms = allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
+
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
     this.setState({allPrograms: allPrograms});
 
     if(isLeader && !isAdmin)

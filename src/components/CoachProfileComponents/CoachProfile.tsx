@@ -137,7 +137,17 @@ class CoachProfile extends React.Component {
 
     // Set programs
     // For admins, we want to show all program options. For leaders, their program should be automatically selected
-    const allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
+
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
 
     // Set Sites
     const allSites = await firebase.getSites();

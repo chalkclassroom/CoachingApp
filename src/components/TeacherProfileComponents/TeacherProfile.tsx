@@ -137,9 +137,17 @@ class TeacherProfile extends React.Component {
 
     // Set programs
     // For admins, we want to show all program options. For leaders, their program should be automatically selected
-    const allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
 
-    const tempAllPrograms = await firebase.getPrograms()
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
 
     // Set Sites
     const allSites = await firebase.getSites();
@@ -153,12 +161,8 @@ class TeacherProfile extends React.Component {
     // If the user is a leader and not an admin, the program should be auto populated
     if(isLeader && !isAdmin)
     {
-      console.log("ALL PROGRAMS: ", allPrograms)
-      console.log("ALL PROGRAMS 2: ", tempAllPrograms)
       const mainProgram = allPrograms[0];
       const programId = mainProgram.id;
-
-      console.log("MAIN PROGRAMS: ", mainProgram)
 
       this.setState({selectedProgramName: mainProgram.name, selectedProgram: programId, programsDisabled: true});
 
