@@ -85,9 +85,10 @@ class SiteProfile extends React.Component {
           allPrograms: [],
           siteOptions: [],
           checkboxes: [],
+          programsDisabled: true,
           checked: [],
           error: false,
-          selectedProgram: "",
+          // selectedProgram: "",
           selectedSite: "",
           view: 1,
           startDate: date,
@@ -124,24 +125,49 @@ class SiteProfile extends React.Component {
   setDropdownOptions = async () => {
     const firebase = this.context;
 
-    // Set programs
-    firebase.getPrograms()
-     .then((data)=>{
-       // Sort array in alphabetical order
-       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-       this.setState({allPrograms: data});
-
-       // Reset selected site just in case we selected it then changed to a program that doesn't have that site
-       this.setState({selectedSite: "", selectedSiteName: ""});
-     });
+    const isLeader = await firebase.userIsLeader();
+    const isAdmin = await firebase.userIsAdmin();
 
     // Set programs
-    firebase.getSites()
-     .then((data)=>{
-       // Sort array in alphabetical order
-       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-       this.setState({allSites: data});
-     });
+    // For admins, we want to show all program options. For leaders, their program should be automatically selected
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
+
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+
+    // Set Sites
+    const allSites = await firebase.getSites();
+    this.setState({ allPrograms: allPrograms });
+    this.setState({ selectedSite: "", selectedSiteName: "" });
+
+    // Sort array in alphabetical order
+    allSites.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    this.setState({allSites: allSites});
+
+    // If the user is a leader and not an admin, the program should be auto populated
+    if(isLeader && !isAdmin)
+    {
+      const mainProgram = allPrograms[0];
+      const programId = mainProgram.id;
+
+      this.setState({selectedProgramName: mainProgram.name, selectedProgram: programId, programsDisabled: true});
+
+      this.setSites(programId);
+    }
+
+
+    // Activate dropdown for admins once we have the data
+    if(isAdmin)
+    {
+      this.setState({ programsDisabled: false });
+    }
 
   }
 
@@ -406,6 +432,7 @@ class SiteProfile extends React.Component {
                           value={this.state.selectedProgram}
                           onChange={this.handleChangeDropdown}
                           name="selectedProgram"
+                          disabled={this.state.programsDisabled}
                         >
                         {this.state.allPrograms.map(
                           (site, index)=>{

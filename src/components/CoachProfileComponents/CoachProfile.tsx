@@ -79,6 +79,7 @@ class CoachProfile extends React.Component {
       date.setMonth(date.getMonth()-1)
       this.state = {
           selectedProgram: "",
+          programsDisabled: true,
 
           allPrograms: [],
           allSites: [],
@@ -91,7 +92,6 @@ class CoachProfile extends React.Component {
           checked: [],
           error: false,
 
-          selectedProgram: "",
           selectedSite: "",
           selectedCoach: "",
           selectedTeacher: "",
@@ -132,24 +132,49 @@ class CoachProfile extends React.Component {
   setDropdownOptions = async () => {
     const firebase = this.context;
 
-    // Set programs
-    firebase.getPrograms()
-     .then((data)=>{
-       // Sort array in alphabetical order
-       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-       this.setState({allPrograms: data});
-
-       // Reset selected site just in case we selected it then changed to a program that doesn't have that site
-       this.setState({selectedSite: "", selectedSiteName: ""});
-     });
+    const isLeader = await firebase.userIsLeader();
+    const isAdmin = await firebase.userIsAdmin();
 
     // Set programs
-    firebase.getSites()
-     .then((data)=>{
-       // Sort array in alphabetical order
-       data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-       this.setState({allSites: data});
-     });
+    // For admins, we want to show all program options. For leaders, their program should be automatically selected
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
+
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+
+    // Set Sites
+    const allSites = await firebase.getSites();
+    this.setState({ allPrograms: allPrograms });
+    this.setState({ selectedSite: "", selectedSiteName: "" });
+
+    // Sort array in alphabetical order
+    allSites.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    this.setState({allSites: allSites});
+
+    // If the user is a leader and not an admin, the program should be auto populated
+    if(isLeader && !isAdmin)
+    {
+      const mainProgram = allPrograms[0];
+      const programId = mainProgram.id;
+
+      this.setState({selectedProgramName: mainProgram.name, selectedProgram: programId, programsDisabled: true});
+
+      this.setSites(programId);
+    }
+
+
+    // Activate dropdown for admins once we have the data
+    if(isAdmin)
+    {
+      this.setState({ programsDisabled: false });
+    }
 
   }
 
@@ -351,6 +376,9 @@ class CoachProfile extends React.Component {
 
         // Set the teacher options
         var teacherOptions = await this.setTeachers(event.target.value);
+
+        // As requested, the Coach Profile reports should always show "All Teachers"
+        this.setState({selectedTeacherName: "All Teachers", selectedTeacher: "all"});
 
         // Set errors if there are no coaches in this program
         if(teacherOptions.length <= 1)
@@ -562,6 +590,7 @@ class CoachProfile extends React.Component {
                           value={this.state.selectedProgram}
                           onChange={this.handleChangeDropdown}
                           name="selectedProgram"
+                          disabled={this.state.programsDisabled}
                         >
                         {this.state.allPrograms.map(
                           (site, index)=>{
@@ -634,37 +663,6 @@ class CoachProfile extends React.Component {
                               })}
                         </StyledSelect>
                         <FormHelperText>{this.state.errorMessages['coach']}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-
-                  </Grid>
-
-
-                  {/* Teacher Dropdown */}
-                  <Grid container xs={12} style={centerRow}>
-
-                    <Grid container xs={3} style={endRow}>
-                      <label style={{marginRight: 30}}>Teacher</label>
-                    </Grid>
-
-                    <Grid container xs={6} style={startRow}>
-                      <FormControl variant="outlined" error={this.state.error['teacher']}>
-                        <StyledSelect
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          value={this.state.selectedTeacher}
-                          onChange={this.handleChangeDropdown}
-                          name="selectedTeacher"
-                          disabled={!(this.state.teacherOptions.length > 0) /* Disable if there are no site options */}
-                        >
-                          {this.state.teacherOptions.map(
-                            (teacher, index)=>{
-                              return <MenuItem value={teacher.id} key={teacher.id}>
-                                    {teacher.name}
-                                  </MenuItem>
-                              })}
-                        </StyledSelect>
-                        <FormHelperText>{this.state.errorMessages['teacher']}</FormHelperText>
                       </FormControl>
                     </Grid>
 

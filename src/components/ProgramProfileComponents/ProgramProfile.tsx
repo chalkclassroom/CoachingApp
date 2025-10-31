@@ -81,6 +81,8 @@ class ProgramProfile extends React.Component {
       date.setMonth(date.getMonth()-1)
       this.state = {
           selectedProgram: "",
+          programsDisabled: true,
+
           allPrograms: [],
           checkboxes: [],
           checked: [],
@@ -115,14 +117,34 @@ class ProgramProfile extends React.Component {
    */
    async setPrograms(){
      const firebase = this.context;
-     firebase.getPrograms()
-      .then((data)=>{
 
-        // Sort array in alphabetical order
-        data.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    const isLeader = await firebase.userIsLeader();
+    const isAdmin = await firebase.userIsAdmin();
 
-        this.setState({allPrograms: data});
-      });
+    let allPrograms;
+    if(isLeader && !isAdmin)
+    {
+      allPrograms = await firebase.getProgramsForUser({ userId: "user" });
+    }
+    if(isAdmin)
+    {
+      allPrograms = await firebase.getPrograms();
+    }
+
+    allPrograms.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    this.setState({allPrograms: allPrograms});
+
+    if(isLeader && !isAdmin)
+    {
+      const mainProgram = allPrograms[0];
+
+      this.setState({selectedProgramName: mainProgram.name, selectedProgram: mainProgram.id, programsDisabled: true,  selectedProgramInfo: mainProgram});
+    }
+    if(isAdmin)
+    {
+      this.setState({programsDisabled: false});
+    }
+
    }
 
 
@@ -329,6 +351,7 @@ class ProgramProfile extends React.Component {
                           value={this.state.selectedProgram}
                           onChange={this.handleChangeDropdown}
                           name="selectedProgram"
+                          disabled={this.state.programsDisabled}
                         >
                         {this.state.allPrograms.map(
                           (program, index)=>{

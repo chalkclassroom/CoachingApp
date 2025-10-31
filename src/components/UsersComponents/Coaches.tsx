@@ -84,7 +84,7 @@ class Coaches extends React.Component<Props, State> {
     this.state = {
       addTeacherFirstName: "",
       addTeacherLastName: "",
-      selectedCoach: "",
+      selectedCoach: "all",
       coachList: [],
       coachesTeachers: [],
       editTeacherFirstName: "",
@@ -123,13 +123,30 @@ class Coaches extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-
+    this.setInitialTeachers();
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.siteData !== this.props.siteData) {
 
     }
+
+    if (prevProps.teacherData !== this.props.teacherData) {
+      this.setInitialTeachers();
+    }
+  }
+
+  setInitialTeachers() {
+    let result = [];
+    this.props.teacherData.map((doc) => {
+      result.push(doc)
+    })
+
+    this.setState({coachesTeachers: result},
+      // Sort the data
+      function(){
+        this.sortTeachers("lastName");
+      })
   }
 
   sortTeachers = (sortType) => {
@@ -578,11 +595,20 @@ class Coaches extends React.Component<Props, State> {
   handlePopulateTable = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let result = []
     this.setState({selectedCoach: event.target.value})
-    this.props.teacherData.map((doc) => {
-      if (doc.coachId === event.target.value) {
-        result.push(doc)
-      }
-    })
+
+    if(event.target.value === "all")
+    {
+      result = [...this.props.teacherData];
+    }
+    else
+    {
+      this.props.teacherData.map((doc) => {
+        if (doc.coachId === event.target.value) {
+          result.push(doc)
+        }
+      })
+    }
+
     this.setState({coachesTeachers: result},
       // Sort the data
       function(){
@@ -590,7 +616,9 @@ class Coaches extends React.Component<Props, State> {
       })
 
     // Set the coach so the transfer page is already set for this user
-    this.handleTransferCoachSelect(event.target.value);
+    if(event.target.value !== "all") {
+      this.handleTransferCoachSelect(event.target.value);
+    }
   }
 
 
@@ -944,7 +972,7 @@ class Coaches extends React.Component<Props, State> {
       this.props.updateTeacherData(update);
 
       this.setState({ // Hold off setting new state until success has been determined
-        selectedCoach: "",
+        selectedCoach: "all",
         editTeacherId: "",
         editCoachId: "",
         editTeacherFirstName: "",
@@ -1223,6 +1251,8 @@ class Coaches extends React.Component<Props, State> {
                       name="selectedCoach"
                       // disabled={!(this.props.coachData.length > 0) /* Disable if there are no site options */}
                     >
+                      <MenuItem value={"all"} key={0}>All Coaches</MenuItem>
+
                       {this.props.coachData.map(
                         (coach, index)=>{
                           if(coach.id !== "") {

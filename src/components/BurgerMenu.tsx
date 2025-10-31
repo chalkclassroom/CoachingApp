@@ -484,7 +484,7 @@ class BurgerMenu extends React.Component<Props, State>{
                           <SupervisedUserCircleIcon style={{ fill: Constants.Colors.LC }} />
                       </ListItemIcon>
                       <ListItemText
-                          primary="Leaders Dashboard"
+                          primary="Leader's Dashboard"
                       />
                   </ListItem>
               </>}

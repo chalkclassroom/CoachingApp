@@ -401,7 +401,65 @@ class Firebase {
    * gets list of all teachers linked to current user's account
    */
   getTeacherList = async (): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+
     if (this.auth.currentUser) {
+
+      const userDoc = await this.getUserInformation();
+      const userRole = userDoc.role;
+
+      // Leaders should be getting all teachers that belong to their program/sites. So we need to get their sites first
+      if(userRole === "siteLeader" || userRole === "programLeader") {
+        let allSiteIds = []
+
+        // For program leaders, we need to grab their program first, then use that to get all the sites in the program
+        if (userRole === "programLeader") {
+          const userPrograms = await this.getProgramsForUser({ userId: "user" });
+          for (let programIndex in userPrograms) {
+            let tempProgram = userPrograms[programIndex];
+            // console.log("TEMP PROGRAM", userPrograms[programIndex]);
+            if (tempProgram.sites) {
+              allSiteIds = allSiteIds.concat(tempProgram.sites)
+            }
+          }
+        }
+
+        if (userRole === "siteLeader") {
+          if (userDoc.sites) {
+            allSiteIds = userDoc.sites;
+          }
+        }
+
+        // Get the names of each site
+        const allSiteInfo = await this.getMultipleUserProgramOrSite({ siteIds: allSiteIds });
+
+        let allSiteNames = [];
+        for(let siteIndex in allSiteInfo)
+        {
+          let tempSiteInfo = allSiteInfo[siteIndex];
+          if(tempSiteInfo.name)
+          {
+            allSiteNames.push(tempSiteInfo.name);
+          }
+        }
+
+        // Grab all the teacher docs based on site names
+        const practiceTeacher = await firebase.firestore().collection('users').doc('rJxNhJmzjRZP7xg29Ko6').get()
+        const siteTeachers = await this.db.collection('users').where("school", "in", allSiteNames).get()
+
+
+        let teacherList: Array<firebase.firestore.DocumentData> = [];
+
+        teacherList.push(this.getTeacherInfo(practiceTeacher.id))
+
+        siteTeachers.forEach(teacher =>
+          teacherList.push(this.getTeacherInfo(teacher.id))
+        )
+
+        return teacherList;
+
+      }
+
+
       return this.db
         .collection('users')
         .doc(this.auth.currentUser.uid)
@@ -5292,28 +5350,42 @@ class Firebase {
         {
           var docData = doc.data();
 
-          // Make sure this user has an array of program ids
+          // Get programs for the user. Site leaders might not have programs set in their user doc. So need to get it based off their sites
+          let programIds = []
           if(docData.programs)
           {
-            var programIds = docData.programs;
-
-            // Go through each program ID in the list
-            for(let programId of programIds)
-            {
-              // Get the program for this program ID
-              var tempProgram = await this.getProgram({programId: programId});
-
-              // There's a problem with the array being filled with deleted information,
-              //  so we have to check to make sure the data is there
-              //  The problem is most likely a local firestore issue but it couldn't hurt
-              if (tempProgram.id && tempProgram.id !== "")
-              {
-                // Add the program data to the list to return
-                programRes.push(tempProgram);
-              }
-
-            };
+            programIds = docData.programs;
           }
+          else if(docData.sites)
+          {
+            const siteIds = docData.sites;
+            for(let siteId of siteIds)
+            {
+              let site = await this.getUserProgramOrSite({siteId: siteId});
+              if(site.programs)
+              {
+                programIds.push(site.programs);
+              }
+            }
+          }
+
+          // Go through each program ID in the list
+          for(let programId of programIds)
+          {
+            // Get the program for this program ID
+            var tempProgram = await this.getProgram({programId: programId});
+
+            // There's a problem with the array being filled with deleted information,
+            //  so we have to check to make sure the data is there
+            //  The problem is most likely a local firestore issue but it couldn't hurt
+            if (tempProgram.id && tempProgram.id !== "")
+            {
+              // Add the program data to the list to return
+              programRes.push(tempProgram);
+            }
+
+          };
+
         }
 
         return programRes;
