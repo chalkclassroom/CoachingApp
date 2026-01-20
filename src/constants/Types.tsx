@@ -231,5 +231,6 @@ export interface User {
   role: string,
   programs: Array<{
     id: string
-  }>
+  }>,
+  lastLogin?: Date
 }

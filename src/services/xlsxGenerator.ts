@@ -1,5 +1,16 @@
 import * as xlsx from 'xlsx'
 
+type UserXlsxResources = {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  role: string
+  school: string
+  archived: boolean
+  lastLogin: Date | null
+}
+
 type ActionPlanXlsxResources = {
   coachId: string
   teacherId: string
@@ -238,5 +249,51 @@ export const generateConferencePlanXlsx = (
     return { wch: 12 }
   })
   xlsx.utils.book_append_sheet(wb, sheet, 'Conference Plans')
+  return wb
+}
+
+const createUsersHeaders = () => {
+  return [
+    'ID',
+    'First Name',
+    'Last Name',
+    'Email',
+    'Role',
+    'School/Site',
+    'Status',
+    'Last Login'
+  ]
+}
+
+const createUserRow = (user: UserXlsxResources): string[] => {
+  return [
+    user.id,
+    user.firstName,
+    user.lastName,
+    user.email,
+    user.role,
+    user.school,
+    user.archived ? 'Archived' : 'Active',
+    convertDate(user.lastLogin)
+  ]
+}
+
+export const generateUsersXlsx = (resources: UserXlsxResources[]) => {
+  const wb = xlsx.utils.book_new()
+  const baseRows = [createUsersHeaders()]
+  const rows = baseRows.concat(resources.map(user => createUserRow(user)))
+
+  let sheet = xlsx.utils.aoa_to_sheet(rows)
+  sheet[`!cols`] = [
+    { wch: 28 }, // ID
+    { wch: 15 }, // First Name
+    { wch: 15 }, // Last Name
+    { wch: 30 }, // Email
+    { wch: 15 }, // Role
+    { wch: 25 }, // School
+    { wch: 10 }, // Status
+    { wch: 12 }  // Last Login
+  ]
+  xlsx.utils.book_append_sheet(wb, sheet, 'Users')
   return wb
 }
