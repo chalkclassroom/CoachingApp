@@ -31,3 +31,7 @@ yarn-error.log*
 src/SPREADSHEET_SECRETS.js
 .firebase/
 public/precache-manifest.*
+
+# Project management (internal)
+.project/
+package-lock.json
