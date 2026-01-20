@@ -40,9 +40,9 @@ interface User {
   lastName: string
   email: string
   role: string
+  school: string
   archived: boolean
   lastLogin: Date | null
-  school: string
 }
 
 interface Props {
@@ -85,7 +85,7 @@ class AllUsersTable extends React.Component<Props, State> {
     if (search) {
       const s = search.toLowerCase()
       users = users.filter(u =>
-        `${u.firstName} ${u.lastName} ${u.email} ${u.role}`.toLowerCase().includes(s)
+        `${u.firstName} ${u.lastName} ${u.email} ${u.role} ${u.school}`.toLowerCase().includes(s)
       )
     }
     if (roleFilter) users = users.filter(u => u.role === roleFilter)
@@ -109,7 +109,7 @@ class AllUsersTable extends React.Component<Props, State> {
     coach: 'Coach', teacher: 'Teacher',
   }[role] || role)
 
-  formatDate = (d: Date | null) => d ? d.toLocaleDateString() : 'Never'
+  formatDate = (d: Date | null) => d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'
 
   handleExport = () => {
     const wb = generateUsersXlsx(this.getFilteredUsers())
@@ -159,26 +159,28 @@ class AllUsersTable extends React.Component<Props, State> {
         </Grid>
 
         <Grid item style={{ overflowX: 'auto' }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 700 }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 800 }}>
             <thead style={{ borderBottom: '2px solid #0988ec' }}>
               <tr>
                 <SortHeader field="lastName" label="Last Name" />
                 <SortHeader field="firstName" label="First Name" />
                 <SortHeader field="email" label="Email" />
                 <SortHeader field="role" label="Role" />
+                <SortHeader field="school" label="School" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><TableCell colSpan={6} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
+                <tr><TableCell colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
               ) : paginated.map(user => (
                 <TableRow key={user.id} onClick={() => this.props.onUserClick?.(user)}>
                   <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.firstName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{this.formatRole(user.role)}</TableCell>
+                  <TableCell>{user.school}</TableCell>
                   <TableCell><StatusBadge archived={user.archived}>{user.archived ? 'Archived' : 'Active'}</StatusBadge></TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
                 </TableRow>

@@ -253,16 +253,7 @@ export const generateConferencePlanXlsx = (
 }
 
 const createUsersHeaders = () => {
-  return [
-    'ID',
-    'First Name',
-    'Last Name',
-    'Email',
-    'Role',
-    'School/Site',
-    'Status',
-    'Last Login'
-  ]
+  return ['ID', 'First Name', 'Last Name', 'Email', 'Role', 'School', 'Status', 'Last Login']
 }
 
 const createUserRow = (user: UserXlsxResources): string[] => {
@@ -280,20 +271,9 @@ const createUserRow = (user: UserXlsxResources): string[] => {
 
 export const generateUsersXlsx = (resources: UserXlsxResources[]) => {
   const wb = xlsx.utils.book_new()
-  const baseRows = [createUsersHeaders()]
-  const rows = baseRows.concat(resources.map(user => createUserRow(user)))
-
+  const rows = [createUsersHeaders(), ...resources.map(createUserRow)]
   let sheet = xlsx.utils.aoa_to_sheet(rows)
-  sheet[`!cols`] = [
-    { wch: 28 }, // ID
-    { wch: 15 }, // First Name
-    { wch: 15 }, // Last Name
-    { wch: 30 }, // Email
-    { wch: 15 }, // Role
-    { wch: 25 }, // School
-    { wch: 10 }, // Status
-    { wch: 12 }  // Last Login
-  ]
+  sheet[`!cols`] = [{ wch: 28 }, { wch: 15 }, { wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 10 }, { wch: 15 }]
   xlsx.utils.book_append_sheet(wb, sheet, 'Users')
   return wb
 }

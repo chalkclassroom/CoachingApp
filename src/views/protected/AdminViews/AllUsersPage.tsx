@@ -13,9 +13,9 @@ interface User {
   lastName: string
   email: string
   role: string
+  school: string
   archived: boolean
   lastLogin: Date | null
-  school: string
 }
 
 interface Props { isAdmin: boolean }

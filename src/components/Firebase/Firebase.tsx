@@ -4744,9 +4744,9 @@ class Firebase {
       lastName: string
       email: string
       role: string
+      school: string
       archived: boolean
       lastLogin: Date | null
-      school: string
     }> = []
 
     const usersSnapshot = await this.db.collection('users').get()
@@ -4759,9 +4759,9 @@ class Firebase {
         lastName: data.lastName || '',
         email: data.email || '',
         role: data.role || '',
+        school: data.school || '',
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
-        school: data.school || ''
       })
     })
 
