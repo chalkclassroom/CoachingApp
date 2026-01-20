@@ -23,9 +23,18 @@ To learn, check out the [How to Create Pull Requests](https://help.github.com/en
     2. npm run firebase:local
     3. npm run localdev
 
-`npm run firebase:local` will configure and start the Firebase emulator suite. 
-On your first run, you  will need to open the emulator suite and add yourself as a user. 
+`npm run firebase:local` will configure and start the Firebase emulator suite.
+On your first run, you  will need to open the emulator suite and add yourself as a user.
 Any data you modify will be saved locally for future use.
+
+### `Seed Test Data`
+To populate the local emulators with test data:
+```bash
+node scripts/seed-full.js
+```
+This creates users for all roles (admin, programLeader, siteLeader, coach, teacher) and sample data.
+
+**Test credentials:** `admin@chalk.local` / `admin123`
 
 In the project directory, you can run:
 
@@ -76,6 +85,21 @@ Launches the test runner in the Cypress Cloud Dashboar<br>
 ### `gcloud functions deploy helloGET --runtime nodejs8 --trigger-http` Deploy Cloud Function
 1. Instead of helloGET substitute with function Folder name
 2. CI/CD Is not done for Cloud Functions so deploy and submit pull request.
+
+## Admin Features
+
+### All Users Dashboard
+Available to Admin, Program Leader, and Site Leader roles via the navigation menu.
+
+**Features:**
+- View all users with search and filters (role, status)
+- Sort by any column (name, email, role, school, status, last login)
+- Edit user name and email
+- Archive/unarchive users
+- Export to Excel
+- Pagination (10/25/50 per page)
+
+**Route:** `/AllUsers`
 
 ## Learn More
 JSDocumentation is Available at [Chalk Docs](https://chalkdocs.web.app).
