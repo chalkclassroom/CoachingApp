@@ -1,15 +1,7 @@
 import * as xlsx from 'xlsx'
+import * as Types from '../constants/Types'
 
-type UserXlsxResources = {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  school: string
-  archived: boolean
-  lastLogin: Date | null
-}
+type UserXlsxResources = Types.User
 
 type ActionPlanXlsxResources = {
   coachId: string

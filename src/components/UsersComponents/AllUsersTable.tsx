@@ -14,6 +14,7 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 import styled from 'styled-components'
 import * as xlsx from 'xlsx'
 import { generateUsersXlsx } from '../../services/xlsxGenerator'
+import * as Types from '../../constants/Types'
 
 const TableRow = styled.tr`
   background-color: white;
@@ -34,20 +35,9 @@ const StatusBadge = styled.span<{ archived: boolean }>`
   color: ${props => (props.archived ? '#c62828' : '#2e7d32')};
 `
 
-interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  school: string
-  archived: boolean
-  lastLogin: Date | null
-}
-
 interface Props {
-  users: User[]
-  onUserClick?: (user: User) => void
+  users: Types.User[]
+  onUserClick?: (user: Types.User) => void
 }
 
 interface State {
@@ -78,7 +68,7 @@ class AllUsersTable extends React.Component<Props, State> {
     }))
   }
 
-  getFilteredUsers = (): User[] => {
+  getFilteredUsers = (): Types.User[] => {
     const { search, sortField, sortDir, roleFilter, statusFilter } = this.state
     let users = [...this.props.users]
 

@@ -6,25 +6,15 @@ import AppBar from '../../../components/AppBar'
 import { connect } from 'react-redux'
 import { Role } from '../../../state/actions/coach'
 import AllUsersTable from '../../../components/UsersComponents/AllUsersTable'
-
-interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  school: string
-  archived: boolean
-  lastLogin: Date | null
-}
+import * as Types from '../../../constants/Types'
 
 interface Props { isAdmin: boolean }
 interface State {
   loading: boolean
-  users: User[]
+  users: Types.User[]
   editOpen: boolean
   archiveOpen: boolean
-  selected: User | null
+  selected: Types.User | null
   firstName: string
   lastName: string
   email: string
@@ -45,7 +35,7 @@ class AllUsersPage extends React.Component<Props, State> {
       .catch(() => { alert('Error loading users'); this.setState({ loading: false }) })
   }
 
-  handleUserClick = (user: User) => {
+  handleUserClick = (user: Types.User) => {
     this.setState({
       selected: user, firstName: user.firstName, lastName: user.lastName,
       email: user.email, editOpen: true,
