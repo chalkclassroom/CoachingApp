@@ -163,6 +163,7 @@ class LoginForm extends React.Component<Props, State> {
               name: userCredential.user.displayName,
               email: userCredential.user.email,
             });
+            this.props.history.push("/Home");
         });
         e.preventDefault()
     }
