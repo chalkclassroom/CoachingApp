@@ -38,6 +38,7 @@ export interface UserDocument {
   email: string
   favouriteQuestions: Array<string>
   playedVideos: Array<string>
+  lastLogin?: Date
 }
 
 interface Note {
@@ -308,6 +309,14 @@ class Firebase {
   }): Promise<firebase.auth.UserCredential | void> => {
     return this.auth
       .signInWithEmailAndPassword(userData.email, userData.password)
+      .then(async (userCredential) => {
+        if (userCredential.user) {
+          await this.db.collection('users').doc(userCredential.user.uid).update({
+            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+          })
+        }
+        return userCredential
+      })
       .catch((error: Error) => {
         console.error('Error signing in: ', error)
         alert(error)
@@ -4720,6 +4729,41 @@ class Firebase {
         })
       }
     }))
+
+    return result
+  }
+
+  /**
+   * Gets all users from Firestore with relevant information for admin dashboard
+   * @returns {Array} Array of user objects with id, name, email, role, status, and lastLogin
+   */
+  getAllUsers = async () => {
+    const result: Array<{
+      id: string
+      firstName: string
+      lastName: string
+      email: string
+      role: string
+      school: string
+      archived: boolean
+      lastLogin: Date | null
+    }> = []
+
+    const usersSnapshot = await this.db.collection('users').get()
+
+    usersSnapshot.docs.forEach(doc => {
+      const data = doc.data()
+      result.push({
+        id: doc.id,
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
+        email: data.email || '',
+        role: data.role || '',
+        school: data.school || '',
+        archived: data.archived || false,
+        lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
+      })
+    })
 
     return result
   }

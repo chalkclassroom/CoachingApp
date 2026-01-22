@@ -49,6 +49,7 @@ import CoachingLiteracyInstruction from './views/protected/CoachingResourcesView
 import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage'
 import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage'
 import AdminPage from './views/protected/AdminViews/AdminPage'
+import AllUsersPage from './views/protected/AdminViews/AllUsersPage'
 import TeamPage from './views/WelcomeViews/TeamPage'
 import TrainingPage from './views/protected/TrainingPage'
 import * as ReactGA3 from 'react-ga'
@@ -635,6 +636,13 @@ class App extends React.Component<Props, State> {
                 userRole={role}
                 path="/Admin"
                 component={AdminPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                userRole={role}
+                path="/AllUsers"
+                component={AllUsersPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
