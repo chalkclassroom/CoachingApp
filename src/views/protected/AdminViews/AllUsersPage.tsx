@@ -84,7 +84,11 @@ class AllUsersPage extends React.Component<Props, State> {
                 <img src={CHALKLogoGIF} alt="Loading" width="150" />
               </div>
             ) : (
-              <AllUsersTable users={users} onUserClick={this.handleUserClick} />
+              <AllUsersTable
+                users={users}
+                onUserClick={this.handleUserClick}
+                onArchiveClick={user => this.setState({ selected: user, archiveOpen: true })}
+              />
             )}
           </div>
         )}
