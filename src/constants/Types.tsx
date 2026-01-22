@@ -229,7 +229,11 @@ export interface User {
   lastName: string,
   id: string,
   role: string,
-  programs: Array<{
+  programs?: Array<{
     id: string
-  }>
+  }>,
+  lastLogin?: Date,
+  email?: string,
+  school?: string,
+  archived?: boolean
 }

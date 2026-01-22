@@ -37,6 +37,7 @@ import * as Types from '../constants/Types';
 import * as H from 'history';
 import Firebase from './Firebase';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import GroupIcon from '@material-ui/icons/Group';
 
 const styles: object = {
   toolbarIcon: {
@@ -485,6 +486,22 @@ class BurgerMenu extends React.Component<Props, State>{
                       </ListItemIcon>
                       <ListItemText
                           primary="Leader's Dashboard"
+                      />
+                  </ListItem>
+              </>}
+              {(role == Role.ADMIN || role == Role.PROGRAMLEADER || role == Role.SITELEADER) && <>
+                  <ListItem
+                      button
+                      onClick={() => this.props.handleNavigation( (): void => {
+                          this.setState({ menu: 16, chalkOpen: false });
+                          this.props.history.push("/AllUsers");
+                      })}
+                  >
+                      <ListItemIcon>
+                          <GroupIcon style={{ fill: Constants.Colors.SE }} />
+                      </ListItemIcon>
+                      <ListItemText
+                          primary="All Users"
                       />
                   </ListItem>
               </>}
