@@ -8,12 +8,14 @@ import {
   MenuItem,
   InputLabel,
   Button,
+  IconButton,
+  Switch,
+  Tooltip,
 } from '@material-ui/core'
 import React from 'react'
 import GetAppIcon from '@material-ui/icons/GetApp'
+import EditIcon from '@material-ui/icons/Edit'
 import styled from 'styled-components'
-import * as xlsx from 'xlsx'
-import { generateUsersXlsx } from '../../services/xlsxGenerator'
 import * as Types from '../../constants/Types'
 
 const TableRow = styled.tr`
@@ -38,6 +40,7 @@ const StatusBadge = styled.span<{ archived: boolean }>`
 interface Props {
   users: Types.User[]
   onUserClick?: (user: Types.User) => void
+  onArchiveClick?: (user: Types.User) => void
 }
 
 interface State {
@@ -102,8 +105,21 @@ class AllUsersTable extends React.Component<Props, State> {
   formatDate = (d: Date | null) => d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'
 
   handleExport = () => {
-    const wb = generateUsersXlsx(this.getFilteredUsers())
-    xlsx.writeFile(wb, `users_${new Date().toISOString().split('T')[0]}.xlsx`)
+    const users = this.getFilteredUsers()
+    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'School', 'Status', 'Last Login']
+    const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
+    const rows = users.map(u => [
+      escape(u.lastName), escape(u.firstName), escape(u.email),
+      escape(this.formatRole(u.role)), escape(u.school || ''),
+      escape(u.archived ? 'Archived' : 'Active'),
+      escape(this.formatDate(u.lastLogin))
+    ].join(','))
+    const csv = [headers.join(','), ...rows].join('\n')
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `users_${new Date().toISOString().split('T')[0]}.csv`
+    link.click()
   }
 
   render() {
@@ -159,13 +175,14 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="school" label="School" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
+                <th style={{ padding: '10px 8px' }}><strong>Actions</strong></th>
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><TableCell colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
+                <tr><TableCell colSpan={8} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
               ) : paginated.map(user => (
-                <TableRow key={user.id} onClick={() => this.props.onUserClick?.(user)}>
+                <TableRow key={user.id}>
                   <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.firstName}</TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -173,6 +190,21 @@ class AllUsersTable extends React.Component<Props, State> {
                   <TableCell>{user.school}</TableCell>
                   <TableCell><StatusBadge archived={user.archived}>{user.archived ? 'Archived' : 'Active'}</StatusBadge></TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
+                  <TableCell onClick={e => e.stopPropagation()} style={{ whiteSpace: 'nowrap' }}>
+                    <Tooltip title="Edit user">
+                      <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={user.archived ? 'Activate user' : 'Archive user'}>
+                      <Switch
+                        size="small"
+                        checked={!user.archived}
+                        onChange={() => this.props.onArchiveClick?.(user)}
+                        color="primary"
+                      />
+                    </Tooltip>
+                  </TableCell>
                 </TableRow>
               ))}
             </tbody>
@@ -185,6 +217,7 @@ class AllUsersTable extends React.Component<Props, State> {
             onPageChange={(_, p) => this.setState({ page: p })}
             onRowsPerPageChange={e => this.setState({ perPage: +e.target.value, page: 0 })}
             rowsPerPageOptions={[10, 25, 50]}
+            labelDisplayedRows={({ from, to, count }) => `Showing ${from}-${to} of ${count} records`}
           />
         </Grid>
       </Grid>
