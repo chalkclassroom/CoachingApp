@@ -175,12 +175,13 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="school" label="School" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
-                <th style={{ padding: '10px 8px' }}><strong>Actions</strong></th>
+                <th style={{ padding: '10px 8px', textAlign: 'center' }}><strong>Edit</strong></th>
+                <th style={{ padding: '10px 8px', textAlign: 'center' }}><strong>Archive</strong></th>
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><TableCell colSpan={8} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
+                <tr><TableCell colSpan={9} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
               ) : paginated.map(user => (
                 <TableRow key={user.id}>
                   <TableCell>{user.lastName}</TableCell>
@@ -190,12 +191,14 @@ class AllUsersTable extends React.Component<Props, State> {
                   <TableCell>{user.school}</TableCell>
                   <TableCell><StatusBadge archived={user.archived}>{user.archived ? 'Archived' : 'Active'}</StatusBadge></TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
-                  <TableCell onClick={e => e.stopPropagation()} style={{ whiteSpace: 'nowrap' }}>
+                  <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title="Edit user">
                       <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
                         <EditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
+                  </TableCell>
+                  <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title={user.archived ? 'Activate user' : 'Archive user'}>
                       <Switch
                         size="small"
