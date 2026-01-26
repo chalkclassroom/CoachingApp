@@ -4744,22 +4744,35 @@ class Firebase {
       lastName: string
       email: string
       role: string
-      school: string
+      program: string
       archived: boolean
       lastLogin: Date | null
     }> = []
+
+    // Fetch all programs to build a lookup map
+    const programsSnapshot = await this.db.collection('programs').get()
+    const programsMap = new Map<string, string>()
+    programsSnapshot.docs.forEach(doc => {
+      programsMap.set(doc.id, doc.data().name || '')
+    })
 
     const usersSnapshot = await this.db.collection('users').get()
 
     usersSnapshot.docs.forEach(doc => {
       const data = doc.data()
+      // Get first program name from user's programs array
+      let programName = ''
+      if (data.programs && Array.isArray(data.programs) && data.programs.length > 0) {
+        const firstProgramId = data.programs[0].id || data.programs[0]
+        programName = programsMap.get(firstProgramId) || ''
+      }
       result.push({
         id: doc.id,
         firstName: data.firstName || '',
         lastName: data.lastName || '',
         email: data.email || '',
         role: data.role || '',
-        school: data.school || '',
+        program: programName,
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
       })

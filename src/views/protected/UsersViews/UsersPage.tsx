@@ -515,6 +515,10 @@ class UsersPage extends React.Component<Props, State> {
     let sendToSites = this.buildSiteData(coachData, siteData, programData, filter ? filter : []);
     this.setState({sendToSites: sendToSites});
 
+    // Load All Users if on that route and user is admin
+    if (this.props.userRole === 'admin' && location.pathname === '/LeadersAllUsers') {
+      this.loadAllUsers()
+    }
 
   }
 
@@ -644,7 +648,7 @@ class UsersPage extends React.Component<Props, State> {
                     <Route path="/LeadersUsers" component={Skeleton} />
                     <Route path="/LeadersAllUsers" render={() =>
                       userRole === 'admin' ? (
-                        <div style={{ padding: '1em' }}>
+                        <div style={{ padding: '30px 30px 40px 30px' }}>
                           <AllUsersTable
                             users={this.state.allUsers}
                             onUserClick={this.handleAllUserClick}
