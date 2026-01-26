@@ -34,4 +34,3 @@ public/precache-manifest.*
 
 # Project management (internal)
 .project/
-package-lock.json

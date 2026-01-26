@@ -235,5 +235,6 @@ export interface User {
   lastLogin?: Date,
   email?: string,
   school?: string,
+  program?: string,
   archived?: boolean
 }
