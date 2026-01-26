@@ -639,7 +639,7 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+                allowedRoles={[Role.ADMIN]}
                 userRole={role}
                 path="/AllUsers"
                 component={AllUsersPage}
@@ -884,6 +884,15 @@ class App extends React.Component<Props, State> {
               auth={auth}
               path="/LeadersArchive"
               allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersAllUsers"
+              allowedRoles={[Role.ADMIN]}
               userRole={role}
               render={(props: {
                 history: H.History

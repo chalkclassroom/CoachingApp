@@ -142,5 +142,5 @@ class AllUsersPage extends React.Component<Props, State> {
 }
 
 export default connect(state => ({
-  isAdmin: [Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER].includes(state.coachState.role),
+  isAdmin: state.coachState.role === Role.ADMIN,
 }))(AllUsersPage)

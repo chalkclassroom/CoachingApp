@@ -20,13 +20,17 @@ import * as Types from '../../constants/Types'
 
 const TableRow = styled.tr`
   background-color: white;
-  :nth-child(odd) { background-color: #eaeaea; }
+  :nth-child(odd) { background-color: rgb(234, 234, 234); }
   &:hover { background-color: rgba(9, 136, 236, 0.4); cursor: pointer; }
 `
 
 const TableCell = styled.td`
-  padding: 10px 8px;
+  padding: 4px 8px;
   text-align: left;
+  font-size: 1.25rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
 `
 
 const StatusBadge = styled.span<{ archived: boolean }>`
@@ -78,7 +82,7 @@ class AllUsersTable extends React.Component<Props, State> {
     if (search) {
       const s = search.toLowerCase()
       users = users.filter(u =>
-        `${u.firstName} ${u.lastName} ${u.email} ${u.role} ${u.school}`.toLowerCase().includes(s)
+        `${u.firstName} ${u.lastName} ${u.email} ${u.role} ${u.program}`.toLowerCase().includes(s)
       )
     }
     if (roleFilter) users = users.filter(u => u.role === roleFilter)
@@ -106,11 +110,11 @@ class AllUsersTable extends React.Component<Props, State> {
 
   handleExport = () => {
     const users = this.getFilteredUsers()
-    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'School', 'Status', 'Last Login']
+    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status', 'Last Login']
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
     const rows = users.map(u => [
       escape(u.lastName), escape(u.firstName), escape(u.email),
-      escape(this.formatRole(u.role)), escape(u.school || ''),
+      escape(this.formatRole(u.role)), escape(u.program || ''),
       escape(u.archived ? 'Archived' : 'Active'),
       escape(this.formatDate(u.lastLogin))
     ].join(','))
@@ -129,7 +133,7 @@ class AllUsersTable extends React.Component<Props, State> {
     const roles = [...new Set(this.props.users.map(u => u.role))].sort()
 
     const SortHeader = ({ field, label }: { field: string; label: string }) => (
-      <th style={{ padding: '10px 8px', cursor: 'pointer' }} onClick={() => this.handleSort(field)}>
+      <th style={{ padding: '4px 8px', cursor: 'pointer', fontSize: '1.25rem', fontWeight: 500 }} onClick={() => this.handleSort(field)}>
         <TableSortLabel active={sortField === field} direction={sortField === field ? sortDir : 'asc'}>
           <strong>{label}</strong>
         </TableSortLabel>
@@ -172,10 +176,10 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="firstName" label="First Name" />
                 <SortHeader field="email" label="Email" />
                 <SortHeader field="role" label="Role" />
-                <SortHeader field="school" label="School" />
+                <SortHeader field="program" label="Program" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
-                <th style={{ padding: '10px 8px' }}><strong>Actions</strong></th>
+                <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>
             <tbody>
@@ -187,15 +191,9 @@ class AllUsersTable extends React.Component<Props, State> {
                   <TableCell>{user.firstName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{this.formatRole(user.role)}</TableCell>
-                  <TableCell>{user.school}</TableCell>
-                  <TableCell><StatusBadge archived={user.archived}>{user.archived ? 'Archived' : 'Active'}</StatusBadge></TableCell>
-                  <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
-                  <TableCell onClick={e => e.stopPropagation()} style={{ whiteSpace: 'nowrap' }}>
-                    <Tooltip title="Edit user">
-                      <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                  <TableCell>{user.program}</TableCell>
+                  <TableCell onClick={e => e.stopPropagation()} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <StatusBadge archived={user.archived}>{user.archived ? 'Archived' : 'Active'}</StatusBadge>
                     <Tooltip title={user.archived ? 'Activate user' : 'Archive user'}>
                       <Switch
                         size="small"
@@ -203,6 +201,14 @@ class AllUsersTable extends React.Component<Props, State> {
                         onChange={() => this.props.onArchiveClick?.(user)}
                         color="primary"
                       />
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
+                  <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
+                    <Tooltip title="Edit user">
+                      <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
