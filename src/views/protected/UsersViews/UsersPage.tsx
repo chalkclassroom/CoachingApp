@@ -18,6 +18,7 @@ import Skeleton from "./Skeleton"
 import Archives from "../../../components/UsersComponents/Archives";
 import Sites from "../../../components/UsersComponents/Sites";
 import AllUsersTable from "../../../components/UsersComponents/AllUsersTable";
+import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
 
 
 const styles: object = {
@@ -648,13 +649,25 @@ class UsersPage extends React.Component<Props, State> {
                     <Route path="/LeadersUsers" component={Skeleton} />
                     <Route path="/LeadersAllUsers" render={() =>
                       userRole === 'admin' ? (
-                        <div style={{ padding: '30px 30px 40px 30px' }}>
-                          <AllUsersTable
-                            users={this.state.allUsers}
-                            onUserClick={this.handleAllUserClick}
-                            onArchiveClick={this.handleAllUserArchive}
-                          />
-                        </div>
+                        this.state.allUsersLoading ? (
+                          <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                            style={{ height: '50vh' }}
+                          >
+                            <img src={CHALKLogoGIF} alt="Loading" width="40%" />
+                          </Grid>
+                        ) : (
+                          <div style={{ padding: '30px 30px 40px 30px' }}>
+                            <AllUsersTable
+                              users={this.state.allUsers}
+                              onUserClick={this.handleAllUserClick}
+                              onArchiveClick={this.handleAllUserArchive}
+                            />
+                          </div>
+                        )
                       ) : (
                         <div style={{ padding: '2em' }}>You must be an admin to access this page.</div>
                       )
