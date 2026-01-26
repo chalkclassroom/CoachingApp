@@ -17,6 +17,7 @@ import Coaches from "../../../components/UsersComponents/Coaches";
 import Skeleton from "./Skeleton"
 import Archives from "../../../components/UsersComponents/Archives";
 import Sites from "../../../components/UsersComponents/Sites";
+import AllUsersTable from "../../../components/UsersComponents/AllUsersTable";
 
 
 const styles: object = {
@@ -108,6 +109,8 @@ interface State {
   currentPage: string
   propFilter: Array<string>
   sendToSites: Array<Object>
+  allUsers: Types.User[]
+  allUsersLoading: boolean
 }
 
 function checkCurrent(item: string) {
@@ -136,7 +139,9 @@ class UsersPage extends React.Component<Props, State> {
       archivedTeachers: [],
       archivedCoaches: [],
       propFilter: [],
-      sendToSites: []
+      sendToSites: [],
+      allUsers: [],
+      allUsersLoading: true
     }
   }
 
@@ -546,6 +551,29 @@ class UsersPage extends React.Component<Props, State> {
     this.setState({programData: data})
   }
 
+  loadAllUsers = async () => {
+    if (this.props.userRole !== 'admin') return
+    this.setState({ allUsersLoading: true })
+    try {
+      const users = await this.context.getAllUsers()
+      this.setState({ allUsers: users, allUsersLoading: false })
+    } catch (e) {
+      console.error('Error loading all users:', e)
+      this.setState({ allUsersLoading: false })
+    }
+  }
+
+  handleAllUserClick = (user: Types.User) => {
+    // Could open edit dialog - for now just log
+    console.log('User clicked:', user)
+  }
+
+  handleAllUserArchive = async (user: Types.User) => {
+    await this.context.db.collection('users').doc(user.id).update({ archived: !user.archived })
+    this.setState(s => ({
+      allUsers: s.allUsers.map(u => u.id === user.id ? { ...u, archived: !user.archived } : u)
+    }))
+  }
 
   static propTypes = {
     classes: PropTypes.exact({
@@ -589,6 +617,16 @@ class UsersPage extends React.Component<Props, State> {
                             </li>
                         )
                     })}
+                    {userRole === 'admin' && (
+                      <li style={{float: 'left'}}>
+                        <a style={Styles.navLinks(checkCurrent('/LeadersAllUsers'))} onClick={() => {
+                          this.loadAllUsers()
+                          this.props.history.push('/LeadersAllUsers')
+                        }}>
+                          All Users
+                        </a>
+                      </li>
+                    )}
                 </ul>
                 <ul style={{listStyle: 'none'}}>
                   <li style={{float: 'right', marginRight:'3vw'}}>
@@ -604,6 +642,19 @@ class UsersPage extends React.Component<Props, State> {
                 <Grid item xs={12} style={{paddingTop:"1em"}}>
                   <Switch location={location} key={location.pathname}>
                     <Route path="/LeadersUsers" component={Skeleton} />
+                    <Route path="/LeadersAllUsers" render={() =>
+                      userRole === 'admin' ? (
+                        <div style={{ padding: '1em' }}>
+                          <AllUsersTable
+                            users={this.state.allUsers}
+                            onUserClick={this.handleAllUserClick}
+                            onArchiveClick={this.handleAllUserArchive}
+                          />
+                        </div>
+                      ) : (
+                        <div style={{ padding: '2em' }}>You must be an admin to access this page.</div>
+                      )
+                    } />
                     <Route path="/LeadersCoaches" render={(props) =>
                       <Coaches
                         changePage={(pageName: string) => this.changePage(pageName)}
