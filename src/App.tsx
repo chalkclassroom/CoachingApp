@@ -49,6 +49,7 @@ import CoachingLiteracyInstruction from './views/protected/CoachingResourcesView
 import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage'
 import LiteracyInstructionResultsPage from './views/protected/LiteracyViews/LiteracyInstructionResultsPage'
 import AdminPage from './views/protected/AdminViews/AdminPage'
+import AllUsersPage from './views/protected/AdminViews/AllUsersPage'
 import TeamPage from './views/WelcomeViews/TeamPage'
 import TrainingPage from './views/protected/TrainingPage'
 import * as ReactGA3 from 'react-ga'
@@ -638,6 +639,13 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[Role.ADMIN]}
+                userRole={role}
+                path="/AllUsers"
+                component={AllUsersPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
                 allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
                 userRole={role}
                 path="/NewUser"
@@ -876,6 +884,15 @@ class App extends React.Component<Props, State> {
               auth={auth}
               path="/LeadersArchive"
               allowedRoles={[Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <UsersPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/LeadersAllUsers"
+              allowedRoles={[Role.ADMIN]}
               userRole={role}
               render={(props: {
                 history: H.History

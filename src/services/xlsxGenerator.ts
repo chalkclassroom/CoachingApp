@@ -1,4 +1,7 @@
 import * as xlsx from 'xlsx'
+import * as Types from '../constants/Types'
+
+type UserXlsxResources = Types.User
 
 type ActionPlanXlsxResources = {
   coachId: string
@@ -238,5 +241,31 @@ export const generateConferencePlanXlsx = (
     return { wch: 12 }
   })
   xlsx.utils.book_append_sheet(wb, sheet, 'Conference Plans')
+  return wb
+}
+
+const createUsersHeaders = () => {
+  return ['ID', 'First Name', 'Last Name', 'Email', 'Role', 'School', 'Status', 'Last Login']
+}
+
+const createUserRow = (user: UserXlsxResources): string[] => {
+  return [
+    user.id,
+    user.firstName,
+    user.lastName,
+    user.email,
+    user.role,
+    user.school,
+    user.archived ? 'Archived' : 'Active',
+    convertDate(user.lastLogin)
+  ]
+}
+
+export const generateUsersXlsx = (resources: UserXlsxResources[]) => {
+  const wb = xlsx.utils.book_new()
+  const rows = [createUsersHeaders(), ...resources.map(createUserRow)]
+  let sheet = xlsx.utils.aoa_to_sheet(rows)
+  sheet[`!cols`] = [{ wch: 28 }, { wch: 15 }, { wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 10 }, { wch: 15 }]
+  xlsx.utils.book_append_sheet(wb, sheet, 'Users')
   return wb
 }
