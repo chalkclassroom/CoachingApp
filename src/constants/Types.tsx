@@ -234,6 +234,7 @@ export interface User {
   }>,
   lastLogin?: Date,
   lastAction?: Date,
+  lastActionType?: string,
   email?: string,
   school?: string,
   program?: string,
