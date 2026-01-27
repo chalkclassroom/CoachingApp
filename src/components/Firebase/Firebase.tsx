@@ -4764,8 +4764,17 @@ class Firebase {
       let programName = ''
       // Priority 1: programs array (current format)
       if (data.programs && Array.isArray(data.programs) && data.programs.length > 0) {
-        const firstProgramId = data.programs[0].id || data.programs[0]
-        programName = programsMap.get(firstProgramId) || ''
+        const firstProgram = data.programs[0].id || data.programs[0]
+        // Try as ID first
+        if (programsMap.has(firstProgram)) {
+          programName = programsMap.get(firstProgram) || ''
+        } else {
+          // Fallback: check if it's a program name (legacy data inconsistency)
+          const programNames = Array.from(programsMap.values())
+          if (programNames.includes(firstProgram)) {
+            programName = firstProgram
+          }
+        }
       }
       // Priority 2: programId string (legacy format)
       else if (data.programId && typeof data.programId === 'string') {
