@@ -112,7 +112,7 @@ class AllUsersTable extends React.Component<Props, State> {
   formatLastAction = (user: Types.User) => {
     if (!user.lastAction) return 'Never'
     const date = user.lastAction.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
-    return user.lastActionType ? `${date} (${user.lastActionType})` : date
+    return user.lastActionType ? `${user.lastActionType} - ${date}` : date
   }
 
   handleExport = () => {
