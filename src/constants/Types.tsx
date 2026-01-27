@@ -233,6 +233,7 @@ export interface User {
     id: string
   }>,
   lastLogin?: Date,
+  lastAction?: Date,
   email?: string,
   school?: string,
   program?: string,

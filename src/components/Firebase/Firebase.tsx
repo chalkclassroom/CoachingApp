@@ -4737,6 +4737,89 @@ class Firebase {
    * Gets all users from Firestore with relevant information for admin dashboard
    * @returns {Array} Array of user objects with id, name, email, role, status, and lastLogin
    */
+  /**
+   * Get last action date for all users by querying activity collections.
+   * Uses optimized approach: 5 total queries instead of per-user queries.
+   * @returns Map<userId, Date> - Last action date per user
+   */
+  getUsersLastAction = async (): Promise<Map<string, Date>> => {
+    const lastActionMap = new Map<string, Date>()
+
+    const updateIfNewer = (userId: string, date: Date | null) => {
+      if (!date || !userId) return
+      const current = lastActionMap.get(userId)
+      if (!current || date > current) {
+        lastActionMap.set(userId, date)
+      }
+    }
+
+    // Helper to extract userId from /user/ID format (used in observations)
+    const extractUserId = (ref: string): string => {
+      if (!ref) return ''
+      return ref.startsWith('/user/') ? ref.replace('/user/', '') : ref
+    }
+
+    // Query all 5 collections in parallel for better performance
+    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
+      this.db.collection('observations').get(),
+      this.db.collection('knowledgeChecks').get(),
+      this.db.collection('conferencePlans').get(),
+      this.db.collection('actionPlans').get(),
+      this.db.collection('emails').get()
+    ])
+
+    // 1. Observations (largest collection - 20K+)
+    observations.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = extractUserId(data.teacher)
+      const endDate = data.end?.toDate?.() || null
+      updateIfNewer(userId, endDate)
+    })
+
+    // 2. Knowledge Checks (6K+)
+    knowledgeChecks.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.answeredBy
+      const timestamp = data.timestamp?.toDate?.() || null
+      updateIfNewer(userId, timestamp)
+    })
+
+    // 3. Conference Plans
+    conferencePlans.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.teacher
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      updateIfNewer(userId, created)
+      updateIfNewer(userId, modified)
+    })
+
+    // 4. Action Plans
+    actionPlans.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.teacher
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      updateIfNewer(userId, created)
+      updateIfNewer(userId, modified)
+    })
+
+    // 5. Emails (check both sender and recipient)
+    emails.docs.forEach(doc => {
+      const data = doc.data()
+      const senderId = data.user
+      const recipientId = data.recipientId
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      updateIfNewer(senderId, created)
+      updateIfNewer(senderId, modified)
+      updateIfNewer(recipientId, created)
+      updateIfNewer(recipientId, modified)
+    })
+
+    return lastActionMap
+  }
+
   getAllUsers = async () => {
     const result: Array<{
       id: string
@@ -4747,16 +4830,21 @@ class Firebase {
       program: string
       archived: boolean
       lastLogin: Date | null
+      lastAction: Date | null
     }> = []
 
-    // Fetch all programs to build a lookup map
-    const programsSnapshot = await this.db.collection('programs').get()
+    // Fetch programs, users, and last action data in parallel
+    const [programsSnapshot, usersSnapshot, lastActionMap] = await Promise.all([
+      this.db.collection('programs').get(),
+      this.db.collection('users').get(),
+      this.getUsersLastAction()
+    ])
+
+    // Build programs lookup map
     const programsMap = new Map<string, string>()
     programsSnapshot.docs.forEach(doc => {
       programsMap.set(doc.id, doc.data().name || '')
     })
-
-    const usersSnapshot = await this.db.collection('users').get()
 
     usersSnapshot.docs.forEach(doc => {
       const data = doc.data()
@@ -4800,6 +4888,7 @@ class Firebase {
         program: programName,
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
+        lastAction: lastActionMap.get(doc.id) || null,
       })
     })
 
