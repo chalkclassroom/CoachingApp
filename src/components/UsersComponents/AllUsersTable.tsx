@@ -109,16 +109,23 @@ class AllUsersTable extends React.Component<Props, State> {
 
   formatDate = (d: Date | null) => d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'
 
+  formatLastAction = (user: Types.User) => {
+    if (!user.lastAction) return 'Never'
+    const date = user.lastAction.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
+    return user.lastActionType ? `${date} (${user.lastActionType})` : date
+  }
+
   handleExport = () => {
     const users = this.getFilteredUsers()
-    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status', 'Last Login', 'Last Action']
+    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status', 'Last Login', 'Last Action', 'Action Type']
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
     const rows = users.map(u => [
       escape(u.lastName), escape(u.firstName), escape(u.email),
       escape(this.formatRole(u.role)), escape(u.program || ''),
       escape(u.archived ? 'Archived' : 'Active'),
       escape(this.formatDate(u.lastLogin)),
-      escape(this.formatDate(u.lastAction))
+      escape(this.formatDate(u.lastAction)),
+      escape(u.lastActionType || '')
     ].join(','))
     const csv = [headers.join(','), ...rows].join('\n')
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
@@ -207,7 +214,7 @@ class AllUsersTable extends React.Component<Props, State> {
                     </Tooltip>
                   </TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
-                  <TableCell>{this.formatDate(user.lastAction)}</TableCell>
+                  <TableCell>{this.formatLastAction(user)}</TableCell>
                   <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title="Edit user">
                       <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>

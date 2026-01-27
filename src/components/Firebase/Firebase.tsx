@@ -4738,18 +4738,18 @@ class Firebase {
    * @returns {Array} Array of user objects with id, name, email, role, status, and lastLogin
    */
   /**
-   * Get last action date for all users by querying activity collections.
+   * Get last action date and type for all users by querying activity collections.
    * Uses optimized approach: 5 total queries instead of per-user queries.
-   * @returns Map<userId, Date> - Last action date per user
+   * @returns Map<userId, {date: Date, type: string}> - Last action info per user
    */
-  getUsersLastAction = async (): Promise<Map<string, Date>> => {
-    const lastActionMap = new Map<string, Date>()
+  getUsersLastAction = async (): Promise<Map<string, { date: Date; type: string }>> => {
+    const lastActionMap = new Map<string, { date: Date; type: string }>()
 
-    const updateIfNewer = (userId: string, date: Date | null) => {
+    const updateIfNewer = (userId: string, date: Date | null, type: string) => {
       if (!date || !userId) return
       const current = lastActionMap.get(userId)
-      if (!current || date > current) {
-        lastActionMap.set(userId, date)
+      if (!current || date > current.date) {
+        lastActionMap.set(userId, { date, type })
       }
     }
 
@@ -4773,7 +4773,7 @@ class Firebase {
       const data = doc.data()
       const userId = extractUserId(data.teacher)
       const endDate = data.end?.toDate?.() || null
-      updateIfNewer(userId, endDate)
+      updateIfNewer(userId, endDate, 'Observation')
     })
 
     // 2. Knowledge Checks (6K+)
@@ -4781,7 +4781,7 @@ class Firebase {
       const data = doc.data()
       const userId = data.answeredBy
       const timestamp = data.timestamp?.toDate?.() || null
-      updateIfNewer(userId, timestamp)
+      updateIfNewer(userId, timestamp, 'Training')
     })
 
     // 3. Conference Plans
@@ -4790,8 +4790,8 @@ class Firebase {
       const userId = data.teacher
       const created = data.dateCreated?.toDate?.() || null
       const modified = data.dateModified?.toDate?.() || null
-      updateIfNewer(userId, created)
-      updateIfNewer(userId, modified)
+      updateIfNewer(userId, created, 'Conference Plan')
+      updateIfNewer(userId, modified, 'Conference Plan')
     })
 
     // 4. Action Plans
@@ -4800,8 +4800,8 @@ class Firebase {
       const userId = data.teacher
       const created = data.dateCreated?.toDate?.() || null
       const modified = data.dateModified?.toDate?.() || null
-      updateIfNewer(userId, created)
-      updateIfNewer(userId, modified)
+      updateIfNewer(userId, created, 'Action Plan')
+      updateIfNewer(userId, modified, 'Action Plan')
     })
 
     // 5. Emails (check both sender and recipient)
@@ -4811,10 +4811,10 @@ class Firebase {
       const recipientId = data.recipientId
       const created = data.dateCreated?.toDate?.() || null
       const modified = data.dateModified?.toDate?.() || null
-      updateIfNewer(senderId, created)
-      updateIfNewer(senderId, modified)
-      updateIfNewer(recipientId, created)
-      updateIfNewer(recipientId, modified)
+      updateIfNewer(senderId, created, 'Email')
+      updateIfNewer(senderId, modified, 'Email')
+      updateIfNewer(recipientId, created, 'Email')
+      updateIfNewer(recipientId, modified, 'Email')
     })
 
     return lastActionMap
@@ -4831,6 +4831,7 @@ class Firebase {
       archived: boolean
       lastLogin: Date | null
       lastAction: Date | null
+      lastActionType: string
     }> = []
 
     // Fetch programs, users, and last action data in parallel
@@ -4879,6 +4880,7 @@ class Firebase {
           }
         }
       }
+      const lastActionData = lastActionMap.get(doc.id)
       result.push({
         id: doc.id,
         firstName: data.firstName || '',
@@ -4888,7 +4890,8 @@ class Firebase {
         program: programName,
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
-        lastAction: lastActionMap.get(doc.id) || null,
+        lastAction: lastActionData?.date || null,
+        lastActionType: lastActionData?.type || '',
       })
     })
 
