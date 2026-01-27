@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import Grid from "@material-ui/core/Grid";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from "@material-ui/core";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { coachLoaded, Role } from '../../../state/actions/coach'
 import { connect } from 'react-redux';
@@ -112,6 +113,12 @@ interface State {
   sendToSites: Array<Object>
   allUsers: Types.User[]
   allUsersLoading: boolean
+  editDialogOpen: boolean
+  archiveDialogOpen: boolean
+  selectedUser: Types.User | null
+  editFirstName: string
+  editLastName: string
+  editEmail: string
 }
 
 function checkCurrent(item: string) {
@@ -142,7 +149,13 @@ class UsersPage extends React.Component<Props, State> {
       propFilter: [],
       sendToSites: [],
       allUsers: [],
-      allUsersLoading: true
+      allUsersLoading: true,
+      editDialogOpen: false,
+      archiveDialogOpen: false,
+      selectedUser: null,
+      editFirstName: '',
+      editLastName: '',
+      editEmail: ''
     }
   }
 
@@ -569,15 +582,51 @@ class UsersPage extends React.Component<Props, State> {
   }
 
   handleAllUserClick = (user: Types.User) => {
-    // Could open edit dialog - for now just log
-    console.log('User clicked:', user)
+    this.setState({
+      selectedUser: user,
+      editFirstName: user.firstName,
+      editLastName: user.lastName,
+      editEmail: user.email || '',
+      editDialogOpen: true
+    })
   }
 
-  handleAllUserArchive = async (user: Types.User) => {
-    await this.context.db.collection('users').doc(user.id).update({ archived: !user.archived })
+  handleEditSave = async () => {
+    const { selectedUser, editFirstName, editLastName, editEmail } = this.state
+    if (!selectedUser || !editFirstName.trim() || !editLastName.trim()) {
+      alert('Name is required')
+      return
+    }
+
+    await this.context.editUserName(selectedUser.id, editFirstName, editLastName, editEmail, selectedUser.role)
     this.setState(s => ({
-      allUsers: s.allUsers.map(u => u.id === user.id ? { ...u, archived: !user.archived } : u)
+      allUsers: s.allUsers.map(u => u.id === selectedUser.id
+        ? { ...u, firstName: editFirstName, lastName: editLastName, email: editEmail }
+        : u
+      ),
+      editDialogOpen: false,
+      selectedUser: null
     }))
+  }
+
+  handleArchiveFromEdit = () => {
+    this.setState({ editDialogOpen: false, archiveDialogOpen: true })
+  }
+
+  handleArchiveConfirm = async () => {
+    const { selectedUser } = this.state
+    if (!selectedUser) return
+
+    await this.context.db.collection('users').doc(selectedUser.id).update({ archived: !selectedUser.archived })
+    this.setState(s => ({
+      allUsers: s.allUsers.map(u => u.id === selectedUser.id ? { ...u, archived: !selectedUser.archived } : u),
+      archiveDialogOpen: false,
+      selectedUser: null
+    }))
+  }
+
+  handleAllUserArchive = (user: Types.User) => {
+    this.setState({ selectedUser: user, archiveDialogOpen: true })
   }
 
   static propTypes = {
@@ -735,6 +784,73 @@ class UsersPage extends React.Component<Props, State> {
             </Grid>
         </Grid>
         </div>
+
+        {/* Edit User Dialog */}
+        <Dialog open={this.state.editDialogOpen} onClose={() => this.setState({ editDialogOpen: false })} maxWidth="sm" fullWidth>
+          <DialogTitle>Edit User</DialogTitle>
+          <DialogContent>
+            <Grid container spacing={2} style={{ marginTop: 8 }}>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  variant="outlined"
+                  value={this.state.editFirstName}
+                  onChange={e => this.setState({ editFirstName: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  variant="outlined"
+                  value={this.state.editLastName}
+                  onChange={e => this.setState({ editLastName: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  variant="outlined"
+                  value={this.state.editEmail}
+                  onChange={e => this.setState({ editEmail: e.target.value })}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={this.handleArchiveFromEdit}
+              color={this.state.selectedUser?.archived ? 'primary' : 'secondary'}
+            >
+              {this.state.selectedUser?.archived ? 'Unarchive' : 'Archive'}
+            </Button>
+            <div style={{ flex: 1 }} />
+            <Button onClick={() => this.setState({ editDialogOpen: false })}>Cancel</Button>
+            <Button onClick={this.handleEditSave} color="primary" variant="contained">Save</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Archive Confirmation Dialog */}
+        <Dialog open={this.state.archiveDialogOpen} onClose={() => this.setState({ archiveDialogOpen: false })}>
+          <DialogTitle>{this.state.selectedUser?.archived ? 'Unarchive' : 'Archive'} User</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to {this.state.selectedUser?.archived ? 'unarchive' : 'archive'} {this.state.selectedUser?.firstName} {this.state.selectedUser?.lastName}?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.setState({ archiveDialogOpen: false })}>Cancel</Button>
+            <Button
+              onClick={this.handleArchiveConfirm}
+              color={this.state.selectedUser?.archived ? 'primary' : 'secondary'}
+              variant="contained"
+            >
+              {this.state.selectedUser?.archived ? 'Unarchive' : 'Archive'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
