@@ -311,6 +311,13 @@ class Firebase {
       .signInWithEmailAndPassword(userData.email, userData.password)
       .then(async (userCredential) => {
         if (userCredential.user) {
+          // Check if user is archived
+          const userDoc = await this.db.collection('users').doc(userCredential.user.uid).get()
+          if (userDoc.exists && userDoc.data()?.archived === true) {
+            await this.auth.signOut()
+            throw new Error('Your account has been archived. Please contact an administrator.')
+          }
+
           await this.db.collection('users').doc(userCredential.user.uid).update({
             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
           })
