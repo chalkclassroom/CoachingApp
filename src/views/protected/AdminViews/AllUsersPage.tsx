@@ -38,7 +38,7 @@ class AllUsersPage extends React.Component<Props, State> {
   handleUserClick = (user: Types.User) => {
     this.setState({
       selected: user, firstName: user.firstName, lastName: user.lastName,
-      email: user.email, editOpen: true,
+      email: user.email || '', editOpen: true,
     })
   }
 
