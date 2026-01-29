@@ -65,7 +65,7 @@ class AllUsersTable extends React.Component<Props, State> {
     roleFilter: '',
     statusFilter: '',
     page: 0,
-    perPage: 10,
+    perPage: 50,
   }
 
   handleSort = (field: string) => {
