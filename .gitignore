@@ -30,6 +30,7 @@ yarn-error.log*
 .idea/
 src/SPREADSHEET_SECRETS.js
 .firebase/
+functions/.runtimeconfig.json
 public/precache-manifest.*
 
 # Project management (internal)

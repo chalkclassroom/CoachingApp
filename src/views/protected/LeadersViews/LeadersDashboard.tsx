@@ -24,6 +24,7 @@ import * as Types from '../../../constants/Types'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import * as H from 'history'
 import Firebase from '../../../components/Firebase'
+import HelpRequestDialog from '../../../components/Shared/HelpRequestDialog'
 
 import UsersIcon from '../../../assets/icons/UsersIcon.png'
 import ReportsIcon from '../../../assets/icons/ReportsIcon.png'
@@ -112,6 +113,7 @@ interface State {
   teacherModal: boolean
   type: string
   coachName: string
+  helpDialogOpen: boolean
 }
 
 /**
@@ -129,6 +131,7 @@ class LeadersDashboard extends React.Component<Props, State> {
       teacherModal: false,
       type: '',
       coachName: '',
+      helpDialogOpen: false,
     }
   }
 
@@ -704,6 +707,7 @@ class LeadersDashboard extends React.Component<Props, State> {
                         color="primary"
                         className={classes.helpButtons}
                         style={{ paddingLeft: '2em' }}
+                        onClick={(): void => this.setState({ helpDialogOpen: true })}
                       >
                         HELP
                       </Button>
@@ -739,6 +743,10 @@ class LeadersDashboard extends React.Component<Props, State> {
         ) : (
           <div />
         )}
+        <HelpRequestDialog
+          open={this.state.helpDialogOpen}
+          handleClose={(): void => this.setState({ helpDialogOpen: false })}
+        />
       </div>
     )
   }

@@ -23,6 +23,7 @@ import * as Types from '../../../constants/Types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as H from 'history';
 import Firebase from '../../../components/Firebase'
+import HelpRequestDialog from '../../../components/Shared/HelpRequestDialog'
 
 const styles: object = {
   root: {
@@ -99,7 +100,8 @@ interface Props {
 interface State {
   teacherModal: boolean,
   type: string,
-  coachName: string
+  coachName: string,
+  helpDialogOpen: boolean
 }
 
 /**
@@ -116,7 +118,8 @@ class HomePage extends React.Component<Props, State> {
     this.state = {
       teacherModal: false,
       type: "",
-      coachName: ""
+      coachName: "",
+      helpDialogOpen: false
     }
   }
 
@@ -546,7 +549,9 @@ class HomePage extends React.Component<Props, State> {
                   </Grid>
                   <Grid item xs={5}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
-                      <Button color="primary" className={classes.helpButtons} style={{paddingLeft: '2em'}}>
+                      <Button color="primary" className={classes.helpButtons} style={{paddingLeft: '2em'}}
+                        onClick={(): void => this.setState({ helpDialogOpen: true })}
+                      >
                         HELP
                       </Button>
                     </Grid>
@@ -581,6 +586,10 @@ class HomePage extends React.Component<Props, State> {
         ) : (
           <div />
         )}
+        <HelpRequestDialog
+          open={this.state.helpDialogOpen}
+          handleClose={(): void => this.setState({ helpDialogOpen: false })}
+        />
       </div>
     );
   }
