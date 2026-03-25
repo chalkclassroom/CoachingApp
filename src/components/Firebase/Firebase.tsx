@@ -413,6 +413,21 @@ class Firebase {
       .catch(error => error)
   }
 
+  sendHelpRequest = async (message: string): Promise<{success: boolean}> => {
+    const sendHelpRequestFunction = this.functions.httpsCallable(
+      'funcSendHelpRequest'
+    )
+    return sendHelpRequestFunction({message})
+      .then(result => {
+        console.log('Help request sent:', result)
+        return {success: true}
+      })
+      .catch(error => {
+        console.error('Error sending help request:', error)
+        throw error
+      })
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */

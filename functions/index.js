@@ -79,6 +79,7 @@ exports.funcLiteracyTrendLanguage = require('./funcLiteracyTrendLanguage').funcL
 exports.funcMathDetails = require('./funcMathDetails').funcMathDetails;
 exports.funcRecentObservations = require('./funcRecentObservations').funcRecentObservations;
 exports.funcSendEmail = require('./funcSendEmail').funcSendEmail;
+exports.funcSendHelpRequest = require('./funcSendHelpRequest').funcSendHelpRequest;
 exports.funcSendMLE = require('./funcSendMLE').funcSendMLE;
 exports.funcSeqDetails = require('./funcSeqDetails').funcSeqDetails;
 exports.funcSessionDates = require('./funcSessionDates').funcSessionDates;

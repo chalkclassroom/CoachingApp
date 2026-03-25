@@ -36,6 +36,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 import * as H from 'history';
 import Firebase from './Firebase';
+import HelpRequestDialog from './Shared/HelpRequestDialog';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 
 const styles: object = {
@@ -75,7 +76,8 @@ interface State {
   chalkOpen: boolean,
   teacherModal: boolean,
   practiceOpen: boolean,
-  type: string
+  type: string,
+  helpDialogOpen: boolean
 }
 
 /**
@@ -91,7 +93,8 @@ class BurgerMenu extends React.Component<Props, State>{
     chalkOpen: false,
     teacherModal: false,
     practiceOpen: false,
-    type: ""
+    type: "",
+    helpDialogOpen: false
   };
   handleDrawerOpen = (): void => {
     this.setState({ open: true });
@@ -459,11 +462,9 @@ class BurgerMenu extends React.Component<Props, State>{
             </ListItem>
             <ListItem
                 button
-                disabled
-                onClick={() => this.props.handleNavigation( (): void => {
-                  this.setState({ menu: 13, chalkOpen: false });
-                  this.props.history.push("/help");
-                })}
+                onClick={(): void => {
+                  this.setState({ helpDialogOpen: true });
+                }}
             >
               <ListItemIcon>
                 <HelpIcon style={{ fill: Constants.Colors.TT }} />
@@ -536,6 +537,10 @@ class BurgerMenu extends React.Component<Props, State>{
         ) : (
           <div />
         )}
+        <HelpRequestDialog
+          open={this.state.helpDialogOpen}
+          handleClose={(): void => this.setState({ helpDialogOpen: false })}
+        />
       </div>
     );
   }
