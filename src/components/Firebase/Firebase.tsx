@@ -414,18 +414,20 @@ class Firebase {
   }
 
   sendHelpRequest = async (message: string): Promise<{success: boolean}> => {
-    const sendHelpRequestFunction = this.functions.httpsCallable(
-      'funcSendHelpRequest'
-    )
-    return sendHelpRequestFunction({message})
-      .then(result => {
-        console.log('Help request sent:', result)
-        return {success: true}
-      })
-      .catch(error => {
-        console.error('Error sending help request:', error)
-        throw error
-      })
+    if (!this.auth.currentUser) {
+      throw new Error('User must be logged in to submit a help request.')
+    }
+    const userDoc = await this.getUserInformation()
+    await this.db.collection('helpRequests').add({
+      message,
+      userName: `${userDoc.firstName} ${userDoc.lastName}`,
+      userEmail: userDoc.email,
+      userRole: userDoc.role,
+      userId: this.auth.currentUser.uid,
+      status: 'pending',
+      dateCreated: new Date()
+    })
+    return {success: true}
   }
 
   /**
