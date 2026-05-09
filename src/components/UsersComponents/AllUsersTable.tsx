@@ -12,6 +12,8 @@ import {
   Switch,
   Tooltip,
 } from '@material-ui/core'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 import React from 'react'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
@@ -43,6 +45,10 @@ const StatusBadge = styled.span<{ archived: boolean }>`
 
 interface Props {
   users: Types.User[]
+  loginCounts: Map<string, number>
+  rangeStart: Date
+  rangeEnd: Date
+  onRangeChange: (start: Date, end: Date) => void
   onUserClick?: (user: Types.User) => void
   onArchiveClick?: (user: Types.User) => void
 }
@@ -90,12 +96,19 @@ class AllUsersTable extends React.Component<Props, State> {
 
     users.sort((a, b) => {
       const isDateField = sortField === 'lastLogin' || sortField === 'lastAction'
-      const aVal = isDateField
-        ? (a[sortField]?.getTime() || 0)
-        : String(a[sortField] || '').toLowerCase()
-      const bVal = isDateField
-        ? (b[sortField]?.getTime() || 0)
-        : String(b[sortField] || '').toLowerCase()
+      const isLoginCount = sortField === 'loginCount'
+      let aVal: number | string
+      let bVal: number | string
+      if (isLoginCount) {
+        aVal = this.props.loginCounts.get(a.id) || 0
+        bVal = this.props.loginCounts.get(b.id) || 0
+      } else if (isDateField) {
+        aVal = a[sortField]?.getTime() || 0
+        bVal = b[sortField]?.getTime() || 0
+      } else {
+        aVal = String(a[sortField] || '').toLowerCase()
+        bVal = String(b[sortField] || '').toLowerCase()
+      }
       return sortDir === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1)
     })
 
@@ -115,15 +128,33 @@ class AllUsersTable extends React.Component<Props, State> {
     return user.lastActionType ? `${user.lastActionType} - ${date}` : date
   }
 
+  formatRangeLabel = () => {
+    const fmt = (d: Date) => d.toLocaleDateString([], { month: 'short', day: 'numeric' })
+    return `${fmt(this.props.rangeStart)} \u2013 ${fmt(this.props.rangeEnd)}`
+  }
+
+  applyPreset = (days: number) => {
+    const end = new Date()
+    end.setHours(23, 59, 59, 999)
+    const start = new Date()
+    start.setDate(start.getDate() - days + 1)
+    start.setHours(0, 0, 0, 0)
+    this.props.onRangeChange(start, end)
+  }
+
   handleExport = () => {
     const users = this.getFilteredUsers()
-    const headers = ['Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status', 'Last Login', 'Last Action', 'Action Type']
+    const headers = [
+      'Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status',
+      'Last Login', `Login Count (${this.formatRangeLabel()})`, 'Last Action', 'Action Type'
+    ]
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
     const rows = users.map(u => [
       escape(u.lastName), escape(u.firstName), escape(u.email),
       escape(this.formatRole(u.role)), escape(u.program || ''),
       escape(u.archived ? 'Archived' : 'Active'),
       escape(this.formatDate(u.lastLogin)),
+      String(this.props.loginCounts.get(u.id) || 0),
       escape(this.formatDate(u.lastAction)),
       escape(u.lastActionType || '')
     ].join(','))
@@ -141,13 +172,15 @@ class AllUsersTable extends React.Component<Props, State> {
     const paginated = filtered.slice(page * perPage, (page + 1) * perPage)
     const roles = [...new Set(this.props.users.map(u => u.role))].sort()
 
-    const SortHeader = ({ field, label }: { field: string; label: string }) => (
+    const SortHeader = ({ field, label }: { field: string; label: React.ReactNode }) => (
       <th style={{ padding: '4px 8px', cursor: 'pointer', fontSize: '1.25rem', fontWeight: 500 }} onClick={() => this.handleSort(field)}>
         <TableSortLabel active={sortField === field} direction={sortField === field ? sortDir : 'asc'}>
           <strong>{label}</strong>
         </TableSortLabel>
       </th>
     )
+
+    const { rangeStart, rangeEnd, onRangeChange } = this.props
 
     return (
       <Grid container direction="column" spacing={2}>
@@ -177,6 +210,25 @@ class AllUsersTable extends React.Component<Props, State> {
           </Button>
         </Grid>
 
+        <Grid item style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Login range:</span>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+              autoOk label="From" value={rangeStart} style={{ width: 150 }}
+              onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
+            />
+            <KeyboardDatePicker
+              disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+              autoOk label="To" value={rangeEnd} style={{ width: 150 }}
+              onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
+            />
+          </MuiPickersUtilsProvider>
+          <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>Last 7d</Button>
+          <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>Last 30d</Button>
+          <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>Last 90d</Button>
+        </Grid>
+
         <Grid item style={{ overflowX: 'auto' }}>
           <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 800 }}>
             <thead style={{ borderBottom: '2px solid #0988ec' }}>
@@ -188,13 +240,14 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="program" label="Program" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
+                <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <SortHeader field="lastAction" label="Last Action" />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><TableCell colSpan={9} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
+                <tr><TableCell colSpan={10} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
               ) : paginated.map(user => (
                 <TableRow key={user.id}>
                   <TableCell>{user.lastName}</TableCell>
@@ -214,6 +267,7 @@ class AllUsersTable extends React.Component<Props, State> {
                     </Tooltip>
                   </TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
+                  <TableCell>{this.props.loginCounts.get(user.id) || 0}</TableCell>
                   <TableCell>{this.formatLastAction(user)}</TableCell>
                   <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title="Edit user">

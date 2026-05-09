@@ -321,6 +321,10 @@ class Firebase {
           await this.db.collection('users').doc(userCredential.user.uid).update({
             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
           })
+          await this.db.collection('loginEvents').add({
+            userId: userCredential.user.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          })
         }
         return userCredential
       })
@@ -4842,6 +4846,26 @@ class Firebase {
     })
 
     return lastActionMap
+  }
+
+  getUsersLoginCounts = async (
+    startDate: Date,
+    endDate: Date
+  ): Promise<Map<string, number>> => {
+    const counts = new Map<string, number>()
+    const snapshot = await this.db
+      .collection('loginEvents')
+      .where('timestamp', '>=', startDate)
+      .where('timestamp', '<=', endDate)
+      .get()
+
+    snapshot.docs.forEach(doc => {
+      const userId = doc.data().userId
+      if (!userId) return
+      counts.set(userId, (counts.get(userId) || 0) + 1)
+    })
+
+    return counts
   }
 
   getAllUsers = async () => {

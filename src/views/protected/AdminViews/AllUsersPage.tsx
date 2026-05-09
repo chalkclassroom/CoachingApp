@@ -12,6 +12,9 @@ interface Props { isAdmin: boolean }
 interface State {
   loading: boolean
   users: Types.User[]
+  loginCounts: Map<string, number>
+  rangeStart: Date
+  rangeEnd: Date
   editOpen: boolean
   archiveOpen: boolean
   selected: Types.User | null
@@ -20,19 +23,41 @@ interface State {
   email: string
 }
 
+const defaultRange = (): { start: Date; end: Date } => {
+  const end = new Date()
+  end.setHours(23, 59, 59, 999)
+  const start = new Date()
+  start.setDate(start.getDate() - 29)
+  start.setHours(0, 0, 0, 0)
+  return { start, end }
+}
+
 class AllUsersPage extends React.Component<Props, State> {
   static contextType = FirebaseContext
   context!: Firebase
 
   state: State = {
-    loading: true, users: [], editOpen: false, archiveOpen: false,
+    loading: true, users: [], loginCounts: new Map(),
+    rangeStart: defaultRange().start, rangeEnd: defaultRange().end,
+    editOpen: false, archiveOpen: false,
     selected: null, firstName: '', lastName: '', email: '',
   }
 
   componentDidMount() {
-    this.context.getAllUsers()
-      .then(users => this.setState({ users, loading: false }))
+    const { rangeStart, rangeEnd } = this.state
+    Promise.all([
+      this.context.getAllUsers(),
+      this.context.getUsersLoginCounts(rangeStart, rangeEnd)
+    ])
+      .then(([users, loginCounts]) => this.setState({ users, loginCounts, loading: false }))
       .catch(() => { alert('Error loading users'); this.setState({ loading: false }) })
+  }
+
+  handleRangeChange = (start: Date, end: Date) => {
+    this.setState({ rangeStart: start, rangeEnd: end })
+    this.context.getUsersLoginCounts(start, end)
+      .then(loginCounts => this.setState({ loginCounts }))
+      .catch(() => alert('Error loading login counts'))
   }
 
   handleUserClick = (user: Types.User) => {
@@ -66,7 +91,7 @@ class AllUsersPage extends React.Component<Props, State> {
 
   render() {
     const { isAdmin } = this.props
-    const { loading, users, editOpen, archiveOpen, selected, firstName, lastName, email } = this.state
+    const { loading, users, loginCounts, rangeStart, rangeEnd, editOpen, archiveOpen, selected, firstName, lastName, email } = this.state
 
     return (
       <div style={{ height: '100vh', overflow: 'auto' }}>
@@ -86,6 +111,10 @@ class AllUsersPage extends React.Component<Props, State> {
             ) : (
               <AllUsersTable
                 users={users}
+                loginCounts={loginCounts}
+                rangeStart={rangeStart}
+                rangeEnd={rangeEnd}
+                onRangeChange={this.handleRangeChange}
                 onUserClick={this.handleUserClick}
                 onArchiveClick={user => this.setState({ selected: user, archiveOpen: true })}
               />
