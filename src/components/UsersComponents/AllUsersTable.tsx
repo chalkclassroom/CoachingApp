@@ -146,7 +146,7 @@ class AllUsersTable extends React.Component<Props, State> {
     const users = this.getFilteredUsers()
     const headers = [
       'Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status',
-      'Last Login', `Logins (${this.formatRangeLabel()})`, 'Last Action', 'Action Type'
+      'Last Login', `Login Count (${this.formatRangeLabel()})`, 'Last Action', 'Action Type'
     ]
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
     const rows = users.map(u => [
@@ -172,7 +172,7 @@ class AllUsersTable extends React.Component<Props, State> {
     const paginated = filtered.slice(page * perPage, (page + 1) * perPage)
     const roles = [...new Set(this.props.users.map(u => u.role))].sort()
 
-    const SortHeader = ({ field, label }: { field: string; label: string }) => (
+    const SortHeader = ({ field, label }: { field: string; label: React.ReactNode }) => (
       <th style={{ padding: '4px 8px', cursor: 'pointer', fontSize: '1.25rem', fontWeight: 500 }} onClick={() => this.handleSort(field)}>
         <TableSortLabel active={sortField === field} direction={sortField === field ? sortDir : 'asc'}>
           <strong>{label}</strong>
@@ -240,7 +240,7 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="program" label="Program" />
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
-                <SortHeader field="loginCount" label={`Logins (${this.formatRangeLabel()})`} />
+                <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <SortHeader field="lastAction" label="Last Action" />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
