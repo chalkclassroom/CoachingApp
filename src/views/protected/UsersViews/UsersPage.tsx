@@ -113,6 +113,9 @@ interface State {
   sendToSites: Array<Object>
   allUsers: Types.User[]
   allUsersLoading: boolean
+  allUsersLoginCounts: Map<string, number>
+  allUsersRangeStart: Date
+  allUsersRangeEnd: Date
   editDialogOpen: boolean
   archiveDialogOpen: boolean
   selectedUser: Types.User | null
@@ -138,6 +141,12 @@ class UsersPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const rangeEnd = new Date()
+    rangeEnd.setHours(23, 59, 59, 999)
+    const rangeStart = new Date()
+    rangeStart.setDate(rangeStart.getDate() - 29)
+    rangeStart.setHours(0, 0, 0, 0)
+
     this.state = {
       currentPage: "",
       coachData: [],
@@ -150,6 +159,9 @@ class UsersPage extends React.Component<Props, State> {
       sendToSites: [],
       allUsers: [],
       allUsersLoading: true,
+      allUsersLoginCounts: new Map(),
+      allUsersRangeStart: rangeStart,
+      allUsersRangeEnd: rangeEnd,
       editDialogOpen: false,
       archiveDialogOpen: false,
       selectedUser: null,
@@ -573,12 +585,23 @@ class UsersPage extends React.Component<Props, State> {
     if (this.props.userRole !== 'admin') return
     this.setState({ allUsersLoading: true })
     try {
-      const users = await this.context.getAllUsers()
-      this.setState({ allUsers: users, allUsersLoading: false })
+      const { allUsersRangeStart, allUsersRangeEnd } = this.state
+      const [users, allUsersLoginCounts] = await Promise.all([
+        this.context.getAllUsers(),
+        this.context.getUsersLoginCounts(allUsersRangeStart, allUsersRangeEnd)
+      ])
+      this.setState({ allUsers: users, allUsersLoginCounts, allUsersLoading: false })
     } catch (e) {
       console.error('Error loading all users:', e)
       this.setState({ allUsersLoading: false })
     }
+  }
+
+  handleAllUsersRangeChange = (start: Date, end: Date) => {
+    this.setState({ allUsersRangeStart: start, allUsersRangeEnd: end })
+    this.context.getUsersLoginCounts(start, end)
+      .then(allUsersLoginCounts => this.setState({ allUsersLoginCounts }))
+      .catch(e => console.error('Error loading login counts:', e))
   }
 
   handleAllUserClick = (user: Types.User) => {
@@ -712,6 +735,10 @@ class UsersPage extends React.Component<Props, State> {
                           <div style={{ padding: '30px 30px 40px 30px' }}>
                             <AllUsersTable
                               users={this.state.allUsers}
+                              loginCounts={this.state.allUsersLoginCounts}
+                              rangeStart={this.state.allUsersRangeStart}
+                              rangeEnd={this.state.allUsersRangeEnd}
+                              onRangeChange={this.handleAllUsersRangeChange}
                               onUserClick={this.handleAllUserClick}
                               onArchiveClick={this.handleAllUserArchive}
                             />
