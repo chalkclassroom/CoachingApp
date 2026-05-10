@@ -322,15 +322,12 @@ class Firebase {
             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
           })
           try {
-            const uid = userCredential.user.uid
-            console.warn('[CHALK-LOGIN-EVENT] about to write, uid=', uid)
-            const ref = await this.db.collection('loginEvents').add({
-              userId: uid,
+            await this.db.collection('loginEvents').add({
+              userId: userCredential.user.uid,
               timestamp: firebase.firestore.FieldValue.serverTimestamp()
             })
-            console.warn('[CHALK-LOGIN-EVENT] write OK, docId=', ref.id)
           } catch (e) {
-            console.error('[CHALK-LOGIN-EVENT] write FAILED:', (e as { code?: string }).code, (e as Error).message, e)
+            console.error('Failed to record loginEvent:', e)
           }
         }
         return userCredential
