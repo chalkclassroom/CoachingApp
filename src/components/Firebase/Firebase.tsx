@@ -321,10 +321,14 @@ class Firebase {
           await this.db.collection('users').doc(userCredential.user.uid).update({
             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
           })
-          await this.db.collection('loginEvents').add({
-            userId: userCredential.user.uid,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          })
+          try {
+            await this.db.collection('loginEvents').add({
+              userId: userCredential.user.uid,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+          } catch (e) {
+            console.error('Failed to record loginEvent:', e)
+          }
         }
         return userCredential
       })
