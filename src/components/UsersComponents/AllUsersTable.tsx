@@ -205,6 +205,10 @@ class AllUsersTable extends React.Component<Props, State> {
               <MenuItem value="archived">Archived</MenuItem>
             </Select>
           </FormControl>
+          <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
+            Export
+          </Button>
+          <span style={{ fontSize: 14, fontWeight: 500, color: '#555', marginLeft: 8 }}>Login range:</span>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               disableToolbar variant="inline" format="MM/dd/yy" margin="none"
@@ -220,9 +224,6 @@ class AllUsersTable extends React.Component<Props, State> {
           <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>Last 7d</Button>
           <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>Last 30d</Button>
           <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>Last 90d</Button>
-          <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
-            Export
-          </Button>
         </Grid>
 
         <Grid item style={{ overflowX: 'auto' }}>
