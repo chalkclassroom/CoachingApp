@@ -5,7 +5,7 @@ import Firebase, { FirebaseContext } from '../../../components/Firebase'
 import AppBar from '../../../components/AppBar'
 import { connect } from 'react-redux'
 import { Role } from '../../../state/actions/coach'
-import AllUsersTable from '../../../components/UsersComponents/AllUsersTable'
+import AllUsersTable, { ActionCountEntry } from '../../../components/UsersComponents/AllUsersTable'
 import * as Types from '../../../constants/Types'
 
 interface Props { isAdmin: boolean }
@@ -13,6 +13,7 @@ interface State {
   loading: boolean
   users: Types.User[]
   loginCounts: Map<string, number>
+  actionCounts: Map<string, ActionCountEntry>
   rangeStart: Date
   rangeEnd: Date
   editOpen: boolean
@@ -37,7 +38,7 @@ class AllUsersPage extends React.Component<Props, State> {
   context!: Firebase
 
   state: State = {
-    loading: true, users: [], loginCounts: new Map(),
+    loading: true, users: [], loginCounts: new Map(), actionCounts: new Map(),
     rangeStart: defaultRange().start, rangeEnd: defaultRange().end,
     editOpen: false, archiveOpen: false,
     selected: null, firstName: '', lastName: '', email: '',
@@ -47,17 +48,21 @@ class AllUsersPage extends React.Component<Props, State> {
     const { rangeStart, rangeEnd } = this.state
     Promise.all([
       this.context.getAllUsers(),
-      this.context.getUsersLoginCounts(rangeStart, rangeEnd)
+      this.context.getUsersLoginCounts(rangeStart, rangeEnd),
+      this.context.getUsersActionCounts(rangeStart, rangeEnd)
     ])
-      .then(([users, loginCounts]) => this.setState({ users, loginCounts, loading: false }))
+      .then(([users, loginCounts, actionCounts]) => this.setState({ users, loginCounts, actionCounts, loading: false }))
       .catch(() => { alert('Error loading users'); this.setState({ loading: false }) })
   }
 
   handleRangeChange = (start: Date, end: Date) => {
     this.setState({ rangeStart: start, rangeEnd: end })
-    this.context.getUsersLoginCounts(start, end)
-      .then(loginCounts => this.setState({ loginCounts }))
-      .catch(() => alert('Error loading login counts'))
+    Promise.all([
+      this.context.getUsersLoginCounts(start, end),
+      this.context.getUsersActionCounts(start, end)
+    ])
+      .then(([loginCounts, actionCounts]) => this.setState({ loginCounts, actionCounts }))
+      .catch(() => alert('Error loading counts'))
   }
 
   handleUserClick = (user: Types.User) => {
@@ -91,7 +96,7 @@ class AllUsersPage extends React.Component<Props, State> {
 
   render() {
     const { isAdmin } = this.props
-    const { loading, users, loginCounts, rangeStart, rangeEnd, editOpen, archiveOpen, selected, firstName, lastName, email } = this.state
+    const { loading, users, loginCounts, actionCounts, rangeStart, rangeEnd, editOpen, archiveOpen, selected, firstName, lastName, email } = this.state
 
     return (
       <div style={{ height: '100vh', overflow: 'auto' }}>
@@ -112,6 +117,7 @@ class AllUsersPage extends React.Component<Props, State> {
               <AllUsersTable
                 users={users}
                 loginCounts={loginCounts}
+                actionCounts={actionCounts}
                 rangeStart={rangeStart}
                 rangeEnd={rangeEnd}
                 onRangeChange={this.handleRangeChange}
