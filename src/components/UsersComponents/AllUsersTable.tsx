@@ -174,7 +174,7 @@ class AllUsersTable extends React.Component<Props, State> {
     const end = new Date()
     end.setHours(23, 59, 59, 999)
     const start = new Date()
-    start.setDate(start.getDate() - days + 1)
+    start.setDate(start.getDate() - days)
     start.setHours(0, 0, 0, 0)
     this.props.onRangeChange(start, end)
   }
@@ -320,7 +320,7 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="lastLogin" label="Last Login" />
                 <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <SortHeader field="actionCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Action Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
-                <SortHeader field="lastAction" label="Last Action" />
+                <SortHeader field="lastAction" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Last Action<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>all time</span></span>} />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>
