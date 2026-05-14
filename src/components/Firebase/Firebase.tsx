@@ -5000,12 +5000,15 @@ class Firebase {
       program: string
       archived: boolean
       lastLogin: Date | null
+      lastAction: Date | null
+      lastActionType: string
     }> = []
 
-    // Fetch programs and users in parallel
-    const [programsSnapshot, usersSnapshot] = await Promise.all([
+    // Fetch programs, users, and last action data in parallel
+    const [programsSnapshot, usersSnapshot, lastActionMap] = await Promise.all([
       this.db.collection('programs').get(),
-      this.db.collection('users').get()
+      this.db.collection('users').get(),
+      this.getUsersLastAction()
     ])
 
     // Build programs lookup map
@@ -5047,6 +5050,7 @@ class Firebase {
           }
         }
       }
+      const lastActionData = lastActionMap.get(doc.id)
       result.push({
         id: doc.id,
         firstName: data.firstName || '',
@@ -5056,6 +5060,8 @@ class Firebase {
         program: programName,
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
+        lastAction: lastActionData?.date || null,
+        lastActionType: lastActionData?.type || '',
       })
     })
 
