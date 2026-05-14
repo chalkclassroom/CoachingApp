@@ -184,49 +184,50 @@ class AllUsersTable extends React.Component<Props, State> {
 
     return (
       <Grid container direction="column" spacing={2}>
-        <Grid item style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-          <TextField
-            size="small" variant="outlined" label="Search" value={search}
-            onChange={e => this.setState({ search: e.target.value, page: 0 })}
-            style={{ width: 200 }}
-          />
-          <FormControl variant="outlined" size="small" style={{ minWidth: 130 }}>
-            <InputLabel>Role</InputLabel>
-            <Select value={roleFilter} label="Role" onChange={e => this.setState({ roleFilter: e.target.value as string, page: 0 })}>
-              <MenuItem value=""><em>All</em></MenuItem>
-              {roles.map(r => <MenuItem key={r} value={r}>{this.formatRole(r)}</MenuItem>)}
-            </Select>
-          </FormControl>
-          <FormControl variant="outlined" size="small" style={{ minWidth: 130 }}>
-            <InputLabel>Status</InputLabel>
-            <Select value={statusFilter} label="Status" onChange={e => this.setState({ statusFilter: e.target.value as string, page: 0 })}>
-              <MenuItem value=""><em>All</em></MenuItem>
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="archived">Archived</MenuItem>
-            </Select>
-          </FormControl>
-          <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
-            Export
-          </Button>
-        </Grid>
-
-        <Grid item style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Login range:</span>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-              autoOk label="From" value={rangeStart} style={{ width: 150 }}
-              onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
+        <Grid item style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+            <TextField
+              size="small" variant="outlined" label="Search" value={search}
+              onChange={e => this.setState({ search: e.target.value, page: 0 })}
+              style={{ width: 180 }}
             />
-            <KeyboardDatePicker
-              disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-              autoOk label="To" value={rangeEnd} style={{ width: 150 }}
-              onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
-            />
-          </MuiPickersUtilsProvider>
-          <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>Last 7d</Button>
-          <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>Last 30d</Button>
-          <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>Last 90d</Button>
+            <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
+              <InputLabel>Role</InputLabel>
+              <Select value={roleFilter} label="Role" onChange={e => this.setState({ roleFilter: e.target.value as string, page: 0 })}>
+                <MenuItem value=""><em>All</em></MenuItem>
+                {roles.map(r => <MenuItem key={r} value={r}>{this.formatRole(r)}</MenuItem>)}
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
+              <InputLabel>Status</InputLabel>
+              <Select value={statusFilter} label="Status" onChange={e => this.setState({ statusFilter: e.target.value as string, page: 0 })}>
+                <MenuItem value=""><em>All</em></MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="archived">Archived</MenuItem>
+              </Select>
+            </FormControl>
+            <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
+              Export
+            </Button>
+          </div>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Login range:</span>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+                autoOk label="From" value={rangeStart} style={{ width: 120 }}
+                onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
+              />
+              <KeyboardDatePicker
+                disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+                autoOk label="To" value={rangeEnd} style={{ width: 120 }}
+                onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
+              />
+            </MuiPickersUtilsProvider>
+            <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>Last 7d</Button>
+            <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>Last 30d</Button>
+            <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>Last 90d</Button>
+          </div>
         </Grid>
 
         <Grid item style={{ overflowX: 'auto' }}>
