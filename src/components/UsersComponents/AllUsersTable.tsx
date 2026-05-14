@@ -43,9 +43,19 @@ const StatusBadge = styled.span<{ archived: boolean }>`
   color: ${props => (props.archived ? '#c62828' : '#2e7d32')};
 `
 
+export type ActionCountEntry = {
+  total: number
+  observations: number
+  knowledgeChecks: number
+  conferencePlans: number
+  actionPlans: number
+  emails: number
+}
+
 interface Props {
   users: Types.User[]
   loginCounts: Map<string, number>
+  actionCounts: Map<string, ActionCountEntry>
   rangeStart: Date
   rangeEnd: Date
   onRangeChange: (start: Date, end: Date) => void
@@ -95,13 +105,17 @@ class AllUsersTable extends React.Component<Props, State> {
     if (statusFilter) users = users.filter(u => u.archived === (statusFilter === 'archived'))
 
     users.sort((a, b) => {
-      const isDateField = sortField === 'lastLogin' || sortField === 'lastAction'
+      const isDateField = sortField === 'lastLogin'
       const isLoginCount = sortField === 'loginCount'
+      const isActionCount = sortField === 'actionCount'
       let aVal: number | string
       let bVal: number | string
       if (isLoginCount) {
         aVal = this.props.loginCounts.get(a.id) || 0
         bVal = this.props.loginCounts.get(b.id) || 0
+      } else if (isActionCount) {
+        aVal = this.props.actionCounts.get(a.id)?.total || 0
+        bVal = this.props.actionCounts.get(b.id)?.total || 0
       } else if (isDateField) {
         aVal = a[sortField]?.getTime() || 0
         bVal = b[sortField]?.getTime() || 0
@@ -122,10 +136,26 @@ class AllUsersTable extends React.Component<Props, State> {
 
   formatDate = (d: Date | null) => d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'
 
-  formatLastAction = (user: Types.User) => {
-    if (!user.lastAction) return 'Never'
-    const date = user.lastAction.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
-    return user.lastActionType ? `${user.lastActionType} - ${date}` : date
+  formatActionBreakdown = (entry: ActionCountEntry | undefined): string => {
+    if (!entry || entry.total === 0) return 'No actions in range'
+    const parts: string[] = []
+    if (entry.observations) parts.push(`${entry.observations} observation${entry.observations === 1 ? '' : 's'}`)
+    if (entry.knowledgeChecks) parts.push(`${entry.knowledgeChecks} training${entry.knowledgeChecks === 1 ? '' : 's'}`)
+    if (entry.conferencePlans) parts.push(`${entry.conferencePlans} conference plan${entry.conferencePlans === 1 ? '' : 's'}`)
+    if (entry.actionPlans) parts.push(`${entry.actionPlans} action plan${entry.actionPlans === 1 ? '' : 's'}`)
+    if (entry.emails) parts.push(`${entry.emails} email${entry.emails === 1 ? '' : 's'}`)
+    return parts.join(', ')
+  }
+
+  formatActionBreakdownShort = (entry: ActionCountEntry | undefined): string => {
+    if (!entry || entry.total === 0) return ''
+    const parts: string[] = []
+    if (entry.observations) parts.push(`${entry.observations} obs`)
+    if (entry.knowledgeChecks) parts.push(`${entry.knowledgeChecks} train`)
+    if (entry.conferencePlans) parts.push(`${entry.conferencePlans} conf`)
+    if (entry.actionPlans) parts.push(`${entry.actionPlans} plan`)
+    if (entry.emails) parts.push(`${entry.emails} email`)
+    return parts.join(', ')
   }
 
   formatRangeLabel = () => {
@@ -146,18 +176,24 @@ class AllUsersTable extends React.Component<Props, State> {
     const users = this.getFilteredUsers()
     const headers = [
       'Last Name', 'First Name', 'Email', 'Role', 'Program', 'Status',
-      'Last Login', `Login Count (${this.formatRangeLabel()})`, 'Last Action', 'Action Type'
+      'Last Login',
+      `Login Count (${this.formatRangeLabel()})`,
+      `Action Count (${this.formatRangeLabel()})`,
+      'Action Breakdown'
     ]
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
-    const rows = users.map(u => [
-      escape(u.lastName), escape(u.firstName), escape(u.email),
-      escape(this.formatRole(u.role)), escape(u.program || ''),
-      escape(u.archived ? 'Archived' : 'Active'),
-      escape(this.formatDate(u.lastLogin)),
-      String(this.props.loginCounts.get(u.id) || 0),
-      escape(this.formatDate(u.lastAction)),
-      escape(u.lastActionType || '')
-    ].join(','))
+    const rows = users.map(u => {
+      const action = this.props.actionCounts.get(u.id)
+      return [
+        escape(u.lastName), escape(u.firstName), escape(u.email),
+        escape(this.formatRole(u.role)), escape(u.program || ''),
+        escape(u.archived ? 'Archived' : 'Active'),
+        escape(this.formatDate(u.lastLogin)),
+        String(this.props.loginCounts.get(u.id) || 0),
+        String(action?.total || 0),
+        escape(this.formatActionBreakdownShort(action))
+      ].join(',')
+    })
     const csv = [headers.join(','), ...rows].join('\n')
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
@@ -211,7 +247,7 @@ class AllUsersTable extends React.Component<Props, State> {
             </Button>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Login range:</span>
+            <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Date range:</span>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 disableToolbar variant="inline" format="MM/dd/yy" margin="none"
@@ -242,7 +278,7 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="archived" label="Status" />
                 <SortHeader field="lastLogin" label="Last Login" />
                 <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
-                <SortHeader field="lastAction" label="Last Action" />
+                <SortHeader field="actionCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Action Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>
@@ -269,7 +305,18 @@ class AllUsersTable extends React.Component<Props, State> {
                   </TableCell>
                   <TableCell>{this.formatDate(user.lastLogin)}</TableCell>
                   <TableCell>{this.props.loginCounts.get(user.id) || 0}</TableCell>
-                  <TableCell>{this.formatLastAction(user)}</TableCell>
+                  <TableCell>
+                    {(() => {
+                      const entry = this.props.actionCounts.get(user.id)
+                      const total = entry?.total || 0
+                      const breakdown = this.formatActionBreakdown(entry)
+                      return (
+                        <Tooltip title={breakdown} placement="top" arrow>
+                          <span style={{ cursor: 'help', borderBottom: total > 0 ? '1px dotted #999' : 'none' }}>{total}</span>
+                        </Tooltip>
+                      )
+                    })()}
+                  </TableCell>
                   <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title="Edit user">
                       <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
