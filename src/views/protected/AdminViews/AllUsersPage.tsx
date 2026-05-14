@@ -28,7 +28,7 @@ const defaultRange = (): { start: Date; end: Date } => {
   const end = new Date()
   end.setHours(23, 59, 59, 999)
   const start = new Date()
-  start.setDate(start.getDate() - 29)
+  start.setDate(start.getDate() - 30)
   start.setHours(0, 0, 0, 0)
   return { start, end }
 }
