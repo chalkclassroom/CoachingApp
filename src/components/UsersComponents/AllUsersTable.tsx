@@ -105,7 +105,7 @@ class AllUsersTable extends React.Component<Props, State> {
     if (statusFilter) users = users.filter(u => u.archived === (statusFilter === 'archived'))
 
     users.sort((a, b) => {
-      const isDateField = sortField === 'lastLogin'
+      const isDateField = sortField === 'lastLogin' || sortField === 'lastAction'
       const isLoginCount = sortField === 'loginCount'
       const isActionCount = sortField === 'actionCount'
       let aVal: number | string
@@ -135,6 +135,12 @@ class AllUsersTable extends React.Component<Props, State> {
   }[role] || role)
 
   formatDate = (d: Date | null) => d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'
+
+  formatLastAction = (user: Types.User) => {
+    if (!user.lastAction) return 'Never'
+    const date = user.lastAction.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
+    return user.lastActionType ? `${user.lastActionType} - ${date}` : date
+  }
 
   formatActionBreakdown = (entry: ActionCountEntry | undefined): string => {
     if (!entry || entry.total === 0) return 'No actions in range'
@@ -179,7 +185,9 @@ class AllUsersTable extends React.Component<Props, State> {
       'Last Login',
       `Login Count (${this.formatRangeLabel()})`,
       `Action Count (${this.formatRangeLabel()})`,
-      'Action Breakdown'
+      'Action Breakdown',
+      'Last Action',
+      'Last Action Type'
     ]
     const escape = (val: string) => `"${(val || '').replace(/"/g, '""')}"`
     const rows = users.map(u => {
@@ -191,7 +199,9 @@ class AllUsersTable extends React.Component<Props, State> {
         escape(this.formatDate(u.lastLogin)),
         String(this.props.loginCounts.get(u.id) || 0),
         String(action?.total || 0),
-        escape(this.formatActionBreakdownShort(action))
+        escape(this.formatActionBreakdownShort(action)),
+        escape(this.formatDate(u.lastAction)),
+        escape(u.lastActionType || '')
       ].join(',')
     })
     const csv = [headers.join(','), ...rows].join('\n')
@@ -251,12 +261,12 @@ class AllUsersTable extends React.Component<Props, State> {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-                autoOk label="From" value={rangeStart} style={{ width: 120 }}
+                autoOk label="From" value={rangeStart} style={{ width: 150 }}
                 onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
               />
               <KeyboardDatePicker
                 disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-                autoOk label="To" value={rangeEnd} style={{ width: 120 }}
+                autoOk label="To" value={rangeEnd} style={{ width: 150 }}
                 onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
               />
             </MuiPickersUtilsProvider>
@@ -279,12 +289,13 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="lastLogin" label="Last Login" />
                 <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <SortHeader field="actionCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Action Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
+                <SortHeader field="lastAction" label="Last Action" />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><TableCell colSpan={10} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
+                <tr><TableCell colSpan={11} style={{ textAlign: 'center', padding: 40 }}>No users found</TableCell></tr>
               ) : paginated.map(user => (
                 <TableRow key={user.id}>
                   <TableCell>{user.lastName}</TableCell>
@@ -317,6 +328,7 @@ class AllUsersTable extends React.Component<Props, State> {
                       )
                     })()}
                   </TableCell>
+                  <TableCell>{this.formatLastAction(user)}</TableCell>
                   <TableCell onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                     <Tooltip title="Edit user">
                       <IconButton size="small" onClick={() => this.props.onUserClick?.(user)}>
