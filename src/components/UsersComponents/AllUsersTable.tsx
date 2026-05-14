@@ -11,6 +11,7 @@ import {
   IconButton,
   Switch,
   Tooltip,
+  Typography,
 } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
@@ -173,7 +174,7 @@ class AllUsersTable extends React.Component<Props, State> {
     const end = new Date()
     end.setHours(23, 59, 59, 999)
     const start = new Date()
-    start.setDate(start.getDate() - days + 1)
+    start.setDate(start.getDate() - days)
     start.setHours(0, 0, 0, 0)
     this.props.onRangeChange(start, end)
   }
@@ -230,50 +231,79 @@ class AllUsersTable extends React.Component<Props, State> {
 
     return (
       <Grid container direction="column" spacing={2}>
-        <Grid item style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <TextField
-              size="small" variant="outlined" label="Search" value={search}
-              onChange={e => this.setState({ search: e.target.value, page: 0 })}
-              style={{ width: 180 }}
-            />
-            <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
-              <InputLabel>Role</InputLabel>
-              <Select value={roleFilter} label="Role" onChange={e => this.setState({ roleFilter: e.target.value as string, page: 0 })}>
-                <MenuItem value=""><em>All</em></MenuItem>
-                {roles.map(r => <MenuItem key={r} value={r}>{this.formatRole(r)}</MenuItem>)}
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
-              <InputLabel>Status</InputLabel>
-              <Select value={statusFilter} label="Status" onChange={e => this.setState({ statusFilter: e.target.value as string, page: 0 })}>
-                <MenuItem value=""><em>All</em></MenuItem>
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="archived">Archived</MenuItem>
-              </Select>
-            </FormControl>
-            <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
-              Export
-            </Button>
-          </div>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>Date range:</span>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-                autoOk label="From" value={rangeStart} style={{ width: 150 }}
-                onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
-              />
-              <KeyboardDatePicker
-                disableToolbar variant="inline" format="MM/dd/yy" margin="none"
-                autoOk label="To" value={rangeEnd} style={{ width: 150 }}
-                onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
-              />
-            </MuiPickersUtilsProvider>
-            <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>Last 7d</Button>
-            <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>Last 30d</Button>
-            <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>Last 90d</Button>
-          </div>
+        <Grid item style={{ width: '100%' }}>
+          <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+            <Grid item xs={12} lg="auto">
+              <Grid container spacing={1} alignItems="center">
+                <Grid item>
+                  <TextField
+                    size="small" variant="outlined" label="Search" value={search}
+                    onChange={e => this.setState({ search: e.target.value, page: 0 })}
+                    style={{ width: 180 }}
+                  />
+                </Grid>
+                <Grid item>
+                  <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
+                    <InputLabel>Role</InputLabel>
+                    <Select value={roleFilter} label="Role" onChange={e => this.setState({ roleFilter: e.target.value as string, page: 0 })}>
+                      <MenuItem value=""><em>All</em></MenuItem>
+                      {roles.map(r => <MenuItem key={r} value={r}>{this.formatRole(r)}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <FormControl variant="outlined" size="small" style={{ minWidth: 110 }}>
+                    <InputLabel>Status</InputLabel>
+                    <Select value={statusFilter} label="Status" onChange={e => this.setState({ statusFilter: e.target.value as string, page: 0 })}>
+                      <MenuItem value=""><em>All</em></MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="archived">Archived</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <Button variant="outlined" color="primary" startIcon={<GetAppIcon />} onClick={this.handleExport}>
+                    Export
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12} lg="auto">
+              <Grid container spacing={1} alignItems="center">
+                <Grid item>
+                  <Typography variant="body2" style={{ fontWeight: 500, color: '#555' }}>
+                    Date range:
+                  </Typography>
+                </Grid>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid item>
+                    <KeyboardDatePicker
+                      disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+                      autoOk label="From" value={rangeStart} style={{ width: 140 }}
+                      onChange={(date: Date | null) => date && onRangeChange(date, rangeEnd)}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <KeyboardDatePicker
+                      disableToolbar variant="inline" format="MM/dd/yy" margin="none"
+                      autoOk label="To" value={rangeEnd} style={{ width: 140 }}
+                      onChange={(date: Date | null) => date && onRangeChange(rangeStart, date)}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+                <Grid item>
+                  <Button size="small" variant="outlined" onClick={() => this.applyPreset(7)}>7d</Button>
+                </Grid>
+                <Grid item>
+                  <Button size="small" variant="outlined" onClick={() => this.applyPreset(30)}>30d</Button>
+                </Grid>
+                <Grid item>
+                  <Button size="small" variant="outlined" onClick={() => this.applyPreset(90)}>90d</Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
 
         <Grid item style={{ width: '100%', maxWidth: '100%', minWidth: 0 }}>
@@ -290,7 +320,7 @@ class AllUsersTable extends React.Component<Props, State> {
                 <SortHeader field="lastLogin" label="Last Login" />
                 <SortHeader field="loginCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Login Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
                 <SortHeader field="actionCount" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Action Count<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>{this.formatRangeLabel()}</span></span>} />
-                <SortHeader field="lastAction" label="Last Action" />
+                <SortHeader field="lastAction" label={<span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.2 }}>Last Action<span style={{ fontSize: '0.75rem', fontWeight: 400, color: '#666' }}>all time</span></span>} />
                 <th style={{ padding: '4px 8px', textAlign: 'center', fontSize: '1.25rem', fontWeight: 500 }}><strong>Edit</strong></th>
               </tr>
             </thead>

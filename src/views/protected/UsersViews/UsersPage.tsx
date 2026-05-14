@@ -145,7 +145,7 @@ class UsersPage extends React.Component<Props, State> {
     const rangeEnd = new Date()
     rangeEnd.setHours(23, 59, 59, 999)
     const rangeStart = new Date()
-    rangeStart.setDate(rangeStart.getDate() - 29)
+    rangeStart.setDate(rangeStart.getDate() - 30)
     rangeStart.setHours(0, 0, 0, 0)
 
     this.state = {
