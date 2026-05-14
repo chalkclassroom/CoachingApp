@@ -4872,6 +4872,124 @@ class Firebase {
     return counts
   }
 
+  getUsersActionCounts = async (
+    startDate: Date,
+    endDate: Date
+  ): Promise<Map<string, {
+    total: number
+    observations: number
+    knowledgeChecks: number
+    conferencePlans: number
+    actionPlans: number
+    emails: number
+  }>> => {
+    type Entry = {
+      total: number
+      observations: number
+      knowledgeChecks: number
+      conferencePlans: number
+      actionPlans: number
+      emails: number
+    }
+    const counts = new Map<string, Entry>()
+
+    const ensure = (userId: string): Entry => {
+      let entry = counts.get(userId)
+      if (!entry) {
+        entry = { total: 0, observations: 0, knowledgeChecks: 0, conferencePlans: 0, actionPlans: 0, emails: 0 }
+        counts.set(userId, entry)
+      }
+      return entry
+    }
+
+    const extractUserId = (ref: string): string => {
+      if (!ref) return ''
+      return ref.startsWith('/user/') ? ref.replace('/user/', '') : ref
+    }
+
+    const inRange = (date: Date | null): boolean => {
+      if (!date) return false
+      return date >= startDate && date <= endDate
+    }
+
+    // Fetch all 5 collections in parallel. observations and knowledgeChecks are
+    // filtered Firestore-side on their single timestamp field. The plan/email
+    // collections have two date fields each (dateCreated + dateModified) and we
+    // want to count the doc if EITHER falls in range, so we fetch all and filter
+    // in memory (these collections are small: ~500/450/440 docs).
+    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
+      this.db.collection('observations')
+        .where('end', '>=', startDate)
+        .where('end', '<=', endDate)
+        .get(),
+      this.db.collection('knowledgeChecks')
+        .where('timestamp', '>=', startDate)
+        .where('timestamp', '<=', endDate)
+        .get(),
+      this.db.collection('conferencePlans').get(),
+      this.db.collection('actionPlans').get(),
+      this.db.collection('emails').get()
+    ])
+
+    observations.docs.forEach(doc => {
+      const userId = extractUserId(doc.data().teacher)
+      if (!userId) return
+      const entry = ensure(userId)
+      entry.observations++
+      entry.total++
+    })
+
+    knowledgeChecks.docs.forEach(doc => {
+      const userId = doc.data().answeredBy
+      if (!userId) return
+      const entry = ensure(userId)
+      entry.knowledgeChecks++
+      entry.total++
+    })
+
+    conferencePlans.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.teacher
+      if (!userId) return
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      if (inRange(created) || inRange(modified)) {
+        const entry = ensure(userId)
+        entry.conferencePlans++
+        entry.total++
+      }
+    })
+
+    actionPlans.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.teacher
+      if (!userId) return
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      if (inRange(created) || inRange(modified)) {
+        const entry = ensure(userId)
+        entry.actionPlans++
+        entry.total++
+      }
+    })
+
+    // Emails: sender only (recipient receiving an email is not an action they took)
+    emails.docs.forEach(doc => {
+      const data = doc.data()
+      const senderId = data.user
+      if (!senderId) return
+      const created = data.dateCreated?.toDate?.() || null
+      const modified = data.dateModified?.toDate?.() || null
+      if (inRange(created) || inRange(modified)) {
+        const entry = ensure(senderId)
+        entry.emails++
+        entry.total++
+      }
+    })
+
+    return counts
+  }
+
   getAllUsers = async () => {
     const result: Array<{
       id: string
@@ -4882,15 +5000,12 @@ class Firebase {
       program: string
       archived: boolean
       lastLogin: Date | null
-      lastAction: Date | null
-      lastActionType: string
     }> = []
 
-    // Fetch programs, users, and last action data in parallel
-    const [programsSnapshot, usersSnapshot, lastActionMap] = await Promise.all([
+    // Fetch programs and users in parallel
+    const [programsSnapshot, usersSnapshot] = await Promise.all([
       this.db.collection('programs').get(),
-      this.db.collection('users').get(),
-      this.getUsersLastAction()
+      this.db.collection('users').get()
     ])
 
     // Build programs lookup map
@@ -4932,7 +5047,6 @@ class Firebase {
           }
         }
       }
-      const lastActionData = lastActionMap.get(doc.id)
       result.push({
         id: doc.id,
         firstName: data.firstName || '',
@@ -4942,8 +5056,6 @@ class Firebase {
         program: programName,
         archived: data.archived || false,
         lastLogin: data.lastLogin ? data.lastLogin.toDate() : null,
-        lastAction: lastActionData?.date || null,
-        lastActionType: lastActionData?.type || '',
       })
     })
 

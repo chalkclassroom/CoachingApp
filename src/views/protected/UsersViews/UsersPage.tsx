@@ -18,7 +18,7 @@ import Coaches from "../../../components/UsersComponents/Coaches";
 import Skeleton from "./Skeleton"
 import Archives from "../../../components/UsersComponents/Archives";
 import Sites from "../../../components/UsersComponents/Sites";
-import AllUsersTable from "../../../components/UsersComponents/AllUsersTable";
+import AllUsersTable, { ActionCountEntry } from "../../../components/UsersComponents/AllUsersTable";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
 
 
@@ -114,6 +114,7 @@ interface State {
   allUsers: Types.User[]
   allUsersLoading: boolean
   allUsersLoginCounts: Map<string, number>
+  allUsersActionCounts: Map<string, ActionCountEntry>
   allUsersRangeStart: Date
   allUsersRangeEnd: Date
   editDialogOpen: boolean
@@ -160,6 +161,7 @@ class UsersPage extends React.Component<Props, State> {
       allUsers: [],
       allUsersLoading: true,
       allUsersLoginCounts: new Map(),
+      allUsersActionCounts: new Map(),
       allUsersRangeStart: rangeStart,
       allUsersRangeEnd: rangeEnd,
       editDialogOpen: false,
@@ -586,11 +588,12 @@ class UsersPage extends React.Component<Props, State> {
     this.setState({ allUsersLoading: true })
     try {
       const { allUsersRangeStart, allUsersRangeEnd } = this.state
-      const [users, allUsersLoginCounts] = await Promise.all([
+      const [users, allUsersLoginCounts, allUsersActionCounts] = await Promise.all([
         this.context.getAllUsers(),
-        this.context.getUsersLoginCounts(allUsersRangeStart, allUsersRangeEnd)
+        this.context.getUsersLoginCounts(allUsersRangeStart, allUsersRangeEnd),
+        this.context.getUsersActionCounts(allUsersRangeStart, allUsersRangeEnd)
       ])
-      this.setState({ allUsers: users, allUsersLoginCounts, allUsersLoading: false })
+      this.setState({ allUsers: users, allUsersLoginCounts, allUsersActionCounts, allUsersLoading: false })
     } catch (e) {
       console.error('Error loading all users:', e)
       this.setState({ allUsersLoading: false })
@@ -599,9 +602,12 @@ class UsersPage extends React.Component<Props, State> {
 
   handleAllUsersRangeChange = (start: Date, end: Date) => {
     this.setState({ allUsersRangeStart: start, allUsersRangeEnd: end })
-    this.context.getUsersLoginCounts(start, end)
-      .then(allUsersLoginCounts => this.setState({ allUsersLoginCounts }))
-      .catch(e => console.error('Error loading login counts:', e))
+    Promise.all([
+      this.context.getUsersLoginCounts(start, end),
+      this.context.getUsersActionCounts(start, end)
+    ])
+      .then(([allUsersLoginCounts, allUsersActionCounts]) => this.setState({ allUsersLoginCounts, allUsersActionCounts }))
+      .catch(e => console.error('Error loading counts:', e))
   }
 
   handleAllUserClick = (user: Types.User) => {
@@ -736,6 +742,7 @@ class UsersPage extends React.Component<Props, State> {
                             <AllUsersTable
                               users={this.state.allUsers}
                               loginCounts={this.state.allUsersLoginCounts}
+                              actionCounts={this.state.allUsersActionCounts}
                               rangeStart={this.state.allUsersRangeStart}
                               rangeEnd={this.state.allUsersRangeEnd}
                               onRangeChange={this.handleAllUsersRangeChange}
