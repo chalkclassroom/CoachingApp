@@ -276,8 +276,9 @@ class AllUsersTable extends React.Component<Props, State> {
           </div>
         </Grid>
 
-        <Grid item style={{ overflowX: 'auto' }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 800 }}>
+        <Grid item style={{ width: '100%', maxWidth: '100%', minWidth: 0 }}>
+          <div style={{ overflowX: 'auto', width: '100%' }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 1200 }}>
             <thead style={{ borderBottom: '2px solid #0988ec' }}>
               <tr>
                 <SortHeader field="lastName" label="Last Name" />
@@ -340,6 +341,7 @@ class AllUsersTable extends React.Component<Props, State> {
               ))}
             </tbody>
           </table>
+          </div>
         </Grid>
 
         <Grid item>
