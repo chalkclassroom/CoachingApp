@@ -2,7 +2,10 @@ import * as React from 'react'
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 import { AppShell } from './layout/AppShell'
 import { CoachHome } from './pages/CoachHome'
-import { PlaceholderPage } from './pages/PlaceholderPage'
+import { AllTeachers } from './pages/AllTeachers'
+import { LiveObservation } from './pages/LiveObservation'
+import { PlanDetail } from './pages/PlanDetail'
+import { Training } from './pages/Training'
 import { useTheme } from './hooks/useTheme'
 
 import './design/tokens.css'
@@ -35,10 +38,10 @@ export function V2App(props: { userName?: string }) {
       >
         <Switch>
           <Route path="/v2/home" render={() => <CoachHome userName={userName} />} />
-          <Route path="/v2/teachers" render={() => <PlaceholderPage title="All Teachers" subtitle="Will replace the current /LeadersAllUsers view with the v2 design, keeping the login/action count infrastructure already in place." />} />
-          <Route path="/v2/observation" render={() => <PlaceholderPage title="Live Observation — Open Mode" subtitle="The new free-form note-taking experience with post-session alignment to Magic 9." />} />
-          <Route path="/v2/plans" render={() => <PlaceholderPage title="Plans — Auto-save & Share" subtitle="Coaching & action plans with auto-save, send-to-teacher, threaded comments." />} />
-          <Route path="/v2/training" render={() => <PlaceholderPage title="Adaptive Training" subtitle="Recommendations driven by your observation data — not blanket gates." />} />
+          <Route path="/v2/teachers" render={() => <AllTeachers />} />
+          <Route path="/v2/observation" render={() => <LiveObservation />} />
+          <Route path="/v2/plans" render={() => <PlanDetail />} />
+          <Route path="/v2/training" render={() => <Training />} />
           <Redirect to="/v2/home" />
         </Switch>
       </AppShell>
