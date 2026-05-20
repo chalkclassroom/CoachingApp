@@ -2,6 +2,7 @@ import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import './App.css'
+import { V2App } from './v2/App'
 import WelcomePage from './views/WelcomeViews/WelcomePage'
 import LoginPage from './views/WelcomeViews/LoginPage'
 import ClassroomClimatePage from './views/protected/ClassroomClimateViews/ClassroomClimatePage'
@@ -279,6 +280,8 @@ class App extends React.Component<Props, State> {
               }
             />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
+            {/* CHALK 2.0 renovation preview — accessible at /v2/* */}
+            <Route path="/v2" render={(): React.ReactElement => <V2App userName={(this.props as { firstName?: string }).firstName || 'Tisha Owen'} />} />
             <PrivateRoute
               auth={auth}
               path="/Landing"
