@@ -1,7 +1,45 @@
 import * as React from 'react'
+import { useParams } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
+import { EmptyState } from '../components/EmptyState'
+import { Skeleton } from '../components/Skeleton'
+import { useToast } from '../hooks/useToast'
+import { useV2Auth } from '../hooks/useV2Auth'
+import { useV2Firebase } from '../lib/firebase'
+import { createV2Api } from '../lib/api'
+import { PlanComment, PlanDetail as V2PlanDetail, PlanStep } from '../lib/types'
+
+const DEMO_PLAN: V2PlanDetail = {
+  id: 'demo-plan',
+  title: 'Reducing transition time',
+  teacherId: 'demo-chrystaline',
+  teacherName: 'Morgan Lee',
+  goal: 'Reduce the average transition time between activities from 5 minutes to under 2 minutes, while maintaining smooth flow and minimal disruption.',
+  benefit: 'Tisha will observe two transitions per week and log timing. Target: average under 2:00 by May 28.',
+  dueDate: new Date('2026-05-28T12:00:00'),
+  progress: 65,
+  steps: [
+    { step: 'Introduce a transition song as a cue. Use the same song daily for one week.', person: 'Morgan', timeline: new Date('2026-05-22T12:00:00') },
+    { step: 'Set up the next activity materials before ending the current one.', person: 'Morgan', timeline: new Date('2026-05-25T12:00:00') },
+    { step: 'Self-time each transition using the in-app timer.', person: 'Morgan', timeline: new Date('2026-05-27T12:00:00') }
+  ],
+  comments: [
+    { id: 'c1', name: 'Demo Coach', time: 'May 6 · 2:14 PM', text: 'Here is the transition plan we discussed. The first step is to use one consistent cue before cleanup.' },
+    { id: 'c2', name: 'Morgan Lee', time: 'May 7 · 9:32 AM', text: 'Tried the cleanup cue this morning. The transition was shorter and the children knew what to do next.' },
+    { id: 'c3', name: 'Demo Coach', time: 'May 7 · 11:05 AM', text: 'Good progress. We will keep tracking the timing during the next observation.' }
+  ]
+}
+
+function dateInputValue(date: Date | null): string {
+  if (!date) return ''
+  return date.toISOString().slice(0, 10)
+}
+
+function formatDueDate(date: Date | null): string {
+  return date ? date.toLocaleDateString() : 'No due date'
+}
 
 function Field(p: { label: string; children: React.ReactNode }) {
   return (
@@ -26,7 +64,7 @@ function Field(p: { label: string; children: React.ReactNode }) {
   )
 }
 
-function Comment(p: { name: string; time: string; text: string }) {
+function Comment(p: PlanComment) {
   return (
     <div style={{ display: 'flex', gap: '0.65rem', padding: '0.85rem 0', borderBottom: '1px solid var(--v2-line-soft)' }}>
       <Avatar name={p.name} size={30} />
@@ -41,93 +79,285 @@ function Comment(p: { name: string; time: string; text: string }) {
   )
 }
 
+function EditableTextArea(props: { value: string; onChange(value: string): void; minHeight?: number }) {
+  return (
+    <textarea
+      value={props.value}
+      onChange={(event) => props.onChange(event.currentTarget.value)}
+      style={{
+        width: '100%',
+        minHeight: props.minHeight || 110,
+        border: '1px solid var(--v2-line)',
+        borderRadius: 8,
+        padding: '0.8rem',
+        background: 'var(--v2-white)',
+        color: 'var(--v2-ink)',
+        resize: 'vertical',
+        lineHeight: 1.55
+      }}
+    />
+  )
+}
+
 export function PlanDetail() {
+  const { planId } = useParams<{ planId?: string }>()
+  const firebase = useV2Firebase()
+  const auth = useV2Auth()
+  const toast = useToast()
+  const [plan, setPlan] = React.useState<V2PlanDetail>(DEMO_PLAN)
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
+  const [savedLabel, setSavedLabel] = React.useState('Saved locally')
+  const [commentText, setCommentText] = React.useState('')
+  const realPlanId = planId && planId !== 'demo-plan' ? planId : ''
+
+  React.useEffect(() => {
+    if (!realPlanId || !auth.user) {
+      const cached = window.localStorage.getItem('chalk-v2-plan-draft')
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached)
+          setPlan({ ...DEMO_PLAN, ...parsed, dueDate: parsed.dueDate ? new Date(parsed.dueDate) : DEMO_PLAN.dueDate })
+        } catch (error) {
+          console.error('Unable to parse local v2 plan draft', error)
+        }
+      }
+      return
+    }
+
+    let active = true
+    setLoading(true)
+    setError(null)
+    createV2Api(firebase).getActionPlanFull(realPlanId).then(nextPlan => {
+      if (!active) return
+      if (nextPlan) {
+        setPlan(nextPlan)
+        setSavedLabel('Loaded from CHALK')
+      }
+      setLoading(false)
+    }).catch(fetchError => {
+      if (!active) return
+      setError(fetchError as Error)
+      setLoading(false)
+    })
+
+    return () => { active = false }
+  }, [auth.user, firebase, realPlanId])
+
+  React.useEffect(() => {
+    if (loading) {
+      return
+    }
+
+    setSavedLabel(auth.user && realPlanId ? 'Saving...' : 'Saving locally...')
+    const timeout = window.setTimeout(() => {
+      if (!auth.user || !realPlanId) {
+        window.localStorage.setItem('chalk-v2-plan-draft', JSON.stringify({
+          ...plan,
+          dueDate: plan.dueDate ? plan.dueDate.toISOString() : null
+        }))
+        setSavedLabel('Saved locally')
+        return
+      }
+
+      createV2Api(firebase).saveActionPlanDraft(realPlanId, {
+        title: plan.title,
+        goal: plan.goal,
+        benefit: plan.benefit,
+        dueDate: plan.dueDate
+      }).then(() => {
+        setSavedLabel('Auto-saved')
+      }).catch(saveError => {
+        console.error('Unable to autosave v2 action plan', saveError)
+        setSavedLabel('Save failed')
+      })
+    }, 900)
+
+    return () => window.clearTimeout(timeout)
+  }, [auth.user, firebase, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId])
+
+  const updatePlan = (patch: Partial<V2PlanDetail>) => {
+    setPlan(current => ({ ...current, ...patch }))
+  }
+
+  const updateStep = (index: number, patch: Partial<PlanStep>) => {
+    setPlan(current => ({
+      ...current,
+      steps: current.steps.map((step, stepIndex) => stepIndex === index ? { ...step, ...patch } : step)
+    }))
+  }
+
+  const addStep = () => {
+    setPlan(current => ({
+      ...current,
+      steps: [...current.steps, { step: '', person: '', timeline: null }]
+    }))
+  }
+
+  const addComment = () => {
+    const text = commentText.trim()
+    if (!text) {
+      return
+    }
+
+    const authorName = auth.user ? `${auth.user.firstName} ${auth.user.lastName}`.trim() || 'CHALK user' : 'Preview coach'
+    setCommentText('')
+
+    if (!auth.user || !realPlanId) {
+      setPlan(current => ({
+        ...current,
+        comments: [...current.comments, { id: `local-${Date.now()}`, name: authorName, time: new Date().toLocaleString(), text }]
+      }))
+      toast.info('Comment saved locally for preview.')
+      return
+    }
+
+    createV2Api(firebase).addActionPlanComment(realPlanId, { authorName, authorId: auth.user.uid, text })
+      .then(comment => {
+        setPlan(current => ({ ...current, comments: [...current.comments, comment] }))
+        toast.success('Comment added.')
+      })
+      .catch(commentError => {
+        console.error('Unable to add v2 plan comment', commentError)
+        toast.error('Unable to add comment.')
+      })
+  }
+
+  const sendToTeacher = () => {
+    if (!auth.user || !realPlanId) {
+      toast.info('Send-to-teacher is ready for live plans after staging signoff.')
+      return
+    }
+
+    createV2Api(firebase).markActionPlanSentToTeacher(realPlanId, auth.user.uid)
+      .then(() => toast.success('Plan marked as sent to teacher.'))
+      .catch(sendError => {
+        console.error('Unable to mark v2 plan as sent', sendError)
+        toast.error('Unable to send plan.')
+      })
+  }
+
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+        <Skeleton width="40%" height={32} style={{ marginBottom: '1rem' }} />
+        <Skeleton height={240} />
+      </div>
+    )
+  }
+
   return (
     <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
-      {/* Header */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
         marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem'
       }}>
         <div>
           <div style={{ fontSize: '0.78rem', color: 'var(--v2-muted)', marginBottom: '0.3rem' }}>
-            Action Plans / Chrystaline Glenn
+            Action Plans / {plan.teacherName}
           </div>
-          <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Reducing transition time</h1>
+          <input
+            value={plan.title}
+            onChange={(event) => updatePlan({ title: event.currentTarget.value })}
+            style={{
+              width: '100%',
+              maxWidth: 620,
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              color: 'var(--v2-ink)',
+              fontSize: '1.7rem',
+              fontWeight: 700,
+              letterSpacing: '-0.02em'
+            }}
+          />
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            For Chrystaline Glenn · created May 6 · due May 28
+            For {plan.teacherName} · due {formatDueDate(plan.dueDate)}
           </div>
+          {error && (
+            <div style={{ color: 'var(--v2-warm-dark)', fontSize: '0.82rem', marginTop: '0.4rem', fontWeight: 600 }}>
+              Live plan unavailable; showing editable local draft.
+            </div>
+          )}
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-            background: 'var(--v2-success-soft)',
-            color: 'var(--v2-success)',
+            background: savedLabel === 'Save failed' ? 'var(--v2-warm-soft)' : 'var(--v2-success-soft)',
+            color: savedLabel === 'Save failed' ? 'var(--v2-warm-dark)' : 'var(--v2-success)',
             padding: '0.35rem 0.85rem',
             borderRadius: 'var(--v2-radius-pill)',
             fontSize: '0.78rem', fontWeight: 600
-          }}>✓ Saved 3s ago</span>
-          <Button>⋯ More</Button>
-          <Button variant="primary">📨 Send to teacher</Button>
+          }}>{savedLabel}</span>
+          <Button onClick={() => toast.info('Additional plan actions remain in legacy CHALK for this sprint.')}>⋯ More</Button>
+          <Button variant="primary" onClick={sendToTeacher}>📨 Send to teacher</Button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
-        {/* Left: plan content */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
         <div>
           <Card style={{ marginBottom: '0.85rem' }} padding="1.35rem">
             <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>🎯 Goal</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--v2-ink-soft)' }}>
-              Reduce the average transition time between activities from 5 minutes to under 2 minutes, while maintaining smooth flow and minimal disruption.
-            </p>
+            <EditableTextArea value={plan.goal} onChange={(goal) => updatePlan({ goal })} />
           </Card>
 
           <Card style={{ marginBottom: '0.85rem' }} padding="1.35rem">
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>📋 Action steps</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 700 }}>📋 Action steps</h3>
+              <Button size="sm" onClick={addStep}>+ Step</Button>
+            </div>
             <div style={{ display: 'grid', gap: '0.65rem' }}>
-              <Field label="Step 1 · By May 22">
-                Introduce a transition song as a cue. Use the same song daily for one week.
-              </Field>
-              <Field label="Step 2 · By May 25">
-                Set up the next activity materials before ending the current one (parallel prep).
-              </Field>
-              <Field label="Step 3 · By May 27">
-                Self-time each transition using the in-app timer. Log duration in observation notes.
-              </Field>
+              {plan.steps.map((step, index) => (
+                <Field key={index} label={`Step ${index + 1}`}>
+                  <input
+                    value={step.step || ''}
+                    onChange={(event) => updateStep(index, { step: event.currentTarget.value })}
+                    placeholder="Action step"
+                    style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', color: 'var(--v2-ink)', marginBottom: '0.45rem' }}
+                  />
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      value={step.person || ''}
+                      onChange={(event) => updateStep(index, { person: event.currentTarget.value })}
+                      placeholder="Owner"
+                      style={{ flex: 1, border: '1px solid var(--v2-line)', borderRadius: 6, padding: '0.4rem 0.55rem', background: 'var(--v2-white)' }}
+                    />
+                    <input
+                      type="date"
+                      value={dateInputValue(step.timeline)}
+                      onChange={(event) => updateStep(index, { timeline: event.currentTarget.value ? new Date(`${event.currentTarget.value}T12:00:00`) : null })}
+                      style={{ border: '1px solid var(--v2-line)', borderRadius: 6, padding: '0.4rem 0.55rem', background: 'var(--v2-white)' }}
+                    />
+                  </div>
+                </Field>
+              ))}
             </div>
           </Card>
 
           <Card padding="1.35rem">
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>📊 Measurement</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--v2-ink-soft)' }}>
-              Tisha will observe two transitions per week and log timing. Target: average under 2:00 by May 28.
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 700 }}>📊 Measurement</h3>
+              <input
+                type="date"
+                value={dateInputValue(plan.dueDate)}
+                onChange={(event) => updatePlan({ dueDate: event.currentTarget.value ? new Date(`${event.currentTarget.value}T12:00:00`) : null })}
+                style={{ border: '1px solid var(--v2-line)', borderRadius: 6, padding: '0.4rem 0.55rem', background: 'var(--v2-white)' }}
+              />
+            </div>
+            <EditableTextArea value={plan.benefit} onChange={(benefit) => updatePlan({ benefit })} minHeight={90} />
           </Card>
         </div>
 
-        {/* Right: conversation + progress */}
         <div>
           <Card padding="1.35rem">
             <div style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.65rem' }}>
               💬 Conversation
-              <span style={{ fontWeight: 400, color: 'var(--v2-muted)', fontSize: '0.75rem', marginLeft: '0.5rem' }}>3 messages · in CHALK</span>
+              <span style={{ fontWeight: 400, color: 'var(--v2-muted)', fontSize: '0.75rem', marginLeft: '0.5rem' }}>{plan.comments.length} messages · in CHALK</span>
             </div>
 
-            <Comment
-              name="Tisha Owen"
-              time="May 6 · 2:14 PM"
-              text="Chrystaline, here's the plan we discussed. The song idea came up because I noticed kids respond well to your singing during circle time."
-            />
-            <Comment
-              name="Chrystaline Glenn"
-              time="May 7 · 9:32 AM"
-              text='Got it — tried "Tidy Up" song this morning, kids loved it. Transition went from ~5 min to ~3 min. 🎉'
-            />
-            <Comment
-              name="Tisha Owen"
-              time="May 7 · 11:05 AM"
-              text="Amazing progress! Let's keep tracking — I'll observe tomorrow morning."
-            />
+            {plan.comments.length > 0 ? plan.comments.map(comment => <Comment key={comment.id} {...comment} />) : (
+              <EmptyState title="No comments yet" description="Plan comments between coach and teacher will appear here." />
+            )}
 
             <div style={{
               marginTop: '0.85rem',
@@ -138,20 +368,23 @@ export function PlanDetail() {
             }}>
               <input
                 type="text"
-                placeholder="Write a message…"
+                value={commentText}
+                onChange={(event) => setCommentText(event.currentTarget.value)}
+                onKeyDown={(event) => { if (event.key === 'Enter') addComment() }}
+                placeholder="Write a message..."
                 style={{ border: 'none', outline: 'none', flex: 1, background: 'transparent', fontSize: '0.85rem', color: 'var(--v2-ink)' }}
               />
-              <Button variant="primary" size="sm">Send</Button>
+              <Button variant="primary" size="sm" onClick={addComment}>Send</Button>
             </div>
           </Card>
 
           <Card style={{ marginTop: '1rem' }} padding="1.35rem">
             <CardHeader title="📈 Progress" />
             <div style={{ height: 6, background: 'var(--v2-bg-soft)', borderRadius: 999, overflow: 'hidden', marginBottom: '0.5rem' }}>
-              <div style={{ height: '100%', width: '65%', background: 'var(--v2-brand)', borderRadius: 999 }} />
+              <div style={{ height: '100%', width: `${plan.progress}%`, background: 'var(--v2-brand)', borderRadius: 999 }} />
             </div>
             <div style={{ fontSize: '0.78rem', color: 'var(--v2-muted)', display: 'flex', justifyContent: 'space-between' }}>
-              <span>2 of 3 steps complete</span><span>8 days remaining</span>
+              <span>{plan.progress}% complete</span><span>{plan.steps.length} steps</span>
             </div>
           </Card>
         </div>

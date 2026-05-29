@@ -2,47 +2,39 @@ import * as React from 'react'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
+import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
 import { Stat } from '../components/Stat'
+import { StatSkeleton } from '../components/Skeleton'
+import { useV2Auth } from '../hooks/useV2Auth'
+import { useV2Firebase } from '../lib/firebase'
+import { createV2Api } from '../lib/api'
+import { ActivityItem, AttentionItem, DashboardStats, PlanItem } from '../lib/types'
 
-type AttentionTeacher = {
-  id: string
-  name: string
-  reason: { text: string; variant: 'warn' | 'danger' | 'neutral' }
-  context: string
-  cta: string
+const EMPTY_STATS: DashboardStats = {
+  underCoaching: 12,
+  needAttention: 4,
+  observationsThisWeek: 8,
+  activePlans: 6
 }
 
-type ActivityItem = {
-  title: string
-  meta: string
-  tone: 'success' | 'brand' | 'warn'
-}
-
-type PlanItem = {
-  title: string
-  forName: string
-  progress: number
-  due: string
-}
-
-const STUB_ATTENTION: AttentionTeacher[] = [
-  { id: 'dj', name: 'Dawn Johnson', reason: { text: 'No observation in 45d', variant: 'danger' }, context: 'Pre-K · Preschool Promise', cta: 'Schedule obs' },
-  { id: 'cg', name: 'Chrystaline Glenn', reason: { text: 'Action plan overdue', variant: 'warn' }, context: 'Toddler · All Our Children Elite', cta: 'Open plan' },
-  { id: 'kl', name: 'Kerry Leedy', reason: { text: 'Magic 9 score dropped', variant: 'warn' }, context: 'Pre-K · Preschool Promise', cta: 'Send check-in' },
-  { id: 'sw', name: 'Shonnell Wilkins', reason: { text: 'No activity recently', variant: 'neutral' }, context: 'Infant · All Our Children Elite', cta: 'Send check-in' }
+const STUB_ATTENTION: AttentionItem[] = [
+  { id: 'demo-teacher-1', name: 'Alex Rivera', reason: { text: 'No observation in 45d', variant: 'danger' }, context: 'Pre-K · Demo Early Learning', cta: 'Schedule obs' },
+  { id: 'demo-teacher-2', name: 'Morgan Lee', reason: { text: 'Action plan overdue', variant: 'warn' }, context: 'Toddler · River Center Demo', cta: 'Open plan' },
+  { id: 'demo-teacher-3', name: 'Jamie Chen', reason: { text: 'Magic 9 score dropped', variant: 'warn' }, context: 'Pre-K · Demo Early Learning', cta: 'Send check-in' },
+  { id: 'demo-teacher-4', name: 'Sam Taylor', reason: { text: 'No activity recently', variant: 'neutral' }, context: 'Infant · River Center Demo', cta: 'Send check-in' }
 ]
 
 const STUB_ACTIVITY: ActivityItem[] = [
-  { title: 'Observation completed', meta: 'Chrystaline Glenn · 22 min ago', tone: 'success' },
-  { title: 'Note sent to teacher', meta: 'Dawn Johnson · 1h ago', tone: 'brand' },
-  { title: 'Action plan flagged overdue', meta: 'Chrystaline Glenn · 3h ago', tone: 'warn' },
-  { title: 'Training completed', meta: 'Kerry Leedy · Classroom Climate · Yesterday', tone: 'success' }
+  { id: 'a1', title: 'Observation completed', meta: 'Morgan Lee · 22 min ago', tone: 'success' },
+  { id: 'a2', title: 'Note sent to teacher', meta: 'Alex Rivera · 1h ago', tone: 'brand' },
+  { id: 'a3', title: 'Action plan flagged overdue', meta: 'Morgan Lee · 3h ago', tone: 'warn' },
+  { id: 'a4', title: 'Training completed', meta: 'Jamie Chen · Classroom Climate · Yesterday', tone: 'success' }
 ]
 
 const STUB_PLANS: PlanItem[] = [
-  { title: 'Reducing transition time', forName: 'Chrystaline G.', progress: 65, due: 'Due May 28' },
-  { title: 'Open-ended questions', forName: 'Dawn J.', progress: 30, due: 'Due Jun 3' }
+  { id: 'p1', title: 'Reducing transition time', forName: 'Morgan L.', progress: 65, due: 'Due May 28' },
+  { id: 'p2', title: 'Open-ended questions', forName: 'Alex R.', progress: 30, due: 'Due Jun 3' }
 ]
 
 function TimelineItem(props: ActivityItem) {
@@ -84,7 +76,7 @@ function PlanMini(props: PlanItem) {
   )
 }
 
-function AttentionRow(props: { teacher: AttentionTeacher }) {
+function AttentionRow(props: { teacher: AttentionItem }) {
   const t = props.teacher
   return (
     <div style={{
@@ -106,11 +98,50 @@ function AttentionRow(props: { teacher: AttentionTeacher }) {
 }
 
 export function CoachHome(props: { userName: string; programCount?: number }) {
-  const firstName = props.userName.split(' ')[0]
+  const firebase = useV2Firebase()
+  const auth = useV2Auth()
+  const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
+  const [attention, setAttention] = React.useState<AttentionItem[]>(STUB_ATTENTION)
+  const [activity, setActivity] = React.useState<ActivityItem[]>(STUB_ACTIVITY)
+  const [plans, setPlans] = React.useState<PlanItem[]>(STUB_PLANS)
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
+
+  React.useEffect(() => {
+    if (!auth.user) {
+      return
+    }
+
+    let active = true
+    const api = createV2Api(firebase)
+    setLoading(true)
+    setError(null)
+
+    Promise.all([
+      api.getDashboardStats(auth.user.uid),
+      api.getCoachAttention(auth.user.uid),
+      api.getRecentActivity(auth.user.uid),
+      api.getActivePlans(auth.user.uid)
+    ]).then(([nextStats, nextAttention, nextActivity, nextPlans]) => {
+      if (!active) return
+      setStats(nextStats)
+      setAttention(nextAttention.length > 0 ? nextAttention : [])
+      setActivity(nextActivity.length > 0 ? nextActivity : [])
+      setPlans(nextPlans.length > 0 ? nextPlans : [])
+      setLoading(false)
+    }).catch(fetchError => {
+      if (!active) return
+      setError(fetchError as Error)
+      setLoading(false)
+    })
+
+    return () => { active = false }
+  }, [auth.user, firebase])
+
+  const firstName = auth.user?.firstName || props.userName.split(' ')[0]
 
   return (
     <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
-      {/* Greeting */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
         marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem'
@@ -120,7 +151,7 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
             Good morning, <span style={{ color: 'var(--v2-brand)', fontWeight: 800 }}>{firstName}</span>
           </h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            You have 3 observations scheduled today and 2 teachers flagged for follow-up.
+            {stats.observationsThisWeek} observations this week and {stats.needAttention} teachers flagged for follow-up.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -129,33 +160,47 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
         </div>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-        <Stat tone="brand" icon="👥" label="Under coaching" value="12" delta={{ text: 'No change this week', trend: 'flat' }} />
-        <Stat tone="warm" icon="⚠" label="Need attention" value="4" delta={{ text: '↑ 2 since last week', trend: 'warn' }} />
-        <Stat tone="success" icon="✓" label="Observations this week" value="8" delta={{ text: '↑ 33% vs avg', trend: 'up' }} />
-        <Stat tone="gold" icon="📋" label="Action plans active" value="6" delta={{ text: '2 due Friday', trend: 'up' }} />
-      </div>
+      {loading ? (
+        <StatSkeleton />
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <Stat tone="brand" icon="👥" label="Under coaching" value={String(stats.underCoaching)} delta={{ text: 'Active teacher links', trend: 'flat' }} />
+          <Stat tone="warm" icon="⚠" label="Need attention" value={String(stats.needAttention)} delta={{ text: 'Derived from activity', trend: stats.needAttention > 0 ? 'warn' : 'flat' }} />
+          <Stat tone="success" icon="✓" label="Observations this week" value={String(stats.observationsThisWeek)} delta={{ text: 'Live Firestore count', trend: 'up' }} />
+          <Stat tone="gold" icon="📋" label="Action plans active" value={String(stats.activePlans)} delta={{ text: 'Open plan count', trend: 'up' }} />
+        </div>
+      )}
 
-      {/* Two-column grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
+      {error && (
+        <Card style={{ marginBottom: '1rem', borderColor: 'var(--v2-warm)' }}>
+          <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600 }}>Unable to load live dashboard data.</div>
+        </Card>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
         <Card>
           <CardHeader
-            title={<>Teachers needing attention <Pill variant="warn" style={{ background: 'var(--v2-warm)', color: '#fff' }}>4</Pill></>}
+            title={<>Teachers needing attention <Pill variant="warn" style={{ background: 'var(--v2-warm)', color: '#fff' }}>{attention.length}</Pill></>}
             action="View all teachers →"
           />
-          {STUB_ATTENTION.map(t => <AttentionRow key={t.id} teacher={t} />)}
+          {attention.length > 0 ? attention.map(t => <AttentionRow key={t.id} teacher={t} />) : (
+            <EmptyState title="No teachers need attention" description="The current data range has no flagged teachers." />
+          )}
         </Card>
 
         <div>
           <Card style={{ marginBottom: '1rem' }}>
             <CardHeader title="Recent activity" action="All →" />
-            {STUB_ACTIVITY.map((a, i) => <TimelineItem key={i} {...a} />)}
+            {activity.length > 0 ? activity.map(a => <TimelineItem key={a.id} {...a} />) : (
+              <EmptyState title="No recent activity" description="Recent observations, plans, emails, and training events will appear here." />
+            )}
           </Card>
 
           <Card>
             <CardHeader title="Active action plans" />
-            {STUB_PLANS.map((p, i) => <PlanMini key={i} {...p} />)}
+            {plans.length > 0 ? plans.map(p => <PlanMini key={p.id} {...p} />) : (
+              <EmptyState title="No active plans" description="Open action plans will appear here after they are created." />
+            )}
           </Card>
         </div>
       </div>

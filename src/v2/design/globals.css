@@ -54,3 +54,21 @@
 
 .v2-root p { margin: 0; }
 .v2-root ul, .v2-root ol { margin: 0; padding: 0; list-style: none; }
+
+
+.v2-root .v2-skeleton {
+  background: linear-gradient(90deg, var(--v2-bg-soft), var(--v2-line-soft), var(--v2-bg-soft));
+  background-size: 220% 100%;
+  animation: v2-skeleton-pulse 1.25s ease-in-out infinite;
+}
+
+@keyframes v2-skeleton-pulse {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-root .v2-skeleton {
+    animation: none;
+  }
+}

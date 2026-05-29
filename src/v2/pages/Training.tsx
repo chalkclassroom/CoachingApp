@@ -1,9 +1,16 @@
 import * as React from 'react'
 import { Button } from '../components/Button'
+import { EmptyState } from '../components/EmptyState'
+import { Skeleton } from '../components/Skeleton'
+import { useToast } from '../hooks/useToast'
+import { useV2Auth } from '../hooks/useV2Auth'
+import { useV2Firebase } from '../lib/firebase'
+import { createV2Api } from '../lib/api'
 
 type Reason = 'alert' | 'win' | 'skip'
 
 type TrainingCard = {
+  id?: string
   title: string
   icon: string
   tone: 'warm' | 'brand' | 'success' | 'gold' | 'purple'
@@ -37,6 +44,42 @@ const reasonStyle: Record<Reason, { bg: string; fg: string }> = {
 }
 
 export function Training() {
+  const firebase = useV2Firebase()
+  const auth = useV2Auth()
+  const toast = useToast()
+  const [cards, setCards] = React.useState<TrainingCard[]>(CARDS)
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
+
+  React.useEffect(() => {
+    if (!auth.user) {
+      return
+    }
+
+    let active = true
+    setLoading(true)
+    setError(null)
+    createV2Api(firebase).getTrainingRecommendations(auth.user.uid).then(nextCards => {
+      if (!active) return
+      setCards(nextCards.length > 0 ? nextCards : [])
+      setLoading(false)
+    }).catch(fetchError => {
+      if (!active) return
+      setError(fetchError as Error)
+      setLoading(false)
+    })
+
+    return () => { active = false }
+  }, [auth.user, firebase])
+
+  const handleCardAction = (card: TrainingCard) => {
+    if (card.reason === 'skip') {
+      toast.info(`${card.title} is optional for this coach right now.`)
+      return
+    }
+    toast.info(`${card.title} training opens from the existing CHALK training library.`)
+  }
+
   return (
     <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
@@ -52,9 +95,31 @@ export function Training() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-        {CARDS.map((c, i) => (
+      {error && (
+        <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live training recommendations unavailable; showing local recommendations.</div>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+        {loading ? [0, 1, 2].map(i => (
           <div key={i} style={{
+            background: 'var(--v2-white)',
+            borderRadius: 'var(--v2-radius)',
+            border: '1px solid var(--v2-line-soft)',
+            overflow: 'hidden',
+            boxShadow: 'var(--v2-shadow-sm)',
+            padding: '1.1rem'
+          }}>
+            <Skeleton height={120} style={{ marginBottom: '1rem' }} />
+            <Skeleton width="70%" height={20} style={{ marginBottom: '0.7rem' }} />
+            <Skeleton height={34} style={{ marginBottom: '0.8rem' }} />
+            <Skeleton width="45%" height={30} />
+          </div>
+        )) : cards.length === 0 ? (
+          <div style={{ gridColumn: '1 / -1' }}>
+            <EmptyState title="No training recommendations" description="Training recommendations will appear after recent observations and action plans are available." />
+          </div>
+        ) : cards.map((c, i) => (
+          <div key={c.id || i} style={{
             background: 'var(--v2-white)',
             borderRadius: 'var(--v2-radius)',
             border: '1px solid var(--v2-line-soft)',
@@ -88,6 +153,7 @@ export function Training() {
                   variant={c.ctaVariant === 'primary' ? 'primary' : 'default'}
                   size="sm"
                   style={{ flex: 1, justifyContent: 'center' }}
+                  onClick={() => handleCardAction(c)}
                 >
                   {c.ctaText}
                 </Button>

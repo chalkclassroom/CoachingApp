@@ -42,8 +42,30 @@ if (module.hot) {
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+        let refreshing = false
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) {
+                return
+            }
+            refreshing = true
+            window.location.reload()
+        })
+
         navigator.serviceWorker.register('/service-worker.js').then(registration => {
             console.log('SW registered: ', registration)
+            registration.onupdatefound = () => {
+                const installingWorker = registration.installing
+                if (!installingWorker) {
+                    return
+                }
+
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('New CHALK version available; refreshing to activate it.')
+                    }
+                }
+            }
         }).catch(registrationError => {
             console.log('SW registration failed: ', registrationError)
         })
