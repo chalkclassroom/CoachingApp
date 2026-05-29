@@ -13,6 +13,25 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
+type ObservationDraftPayload = {
+  teacherUid: string
+  teacherName?: string
+  classroomName?: string
+  sessionName?: string
+  typeCode: string
+  storedType: string
+  notes: string
+  elapsedSeconds: number
+  updatedAt: Date
+}
+
+type ObservationCompletePayload = ObservationDraftPayload & {
+  alignedTags: string[]
+  strength: string
+  opportunity: string
+  nextStep: string
+}
+
 export function lastNDays(days: number): DateRange {
   const endDate = new Date()
   const startDate = new Date(endDate.getTime() - days * DAY_MS)
@@ -202,7 +221,7 @@ export async function saveActionPlanField(firebase: any, planId: string, patch: 
   return getActionPlanFull(firebase, planId)
 }
 
-export async function saveActionPlanDraft(firebase: any, planId: string, patch: { title?: string; goal?: string; benefit?: string; dueDate?: Date | null }): Promise<PlanDetail | null> {
+export async function saveActionPlanDraft(firebase: any, planId: string, patch: { title?: string; goal?: string; benefit?: string; dueDate?: Date | null; steps?: PlanDetail['steps'] }): Promise<PlanDetail | null> {
   const update: any = {
     dateModified: new Date()
   }
@@ -213,6 +232,21 @@ export async function saveActionPlanDraft(firebase: any, planId: string, patch: 
   if (patch.dueDate !== undefined) update.goalTimeline = patch.dueDate
 
   await firebase.db.collection('actionPlans').doc(planId).update(update)
+
+  if (patch.steps) {
+    await Promise.all(patch.steps.map((step, index) => {
+      if (firebase.saveActionStep) {
+        return firebase.saveActionStep(planId, String(index), step.step || '', step.person || '', step.timeline || null)
+      }
+
+      return firebase.db.collection('actionPlans').doc(planId).collection('actionSteps').doc(String(index)).set({
+        step: step.step || '',
+        person: step.person || '',
+        timeline: step.timeline || null
+      }, { merge: true })
+    }))
+  }
+
   return getActionPlanFull(firebase, planId)
 }
 
@@ -255,17 +289,64 @@ export async function startObservation(firebase: any, coachUid: string, teacherU
   return { coachUid, teacherUid, type: storedType, startedAt: new Date() }
 }
 
-export async function endObservation(firebase: any): Promise<{ completed: boolean }> {
+export async function saveObservationDraft(firebase: any, coachUid: string, draft: ObservationDraftPayload): Promise<{ saved: boolean }> {
+  await firebase.db.collection('users').doc(coachUid).set({ observationDraft: draft }, { merge: true })
+  return { saved: true }
+}
+
+export async function completeObservation(firebase: any, coachUid: string, payload: ObservationCompletePayload): Promise<{ completed: boolean; observationId?: string | null }> {
+  const notes = payload.notes.trim()
+  if (notes && firebase.handlePushNotes) {
+    firebase.handlePushNotes(notes)
+  }
+
+  if (firebase.handlePushNotes) {
+    firebase.handlePushNotes([
+      `Framework alignment: ${payload.alignedTags.join(', ') || 'Not recorded'}`,
+      `Strength: ${payload.strength || 'Not recorded'}`,
+      `Opportunity: ${payload.opportunity || 'Not recorded'}`,
+      `Next step: ${payload.nextStep || 'Not recorded'}`
+    ].join('\n'))
+  }
+
   firebase.endSession(new Date())
-  return { completed: true }
+  await firebase.db.collection('users').doc(coachUid).set({ observationDraft: null }, { merge: true })
+  return { completed: true, observationId: firebase.sessionRef?.id || null }
 }
 
 export async function getTrainingRecommendations(firebase: any, uid: string): Promise<TrainingCard[]> {
   return [
-    { id: 'transitions', title: 'Smooth Transitions', icon: 'Timer', tone: 'warm', reason: 'alert', reasonText: 'Recommended from recent observations', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
-    { id: 'questions', title: 'Open-Ended Questions', icon: 'Message', tone: 'brand', reason: 'alert', reasonText: 'Recurring coaching theme', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
-    { id: 'climate', title: 'Classroom Climate', icon: 'Heart', tone: 'success', reason: 'win', reasonText: 'Refresh available', ctaText: 'Refresh (8 min)' }
+    { id: 'transitions', title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: 'Recommended from recent observations', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
+    { id: 'questions', title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: 'Recurring coaching theme', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
+    { id: 'climate', title: 'Classroom Climate', icon: '💚', tone: 'success', reason: 'win', reasonText: 'Refresh available', ctaText: 'Refresh (8 min)' },
+    { id: 'discipline', title: 'Conscious Discipline Foundations', icon: '📚', tone: 'purple', reason: 'skip', reasonText: 'Completed previously — skip unless needed', ctaText: 'Review notes' },
+    { id: 'magic9', title: 'Using Magic 9 effectively', icon: '📊', tone: 'gold', reason: 'skip', reasonText: 'Optional for experienced coaches', ctaText: 'Not now' },
+    { id: 'plans', title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: 'Recommended when goals are not measurable', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
   ]
+}
+
+export async function getTrainingStatus(firebase: any, uid: string): Promise<Record<string, { completedAt?: any; dismissedAt?: any }>> {
+  const doc = await firebase.db.collection('users').doc(uid).get()
+  const data = doc.exists ? doc.data() || {} : {}
+  return data.v2TrainingStatus || {}
+}
+
+export async function markTrainingCompleted(firebase: any, uid: string, trainingId: string): Promise<{ completed: boolean }> {
+  await firebase.db.collection('users').doc(uid).set({
+    v2TrainingStatus: {
+      [trainingId]: { completedAt: new Date() }
+    }
+  }, { merge: true })
+  return { completed: true }
+}
+
+export async function dismissTrainingRecommendation(firebase: any, uid: string, trainingId: string): Promise<{ dismissed: boolean }> {
+  await firebase.db.collection('users').doc(uid).set({
+    v2TrainingStatus: {
+      [trainingId]: { dismissedAt: new Date() }
+    }
+  }, { merge: true })
+  return { dismissed: true }
 }
 
 export function createV2Api(firebase: any) {
@@ -277,11 +358,15 @@ export function createV2Api(firebase: any) {
     getTeachersForCoach: (uid: string, range?: DateRange) => getTeachersForCoach(firebase, uid, range),
     getActionPlanFull: (planId: string) => getActionPlanFull(firebase, planId),
     saveActionPlanField: (planId: string, patch: Partial<PlanDetail>) => saveActionPlanField(firebase, planId, patch),
-    saveActionPlanDraft: (planId: string, patch: { title?: string; goal?: string; benefit?: string; dueDate?: Date | null }) => saveActionPlanDraft(firebase, planId, patch),
+    saveActionPlanDraft: (planId: string, patch: { title?: string; goal?: string; benefit?: string; dueDate?: Date | null; steps?: PlanDetail['steps'] }) => saveActionPlanDraft(firebase, planId, patch),
     addActionPlanComment: (planId: string, comment: { authorName: string; authorId?: string; text: string }) => addActionPlanComment(firebase, planId, comment),
     markActionPlanSentToTeacher: (planId: string, sentBy: string) => markActionPlanSentToTeacher(firebase, planId, sentBy),
     startObservation: (coachUid: string, teacherUid: string, typeCode: string) => startObservation(firebase, coachUid, teacherUid, typeCode),
-    endObservation: () => endObservation(firebase),
-    getTrainingRecommendations: (uid: string) => getTrainingRecommendations(firebase, uid)
+    saveObservationDraft: (coachUid: string, draft: ObservationDraftPayload) => saveObservationDraft(firebase, coachUid, draft),
+    completeObservation: (coachUid: string, payload: ObservationCompletePayload) => completeObservation(firebase, coachUid, payload),
+    getTrainingRecommendations: (uid: string) => getTrainingRecommendations(firebase, uid),
+    getTrainingStatus: (uid: string) => getTrainingStatus(firebase, uid),
+    markTrainingCompleted: (uid: string, trainingId: string) => markTrainingCompleted(firebase, uid, trainingId),
+    dismissTrainingRecommendation: (uid: string, trainingId: string) => dismissTrainingRecommendation(firebase, uid, trainingId)
   }
 }

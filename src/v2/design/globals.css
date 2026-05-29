@@ -72,3 +72,14 @@
     animation: none;
   }
 }
+
+
+@media (max-width: 720px) {
+  .v2-root .v2-page {
+    padding: 1rem !important;
+  }
+
+  .v2-root table {
+    font-size: 0.82rem;
+  }
+}

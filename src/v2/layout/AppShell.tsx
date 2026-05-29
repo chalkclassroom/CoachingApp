@@ -30,7 +30,9 @@ export function AppShell(props: {
         zIndex: 100,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.75rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '-0.01em' }}>
           <div style={{
@@ -58,9 +60,9 @@ export function AppShell(props: {
         <div style={{
           display: 'flex',
           gap: '0.25rem',
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)'
+          flex: '1 1 460px',
+          justifyContent: 'center',
+          flexWrap: 'wrap'
         }}>
           {NAV_ITEMS.map(item => {
             const active = item.key === props.activeKey
@@ -85,7 +87,7 @@ export function AppShell(props: {
                 {active && (
                   <span style={{
                     position: 'absolute',
-                    bottom: '-0.95rem',
+                    bottom: '-0.6rem',
                     left: '1rem', right: '1rem',
                     height: 2,
                     background: 'var(--v2-brand)',

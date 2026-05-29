@@ -8,6 +8,7 @@ import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
 
 type Reason = 'alert' | 'win' | 'skip'
+type TrainingView = 'recommended' | 'all' | 'completed'
 
 type TrainingCard = {
   id?: string
@@ -21,12 +22,12 @@ type TrainingCard = {
 }
 
 const CARDS: TrainingCard[] = [
-  { title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: '⚠ 3 of your teachers flagged in this area', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
-  { title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: '⚠ Recurring theme in last 5 observations', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
-  { title: 'Classroom Climate', icon: '💚', tone: 'success', reason: 'win', reasonText: '✓ You scored in the top 10% — refresh available', ctaText: 'Refresh (8 min)' },
-  { title: 'Conscious Discipline Foundations', icon: '📚', tone: 'purple', reason: 'skip', reasonText: 'Completed in 2024 — skip unless needed', ctaText: 'Review notes' },
-  { title: 'Using Magic 9 effectively', icon: '📊', tone: 'gold', reason: 'skip', reasonText: 'Optional · recommended for new coaches', ctaText: 'Not now' },
-  { title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: '⚠ Your last 2 plans had no measurable goals', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
+  { id: 'transitions', title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: '⚠ 3 teachers flagged in this area', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
+  { id: 'questions', title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: '⚠ Recurring theme in recent observations', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
+  { id: 'climate', title: 'Classroom Climate', icon: '💚', tone: 'success', reason: 'win', reasonText: '✓ Refresh available', ctaText: 'Refresh (8 min)' },
+  { id: 'discipline', title: 'Conscious Discipline Foundations', icon: '📚', tone: 'purple', reason: 'skip', reasonText: 'Completed previously — skip unless needed', ctaText: 'Review notes' },
+  { id: 'magic9', title: 'Using Magic 9 effectively', icon: '📊', tone: 'gold', reason: 'skip', reasonText: 'Optional · recommended for new coaches', ctaText: 'Not now' },
+  { id: 'plans', title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: '⚠ Recent plans need measurable goals', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
 ]
 
 const toneBg: Record<TrainingCard['tone'], string> = {
@@ -37,10 +38,23 @@ const toneBg: Record<TrainingCard['tone'], string> = {
   purple: 'linear-gradient(135deg, #6f39c4, #f0523d)'
 }
 
-const reasonStyle: Record<Reason, { bg: string; fg: string }> = {
+const reasonStyle: Record<Reason | 'complete', { bg: string; fg: string }> = {
   alert:   { bg: 'var(--v2-warm-soft)', fg: 'var(--v2-warm-dark)' },
   win:     { bg: 'var(--v2-success-soft)', fg: '#15803D' },
-  skip:    { bg: 'var(--v2-bg-soft)', fg: 'var(--v2-muted)' }
+  skip:    { bg: 'var(--v2-bg-soft)', fg: 'var(--v2-muted)' },
+  complete:{ bg: 'var(--v2-success-soft)', fg: 'var(--v2-success)' }
+}
+
+function storageKey(uid: string | undefined, suffix: string): string {
+  return `chalk-v2-training-${suffix}-${uid || 'preview'}`
+}
+
+function loadStoredIds(key: string): string[] {
+  try {
+    return JSON.parse(window.localStorage.getItem(key) || '[]')
+  } catch (error) {
+    return []
+  }
 }
 
 export function Training() {
@@ -50,6 +64,15 @@ export function Training() {
   const [cards, setCards] = React.useState<TrainingCard[]>(CARDS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
+  const [view, setView] = React.useState<TrainingView>('recommended')
+  const [completedIds, setCompletedIds] = React.useState<string[]>(() => loadStoredIds(storageKey(undefined, 'completed')))
+  const [dismissedIds, setDismissedIds] = React.useState<string[]>(() => loadStoredIds(storageKey(undefined, 'dismissed')))
+
+  React.useEffect(() => {
+    const uid = auth.user?.uid
+    setCompletedIds(loadStoredIds(storageKey(uid, 'completed')))
+    setDismissedIds(loadStoredIds(storageKey(uid, 'dismissed')))
+  }, [auth.user])
 
   React.useEffect(() => {
     if (!auth.user) {
@@ -57,11 +80,18 @@ export function Training() {
     }
 
     let active = true
+    const api = createV2Api(firebase)
     setLoading(true)
     setError(null)
-    createV2Api(firebase).getTrainingRecommendations(auth.user.uid).then(nextCards => {
+
+    Promise.all([
+      api.getTrainingRecommendations(auth.user.uid),
+      api.getTrainingStatus(auth.user.uid)
+    ]).then(([nextCards, status]) => {
       if (!active) return
       setCards(nextCards.length > 0 ? nextCards : [])
+      setCompletedIds(Object.keys(status).filter(id => status[id]?.completedAt))
+      setDismissedIds(Object.keys(status).filter(id => status[id]?.dismissedAt && !status[id]?.completedAt))
       setLoading(false)
     }).catch(fetchError => {
       if (!active) return
@@ -72,26 +102,67 @@ export function Training() {
     return () => { active = false }
   }, [auth.user, firebase])
 
-  const handleCardAction = (card: TrainingCard) => {
-    if (card.reason === 'skip') {
-      toast.info(`${card.title} is optional for this coach right now.`)
-      return
-    }
-    toast.info(`${card.title} training opens from the existing CHALK training library.`)
+  React.useEffect(() => {
+    const uid = auth.user?.uid
+    window.localStorage.setItem(storageKey(uid, 'completed'), JSON.stringify(completedIds))
+    window.localStorage.setItem(storageKey(uid, 'dismissed'), JSON.stringify(dismissedIds))
+  }, [auth.user, completedIds, dismissedIds])
+
+  const visibleCards = cards.filter(card => {
+    const id = card.id || card.title
+    if (view === 'completed') return completedIds.includes(id)
+    if (view === 'recommended') return !completedIds.includes(id) && !dismissedIds.includes(id)
+    return !dismissedIds.includes(id) || completedIds.includes(id)
+  })
+
+  const markCompleted = (id: string) => {
+    setCompletedIds(current => current.includes(id) ? current : [...current, id])
+    setDismissedIds(current => current.filter(item => item !== id))
   }
 
+  const dismissCard = (id: string) => {
+    setDismissedIds(current => current.includes(id) ? current : [...current, id])
+  }
+
+  const handleCardAction = (card: TrainingCard) => {
+    const id = card.id || card.title
+    const api = createV2Api(firebase)
+
+    if (card.reason === 'skip') {
+      dismissCard(id)
+      if (auth.user) {
+        api.dismissTrainingRecommendation(auth.user.uid, id).catch(error => console.error('Unable to dismiss v2 training recommendation', error))
+      }
+      toast.info(`${card.title} skipped for this release view.`)
+      return
+    }
+
+    markCompleted(id)
+    if (auth.user) {
+      api.markTrainingCompleted(auth.user.uid, id).catch(error => console.error('Unable to mark v2 training complete', error))
+    }
+    toast.success(`${card.title} marked complete.`)
+  }
+
+  const tabStyle = (key: TrainingView): React.CSSProperties => ({
+    background: view === key ? 'var(--v2-ink)' : 'var(--v2-white)',
+    color: view === key ? 'var(--v2-white)' : 'var(--v2-ink-soft)',
+    border: '1px solid var(--v2-line)'
+  })
+
   return (
-    <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+    <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Training tailored to your coaching</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Based on patterns in your recent observations and action plans — recommended, not required.
+            Based on patterns in recent observations and action plans — recommended, not required.
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Button>All training</Button>
-          <Button>Completed</Button>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Button style={tabStyle('recommended')} onClick={() => setView('recommended')}>Recommended</Button>
+          <Button style={tabStyle('all')} onClick={() => setView('all')}>All training</Button>
+          <Button style={tabStyle('completed')} onClick={() => setView('completed')}>Completed</Button>
         </div>
       </div>
 
@@ -114,53 +185,59 @@ export function Training() {
             <Skeleton height={34} style={{ marginBottom: '0.8rem' }} />
             <Skeleton width="45%" height={30} />
           </div>
-        )) : cards.length === 0 ? (
+        )) : visibleCards.length === 0 ? (
           <div style={{ gridColumn: '1 / -1' }}>
-            <EmptyState title="No training recommendations" description="Training recommendations will appear after recent observations and action plans are available." />
+            <EmptyState title="No training in this view" description="Completed and skipped recommendations are tracked per coach." />
           </div>
-        ) : cards.map((c, i) => (
-          <div key={c.id || i} style={{
-            background: 'var(--v2-white)',
-            borderRadius: 'var(--v2-radius)',
-            border: '1px solid var(--v2-line-soft)',
-            overflow: 'hidden',
-            boxShadow: 'var(--v2-shadow-sm)'
-          }}>
-            <div style={{
-              height: 120,
-              background: toneBg[c.tone],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: '2rem'
+        ) : visibleCards.map((c, i) => {
+          const id = c.id || c.title
+          const complete = completedIds.includes(id)
+          const statusStyle = complete ? reasonStyle.complete : reasonStyle[c.reason]
+          return (
+            <div key={id || i} style={{
+              background: 'var(--v2-white)',
+              borderRadius: 'var(--v2-radius)',
+              border: '1px solid var(--v2-line-soft)',
+              overflow: 'hidden',
+              boxShadow: 'var(--v2-shadow-sm)'
             }}>
-              {c.icon}
-            </div>
-            <div style={{ padding: '1.1rem' }}>
-              <h4 style={{ fontSize: '0.98rem', fontWeight: 600, marginBottom: '0.35rem' }}>{c.title}</h4>
               <div style={{
-                fontSize: '0.76rem',
-                padding: '0.4rem 0.6rem',
-                borderRadius: 6,
-                margin: '0.5rem 0 0.8rem',
-                fontWeight: 600,
-                background: reasonStyle[c.reason].bg,
-                color: reasonStyle[c.reason].fg
-              }}>{c.reasonText}</div>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
-                <Button
-                  variant={c.ctaVariant === 'primary' ? 'primary' : 'default'}
-                  size="sm"
-                  style={{ flex: 1, justifyContent: 'center' }}
-                  onClick={() => handleCardAction(c)}
-                >
-                  {c.ctaText}
-                </Button>
+                height: 120,
+                background: toneBg[c.tone],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontSize: '2rem'
+              }}>
+                {c.icon}
+              </div>
+              <div style={{ padding: '1.1rem' }}>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, marginBottom: '0.35rem' }}>{c.title}</h4>
+                <div style={{
+                  fontSize: '0.76rem',
+                  padding: '0.4rem 0.6rem',
+                  borderRadius: 6,
+                  margin: '0.5rem 0 0.8rem',
+                  fontWeight: 600,
+                  background: statusStyle.bg,
+                  color: statusStyle.fg
+                }}>{complete ? '✓ Completed for this coach' : c.reasonText}</div>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  <Button
+                    variant={complete ? 'default' : c.ctaVariant === 'primary' ? 'primary' : 'default'}
+                    size="sm"
+                    disabled={complete}
+                    style={{ flex: 1, justifyContent: 'center' }}
+                    onClick={() => handleCardAction(c)}
+                  >
+                    {complete ? 'Completed' : c.ctaText}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

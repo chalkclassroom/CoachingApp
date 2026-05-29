@@ -33,7 +33,7 @@ export function TableSkeleton(props: { rows?: number; cols?: number }) {
 
 export function StatSkeleton() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
       {[0, 1, 2, 3].map(index => (
         <div key={index} style={{ background: 'var(--v2-white)', border: '1px solid var(--v2-line-soft)', borderRadius: 'var(--v2-radius)', padding: '1rem' }}>
           <Skeleton width={42} height={42} style={{ marginBottom: '0.85rem' }} />

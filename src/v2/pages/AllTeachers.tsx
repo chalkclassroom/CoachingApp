@@ -217,7 +217,7 @@ export function AllTeachers() {
   }
 
   return (
-    <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+    <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       {/* Header */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',

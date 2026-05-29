@@ -14,10 +14,10 @@ import { PlanComment, PlanDetail as V2PlanDetail, PlanStep } from '../lib/types'
 const DEMO_PLAN: V2PlanDetail = {
   id: 'demo-plan',
   title: 'Reducing transition time',
-  teacherId: 'demo-chrystaline',
+  teacherId: 'demo-teacher-2',
   teacherName: 'Morgan Lee',
   goal: 'Reduce the average transition time between activities from 5 minutes to under 2 minutes, while maintaining smooth flow and minimal disruption.',
-  benefit: 'Tisha will observe two transitions per week and log timing. Target: average under 2:00 by May 28.',
+  benefit: 'Coach will observe two transitions per week and log timing. Target: average under 2:00 by May 28.',
   dueDate: new Date('2026-05-28T12:00:00'),
   progress: 65,
   steps: [
@@ -109,7 +109,14 @@ export function PlanDetail() {
   const [error, setError] = React.useState<Error | null>(null)
   const [savedLabel, setSavedLabel] = React.useState('Saved locally')
   const [commentText, setCommentText] = React.useState('')
+  const [showSendConfirm, setShowSendConfirm] = React.useState(false)
+  const [sending, setSending] = React.useState(false)
   const realPlanId = planId && planId !== 'demo-plan' ? planId : ''
+  const serializedSteps = JSON.stringify(plan.steps.map(step => ({
+    step: step.step,
+    person: step.person,
+    timeline: step.timeline ? step.timeline.toISOString() : null
+  })))
 
   React.useEffect(() => {
     if (!realPlanId || !auth.user) {
@@ -164,7 +171,8 @@ export function PlanDetail() {
         title: plan.title,
         goal: plan.goal,
         benefit: plan.benefit,
-        dueDate: plan.dueDate
+        dueDate: plan.dueDate,
+        steps: plan.steps
       }).then(() => {
         setSavedLabel('Auto-saved')
       }).catch(saveError => {
@@ -174,7 +182,7 @@ export function PlanDetail() {
     }, 900)
 
     return () => window.clearTimeout(timeout)
-  }, [auth.user, firebase, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId])
+  }, [auth.user, firebase, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId, serializedSteps])
 
   const updatePlan = (patch: Partial<V2PlanDetail>) => {
     setPlan(current => ({ ...current, ...patch }))
@@ -229,17 +237,31 @@ export function PlanDetail() {
       return
     }
 
+    setShowSendConfirm(true)
+  }
+
+  const confirmSendToTeacher = () => {
+    if (!auth.user || !realPlanId || sending) {
+      return
+    }
+
+    setSending(true)
     createV2Api(firebase).markActionPlanSentToTeacher(realPlanId, auth.user.uid)
-      .then(() => toast.success('Plan marked as sent to teacher.'))
+      .then(() => {
+        setShowSendConfirm(false)
+        setSending(false)
+        toast.success('Plan marked as sent to teacher.')
+      })
       .catch(sendError => {
         console.error('Unable to mark v2 plan as sent', sendError)
+        setSending(false)
         toast.error('Unable to send plan.')
       })
   }
 
   if (loading) {
     return (
-      <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
         <Skeleton width="40%" height={32} style={{ marginBottom: '1rem' }} />
         <Skeleton height={240} />
       </div>
@@ -247,7 +269,7 @@ export function PlanDetail() {
   }
 
   return (
-    <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+    <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
         marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem'
@@ -280,7 +302,7 @@ export function PlanDetail() {
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
             background: savedLabel === 'Save failed' ? 'var(--v2-warm-soft)' : 'var(--v2-success-soft)',
@@ -315,12 +337,12 @@ export function PlanDetail() {
                     placeholder="Action step"
                     style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', color: 'var(--v2-ink)', marginBottom: '0.45rem' }}
                   />
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <input
                       value={step.person || ''}
                       onChange={(event) => updateStep(index, { person: event.currentTarget.value })}
                       placeholder="Owner"
-                      style={{ flex: 1, border: '1px solid var(--v2-line)', borderRadius: 6, padding: '0.4rem 0.55rem', background: 'var(--v2-white)' }}
+                      style={{ flex: 1, minWidth: 130, border: '1px solid var(--v2-line)', borderRadius: 6, padding: '0.4rem 0.55rem', background: 'var(--v2-white)' }}
                     />
                     <input
                       type="date"
@@ -335,7 +357,7 @@ export function PlanDetail() {
           </Card>
 
           <Card padding="1.35rem">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', gap: '0.75rem', flexWrap: 'wrap' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 700 }}>📊 Measurement</h3>
               <input
                 type="date"
@@ -389,6 +411,30 @@ export function PlanDetail() {
           </Card>
         </div>
       </div>
+
+      {showSendConfirm && (
+        <div role="dialog" aria-modal="true" aria-label="Send plan to teacher" style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(18, 24, 31, 0.28)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem',
+          zIndex: 1000
+        }}>
+          <Card style={{ width: 'min(520px, 100%)', boxShadow: 'var(--v2-shadow-lg)' }}>
+            <h3 style={{ fontSize: '1.05rem', marginBottom: '0.45rem' }}>Send this plan to {plan.teacherName}?</h3>
+            <p style={{ color: 'var(--v2-muted)', fontSize: '0.86rem', lineHeight: 1.55 }}>
+              This will mark the action plan as sent in Firestore. Review the goal, steps, measurement date, and conversation before confirming.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <Button onClick={() => setShowSendConfirm(false)}>Cancel</Button>
+              <Button variant="primary" disabled={sending} onClick={confirmSendToTeacher}>{sending ? 'Sending...' : 'Confirm send'}</Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }

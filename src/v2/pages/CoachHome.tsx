@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
@@ -6,6 +7,7 @@ import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
 import { Stat } from '../components/Stat'
 import { StatSkeleton } from '../components/Skeleton'
+import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
@@ -76,7 +78,7 @@ function PlanMini(props: PlanItem) {
   )
 }
 
-function AttentionRow(props: { teacher: AttentionItem }) {
+function AttentionRow(props: { teacher: AttentionItem; onAction(teacher: AttentionItem): void }) {
   const t = props.teacher
   return (
     <div style={{
@@ -92,7 +94,7 @@ function AttentionRow(props: { teacher: AttentionItem }) {
           {t.context}
         </div>
       </div>
-      <Button size="sm">{t.cta}</Button>
+      <Button size="sm" onClick={() => props.onAction(t)}>{t.cta}</Button>
     </div>
   )
 }
@@ -100,6 +102,8 @@ function AttentionRow(props: { teacher: AttentionItem }) {
 export function CoachHome(props: { userName: string; programCount?: number }) {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
+  const history = useHistory()
+  const toast = useToast()
   const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
   const [attention, setAttention] = React.useState<AttentionItem[]>(STUB_ATTENTION)
   const [activity, setActivity] = React.useState<ActivityItem[]>(STUB_ACTIVITY)
@@ -140,8 +144,31 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
 
   const firstName = auth.user?.firstName || props.userName.split(' ')[0]
 
+  const openObservation = (teacher?: AttentionItem) => {
+    if (!teacher) {
+      history.push('/v2/observation')
+      return
+    }
+
+    history.push(`/v2/observation?teacher=${encodeURIComponent(teacher.id)}&teacherName=${encodeURIComponent(teacher.name)}&classroom=${encodeURIComponent(teacher.context)}&session=Coaching check-in`)
+  }
+
+  const openAttentionAction = (teacher: AttentionItem) => {
+    const cta = teacher.cta.toLowerCase()
+    if (cta.includes('obs') || cta.includes('schedule')) {
+      openObservation(teacher)
+      return
+    }
+    if (cta.includes('plan')) {
+      history.push('/v2/plans')
+      return
+    }
+    toast.info('Teacher profile detail remains in legacy CHALK for this sprint.')
+    history.push('/v2/teachers')
+  }
+
   return (
-    <div style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+    <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
         marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem'
@@ -155,8 +182,8 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Button>📅 Schedule</Button>
-          <Button variant="accent">▶ Start observation</Button>
+          <Button onClick={() => { toast.info('Choose a teacher, then schedule from the teacher workflow.'); history.push('/v2/teachers') }}>📅 Schedule</Button>
+          <Button variant="accent" onClick={() => openObservation()}>▶ Start observation</Button>
         </div>
       </div>
 
@@ -181,16 +208,16 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
         <Card>
           <CardHeader
             title={<>Teachers needing attention <Pill variant="warn" style={{ background: 'var(--v2-warm)', color: '#fff' }}>{attention.length}</Pill></>}
-            action="View all teachers →"
+            action={<button type="button" onClick={() => history.push('/v2/teachers')} style={{ color: 'var(--v2-brand-dark)', fontWeight: 600, padding: 0 }}>View all teachers →</button>}
           />
-          {attention.length > 0 ? attention.map(t => <AttentionRow key={t.id} teacher={t} />) : (
+          {attention.length > 0 ? attention.map(t => <AttentionRow key={t.id} teacher={t} onAction={openAttentionAction} />) : (
             <EmptyState title="No teachers need attention" description="The current data range has no flagged teachers." />
           )}
         </Card>
 
         <div>
           <Card style={{ marginBottom: '1rem' }}>
-            <CardHeader title="Recent activity" action="All →" />
+            <CardHeader title="Recent activity" action={<button type="button" onClick={() => history.push('/v2/teachers')} style={{ color: 'var(--v2-brand-dark)', fontWeight: 600, padding: 0 }}>All →</button>} />
             {activity.length > 0 ? activity.map(a => <TimelineItem key={a.id} {...a} />) : (
               <EmptyState title="No recent activity" description="Recent observations, plans, emails, and training events will appear here." />
             )}
