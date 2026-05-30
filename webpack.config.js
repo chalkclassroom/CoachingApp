@@ -106,6 +106,7 @@ module.exports = (env, argv) => {
                     'process.env.USE_LOCAL_FIRESTORE': process.env.REACT_APP_USE_LOCAL_FIRESTORE === 'true',
                     'process.env.USE_LOCAL_FUNCTIONS': process.env.REACT_APP_USE_LOCAL_FUNCTIONS === 'true',
                     'process.env.USE_LOCAL_AUTH'     : process.env.REACT_APP_USE_LOCAL_AUTH === 'true',
+                    'process.env.V2_PUBLIC_PREVIEW'  : process.env.REACT_APP_V2_PUBLIC_PREVIEW === 'true',
                     'process.env.FIREBASE_CONFIG'    : process.env.REACT_APP_FIREBASE_CONFIG
                 }),
                 new HtmlWebpackPlugin({
