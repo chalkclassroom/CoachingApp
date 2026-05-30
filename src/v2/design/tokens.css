@@ -1,0 +1,95 @@
+/* ============================================================
+   CHALK 2.0 — Design tokens
+   ============================================================
+   All visual constants of the renovated app live here as CSS
+   custom properties. Light and dark themes share the same names;
+   only the values differ. This makes theme switching instant.
+
+   Scoped to .v2-root so it never leaks to legacy MUI code.
+============================================================ */
+
+.v2-root {
+  /* Brand (matches chalkcoaching.com) */
+  --v2-brand: #00b2ff;
+  --v2-brand-dark: #0091d4;
+  --v2-brand-darker: #006fa5;
+  --v2-brand-soft: #E5F6FF;
+  --v2-brand-softer: #F2FAFF;
+
+  --v2-warm: #f0523d;
+  --v2-warm-dark: #d63a26;
+  --v2-warm-soft: #FFE9E4;
+
+  --v2-gold: #f0a623;
+  --v2-gold-soft: #FCEFD8;
+
+  /* Neutrals */
+  --v2-ink: #272727;
+  --v2-ink-soft: #3e3e3e;
+  --v2-muted: #6B6B6B;
+  --v2-muted-soft: #9b9b9b;
+  --v2-line: #E4E4E4;
+  --v2-line-soft: #f0f0f0;
+  --v2-bg: #fafafa;
+  --v2-bg-soft: #f6f6f6;
+  --v2-white: #ffffff;
+
+  /* Semantic */
+  --v2-success: #2ECC71;
+  --v2-success-soft: #DCF7E8;
+  --v2-danger: #EF4444;
+  --v2-danger-soft: #FFE5E5;
+
+  /* Radii */
+  --v2-radius-sm: 8px;
+  --v2-radius: 12px;
+  --v2-radius-lg: 16px;
+  --v2-radius-xl: 20px;
+  --v2-radius-pill: 999px;
+
+  /* Shadows */
+  --v2-shadow-sm: 0 1px 3px rgba(39, 39, 39, 0.05);
+  --v2-shadow: 0 4px 16px rgba(39, 39, 39, 0.06);
+  --v2-shadow-lg: 0 12px 40px rgba(39, 39, 39, 0.10);
+
+  /* Typography */
+  --v2-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spacing scale (4px base) */
+  --v2-sp-1: 4px;
+  --v2-sp-2: 8px;
+  --v2-sp-3: 12px;
+  --v2-sp-4: 16px;
+  --v2-sp-5: 20px;
+  --v2-sp-6: 24px;
+  --v2-sp-8: 32px;
+  --v2-sp-10: 40px;
+  --v2-sp-12: 48px;
+
+  /* Z-index */
+  --v2-z-dropdown: 100;
+  --v2-z-sticky: 200;
+  --v2-z-modal: 1000;
+  --v2-z-toast: 2000;
+}
+
+.v2-root[data-theme="dark"] {
+  --v2-bg: #0F1419;
+  --v2-bg-soft: #1A1F26;
+  --v2-white: #1F2630;
+  --v2-ink: #E5E7EB;
+  --v2-ink-soft: #B8BCC2;
+  --v2-muted: #9CA3AF;
+  --v2-muted-soft: #6B7280;
+  --v2-line: #2D3340;
+  --v2-line-soft: #242931;
+  --v2-brand-soft: #003D5E;
+  --v2-brand-softer: #002940;
+  --v2-warm-soft: #3D1F18;
+  --v2-gold-soft: #3D2F12;
+  --v2-success-soft: #0F3B26;
+  --v2-danger-soft: #3D1A1A;
+  --v2-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --v2-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --v2-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
