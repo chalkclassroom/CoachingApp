@@ -1,16 +1,80 @@
+rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // CHALK 2.0 sprint posture: keep the legacy auth-only wildcard for now.
-    // The v2 draft/comment paths inherit this broad rule until Phase 4
-    // security hardening replaces it with document-level ownership checks.
-    match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+    function signedIn() {
+      return request.auth != null;
     }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function canWriteUserDoc(userId) {
+      return isOwner(userId) || isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow create, update, delete: if canWriteUserDoc(userId);
+
+      // Preserve legacy user subcollection behavior while hardening the user root doc.
+      match /{subcollection}/{document=**} {
+        allow read, write: if signedIn();
+      }
+    }
+
+    // Legacy collections retained during the strangler rollout.
+    match /actionPlans/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /observations/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /conferencePlans/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /emails/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /appointments/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /programs/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /sites/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /archives/{document=**} {
+      allow read, write: if signedIn();
+    }
+
     match /pilotForm/{document=**} {
-    	allow write;
+      allow write: if true;
+      allow read: if signedIn();
     }
+
     match /emailList/{document=**} {
-    	allow write;
+      allow write: if true;
+      allow read: if signedIn();
+    }
+
+    // Fallback: authenticated reads remain broad, but unknown writes are denied.
+    match /{document=**} {
+      allow read: if signedIn();
+      allow write: if false;
     }
   }
 }

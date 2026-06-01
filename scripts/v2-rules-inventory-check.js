@@ -24,6 +24,7 @@ function tableHasRow(markdown, firstCell) {
 }
 
 const api = readApp('src/v2/lib/api.ts')
+const rules = readApp('firestore.rules')
 const decisionLogExists = existsChalk('decision-log.md')
 const inventoryExists = existsChalk('CHALK-2-V2-RULES-INVENTORY.md')
 const fixturesExists = existsChalk('CHALK-2-V2-RULES-FIXTURES.md')
@@ -49,7 +50,8 @@ if (fixturesExists) fixtures = readChalk('CHALK-2-V2-RULES-FIXTURES.md')
 
 assert(/2026-06-01 - CHALK 2\.0 V2 Firestore Rules Posture/.test(decisionLog), 'decision log must include the 2026-06-01 V2 rules posture entry')
 assert(/supersedes the 2026-05-28 Posture A/i.test(decisionLog), 'decision log must explicitly supersede or constrain Posture A')
-assert(/G2\.3-G2\.5 are blocked/i.test(decisionLog), 'decision log must block G2.3-G2.5 until real denial rules/harness exist')
+assert(/Posture B User-Root Rule Hardening/i.test(decisionLog), 'decision log must include the Posture B user-root hardening entry')
+assert(/G2.3 user-root denial smoke now passes/i.test(decisionLog), 'decision log must record G2.3 user-root denial evidence')
 
 const createApiBodyMatch = api.match(/export function createV2Api\(firebase: any\) \{[\s\S]*?return \{([\s\S]*?)\n  \}\n\}/)
 assert(Boolean(createApiBodyMatch), 'createV2Api() object must be parseable')
@@ -82,8 +84,13 @@ for (const term of fixtureTerms) {
   assert(fixtures.includes(term), 'fixture manifest must include ' + term)
 }
 
-assert(/auth-only wildcard remains in production rules today/i.test(inventory), 'inventory must state that the auth-only wildcard remains active today')
-assert(/not production-ready/i.test(inventory), 'inventory must state G2 is not production-ready until emulator denial tests pass')
+assert(/auth-only write wildcard has been removed/i.test(inventory), 'inventory must state that the auth-only write wildcard has been removed from the working ruleset')
+assert(/G2\.3 user-root denial is emulator green/i.test(inventory), 'inventory must state G2.3 user-root denial is emulator green')
+assert(/G2\.4\/G2\.5/i.test(inventory), 'inventory must state remaining G2.4/G2.5 denial coverage is pending')
+assert(rules.includes("rules_version = '2'"), 'firestore.rules must use rules_version 2 for recursive wildcard semantics')
+assert(rules.includes('function canWriteUserDoc'), 'firestore.rules must define root user write ownership helper')
+assert(rules.includes('allow write: if false'), 'firestore.rules fallback must deny unknown writes')
+assert(!rules.includes('allow read, write: if request.auth.uid != null'), 'firestore.rules must not retain the auth-only read/write wildcard')
 if (seedScriptExists) {
   const seedScript = fs.readFileSync(path.join(appRoot, 'scripts/v2-rules-seed-fixtures.js'), 'utf8')
   assert(seedScript.includes('FIRESTORE_EMULATOR_HOST'), 'seed script must require FIRESTORE_EMULATOR_HOST')

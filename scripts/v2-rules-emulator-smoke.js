@@ -89,6 +89,15 @@ async function main() {
   const coach = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-coach'))
   assertStatus('coach own observationDraft write', coach, 200)
 
+  const unrelatedCoach = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-unrelated-coach'))
+  assertStatus('unrelated coach observationDraft write', unrelatedCoach, 403)
+
+  const teacher = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-teacher'))
+  assertStatus('teacher cross-user observationDraft write', teacher, 403)
+
+  const admin = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-admin'))
+  assertStatus('admin observationDraft override write', admin, 200)
+
   console.log('V2 rules emulator smoke passed')
 }
 
