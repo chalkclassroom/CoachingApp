@@ -96,6 +96,7 @@
     "doc": "rimraf docs && jsdoc -r  . -d docs -c jsdoc.conf README.md",
     "cypress": "npx cypress open",
     "test": "npx cypress run",
+    "v2:preview-check": "node scripts/v2-preview-readiness-check.js",
     "removebuild": "rimraf build",
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
