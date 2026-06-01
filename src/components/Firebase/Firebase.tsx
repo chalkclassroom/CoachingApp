@@ -511,7 +511,6 @@ class Firebase {
           partners.forEach(partner =>
             teacherList.push(this.getTeacherInfo(partner.id))
           )
-          console.log('teacher list', teacherList)
           return teacherList
         })
         .catch((error: Error) =>
@@ -3235,7 +3234,6 @@ class Firebase {
               })
             }
           )
-          console.log('idArr is2 ', idArr)
           return idArr
         })
         .catch(() => {

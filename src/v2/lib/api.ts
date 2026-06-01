@@ -71,14 +71,43 @@ function roleOf(value: string): TeacherRow['role'] {
   return 'teacher'
 }
 
+async function getCurrentUserRole(firebase: any): Promise<string> {
+  const user: any = await safeRead("Unable to load v2 current user role", () => firebase.getUserInformation(), null)
+  return user?.role || ""
+}
+
+function normalizeAdminTeacher(row: any): any | null {
+  if (!row?.teacherId) return null
+  return {
+    id: row.teacherId,
+    uid: row.teacherId,
+    firstName: row.teacherFirstName || "",
+    lastName: row.teacherLastName || "",
+    role: "teacher",
+    school: row.siteName || "Unassigned",
+    program: row.siteName || "Unassigned",
+    archived: Boolean(row.archived)
+  }
+}
+
 async function resolveTeacherDocs(firebase: any): Promise<any[]> {
-  const raw = await safeRead('Unable to load v2 teacher list', () => firebase.getTeacherList(), [])
+  const raw = await safeRead("Unable to load v2 teacher list", () => firebase.getTeacherList(), [])
   const list = Array.isArray(raw) ? raw : []
   const docs = await Promise.all(list.map(item => Promise.resolve(item).catch(error => {
-    console.error('Unable to resolve v2 teacher document', error)
+    console.error("Unable to resolve v2 teacher document", error)
     return null
   })))
-  return docs.filter(Boolean)
+  const resolvedDocs = docs.filter(Boolean)
+
+  if (resolvedDocs.length > 0) return resolvedDocs
+
+  const role = await getCurrentUserRole(firebase)
+  if (role === "admin" && typeof firebase.getTeacherData === "function") {
+    const adminRows: any[] = await safeRead("Unable to load v2 admin teacher data", () => firebase.getTeacherData(), [])
+    return (Array.isArray(adminRows) ? adminRows : []).map(normalizeAdminTeacher).filter(Boolean)
+  }
+
+  return resolvedDocs
 }
 
 export async function getTeachersForCoach(firebase: any, uid: string, range: DateRange = lastNDays(30)): Promise<TeacherRow[]> {
@@ -107,19 +136,43 @@ export async function getTeachersForCoach(firebase: any, uid: string, range: Dat
   })
 }
 
+async function getAdminActionPlans(firebase: any): Promise<any[]> {
+  if (!firebase.db) return []
+  const snapshot = await firebase.db.collection("actionPlans").orderBy("dateModified", "desc").limit(10).get()
+  return snapshot.docs.map((doc: any) => {
+    const data = doc.data()
+    return {
+      id: doc.id,
+      teacherId: data.teacher || "",
+      teacherFirstName: "",
+      teacherLastName: "",
+      practice: data.tool || "Action plan",
+      date: data.dateModified,
+      modified: toDate(data.dateModified)?.getTime() || 0,
+      achieveBy: data.goalTimeline || data.achieveBy || null,
+      status: data.status || "active"
+    }
+  })
+}
+
 export async function getActivePlans(firebase: any, uid: string): Promise<PlanItem[]> {
-  const plans = await safeRead('Unable to load v2 active plans', () => firebase.getCoachActionPlans(), [])
-  const list = Array.isArray(plans) ? plans : []
+  const plans = await safeRead("Unable to load v2 active plans", () => firebase.getCoachActionPlans(), [])
+  let list = Array.isArray(plans) ? plans : []
+
+  if (list.length === 0 && await getCurrentUserRole(firebase) === "admin") {
+    list = await safeRead("Unable to load v2 admin action plans", () => getAdminActionPlans(firebase), [])
+  }
+
   return list
-    .filter((plan: any) => plan.status !== 'complete' && plan.status !== 'archived')
+    .filter((plan: any) => plan.status !== "complete" && plan.status !== "archived")
     .sort((a: any, b: any) => (b.modified || 0) - (a.modified || 0))
     .slice(0, 2)
     .map((plan: any) => ({
       id: plan.id,
-      title: plan.practice || 'Action plan',
-      forName: `${plan.teacherFirstName || ''} ${plan.teacherLastName || ''}`.trim() || plan.teacherId || 'Teacher',
-      progress: plan.status === 'inProgress' ? 65 : 30,
-      due: toDate(plan.achieveBy) ? `Due ${toDate(plan.achieveBy)?.toLocaleDateString()}` : 'No due date'
+      title: plan.practice || "Action plan",
+      forName: ((plan.teacherFirstName || "") + " " + (plan.teacherLastName || "")).trim() || plan.teacherId || "Teacher",
+      progress: plan.status === "inProgress" ? 65 : 30,
+      due: toDate(plan.achieveBy) ? "Due " + toDate(plan.achieveBy)?.toLocaleDateString() : "No due date"
     }))
 }
 

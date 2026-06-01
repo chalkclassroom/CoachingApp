@@ -237,14 +237,15 @@ class App extends React.Component<Props, State> {
         this.props.firebase.getLiteracyTraining().then((result: LiteracyTrainingFlags ) => {
           this.props.setLiteracyTraining(result)
         })
-        this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
-          const teacherList: Array<Types.Teacher> = [];
-          teacherPromiseList.forEach(tpromise => {
-            tpromise.then((data: Types.Teacher) => {
-              teacherList.push(data);
-            });
-          });
-          this.props.getTeacherList(teacherList);
+        this.props.firebase.getTeacherList().then(async (teacherPromiseList: any = []) => {
+          const teacherEntries = Array.isArray(teacherPromiseList) ? teacherPromiseList : [];
+          const teacherList = await Promise.all(teacherEntries.map((teacherEntry: Promise<Types.Teacher> | Types.Teacher) =>
+            Promise.resolve(teacherEntry).catch((error: Error) => {
+              console.error("Unable to resolve teacher list entry", error);
+              return null;
+            })
+          ));
+          this.props.getTeacherList(teacherList.filter((teacher): teacher is Types.Teacher => Boolean(teacher)));
         });
       } else {
         this.setState({

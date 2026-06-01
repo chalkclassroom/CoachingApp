@@ -29,6 +29,10 @@ assert(webpack.includes('class StaticPublicAssetPlugin'), 'webpack must emit sta
 assert(webpack.includes("'manifest.json'"), 'webpack static asset plugin must emit manifest.json')
 assert(webpack.includes("'site.webmanifest'"), 'webpack static asset plugin must emit site.webmanifest')
 
+const firebaseSource = fs.readFileSync("src/components/Firebase/Firebase.tsx", "utf8")
+assert(!firebaseSource.includes("teacher list"), "legacy Firebase teacher list must not log empty arrays in staging")
+assert(!firebaseSource.includes("idArr is2"), "legacy Firebase action plan list must not log empty arrays in staging")
+
 if (failures.length > 0) {
   console.error('V2 console hygiene check failed:')
   for (const failure of failures) console.error('- ' + failure)
