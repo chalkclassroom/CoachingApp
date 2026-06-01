@@ -51,6 +51,15 @@ function formatDate(value: any): string {
   return date ? date.toLocaleString() : 'Never'
 }
 
+async function safeRead<T>(label: string, read: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await read()
+  } catch (error) {
+    console.error(label, error)
+    return fallback
+  }
+}
+
 function fullName(data: any): string {
   return `${data?.firstName || ''} ${data?.lastName || ''}`.trim() || 'Unknown teacher'
 }
@@ -63,17 +72,19 @@ function roleOf(value: string): TeacherRow['role'] {
 }
 
 async function resolveTeacherDocs(firebase: any): Promise<any[]> {
-  const raw = await firebase.getTeacherList()
+  const raw = await safeRead('Unable to load v2 teacher list', () => firebase.getTeacherList(), [])
   const list = Array.isArray(raw) ? raw : []
-  return Promise.all(list.map(item => Promise.resolve(item)))
+  const docs = await Promise.all(list.map(item => Promise.resolve(item).catch(error => {
+    console.error('Unable to resolve v2 teacher document', error)
+    return null
+  })))
+  return docs.filter(Boolean)
 }
 
 export async function getTeachersForCoach(firebase: any, uid: string, range: DateRange = lastNDays(30)): Promise<TeacherRow[]> {
-  const [teachers, loginCounts, actionCounts] = await Promise.all([
-    resolveTeacherDocs(firebase),
-    firebase.getUsersLoginCounts(range.startDate, range.endDate),
-    firebase.getUsersActionCounts(range.startDate, range.endDate)
-  ])
+  const teachers = await resolveTeacherDocs(firebase)
+  const loginCounts = await safeRead('Unable to load v2 login counts', () => firebase.getUsersLoginCounts(range.startDate, range.endDate), new Map<string, number>())
+  const actionCounts = await safeRead('Unable to load v2 action counts', () => firebase.getUsersActionCounts(range.startDate, range.endDate), new Map<string, any>())
 
   return teachers.map((teacher: any) => {
     const id = teacher.id || teacher.uid || teacher.email || ''
@@ -97,7 +108,7 @@ export async function getTeachersForCoach(firebase: any, uid: string, range: Dat
 }
 
 export async function getActivePlans(firebase: any, uid: string): Promise<PlanItem[]> {
-  const plans = await firebase.getCoachActionPlans()
+  const plans = await safeRead('Unable to load v2 active plans', () => firebase.getCoachActionPlans(), [])
   const list = Array.isArray(plans) ? plans : []
   return list
     .filter((plan: any) => plan.status !== 'complete' && plan.status !== 'archived')
@@ -113,10 +124,8 @@ export async function getActivePlans(firebase: any, uid: string): Promise<PlanIt
 }
 
 export async function getDashboardStats(firebase: any, uid: string, range: DateRange = lastNDays(7)): Promise<DashboardStats> {
-  const [teachers, activePlans] = await Promise.all([
-    getTeachersForCoach(firebase, uid, lastNDays(30)),
-    getActivePlans(firebase, uid)
-  ])
+  const teachers = await safeRead('Unable to load v2 dashboard teachers', () => getTeachersForCoach(firebase, uid, lastNDays(30)), [])
+  const activePlans = await safeRead('Unable to load v2 dashboard active plans', () => getActivePlans(firebase, uid), [])
 
   let observationsThisWeek = 0
   try {
@@ -183,7 +192,7 @@ export async function getActionPlanFull(firebase: any, planId: string): Promise<
 
   const data = doc.data() || {}
   const [steps, commentsSnapshot] = await Promise.all([
-    firebase.getActionStepsForExport(planId),
+    safeRead('Unable to load v2 action plan steps', () => firebase.getActionStepsForExport(planId), []),
     firebase.db.collection('actionPlans').doc(planId).collection('comments').orderBy('createdAt', 'asc').get().catch(() => null)
   ])
 
@@ -326,9 +335,11 @@ export async function getTrainingRecommendations(firebase: any, uid: string): Pr
 }
 
 export async function getTrainingStatus(firebase: any, uid: string): Promise<Record<string, { completedAt?: any; dismissedAt?: any }>> {
-  const doc = await firebase.db.collection('users').doc(uid).get()
-  const data = doc.exists ? doc.data() || {} : {}
-  return data.v2TrainingStatus || {}
+  return safeRead('Unable to load v2 training status', async () => {
+    const doc = await firebase.db.collection('users').doc(uid).get()
+    const data = doc.exists ? doc.data() || {} : {}
+    return data.v2TrainingStatus || {}
+  }, {})
 }
 
 export async function markTrainingCompleted(firebase: any, uid: string, trainingId: string): Promise<{ completed: boolean }> {
