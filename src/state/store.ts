@@ -1,5 +1,4 @@
-import { applyMiddleware, createStore, compose } from 'redux'
-import { createLogger } from 'redux-logger'
+import { applyMiddleware, createStore, compose, Middleware } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import thunk from 'redux-thunk'
@@ -12,9 +11,12 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const middleware = process.env.NODE_ENV === 'development'
-  ? [createLogger(), thunk]
-  : [thunk]
+const middleware: Middleware[] = [thunk]
+
+if (process.env.NODE_ENV === 'development') {
+  const { createLogger } = require('redux-logger')
+  middleware.unshift(createLogger())
+}
 
 const composeEnhancers =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
