@@ -12,7 +12,6 @@ module.exports = {
   REACT_APP_USE_LOCAL_FIRESTORE: false,
   REACT_APP_USE_LOCAL_FUNCTIONS: false,
   REACT_APP_USE_LOCAL_AUTH: false,
-  REACT_APP_V2_PUBLIC_PREVIEW: false,
   BQ_PROJECT_ID: 'cqrefpwa',
   BQ_DATASET: 'observations'
 },
@@ -29,7 +28,6 @@ module.exports = {
     REACT_APP_USE_LOCAL_FIRESTORE : true,
     REACT_APP_USE_LOCAL_FUNCTIONS: true,
     REACT_APP_USE_LOCAL_AUTH: true,
-    REACT_APP_V2_PUBLIC_PREVIEW: false,
     BQ_PROJECT_ID: 'chalk-dev-c6a5d',
     BQ_DATASET: 'observations_dev'
   },
@@ -45,7 +43,6 @@ module.exports = {
     REACT_APP_USE_LOCAL_FIRESTORE: false,
     REACT_APP_USE_LOCAL_FUNCTIONS: false,
     REACT_APP_USE_LOCAL_AUTH: false,
-    REACT_APP_V2_PUBLIC_PREVIEW: false,
     BQ_PROJECT_ID: 'chalk-dev-c6a5d',
     BQ_DATASET: 'observations',
   }
