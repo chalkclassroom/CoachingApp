@@ -115,7 +115,10 @@
     "deploy:preview": "npm run removebuild && npm run prod && firebase target:apply hosting cqrefpwa cqrefpw && firebase hosting:channel:deploy prod_preview",
     "deploy:stage": "npm run removebuild && npm run functions:config:stage && npm run staging && firebase deploy -P staging",
     "devdeploy": "npm run removebuild && firebase target:apply hosting devcqref devcqref && npm run dev && firebase deploy --only hosting:devcqref",
-    "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && firebase deploy --only hosting:stagingcqref"
+    "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && firebase deploy --only hosting:stagingcqref",
+    "v2:rules-check": "node scripts/v2-rules-inventory-check.js",
+    "v2:rules-seed:emulator": "node scripts/v2-rules-seed-fixtures.js",
+    "v2:rules-seed:test": "./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore \"npm run v2:rules-seed:emulator\""
   },
   "eslintConfig": {
     "extends": "react-app"
