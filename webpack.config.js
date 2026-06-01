@@ -5,6 +5,26 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const SourceMapPlugin = require('webpack').SourceMapDevToolPlugin;
 const DefinePlugin = require('webpack').DefinePlugin;
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
+
+class StaticPublicAssetPlugin {
+    constructor(files) {
+        this.files = files;
+    }
+
+    apply(compiler) {
+        compiler.hooks.emit.tapAsync('StaticPublicAssetPlugin', (compilation, callback) => {
+            this.files.forEach(file => {
+                const source = require('fs').readFileSync(path.resolve(__dirname, 'public', file));
+                compilation.assets[file] = {
+                    source: () => source,
+                    size: () => source.length
+                };
+            });
+            callback();
+        });
+    }
+}
+
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
 
@@ -112,6 +132,10 @@ module.exports = (env, argv) => {
                 new HtmlWebpackPlugin({
                     template: "./public/template/index.html"
                 }),
+                new StaticPublicAssetPlugin([
+                    'manifest.json',
+                    'site.webmanifest'
+                ]),
                 new WorkboxPlugin.GenerateSW({
                            // these options encourage the ServiceWorkers to get in there fast
                            // and not allow any straggling "old" SWs to hang around

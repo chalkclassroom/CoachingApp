@@ -62,7 +62,7 @@ export default (state = initialState, action: TrainingLiteracyTypes): TrainingLi
         knowledgeCheckWriting = false,
         knowledgeCheckReading = false,
         knowledgeCheckLanguage = false
-      } = action.literacyTraining
+      } = action.literacyTraining || {}
       return {
         ...state,
         conceptsFoundational,
