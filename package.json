@@ -118,7 +118,9 @@
     "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && firebase deploy --only hosting:stagingcqref",
     "v2:rules-check": "node scripts/v2-rules-inventory-check.js",
     "v2:rules-seed:emulator": "node scripts/v2-rules-seed-fixtures.js",
-    "v2:rules-seed:test": "./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore \"npm run v2:rules-seed:emulator\""
+    "v2:rules-seed:test": "./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore \"npm run v2:rules-seed:emulator\"",
+    "v2:rules-smoke:emulator": "node scripts/v2-rules-emulator-smoke.js",
+    "v2:rules-smoke:test": "./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore \"npm run v2:rules-smoke:emulator\""
   },
   "eslintConfig": {
     "extends": "react-app"

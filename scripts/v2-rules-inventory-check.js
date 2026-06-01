@@ -30,6 +30,7 @@ const fixturesExists = existsChalk('CHALK-2-V2-RULES-FIXTURES.md')
 const fixtureSourceExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-fixtures.js'))
 const seedScriptExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-seed-fixtures.js'))
 const emulatorConfigExists = fs.existsSync(path.join(appRoot, 'firebase.v2-rules.json'))
+const smokeScriptExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-emulator-smoke.js'))
 
 assert(decisionLogExists, '.chalk/decision-log.md must exist')
 assert(inventoryExists, '.chalk/CHALK-2-V2-RULES-INVENTORY.md must exist')
@@ -37,6 +38,7 @@ assert(fixturesExists, '.chalk/CHALK-2-V2-RULES-FIXTURES.md must exist')
 assert(fixtureSourceExists, 'scripts/v2-rules-fixtures.js must exist')
 assert(seedScriptExists, 'scripts/v2-rules-seed-fixtures.js must exist')
 assert(emulatorConfigExists, 'firebase.v2-rules.json must exist for isolated rules tests')
+assert(smokeScriptExists, 'scripts/v2-rules-emulator-smoke.js must exist')
 
 let decisionLog = ''
 let inventory = ''
