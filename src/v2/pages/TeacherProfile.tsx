@@ -20,11 +20,7 @@ type ProfileTeacher = TeacherRow & {
   nextStep: string
 }
 
-const DEMO_TEACHERS: ProfileTeacher[] = [
-  { id: '1', firstName: 'Alex', lastName: 'Rivera', role: 'teacher', program: 'Demo Early Learning', status: 'active', lastLogin: '5/19/26, 8:32 AM', loginCount: 14, actionCount: 8, lastAction: { type: 'Observation', date: '5/18/26, 2:14 PM' }, classroom: 'Pre-K', focus: 'Open-ended questions', currentPlan: 'Open-ended questions during centers', lastObservation: 'May 18, 2026', nextStep: 'Capture two examples of child-led responses.' },
-  { id: '2', firstName: 'Morgan', lastName: 'Lee', role: 'teacher', program: 'River Center Demo', status: 'active', lastLogin: '5/20/26, 9:15 AM', loginCount: 22, actionCount: 12, lastAction: { type: 'Action Plan', date: '5/19/26, 4:42 PM' }, classroom: 'Toddler', focus: 'Transition Time', currentPlan: 'Reducing transition time', lastObservation: 'May 19, 2026', nextStep: 'Time handwashing transition and compare against baseline.' },
-  { id: '3', firstName: 'Jamie', lastName: 'Chen', role: 'teacher', program: 'Demo Early Learning', status: 'active', lastLogin: '5/14/26, 9:05 PM', loginCount: 7, actionCount: 3, lastAction: { type: 'Observation', date: '5/14/26, 9:05 PM' }, classroom: 'Pre-K', focus: 'Classroom Climate', currentPlan: 'Classroom climate conference', lastObservation: 'May 14, 2026', nextStep: 'Prepare a strengths-first feedback note.' }
-]
+const EMPTY_TEACHERS: ProfileTeacher[] = []
 
 function fullName(teacher: { firstName: string; lastName: string }): string {
   return `${teacher.firstName} ${teacher.lastName}`.trim()
@@ -49,7 +45,7 @@ export function TeacherProfile() {
   const params = new URLSearchParams(history.location.search)
   const queryName = params.get('teacherName') || ''
   const queryProgram = params.get('program') || ''
-  const [teachers, setTeachers] = React.useState<ProfileTeacher[]>(DEMO_TEACHERS)
+  const [teachers, setTeachers] = React.useState<ProfileTeacher[]>(EMPTY_TEACHERS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
 
@@ -79,13 +75,22 @@ export function TeacherProfile() {
   const found = teachers.find(teacher => teacher.id === teacherId)
   const fallbackName = queryName || 'Selected teacher'
   const fallbackParts = fallbackName.split(' ')
-  const teacher = found || {
-    ...DEMO_TEACHERS[0],
+  const teacher: ProfileTeacher = found || {
     id: teacherId,
     firstName: fallbackParts[0] || 'Selected',
     lastName: fallbackParts.slice(1).join(' ') || 'Teacher',
+    role: 'teacher',
     program: queryProgram || 'Selected classroom',
-    classroom: queryProgram || 'Selected classroom'
+    status: 'active',
+    lastLogin: 'Never',
+    loginCount: 0,
+    actionCount: 0,
+    lastAction: { type: 'None', date: 'Never' },
+    classroom: queryProgram || 'Selected classroom',
+    focus: 'Initial coaching cycle',
+    currentPlan: 'No active plan loaded',
+    lastObservation: 'None loaded',
+    nextStep: 'Load live CHALK data or start a baseline observation.'
   }
   const name = fullName(teacher)
 
@@ -115,7 +120,7 @@ export function TeacherProfile() {
         </div>
       </div>
 
-      {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live profile data unavailable; showing preview-safe profile.</div>}
+      {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live profile data unavailable.</div>}
 
       {loading ? (
         <Card><Skeleton height={160} /></Card>

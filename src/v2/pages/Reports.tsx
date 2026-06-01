@@ -14,19 +14,9 @@ import { DashboardStats } from '../lib/types'
 type PracticeRow = { label: string; value: number; tone: 'brand' | 'warm' | 'success' | 'gold' }
 type ReportRow = { id: string; title: string; scope: string; updated: string; status: 'ready' | 'draft' | 'scheduled' }
 
-const DEFAULT_STATS: DashboardStats = { underCoaching: 12, needAttention: 4, observationsThisWeek: 8, activePlans: 6 }
-const PRACTICES: PracticeRow[] = [
-  { label: 'Transition Time', value: 78, tone: 'warm' },
-  { label: 'Classroom Climate', value: 64, tone: 'success' },
-  { label: 'Math Instruction', value: 52, tone: 'gold' },
-  { label: 'Student Engagement', value: 46, tone: 'brand' }
-]
-const REPORTS: ReportRow[] = [
-  { id: 'coach-summary', title: 'Coach activity summary', scope: 'My teachers - last 30 days', updated: 'Today 8:00 AM', status: 'ready' },
-  { id: 'program-rollup', title: 'Program rollup', scope: 'Demo Early Learning', updated: 'Yesterday 5:30 PM', status: 'scheduled' },
-  { id: 'observation-trends', title: 'Observation trend detail', scope: 'All observation tools', updated: 'May 29 2:10 PM', status: 'ready' },
-  { id: 'training-completion', title: 'Training completion export', scope: 'Recommended modules', updated: 'May 28 11:45 AM', status: 'draft' }
-]
+const EMPTY_STATS: DashboardStats = { underCoaching: 0, needAttention: 0, observationsThisWeek: 0, activePlans: 0 }
+const PRACTICES: PracticeRow[] = []
+const REPORTS: ReportRow[] = []
 
 function statusVariant(status: ReportRow['status']): 'neutral' | 'brand' | 'success' {
   if (status === 'ready') return 'success'
@@ -53,7 +43,7 @@ export function Reports() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const toast = useToast()
-  const [stats, setStats] = React.useState<DashboardStats>(DEFAULT_STATS)
+  const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
 
@@ -93,7 +83,7 @@ export function Reports() {
         </div>
       </div>
 
-      {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live report stats unavailable; showing preview-safe data.</div>}
+      {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live report stats unavailable.</div>}
 
       {loading ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>

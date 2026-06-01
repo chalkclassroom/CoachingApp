@@ -23,26 +23,7 @@ type TeacherRow = {
   lastAction: { type: string; date: string }
 }
 
-const ROWS: TeacherRow[] = [
-  { id: '1', firstName: 'Alex', lastName: 'Rivera', role: 'teacher', program: 'Demo Early Learning', status: 'active', lastLogin: '5/19/26, 8:32 AM', loginCount: 14, actionCount: 8, lastAction: { type: 'Observation', date: '5/18/26, 2:14 PM' } },
-  { id: '2', firstName: 'Morgan', lastName: 'Lee', role: 'teacher', program: 'River Center Demo', status: 'active', lastLogin: '5/20/26, 9:15 AM', loginCount: 22, actionCount: 12, lastAction: { type: 'Action Plan', date: '5/19/26, 4:42 PM' } },
-  { id: '3', firstName: 'Jamie', lastName: 'Chen', role: 'teacher', program: 'Demo Early Learning', status: 'active', lastLogin: '5/14/26, 9:05 PM', loginCount: 7, actionCount: 3, lastAction: { type: 'Observation', date: '5/14/26, 9:05 PM' } },
-  { id: '4', firstName: 'Sam', lastName: 'Taylor', role: 'teacher', program: 'River Center Demo', status: 'active', lastLogin: '5/17/26, 7:18 AM', loginCount: 5, actionCount: 2, lastAction: { type: 'Observation', date: '5/15/26, 10:22 AM' } },
-  { id: '5', firstName: 'Casey', lastName: 'Brooks', role: 'teacher', program: 'Demo Early Learning', status: 'active', lastLogin: '5/19/26, 2:48 PM', loginCount: 9, actionCount: 5, lastAction: { type: 'Training', date: '5/19/26, 3:00 PM' } },
-  { id: '6', firstName: 'Riley', lastName: 'Nguyen', role: 'teacher', program: 'Campus Demo Center', status: 'active', lastLogin: '5/18/26, 11:02 AM', loginCount: 6, actionCount: 1, lastAction: { type: 'Observation', date: '5/12/26, 9:30 AM' } },
-  { id: '7', firstName: 'Jordan', lastName: 'Patel', role: 'teacher', program: 'Northside Demo Academy', status: 'active', lastLogin: '5/19/26, 4:14 PM', loginCount: 11, actionCount: 4, lastAction: { type: 'Conference Plan', date: '5/16/26, 1:48 PM' } },
-  { id: '8', firstName: 'Taylor', lastName: 'Morgan', role: 'teacher', program: 'River Center Demo', status: 'active', lastLogin: '5/13/26, 8:01 AM', loginCount: 4, actionCount: 2, lastAction: { type: 'Email', date: '5/13/26, 10:11 AM' } },
-  { id: '9', firstName: 'Avery', lastName: 'Quinn', role: 'teacher', program: 'Westside Demo Learning', status: 'active', lastLogin: 'Never', loginCount: 0, actionCount: 1, lastAction: { type: 'Observation', date: '5/11/26, 2:00 PM' } },
-  { id: '10', firstName: 'Emery', lastName: 'Stone', role: 'teacher', program: 'Campus Demo Center', status: 'active', lastLogin: '5/20/26, 7:42 AM', loginCount: 18, actionCount: 6, lastAction: { type: 'Conference Plan', date: '5/19/26, 11:30 AM' } },
-  { id: '11', firstName: 'Parker', lastName: 'Davis', role: 'teacher', program: 'Community Demo Network', status: 'active', lastLogin: '5/16/26, 1:22 PM', loginCount: 3, actionCount: 1, lastAction: { type: 'Observation', date: '5/16/26, 2:45 PM' } },
-  { id: '12', firstName: 'Quinn', lastName: 'Larsen', role: 'teacher', program: 'Community Demo Network', status: 'active', lastLogin: '5/18/26, 9:55 AM', loginCount: 8, actionCount: 4, lastAction: { type: 'Training', date: '5/18/26, 10:30 AM' } },
-  { id: '13', firstName: 'Harper', lastName: 'Kim', role: 'teacher', program: 'Northside Demo Academy', status: 'active', lastLogin: '5/15/26, 3:12 PM', loginCount: 6, actionCount: 2, lastAction: { type: 'Action Plan', date: '5/14/26, 4:22 PM' } },
-  { id: '14', firstName: 'Reese', lastName: 'Allen', role: 'teacher', program: 'Demo Early Learning', status: 'archived', lastLogin: '11/13/24, 1:20 PM', loginCount: 0, actionCount: 0, lastAction: { type: 'Email', date: '11/13/24, 1:20 PM' } },
-  { id: '15', firstName: 'Devon', lastName: 'Owen', role: 'coach', program: 'Demo Early Learning', status: 'active', lastLogin: '5/20/26, 7:01 AM', loginCount: 25, actionCount: 32, lastAction: { type: 'Observation', date: '5/20/26, 10:00 AM' } },
-  { id: '16', firstName: 'Marlowe', lastName: 'Reed', role: 'coach', program: 'Campus Demo Center', status: 'active', lastLogin: '5/19/26, 4:30 PM', loginCount: 19, actionCount: 27, lastAction: { type: 'Conference Plan', date: '5/19/26, 5:00 PM' } },
-  { id: '17', firstName: 'Skyler', lastName: 'Holt', role: 'coach', program: 'Community Demo Network', status: 'active', lastLogin: '5/20/26, 6:55 AM', loginCount: 21, actionCount: 24, lastAction: { type: 'Action Plan', date: '5/20/26, 9:14 AM' } },
-  { id: '18', firstName: 'Blair', lastName: 'Carter', role: 'admin', program: 'Campus Demo Center', status: 'active', lastLogin: '5/19/26, 11:10 AM', loginCount: 12, actionCount: 8, lastAction: { type: 'Email', date: '5/19/26, 11:20 AM' } },
-]
+const EMPTY_ROWS: TeacherRow[] = []
 
 const roleLabel: Record<TeacherRow['role'], string> = {
   admin: 'Admin', programLeader: 'Program Leader', siteLeader: 'Site Leader',
@@ -118,7 +99,7 @@ export function AllTeachers() {
   const auth = useV2Auth()
   const toast = useToast()
   const csvInputRef = React.useRef<HTMLInputElement | null>(null)
-  const [rows, setRows] = React.useState<TeacherRow[]>(ROWS)
+  const [rows, setRows] = React.useState<TeacherRow[]>(EMPTY_ROWS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
   const [search, setSearch] = React.useState('')

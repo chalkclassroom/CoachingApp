@@ -19,47 +19,7 @@ type Thread = {
   messages: Message[]
 }
 
-const THREADS: Thread[] = [
-  {
-    id: 'thread-transition',
-    teacherId: '2',
-    teacher: 'Morgan Lee',
-    classroom: 'Toddler - River Center Demo',
-    subject: 'Transition plan check-in',
-    status: 'unread',
-    updated: '10:42 AM',
-    messages: [
-      { id: 'm1', author: 'Morgan Lee', body: 'The cleanup cue worked well this morning. I still need help with the handwashing line.', time: '10:22 AM' },
-      { id: 'm2', author: 'Demo Coach', body: 'Good note. I will look for the line-up step during our next observation.', time: '10:42 AM', mine: true }
-    ]
-  },
-  {
-    id: 'thread-questions',
-    teacherId: '1',
-    teacher: 'Alex Rivera',
-    classroom: 'Pre-K - Demo Early Learning',
-    subject: 'Open-ended question prompts',
-    status: 'open',
-    updated: 'Yesterday',
-    messages: [
-      { id: 'm1', author: 'Demo Coach', body: 'Try one follow-up question after each child response in block center.', time: 'Yesterday', mine: true },
-      { id: 'm2', author: 'Alex Rivera', body: 'I added the prompt card to my clipboard for tomorrow.', time: 'Yesterday' }
-    ]
-  },
-  {
-    id: 'thread-conference',
-    teacherId: '7',
-    teacher: 'Jordan Patel',
-    classroom: 'Northside Demo Academy',
-    subject: 'Conference prep materials',
-    status: 'closed',
-    updated: 'May 26',
-    messages: [
-      { id: 'm1', author: 'Jordan Patel', body: 'I uploaded the family-facing notes for review.', time: 'May 26' },
-      { id: 'm2', author: 'Demo Coach', body: 'Reviewed and ready to use.', time: 'May 26', mine: true }
-    ]
-  }
-]
+const EMPTY_THREADS: Thread[] = []
 
 function statusVariant(status: Thread['status']): 'neutral' | 'brand' | 'success' {
   if (status === 'unread') return 'brand'
@@ -72,8 +32,8 @@ export function Messaging() {
   const toast = useToast()
   const params = new URLSearchParams(history.location.search)
   const teacherName = params.get('teacherName')
-  const seeded = React.useMemo(() => {
-    if (!teacherName) return THREADS
+  const initialThreads = React.useMemo(() => {
+    if (!teacherName) return EMPTY_THREADS
     return [{
       id: 'thread-new',
       teacherId: params.get('teacher') || 'preview-teacher',
@@ -82,19 +42,19 @@ export function Messaging() {
       subject: 'New coaching message',
       status: 'open' as const,
       updated: 'Now',
-      messages: [{ id: 'intro', author: 'Demo Coach', body: `Draft a check-in for ${teacherName}.`, time: 'Now', mine: true }]
-    }, ...THREADS]
+      messages: [{ id: 'intro', author: 'Coach', body: `Draft a check-in for ${teacherName}.`, time: 'Now', mine: true }]
+    }, ...EMPTY_THREADS]
   }, [history.location.search])
 
-  const [threads, setThreads] = React.useState<Thread[]>(seeded)
-  const [selectedId, setSelectedId] = React.useState(seeded[0]?.id || '')
+  const [threads, setThreads] = React.useState<Thread[]>(initialThreads)
+  const [selectedId, setSelectedId] = React.useState(initialThreads[0]?.id || '')
   const [search, setSearch] = React.useState('')
   const [draft, setDraft] = React.useState('')
 
   React.useEffect(() => {
-    setThreads(seeded)
-    setSelectedId(seeded[0]?.id || '')
-  }, [seeded])
+    setThreads(initialThreads)
+    setSelectedId(initialThreads[0]?.id || '')
+  }, [initialThreads])
 
   const selected = threads.find(thread => thread.id === selectedId) || threads[0]
   const normalized = search.trim().toLowerCase()
@@ -110,7 +70,7 @@ export function Messaging() {
       ...thread,
       status: 'open',
       updated: 'Now',
-      messages: [...thread.messages, { id: `local-${Date.now()}`, author: 'Demo Coach', body, time: 'Now', mine: true }]
+      messages: [...thread.messages, { id: `local-${Date.now()}`, author: 'Coach', body, time: 'Now', mine: true }]
     } : thread))
     setDraft('')
     toast.success('Message saved in the V2 preview thread.')

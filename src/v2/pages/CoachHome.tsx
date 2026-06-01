@@ -14,30 +14,15 @@ import { createV2Api } from '../lib/api'
 import { ActivityItem, AttentionItem, DashboardStats, PlanItem } from '../lib/types'
 
 const EMPTY_STATS: DashboardStats = {
-  underCoaching: 12,
-  needAttention: 4,
-  observationsThisWeek: 8,
-  activePlans: 6
+  underCoaching: 0,
+  needAttention: 0,
+  observationsThisWeek: 0,
+  activePlans: 0
 }
 
-const STUB_ATTENTION: AttentionItem[] = [
-  { id: 'demo-teacher-1', name: 'Alex Rivera', reason: { text: 'No observation in 45d', variant: 'danger' }, context: 'Pre-K · Demo Early Learning', cta: 'Schedule obs' },
-  { id: 'demo-teacher-2', name: 'Morgan Lee', reason: { text: 'Action plan overdue', variant: 'warn' }, context: 'Toddler · River Center Demo', cta: 'Open plan' },
-  { id: 'demo-teacher-3', name: 'Jamie Chen', reason: { text: 'Magic 9 score dropped', variant: 'warn' }, context: 'Pre-K · Demo Early Learning', cta: 'Send check-in' },
-  { id: 'demo-teacher-4', name: 'Sam Taylor', reason: { text: 'No activity recently', variant: 'neutral' }, context: 'Infant · River Center Demo', cta: 'Send check-in' }
-]
-
-const STUB_ACTIVITY: ActivityItem[] = [
-  { id: 'a1', title: 'Observation completed', meta: 'Morgan Lee · 22 min ago', tone: 'success' },
-  { id: 'a2', title: 'Note sent to teacher', meta: 'Alex Rivera · 1h ago', tone: 'brand' },
-  { id: 'a3', title: 'Action plan flagged overdue', meta: 'Morgan Lee · 3h ago', tone: 'warn' },
-  { id: 'a4', title: 'Training completed', meta: 'Jamie Chen · Classroom Climate · Yesterday', tone: 'success' }
-]
-
-const STUB_PLANS: PlanItem[] = [
-  { id: 'p1', title: 'Reducing transition time', forName: 'Morgan L.', progress: 65, due: 'Due May 28' },
-  { id: 'p2', title: 'Open-ended questions', forName: 'Alex R.', progress: 30, due: 'Due Jun 3' }
-]
+const EMPTY_ATTENTION: AttentionItem[] = []
+const EMPTY_ACTIVITY: ActivityItem[] = []
+const EMPTY_PLANS: PlanItem[] = []
 
 function TimelineItem(props: ActivityItem) {
   const dot = props.tone === 'success' ? 'var(--v2-success)' : props.tone === 'warn' ? 'var(--v2-warm)' : 'var(--v2-brand)'
@@ -105,9 +90,9 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
   const history = useHistory()
   const toast = useToast()
   const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
-  const [attention, setAttention] = React.useState<AttentionItem[]>(STUB_ATTENTION)
-  const [activity, setActivity] = React.useState<ActivityItem[]>(STUB_ACTIVITY)
-  const [plans, setPlans] = React.useState<PlanItem[]>(STUB_PLANS)
+  const [attention, setAttention] = React.useState<AttentionItem[]>(EMPTY_ATTENTION)
+  const [activity, setActivity] = React.useState<ActivityItem[]>(EMPTY_ACTIVITY)
+  const [plans, setPlans] = React.useState<PlanItem[]>(EMPTY_PLANS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
 

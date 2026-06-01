@@ -50,6 +50,19 @@ for (const file of walk(v2Dir)) {
   }
 }
 
+const retiredStubTokens = [
+  'STUB_ATTENTION', 'STUB_ACTIVITY', 'STUB_PLANS', 'DEMO_PLANS', 'DEMO_PLAN', 'DEMO_TEACHERS',
+  'DEFAULT_STATS', 'const ROWS', 'const THREADS', 'const CARDS', 'seeded',
+  'Alex Rivera', 'Morgan Lee', 'Jamie Chen', 'Demo Early Learning', 'River Center Demo', 'Demo Coach'
+]
+for (const file of walk(v2Dir)) {
+  if (!/\.(ts|tsx)$/.test(file)) continue
+  const body = fs.readFileSync(file, 'utf8')
+  for (const token of retiredStubTokens) {
+    assert(!body.includes(token), `retired preview stub token '${token}' found in ${path.relative(appRoot, file)}`)
+  }
+}
+
 const reviewGuide = 'CHALK-2-STAGING-REVIEW-GUIDE.md'
 const stubsGuide = 'CHALK-2-STUBS-DISCLOSURE.md'
 const smokeGuide = 'CHALK-2-GOAL-1-RESPONSIVE-A11Y-SMOKE.md'

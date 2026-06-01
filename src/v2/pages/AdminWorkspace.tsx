@@ -10,22 +10,9 @@ type UserRow = { name: string; role: string; program: string; status: 'active' |
 type ProgramRow = { name: string; sites: number; teachers: number; coaches: number; status: 'active' | 'setup' }
 type SiteRow = { name: string; program: string; teachers: number; coaches: number; lastActivity: string }
 
-const USERS: UserRow[] = [
-  { name: 'Devon Owen', role: 'Coach', program: 'Demo Early Learning', status: 'active', lastLogin: 'Today 7:01 AM' },
-  { name: 'Blair Carter', role: 'Admin', program: 'Campus Demo Center', status: 'active', lastLogin: 'Yesterday 11:10 AM' },
-  { name: 'Harper Kim', role: 'Teacher', program: 'Northside Demo Academy', status: 'invited', lastLogin: 'Never' },
-  { name: 'Reese Allen', role: 'Teacher', program: 'Demo Early Learning', status: 'archived', lastLogin: 'Nov 13, 2024' }
-]
-const PROGRAMS: ProgramRow[] = [
-  { name: 'Demo Early Learning', sites: 2, teachers: 18, coaches: 3, status: 'active' },
-  { name: 'River Center Demo', sites: 1, teachers: 11, coaches: 2, status: 'active' },
-  { name: 'Community Demo Network', sites: 4, teachers: 24, coaches: 4, status: 'setup' }
-]
-const SITES: SiteRow[] = [
-  { name: 'North Campus', program: 'Demo Early Learning', teachers: 9, coaches: 2, lastActivity: 'Today' },
-  { name: 'River Center', program: 'River Center Demo', teachers: 11, coaches: 2, lastActivity: 'Yesterday' },
-  { name: 'Westside Learning', program: 'Community Demo Network', teachers: 7, coaches: 1, lastActivity: 'May 28' }
-]
+const USERS: UserRow[] = []
+const PROGRAMS: ProgramRow[] = []
+const SITES: SiteRow[] = []
 
 function statusVariant(status: string): 'neutral' | 'brand' | 'success' {
   if (status === 'active') return 'success'

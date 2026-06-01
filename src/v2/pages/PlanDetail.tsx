@@ -11,25 +11,17 @@ import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
 import { PlanComment, PlanDetail as V2PlanDetail, PlanStep } from '../lib/types'
 
-const DEMO_PLAN: V2PlanDetail = {
-  id: 'demo-plan',
-  title: 'Reducing transition time',
-  teacherId: 'demo-teacher-2',
-  teacherName: 'Morgan Lee',
-  goal: 'Reduce the average transition time between activities from 5 minutes to under 2 minutes, while maintaining smooth flow and minimal disruption.',
-  benefit: 'Coach will observe two transitions per week and log timing. Target: average under 2:00 by May 28.',
-  dueDate: new Date('2026-05-28T12:00:00'),
-  progress: 65,
-  steps: [
-    { step: 'Introduce a transition song as a cue. Use the same song daily for one week.', person: 'Morgan', timeline: new Date('2026-05-22T12:00:00') },
-    { step: 'Set up the next activity materials before ending the current one.', person: 'Morgan', timeline: new Date('2026-05-25T12:00:00') },
-    { step: 'Self-time each transition using the in-app timer.', person: 'Morgan', timeline: new Date('2026-05-27T12:00:00') }
-  ],
-  comments: [
-    { id: 'c1', name: 'Demo Coach', time: 'May 6 · 2:14 PM', text: 'Here is the transition plan we discussed. The first step is to use one consistent cue before cleanup.' },
-    { id: 'c2', name: 'Morgan Lee', time: 'May 7 · 9:32 AM', text: 'Tried the cleanup cue this morning. The transition was shorter and the children knew what to do next.' },
-    { id: 'c3', name: 'Demo Coach', time: 'May 7 · 11:05 AM', text: 'Good progress. We will keep tracking the timing during the next observation.' }
-  ]
+const EMPTY_PLAN: V2PlanDetail = {
+  id: "",
+  title: "Untitled action plan",
+  teacherId: "",
+  teacherName: "Teacher",
+  goal: "",
+  benefit: "",
+  dueDate: null,
+  progress: 0,
+  steps: [],
+  comments: []
 }
 
 function dateInputValue(date: Date | null): string {
@@ -104,7 +96,7 @@ export function PlanDetail() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const toast = useToast()
-  const [plan, setPlan] = React.useState<V2PlanDetail>(DEMO_PLAN)
+  const [plan, setPlan] = React.useState<V2PlanDetail>(EMPTY_PLAN)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
   const [savedLabel, setSavedLabel] = React.useState('Saved locally')
@@ -124,7 +116,7 @@ export function PlanDetail() {
       if (cached) {
         try {
           const parsed = JSON.parse(cached)
-          setPlan({ ...DEMO_PLAN, ...parsed, dueDate: parsed.dueDate ? new Date(parsed.dueDate) : DEMO_PLAN.dueDate })
+          setPlan({ ...EMPTY_PLAN, ...parsed, dueDate: parsed.dueDate ? new Date(parsed.dueDate) : EMPTY_PLAN.dueDate })
         } catch (error) {
           console.error('Unable to parse local v2 plan draft', error)
         }

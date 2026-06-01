@@ -91,10 +91,10 @@ export function LiveObservation() {
   const toast = useToast()
   const params = new URLSearchParams(location.search)
   const selectedCode = params.get('type')
-  const teacherUid = params.get('teacher') || 'demo-teacher-1'
-  const teacherName = params.get('teacherName') || 'Alex Rivera'
-  const classroomName = params.get('classroom') || 'Demo Early Learning - Pre-K'
-  const sessionName = params.get('session') || 'Morning circle'
+  const teacherUid = params.get('teacher') || 'selected-teacher'
+  const teacherName = params.get('teacherName') || 'Selected teacher'
+  const classroomName = params.get('classroom') || 'Selected classroom'
+  const sessionName = params.get('session') || 'Coaching observation'
   const selectedOption = getObservationTypeOption(selectedCode)
   const storedObservationType = getStoredObservationType(selectedCode)
   const [elapsedSeconds, setElapsedSeconds] = React.useState(0)

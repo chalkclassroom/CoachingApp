@@ -31,13 +31,7 @@ type PlanRow = {
   owner: string
 }
 
-const DEMO_PLANS: PlanRow[] = [
-  { id: 'demo-plan', kind: 'action', title: 'Reducing transition time', teacher: 'Morgan Lee', teacherId: '2', classroom: 'Toddler - River Center Demo', status: 'active', progress: 65, due: 'May 28, 2026', updated: 'Today 9:12 AM', focus: 'Transition Time', owner: 'Demo Coach' },
-  { id: 'open-ended-questions', kind: 'action', title: 'Open-ended questions during centers', teacher: 'Alex Rivera', teacherId: '1', classroom: 'Pre-K - Demo Early Learning', status: 'overdue', progress: 40, due: 'May 24, 2026', updated: 'Yesterday 4:10 PM', focus: 'Language Modeling', owner: 'Demo Coach' },
-  { id: 'classroom-climate-check', kind: 'conference', title: 'Classroom climate conference', teacher: 'Jamie Chen', teacherId: '3', classroom: 'Pre-K - Demo Early Learning', status: 'sent', progress: 100, due: 'Jun 4, 2026', updated: 'May 29 2:30 PM', focus: 'Conference Plan', owner: 'Site Lead' },
-  { id: 'math-small-groups', kind: 'action', title: 'Math language in small groups', teacher: 'Emery Stone', teacherId: '10', classroom: 'Campus Demo Center', status: 'draft', progress: 15, due: 'Jun 10, 2026', updated: 'May 27 11:45 AM', focus: 'Math Instruction', owner: 'Demo Coach' },
-  { id: 'family-conference', kind: 'conference', title: 'Family conference preparation', teacher: 'Jordan Patel', teacherId: '7', classroom: 'Northside Demo Academy', status: 'active', progress: 55, due: 'Jun 12, 2026', updated: 'May 26 1:20 PM', focus: 'Conference Plan', owner: 'Program Lead' }
-]
+const EMPTY_PLANS: PlanRow[] = []
 
 const statusVariant: Record<PlanStatus, 'neutral' | 'warn' | 'danger' | 'success' | 'brand'> = {
   draft: 'neutral',
@@ -126,7 +120,7 @@ export function ActionPlans() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const toast = useToast()
-  const [plans, setPlans] = React.useState<PlanRow[]>(DEMO_PLANS)
+  const [plans, setPlans] = React.useState<PlanRow[]>(EMPTY_PLANS)
   const [filter, setFilter] = React.useState<PlanFilter>('active')
   const [search, setSearch] = React.useState('')
   const [loading, setLoading] = React.useState(false)

@@ -21,14 +21,7 @@ type TrainingCard = {
   ctaVariant?: 'default' | 'primary'
 }
 
-const CARDS: TrainingCard[] = [
-  { id: 'transitions', title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: '⚠ 3 teachers flagged in this area', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
-  { id: 'questions', title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: '⚠ Recurring theme in recent observations', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
-  { id: 'climate', title: 'Classroom Climate', icon: '💚', tone: 'success', reason: 'win', reasonText: '✓ Refresh available', ctaText: 'Refresh (8 min)' },
-  { id: 'discipline', title: 'Conscious Discipline Foundations', icon: '📚', tone: 'purple', reason: 'skip', reasonText: 'Completed previously — skip unless needed', ctaText: 'Review notes' },
-  { id: 'magic9', title: 'Using Magic 9 effectively', icon: '📊', tone: 'gold', reason: 'skip', reasonText: 'Optional · recommended for new coaches', ctaText: 'Not now' },
-  { id: 'plans', title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: '⚠ Recent plans need measurable goals', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
-]
+const EMPTY_CARDS: TrainingCard[] = []
 
 const toneBg: Record<TrainingCard['tone'], string> = {
   warm: 'linear-gradient(135deg, #f0523d, #d63a26)',
@@ -61,7 +54,7 @@ export function Training() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const toast = useToast()
-  const [cards, setCards] = React.useState<TrainingCard[]>(CARDS)
+  const [cards, setCards] = React.useState<TrainingCard[]>(EMPTY_CARDS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
   const [view, setView] = React.useState<TrainingView>('recommended')
