@@ -17,6 +17,11 @@ const hasObservationDashboardIndex = indexes.indexes.some(index => {
 })
 assert(hasObservationDashboardIndex, 'firestore.indexes.json must include observations observedBy ASC + end ASC index')
 
+const store = fs.readFileSync('src/state/store.ts', 'utf8')
+assert(store.includes("process.env.NODE_ENV === 'development'"), 'redux-logger must be gated to development builds only')
+assert(!store.includes('const logger = createLogger()'), 'redux-logger must not be instantiated unconditionally')
+assert(store.includes(': [thunk]'), 'production/staging Redux middleware must omit redux-logger')
+
 const webpack = fs.readFileSync('webpack.config.js', 'utf8')
 assert(webpack.includes('class StaticPublicAssetPlugin'), 'webpack must emit static manifest files into build')
 assert(webpack.includes("'manifest.json'"), 'webpack static asset plugin must emit manifest.json')

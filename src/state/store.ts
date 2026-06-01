@@ -12,8 +12,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const logger = createLogger()
-const middleware = [logger, thunk]
+const middleware = process.env.NODE_ENV === 'development'
+  ? [createLogger(), thunk]
+  : [thunk]
 
 const composeEnhancers =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
