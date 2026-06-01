@@ -5,8 +5,12 @@ import { useTheme } from '../hooks/useTheme'
 const NAV_ITEMS = [
   { key: 'home', label: 'Home', path: '/v2/home' },
   { key: 'teachers', label: 'Teachers', path: '/v2/teachers' },
-  { key: 'observation', label: 'Observation', path: '/v2/observation' },
+  { key: 'observation', label: 'Observe', path: '/v2/observation' },
   { key: 'plans', label: 'Plans', path: '/v2/plans' },
+  { key: 'messages', label: 'Messages', path: '/v2/messages' },
+  { key: 'resources', label: 'Resources', path: '/v2/resources' },
+  { key: 'reports', label: 'Reports', path: '/v2/reports' },
+  { key: 'admin', label: 'Admin', path: '/v2/admin' },
   { key: 'training', label: 'Training', path: '/v2/training' }
 ]
 
@@ -60,7 +64,7 @@ export function AppShell(props: {
         <div style={{
           display: 'flex',
           gap: '0.25rem',
-          flex: '1 1 460px',
+          flex: '1 1 620px',
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
@@ -75,7 +79,7 @@ export function AppShell(props: {
                   fontSize: '0.88rem',
                   fontWeight: active ? 600 : 500,
                   color: active ? 'var(--v2-brand-darker)' : 'var(--v2-muted)',
-                  padding: '0.55rem 1rem',
+                  padding: '0.5rem 0.72rem',
                   borderRadius: 8,
                   cursor: 'pointer',
                   position: 'relative',
@@ -117,13 +121,16 @@ export function AppShell(props: {
           <div style={{
             display: 'flex', alignItems: 'center', gap: '0.55rem',
             padding: '0.3rem 0.85rem 0.3rem 0.3rem',
-            background: 'var(--v2-bg-soft)',
+            background: props.activeKey === 'account' ? 'var(--v2-brand-softer)' : 'var(--v2-bg-soft)',
             borderRadius: 'var(--v2-radius-pill)',
             fontSize: '0.85rem',
             fontWeight: 600,
             color: 'var(--v2-ink-soft)',
             cursor: 'pointer'
-          }}>
+          }}
+          onClick={() => props.onNavigate?.('/v2/account')}
+          title="Account settings"
+          >
             <Avatar name={userName} size={28} />
             <span>{userName.split(' ')[0]}</span>
           </div>

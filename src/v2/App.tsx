@@ -6,6 +6,13 @@ import { AllTeachers } from './pages/AllTeachers'
 import { LiveObservation } from './pages/LiveObservation'
 import { PlanDetail } from './pages/PlanDetail'
 import { Training } from './pages/Training'
+import { ActionPlans } from './pages/ActionPlans'
+import { Messaging } from './pages/Messaging'
+import { Resources } from './pages/Resources'
+import { Reports } from './pages/Reports'
+import { AdminWorkspace } from './pages/AdminWorkspace'
+import { TeacherProfile } from './pages/TeacherProfile'
+import { AccountSettings } from './pages/AccountSettings'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { EmptyState } from './components/EmptyState'
 import { Toast } from './components/Toast'
@@ -30,6 +37,11 @@ function V2Routes() {
     path.startsWith('/v2/teachers') ? 'teachers' :
     path.startsWith('/v2/observation') ? 'observation' :
     path.startsWith('/v2/plans') ? 'plans' :
+    path.startsWith('/v2/messages') ? 'messages' :
+    path.startsWith('/v2/resources') ? 'resources' :
+    path.startsWith('/v2/reports') ? 'reports' :
+    path.startsWith('/v2/admin') ? 'admin' :
+    path.startsWith('/v2/account') ? 'account' :
     path.startsWith('/v2/training') ? 'training' :
     'home'
 
@@ -48,9 +60,16 @@ function V2Routes() {
         )}>
           <Switch>
             <Route path="/v2/home" render={() => <CoachHome userName={userName} />} />
-            <Route path="/v2/teachers" render={() => <AllTeachers />} />
+            <Route path="/v2/teachers/:teacherId" render={() => <TeacherProfile />} />
+            <Route exact path="/v2/teachers" render={() => <AllTeachers />} />
             <Route path="/v2/observation" render={() => <LiveObservation />} />
-            <Route path="/v2/plans/:planId?" render={() => <PlanDetail />} />
+            <Route exact path="/v2/plans" render={() => <ActionPlans />} />
+            <Route path="/v2/plans/:planId" render={() => <PlanDetail />} />
+            <Route path="/v2/messages" render={() => <Messaging />} />
+            <Route path="/v2/resources" render={() => <Resources />} />
+            <Route path="/v2/reports" render={() => <Reports />} />
+            <Route path="/v2/admin" render={() => <AdminWorkspace />} />
+            <Route path="/v2/account" render={() => <AccountSettings />} />
             <Route path="/v2/training" render={() => <Training />} />
             <Redirect to="/v2/home" />
           </Switch>

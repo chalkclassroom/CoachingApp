@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
@@ -112,6 +113,7 @@ const Preset = (p: { active?: boolean; children: React.ReactNode }) => (
 )
 
 export function AllTeachers() {
+  const history = useHistory()
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const toast = useToast()
@@ -216,6 +218,10 @@ export function AllTeachers() {
     reader.readAsText(file)
   }
 
+  const openProfile = (row: TeacherRow) => {
+    history.push(`/v2/teachers/${encodeURIComponent(row.id)}?teacherName=${encodeURIComponent(`${row.firstName} ${row.lastName}`.trim())}&program=${encodeURIComponent(row.program)}`)
+  }
+
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       {/* Header */}
@@ -286,10 +292,10 @@ export function AllTeachers() {
         ) : filteredRows.length === 0 ? (
           <EmptyState title="No teammates match these filters" description="Adjust the search, role, status, or date range and try again." />
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', borderSpacing: 0, minWidth: 1100 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', borderSpacing: 0, minWidth: 1180 }}>
             <thead>
               <tr style={{ background: 'var(--v2-bg-soft)' }}>
-                {['Name', 'Role · Program', 'Status', 'Last Login', 'Login Count', 'Action Count', 'Last Action'].map((h, i) => (
+                {['Name', 'Role · Program', 'Status', 'Last Login', 'Login Count', 'Action Count', 'Last Action', ''].map((h, i) => (
                   <th key={i} style={{
                     textAlign: 'left',
                     padding: '0.85rem 1rem',
@@ -337,6 +343,9 @@ export function AllTeachers() {
                   </td>
                   <td style={{ padding: '0.85rem 1rem', fontSize: '0.88rem', color: 'var(--v2-ink-soft)' }}>
                     {r.lastAction.type} — {r.lastAction.date}
+                  </td>
+                  <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
+                    <Button size="sm" onClick={() => openProfile(r)}>Open</Button>
                   </td>
                 </tr>
               ))}
