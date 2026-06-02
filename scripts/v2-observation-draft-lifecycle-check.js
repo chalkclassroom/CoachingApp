@@ -25,6 +25,9 @@ assert(liveObservation.includes("setNotes(draft.notes"), "draft restore must rep
 assert(liveObservation.includes("setElapsedSeconds("), "draft restore must replay elapsed seconds")
 assert(liveObservation.includes("Draft restored"), "draft restore must surface a restored status")
 assert(liveObservation.includes("Unable to restore v2 observation draft"), "draft restore must handle malformed local data safely")
+assert(!liveObservation.includes("Photo capture is outside this release"), "LiveObservation must not show unsupported photo capture controls")
+assert(!liveObservation.includes("Audio capture is outside this release"), "LiveObservation must not show unsupported audio capture controls")
+assert(!liveObservation.includes("Add photo note"), "LiveObservation shortcuts must not advertise unsupported photo notes")
 
 assert(api.includes("saveObservationDraft"), "V2 API must expose saveObservationDraft")
 assert(api.includes("observationDraft: draft"), "saveObservationDraft must write the user observationDraft field")

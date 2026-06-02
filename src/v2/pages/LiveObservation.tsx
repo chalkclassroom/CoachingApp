@@ -268,10 +268,6 @@ export function LiveObservation() {
         event.preventDefault()
         setNotes(current => appendTimestamp(current, elapsedSeconds, selectedOption.label))
       }
-      if (key === 'p') {
-        event.preventDefault()
-        toast.info('Photo capture is outside this release; attach evidence in legacy CHALK for now.')
-      }
       if (event.key === 'Enter') {
         event.preventDefault()
         setAlignmentOpen(true)
@@ -554,8 +550,6 @@ export function LiveObservation() {
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.1rem', paddingTop: '1.1rem', borderTop: '1px solid var(--v2-line)', flexWrap: 'wrap' }}>
-            <Button onClick={() => toast.info('Photo capture is outside this release; attach evidence in legacy CHALK for now.')}>📸 Photo</Button>
-            <Button onClick={() => toast.info('Audio capture is outside this release; use written notes for this sprint.')}>🎙 Audio</Button>
             <Button onClick={() => insertTag(selectedOption.label)}>🏷 Tag</Button>
             <Button onClick={startNewObservation}>Switch type</Button>
             <Button onClick={() => setPaused(current => !current)}>{paused ? '▶ Resume' : '⏸ Pause'}</Button>
@@ -574,7 +568,7 @@ export function LiveObservation() {
 
           <Card padding="1.15rem">
             <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.75rem' }}>⚡ Shortcuts</h4>
-            {['Timestamp|⌘ T', 'Insert tag|⌘ K', 'Add photo note|⌘ P', 'End session|⌘ ↵'].map(item => {
+            {['Timestamp|⌘ T', 'Insert tag|⌘ K', 'End session|⌘ ↵'].map(item => {
               const [label, key] = item.split('|')
               return (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', fontSize: '0.82rem' }}>
