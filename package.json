@@ -128,7 +128,8 @@
     "v2:conference-plan-check": "node scripts/v2-conference-plan-delegation-check.js",
     "v2:action-plan-contract:test": "node scripts/v2-action-plan-contract-check.js",
     "v2:observation-draft:test": "node scripts/v2-observation-draft-lifecycle-check.js",
-    "v2:observation-completion-gate:test": "node scripts/v2-observation-completion-gate-check.js"
+    "v2:observation-completion-gate:test": "node scripts/v2-observation-completion-gate-check.js",
+    "v2:messaging-delegation-check": "node scripts/v2-messaging-delegation-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"
