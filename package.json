@@ -134,7 +134,8 @@
     "v2:resources-catalog-check": "node scripts/v2-resources-catalog-check.js",
     "v2:training-truthfulness-check": "node scripts/v2-training-truthfulness-check.js",
     "v2:account-readonly-check": "node scripts/v2-account-readonly-check.js",
-    "v2:role-access-check": "node scripts/v2-role-access-check.js"
+    "v2:role-access-check": "node scripts/v2-role-access-check.js",
+    "v2:reports-delegation-check": "node scripts/v2-reports-delegation-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -2,26 +2,20 @@ import * as React from 'react'
 import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
-import { Pill } from '../components/Pill'
 import { Skeleton } from '../components/Skeleton'
 import { Stat } from '../components/Stat'
-import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
 import { DashboardStats } from '../lib/types'
 
 type PracticeRow = { label: string; value: number; tone: 'brand' | 'warm' | 'success' | 'gold' }
-type ReportRow = { id: string; title: string; scope: string; updated: string; status: 'ready' | 'draft' | 'scheduled' }
 
 const EMPTY_STATS: DashboardStats = { underCoaching: 0, needAttention: 0, observationsThisWeek: 0, activePlans: 0 }
 const PRACTICES: PracticeRow[] = []
-const REPORTS: ReportRow[] = []
 
-function statusVariant(status: ReportRow['status']): 'neutral' | 'brand' | 'success' {
-  if (status === 'ready') return 'success'
-  if (status === 'scheduled') return 'brand'
-  return 'neutral'
+function openLegacyReports() {
+  window.location.href = '/Reports'
 }
 
 function Bar(props: PracticeRow) {
@@ -42,7 +36,6 @@ function Bar(props: PracticeRow) {
 export function Reports() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
-  const toast = useToast()
   const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
@@ -74,13 +67,10 @@ export function Reports() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Reports</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Operational reporting for coaching activity, observation trends, and training follow-through.
+            Live coaching activity summary. Advanced report exports and scheduling remain in legacy CHALK until the V2 reporting contract is complete.
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Button onClick={() => toast.info('CSV export will reuse the legacy report export backend after signoff.')}>Export CSV</Button>
-          <Button variant="primary" onClick={() => toast.info('Report scheduling is mapped for the admin release slice.')}>Schedule report</Button>
-        </div>
+        <Button variant="primary" onClick={openLegacyReports}>Open legacy reports</Button>
       </div>
 
       {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live report stats unavailable.</div>}
@@ -101,40 +91,28 @@ export function Reports() {
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 0.9fr) minmax(420px, 1.4fr)', gap: '1rem' }}>
         <Card>
           <CardHeader title="Observation practice trends" />
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {PRACTICES.map(row => <Bar key={row.label} {...row} />)}
-          </div>
-          <div style={{ color: 'var(--v2-muted)', fontSize: '0.78rem', marginTop: '1rem' }}>
-            Percent indicates teachers with at least one recent observation or plan touch in that practice area.
-          </div>
+          {PRACTICES.length === 0 ? (
+            <EmptyState
+              title="No live practice trend data"
+              description="Practice trend charts are delegated to legacy CHALK until V2 can match the report contract with live data."
+              cta={<Button onClick={openLegacyReports}>Open legacy reports</Button>}
+            />
+          ) : (
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              {PRACTICES.map(row => <Bar key={row.label} {...row} />)}
+            </div>
+          )}
         </Card>
 
         <Card padding="0" style={{ overflow: 'hidden' }}>
           <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--v2-line-soft)' }}>
             <CardHeader title="Saved reports" />
           </div>
-          {REPORTS.length === 0 ? <EmptyState title="No saved reports" description="Create a report to see it here." /> : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 620 }}>
-              <thead>
-                <tr style={{ background: 'var(--v2-bg-soft)' }}>
-                  {['Report', 'Scope', 'Updated', 'Status', ''].map(header => (
-                    <th key={header} style={{ textAlign: 'left', padding: '0.85rem 1rem', color: 'var(--v2-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--v2-line)' }}>{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {REPORTS.map(report => (
-                  <tr key={report.id} style={{ borderBottom: '1px solid var(--v2-line-soft)' }}>
-                    <td style={{ padding: '0.9rem 1rem', fontWeight: 700 }}>{report.title}</td>
-                    <td style={{ padding: '0.9rem 1rem', color: 'var(--v2-muted)' }}>{report.scope}</td>
-                    <td style={{ padding: '0.9rem 1rem', color: 'var(--v2-muted)' }}>{report.updated}</td>
-                    <td style={{ padding: '0.9rem 1rem' }}><Pill variant={statusVariant(report.status)}>{report.status}</Pill></td>
-                    <td style={{ padding: '0.9rem 1rem', textAlign: 'right' }}><Button size="sm" onClick={() => toast.info(`${report.title} preview opened from V2 reports.`)}>Open</Button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <EmptyState
+            title="Saved reports remain in legacy CHALK"
+            description="Use the legacy reporting workspace for saved reports, exports, and scheduled report delivery."
+            cta={<Button onClick={openLegacyReports}>Open legacy reports</Button>}
+          />
         </Card>
       </div>
     </div>
