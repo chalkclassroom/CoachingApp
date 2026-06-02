@@ -298,10 +298,6 @@ export async function saveActionPlanDraft(firebase: any, planId: string, patch: 
 
   if (patch.steps) {
     await Promise.all(patch.steps.map((step, index) => {
-      if (firebase.saveActionStep) {
-        return firebase.saveActionStep(planId, String(index), step.step || '', step.person || '', step.timeline || null)
-      }
-
       return firebase.db.collection('actionPlans').doc(planId).collection('actionSteps').doc(String(index)).set({
         step: step.step || '',
         person: step.person || '',
