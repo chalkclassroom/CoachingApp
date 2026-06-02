@@ -1,25 +1,30 @@
 import * as React from 'react'
-import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
 import { Pill } from '../components/Pill'
-import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
+
+function ReadOnlyPreference(props: { title: string; value: string; description: string }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', alignItems: 'flex-start', border: '1px solid var(--v2-line-soft)', borderRadius: 8, padding: '0.85rem', background: 'var(--v2-bg-soft)' }}>
+      <span>
+        <strong>{props.title}</strong>
+        <div style={{ color: 'var(--v2-muted)', fontSize: '0.8rem', marginTop: '0.2rem' }}>{props.description}</div>
+      </span>
+      <Pill variant="neutral">{props.value}</Pill>
+    </div>
+  )
+}
 
 export function AccountSettings() {
   const auth = useV2Auth()
-  const toast = useToast()
   const userName = auth.user ? `${auth.user.firstName} ${auth.user.lastName}`.trim() || 'Coach' : 'Preview coach'
-  const [settings, setSettings] = React.useState({ digest: true, planAlerts: true, theme: 'system', defaultRange: '30' })
-
-  const toggle = (key: 'digest' | 'planAlerts') => setSettings(current => ({ ...current, [key]: !current[key] }))
-  const save = () => toast.success('Account preferences saved for the V2 preview.')
 
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1100, margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Account settings</h1>
-        <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-          Profile, notifications, and workspace defaults for {userName}.
+        <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem', lineHeight: 1.5 }}>
+          Profile and workspace preferences for {userName}. This V2 screen is read-only; editable account preferences are managed in legacy CHALK until the persistence contract is approved.
         </div>
       </div>
 
@@ -33,25 +38,11 @@ export function AccountSettings() {
         </Card>
 
         <Card>
-          <CardHeader title="Workspace preferences" />
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            <label style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
-              <span><strong>Daily coaching digest</strong><div style={{ color: 'var(--v2-muted)', fontSize: '0.8rem' }}>Summary of teachers needing attention.</div></span>
-              <input type="checkbox" checked={settings.digest} onChange={() => toggle('digest')} />
-            </label>
-            <label style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', alignItems: 'center' }}>
-              <span><strong>Action plan alerts</strong><div style={{ color: 'var(--v2-muted)', fontSize: '0.8rem' }}>Notify when plans are due or teacher-visible.</div></span>
-              <input type="checkbox" checked={settings.planAlerts} onChange={() => toggle('planAlerts')} />
-            </label>
-            <label style={{ display: 'grid', gap: '0.35rem' }}>
-              <strong>Default report range</strong>
-              <select value={settings.defaultRange} onChange={(event) => setSettings(current => ({ ...current, defaultRange: event.currentTarget.value }))} style={{ border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.7rem', background: 'var(--v2-white)' }}>
-                <option value="7">7 days</option>
-                <option value="30">30 days</option>
-                <option value="90">90 days</option>
-              </select>
-            </label>
-            <Button variant="primary" onClick={save} style={{ justifySelf: 'start' }}>Save preferences</Button>
+          <CardHeader title="Workspace preferences" badge={<Pill variant="neutral">Read-only</Pill>} />
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            <ReadOnlyPreference title="Daily coaching digest" value="Legacy" description="Notification preferences stay in legacy CHALK for this release." />
+            <ReadOnlyPreference title="Action plan alerts" value="Legacy" description="Due-plan and teacher-visible alerts use the existing CHALK notification path." />
+            <ReadOnlyPreference title="Default report range" value="30 days" description="V2 reports default to a safe 30-day window until saved preferences are implemented." />
           </div>
         </Card>
       </div>
