@@ -7,6 +7,7 @@ describe('CHALK 2.0 preview readiness', () => {
     '/v2/resources',
     '/v2/reports',
     '/v2/admin',
+    '/v2/leader',
     '/v2/training',
     '/v2/account'
   ]
