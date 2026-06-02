@@ -111,6 +111,11 @@ export function LiveObservation() {
   const [completing, setCompleting] = React.useState(false)
   const startedRef = React.useRef(false)
   const restoredDraftRef = React.useRef(false)
+  const hasCanonicalObservationEntries = Array.isArray(firebase?.currentObservation?.entries) && firebase.currentObservation.entries.length > 0
+  const canCompleteObservation = !auth.user || hasCanonicalObservationEntries
+  const completionGateMessage = auth.user && !hasCanonicalObservationEntries
+    ? 'Completion requires coded observation entries from the legacy observation tools. V2 notes are saved as a draft.'
+    : ''
 
   const selectObservationType = (code: string) => {
     const next = new URLSearchParams(location.search)
@@ -288,6 +293,12 @@ export function LiveObservation() {
 
   const completeObservation = () => {
     if (!selectedOption || !storedObservationType || needsChecklist || completing) {
+      return
+    }
+
+    if (auth.user && !hasCanonicalObservationEntries) {
+      toast.info('Completion requires coded observation entries. V2 notes are saved as a draft.')
+      setDraftStatus('Draft saved')
       return
     }
 
@@ -605,6 +616,12 @@ export function LiveObservation() {
               <Button size="sm" onClick={() => setAlignmentOpen(false)}>Close</Button>
             </div>
 
+            {completionGateMessage && (
+              <div style={{ border: '1px solid var(--v2-warm)', background: 'var(--v2-warm-soft)', color: 'var(--v2-warm-dark)', borderRadius: 8, padding: '0.75rem 0.85rem', fontSize: '0.84rem', lineHeight: 1.45, marginBottom: '0.85rem', fontWeight: 600 }}>
+                {completionGateMessage}
+              </div>
+            )}
+
             <div style={{ display: 'grid', gap: '0.85rem' }}>
               <div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--v2-muted)', marginBottom: '0.45rem' }}>Framework tags</div>
@@ -623,7 +640,7 @@ export function LiveObservation() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
               <Button onClick={() => setAlignmentOpen(false)}>Keep observing</Button>
-              <Button variant="primary" disabled={completing} onClick={completeObservation}>{completing ? 'Completing...' : 'Complete observation'}</Button>
+              <Button variant="primary" disabled={!canCompleteObservation || completing} onClick={completeObservation}>{completing ? 'Completing...' : 'Complete observation'}</Button>
             </div>
           </Card>
         </div>
