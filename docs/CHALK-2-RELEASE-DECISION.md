@@ -21,7 +21,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 - Account settings with live V2 preference persistence and locked identity fields.
 - Reports summary and practice trends backed by live observations; exports/scheduling remain legacy.
 - Admin live user list with archive/restore; create/import/program/site workflows remain legacy.
-- Leader workflow delegation to legacy routes.
+- Leader live summary with advanced leader workflows delegated to legacy routes.
 - Coach/site/program profile report delegation to legacy routes.
 
 ## Delegated modules
@@ -30,7 +30,7 @@ These modules are intentionally delegated to legacy CHALK for this release decis
 
 - Advanced report exports and report scheduling.
 - Admin create/import/role-edit/program/site writes.
-- Leader dashboards, users, teachers, coaches, sites, archive, and all-users workflows.
+- Detailed leader dashboards, users, teachers, coaches, sites, archive, and all-users workflows.
 - Coach profile, site profile, and program profile reports.
 - Conference plan creation/editing.
 - Messaging email delivery and attachments.

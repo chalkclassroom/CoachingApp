@@ -41,7 +41,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 Use this language before staging signoff:
 
 ```text
-The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, report exports/scheduling/profile reports, Leader workflows, profile reports, conference plans, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
+The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, report exports/scheduling/profile reports, detailed Leader workflows, profile reports, conference plans, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
 ```
 
 ---

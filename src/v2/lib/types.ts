@@ -47,6 +47,14 @@ export type AdminUserRow = {
   sites: string[]
 }
 
+export type LeaderSummary = {
+  programs: number
+  sites: number
+  teachers: number
+  coaches: number
+  archivedUsers: number
+}
+
 export type DashboardStats = {
   underCoaching: number
   needAttention: number

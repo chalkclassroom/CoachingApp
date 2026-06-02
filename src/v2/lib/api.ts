@@ -6,6 +6,7 @@ import {
   AttentionItem,
   DashboardStats,
   DateRange,
+  LeaderSummary,
   MessagingEmail,
   ObservationSession,
   PlanDetail,
@@ -574,6 +575,45 @@ export async function setUserArchived(firebase: any, userId: string, archived: b
   return { archived }
 }
 
+function intersects(left: string[] = [], right: string[] = []): boolean {
+  if (left.length === 0 || right.length === 0) return false
+  return left.some(value => right.includes(value))
+}
+
+function userInLeaderScope(row: AdminUserRow, leader: { role?: string; programs?: string[]; sites?: string[] }): boolean {
+  if (leader.role === 'admin') return true
+  const leaderPrograms = leader.programs || []
+  const leaderSites = leader.sites || []
+  if (leaderPrograms.length === 0 && leaderSites.length === 0) return true
+  return intersects(row.programs, leaderPrograms) || intersects(row.sites, leaderSites)
+}
+
+export async function getLeaderSummary(firebase: any, leader: { role?: string; programs?: string[]; sites?: string[] }): Promise<LeaderSummary> {
+  return safeRead('Unable to load v2 leader summary', async () => {
+    const [users, programsSnapshot, sitesSnapshot] = await Promise.all([
+      getAdminUsers(firebase),
+      firebase.db.collection('programs').get().catch(() => null),
+      firebase.db.collection('sites').get().catch(() => null)
+    ])
+    const scopedUsers = users.filter(user => userInLeaderScope(user, leader))
+    const leaderPrograms = leader.programs || []
+    const leaderSites = leader.sites || []
+    const programs = programsSnapshot
+      ? programsSnapshot.docs.filter((doc: any) => leader.role === 'admin' || leaderPrograms.length === 0 || leaderPrograms.includes(doc.id)).length
+      : leaderPrograms.length
+    const sites = sitesSnapshot
+      ? sitesSnapshot.docs.filter((doc: any) => leader.role === 'admin' || leaderSites.length === 0 || leaderSites.includes(doc.id) || leaderPrograms.includes((doc.data() || {}).programs)).length
+      : leaderSites.length
+    return {
+      programs,
+      sites,
+      teachers: scopedUsers.filter(user => user.role === 'teacher' && !user.archived).length,
+      coaches: scopedUsers.filter(user => user.role === 'coach' && !user.archived).length,
+      archivedUsers: scopedUsers.filter(user => user.archived).length
+    }
+  }, { programs: 0, sites: 0, teachers: 0, coaches: 0, archivedUsers: 0 })
+}
+
 export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
@@ -599,6 +639,7 @@ export function createV2Api(firebase: any) {
     getMessagingEmails: (uid: string) => getMessagingEmails(firebase, uid),
     saveMessagingDraft: (uid: string, draft: Partial<MessagingEmail>) => saveMessagingDraft(firebase, uid, draft),
     getAdminUsers: () => getAdminUsers(firebase),
-    setUserArchived: (userId: string, archived: boolean) => setUserArchived(firebase, userId, archived)
+    setUserArchived: (userId: string, archived: boolean) => setUserArchived(firebase, userId, archived),
+    getLeaderSummary: (leader: { role?: string; programs?: string[]; sites?: string[] }) => getLeaderSummary(firebase, leader)
   }
 }
