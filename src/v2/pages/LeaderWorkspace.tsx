@@ -13,6 +13,12 @@ const LEADER_ROUTES = [
   { label: 'All users', path: '/LeadersAllUsers' }
 ]
 
+const PROFILE_ROUTES = [
+  { label: 'Coach profile report', path: '/CoachProfile' },
+  { label: 'Site profile report', path: '/SiteProfile' },
+  { label: 'Program profile report', path: '/ProgramProfile' }
+]
+
 function openLegacy(path: string) {
   window.location.href = path
 }
@@ -31,6 +37,20 @@ export function LeaderWorkspace() {
         <CardHeader title="Legacy leader workflows" />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
           {LEADER_ROUTES.map(route => (
+            <Button key={route.path} onClick={() => openLegacy(route.path)} style={{ justifyContent: 'center' }}>
+              {route.label}
+            </Button>
+          ))}
+        </div>
+      </Card>
+
+      <Card style={{ marginTop: '1rem' }}>
+        <CardHeader title="Profile reports remain in legacy CHALK" />
+        <div style={{ color: 'var(--v2-muted)', fontSize: '0.88rem', lineHeight: 1.55, marginBottom: '1rem' }}>
+          Coach, site, and program profile reports depend on legacy report filters and Cloud Function contracts. V2 links directly to the legacy profile workflows instead of rendering partial data.
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '0.75rem' }}>
+          {PROFILE_ROUTES.map(route => (
             <Button key={route.path} onClick={() => openLegacy(route.path)} style={{ justifyContent: 'center' }}>
               {route.label}
             </Button>
