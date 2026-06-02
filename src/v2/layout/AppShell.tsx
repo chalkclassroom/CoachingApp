@@ -1,18 +1,8 @@
 import * as React from 'react'
 import { Avatar } from '../components/Avatar'
 import { useTheme } from '../hooks/useTheme'
+import { getV2NavItemsForRole } from '../access'
 
-const NAV_ITEMS = [
-  { key: 'home', label: 'Home', path: '/v2/home' },
-  { key: 'teachers', label: 'Teachers', path: '/v2/teachers' },
-  { key: 'observation', label: 'Observe', path: '/v2/observation' },
-  { key: 'plans', label: 'Plans', path: '/v2/plans' },
-  { key: 'messages', label: 'Messages', path: '/v2/messages' },
-  { key: 'resources', label: 'Resources', path: '/v2/resources' },
-  { key: 'reports', label: 'Reports', path: '/v2/reports' },
-  { key: 'admin', label: 'Admin', path: '/v2/admin' },
-  { key: 'training', label: 'Training', path: '/v2/training' }
-]
 
 export function AppShell(props: {
   activeKey: string
@@ -22,6 +12,7 @@ export function AppShell(props: {
 }) {
   const { theme, toggle } = useTheme()
   const userName = props.user?.name ?? 'Guest'
+  const navItems = getV2NavItemsForRole(props.user?.role)
 
   return (
     <>
@@ -68,7 +59,7 @@ export function AppShell(props: {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-          {NAV_ITEMS.map(item => {
+          {navItems.map(item => {
             const active = item.key === props.activeKey
             return (
               <a

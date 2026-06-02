@@ -15,11 +15,13 @@ import { TeacherProfile } from './pages/TeacherProfile'
 import { AccountSettings } from './pages/AccountSettings'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { EmptyState } from './components/EmptyState'
+import { Button } from './components/Button'
 import { Toast } from './components/Toast'
 import { useTheme } from './hooks/useTheme'
 import { useV2Auth } from './hooks/useV2Auth'
 import { ToastProvider } from './hooks/useToast'
 import { V2FirebaseProvider } from './lib/firebase'
+import { canAccessV2Area, getLegacyDelegationPath, V2Area } from './access'
 
 import './design/tokens.css'
 import './design/globals.css'
@@ -45,6 +47,41 @@ function V2Routes() {
     path.startsWith('/v2/training') ? 'training' :
     'home'
 
+  function UnsupportedV2Route(props: { area: V2Area }) {
+    const legacyPath = getLegacyDelegationPath(props.area)
+    return (
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 960, margin: '0 auto' }}>
+        <EmptyState
+          title="Unsupported V2 route"
+          description="This workspace is not enabled for your role in CHALK 2.0 yet. Use the supported V2 navigation or open the legacy workflow."
+          cta={legacyPath ? (
+            <Button variant="primary" onClick={() => { window.location.href = legacyPath }}>
+              Open legacy workflow
+            </Button>
+          ) : undefined}
+        />
+      </div>
+    )
+  }
+
+  function GuardedV2Route(props: { path: string; exact?: boolean; area: V2Area; render: () => React.ReactElement }) {
+    return (
+      <Route
+        exact={props.exact}
+        path={props.path}
+        render={() => {
+          if (auth.loading) {
+            return <EmptyState title="Loading workspace" description="Checking your CHALK role before opening this V2 route." />
+          }
+          if (!canAccessV2Area(auth.user?.role, props.area)) {
+            return <UnsupportedV2Route area={props.area} />
+          }
+          return props.render()
+        }}
+      />
+    )
+  }
+
   return (
     <ToastProvider>
       <AppShell
@@ -59,18 +96,18 @@ function V2Routes() {
           />
         )}>
           <Switch>
-            <Route path="/v2/home" render={() => <CoachHome userName={userName} />} />
-            <Route path="/v2/teachers/:teacherId" render={() => <TeacherProfile />} />
-            <Route exact path="/v2/teachers" render={() => <AllTeachers />} />
-            <Route path="/v2/observation" render={() => <LiveObservation />} />
-            <Route exact path="/v2/plans" render={() => <ActionPlans />} />
-            <Route path="/v2/plans/:planId" render={() => <PlanDetail />} />
-            <Route path="/v2/messages" render={() => <Messaging />} />
-            <Route path="/v2/resources" render={() => <Resources />} />
-            <Route path="/v2/reports" render={() => <Reports />} />
-            <Route path="/v2/admin" render={() => <AdminWorkspace />} />
-            <Route path="/v2/account" render={() => <AccountSettings />} />
-            <Route path="/v2/training" render={() => <Training />} />
+            <GuardedV2Route path="/v2/home" area="home" render={() => <CoachHome userName={userName} />} />
+            <GuardedV2Route path="/v2/teachers/:teacherId" area="teachers" render={() => <TeacherProfile />} />
+            <GuardedV2Route exact path="/v2/teachers" area="teachers" render={() => <AllTeachers />} />
+            <GuardedV2Route path="/v2/observation" area="observation" render={() => <LiveObservation />} />
+            <GuardedV2Route exact path="/v2/plans" area="plans" render={() => <ActionPlans />} />
+            <GuardedV2Route path="/v2/plans/:planId" area="plans" render={() => <PlanDetail />} />
+            <GuardedV2Route path="/v2/messages" area="messages" render={() => <Messaging />} />
+            <GuardedV2Route path="/v2/resources" area="resources" render={() => <Resources />} />
+            <GuardedV2Route path="/v2/reports" area="reports" render={() => <Reports />} />
+            <GuardedV2Route path="/v2/admin" area="admin" render={() => <AdminWorkspace />} />
+            <GuardedV2Route path="/v2/account" area="account" render={() => <AccountSettings />} />
+            <GuardedV2Route path="/v2/training" area="training" render={() => <Training />} />
             <Redirect to="/v2/home" />
           </Switch>
         </ErrorBoundary>
