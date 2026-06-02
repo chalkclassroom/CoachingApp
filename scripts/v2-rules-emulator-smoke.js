@@ -69,6 +69,49 @@ function draftBody() {
   }
 }
 
+function malformedDraftBody() {
+  return {
+    fields: {
+      observationDraft: {
+        mapValue: {
+          fields: {
+            teacherUid: { stringValue: "v2-teacher" },
+            notes: { stringValue: "Missing required type fields" }
+          }
+        }
+      }
+    }
+  }
+}
+
+function trainingStatusBody() {
+  return {
+    fields: {
+      v2TrainingStatus: {
+        mapValue: {
+          fields: {
+            transitions: {
+              mapValue: {
+                fields: {
+                  completedAt: { timestampValue: new Date("2026-06-01T00:03:00.000Z").toISOString() }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function arbitraryUserFieldBody() {
+  return {
+    fields: {
+      role: { stringValue: "admin" }
+    }
+  }
+}
+
 function commentBody(options = {}) {
   const authorId = options.authorId || "v2-coach"
   const text = options.text || "Rules smoke comment"
@@ -132,6 +175,17 @@ async function main() {
 
   const coach = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-coach'))
   assertStatus('coach own observationDraft write', coach, 200)
+
+  const malformedDraft = await request("PATCH", url, malformedDraftBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("malformed observationDraft write", malformedDraft, 403)
+
+  const trainingStatusUrl = base + "/users/v2-coach?updateMask.fieldPaths=v2TrainingStatus"
+  const trainingStatus = await request("PATCH", trainingStatusUrl, trainingStatusBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach own training status write", trainingStatus, 200)
+
+  const arbitraryUserFieldUrl = base + "/users/v2-coach?updateMask.fieldPaths=role"
+  const arbitraryUserField = await request("PATCH", arbitraryUserFieldUrl, arbitraryUserFieldBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach arbitrary user field write", arbitraryUserField, 403)
 
   const unrelatedCoach = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-unrelated-coach'))
   assertStatus('unrelated coach observationDraft write', unrelatedCoach, 403)

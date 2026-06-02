@@ -18,9 +18,39 @@ service cloud.firestore {
       return isOwner(userId) || isAdmin();
     }
 
+    function validObservationDraftValue(draft) {
+      return draft == null || (
+        draft is map &&
+        draft.keys().hasOnly(["teacherUid", "teacherName", "classroomName", "sessionName", "typeCode", "storedType", "notes", "elapsedSeconds", "updatedAt"]) &&
+        draft.keys().hasAll(["teacherUid", "typeCode", "storedType", "notes", "elapsedSeconds", "updatedAt"]) &&
+        draft.teacherUid is string &&
+        draft.typeCode is string &&
+        draft.storedType is string &&
+        draft.notes is string &&
+        draft.elapsedSeconds is int &&
+        draft.updatedAt is timestamp &&
+        (!draft.keys().hasAny(["teacherName"]) || draft.teacherName is string) &&
+        (!draft.keys().hasAny(["classroomName"]) || draft.classroomName is string) &&
+        (!draft.keys().hasAny(["sessionName"]) || draft.sessionName is string)
+      );
+    }
+
+    function validOwnerUserUpdate(userId) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return isOwner(userId) &&
+        changed.hasOnly(["observationDraft", "v2TrainingStatus"]) &&
+        (!changed.hasAny(["observationDraft"]) || validObservationDraftValue(request.resource.data.observationDraft)) &&
+        (!changed.hasAny(["v2TrainingStatus"]) || request.resource.data.v2TrainingStatus is map);
+    }
+
+    function validUserUpdate(userId) {
+      return isAdmin() || validOwnerUserUpdate(userId);
+    }
+
     match /users/{userId} {
       allow read: if signedIn();
-      allow create, update, delete: if canWriteUserDoc(userId);
+      allow create, delete: if canWriteUserDoc(userId);
+      allow update: if validUserUpdate(userId);
 
       // Preserve legacy user subcollection behavior while hardening the user root doc.
       match /{subcollection}/{document=**} {
