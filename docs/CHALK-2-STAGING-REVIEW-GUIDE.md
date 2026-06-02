@@ -38,7 +38,7 @@ Do not treat partial or delegated interactions as durable production writes unle
 | `/v2/messages` | Live drafts / delegated delivery | Draft list/editor backed by Firestore plus legacy route for sending and attachments | V2 sends email through SendGrid directly |
 | `/v2/resources` | Partial | Resource hub backed by real bundled CHALK assets | Every training/media asset has final production UX |
 | `/v2/reports` | Live summary/trends/export | Live summary stats, live practice trends, basic CSV export, and legacy route for saved/scheduled/profile reports | V2 saved report libraries or scheduled delivery are complete |
-| `/v2/admin` | Live users / delegated setup | Live user list with archive/restore plus legacy links for create/import/program/site setup | Full admin onboarding/import is V2-native |
+| `/v2/admin` | Live users/programs/sites | Live user list with archive/restore plus live program/site directory edits and legacy links for user creation/import/invites/role edits | Full admin onboarding/import is V2-native |
 | `/v2/leader` | Live summary / delegated detail | Live leader summary plus legacy links to dashboard/users/teachers/coaches/sites/archive/all-users/profile reports | Detailed leader management is fully V2-native |
 | `/v2/account` | Live preferences | Locked profile identity plus persisted V2 workspace preferences | Name/email/role can be edited from V2 |
 | `/v2/training` | Partial | Curated modules, truthful status labels, non-optimistic completion/skip behavior | Recommendations are fully data-driven |
@@ -67,7 +67,7 @@ The detailed stub disclosure lives in `docs/CHALK-2-STUBS-DISCLOSURE.md`.
 High-level summary:
 
 - Message drafts are live in V2; email delivery and attachments remain in legacy CHALK.
-- Admin user archive/restore is live in V2; create/import/program/site setup remains in legacy CHALK.
+- Admin user archive/restore and program/site edits are live in V2; user creation/import/invite/role edits remain in legacy CHALK.
 - Report summary, practice trends, and basic CSV export are live in V2; saved/scheduled/profile reports remain in legacy CHALK.
 - Leader summary is live in V2; detailed leader management remains in legacy CHALK.
 - Existing conference plans list/edit in V2; new conference plan creation from the observation context remains outside this preview path.

@@ -1,6 +1,8 @@
 import { buildObservationStartPayload } from './observationTypes'
 import {
   AccountPreferences,
+  AdminProgramRow,
+  AdminSiteRow,
   AdminUserRow,
   ActivityItem,
   AttentionItem,
@@ -619,6 +621,69 @@ export async function setUserArchived(firebase: any, userId: string, archived: b
   return { archived }
 }
 
+function slugId(value: string, fallback: string): string {
+  const slug = String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return slug || fallback
+}
+
+function mapAdminProgram(id: string, data: any): AdminProgramRow {
+  return {
+    id,
+    name: data.name || data.programName || id
+  }
+}
+
+function mapAdminSite(id: string, data: any): AdminSiteRow {
+  return {
+    id,
+    name: data.name || data.siteName || id,
+    programId: data.programId || data.program || ''
+  }
+}
+
+export async function getAdminPrograms(firebase: any): Promise<AdminProgramRow[]> {
+  return safeRead('Unable to load v2 admin programs', async () => {
+    const snapshot = await firebase.db.collection('programs').get()
+    return snapshot.docs
+      .map((doc: any) => mapAdminProgram(doc.id, doc.data() || {}))
+      .sort((a: AdminProgramRow, b: AdminProgramRow) => a.name.localeCompare(b.name))
+  }, [])
+}
+
+export async function getAdminSites(firebase: any): Promise<AdminSiteRow[]> {
+  return safeRead('Unable to load v2 admin sites', async () => {
+    const snapshot = await firebase.db.collection('sites').get()
+    return snapshot.docs
+      .map((doc: any) => mapAdminSite(doc.id, doc.data() || {}))
+      .sort((a: AdminSiteRow, b: AdminSiteRow) => a.name.localeCompare(b.name))
+  }, [])
+}
+
+export async function saveAdminProgram(firebase: any, program: AdminProgramRow): Promise<AdminProgramRow> {
+  const id = program.id || slugId(program.name, 'program-' + Date.now())
+  const data = {
+    name: program.name.trim(),
+    dateModified: new Date()
+  }
+  await firebase.db.collection('programs').doc(id).set(data, { merge: true })
+  return mapAdminProgram(id, data)
+}
+
+export async function saveAdminSite(firebase: any, site: AdminSiteRow): Promise<AdminSiteRow> {
+  const id = site.id || slugId(site.name, 'site-' + Date.now())
+  const data = {
+    name: site.name.trim(),
+    programId: site.programId.trim(),
+    dateModified: new Date()
+  }
+  await firebase.db.collection('sites').doc(id).set(data, { merge: true })
+  return mapAdminSite(id, data)
+}
+
 function intersects(left: string[] = [], right: string[] = []): boolean {
   if (left.length === 0 || right.length === 0) return false
   return left.some(value => right.includes(value))
@@ -687,6 +752,10 @@ export function createV2Api(firebase: any) {
     saveMessagingDraft: (uid: string, draft: Partial<MessagingEmail>) => saveMessagingDraft(firebase, uid, draft),
     getAdminUsers: () => getAdminUsers(firebase),
     setUserArchived: (userId: string, archived: boolean) => setUserArchived(firebase, userId, archived),
+    getAdminPrograms: () => getAdminPrograms(firebase),
+    getAdminSites: () => getAdminSites(firebase),
+    saveAdminProgram: (program: AdminProgramRow) => saveAdminProgram(firebase, program),
+    saveAdminSite: (site: AdminSiteRow) => saveAdminSite(firebase, site),
     getLeaderSummary: (leader: { role?: string; programs?: string[]; sites?: string[] }) => getLeaderSummary(firebase, leader)
   }
 }

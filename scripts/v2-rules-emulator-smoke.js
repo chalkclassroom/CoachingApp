@@ -228,6 +228,25 @@ function messagingDraftBody(user = "v2-coach") {
   }
 }
 
+function programBody() {
+  return {
+    fields: {
+      name: { stringValue: "Program Gamma" },
+      dateModified: { timestampValue: new Date("2026-06-01T00:40:00.000Z").toISOString() }
+    }
+  }
+}
+
+function siteBody() {
+  return {
+    fields: {
+      name: { stringValue: "Site West" },
+      programId: { stringValue: "program-alpha" },
+      dateModified: { timestampValue: new Date("2026-06-01T00:41:00.000Z").toISOString() }
+    }
+  }
+}
+
 function previewWriteBody() {
   return {
     fields: {
@@ -344,6 +363,12 @@ async function main() {
 
   const reportWrite = await request("PATCH", base + "/reports/v2-preview-report", previewWriteBody(), fakeFirebaseToken("v2-coach"))
   assertStatus("unsupported reports write", reportWrite, 403)
+
+  const adminProgramWrite = await request("PATCH", base + "/programs/v2-preview-program", programBody(), fakeFirebaseToken("v2-admin"))
+  assertStatus("admin program directory write", adminProgramWrite, 200)
+
+  const adminSiteWrite = await request("PATCH", base + "/sites/v2-preview-site", siteBody(), fakeFirebaseToken("v2-admin"))
+  assertStatus("admin site directory write", adminSiteWrite, 200)
 
   const coachProgramWrite = await request("PATCH", base + "/programs/v2-preview-program", previewWriteBody(), fakeFirebaseToken("v2-coach"))
   assertStatus("coach unsupported admin program write", coachProgramWrite, 403)

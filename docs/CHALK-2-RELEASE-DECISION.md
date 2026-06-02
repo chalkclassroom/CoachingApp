@@ -20,7 +20,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 - Training modules with truthful completion persistence behavior.
 - Account settings with live V2 preference persistence and locked identity fields.
 - Reports summary, practice trends, and basic CSV export backed by live observations; saved/scheduled reports remain legacy.
-- Admin live user list with archive/restore; create/import/program/site workflows remain legacy.
+- Admin live user list with archive/restore plus live program/site directory edits; user create/import/invite/role-edit workflows remain legacy.
 - Leader live summary with advanced leader workflows delegated to legacy routes.
 - Coach/site/program profile report delegation to legacy routes.
 
@@ -29,7 +29,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 These modules are intentionally delegated to legacy CHALK for this release decision:
 
 - Saved report libraries and scheduled report delivery.
-- Admin create/import/role-edit/program/site writes.
+- Admin user create/import/invite/role-edit writes.
 - Detailed leader dashboards, users, teachers, coaches, sites, archive, and all-users workflows.
 - Coach profile, site profile, and program profile reports.
 - Conference plan creation from the observation context; existing conference plans can be listed and edited in V2.

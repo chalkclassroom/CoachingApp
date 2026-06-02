@@ -8,7 +8,7 @@ import { Stat } from '../components/Stat'
 import { useToast } from '../hooks/useToast'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
-import { AdminUserRow } from '../lib/types'
+import { AdminProgramRow, AdminSiteRow, AdminUserRow } from '../lib/types'
 
 type AdminTab = 'users' | 'programs' | 'sites'
 
@@ -34,33 +34,48 @@ function roleLabel(role: string): string {
   return role || 'User'
 }
 
+function upsertById<T extends { id: string }>(rows: T[], next: T): T[] {
+  const found = rows.some(row => row.id === next.id)
+  return found ? rows.map(row => row.id === next.id ? next : row) : [...rows, next]
+}
+
 export function AdminWorkspace() {
   const firebase = useV2Firebase()
   const toast = useToast()
   const [tab, setTab] = React.useState<AdminTab>('users')
   const [users, setUsers] = React.useState<AdminUserRow[]>([])
+  const [programs, setPrograms] = React.useState<AdminProgramRow[]>([])
+  const [sites, setSites] = React.useState<AdminSiteRow[]>([])
+  const [newProgramName, setNewProgramName] = React.useState('')
+  const [newSiteName, setNewSiteName] = React.useState('')
+  const [newSiteProgramId, setNewSiteProgramId] = React.useState('')
   const [search, setSearch] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const [updatingId, setUpdatingId] = React.useState('')
   const [error, setError] = React.useState<Error | null>(null)
 
-  const loadUsers = React.useCallback(() => {
+  const loadAdminData = React.useCallback(() => {
     setLoading(true)
     setError(null)
-    createV2Api(firebase).getAdminUsers()
-      .then(nextUsers => {
-        setUsers(nextUsers)
-        setLoading(false)
-      })
-      .catch(loadError => {
-        setError(loadError as Error)
-        setLoading(false)
-      })
+    Promise.all([
+      createV2Api(firebase).getAdminUsers(),
+      createV2Api(firebase).getAdminPrograms(),
+      createV2Api(firebase).getAdminSites()
+    ]).then(([nextUsers, nextPrograms, nextSites]) => {
+      setUsers(nextUsers)
+      setPrograms(nextPrograms)
+      setSites(nextSites)
+      setNewSiteProgramId(current => current || nextPrograms[0]?.id || '')
+      setLoading(false)
+    }).catch(loadError => {
+      setError(loadError as Error)
+      setLoading(false)
+    })
   }, [firebase])
 
   React.useEffect(() => {
-    loadUsers()
-  }, [loadUsers])
+    loadAdminData()
+  }, [loadAdminData])
 
   const toggleArchive = (user: AdminUserRow) => {
     setUpdatingId(user.id)
@@ -74,6 +89,55 @@ export function AdminWorkspace() {
         setError(updateError as Error)
         setUpdatingId('')
         toast.error('Unable to update user archive state.')
+      })
+  }
+
+  const saveProgram = (program: AdminProgramRow) => {
+    const name = program.name.trim()
+    if (!name) {
+      toast.error('Program name is required.')
+      return
+    }
+
+    const pendingId = program.id || 'new-program'
+    setUpdatingId(pendingId)
+    createV2Api(firebase).saveAdminProgram({ ...program, name })
+      .then(saved => {
+        setPrograms(current => upsertById(current, saved).sort((a, b) => a.name.localeCompare(b.name)))
+        if (!program.id) setNewProgramName('')
+        setUpdatingId('')
+        toast.success('Program saved.')
+      })
+      .catch(updateError => {
+        setError(updateError as Error)
+        setUpdatingId('')
+        toast.error('Unable to save program.')
+      })
+  }
+
+  const saveSite = (site: AdminSiteRow) => {
+    const name = site.name.trim()
+    if (!name) {
+      toast.error('Site name is required.')
+      return
+    }
+
+    const pendingId = site.id || 'new-site'
+    setUpdatingId(pendingId)
+    createV2Api(firebase).saveAdminSite({ ...site, name, programId: site.programId || newSiteProgramId })
+      .then(saved => {
+        setSites(current => upsertById(current, saved).sort((a, b) => a.name.localeCompare(b.name)))
+        if (!site.id) {
+          setNewSiteName('')
+          setNewSiteProgramId(programs[0]?.id || '')
+        }
+        setUpdatingId('')
+        toast.success('Site saved.')
+      })
+      .catch(updateError => {
+        setError(updateError as Error)
+        setUpdatingId('')
+        toast.error('Unable to save site.')
       })
   }
 
@@ -94,7 +158,7 @@ export function AdminWorkspace() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Admin workspace</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Live users with archive and restore controls. Program, site, import, invite, and role-edit workflows still use the legacy admin workspace.
+            Live users, archive controls, programs, and sites. User import, invite, and role-edit workflows still use the legacy admin workspace.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -106,8 +170,8 @@ export function AdminWorkspace() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
         <Stat label="Active users" value={activeCount} tone="brand" icon="U" delta={{ text: 'Live users', trend: 'flat' }} />
         <Stat label="Archived" value={archivedCount} tone="warm" icon="A" delta={{ text: 'Restorable', trend: archivedCount > 0 ? 'warn' : 'flat' }} />
-        <Stat label="Coaches" value={coachCount} tone="gold" icon="C" delta={{ text: 'Role count', trend: 'flat' }} />
-        <Stat label="Teachers" value={teacherCount} tone="success" icon="T" delta={{ text: 'Role count', trend: 'flat' }} />
+        <Stat label="Programs" value={programs.length} tone="gold" icon="P" delta={{ text: 'Live directory', trend: 'flat' }} />
+        <Stat label="Sites" value={sites.length} tone="success" icon="S" delta={{ text: 'Live directory', trend: 'flat' }} />
       </div>
 
       <Card padding="1rem" style={{ marginBottom: '1rem' }}>
@@ -130,16 +194,78 @@ export function AdminWorkspace() {
 
       {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Admin data could not be synced.</div>}
 
-      {tab !== 'users' ? (
-        <Card>
-          <EmptyState
-            title={tab === 'programs' ? 'Program edits remain in legacy CHALK' : 'Site edits remain in legacy CHALK'}
-            description="Use the legacy admin workspace for create/edit/import workflows while V2 keeps user archive controls live and scoped."
-            cta={<Button variant="primary" onClick={openLegacyAdmin}>Open legacy admin</Button>}
-          />
-        </Card>
-      ) : loading ? (
+      {loading ? (
         <Card><Skeleton height={260} /></Card>
+      ) : tab === 'programs' ? (
+        <div style={{ display: 'grid', gap: '1rem' }}>
+          <Card padding="1rem">
+            <CardHeader title="New program" />
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <input value={newProgramName} onChange={(event) => setNewProgramName(event.currentTarget.value)} placeholder="Program name" style={{ flex: '1 1 260px', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.55rem 0.75rem', background: 'var(--v2-white)' }} />
+              <Button variant="primary" disabled={updatingId === 'new-program'} onClick={() => saveProgram({ id: '', name: newProgramName })}>Save program</Button>
+            </div>
+          </Card>
+          <Card padding="0" style={{ overflow: 'hidden' }}>
+            <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--v2-line-soft)' }}>
+              <CardHeader title="Live programs" badge={<Pill variant="brand">{programs.length}</Pill>} />
+            </div>
+            {programs.length === 0 ? <EmptyState title="No programs loaded" description="Create a program above or open legacy admin for advanced setup." /> : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
+                  <tbody>
+                    {programs.map(program => (
+                      <tr key={program.id} style={{ borderBottom: '1px solid var(--v2-line-soft)' }}>
+                        <td style={{ padding: '0.85rem 1rem', width: '35%', color: 'var(--v2-muted)' }}>{program.id}</td>
+                        <td style={{ padding: '0.85rem 1rem' }}><input value={program.name} onChange={(event) => setPrograms(current => current.map(item => item.id === program.id ? { ...item, name: event.currentTarget.value } : item))} style={{ width: '100%', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.45rem 0.65rem', background: 'var(--v2-white)' }} /></td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}><Button size="sm" disabled={updatingId === program.id} onClick={() => saveProgram(program)}>Save</Button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
+        </div>
+      ) : tab === 'sites' ? (
+        <div style={{ display: 'grid', gap: '1rem' }}>
+          <Card padding="1rem">
+            <CardHeader title="New site" />
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <input value={newSiteName} onChange={(event) => setNewSiteName(event.currentTarget.value)} placeholder="Site name" style={{ flex: '1 1 240px', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.55rem 0.75rem', background: 'var(--v2-white)' }} />
+              <select value={newSiteProgramId} onChange={(event) => setNewSiteProgramId(event.currentTarget.value)} style={{ flex: '0 1 220px', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.55rem 0.75rem', background: 'var(--v2-white)' }}>
+                <option value="">No program</option>
+                {programs.map(program => <option key={program.id} value={program.id}>{program.name}</option>)}
+              </select>
+              <Button variant="primary" disabled={updatingId === 'new-site'} onClick={() => saveSite({ id: '', name: newSiteName, programId: newSiteProgramId })}>Save site</Button>
+            </div>
+          </Card>
+          <Card padding="0" style={{ overflow: 'hidden' }}>
+            <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--v2-line-soft)' }}>
+              <CardHeader title="Live sites" badge={<Pill variant="brand">{sites.length}</Pill>} />
+            </div>
+            {sites.length === 0 ? <EmptyState title="No sites loaded" description="Create a site above or open legacy admin for advanced setup." /> : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
+                  <tbody>
+                    {sites.map(site => (
+                      <tr key={site.id} style={{ borderBottom: '1px solid var(--v2-line-soft)' }}>
+                        <td style={{ padding: '0.85rem 1rem', width: '28%', color: 'var(--v2-muted)' }}>{site.id}</td>
+                        <td style={{ padding: '0.85rem 1rem' }}><input value={site.name} onChange={(event) => setSites(current => current.map(item => item.id === site.id ? { ...item, name: event.currentTarget.value } : item))} style={{ width: '100%', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.45rem 0.65rem', background: 'var(--v2-white)' }} /></td>
+                        <td style={{ padding: '0.85rem 1rem' }}>
+                          <select value={site.programId} onChange={(event) => setSites(current => current.map(item => item.id === site.id ? { ...item, programId: event.currentTarget.value } : item))} style={{ width: '100%', border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.45rem 0.65rem', background: 'var(--v2-white)' }}>
+                            <option value="">No program</option>
+                            {programs.map(program => <option key={program.id} value={program.id}>{program.name}</option>)}
+                          </select>
+                        </td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}><Button size="sm" disabled={updatingId === site.id} onClick={() => saveSite(site)}>Save</Button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
+        </div>
       ) : visibleUsers.length === 0 ? (
         <Card><EmptyState title="No users match this view" description="Clear the search or open legacy users for advanced filters." /></Card>
       ) : (
