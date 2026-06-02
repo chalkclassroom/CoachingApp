@@ -69,6 +69,50 @@ function draftBody() {
   }
 }
 
+function commentBody(options = {}) {
+  const authorId = options.authorId || "v2-coach"
+  const text = options.text || "Rules smoke comment"
+  return {
+    fields: {
+      authorName: { stringValue: "V2 Coach" },
+      authorId: { stringValue: authorId },
+      text: { stringValue: text },
+      createdAt: { timestampValue: new Date("2026-06-01T00:05:00.000Z").toISOString() }
+    }
+  }
+}
+
+function malformedCommentBody() {
+  return {
+    fields: {
+      authorName: { stringValue: "V2 Coach" },
+      authorId: { stringValue: "v2-coach" },
+      createdAt: { timestampValue: new Date("2026-06-01T00:05:00.000Z").toISOString() }
+    }
+  }
+}
+
+function sentBody(sentBy = "v2-coach") {
+  const timestamp = new Date("2026-06-01T00:10:00.000Z").toISOString()
+  return {
+    fields: {
+      sentToTeacher: { booleanValue: true },
+      sentToTeacherAt: { timestampValue: timestamp },
+      sentToTeacherBy: { stringValue: sentBy },
+      dateModified: { timestampValue: timestamp }
+    }
+  }
+}
+
+function previewWriteBody() {
+  return {
+    fields: {
+      name: { stringValue: "V2 preview unsupported write" },
+      createdAt: { timestampValue: new Date("2026-06-01T00:20:00.000Z").toISOString() }
+    }
+  }
+}
+
 function assertStatus(label, response, expected) {
   if (response.status !== expected) {
     console.error(label + ' expected HTTP ' + expected + ' but got ' + response.status)
@@ -98,7 +142,41 @@ async function main() {
   const admin = await request('PATCH', url, draftBody(), fakeFirebaseToken('v2-admin'))
   assertStatus('admin observationDraft override write', admin, 200)
 
-  console.log('V2 rules emulator smoke passed')
+  const commentUrl = base + "/actionPlans/v2-same-program-plan/comments/v2-smoke-comment"
+  const coachComment = await request("PATCH", commentUrl, commentBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("assigned coach action plan comment write", coachComment, 200)
+
+  const teacherCommentRead = await request("GET", commentUrl, null, fakeFirebaseToken("v2-teacher"))
+  assertStatus("teacher action plan comment read", teacherCommentRead, 200)
+
+  const unrelatedCommentUrl = base + "/actionPlans/v2-same-program-plan/comments/v2-unrelated-comment"
+  const unrelatedComment = await request("PATCH", unrelatedCommentUrl, commentBody({ authorId: "v2-unrelated-coach" }), fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach action plan comment write", unrelatedComment, 403)
+
+  const malformedCommentUrl = base + "/actionPlans/v2-same-program-plan/comments/v2-malformed-comment"
+  const malformedComment = await request("PATCH", malformedCommentUrl, malformedCommentBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("malformed action plan comment write", malformedComment, 403)
+
+  const sentUrl = base + "/actionPlans/v2-same-program-plan?updateMask.fieldPaths=sentToTeacher&updateMask.fieldPaths=sentToTeacherAt&updateMask.fieldPaths=sentToTeacherBy&updateMask.fieldPaths=dateModified"
+  const coachSent = await request("PATCH", sentUrl, sentBody("v2-coach"), fakeFirebaseToken("v2-coach"))
+  assertStatus("assigned coach action plan sent-state write", coachSent, 200)
+
+  const unrelatedSent = await request("PATCH", sentUrl, sentBody("v2-unrelated-coach"), fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach action plan sent-state write", unrelatedSent, 403)
+
+  const messageWrite = await request("PATCH", base + "/messages/v2-preview-thread", previewWriteBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("unsupported messages write", messageWrite, 403)
+
+  const reportWrite = await request("PATCH", base + "/reports/v2-preview-report", previewWriteBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("unsupported reports write", reportWrite, 403)
+
+  const coachProgramWrite = await request("PATCH", base + "/programs/v2-preview-program", previewWriteBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach unsupported admin program write", coachProgramWrite, 403)
+
+  const coachSiteWrite = await request("PATCH", base + "/sites/v2-preview-site", previewWriteBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach unsupported admin site write", coachSiteWrite, 403)
+
+  console.log("V2 rules emulator smoke passed")
 }
 
 main().catch(error => {

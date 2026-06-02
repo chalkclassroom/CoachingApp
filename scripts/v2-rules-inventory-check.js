@@ -52,6 +52,10 @@ assert(/2026-06-01 - CHALK 2\.0 V2 Firestore Rules Posture/.test(decisionLog), '
 assert(/supersedes the 2026-05-28 Posture A/i.test(decisionLog), 'decision log must explicitly supersede or constrain Posture A')
 assert(/Posture B User-Root Rule Hardening/i.test(decisionLog), 'decision log must include the Posture B user-root hardening entry')
 assert(/G2.3 user-root denial smoke now passes/i.test(decisionLog), 'decision log must record G2.3 user-root denial evidence')
+assert(/Posture B Action-Plan Write Hardening/i.test(decisionLog), 'decision log must include the Posture B action-plan hardening entry')
+assert(/G2.4 action-plan smoke now passes/i.test(decisionLog), 'decision log must record G2.4 action-plan smoke evidence')
+assert(/Unsupported Preview Write Gates/i.test(decisionLog), 'decision log must include the G2.5 unsupported preview write gates entry')
+assert(/G2.5 unsupported-path smoke now passes/i.test(decisionLog), 'decision log must record G2.5 unsupported-path smoke evidence')
 
 const createApiBodyMatch = api.match(/export function createV2Api\(firebase: any\) \{[\s\S]*?return \{([\s\S]*?)\n  \}\n\}/)
 assert(Boolean(createApiBodyMatch), 'createV2Api() object must be parseable')
@@ -85,10 +89,14 @@ for (const term of fixtureTerms) {
 }
 
 assert(/auth-only write wildcard has been removed/i.test(inventory), 'inventory must state that the auth-only write wildcard has been removed from the working ruleset')
-assert(/G2\.3 user-root denial is emulator green/i.test(inventory), 'inventory must state G2.3 user-root denial is emulator green')
-assert(/G2\.4\/G2\.5/i.test(inventory), 'inventory must state remaining G2.4/G2.5 denial coverage is pending')
+assert(/G2\.3 user-root denial.*emulator green/i.test(inventory), 'inventory must state G2.3 user-root denial is emulator green')
+assert(/G2\.4 action-plan comment\/sent-state denial.*emulator green/i.test(inventory), 'inventory must state G2.4 action-plan denial is emulator green')
+assert(/G2\.5 unsupported preview write denial are emulator green/i.test(inventory), 'inventory must state G2.5 unsupported preview write denial is emulator green')
 assert(rules.includes("rules_version = '2'"), 'firestore.rules must use rules_version 2 for recursive wildcard semantics')
 assert(rules.includes('function canWriteUserDoc'), 'firestore.rules must define root user write ownership helper')
+assert(rules.includes('function canWriteActionPlan'), 'firestore.rules must define action-plan write participant helper')
+assert(!rules.includes('match /actionPlans/{document=**}'), 'firestore.rules must not retain a broad actionPlans recursive write wildcard')
+assert(rules.includes('allow write: if isAdmin();'), 'firestore.rules must restrict at least one admin workspace write surface to admin-only')
 assert(rules.includes('allow write: if false'), 'firestore.rules fallback must deny unknown writes')
 assert(!rules.includes('allow read, write: if request.auth.uid != null'), 'firestore.rules must not retain the auth-only read/write wildcard')
 if (seedScriptExists) {

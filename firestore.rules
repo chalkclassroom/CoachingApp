@@ -29,8 +29,69 @@ service cloud.firestore {
     }
 
     // Legacy collections retained during the strangler rollout.
-    match /actionPlans/{document=**} {
-      allow read, write: if signedIn();
+    function isActionPlanCoach(plan) {
+      return plan.get("coachId", "") == request.auth.uid ||
+        plan.get("coach", "") == request.auth.uid ||
+        plan.get("createdBy", "") == request.auth.uid;
+    }
+
+    function isActionPlanTeacher(plan) {
+      return plan.get("teacherId", "") == request.auth.uid ||
+        plan.get("teacher", "") == request.auth.uid;
+    }
+
+    function canReadActionPlan(plan) {
+      return signedIn() && (isAdmin() || isActionPlanCoach(plan) || isActionPlanTeacher(plan));
+    }
+
+    function canWriteActionPlan(plan) {
+      return signedIn() && (isAdmin() || isActionPlanCoach(plan));
+    }
+
+    function validActionPlanUpdate(plan) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let sentChanged = changed.hasAny(["sentToTeacher", "sentToTeacherAt", "sentToTeacherBy"]);
+      return canWriteActionPlan(plan) &&
+        changed.hasOnly(["tool", "practice", "goal", "benefit", "goalTimeline", "achieveBy", "status", "dateModified", "sentToTeacher", "sentToTeacherAt", "sentToTeacherBy"]) &&
+        (!sentChanged || (
+          changed.hasAll(["sentToTeacher", "sentToTeacherAt", "sentToTeacherBy", "dateModified"]) &&
+          request.resource.data.sentToTeacher == true &&
+          request.resource.data.sentToTeacherBy == request.auth.uid &&
+          request.resource.data.sentToTeacherAt is timestamp &&
+          request.resource.data.dateModified is timestamp
+        ));
+    }
+
+    function validActionPlanComment() {
+      return request.resource.data.keys().hasOnly(["authorName", "authorId", "text", "createdAt"]) &&
+        request.resource.data.authorId == request.auth.uid &&
+        request.resource.data.authorName is string &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 2000 &&
+        request.resource.data.createdAt is timestamp;
+    }
+
+    function actionPlanData(planId) {
+      return get(/databases/$(database)/documents/actionPlans/$(planId)).data;
+    }
+
+    match /actionPlans/{planId} {
+      allow read: if canReadActionPlan(resource.data);
+      allow create: if signedIn();
+      allow update: if validActionPlanUpdate(resource.data);
+      allow delete: if isAdmin();
+
+      match /comments/{commentId} {
+        allow read: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canReadActionPlan(actionPlanData(planId));
+        allow create: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canWriteActionPlan(actionPlanData(planId)) && validActionPlanComment();
+        allow update, delete: if isAdmin();
+      }
+
+      match /actionSteps/{stepId} {
+        allow read: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canReadActionPlan(actionPlanData(planId));
+        allow create, update, delete: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canWriteActionPlan(actionPlanData(planId));
+      }
     }
 
     match /observations/{document=**} {
@@ -50,11 +111,13 @@ service cloud.firestore {
     }
 
     match /programs/{document=**} {
-      allow read, write: if signedIn();
+      allow read: if signedIn();
+      allow write: if isAdmin();
     }
 
     match /sites/{document=**} {
-      allow read, write: if signedIn();
+      allow read: if signedIn();
+      allow write: if isAdmin();
     }
 
     match /archives/{document=**} {
