@@ -3,18 +3,17 @@ const fs = require('fs')
 const path = require('path')
 
 const appRoot = path.resolve(__dirname, '..')
-const repoRoot = path.resolve(appRoot, '..')
-const chalkRoot = path.join(repoRoot, '.chalk')
+const docsRoot = path.join(appRoot, 'docs')
 
 const failures = []
 function read(rel) {
   return fs.readFileSync(path.join(appRoot, rel), 'utf8')
 }
-function readChalk(rel) {
-  return fs.readFileSync(path.join(chalkRoot, rel), 'utf8')
+function readDoc(rel) {
+  return fs.readFileSync(path.join(docsRoot, rel), 'utf8')
 }
-function existsChalk(rel) {
-  return fs.existsSync(path.join(chalkRoot, rel))
+function existsDoc(rel) {
+  return fs.existsSync(path.join(docsRoot, rel))
 }
 function assert(condition, message) {
   if (!condition) failures.push(message)
@@ -66,16 +65,16 @@ for (const file of walk(v2Dir)) {
 const reviewGuide = 'CHALK-2-STAGING-REVIEW-GUIDE.md'
 const stubsGuide = 'CHALK-2-STUBS-DISCLOSURE.md'
 const smokeGuide = 'CHALK-2-GOAL-1-RESPONSIVE-A11Y-SMOKE.md'
-assert(existsChalk(reviewGuide), `.chalk/${reviewGuide} must exist`)
-assert(existsChalk(stubsGuide), `.chalk/${stubsGuide} must exist`)
-assert(existsChalk(smokeGuide), `.chalk/${smokeGuide} must exist`)
+assert(existsDoc(reviewGuide), `docs/${reviewGuide} must exist`)
+assert(existsDoc(stubsGuide), `docs/${stubsGuide} must exist`)
+assert(existsDoc(smokeGuide), `docs/${smokeGuide} must exist`)
 
 let review = ''
 let stubs = ''
 let smoke = ''
-if (existsChalk(reviewGuide)) review = readChalk(reviewGuide)
-if (existsChalk(stubsGuide)) stubs = readChalk(stubsGuide)
-if (existsChalk(smokeGuide)) smoke = readChalk(smokeGuide)
+if (existsDoc(reviewGuide)) review = readDoc(reviewGuide)
+if (existsDoc(stubsGuide)) stubs = readDoc(stubsGuide)
+if (existsDoc(smokeGuide)) smoke = readDoc(smokeGuide)
 
 const routes = [
   '/v2/home',
@@ -88,6 +87,7 @@ const routes = [
   '/v2/resources',
   '/v2/reports',
   '/v2/admin',
+  '/v2/leader',
   '/v2/account',
   '/v2/training'
 ]
