@@ -17,6 +17,12 @@ assert(api.includes('Unable to load v2 active plans'), 'active plan load must de
 assert(api.includes('Unable to load v2 action plan steps'), 'action plan steps load must degrade safely')
 assert(api.includes('Unable to load v2 training status'), 'training status load must degrade safely')
 
+const allTeachers = fs.readFileSync("src/v2/pages/AllTeachers.tsx", "utf8")
+assert(!allTeachers.includes("addLocalTeammate"), "AllTeachers must not add local-only teammate rows")
+assert(!allTeachers.includes("importCsv"), "AllTeachers must not import CSV rows into local-only state")
+assert(!allTeachers.includes("preview list"), "AllTeachers must not present local roster edits as preview data")
+assert(allTeachers.includes("window.location.href = '/AllUsers'"), "AllTeachers unsupported roster writes must route to legacy users")
+
 const app = fs.readFileSync("src/App.tsx", "utf8")
 assert(app.includes("await Promise.all(teacherEntries.map"), "App teacher list load must await teacher document promises before dispatch")
 assert(app.includes("Unable to resolve teacher list entry"), "App teacher list load must isolate individual teacher promise failures")

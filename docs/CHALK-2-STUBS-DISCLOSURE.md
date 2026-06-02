@@ -25,7 +25,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 | `CoachHome.tsx` | `STUB_ATTENTION` | Fallback attention queue appeared when live attention data was unavailable | Empty/error state | Live-derived queue |
 | `CoachHome.tsx` | `STUB_ACTIVITY` | Fallback recent activity appeared in preview | Empty/error state | Live recent activity |
 | `CoachHome.tsx` | `STUB_PLANS` | Fallback active plans appeared in preview | Empty/error state | Live active plans |
-| `AllTeachers.tsx` | `ROWS` | Fictional roster appeared when live teacher list was unavailable | Empty/error state | Live roster only |
+| `AllTeachers.tsx` | `ROWS` | Fictional roster appeared when live teacher list was unavailable | Empty/error state plus legacy users route for roster writes | Live roster only; creation/import handled by approved user flow |
 | `ActionPlans.tsx` | `DEMO_PLANS` | Fictional action/conference plans drove the workspace shell | Empty/live action and conference plan queues | Live plans only; explicit delegation for new conference-plan creation if retained |
 | `Messaging.tsx` | `THREADS` | Preview inbox threads were local/static | Live draft list from `emails` collection | V2 delivery/attachments or explicit legacy fallback |
 | `Messaging.tsx` | `seeded` | Query-string teacher context created local preview thread | Teacher context pre-fills draft editor only | Approved delivery/attachment scope |

@@ -5,7 +5,6 @@ import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
 import { TableSkeleton } from '../components/Skeleton'
-import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
@@ -93,20 +92,20 @@ const Preset = (p: { active?: boolean; children: React.ReactNode }) => (
   }}>{p.children}</button>
 )
 
+function openLegacyUsers() {
+  window.location.href = '/AllUsers'
+}
+
 export function AllTeachers() {
   const history = useHistory()
   const firebase = useV2Firebase()
   const auth = useV2Auth()
-  const toast = useToast()
-  const csvInputRef = React.useRef<HTMLInputElement | null>(null)
   const [rows, setRows] = React.useState<TeacherRow[]>(EMPTY_ROWS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
   const [search, setSearch] = React.useState('')
   const [roleFilter, setRoleFilter] = React.useState('all')
   const [statusFilter, setStatusFilter] = React.useState('active')
-  const [showAddModal, setShowAddModal] = React.useState(false)
-  const [draft, setDraft] = React.useState({ firstName: '', lastName: '', role: 'teacher', program: '' })
 
   React.useEffect(() => {
     if (!auth.user) {
@@ -138,67 +137,6 @@ export function AllTeachers() {
     return matchesSearch && matchesRole && matchesStatus
   })
 
-  const addLocalTeammate = () => {
-    if (!draft.firstName.trim() || !draft.lastName.trim()) {
-      toast.error('First and last name are required.')
-      return
-    }
-
-    setRows(current => [{
-      id: `local-${Date.now()}`,
-      firstName: draft.firstName.trim(),
-      lastName: draft.lastName.trim(),
-      role: draft.role as TeacherRow['role'],
-      program: draft.program.trim() || 'Unassigned',
-      status: 'active',
-      lastLogin: 'Never',
-      loginCount: 0,
-      actionCount: 0,
-      lastAction: { type: 'None', date: 'Never' }
-    }, ...current])
-    setDraft({ firstName: '', lastName: '', role: 'teacher', program: '' })
-    setShowAddModal(false)
-    toast.success('Teammate added to this preview list.')
-  }
-
-  const importCsv = (file: File | null) => {
-    if (!file) {
-      return
-    }
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      const content = String(reader.result || '')
-      const lines = content.split(/\r?\n/).filter(Boolean)
-      if (lines.length < 2) {
-        toast.error('CSV needs a header row and at least one teammate row.')
-        return
-      }
-
-      const headers = lines[0].split(',').map(header => header.trim().toLowerCase())
-      const imported = lines.slice(1).map((line, index) => {
-        const cols = line.split(',').map(col => col.trim())
-        const value = (name: string) => cols[headers.indexOf(name)] || ''
-        return {
-          id: `csv-${Date.now()}-${index}`,
-          firstName: value('firstname') || value('first_name') || value('first') || 'Imported',
-          lastName: value('lastname') || value('last_name') || value('last') || `Teacher ${index + 1}`,
-          role: (value('role') as TeacherRow['role']) || 'teacher',
-          program: value('program') || value('school') || 'Imported CSV',
-          status: 'active' as const,
-          lastLogin: 'Never',
-          loginCount: 0,
-          actionCount: 0,
-          lastAction: { type: 'None', date: 'Never' }
-        }
-      })
-
-      setRows(current => [...imported, ...current])
-      toast.success(`${imported.length} CSV rows added to this preview list.`)
-    }
-    reader.readAsText(file)
-  }
-
   const openProfile = (row: TeacherRow) => {
     history.push(`/v2/teachers/${encodeURIComponent(row.id)}?teacherName=${encodeURIComponent(`${row.firstName} ${row.lastName}`.trim())}&program=${encodeURIComponent(row.program)}`)
   }
@@ -217,15 +155,7 @@ export function AllTeachers() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <input
-            ref={csvInputRef}
-            type="file"
-            accept=".csv,text/csv"
-            style={{ display: 'none' }}
-            onChange={(event) => importCsv(event.currentTarget.files ? event.currentTarget.files[0] : null)}
-          />
-          <Button onClick={() => csvInputRef.current?.click()}>📥 Import CSV</Button>
-          <Button variant="primary" onClick={() => setShowAddModal(true)}>+ Add teammate</Button>
+          <Button variant="primary" onClick={openLegacyUsers}>Open legacy users</Button>
         </div>
       </div>
 
@@ -336,47 +266,9 @@ export function AllTeachers() {
       </div>
 
       <div style={{ marginTop: '1rem', fontSize: '0.82rem', color: 'var(--v2-muted)', textAlign: 'center' }}>
-        {error ? 'Live data unavailable; showing current local rows' : `Showing ${filteredRows.length} of ${rows.length} records`}
+        {error ? 'Live data unavailable; showing last loaded rows' : `Showing ${filteredRows.length} of ${rows.length} records`}
       </div>
 
-      {showAddModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(18, 24, 31, 0.28)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 900
-        }}>
-          <div style={{
-            width: 'min(420px, calc(100vw - 2rem))',
-            background: 'var(--v2-white)',
-            borderRadius: 10,
-            boxShadow: 'var(--v2-shadow-lg)',
-            padding: '1.25rem',
-            border: '1px solid var(--v2-line-soft)'
-          }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: '0.9rem' }}>Add teammate</h3>
-            <div style={{ display: 'grid', gap: '0.7rem' }}>
-              <input placeholder="First name" value={draft.firstName} onChange={(event) => setDraft(current => ({ ...current, firstName: event.currentTarget.value }))} style={{ border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.7rem' }} />
-              <input placeholder="Last name" value={draft.lastName} onChange={(event) => setDraft(current => ({ ...current, lastName: event.currentTarget.value }))} style={{ border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.7rem' }} />
-              <select value={draft.role} onChange={(event) => setDraft(current => ({ ...current, role: event.currentTarget.value }))} style={{ border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.7rem', background: 'var(--v2-white)' }}>
-                <option value="teacher">Teacher</option>
-                <option value="coach">Coach</option>
-                <option value="siteLeader">Site Leader</option>
-                <option value="programLeader">Program Leader</option>
-                <option value="admin">Admin</option>
-              </select>
-              <input placeholder="Program or site" value={draft.program} onChange={(event) => setDraft(current => ({ ...current, program: event.currentTarget.value }))} style={{ border: '1px solid var(--v2-line)', borderRadius: 8, padding: '0.7rem' }} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
-              <Button onClick={() => setShowAddModal(false)}>Cancel</Button>
-              <Button variant="primary" onClick={addLocalTeammate}>Add</Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

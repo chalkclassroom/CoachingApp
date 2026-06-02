@@ -30,7 +30,7 @@ Do not treat partial or delegated interactions as durable production writes unle
 | Route | Status | What to review | Do not assume |
 |---|---|---|---|
 | `/v2/home` | Live-ish | Dashboard layout, attention queue, activity, active plans, empty/error states | Every count/card is complete production reporting |
-| `/v2/teachers` | Live-ish | Teacher table, filters, empty roster behavior, profile entry | Add teammate / CSV import are production-complete |
+| `/v2/teachers` | Live-ish | Teacher table, filters, empty roster behavior, profile entry, legacy users link for roster writes | Add teammate / CSV import are V2-native |
 | `/v2/teachers/:teacherId` | Partial | Teacher summary, current plan card, live-or-empty activity area | Full legacy teacher profile parity |
 | `/v2/observation` | Partial | Type picker, note-taking, draft restore, notes-only completion gate | Final canonical observation completion is fully production-ready |
 | `/v2/plans` | Partial | Action plan queue, filtering, live conference plan list/edit entry | New conference plan creation from observation context is fully V2-native |
