@@ -122,19 +122,35 @@ export function Training() {
     const api = createV2Api(firebase)
 
     if (card.reason === 'skip') {
-      dismissCard(id)
-      if (auth.user) {
-        api.dismissTrainingRecommendation(auth.user.uid, id).catch(error => console.error('Unable to dismiss v2 training recommendation', error))
+      if (!auth.user) {
+        dismissCard(id)
+        toast.info(`${card.title} skipped locally.`)
+        return
       }
-      toast.info(`${card.title} skipped for this release view.`)
+
+      api.dismissTrainingRecommendation(auth.user.uid, id).then(() => {
+        dismissCard(id)
+        toast.info(`${card.title} skipped.`)
+      }).catch(error => {
+        console.error('Unable to skip training', error)
+        toast.error('Unable to skip training.')
+      })
       return
     }
 
-    markCompleted(id)
-    if (auth.user) {
-      api.markTrainingCompleted(auth.user.uid, id).catch(error => console.error('Unable to mark v2 training complete', error))
+    if (!auth.user) {
+      markCompleted(id)
+      toast.success(`${card.title} marked complete locally.`)
+      return
     }
-    toast.success(`${card.title} marked complete.`)
+
+    api.markTrainingCompleted(auth.user.uid, id).then(() => {
+      markCompleted(id)
+      toast.success(`${card.title} marked complete.`)
+    }).catch(error => {
+      console.error('Unable to mark training complete', error)
+      toast.error('Unable to mark training complete.')
+    })
   }
 
   const tabStyle = (key: TrainingView): React.CSSProperties => ({
@@ -149,7 +165,7 @@ export function Training() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Training tailored to your coaching</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Based on patterns in recent observations and action plans — recommended, not required.
+            Curated CHALK training modules with completion status saved per coach — recommended, not required.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>

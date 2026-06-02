@@ -379,12 +379,12 @@ export async function completeObservation(firebase: any, coachUid: string, paylo
 
 export async function getTrainingRecommendations(firebase: any, uid: string): Promise<TrainingCard[]> {
   return [
-    { id: 'transitions', title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: 'Recommended from recent observations', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
-    { id: 'questions', title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: 'Recurring coaching theme', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
+    { id: 'transitions', title: 'Smooth Transitions', icon: '⏱', tone: 'warm', reason: 'alert', reasonText: 'Curated CHALK module', ctaText: 'Start (18 min)', ctaVariant: 'primary' },
+    { id: 'questions', title: 'Open-Ended Questions', icon: '🗣', tone: 'brand', reason: 'alert', reasonText: 'Curated coaching module', ctaText: 'Start (24 min)', ctaVariant: 'primary' },
     { id: 'climate', title: 'Classroom Climate', icon: '💚', tone: 'success', reason: 'win', reasonText: 'Refresh available', ctaText: 'Refresh (8 min)' },
     { id: 'discipline', title: 'Conscious Discipline Foundations', icon: '📚', tone: 'purple', reason: 'skip', reasonText: 'Completed previously — skip unless needed', ctaText: 'Review notes' },
     { id: 'magic9', title: 'Using Magic 9 effectively', icon: '📊', tone: 'gold', reason: 'skip', reasonText: 'Optional for experienced coaches', ctaText: 'Not now' },
-    { id: 'plans', title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: 'Recommended when goals are not measurable', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
+    { id: 'plans', title: 'Writing better action plans', icon: '🎯', tone: 'warm', reason: 'alert', reasonText: 'Curated action-planning module', ctaText: 'Start (12 min)', ctaVariant: 'primary' }
   ]
 }
 
