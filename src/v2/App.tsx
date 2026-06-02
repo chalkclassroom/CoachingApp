@@ -23,6 +23,7 @@ import { useV2Auth } from './hooks/useV2Auth'
 import { ToastProvider } from './hooks/useToast'
 import { V2FirebaseProvider } from './lib/firebase'
 import { canAccessV2Area, getLegacyDelegationPath, V2Area } from './access'
+import { installV2GlobalErrorHandlers } from './lib/monitoring'
 
 import './design/tokens.css'
 import './design/globals.css'
@@ -127,6 +128,10 @@ function V2Routes() {
 export function V2App() {
   // Touch the hook so the theme attribute syncs even before any child mounts.
   useTheme()
+
+  React.useEffect(() => {
+    installV2GlobalErrorHandlers()
+  }, [])
 
   return (
     <div className="v2-root" data-theme="light">

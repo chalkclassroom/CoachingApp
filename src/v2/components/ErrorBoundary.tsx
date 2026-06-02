@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { captureV2Error } from '../lib/monitoring'
 
 type State = { hasError: boolean }
 
@@ -11,6 +12,7 @@ export class ErrorBoundary extends React.Component<{ children: React.ReactNode; 
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     console.error('CHALK 2.0 render error', error, info)
+    captureV2Error(error, { source: 'ErrorBoundary', componentStack: info.componentStack })
   }
 
   render() {
