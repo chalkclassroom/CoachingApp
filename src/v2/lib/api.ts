@@ -5,6 +5,7 @@ import {
   AttentionItem,
   DashboardStats,
   DateRange,
+  MessagingEmail,
   ObservationSession,
   PlanDetail,
   PlanItem,
@@ -446,6 +447,53 @@ export async function saveAccountPreferences(firebase: any, uid: string, prefere
   return normalized
 }
 
+function mapMessagingEmail(id: string, data: any): MessagingEmail {
+  return {
+    id: data.id || id,
+    subject: data.subject || '',
+    emailContent: data.emailContent || '',
+    recipientId: data.recipientId || '',
+    recipientFirstName: data.recipientFirstName || '',
+    recipientName: data.recipientName || '',
+    recipientEmail: data.recipientEmail || '',
+    type: data.type === 'sent' ? 'sent' : 'draft',
+    user: data.user || '',
+    dateCreated: toDate(data.dateCreated),
+    dateModified: toDate(data.dateModified)
+  }
+}
+
+export async function getMessagingEmails(firebase: any, uid: string): Promise<MessagingEmail[]> {
+  return safeRead('Unable to load v2 messaging emails', async () => {
+    const snapshot = await firebase.db.collection('emails').where('user', '==', uid).get()
+    return snapshot.docs
+      .map((doc: any) => mapMessagingEmail(doc.id, doc.data() || {}))
+      .sort((a: MessagingEmail, b: MessagingEmail) => (b.dateModified?.getTime() || 0) - (a.dateModified?.getTime() || 0))
+  }, [])
+}
+
+export async function saveMessagingDraft(firebase: any, uid: string, draft: Partial<MessagingEmail>): Promise<MessagingEmail> {
+  const ref = draft.id ? firebase.db.collection('emails').doc(draft.id) : firebase.db.collection('emails').doc()
+  const now = new Date()
+  const existing = draft.id ? await ref.get().catch(() => null) : null
+  const existingData = existing?.exists ? existing.data() || {} : {}
+  const data = {
+    id: ref.id,
+    emailContent: draft.emailContent || '',
+    subject: draft.subject || '',
+    recipientId: draft.recipientId || '',
+    recipientFirstName: draft.recipientFirstName || '',
+    recipientName: draft.recipientName || '',
+    recipientEmail: draft.recipientEmail || '',
+    dateCreated: existingData.dateCreated || now,
+    dateModified: now,
+    type: 'draft',
+    user: uid
+  }
+  await ref.set(data, { merge: true })
+  return mapMessagingEmail(ref.id, data)
+}
+
 export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
@@ -466,6 +514,8 @@ export function createV2Api(firebase: any) {
     markTrainingCompleted: (uid: string, trainingId: string) => markTrainingCompleted(firebase, uid, trainingId),
     dismissTrainingRecommendation: (uid: string, trainingId: string) => dismissTrainingRecommendation(firebase, uid, trainingId),
     getAccountPreferences: (uid: string) => getAccountPreferences(firebase, uid),
-    saveAccountPreferences: (uid: string, preferences: AccountPreferences) => saveAccountPreferences(firebase, uid, preferences)
+    saveAccountPreferences: (uid: string, preferences: AccountPreferences) => saveAccountPreferences(firebase, uid, preferences),
+    getMessagingEmails: (uid: string) => getMessagingEmails(firebase, uid),
+    saveMessagingDraft: (uid: string, draft: Partial<MessagingEmail>) => saveMessagingDraft(firebase, uid, draft)
   }
 }

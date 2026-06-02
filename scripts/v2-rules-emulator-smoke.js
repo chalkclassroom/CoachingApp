@@ -179,6 +179,25 @@ function sentBody(sentBy = "v2-coach") {
   }
 }
 
+function messagingDraftBody(user = "v2-coach") {
+  const timestamp = new Date("2026-06-01T00:25:00.000Z").toISOString()
+  return {
+    fields: {
+      id: { stringValue: "v2-draft" },
+      emailContent: { stringValue: "Draft body from V2" },
+      subject: { stringValue: "V2 draft" },
+      recipientId: { stringValue: "v2-teacher" },
+      recipientFirstName: { stringValue: "Teacher" },
+      recipientName: { stringValue: "Teacher Example" },
+      recipientEmail: { stringValue: "teacher@example.com" },
+      dateCreated: { timestampValue: timestamp },
+      dateModified: { timestampValue: timestamp },
+      type: { stringValue: "draft" },
+      user: { stringValue: user }
+    }
+  }
+}
+
 function previewWriteBody() {
   return {
     fields: {
@@ -259,6 +278,19 @@ async function main() {
 
   const unrelatedSent = await request("PATCH", sentUrl, sentBody("v2-unrelated-coach"), fakeFirebaseToken("v2-unrelated-coach"))
   assertStatus("unrelated coach action plan sent-state write", unrelatedSent, 403)
+
+  const messagingDraftUrl = base + "/emails/v2-draft"
+  const messagingDraft = await request("PATCH", messagingDraftUrl, messagingDraftBody("v2-coach"), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach own messaging draft write", messagingDraft, 200)
+
+  const ownMessagingRead = await request("GET", messagingDraftUrl, null, fakeFirebaseToken("v2-coach"))
+  assertStatus("coach own messaging draft read", ownMessagingRead, 200)
+
+  const unrelatedMessagingRead = await request("GET", messagingDraftUrl, null, fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach messaging draft read", unrelatedMessagingRead, 403)
+
+  const crossUserMessagingWrite = await request("PATCH", base + "/emails/v2-cross-draft", messagingDraftBody("v2-coach"), fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach messaging draft write", crossUserMessagingWrite, 403)
 
   const messageWrite = await request("PATCH", base + "/messages/v2-preview-thread", previewWriteBody(), fakeFirebaseToken("v2-coach"))
   assertStatus("unsupported messages write", messageWrite, 403)

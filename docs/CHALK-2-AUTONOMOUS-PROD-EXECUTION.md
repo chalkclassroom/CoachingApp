@@ -26,7 +26,7 @@ Autonomous execution now targets Path A-quality implementation, while keeping de
 - Write the failing check first, then production code, then the passing proof.
 - Unsupported workflows must be hidden, read-only, or explicitly delegated. They must not look live.
 - No demo rows, fictional teacher names, local-only threads, or stub initial state may appear in `src/v2`.
-- Every new Firestore write requires:
+- Every new Firestore read or write requires:
   - an API function in `src/v2/lib/api.ts`,
   - a rules inventory entry/check,
   - emulator allow and deny coverage,
@@ -40,7 +40,7 @@ Autonomous execution now targets Path A-quality implementation, while keeping de
 | --- | --- | --- |
 | Release target | Build toward Path A, ship only when gates pass | User wants all V2 product gaps closed, but production approval is separate. |
 | Data contracts | Reuse legacy collections first | Reduces migration risk and preserves BigQuery/report compatibility. |
-| Rules posture | Default deny unknown writes | Prevents the previous auth-only wildcard from returning. |
+| Rules posture | Default deny unknown reads and writes | Prevents the previous auth-only wildcard from returning and avoids private module leakage through fallback rules. |
 | Delegated modules | Convert to live V2 unless blocked by missing external decision | Path C delegation is acceptable for preview, not full product renovation. |
 | Messaging | Do not invent a silent local schema | Needs legacy storage reuse or an explicit V2 schema + rules + migration bridge. |
 | Reports | Summary may stay live-ish, advanced reports need legacy-compatible contracts | Exports/scheduling affect trust and operations. |

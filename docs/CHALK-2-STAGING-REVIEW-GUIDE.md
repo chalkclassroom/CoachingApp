@@ -35,7 +35,7 @@ Do not treat partial or delegated interactions as durable production writes unle
 | `/v2/observation` | Partial | Type picker, note-taking, draft restore, notes-only completion gate | Final canonical observation completion is fully production-ready |
 | `/v2/plans` | Partial/delegated | Action plan queue, filtering, conference plan delegation | Conference plan creation/editing is live in V2 |
 | `/v2/plans/:planId` | Partial | Action plan detail, autosave, comments, send-to-teacher confirmation | Generic empty plan state is a durable live plan |
-| `/v2/messages` | Delegated | Clear route to legacy `/Messaging` and selected teacher context preservation | V2 message thread storage is live |
+| `/v2/messages` | Live drafts / delegated delivery | Draft list/editor backed by Firestore plus legacy route for sending and attachments | V2 sends email through SendGrid directly |
 | `/v2/resources` | Partial | Resource hub backed by real bundled CHALK assets | Every training/media asset has final production UX |
 | `/v2/reports` | Delegated/live-ish | Live summary stats plus legacy delegation for exports/scheduling/profile reports | V2 advanced reporting/export is complete |
 | `/v2/admin` | Read-only/delegated | Admin disclosure and links to legacy admin/users | Create/edit/import writes are enabled in V2 |
@@ -66,7 +66,7 @@ The detailed stub disclosure lives in `docs/CHALK-2-STUBS-DISCLOSURE.md`.
 
 High-level summary:
 
-- Messages are delegated to legacy CHALK.
+- Message drafts are live in V2; email delivery and attachments remain in legacy CHALK.
 - Admin writes are delegated to legacy CHALK.
 - Reports exports/scheduling/profile reports are delegated to legacy CHALK.
 - Leader dashboards and leader user lists are delegated to legacy CHALK.

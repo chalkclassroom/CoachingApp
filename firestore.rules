@@ -104,6 +104,29 @@ service cloud.firestore {
         ));
     }
 
+    function validEmailValue(email) {
+      return email is map &&
+        email.keys().hasOnly(["id", "emailContent", "subject", "recipientId", "recipientFirstName", "recipientName", "recipientEmail", "dateCreated", "dateModified", "type", "user"]) &&
+        email.keys().hasAll(["id", "emailContent", "subject", "recipientId", "recipientFirstName", "recipientName", "recipientEmail", "dateModified", "type", "user"]) &&
+        email.id is string &&
+        email.emailContent is string &&
+        email.emailContent.size() <= 20000 &&
+        email.subject is string &&
+        email.subject.size() <= 300 &&
+        email.recipientId is string &&
+        email.recipientFirstName is string &&
+        email.recipientName is string &&
+        email.recipientEmail is string &&
+        email.dateModified is timestamp &&
+        (!email.keys().hasAny(["dateCreated"]) || email.dateCreated is timestamp) &&
+        email.type in ["draft", "sent"] &&
+        email.user == request.auth.uid;
+    }
+
+    function isEmailOwner(email) {
+      return signedIn() && email.user == request.auth.uid;
+    }
+
     function validActionPlanComment() {
       return request.resource.data.keys().hasOnly(["authorName", "authorId", "text", "createdAt"]) &&
         request.resource.data.authorId == request.auth.uid &&
@@ -144,8 +167,15 @@ service cloud.firestore {
       allow read, write: if signedIn();
     }
 
-    match /emails/{document=**} {
-      allow read, write: if signedIn();
+    match /emails/{emailId} {
+      allow read: if isEmailOwner(resource.data) || isAdmin();
+      allow create: if signedIn() && request.resource.data.id == emailId && validEmailValue(request.resource.data);
+      allow update: if (isEmailOwner(resource.data) || isAdmin()) && request.resource.data.id == emailId && validEmailValue(request.resource.data);
+      allow delete: if isEmailOwner(resource.data) || isAdmin();
+
+      match /attachments/{attachmentId} {
+        allow read, write: if exists(/databases/$(database)/documents/emails/$(emailId)) && (isEmailOwner(get(/databases/$(database)/documents/emails/$(emailId)).data) || isAdmin());
+      }
     }
 
     match /appointments/{document=**} {
@@ -176,10 +206,9 @@ service cloud.firestore {
       allow read: if signedIn();
     }
 
-    // Fallback: authenticated reads remain broad, but unknown writes are denied.
+    // Fallback: unknown paths are denied by default. Add explicit rules before adding V2 reads or writes.
     match /{document=**} {
-      allow read: if signedIn();
-      allow write: if false;
+      allow read, write: if false;
     }
   }
 }

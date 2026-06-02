@@ -22,6 +22,20 @@ export type AccountPreferences = {
   defaultReportRangeDays: 7 | 30 | 90
 }
 
+export type MessagingEmail = {
+  id: string
+  subject: string
+  emailContent: string
+  recipientId: string
+  recipientFirstName: string
+  recipientName: string
+  recipientEmail: string
+  type: 'draft' | 'sent'
+  user: string
+  dateModified: Date | null
+  dateCreated?: Date | null
+}
+
 export type DashboardStats = {
   underCoaching: number
   needAttention: number

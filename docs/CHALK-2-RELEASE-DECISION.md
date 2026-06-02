@@ -15,7 +15,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 - Teachers directory and teacher profile surface where live data exists.
 - Observation draft workflow with notes-only completion gated.
 - Action plan draft contract fix and legacy conference-plan delegation.
-- Messaging delegation to legacy CHALK.
+- Messaging drafts backed by the legacy `emails` collection; email delivery and attachments remain in legacy CHALK.
 - Resources backed by real bundled CHALK assets.
 - Training modules with truthful completion persistence behavior.
 - Account settings with live V2 preference persistence and locked identity fields.
@@ -33,7 +33,7 @@ These modules are intentionally delegated to legacy CHALK for this release decis
 - Leader dashboards, users, teachers, coaches, sites, archive, and all-users workflows.
 - Coach profile, site profile, and program profile reports.
 - Conference plan creation/editing.
-- Messaging backend and thread storage.
+- Messaging email delivery and attachments.
 
 ## Risk acceptance
 
