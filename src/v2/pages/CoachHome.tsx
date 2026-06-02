@@ -148,8 +148,7 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
       history.push('/v2/plans')
       return
     }
-    toast.info('Teacher profile detail remains in legacy CHALK for this sprint.')
-    history.push('/v2/teachers')
+    history.push(`/v2/teachers/${encodeURIComponent(teacher.id)}?teacherName=${encodeURIComponent(teacher.name)}&program=${encodeURIComponent(teacher.context)}`)
   }
 
   return (

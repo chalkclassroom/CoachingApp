@@ -12,6 +12,7 @@ function assert(condition, message) {
 }
 
 const profile = read("src/v2/pages/TeacherProfile.tsx")
+const home = read("src/v2/pages/CoachHome.tsx")
 const api = read("src/v2/lib/api.ts")
 
 assert(profile.includes("createV2Api(firebase).getTeachersForCoach(auth.user.uid)"), "TeacherProfile must load teacher rows from V2 API")
@@ -22,6 +23,8 @@ assert(!profile.includes("Teacher message"), "TeacherProfile must not render fak
 assert(profile.includes("No live teacher record loaded"), "TeacherProfile must disclose missing live teacher records safely")
 assert(profile.includes("No recent live activity"), "TeacherProfile must show an empty timeline when live data is absent")
 assert(profile.includes("history.push('/v2/plans')"), "TeacherProfile plan action must route to the live plans workspace")
+assert(!home.includes("Teacher profile detail remains in legacy CHALK"), "CoachHome attention action must not delegate teacher profiles to legacy")
+assert(home.includes("/v2/teachers/${encodeURIComponent(teacher.id)}"), "CoachHome attention action must route to the specific V2 teacher profile")
 assert(api.includes("getTeachersForCoach"), "V2 API must expose getTeachersForCoach for profile data")
 
 if (failures.length > 0) {
