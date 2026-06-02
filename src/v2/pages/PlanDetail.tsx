@@ -497,7 +497,6 @@ export function PlanDetail() {
             borderRadius: 'var(--v2-radius-pill)',
             fontSize: '0.78rem', fontWeight: 600
           }}>{savedLabel}</span>
-          <Button onClick={() => toast.info('Additional plan actions remain in legacy CHALK for this sprint.')}>⋯ More</Button>
           <Button variant="primary" onClick={sendToTeacher}>📨 Send to teacher</Button>
         </div>
       </div>

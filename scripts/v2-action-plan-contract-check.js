@@ -56,6 +56,7 @@ assert(planDetail.includes("createV2Api(firebase).addActionPlanComment(realPlanI
 assert(planDetail.includes("createV2Api(firebase).markActionPlanSentToTeacher(realPlanId"), "PlanDetail must send live plans through V2 API")
 assert(planDetail.includes("showSendConfirm"), "PlanDetail must require confirmation before send-to-teacher")
 assert(!planDetail.includes("DEMO_PLAN"), "PlanDetail must not retain DEMO_PLAN preview data")
+assert(!planDetail.includes("Additional plan actions remain in legacy CHALK"), "PlanDetail must not show a fake More action for unsupported plan actions")
 assert(!actionPlans.includes("DEMO_PLANS"), "ActionPlans list must not retain DEMO_PLANS preview data")
 
 assert(rules.includes("function validActionPlanUpdate"), "firestore.rules must define validActionPlanUpdate")
