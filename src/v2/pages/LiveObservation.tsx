@@ -110,6 +110,7 @@ export function LiveObservation() {
   const [nextStep, setNextStep] = React.useState('')
   const [completing, setCompleting] = React.useState(false)
   const startedRef = React.useRef(false)
+  const restoredDraftRef = React.useRef(false)
 
   const selectObservationType = (code: string) => {
     const next = new URLSearchParams(location.search)
@@ -169,6 +170,45 @@ export function LiveObservation() {
       startedRef.current = false
     })
   }, [auth.user, firebase, needsChecklist, selectedChecklist, selectedOption, storedObservationType, teacherUid])
+
+  React.useEffect(() => {
+    if (!selectedOption || !storedObservationType || needsChecklist || restoredDraftRef.current) {
+      return
+    }
+
+    restoredDraftRef.current = true
+    const rawDraft = window.localStorage.getItem('chalk-v2-observation-draft')
+    if (!rawDraft) {
+      return
+    }
+
+    try {
+      const draft = JSON.parse(rawDraft)
+      const checklistMatches = (draft.checklist || null) === (selectedChecklist || null)
+      const matchesCurrentSession =
+        draft.teacherUid === teacherUid &&
+        draft.typeCode === selectedOption.code &&
+        draft.storedType === storedObservationType &&
+        checklistMatches
+
+      if (!matchesCurrentSession) {
+        return
+      }
+
+      if (typeof draft.notes === 'string') {
+        setNotes(draft.notes)
+      }
+
+      const restoredSeconds = typeof draft.elapsedSeconds === 'number' && Number.isFinite(draft.elapsedSeconds)
+        ? Math.max(0, Math.floor(draft.elapsedSeconds))
+        : 0
+      setElapsedSeconds(restoredSeconds)
+      setDraftStatus('Draft restored')
+    } catch (error) {
+      console.error('Unable to restore v2 observation draft', error)
+      window.localStorage.removeItem('chalk-v2-observation-draft')
+    }
+  }, [needsChecklist, selectedChecklist, selectedOption, storedObservationType, teacherUid])
 
   React.useEffect(() => {
     if (!selectedOption || !storedObservationType || needsChecklist) {
