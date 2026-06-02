@@ -22,12 +22,14 @@ assert(reports.includes("Practice trends"), "Reports must render a practice tren
 assert(!reports.includes("const PRACTICES: PracticeRow[] = []"), "Reports must not use an empty static practice trend list")
 assert(!reports.includes("No live practice trend data"), "Reports must not delegate all practice trend data")
 assert(!reports.includes("useToast"), "Reports must not use toast as fake report/export/schedule behavior")
-assert(!reports.includes("Export CSV"), "Reports must not show Export CSV unless it is live")
+assert(reports.includes("Export CSV"), "Reports must expose a live CSV export for loaded V2 report data")
+assert(reports.includes("function downloadReportCsv"), "Reports CSV export must be implemented in a real download helper")
+assert(reports.includes("URL.createObjectURL"), "Reports CSV export must create a downloadable Blob URL")
 assert(!reports.includes("Schedule report"), "Reports must not show Schedule report unless it is live")
 assert(!reports.includes("preview opened from V2 reports"), "Saved report open must not fake preview behavior")
 assert(reports.includes("Open legacy reports"), "Reports must expose explicit legacy reports fallback for exports/scheduling")
 assert(reports.includes("window.location.href = '/Reports'"), "Reports fallback must route to legacy /Reports")
-assert(reports.includes("Advanced report exports and scheduling remain in legacy CHALK"), "Reports must disclose unsupported export/schedule scope")
+assert(reports.includes("Advanced saved reports and scheduling remain in legacy CHALK"), "Reports must disclose unsupported saved/scheduled report scope")
 
 if (failures.length > 0) {
   console.error("V2 reports live-trends check failed:")

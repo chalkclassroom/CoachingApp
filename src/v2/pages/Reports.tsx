@@ -15,6 +15,32 @@ function openLegacyReports() {
   window.location.href = '/Reports'
 }
 
+function csvCell(value: string | number): string {
+  const text = String(value)
+  return '"' + text.replace(/"/g, '""') + '"'
+}
+
+function downloadReportCsv(stats: DashboardStats, trends: PracticeTrend[]) {
+  const rows = [
+    ['Section', 'Metric', 'Value'],
+    ['Summary', 'Teachers coached', String(stats.underCoaching)],
+    ['Summary', 'Need attention', String(stats.needAttention)],
+    ['Summary', 'Observations this week', String(stats.observationsThisWeek)],
+    ['Summary', 'Plans active', String(stats.activePlans)],
+    ...trends.map(row => ['Practice trend', row.label, String(row.count)])
+  ]
+  const csv = rows.map(row => row.map(csvCell).join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'chalk-v2-report.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
 function Bar(props: PracticeTrend) {
   const color = props.tone === 'warm' ? 'var(--v2-warm)' : props.tone === 'success' ? 'var(--v2-success)' : props.tone === 'gold' ? 'var(--v2-gold)' : 'var(--v2-brand)'
   return (
@@ -69,10 +95,13 @@ export function Reports() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Reports</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Live coaching activity summary. Advanced report exports and scheduling remain in legacy CHALK until the V2 reporting contract is complete.
+            Live coaching activity summary with CSV export. Advanced saved reports and scheduling remain in legacy CHALK until the V2 reporting contract is complete.
           </div>
         </div>
-        <Button variant="primary" onClick={openLegacyReports}>Open legacy reports</Button>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Button onClick={() => downloadReportCsv(stats, trends)} disabled={loading || Boolean(error)}>Export CSV</Button>
+          <Button variant="primary" onClick={openLegacyReports}>Open legacy reports</Button>
+        </div>
       </div>
 
       {error && <div style={{ color: 'var(--v2-warm-dark)', fontWeight: 600, marginBottom: '1rem' }}>Live report stats unavailable.</div>}
@@ -111,8 +140,8 @@ export function Reports() {
             <CardHeader title="Saved reports" />
           </div>
           <EmptyState
-            title="Saved reports remain in legacy CHALK"
-            description="Use the legacy reporting workspace for saved reports, exports, and scheduled report delivery."
+            title="Saved and scheduled reports remain in legacy CHALK"
+            description="Use the legacy reporting workspace for saved report libraries and scheduled report delivery."
             cta={<Button onClick={openLegacyReports}>Open legacy reports</Button>}
           />
         </Card>
