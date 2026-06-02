@@ -1,6 +1,7 @@
 import { buildObservationStartPayload } from './observationTypes'
 import {
   AccountPreferences,
+  AdminUserRow,
   ActivityItem,
   AttentionItem,
   DashboardStats,
@@ -494,6 +495,37 @@ export async function saveMessagingDraft(firebase: any, uid: string, draft: Part
   return mapMessagingEmail(ref.id, data)
 }
 
+function mapAdminUser(id: string, data: any): AdminUserRow {
+  return {
+    id,
+    firstName: data.firstName || '',
+    lastName: data.lastName || '',
+    email: data.email || '',
+    role: data.role || '',
+    archived: Boolean(data.archived),
+    programs: Array.isArray(data.programs) ? data.programs : (data.program ? [data.program] : []),
+    sites: Array.isArray(data.sites) ? data.sites : []
+  }
+}
+
+export async function getAdminUsers(firebase: any): Promise<AdminUserRow[]> {
+  return safeRead('Unable to load v2 admin users', async () => {
+    const snapshot = await firebase.db.collection('users').get()
+    return snapshot.docs
+      .map((doc: any) => mapAdminUser(doc.id, doc.data() || {}))
+      .sort((a: AdminUserRow, b: AdminUserRow) => {
+        const aName = (a.lastName + ' ' + a.firstName + ' ' + a.email).toLowerCase()
+        const bName = (b.lastName + ' ' + b.firstName + ' ' + b.email).toLowerCase()
+        return aName.localeCompare(bName)
+      })
+  }, [])
+}
+
+export async function setUserArchived(firebase: any, userId: string, archived: boolean): Promise<{ archived: boolean }> {
+  await firebase.db.collection('users').doc(userId).update({ archived })
+  return { archived }
+}
+
 export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
@@ -516,6 +548,8 @@ export function createV2Api(firebase: any) {
     getAccountPreferences: (uid: string) => getAccountPreferences(firebase, uid),
     saveAccountPreferences: (uid: string, preferences: AccountPreferences) => saveAccountPreferences(firebase, uid, preferences),
     getMessagingEmails: (uid: string) => getMessagingEmails(firebase, uid),
-    saveMessagingDraft: (uid: string, draft: Partial<MessagingEmail>) => saveMessagingDraft(firebase, uid, draft)
+    saveMessagingDraft: (uid: string, draft: Partial<MessagingEmail>) => saveMessagingDraft(firebase, uid, draft),
+    getAdminUsers: () => getAdminUsers(firebase),
+    setUserArchived: (userId: string, archived: boolean) => setUserArchived(firebase, userId, archived)
   }
 }

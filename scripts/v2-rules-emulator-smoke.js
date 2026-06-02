@@ -136,6 +136,14 @@ function malformedAccountPreferencesBody() {
   }
 }
 
+function archiveUserBody() {
+  return {
+    fields: {
+      archived: { booleanValue: true }
+    }
+  }
+}
+
 function arbitraryUserFieldBody() {
   return {
     fields: {
@@ -243,6 +251,13 @@ async function main() {
 
   const unrelatedAccountPreferences = await request("PATCH", accountPreferencesUrl, accountPreferencesBody(), fakeFirebaseToken("v2-unrelated-coach"))
   assertStatus("unrelated coach account preferences write", unrelatedAccountPreferences, 403)
+
+  const archiveUserUrl = base + "/users/v2-teacher?updateMask.fieldPaths=archived"
+  const adminArchiveUser = await request("PATCH", archiveUserUrl, archiveUserBody(), fakeFirebaseToken("v2-admin"))
+  assertStatus("admin archive user write", adminArchiveUser, 200)
+
+  const coachArchiveUser = await request("PATCH", archiveUserUrl, archiveUserBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach archive user write", coachArchiveUser, 403)
 
   const arbitraryUserFieldUrl = base + "/users/v2-coach?updateMask.fieldPaths=role"
   const arbitraryUserField = await request("PATCH", arbitraryUserFieldUrl, arbitraryUserFieldBody(), fakeFirebaseToken("v2-coach"))

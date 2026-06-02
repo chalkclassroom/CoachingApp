@@ -36,6 +36,17 @@ export type MessagingEmail = {
   dateCreated?: Date | null
 }
 
+export type AdminUserRow = {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  role: string
+  archived: boolean
+  programs: string[]
+  sites: string[]
+}
+
 export type DashboardStats = {
   underCoaching: number
   needAttention: number

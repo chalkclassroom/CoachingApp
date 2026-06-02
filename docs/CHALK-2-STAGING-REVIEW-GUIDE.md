@@ -38,7 +38,7 @@ Do not treat partial or delegated interactions as durable production writes unle
 | `/v2/messages` | Live drafts / delegated delivery | Draft list/editor backed by Firestore plus legacy route for sending and attachments | V2 sends email through SendGrid directly |
 | `/v2/resources` | Partial | Resource hub backed by real bundled CHALK assets | Every training/media asset has final production UX |
 | `/v2/reports` | Delegated/live-ish | Live summary stats plus legacy delegation for exports/scheduling/profile reports | V2 advanced reporting/export is complete |
-| `/v2/admin` | Read-only/delegated | Admin disclosure and links to legacy admin/users | Create/edit/import writes are enabled in V2 |
+| `/v2/admin` | Live users / delegated setup | Live user list with archive/restore plus legacy links for create/import/program/site setup | Full admin onboarding/import is V2-native |
 | `/v2/leader` | Delegated | Leader links to legacy dashboard/users/teachers/coaches/sites/archive/all-users/profile reports | Leader dashboard data is rendered by V2 |
 | `/v2/account` | Live preferences | Locked profile identity plus persisted V2 workspace preferences | Name/email/role can be edited from V2 |
 | `/v2/training` | Partial | Curated modules, truthful status labels, non-optimistic completion/skip behavior | Recommendations are fully data-driven |
@@ -67,7 +67,7 @@ The detailed stub disclosure lives in `docs/CHALK-2-STUBS-DISCLOSURE.md`.
 High-level summary:
 
 - Message drafts are live in V2; email delivery and attachments remain in legacy CHALK.
-- Admin writes are delegated to legacy CHALK.
+- Admin user archive/restore is live in V2; create/import/program/site setup remains in legacy CHALK.
 - Reports exports/scheduling/profile reports are delegated to legacy CHALK.
 - Leader dashboards and leader user lists are delegated to legacy CHALK.
 - Home, Teachers, Plans, Teacher Profile, Reports, Admin, and Training initialize with empty/loading/error states instead of demo rows.
