@@ -141,10 +141,11 @@
     "v2:profile-delegation-check": "node scripts/v2-profile-delegation-check.js",
     "v2:cypress-ci-check": "node scripts/v2-cypress-ci-check.js",
     "v2:cypress:smoke": "npx cypress run --spec \"cypress/integration/v2/**/*.ts\"",
-    "v2:ci:smoke": "npm run v2:preview-check && npm run v2:data-loading-check && npm run v2:console-check && npm run v2:role-access-check && npm run v2:reports-delegation-check && npm run v2:admin-delegation-check && npm run v2:leader-delegation-check && npm run v2:profile-delegation-check && npm run v2:resources-catalog-check && npm run v2:training-truthfulness-check && npm run v2:account-readonly-check && npm run v2:monitoring-check && npm run v2:sw-rollback-check && npm run v2:release-checklist-check && npm run v2:cypress-ci-check",
+    "v2:ci:smoke": "npm run v2:preview-check && npm run v2:data-loading-check && npm run v2:console-check && npm run v2:role-access-check && npm run v2:reports-delegation-check && npm run v2:admin-delegation-check && npm run v2:leader-delegation-check && npm run v2:profile-delegation-check && npm run v2:resources-catalog-check && npm run v2:training-truthfulness-check && npm run v2:account-readonly-check && npm run v2:monitoring-check && npm run v2:sw-rollback-check && npm run v2:release-checklist-check && npm run v2:release-decision-check && npm run v2:cypress-ci-check",
     "v2:monitoring-check": "node scripts/v2-monitoring-check.js",
     "v2:sw-rollback-check": "node scripts/v2-sw-rollback-check.js",
-    "v2:release-checklist-check": "node scripts/v2-release-checklist-check.js"
+    "v2:release-checklist-check": "node scripts/v2-release-checklist-check.js",
+    "v2:release-decision-check": "node scripts/v2-release-decision-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"
