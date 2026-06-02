@@ -4,7 +4,15 @@ import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
-import { useToast } from '../hooks/useToast'
+import CoachHandbookUrl from '../../assets/coaching-docs/Coach Handbook_9.1.21.pdf'
+import TransitionHandoutUrl from '../../assets/coaching-docs/Transition Time CHALK Handout.pdf'
+import ClassroomClimateHandoutUrl from '../../assets/coaching-docs/Classroom Climate CHALK Handout.pdf'
+import EarlyMathHandoutUrl from '../../assets/coaching-docs/Early Math CHALK Handout.pdf'
+import StudentEngagementHandoutUrl from '../../assets/coaching-docs/Student Engagement CHALK Handout.pdf'
+import LiteracyDefinitionsUrl from '../../assets/coaching-docs/Literacy Definitions and Examples.pdf'
+import AssociativeHandoutUrl from '../../assets/coaching-docs/Associative and Cooperative Interactions CHALK Handout.pdf'
+import ClassCrosswalkUrl from '../../assets/coaching-docs/CLASS CHALK Crosswalk.pdf'
+import CoachingBestPracticesUrl from '../../assets/coaching-docs/Coaching Best Practices.pdf'
 
 type ResourceCategory = 'coaching-cycle' | 'professional-development' | 'crosswalks' | 'best-practices'
 type Resource = {
@@ -12,21 +20,23 @@ type Resource = {
   title: string
   category: ResourceCategory
   tool: string
-  format: 'Guide' | 'Video' | 'Checklist' | 'Crosswalk'
+  format: 'PDF' | 'PPTX'
   time: string
   summary: string
+  url: string
   recommended?: boolean
 }
 
 const RESOURCES: Resource[] = [
-  { id: 'cycle-prepare', title: 'Prepare for a coaching cycle', category: 'coaching-cycle', tool: 'Coaching Cycle', format: 'Checklist', time: '8 min', summary: 'A short sequence for planning observation, feedback, and follow-up before meeting a teacher.', recommended: true },
-  { id: 'transition-time', title: 'Transition Time facilitation moves', category: 'professional-development', tool: 'Transition Time', format: 'Guide', time: '14 min', summary: 'Practice examples and reflection prompts for reducing wait time between activities.', recommended: true },
-  { id: 'climate-pd', title: 'Classroom Climate reflection set', category: 'professional-development', tool: 'Classroom Climate', format: 'Video', time: '18 min', summary: 'A guided module for noticing responsive language, emotional tone, and routines.' },
-  { id: 'math-crosswalk', title: 'Math Instruction crosswalk', category: 'crosswalks', tool: 'Math Instruction', format: 'Crosswalk', time: '6 min', summary: 'Maps CHALK observation evidence to coaching language and aligned next steps.' },
-  { id: 'feedback-conversation', title: 'Feedback conversation structure', category: 'best-practices', tool: 'Coaching Best Practices', format: 'Guide', time: '10 min', summary: 'A simple agenda for turning observation evidence into a concrete teacher-owned action plan.' },
-  { id: 'student-engagement', title: 'Student Engagement look-fors', category: 'professional-development', tool: 'Student Engagement', format: 'Checklist', time: '7 min', summary: 'Observable indicators and coach prompts for increasing active participation.' },
-  { id: 'literacy', title: 'Literacy Instruction resource pack', category: 'professional-development', tool: 'Literacy Instruction', format: 'Guide', time: '16 min', summary: 'Coaching notes, sample language, and action-plan examples for literacy routines.' },
-  { id: 'associative', title: 'Associative and cooperative play prompts', category: 'crosswalks', tool: 'Associative/Cooperative Interactions', format: 'Crosswalk', time: '9 min', summary: 'Connects interaction evidence to classroom practice shifts and teacher reflection questions.' }
+  { id: 'coach-handbook', title: 'Coach Handbook', category: 'coaching-cycle', tool: 'Coaching Cycle', format: 'PDF', time: 'Reference', summary: 'Core CHALK coaching workflow, expectations, and cycle guidance.', url: CoachHandbookUrl, recommended: true },
+  { id: 'transition-time-handout', title: 'Transition Time handout', category: 'professional-development', tool: 'Transition Time', format: 'PDF', time: 'Handout', summary: 'Guidance and examples for observing and coaching classroom transitions.', url: TransitionHandoutUrl, recommended: true },
+  { id: 'classroom-climate-handout', title: 'Classroom Climate handout', category: 'professional-development', tool: 'Classroom Climate', format: 'PDF', time: 'Handout', summary: 'Prompts for noticing responsive language, emotional tone, and routines.', url: ClassroomClimateHandoutUrl },
+  { id: 'early-math-handout', title: 'Early Math handout', category: 'professional-development', tool: 'Math Instruction', format: 'PDF', time: 'Handout', summary: 'Examples and coach language for math talk, concepts, and problem solving.', url: EarlyMathHandoutUrl },
+  { id: 'student-engagement-handout', title: 'Student Engagement handout', category: 'professional-development', tool: 'Student Engagement', format: 'PDF', time: 'Handout', summary: 'Observable indicators and prompts for increasing active participation.', url: StudentEngagementHandoutUrl },
+  { id: 'literacy-definitions', title: 'Literacy definitions and examples', category: 'professional-development', tool: 'Literacy Instruction', format: 'PDF', time: 'Reference', summary: 'Definitions and examples used by the literacy observation path.', url: LiteracyDefinitionsUrl },
+  { id: 'associative-handout', title: 'Associative and cooperative interactions handout', category: 'professional-development', tool: 'Associative/Cooperative Interactions', format: 'PDF', time: 'Handout', summary: 'Connects interaction evidence to classroom practice shifts and teacher reflection.', url: AssociativeHandoutUrl },
+  { id: 'class-crosswalk', title: 'CLASS CHALK Crosswalk', category: 'crosswalks', tool: 'CLASS Crosswalk', format: 'PDF', time: 'Reference', summary: 'Maps CHALK practices to CLASS-aligned observation and coaching language.', url: ClassCrosswalkUrl },
+  { id: 'coaching-best-practices', title: 'Coaching Best Practices', category: 'best-practices', tool: 'Coaching Best Practices', format: 'PDF', time: 'Guide', summary: 'Best-practice guidance for coaching communication, planning, and follow-up.', url: CoachingBestPracticesUrl }
 ]
 
 const categoryLabel: Record<ResourceCategory | 'all', string> = {
@@ -37,16 +47,13 @@ const categoryLabel: Record<ResourceCategory | 'all', string> = {
   'best-practices': 'Best practices'
 }
 
-function formatColor(format: Resource['format']): 'neutral' | 'warn' | 'brand' | 'success' {
-  if (format === 'Guide') return 'brand'
-  if (format === 'Video') return 'warn'
-  if (format === 'Crosswalk') return 'success'
-  return 'neutral'
+function formatColor(format: Resource['format']): 'brand' | 'success' {
+  if (format === 'PPTX') return 'success'
+  return 'brand'
 }
 
 export function Resources() {
   const history = useHistory()
-  const toast = useToast()
   const [category, setCategory] = React.useState<ResourceCategory | 'all'>('all')
   const [search, setSearch] = React.useState('')
   const normalized = search.trim().toLowerCase()
@@ -56,11 +63,7 @@ export function Resources() {
   })
 
   const openResource = (resource: Resource) => {
-    if (resource.category === 'professional-development') {
-      history.push('/v2/training')
-      return
-    }
-    toast.info(`${resource.title} is mapped for the resources migration; source material stays in legacy for now.`)
+    window.open(resource.url, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -69,7 +72,7 @@ export function Resources() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Coaching resources</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            A searchable hub for coaching cycle materials, professional development, crosswalks, and best practices.
+            A searchable hub for CHALK coaching cycle materials, professional development handouts, crosswalks, and best-practice guides.
           </div>
         </div>
         <Button variant="primary" onClick={() => history.push('/v2/training')}>Open recommended training</Button>
