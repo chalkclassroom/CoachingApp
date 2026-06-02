@@ -37,6 +37,9 @@ async function seedFixtures() {
   for (const observation of Object.values(fixtures.observations)) {
     writes.push(setDoc(db, 'observations/' + observation.id, observation))
   }
+  for (const conferencePlan of Object.values(fixtures.conferencePlans)) {
+    writes.push(setDoc(db, 'conferencePlans/' + conferencePlan.id, conferencePlan))
+  }
 
   writes.push(setDoc(db, 'users/v2-coach/partners/v2-teacher', { createdAt: new Date('2026-06-01T00:00:00.000Z') }))
   writes.push(setDoc(db, 'users/v2-unrelated-coach/partners/v2-cross-teacher', { createdAt: new Date('2026-06-01T00:00:00.000Z') }))

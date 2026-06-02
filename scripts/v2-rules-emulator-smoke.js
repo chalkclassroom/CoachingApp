@@ -187,6 +187,28 @@ function sentBody(sentBy = "v2-coach") {
   }
 }
 
+function conferencePlanBody() {
+  const timestamp = new Date("2026-06-01T00:30:00.000Z").toISOString()
+  return {
+    fields: {
+      feedback: { arrayValue: { values: [{ stringValue: "Updated feedback" }] } },
+      questions: { arrayValue: { values: [{ stringValue: "Updated question" }] } },
+      addedQuestions: { arrayValue: { values: [{ stringValue: "Follow-up question" }] } },
+      notes: { arrayValue: { values: [{ stringValue: "Updated note" }] } },
+      dateModified: { timestampValue: timestamp }
+    }
+  }
+}
+
+function malformedConferencePlanBody() {
+  return {
+    fields: {
+      feedback: { stringValue: "not a list" },
+      dateModified: { timestampValue: new Date("2026-06-01T00:31:00.000Z").toISOString() }
+    }
+  }
+}
+
 function messagingDraftBody(user = "v2-coach") {
   const timestamp = new Date("2026-06-01T00:25:00.000Z").toISOString()
   return {
@@ -293,6 +315,16 @@ async function main() {
 
   const unrelatedSent = await request("PATCH", sentUrl, sentBody("v2-unrelated-coach"), fakeFirebaseToken("v2-unrelated-coach"))
   assertStatus("unrelated coach action plan sent-state write", unrelatedSent, 403)
+
+  const conferencePlanUrl = base + "/conferencePlans/v2-conference-plan?updateMask.fieldPaths=feedback&updateMask.fieldPaths=questions&updateMask.fieldPaths=addedQuestions&updateMask.fieldPaths=notes&updateMask.fieldPaths=dateModified"
+  const assignedConferencePlan = await request("PATCH", conferencePlanUrl, conferencePlanBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("assigned coach conference plan write", assignedConferencePlan, 200)
+
+  const unrelatedConferencePlan = await request("PATCH", conferencePlanUrl, conferencePlanBody(), fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach conference plan write", unrelatedConferencePlan, 403)
+
+  const malformedConferencePlan = await request("PATCH", base + "/conferencePlans/v2-conference-plan?updateMask.fieldPaths=feedback&updateMask.fieldPaths=dateModified", malformedConferencePlanBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("malformed conference plan write", malformedConferencePlan, 403)
 
   const messagingDraftUrl = base + "/emails/v2-draft"
   const messagingDraft = await request("PATCH", messagingDraftUrl, messagingDraftBody("v2-coach"), fakeFirebaseToken("v2-coach"))

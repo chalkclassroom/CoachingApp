@@ -132,6 +132,22 @@ export type PlanDetail = {
   comments: PlanComment[]
 }
 
+export type ConferencePlanItem = {
+  id: string
+  teacherId: string
+  teacherName: string
+  sessionId: string
+  practice: string
+  updatedAt: Date | null
+}
+
+export type ConferencePlanDetail = ConferencePlanItem & {
+  feedback: string[]
+  questions: string[]
+  addedQuestions: string[]
+  notes: string[]
+}
+
 export type ObservationSession = {
   coachUid: string
   teacherUid: string

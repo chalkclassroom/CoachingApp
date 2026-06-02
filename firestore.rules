@@ -104,6 +104,40 @@ service cloud.firestore {
         ));
     }
 
+    function isConferencePlanCoach(plan) {
+      return plan.get("coachId", "") == request.auth.uid ||
+        plan.get("coach", "") == request.auth.uid ||
+        plan.get("createdBy", "") == request.auth.uid;
+    }
+
+    function isConferencePlanTeacher(plan) {
+      return plan.get("teacherId", "") == request.auth.uid ||
+        plan.get("teacher", "") == request.auth.uid;
+    }
+
+    function canReadConferencePlan(plan) {
+      return signedIn() && (isAdmin() || isConferencePlanCoach(plan) || isConferencePlanTeacher(plan));
+    }
+
+    function canWriteConferencePlan(plan) {
+      return signedIn() && (isAdmin() || isConferencePlanCoach(plan));
+    }
+
+    function validConferencePlanList(value) {
+      return value is list && value.size() <= 50;
+    }
+
+    function validConferencePlanUpdate(plan) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return canWriteConferencePlan(plan) &&
+        changed.hasOnly(["feedback", "questions", "addedQuestions", "notes", "dateModified"]) &&
+        (!changed.hasAny(["feedback"]) || validConferencePlanList(request.resource.data.feedback)) &&
+        (!changed.hasAny(["questions"]) || validConferencePlanList(request.resource.data.questions)) &&
+        (!changed.hasAny(["addedQuestions"]) || validConferencePlanList(request.resource.data.addedQuestions)) &&
+        (!changed.hasAny(["notes"]) || validConferencePlanList(request.resource.data.notes)) &&
+        (!changed.hasAny(["dateModified"]) || request.resource.data.dateModified is timestamp);
+    }
+
     function validEmailValue(email) {
       return email is map &&
         email.keys().hasOnly(["id", "emailContent", "subject", "recipientId", "recipientFirstName", "recipientName", "recipientEmail", "dateCreated", "dateModified", "type", "user"]) &&
@@ -163,8 +197,11 @@ service cloud.firestore {
       allow read, write: if signedIn();
     }
 
-    match /conferencePlans/{document=**} {
-      allow read, write: if signedIn();
+    match /conferencePlans/{planId} {
+      allow read: if canReadConferencePlan(resource.data);
+      allow create: if signedIn() && (isAdmin() || isConferencePlanCoach(request.resource.data));
+      allow update: if validConferencePlanUpdate(resource.data);
+      allow delete: if isAdmin();
     }
 
     match /emails/{emailId} {

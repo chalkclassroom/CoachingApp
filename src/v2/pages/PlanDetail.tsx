@@ -9,7 +9,7 @@ import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
-import { PlanComment, PlanDetail as V2PlanDetail, PlanStep } from '../lib/types'
+import { ConferencePlanDetail, PlanComment, PlanDetail as V2PlanDetail, PlanStep } from '../lib/types'
 
 const EMPTY_PLAN: V2PlanDetail = {
   id: "",
@@ -22,6 +22,19 @@ const EMPTY_PLAN: V2PlanDetail = {
   progress: 0,
   steps: [],
   comments: []
+}
+
+const EMPTY_CONFERENCE_PLAN: ConferencePlanDetail = {
+  id: "",
+  teacherId: "",
+  teacherName: "Teacher",
+  sessionId: "",
+  practice: "Conference plan",
+  updatedAt: null,
+  feedback: [""],
+  questions: [""],
+  addedQuestions: [],
+  notes: [""]
 }
 
 function dateInputValue(date: Date | null): string {
@@ -71,11 +84,12 @@ function Comment(p: PlanComment) {
   )
 }
 
-function EditableTextArea(props: { value: string; onChange(value: string): void; minHeight?: number }) {
+function EditableTextArea(props: { value: string; onChange(value: string): void; minHeight?: number; placeholder?: string }) {
   return (
     <textarea
       value={props.value}
       onChange={(event) => props.onChange(event.currentTarget.value)}
+      placeholder={props.placeholder}
       style={{
         width: '100%',
         minHeight: props.minHeight || 110,
@@ -91,6 +105,35 @@ function EditableTextArea(props: { value: string; onChange(value: string): void;
   )
 }
 
+function ConferenceListEditor(props: {
+  title: string
+  items: string[]
+  placeholder: string
+  onChange(index: number, value: string): void
+  onAdd(): void
+}) {
+  const items = props.items.length > 0 ? props.items : [""]
+  return (
+    <Card padding="1.35rem">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <h3 style={{ fontSize: '0.95rem', fontWeight: 700 }}>{props.title}</h3>
+        <Button size="sm" onClick={props.onAdd}>+ Add</Button>
+      </div>
+      <div style={{ display: 'grid', gap: '0.75rem' }}>
+        {items.map((item, index) => (
+          <EditableTextArea
+            key={index}
+            value={item}
+            minHeight={90}
+            placeholder={props.placeholder}
+            onChange={(value) => props.onChange(index, value)}
+          />
+        ))}
+      </div>
+    </Card>
+  )
+}
+
 export function PlanDetail() {
   const { planId } = useParams<{ planId?: string }>()
   const firebase = useV2Firebase()
@@ -100,17 +143,30 @@ export function PlanDetail() {
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
   const [savedLabel, setSavedLabel] = React.useState('Saved locally')
+  const [conferencePlan, setConferencePlan] = React.useState<ConferencePlanDetail>(EMPTY_CONFERENCE_PLAN)
   const [commentText, setCommentText] = React.useState('')
   const [showSendConfirm, setShowSendConfirm] = React.useState(false)
   const [sending, setSending] = React.useState(false)
-  const realPlanId = planId && planId !== 'demo-plan' ? planId : ''
+  const isConferencePlan = Boolean(planId && planId.startsWith('conference-'))
+  const realConferencePlanId = isConferencePlan && planId ? planId.replace(/^conference-/, '') : ''
+  const realPlanId = !isConferencePlan && planId && planId !== 'demo-plan' ? planId : ''
   const serializedSteps = JSON.stringify(plan.steps.map(step => ({
     step: step.step,
     person: step.person,
     timeline: step.timeline ? step.timeline.toISOString() : null
   })))
+  const serializedConferencePlan = JSON.stringify({
+    feedback: conferencePlan.feedback,
+    questions: conferencePlan.questions,
+    addedQuestions: conferencePlan.addedQuestions,
+    notes: conferencePlan.notes
+  })
 
   React.useEffect(() => {
+    if (isConferencePlan) {
+      return
+    }
+
     if (!realPlanId || !auth.user) {
       const cached = window.localStorage.getItem('chalk-v2-plan-draft')
       if (cached) {
@@ -141,9 +197,37 @@ export function PlanDetail() {
     })
 
     return () => { active = false }
-  }, [auth.user, firebase, realPlanId])
+  }, [auth.user, firebase, isConferencePlan, realPlanId])
 
   React.useEffect(() => {
+    if (!isConferencePlan || !realConferencePlanId || !auth.user) {
+      return
+    }
+
+    let active = true
+    setLoading(true)
+    setError(null)
+    createV2Api(firebase).getConferencePlanFull(realConferencePlanId).then(nextPlan => {
+      if (!active) return
+      if (nextPlan) {
+        setConferencePlan(nextPlan)
+        setSavedLabel('Loaded from CHALK')
+      }
+      setLoading(false)
+    }).catch(fetchError => {
+      if (!active) return
+      setError(fetchError as Error)
+      setLoading(false)
+    })
+
+    return () => { active = false }
+  }, [auth.user, firebase, isConferencePlan, realConferencePlanId])
+
+  React.useEffect(() => {
+    if (isConferencePlan) {
+      return
+    }
+
     if (loading) {
       return
     }
@@ -174,10 +258,53 @@ export function PlanDetail() {
     }, 900)
 
     return () => window.clearTimeout(timeout)
-  }, [auth.user, firebase, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId, serializedSteps])
+  }, [auth.user, firebase, isConferencePlan, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId, serializedSteps])
+
+  React.useEffect(() => {
+    if (!isConferencePlan || loading) {
+      return
+    }
+
+    setSavedLabel(auth.user && realConferencePlanId ? 'Saving...' : 'Saving locally...')
+    const timeout = window.setTimeout(() => {
+      if (!auth.user || !realConferencePlanId) {
+        window.localStorage.setItem('chalk-v2-conference-plan-draft', JSON.stringify(conferencePlan))
+        setSavedLabel('Saved locally')
+        return
+      }
+
+      createV2Api(firebase).saveConferencePlanDraft(realConferencePlanId, {
+        feedback: conferencePlan.feedback,
+        questions: conferencePlan.questions,
+        addedQuestions: conferencePlan.addedQuestions,
+        notes: conferencePlan.notes
+      }).then(() => {
+        setSavedLabel('Auto-saved')
+      }).catch(saveError => {
+        console.error('Unable to autosave v2 conference plan', saveError)
+        setSavedLabel('Save failed')
+      })
+    }, 900)
+
+    return () => window.clearTimeout(timeout)
+  }, [auth.user, conferencePlan, firebase, isConferencePlan, loading, realConferencePlanId, serializedConferencePlan])
 
   const updatePlan = (patch: Partial<V2PlanDetail>) => {
     setPlan(current => ({ ...current, ...patch }))
+  }
+
+  const updateConferenceList = (field: 'feedback' | 'questions' | 'addedQuestions' | 'notes', index: number, value: string) => {
+    setConferencePlan(current => ({
+      ...current,
+      [field]: (current[field].length > 0 ? current[field] : ['']).map((item, itemIndex) => itemIndex === index ? value : item)
+    }))
+  }
+
+  const addConferenceItem = (field: 'feedback' | 'questions' | 'addedQuestions' | 'notes') => {
+    setConferencePlan(current => ({
+      ...current,
+      [field]: [...current[field], '']
+    }))
   }
 
   const updateStep = (index: number, patch: Partial<PlanStep>) => {
@@ -256,6 +383,73 @@ export function PlanDetail() {
       <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
         <Skeleton width="40%" height={32} style={{ marginBottom: '1rem' }} />
         <Skeleton height={240} />
+      </div>
+    )
+  }
+
+  if (isConferencePlan) {
+    return (
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem'
+        }}>
+          <div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--v2-muted)', marginBottom: '0.3rem' }}>
+              Conference Plans / {conferencePlan.teacherName}
+            </div>
+            <h1 style={{ color: 'var(--v2-ink)', fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
+              {conferencePlan.practice || 'Conference plan'}
+            </h1>
+            <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
+              For {conferencePlan.teacherName} · session {conferencePlan.sessionId || 'not linked'}
+            </div>
+            {error && (
+              <div style={{ color: 'var(--v2-warm-dark)', fontSize: '0.82rem', marginTop: '0.4rem', fontWeight: 600 }}>
+                Live conference plan unavailable; edits are held locally.
+              </div>
+            )}
+          </div>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            background: savedLabel === 'Save failed' ? 'var(--v2-warm-soft)' : 'var(--v2-success-soft)',
+            color: savedLabel === 'Save failed' ? 'var(--v2-warm-dark)' : 'var(--v2-success)',
+            padding: '0.35rem 0.85rem',
+            borderRadius: 'var(--v2-radius-pill)',
+            fontSize: '0.78rem', fontWeight: 600
+          }}>{savedLabel}</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
+          <ConferenceListEditor
+            title="Feedback prompts"
+            items={conferencePlan.feedback}
+            placeholder="Feedback or reflection prompt"
+            onChange={(index, value) => updateConferenceList('feedback', index, value)}
+            onAdd={() => addConferenceItem('feedback')}
+          />
+          <ConferenceListEditor
+            title="Core questions"
+            items={conferencePlan.questions}
+            placeholder="Question for the conference"
+            onChange={(index, value) => updateConferenceList('questions', index, value)}
+            onAdd={() => addConferenceItem('questions')}
+          />
+          <ConferenceListEditor
+            title="Added questions"
+            items={conferencePlan.addedQuestions}
+            placeholder="Additional question"
+            onChange={(index, value) => updateConferenceList('addedQuestions', index, value)}
+            onAdd={() => addConferenceItem('addedQuestions')}
+          />
+          <ConferenceListEditor
+            title="Notes"
+            items={conferencePlan.notes}
+            placeholder="Conference notes"
+            onChange={(index, value) => updateConferenceList('notes', index, value)}
+            onAdd={() => addConferenceItem('notes')}
+          />
+        </div>
       </div>
     )
   }

@@ -107,6 +107,24 @@ const fixtures = {
       programId: 'program-alpha',
       siteId: 'site-north'
     }
+  },
+  conferencePlans: {
+    sameProgramConferencePlan: {
+      id: 'v2-conference-plan',
+      sessionId: 'v2-session',
+      coach: 'v2-coach',
+      teacher: 'v2-teacher',
+      teacherName: 'V2 Teacher',
+      teacherFirstName: 'V2',
+      teacherLastName: 'Teacher',
+      tool: 'Classroom Climate',
+      dateCreated: new Date('2026-06-01T00:00:00.000Z'),
+      dateModified: new Date('2026-06-01T00:00:00.000Z'),
+      feedback: ['Start with a strength.'],
+      questions: ['What changed after the observation?'],
+      addedQuestions: [],
+      notes: ['Rules fixture']
+    }
   }
 }
 

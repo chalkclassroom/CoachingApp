@@ -4,6 +4,8 @@ import {
   AdminUserRow,
   ActivityItem,
   AttentionItem,
+  ConferencePlanDetail,
+  ConferencePlanItem,
   DashboardStats,
   DateRange,
   LeaderSummary,
@@ -186,6 +188,48 @@ export async function getActivePlans(firebase: any, uid: string): Promise<PlanIt
       progress: plan.status === "inProgress" ? 65 : 30,
       due: toDate(plan.achieveBy) ? "Due " + toDate(plan.achieveBy)?.toLocaleDateString() : "No due date"
     }))
+}
+
+function mapConferencePlan(id: string, data: any): ConferencePlanDetail {
+  return {
+    id,
+    teacherId: data.teacher || data.teacherId || '',
+    teacherName: data.teacherName || fullName({ firstName: data.teacherFirstName, lastName: data.teacherLastName }) || data.teacher || 'Teacher',
+    sessionId: data.sessionId || '',
+    practice: data.tool || data.practice || 'Conference plan',
+    updatedAt: toDate(data.dateModified || data.dateCreated),
+    feedback: Array.isArray(data.feedback) ? data.feedback : [''],
+    questions: Array.isArray(data.questions) ? data.questions : [''],
+    addedQuestions: Array.isArray(data.addedQuestions) ? data.addedQuestions : [],
+    notes: Array.isArray(data.notes) ? data.notes : ['']
+  }
+}
+
+export async function getConferencePlans(firebase: any, uid: string): Promise<ConferencePlanItem[]> {
+  return safeRead('Unable to load v2 conference plans', async () => {
+    const snapshot = await firebase.db.collection('conferencePlans').where('coach', '==', uid).get()
+    return snapshot.docs
+      .map((doc: any) => mapConferencePlan(doc.id, doc.data() || {}))
+      .sort((a: ConferencePlanItem, b: ConferencePlanItem) => (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0))
+  }, [])
+}
+
+export async function getConferencePlanFull(firebase: any, planId: string): Promise<ConferencePlanDetail | null> {
+  const doc = await firebase.db.collection('conferencePlans').doc(planId).get()
+  if (!doc.exists) return null
+  return mapConferencePlan(doc.id, doc.data() || {})
+}
+
+export async function saveConferencePlanDraft(firebase: any, planId: string, patch: Pick<ConferencePlanDetail, 'feedback' | 'questions' | 'addedQuestions' | 'notes'>): Promise<ConferencePlanDetail | null> {
+  const normalize = (items: string[]) => (Array.isArray(items) ? items : ['']).map(item => String(item || '')).slice(0, 50)
+  await firebase.db.collection('conferencePlans').doc(planId).update({
+    feedback: normalize(patch.feedback),
+    questions: normalize(patch.questions),
+    addedQuestions: normalize(patch.addedQuestions),
+    notes: normalize(patch.notes),
+    dateModified: new Date()
+  })
+  return getConferencePlanFull(firebase, planId)
 }
 
 export async function getDashboardStats(firebase: any, uid: string, range: DateRange = lastNDays(7)): Promise<DashboardStats> {
@@ -621,6 +665,9 @@ export function createV2Api(firebase: any) {
     getPracticeTrends: (uid: string, range?: DateRange) => getPracticeTrends(firebase, uid, range),
     getRecentActivity: (uid: string, limit?: number) => getRecentActivity(firebase, uid, limit),
     getActivePlans: (uid: string) => getActivePlans(firebase, uid),
+    getConferencePlans: (uid: string) => getConferencePlans(firebase, uid),
+    getConferencePlanFull: (planId: string) => getConferencePlanFull(firebase, planId),
+    saveConferencePlanDraft: (planId: string, patch: Pick<ConferencePlanDetail, 'feedback' | 'questions' | 'addedQuestions' | 'notes'>) => saveConferencePlanDraft(firebase, planId, patch),
     getTeachersForCoach: (uid: string, range?: DateRange) => getTeachersForCoach(firebase, uid, range),
     getActionPlanFull: (planId: string) => getActionPlanFull(firebase, planId),
     saveActionPlanField: (planId: string, patch: Partial<PlanDetail>) => saveActionPlanField(firebase, planId, patch),

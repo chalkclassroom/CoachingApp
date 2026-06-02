@@ -7,7 +7,6 @@ import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
 import { Skeleton } from '../components/Skeleton'
 import { Stat } from '../components/Stat'
-import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
@@ -32,6 +31,10 @@ type PlanRow = {
 }
 
 const EMPTY_PLANS: PlanRow[] = []
+
+function formatUpdated(date: Date | null): string {
+  return date ? date.toLocaleDateString() : 'Live data'
+}
 
 const statusVariant: Record<PlanStatus, 'neutral' | 'warn' | 'danger' | 'success' | 'brand'> = {
   draft: 'neutral',
@@ -119,7 +122,6 @@ export function ActionPlans() {
   const history = useHistory()
   const firebase = useV2Firebase()
   const auth = useV2Auth()
-  const toast = useToast()
   const [plans, setPlans] = React.useState<PlanRow[]>(EMPTY_PLANS)
   const [filter, setFilter] = React.useState<PlanFilter>('active')
   const [search, setSearch] = React.useState('')
@@ -134,24 +136,40 @@ export function ActionPlans() {
     let active = true
     setLoading(true)
     setError(null)
-    createV2Api(firebase).getActivePlans(auth.user.uid).then(items => {
+    Promise.all([
+      createV2Api(firebase).getActivePlans(auth.user.uid),
+      createV2Api(firebase).getConferencePlans(auth.user.uid)
+    ]).then(([actionItems, conferenceItems]) => {
       if (!active) return
-      if (items.length > 0) {
-        setPlans(items.map((item, index) => ({
-          id: item.id || `live-${index}`,
-          kind: 'action',
-          title: item.title,
-          teacher: item.forName,
-          teacherId: item.id || `teacher-${index}`,
-          classroom: 'Live CHALK plan',
-          status: item.progress >= 100 ? 'complete' : 'active',
-          progress: item.progress,
-          due: item.due.replace(/^Due\s+/, ''),
-          updated: 'Live data',
-          focus: item.title,
-          owner: 'Assigned coach'
-        })))
-      }
+      const actionRows: PlanRow[] = actionItems.map((item, index) => ({
+        id: item.id || `live-${index}`,
+        kind: 'action',
+        title: item.title,
+        teacher: item.forName,
+        teacherId: item.id || `teacher-${index}`,
+        classroom: 'Live CHALK plan',
+        status: item.progress >= 100 ? 'complete' : 'active',
+        progress: item.progress,
+        due: item.due.replace(/^Due\s+/, ''),
+        updated: 'Live data',
+        focus: item.title,
+        owner: 'Assigned coach'
+      }))
+      const conferenceRows: PlanRow[] = conferenceItems.map(item => ({
+        id: `conference-${item.id}`,
+        kind: 'conference',
+        title: item.practice || 'Conference plan',
+        teacher: item.teacherName || 'Teacher',
+        teacherId: item.teacherId || '',
+        classroom: item.sessionId || 'Conference session',
+        status: 'active',
+        progress: 50,
+        due: 'No due date',
+        updated: formatUpdated(item.updatedAt),
+        focus: item.practice || 'Conference plan',
+        owner: 'Assigned coach'
+      }))
+      setPlans([...actionRows, ...conferenceRows])
       setLoading(false)
     }).catch(fetchError => {
       if (!active) return
@@ -191,11 +209,10 @@ export function ActionPlans() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Plans workspace</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Action plans live here; conference plans remain delegated to legacy CHALK for this release.
+            Action and conference plans load from CHALK data with preview-safe empty states.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Button onClick={() => toast.info('Conference plans stay in legacy CHALK for this release. Use the legacy Conference Plans workflow to create or edit them.')}>Open legacy conference plans</Button>
           <Button variant="primary" onClick={() => history.push('/v2/plans/demo-plan')}>+ Action plan</Button>
         </div>
       </div>
@@ -204,7 +221,7 @@ export function ActionPlans() {
         <Stat label="Active plans" value={stats.active} tone="brand" icon="A" delta={{ text: 'Drafts included', trend: 'flat' }} />
         <Stat label="Overdue" value={stats.overdue} tone="warm" icon="!" delta={{ text: 'Needs coach action', trend: stats.overdue > 0 ? 'warn' : 'flat' }} />
         <Stat label="Sent" value={stats.sent} tone="success" icon="S" delta={{ text: 'Teacher-visible', trend: 'up' }} />
-        <Stat label="Conference" value={stats.conference} tone="gold" icon="C" delta={{ text: 'Separate workflow', trend: 'flat' }} />
+        <Stat label="Conference" value={stats.conference} tone="gold" icon="C" delta={{ text: 'Live drafts', trend: 'flat' }} />
       </div>
 
       <Card padding="1rem" style={{ marginBottom: '1rem' }}>

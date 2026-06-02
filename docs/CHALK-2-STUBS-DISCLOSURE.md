@@ -26,7 +26,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 | `CoachHome.tsx` | `STUB_ACTIVITY` | Fallback recent activity appeared in preview | Empty/error state | Live recent activity |
 | `CoachHome.tsx` | `STUB_PLANS` | Fallback active plans appeared in preview | Empty/error state | Live active plans |
 | `AllTeachers.tsx` | `ROWS` | Fictional roster appeared when live teacher list was unavailable | Empty/error state | Live roster only |
-| `ActionPlans.tsx` | `DEMO_PLANS` | Fictional action/conference plans drove the workspace shell | Empty/live action plan queue and conference plan delegation | Live plans or legacy delegation |
+| `ActionPlans.tsx` | `DEMO_PLANS` | Fictional action/conference plans drove the workspace shell | Empty/live action and conference plan queues | Live plans only; explicit delegation for new conference-plan creation if retained |
 | `Messaging.tsx` | `THREADS` | Preview inbox threads were local/static | Live draft list from `emails` collection | V2 delivery/attachments or explicit legacy fallback |
 | `Messaging.tsx` | `seeded` | Query-string teacher context created local preview thread | Teacher context pre-fills draft editor only | Approved delivery/attachment scope |
 | `PlanDetail.tsx` | `DEMO_PLAN` | Demo action plan powered `/v2/plans/demo-plan` and local draft behavior | Require live plan ID / safe empty state | Live plan contract |
@@ -41,7 +41,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 Use this language before staging signoff:
 
 ```text
-The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, report exports/scheduling/profile reports, detailed Leader workflows, profile reports, conference plans, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
+The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, report exports/scheduling/profile reports, detailed Leader workflows, profile reports, new conference-plan creation from observation context, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
 ```
 
 ---
