@@ -202,6 +202,7 @@ export function ActionPlans() {
 
   const openPlan = (plan: PlanRow) => history.push(`/v2/plans/${encodeURIComponent(plan.id)}`)
   const openTeacher = (plan: PlanRow) => history.push(`/v2/teachers/${encodeURIComponent(plan.teacherId)}?teacherName=${encodeURIComponent(plan.teacher)}&program=${encodeURIComponent(plan.classroom)}`)
+  const openLegacyActionPlans = () => { window.location.href = '/ActionPlans' }
 
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
@@ -213,7 +214,7 @@ export function ActionPlans() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Button variant="primary" onClick={() => history.push('/v2/plans/demo-plan')}>+ Action plan</Button>
+          <Button variant="primary" onClick={openLegacyActionPlans}>Open legacy action plans</Button>
         </div>
       </div>
 
@@ -243,7 +244,7 @@ export function ActionPlans() {
       {error && (
         <Card style={{ marginBottom: '1rem', borderColor: 'var(--v2-warm)' }}>
           <strong style={{ color: 'var(--v2-warm-dark)' }}>Live plans unavailable.</strong>
-          <span style={{ color: 'var(--v2-muted)', marginLeft: '0.35rem' }}>Showing the preview-safe workspace data.</span>
+          <span style={{ color: 'var(--v2-muted)', marginLeft: '0.35rem' }}>Open legacy action plans to review or create plans.</span>
         </Card>
       )}
 

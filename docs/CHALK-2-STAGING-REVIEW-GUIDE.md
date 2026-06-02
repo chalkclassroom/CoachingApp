@@ -33,8 +33,8 @@ Do not treat partial or delegated interactions as durable production writes unle
 | `/v2/teachers` | Live-ish | Teacher table, filters, empty roster behavior, profile entry, legacy users link for roster writes | Add teammate / CSV import are V2-native |
 | `/v2/teachers/:teacherId` | Partial | Teacher summary, current plan card, live-or-empty activity area | Full legacy teacher profile parity |
 | `/v2/observation` | Partial | Type picker, note-taking, draft restore, notes-only completion gate | Final canonical observation completion is fully production-ready |
-| `/v2/plans` | Partial | Action plan queue, filtering, live conference plan list/edit entry | New conference plan creation from observation context is fully V2-native |
-| `/v2/plans/:planId` | Partial | Action plan detail, autosave, comments, send-to-teacher confirmation, conference plan edit autosave | Generic empty plan state or new conference-plan creation is durable live data |
+| `/v2/plans` | Partial | Action plan queue, filtering, live conference plan list/edit entry, and legacy entry for new action plan creation | New action plan creation or new conference plan creation from observation context is fully V2-native |
+| `/v2/plans/:planId` | Partial | Existing action plan detail, autosave, comments, send-to-teacher confirmation, and existing conference plan edit autosave | Missing/generic plan IDs create local drafts or durable live data |
 | `/v2/messages` | Live drafts / delegated delivery | Draft list/editor backed by Firestore plus legacy route for sending and attachments | V2 sends email through SendGrid directly |
 | `/v2/resources` | Partial | Resource hub backed by real bundled CHALK assets | Every training/media asset has final production UX |
 | `/v2/reports` | Live summary/trends/export | Live summary stats, live practice trends, basic CSV export, and legacy route for saved/scheduled/profile reports | V2 saved report libraries or scheduled delivery are complete |
@@ -70,7 +70,7 @@ High-level summary:
 - Admin user archive/restore and program/site edits are live in V2; user creation/import/invite/role edits remain in legacy CHALK.
 - Report summary, practice trends, and basic CSV export are live in V2; saved/scheduled/profile reports remain in legacy CHALK.
 - Leader summary is live in V2; detailed leader management remains in legacy CHALK.
-- Existing conference plans list/edit in V2; new conference plan creation from the observation context remains outside this preview path.
+- Existing action plans and conference plans can be opened/edited in V2; new action plan creation and new conference plan creation from the observation context remain in legacy CHALK.
 - Home, Teachers, Plans, Teacher Profile, Reports, Admin, and Training initialize with empty/loading/error states instead of demo rows.
 
 ---

@@ -29,7 +29,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 | `ActionPlans.tsx` | `DEMO_PLANS` | Fictional action/conference plans drove the workspace shell | Empty/live action and conference plan queues | Live plans only; explicit delegation for new conference-plan creation if retained |
 | `Messaging.tsx` | `THREADS` | Preview inbox threads were local/static | Live draft list from `emails` collection | V2 delivery/attachments or explicit legacy fallback |
 | `Messaging.tsx` | `seeded` | Query-string teacher context created local preview thread | Teacher context pre-fills draft editor only | Approved delivery/attachment scope |
-| `PlanDetail.tsx` | `DEMO_PLAN` | Demo action plan powered `/v2/plans/demo-plan` and local draft behavior | Require live plan ID / safe empty state | Live plan contract |
+| `PlanDetail.tsx` | `DEMO_PLAN` | Demo action plan powered `/v2/plans/demo-plan` and local draft behavior | Require live plan ID, block local drafts, and route creation/recovery to legacy action plans | Live plan contract or explicit legacy creation flow |
 | `TeacherProfile.tsx` | `DEMO_TEACHERS` | Profile fallback showed fictional teacher summary | Live-or-empty teacher profile | Live teacher profile or legacy delegation |
 | `Reports.tsx` | `DEFAULT_STATS` | Report stats fell back to static values | Live summary, live practice trends, basic CSV export, and zero/empty fallback | Saved/scheduled report contract |
 | `Training.tsx` | `CARDS` | Static training cards looked data-recommended | Curated module labels with persisted status | Data-driven recommendations if implemented |
@@ -41,7 +41,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 Use this language before staging signoff:
 
 ```text
-The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin user create/import/invite/role-edit writes, saved/scheduled report workflows/profile reports, detailed Leader workflows, profile reports, new conference-plan creation from observation context, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
+The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin user create/import/invite/role-edit writes, saved/scheduled report workflows/profile reports, detailed Leader workflows, profile reports, new action plan creation, new conference-plan creation from observation context, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
 ```
 
 ---

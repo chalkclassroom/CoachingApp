@@ -142,14 +142,14 @@ export function PlanDetail() {
   const [plan, setPlan] = React.useState<V2PlanDetail>(EMPTY_PLAN)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
-  const [savedLabel, setSavedLabel] = React.useState('Saved locally')
+  const [savedLabel, setSavedLabel] = React.useState('Not loaded')
   const [conferencePlan, setConferencePlan] = React.useState<ConferencePlanDetail>(EMPTY_CONFERENCE_PLAN)
   const [commentText, setCommentText] = React.useState('')
   const [showSendConfirm, setShowSendConfirm] = React.useState(false)
   const [sending, setSending] = React.useState(false)
   const isConferencePlan = Boolean(planId && planId.startsWith('conference-'))
   const realConferencePlanId = isConferencePlan && planId ? planId.replace(/^conference-/, '') : ''
-  const realPlanId = !isConferencePlan && planId && planId !== 'demo-plan' ? planId : ''
+  const realPlanId = !isConferencePlan && planId ? planId : ''
   const serializedSteps = JSON.stringify(plan.steps.map(step => ({
     step: step.step,
     person: step.person,
@@ -168,15 +168,8 @@ export function PlanDetail() {
     }
 
     if (!realPlanId || !auth.user) {
-      const cached = window.localStorage.getItem('chalk-v2-plan-draft')
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached)
-          setPlan({ ...EMPTY_PLAN, ...parsed, dueDate: parsed.dueDate ? new Date(parsed.dueDate) : EMPTY_PLAN.dueDate })
-        } catch (error) {
-          console.error('Unable to parse local v2 plan draft', error)
-        }
-      }
+      setPlan(EMPTY_PLAN)
+      setSavedLabel('Open an existing CHALK plan')
       return
     }
 
@@ -188,6 +181,10 @@ export function PlanDetail() {
       if (nextPlan) {
         setPlan(nextPlan)
         setSavedLabel('Loaded from CHALK')
+      } else {
+        setPlan(EMPTY_PLAN)
+        setError(new Error('Action plan not found'))
+        setSavedLabel('Plan unavailable')
       }
       setLoading(false)
     }).catch(fetchError => {
@@ -212,6 +209,10 @@ export function PlanDetail() {
       if (nextPlan) {
         setConferencePlan(nextPlan)
         setSavedLabel('Loaded from CHALK')
+      } else {
+        setConferencePlan(EMPTY_CONFERENCE_PLAN)
+        setError(new Error('Conference plan not found'))
+        setSavedLabel('Plan unavailable')
       }
       setLoading(false)
     }).catch(fetchError => {
@@ -228,21 +229,12 @@ export function PlanDetail() {
       return
     }
 
-    if (loading) {
+    if (loading || error || !auth.user || !realPlanId) {
       return
     }
 
-    setSavedLabel(auth.user && realPlanId ? 'Saving...' : 'Saving locally...')
+    setSavedLabel('Saving...')
     const timeout = window.setTimeout(() => {
-      if (!auth.user || !realPlanId) {
-        window.localStorage.setItem('chalk-v2-plan-draft', JSON.stringify({
-          ...plan,
-          dueDate: plan.dueDate ? plan.dueDate.toISOString() : null
-        }))
-        setSavedLabel('Saved locally')
-        return
-      }
-
       createV2Api(firebase).saveActionPlanDraft(realPlanId, {
         title: plan.title,
         goal: plan.goal,
@@ -258,21 +250,15 @@ export function PlanDetail() {
     }, 900)
 
     return () => window.clearTimeout(timeout)
-  }, [auth.user, firebase, isConferencePlan, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId, serializedSteps])
+  }, [auth.user, error, firebase, isConferencePlan, loading, plan.benefit, plan.dueDate, plan.goal, plan.title, realPlanId, serializedSteps])
 
   React.useEffect(() => {
-    if (!isConferencePlan || loading) {
+    if (!isConferencePlan || loading || error || !auth.user || !realConferencePlanId) {
       return
     }
 
-    setSavedLabel(auth.user && realConferencePlanId ? 'Saving...' : 'Saving locally...')
+    setSavedLabel('Saving...')
     const timeout = window.setTimeout(() => {
-      if (!auth.user || !realConferencePlanId) {
-        window.localStorage.setItem('chalk-v2-conference-plan-draft', JSON.stringify(conferencePlan))
-        setSavedLabel('Saved locally')
-        return
-      }
-
       createV2Api(firebase).saveConferencePlanDraft(realConferencePlanId, {
         feedback: conferencePlan.feedback,
         questions: conferencePlan.questions,
@@ -287,7 +273,7 @@ export function PlanDetail() {
     }, 900)
 
     return () => window.clearTimeout(timeout)
-  }, [auth.user, conferencePlan, firebase, isConferencePlan, loading, realConferencePlanId, serializedConferencePlan])
+  }, [auth.user, conferencePlan, error, firebase, isConferencePlan, loading, realConferencePlanId, serializedConferencePlan])
 
   const updatePlan = (patch: Partial<V2PlanDetail>) => {
     setPlan(current => ({ ...current, ...patch }))
@@ -331,11 +317,7 @@ export function PlanDetail() {
     setCommentText('')
 
     if (!auth.user || !realPlanId) {
-      setPlan(current => ({
-        ...current,
-        comments: [...current.comments, { id: `local-${Date.now()}`, name: authorName, time: new Date().toLocaleString(), text }]
-      }))
-      toast.info('Comment saved locally for preview.')
+      toast.info('Open an existing CHALK action plan before adding comments.')
       return
     }
 
@@ -352,7 +334,7 @@ export function PlanDetail() {
 
   const sendToTeacher = () => {
     if (!auth.user || !realPlanId) {
-      toast.info('Send-to-teacher is ready for live plans after staging signoff.')
+      toast.info('Open an existing CHALK action plan before sending to a teacher.')
       return
     }
 
@@ -387,6 +369,20 @@ export function PlanDetail() {
     )
   }
 
+  if (isConferencePlan && (!realConferencePlanId || error)) {
+    return (
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 900, margin: '0 auto' }}>
+        <Card>
+          <EmptyState
+            title="Conference plan unavailable"
+            description="Open an existing CHALK conference plan from the V2 plans list or use legacy conference plans for creation and recovery."
+            cta={<Button variant="primary" onClick={() => { window.location.href = '/ConferencePlans' }}>Open legacy conference plans</Button>}
+          />
+        </Card>
+      </div>
+    )
+  }
+
   if (isConferencePlan) {
     return (
       <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
@@ -406,7 +402,7 @@ export function PlanDetail() {
             </div>
             {error && (
               <div style={{ color: 'var(--v2-warm-dark)', fontSize: '0.82rem', marginTop: '0.4rem', fontWeight: 600 }}>
-                Live conference plan unavailable; edits are held locally.
+                Live conference plan unavailable; edits are disabled until the CHALK plan loads.
               </div>
             )}
           </div>
@@ -454,6 +450,20 @@ export function PlanDetail() {
     )
   }
 
+  if (!realPlanId || error) {
+    return (
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 900, margin: '0 auto' }}>
+        <Card>
+          <EmptyState
+            title="Action plan unavailable"
+            description="Open an existing CHALK action plan from the V2 plans list or use the approved legacy action plan workflow for creation."
+            cta={<Button variant="primary" onClick={() => { window.location.href = '/ActionPlans' }}>Open legacy action plans</Button>}
+          />
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{
@@ -484,7 +494,7 @@ export function PlanDetail() {
           </div>
           {error && (
             <div style={{ color: 'var(--v2-warm-dark)', fontSize: '0.82rem', marginTop: '0.4rem', fontWeight: 600 }}>
-              Live plan unavailable; showing editable local draft.
+              Live plan unavailable; edits are disabled until the CHALK plan loads.
             </div>
           )}
         </div>
