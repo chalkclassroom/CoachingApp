@@ -11,6 +11,14 @@ export type StoredObservationType =
   | 'AC'
   | 'LI'
 
+export type LiteracyChecklist =
+  | 'FoundationalTeacher'
+  | 'FoundationalChild'
+  | 'WritingTeacher'
+  | 'WritingChild'
+  | 'LanguageTeacher'
+  | 'ReadingTeacher'
+
 export type ObservationTypeOption = {
   code: ObservationUiCode
   label: string
@@ -18,6 +26,22 @@ export type ObservationTypeOption = {
   description: string
   requiresChecklist?: boolean
 }
+
+export type ObservationStartPayload = {
+  observedBy: string
+  teacher: string
+  type: StoredObservationType
+  checklist?: LiteracyChecklist
+}
+
+export const LITERACY_CHECKLIST_OPTIONS: LiteracyChecklist[] = [
+  'FoundationalTeacher',
+  'FoundationalChild',
+  'WritingTeacher',
+  'WritingChild',
+  'LanguageTeacher',
+  'ReadingTeacher'
+]
 
 export const OBSERVATION_TYPE_OPTIONS: ObservationTypeOption[] = [
   { code: 'TT', label: 'Transition Time', storedType: 'transition', description: 'Transitions between routines and activities.' },
@@ -38,4 +62,31 @@ export function getObservationTypeOption(code?: string | null): ObservationTypeO
 export function getStoredObservationType(code?: string | null): StoredObservationType | undefined {
   const option = getObservationTypeOption(code)
   return option ? option.storedType : undefined
+}
+
+export function getLiteracyChecklist(value?: string | null): LiteracyChecklist | undefined {
+  return LITERACY_CHECKLIST_OPTIONS.find(option => option === value)
+}
+
+export function buildObservationStartPayload(coachUid: string, teacherUid: string, code?: string | null, checklist?: string | null): ObservationStartPayload {
+  const option = getObservationTypeOption(code)
+  if (!option) {
+    throw new Error('Invalid observation type code')
+  }
+
+  const payload: ObservationStartPayload = {
+    observedBy: coachUid,
+    teacher: teacherUid,
+    type: option.storedType
+  }
+
+  if (option.requiresChecklist) {
+    const literacyChecklist = getLiteracyChecklist(checklist)
+    if (!literacyChecklist) {
+      throw new Error('Literacy observations require a legacy literacy checklist')
+    }
+    payload.checklist = literacyChecklist
+  }
+
+  return payload
 }

@@ -1,4 +1,4 @@
-import { getStoredObservationType } from './observationTypes'
+import { buildObservationStartPayload } from './observationTypes'
 import {
   ActivityItem,
   AttentionItem,
@@ -15,6 +15,7 @@ const DAY_MS = 24 * 60 * 60 * 1000
 
 type ObservationDraftPayload = {
   teacherUid: string
+  checklist?: string
   teacherName?: string
   classroomName?: string
   sessionName?: string
@@ -340,15 +341,10 @@ export async function markActionPlanSentToTeacher(firebase: any, planId: string,
   return { sent: true }
 }
 
-export async function startObservation(firebase: any, coachUid: string, teacherUid: string, typeCode: string): Promise<ObservationSession> {
-  const storedType = getStoredObservationType(typeCode) || typeCode
-  await firebase.handleSession({
-    observedBy: coachUid,
-    teacher: teacherUid,
-    type: storedType,
-    checklist: typeCode === 'LI' ? 'LI' : undefined
-  })
-  return { coachUid, teacherUid, type: storedType, startedAt: new Date() }
+export async function startObservation(firebase: any, coachUid: string, teacherUid: string, typeCode: string, checklist?: string | null): Promise<ObservationSession> {
+  const payload = buildObservationStartPayload(coachUid, teacherUid, typeCode, checklist)
+  await firebase.handleSession(payload)
+  return { coachUid, teacherUid, type: payload.type, checklist: payload.checklist, startedAt: new Date() }
 }
 
 export async function saveObservationDraft(firebase: any, coachUid: string, draft: ObservationDraftPayload): Promise<{ saved: boolean }> {
@@ -425,7 +421,7 @@ export function createV2Api(firebase: any) {
     saveActionPlanDraft: (planId: string, patch: { title?: string; goal?: string; benefit?: string; dueDate?: Date | null; steps?: PlanDetail['steps'] }) => saveActionPlanDraft(firebase, planId, patch),
     addActionPlanComment: (planId: string, comment: { authorName: string; authorId?: string; text: string }) => addActionPlanComment(firebase, planId, comment),
     markActionPlanSentToTeacher: (planId: string, sentBy: string) => markActionPlanSentToTeacher(firebase, planId, sentBy),
-    startObservation: (coachUid: string, teacherUid: string, typeCode: string) => startObservation(firebase, coachUid, teacherUid, typeCode),
+    startObservation: (coachUid: string, teacherUid: string, typeCode: string, checklist?: string | null) => startObservation(firebase, coachUid, teacherUid, typeCode, checklist),
     saveObservationDraft: (coachUid: string, draft: ObservationDraftPayload) => saveObservationDraft(firebase, coachUid, draft),
     completeObservation: (coachUid: string, payload: ObservationCompletePayload) => completeObservation(firebase, coachUid, payload),
     getTrainingRecommendations: (uid: string) => getTrainingRecommendations(firebase, uid),

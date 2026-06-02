@@ -90,6 +90,7 @@ export type ObservationSession = {
   coachUid: string
   teacherUid: string
   type: string
+  checklist?: string
   startedAt: Date
 }
 

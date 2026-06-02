@@ -6,7 +6,7 @@ import { useToast } from '../hooks/useToast'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
-import { OBSERVATION_TYPE_OPTIONS, getObservationTypeOption, getStoredObservationType } from '../lib/observationTypes'
+import { OBSERVATION_TYPE_OPTIONS, LITERACY_CHECKLIST_OPTIONS, getLiteracyChecklist, getObservationTypeOption, getStoredObservationType } from '../lib/observationTypes'
 
 const TAGS = ['Listening', 'Sequential', 'Math', 'Literacy', 'SEL', 'Engagement', 'Transitions', 'Climate', 'Instruction']
 
@@ -97,6 +97,8 @@ export function LiveObservation() {
   const sessionName = params.get('session') || 'Coaching observation'
   const selectedOption = getObservationTypeOption(selectedCode)
   const storedObservationType = getStoredObservationType(selectedCode)
+  const selectedChecklist = getLiteracyChecklist(params.get('checklist'))
+  const needsChecklist = Boolean(selectedOption?.requiresChecklist && !selectedChecklist)
   const [elapsedSeconds, setElapsedSeconds] = React.useState(0)
   const [notes, setNotes] = React.useState('')
   const [draftStatus, setDraftStatus] = React.useState('Ready')
@@ -124,6 +126,16 @@ export function LiveObservation() {
       next.set('session', sessionName)
     }
     next.set('type', code)
+    if (code !== 'LI') {
+      next.delete('checklist')
+    }
+    history.push({ pathname: location.pathname, search: `?${next.toString()}` })
+  }
+
+  const selectLiteracyChecklist = (checklist: string) => {
+    const next = new URLSearchParams(location.search)
+    next.set('type', 'LI')
+    next.set('checklist', checklist)
     history.push({ pathname: location.pathname, search: `?${next.toString()}` })
   }
 
@@ -135,7 +147,7 @@ export function LiveObservation() {
   }
 
   React.useEffect(() => {
-    if (!selectedOption || paused) {
+    if (!selectedOption || needsChecklist || paused) {
       return
     }
 
@@ -144,22 +156,22 @@ export function LiveObservation() {
     }, 1000)
 
     return () => window.clearInterval(timer)
-  }, [paused, selectedOption])
+  }, [needsChecklist, paused, selectedOption])
 
   React.useEffect(() => {
-    if (!selectedOption || !storedObservationType || !auth.user || startedRef.current) {
+    if (!selectedOption || !storedObservationType || needsChecklist || !auth.user || startedRef.current) {
       return
     }
 
     startedRef.current = true
-    createV2Api(firebase).startObservation(auth.user.uid, teacherUid, selectedOption.code).catch(error => {
+    createV2Api(firebase).startObservation(auth.user.uid, teacherUid, selectedOption.code, selectedChecklist).catch(error => {
       console.error('Unable to start v2 observation session', error)
       startedRef.current = false
     })
-  }, [auth.user, firebase, selectedOption, storedObservationType, teacherUid])
+  }, [auth.user, firebase, needsChecklist, selectedChecklist, selectedOption, storedObservationType, teacherUid])
 
   React.useEffect(() => {
-    if (!selectedOption || !storedObservationType) {
+    if (!selectedOption || !storedObservationType || needsChecklist) {
       return
     }
 
@@ -172,6 +184,7 @@ export function LiveObservation() {
         sessionName,
         typeCode: selectedOption.code,
         storedType: storedObservationType,
+        checklist: selectedChecklist,
         notes,
         elapsedSeconds,
         updatedAt: new Date()
@@ -193,7 +206,7 @@ export function LiveObservation() {
     }, 900)
 
     return () => window.clearTimeout(timeout)
-  }, [auth.user, classroomName, elapsedSeconds, firebase, notes, selectedOption, sessionName, storedObservationType, teacherName, teacherUid])
+  }, [auth.user, classroomName, elapsedSeconds, firebase, needsChecklist, notes, selectedChecklist, selectedOption, sessionName, storedObservationType, teacherName, teacherUid])
 
   React.useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -234,7 +247,7 @@ export function LiveObservation() {
   }
 
   const completeObservation = () => {
-    if (!selectedOption || !storedObservationType || completing) {
+    if (!selectedOption || !storedObservationType || needsChecklist || completing) {
       return
     }
 
@@ -245,6 +258,7 @@ export function LiveObservation() {
       sessionName,
       typeCode: selectedOption.code,
       storedType: storedObservationType,
+      checklist: selectedChecklist,
       notes,
       elapsedSeconds,
       updatedAt: new Date(),
@@ -333,6 +347,48 @@ export function LiveObservation() {
     )
   }
 
+  if (needsChecklist) {
+    return (
+      <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Pick a literacy checklist</h1>
+            <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
+              Literacy observations must use one of the legacy checklist paths before a session can start.
+            </div>
+          </div>
+          <Button onClick={() => history.push('/v2/observation')}>Back</Button>
+        </div>
+
+        <Card>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.8rem' }}>
+            {LITERACY_CHECKLIST_OPTIONS.map(checklist => (
+              <button
+                key={checklist}
+                type="button"
+                onClick={() => selectLiteracyChecklist(checklist)}
+                style={{
+                  textAlign: 'left',
+                  background: 'var(--v2-white)',
+                  border: '1px solid var(--v2-line)',
+                  borderRadius: 8,
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  boxShadow: 'var(--v2-shadow-sm)'
+                }}
+              >
+                <strong style={{ color: 'var(--v2-ink)', fontSize: '0.94rem' }}>{checklist}</strong>
+                <p style={{ color: 'var(--v2-muted)', fontSize: '0.82rem', lineHeight: 1.45, margin: '0.45rem 0 0' }}>
+                  Stores as LI with checklist {checklist}.
+                </p>
+              </button>
+            ))}
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
@@ -344,7 +400,7 @@ export function LiveObservation() {
             {classroomName} · {sessionName} session
           </div>
           <div style={{ color: 'var(--v2-ink-soft)', fontSize: '0.78rem', marginTop: '0.45rem', fontWeight: 600 }}>
-            Observation type: {selectedOption.code} stores as {storedObservationType}{selectedOption.requiresChecklist ? ' + checklist' : ''}
+            Observation type: {selectedOption.code} stores as {storedObservationType}{selectedChecklist ? ' + ' + selectedChecklist : ''}
           </div>
         </div>
         <Button onClick={() => history.push('/v2/home')}>Cancel</Button>

@@ -21,7 +21,7 @@ service cloud.firestore {
     function validObservationDraftValue(draft) {
       return draft == null || (
         draft is map &&
-        draft.keys().hasOnly(["teacherUid", "teacherName", "classroomName", "sessionName", "typeCode", "storedType", "notes", "elapsedSeconds", "updatedAt"]) &&
+        draft.keys().hasOnly(["teacherUid", "teacherName", "classroomName", "sessionName", "typeCode", "storedType", "checklist", "notes", "elapsedSeconds", "updatedAt"]) &&
         draft.keys().hasAll(["teacherUid", "typeCode", "storedType", "notes", "elapsedSeconds", "updatedAt"]) &&
         draft.teacherUid is string &&
         draft.typeCode is string &&
@@ -31,7 +31,8 @@ service cloud.firestore {
         draft.updatedAt is timestamp &&
         (!draft.keys().hasAny(["teacherName"]) || draft.teacherName is string) &&
         (!draft.keys().hasAny(["classroomName"]) || draft.classroomName is string) &&
-        (!draft.keys().hasAny(["sessionName"]) || draft.sessionName is string)
+        (!draft.keys().hasAny(["sessionName"]) || draft.sessionName is string) &&
+        (!draft.keys().hasAny(["checklist"]) || draft.checklist is string)
       );
     }
 
