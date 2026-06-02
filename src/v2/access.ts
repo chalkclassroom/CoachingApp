@@ -1,5 +1,5 @@
 export type V2Role = 'teacher' | 'coach' | 'admin' | 'siteLeader' | 'programLeader' | 'default'
-export type V2Area = 'home' | 'teachers' | 'observation' | 'plans' | 'messages' | 'resources' | 'reports' | 'admin' | 'training' | 'account'
+export type V2Area = 'home' | 'teachers' | 'observation' | 'plans' | 'messages' | 'resources' | 'reports' | 'admin' | 'leader' | 'training' | 'account'
 
 export type V2NavItem = {
   key: V2Area
@@ -15,15 +15,16 @@ export const V2_NAV_ITEMS: V2NavItem[] = [
   { key: 'messages', label: 'Messages', path: '/v2/messages' },
   { key: 'resources', label: 'Resources', path: '/v2/resources' },
   { key: 'reports', label: 'Reports', path: '/v2/reports' },
+  { key: 'leader', label: 'Leader', path: '/v2/leader' },
   { key: 'admin', label: 'Admin', path: '/v2/admin' },
   { key: 'training', label: 'Training', path: '/v2/training' }
 ]
 
 export const ROLE_AREAS: Record<V2Role, V2Area[]> = {
-  admin: ['home', 'teachers', 'observation', 'plans', 'messages', 'resources', 'reports', 'admin', 'training', 'account'],
+  admin: ['home', 'teachers', 'observation', 'plans', 'messages', 'resources', 'reports', 'leader', 'admin', 'training', 'account'],
   coach: ['home', 'teachers', 'observation', 'plans', 'messages', 'resources', 'training', 'account'],
-  siteLeader: ['home', 'teachers', 'messages', 'resources', 'reports', 'training', 'account'],
-  programLeader: ['home', 'teachers', 'messages', 'resources', 'reports', 'training', 'account'],
+  siteLeader: ['home', 'teachers', 'messages', 'resources', 'reports', 'leader', 'training', 'account'],
+  programLeader: ['home', 'teachers', 'messages', 'resources', 'reports', 'leader', 'training', 'account'],
   teacher: ['home', 'resources', 'training', 'account'],
   default: ['home', 'resources', 'training', 'account']
 }
@@ -37,6 +38,7 @@ export const AREA_ROLES: Record<V2Area, V2Role[]> = {
   resources: ['admin', 'coach', 'siteLeader', 'programLeader', 'teacher', 'default'],
   reports: ['admin', 'siteLeader', 'programLeader'],
   admin: ['admin'],
+  leader: ['admin', 'siteLeader', 'programLeader'],
   training: ['admin', 'coach', 'siteLeader', 'programLeader', 'teacher', 'default'],
   account: ['admin', 'coach', 'siteLeader', 'programLeader', 'teacher', 'default']
 }
@@ -59,6 +61,7 @@ export function getV2NavItemsForRole(role?: string): V2NavItem[] {
 export function getLegacyDelegationPath(area: V2Area): string | null {
   if (area === 'admin') return '/Admin'
   if (area === 'reports') return '/Reports'
+  if (area === 'leader') return '/LeadersDashboard'
   if (area === 'messages') return '/Messaging'
   if (area === 'teachers') return '/MyTeachers'
   if (area === 'plans') return '/ActionPlans'

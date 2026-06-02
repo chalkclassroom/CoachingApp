@@ -136,7 +136,8 @@
     "v2:account-readonly-check": "node scripts/v2-account-readonly-check.js",
     "v2:role-access-check": "node scripts/v2-role-access-check.js",
     "v2:reports-delegation-check": "node scripts/v2-reports-delegation-check.js",
-    "v2:admin-delegation-check": "node scripts/v2-admin-delegation-check.js"
+    "v2:admin-delegation-check": "node scripts/v2-admin-delegation-check.js",
+    "v2:leader-delegation-check": "node scripts/v2-leader-delegation-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"

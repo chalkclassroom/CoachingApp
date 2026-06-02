@@ -11,6 +11,7 @@ import { Messaging } from './pages/Messaging'
 import { Resources } from './pages/Resources'
 import { Reports } from './pages/Reports'
 import { AdminWorkspace } from './pages/AdminWorkspace'
+import { LeaderWorkspace } from './pages/LeaderWorkspace'
 import { TeacherProfile } from './pages/TeacherProfile'
 import { AccountSettings } from './pages/AccountSettings'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -43,6 +44,7 @@ function V2Routes() {
     path.startsWith('/v2/resources') ? 'resources' :
     path.startsWith('/v2/reports') ? 'reports' :
     path.startsWith('/v2/admin') ? 'admin' :
+    path.startsWith('/v2/leader') ? 'leader' :
     path.startsWith('/v2/account') ? 'account' :
     path.startsWith('/v2/training') ? 'training' :
     'home'
@@ -106,6 +108,7 @@ function V2Routes() {
             <GuardedV2Route path="/v2/resources" area="resources" render={() => <Resources />} />
             <GuardedV2Route path="/v2/reports" area="reports" render={() => <Reports />} />
             <GuardedV2Route path="/v2/admin" area="admin" render={() => <AdminWorkspace />} />
+            <GuardedV2Route path="/v2/leader" area="leader" render={() => <LeaderWorkspace />} />
             <GuardedV2Route path="/v2/account" area="account" render={() => <AccountSettings />} />
             <GuardedV2Route path="/v2/training" area="training" render={() => <Training />} />
             <Redirect to="/v2/home" />
