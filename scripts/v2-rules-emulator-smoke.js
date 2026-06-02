@@ -104,6 +104,38 @@ function trainingStatusBody() {
   }
 }
 
+function accountPreferencesBody() {
+  return {
+    fields: {
+      v2Preferences: {
+        mapValue: {
+          fields: {
+            dailyDigestEnabled: { booleanValue: true },
+            actionPlanAlertsEnabled: { booleanValue: false },
+            defaultReportRangeDays: { integerValue: '30' }
+          }
+        }
+      }
+    }
+  }
+}
+
+function malformedAccountPreferencesBody() {
+  return {
+    fields: {
+      v2Preferences: {
+        mapValue: {
+          fields: {
+            dailyDigestEnabled: { stringValue: 'yes' },
+            actionPlanAlertsEnabled: { booleanValue: false },
+            defaultReportRangeDays: { integerValue: '365' }
+          }
+        }
+      }
+    }
+  }
+}
+
 function arbitraryUserFieldBody() {
   return {
     fields: {
@@ -182,6 +214,16 @@ async function main() {
   const trainingStatusUrl = base + "/users/v2-coach?updateMask.fieldPaths=v2TrainingStatus"
   const trainingStatus = await request("PATCH", trainingStatusUrl, trainingStatusBody(), fakeFirebaseToken("v2-coach"))
   assertStatus("coach own training status write", trainingStatus, 200)
+
+  const accountPreferencesUrl = base + "/users/v2-coach?updateMask.fieldPaths=v2Preferences"
+  const accountPreferences = await request("PATCH", accountPreferencesUrl, accountPreferencesBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("coach own account preferences write", accountPreferences, 200)
+
+  const malformedAccountPreferences = await request("PATCH", accountPreferencesUrl, malformedAccountPreferencesBody(), fakeFirebaseToken("v2-coach"))
+  assertStatus("malformed account preferences write", malformedAccountPreferences, 403)
+
+  const unrelatedAccountPreferences = await request("PATCH", accountPreferencesUrl, accountPreferencesBody(), fakeFirebaseToken("v2-unrelated-coach"))
+  assertStatus("unrelated coach account preferences write", unrelatedAccountPreferences, 403)
 
   const arbitraryUserFieldUrl = base + "/users/v2-coach?updateMask.fieldPaths=role"
   const arbitraryUserField = await request("PATCH", arbitraryUserFieldUrl, arbitraryUserFieldBody(), fakeFirebaseToken("v2-coach"))

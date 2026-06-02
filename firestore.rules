@@ -36,12 +36,23 @@ service cloud.firestore {
       );
     }
 
+    function validPreferencesValue(preferences) {
+      return preferences is map &&
+        preferences.keys().hasOnly(["dailyDigestEnabled", "actionPlanAlertsEnabled", "defaultReportRangeDays"]) &&
+        preferences.keys().hasAll(["dailyDigestEnabled", "actionPlanAlertsEnabled", "defaultReportRangeDays"]) &&
+        preferences.dailyDigestEnabled is bool &&
+        preferences.actionPlanAlertsEnabled is bool &&
+        preferences.defaultReportRangeDays is int &&
+        preferences.defaultReportRangeDays in [7, 30, 90];
+    }
+
     function validOwnerUserUpdate(userId) {
       let changed = request.resource.data.diff(resource.data).affectedKeys();
       return isOwner(userId) &&
-        changed.hasOnly(["observationDraft", "v2TrainingStatus"]) &&
+        changed.hasOnly(["observationDraft", "v2TrainingStatus", "v2Preferences"]) &&
         (!changed.hasAny(["observationDraft"]) || validObservationDraftValue(request.resource.data.observationDraft)) &&
-        (!changed.hasAny(["v2TrainingStatus"]) || request.resource.data.v2TrainingStatus is map);
+        (!changed.hasAny(["v2TrainingStatus"]) || request.resource.data.v2TrainingStatus is map) &&
+        (!changed.hasAny(["v2Preferences"]) || validPreferencesValue(request.resource.data.v2Preferences));
     }
 
     function validUserUpdate(userId) {

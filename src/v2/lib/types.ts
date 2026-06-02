@@ -16,6 +16,12 @@ export type DateRange = {
   endDate: Date
 }
 
+export type AccountPreferences = {
+  dailyDigestEnabled: boolean
+  actionPlanAlertsEnabled: boolean
+  defaultReportRangeDays: 7 | 30 | 90
+}
+
 export type DashboardStats = {
   underCoaching: number
   needAttention: number

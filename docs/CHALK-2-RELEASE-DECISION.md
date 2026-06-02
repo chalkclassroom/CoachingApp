@@ -18,7 +18,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 - Messaging delegation to legacy CHALK.
 - Resources backed by real bundled CHALK assets.
 - Training modules with truthful completion persistence behavior.
-- Account settings as read-only/delegated.
+- Account settings with live V2 preference persistence and locked identity fields.
 - Reports summary with advanced reports delegated to legacy.
 - Admin read-only/delegated workspace.
 - Leader workflow delegation to legacy routes.
@@ -34,7 +34,6 @@ These modules are intentionally delegated to legacy CHALK for this release decis
 - Coach profile, site profile, and program profile reports.
 - Conference plan creation/editing.
 - Messaging backend and thread storage.
-- Editable account preferences.
 
 ## Risk acceptance
 

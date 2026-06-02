@@ -1,5 +1,6 @@
 import { buildObservationStartPayload } from './observationTypes'
 import {
+  AccountPreferences,
   ActivityItem,
   AttentionItem,
   DashboardStats,
@@ -12,6 +13,12 @@ import {
 } from './types'
 
 const DAY_MS = 24 * 60 * 60 * 1000
+
+export const DEFAULT_ACCOUNT_PREFERENCES: AccountPreferences = {
+  dailyDigestEnabled: true,
+  actionPlanAlertsEnabled: true,
+  defaultReportRangeDays: 30
+}
 
 type ObservationDraftPayload = {
   teacherUid: string
@@ -414,6 +421,31 @@ export async function dismissTrainingRecommendation(firebase: any, uid: string, 
   return { dismissed: true }
 }
 
+function normalizeAccountPreferences(value: any): AccountPreferences {
+  const range = Number(value?.defaultReportRangeDays)
+  return {
+    dailyDigestEnabled: typeof value?.dailyDigestEnabled === 'boolean' ? value.dailyDigestEnabled : DEFAULT_ACCOUNT_PREFERENCES.dailyDigestEnabled,
+    actionPlanAlertsEnabled: typeof value?.actionPlanAlertsEnabled === 'boolean' ? value.actionPlanAlertsEnabled : DEFAULT_ACCOUNT_PREFERENCES.actionPlanAlertsEnabled,
+    defaultReportRangeDays: range === 7 || range === 90 ? range : DEFAULT_ACCOUNT_PREFERENCES.defaultReportRangeDays
+  }
+}
+
+export async function getAccountPreferences(firebase: any, uid: string): Promise<AccountPreferences> {
+  return safeRead('Unable to load v2 account preferences', async () => {
+    const doc = await firebase.db.collection('users').doc(uid).get()
+    const data = doc.exists ? doc.data() || {} : {}
+    return normalizeAccountPreferences(data.v2Preferences)
+  }, DEFAULT_ACCOUNT_PREFERENCES)
+}
+
+export async function saveAccountPreferences(firebase: any, uid: string, preferences: AccountPreferences): Promise<AccountPreferences> {
+  const normalized = normalizeAccountPreferences(preferences)
+  await firebase.db.collection('users').doc(uid).set({
+    v2Preferences: normalized
+  }, { merge: true })
+  return normalized
+}
+
 export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
@@ -432,6 +464,8 @@ export function createV2Api(firebase: any) {
     getTrainingRecommendations: (uid: string) => getTrainingRecommendations(firebase, uid),
     getTrainingStatus: (uid: string) => getTrainingStatus(firebase, uid),
     markTrainingCompleted: (uid: string, trainingId: string) => markTrainingCompleted(firebase, uid, trainingId),
-    dismissTrainingRecommendation: (uid: string, trainingId: string) => dismissTrainingRecommendation(firebase, uid, trainingId)
+    dismissTrainingRecommendation: (uid: string, trainingId: string) => dismissTrainingRecommendation(firebase, uid, trainingId),
+    getAccountPreferences: (uid: string) => getAccountPreferences(firebase, uid),
+    saveAccountPreferences: (uid: string, preferences: AccountPreferences) => saveAccountPreferences(firebase, uid, preferences)
   }
 }

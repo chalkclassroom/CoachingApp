@@ -40,7 +40,7 @@ Do not treat partial or delegated interactions as durable production writes unle
 | `/v2/reports` | Delegated/live-ish | Live summary stats plus legacy delegation for exports/scheduling/profile reports | V2 advanced reporting/export is complete |
 | `/v2/admin` | Read-only/delegated | Admin disclosure and links to legacy admin/users | Create/edit/import writes are enabled in V2 |
 | `/v2/leader` | Delegated | Leader links to legacy dashboard/users/teachers/coaches/sites/archive/all-users/profile reports | Leader dashboard data is rendered by V2 |
-| `/v2/account` | Read-only/delegated | Profile display and preference disclosure | Preferences persist from V2 |
+| `/v2/account` | Live preferences | Locked profile identity plus persisted V2 workspace preferences | Name/email/role can be edited from V2 |
 | `/v2/training` | Partial | Curated modules, truthful status labels, non-optimistic completion/skip behavior | Recommendations are fully data-driven |
 
 ---
@@ -70,7 +70,6 @@ High-level summary:
 - Admin writes are delegated to legacy CHALK.
 - Reports exports/scheduling/profile reports are delegated to legacy CHALK.
 - Leader dashboards and leader user lists are delegated to legacy CHALK.
-- Account preferences are read-only/delegated.
 - Home, Teachers, Plans, Teacher Profile, Reports, Admin, and Training initialize with empty/loading/error states instead of demo rows.
 
 ---
