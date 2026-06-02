@@ -94,8 +94,10 @@ export function TeacherProfile() {
   }
   const name = fullName(teacher)
 
+  const liveTimelineItems = teacher.lastAction.type === 'None' ? [] : [teacher.lastAction]
   const startObservation = () => history.push(`/v2/observation?teacher=${encodeURIComponent(teacher.id)}&teacherName=${encodeURIComponent(name)}&classroom=${encodeURIComponent(teacher.classroom || teacher.program)}&session=Coaching observation`)
   const message = () => history.push(`/v2/messages?teacher=${encodeURIComponent(teacher.id)}&teacherName=${encodeURIComponent(name)}&program=${encodeURIComponent(teacher.program)}`)
+  const openPlans = () => history.push('/v2/plans')
 
   return (
     <div className="v2-page" style={{ padding: '2rem 2.5rem', maxWidth: 1400, margin: '0 auto' }}>
@@ -115,7 +117,7 @@ export function TeacherProfile() {
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <Button onClick={message}>Message</Button>
-          <Button onClick={() => history.push('/v2/plans/demo-plan')}>Open plan</Button>
+          <Button onClick={openPlans}>View plans</Button>
           <Button variant="primary" onClick={startObservation}>Start observation</Button>
         </div>
       </div>
@@ -147,7 +149,7 @@ export function TeacherProfile() {
 
             <Card>
               <CardHeader title="Timeline" action={<button type="button" onClick={() => history.push('/v2/reports')} style={{ color: 'var(--v2-brand-dark)', fontWeight: 600, padding: 0 }}>View reports</button>} />
-              {[teacher.lastAction, { type: 'Plan update', date: 'May 20, 2026' }, { type: 'Teacher message', date: 'May 19, 2026' }].map((item, index) => (
+              {liveTimelineItems.length > 0 ? liveTimelineItems.map((item, index) => (
                 <div key={`${item.type}-${index}`} style={{ display: 'flex', gap: '0.8rem', padding: '0.75rem 0', borderBottom: '1px solid var(--v2-line-soft)' }}>
                   <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--v2-brand-soft)', color: 'var(--v2-brand-darker)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>{index + 1}</div>
                   <div>
@@ -155,7 +157,9 @@ export function TeacherProfile() {
                     <div style={{ color: 'var(--v2-muted)', fontSize: '0.78rem' }}>{item.date}</div>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <EmptyState title="No recent live activity" description="This teacher has no loaded CHALK actions in the current data window." />
+              )}
             </Card>
           </div>
         </>
@@ -163,7 +167,7 @@ export function TeacherProfile() {
 
       {!found && !queryName && (
         <div style={{ marginTop: '1rem' }}>
-          <EmptyState title="Teacher loaded from preview fallback" description="This route is ready for live teacher IDs once the data contract is finalized." />
+          <EmptyState title="No live teacher record loaded" description="This route has teacher context, but no matching live teacher row was returned for the current user." />
         </div>
       )}
     </div>
