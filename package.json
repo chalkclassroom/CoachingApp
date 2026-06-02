@@ -124,7 +124,8 @@
     "v2:data-loading-check": "node scripts/v2-data-loading-check.js",
     "v2:console-check": "node scripts/v2-console-check.js",
     "v2:observation-contract:test": "node scripts/v2-observation-contract-check.js",
-    "v2:observation-export:test": "node scripts/v2-observation-export-compat-check.js"
+    "v2:observation-export:test": "node scripts/v2-observation-export-compat-check.js",
+    "v2:conference-plan-check": "node scripts/v2-conference-plan-delegation-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"

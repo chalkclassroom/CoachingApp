@@ -191,11 +191,11 @@ export function ActionPlans() {
         <div>
           <h1 style={{ fontSize: '1.7rem', fontWeight: 700, letterSpacing: '-0.02em' }}>Plans workspace</h1>
           <div style={{ color: 'var(--v2-muted)', fontSize: '0.92rem', marginTop: '0.3rem' }}>
-            Action plans and conference plans in one coach-friendly queue.
+            Action plans live here; conference plans remain delegated to legacy CHALK for this release.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Button onClick={() => toast.info('Conference plan creation stays in legacy until write rules are finalized.')}>+ Conference plan</Button>
+          <Button onClick={() => toast.info('Conference plans stay in legacy CHALK for this release. Use the legacy Conference Plans workflow to create or edit them.')}>Open legacy conference plans</Button>
           <Button variant="primary" onClick={() => history.push('/v2/plans/demo-plan')}>+ Action plan</Button>
         </div>
       </div>
