@@ -352,7 +352,16 @@ export async function saveObservationDraft(firebase: any, coachUid: string, draf
   return { saved: true }
 }
 
+function requiresCanonicalObservationEntries(firebase: any): boolean {
+  const entries = firebase?.currentObservation?.entries
+  return Array.isArray(entries) && entries.length > 0
+}
+
 export async function completeObservation(firebase: any, coachUid: string, payload: ObservationCompletePayload): Promise<{ completed: boolean; observationId?: string | null }> {
+  if (!requiresCanonicalObservationEntries(firebase)) {
+    throw new Error('V2 observation completion requires canonical coded entries before export')
+  }
+
   const notes = payload.notes.trim()
   if (notes && firebase.handlePushNotes) {
     firebase.handlePushNotes(notes)

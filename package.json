@@ -123,7 +123,8 @@
     "v2:rules-smoke:test": "./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore \"npm run v2:rules-smoke:emulator\"",
     "v2:data-loading-check": "node scripts/v2-data-loading-check.js",
     "v2:console-check": "node scripts/v2-console-check.js",
-    "v2:observation-contract:test": "node scripts/v2-observation-contract-check.js"
+    "v2:observation-contract:test": "node scripts/v2-observation-contract-check.js",
+    "v2:observation-export:test": "node scripts/v2-observation-export-compat-check.js"
   },
   "eslintConfig": {
     "extends": "react-app"
