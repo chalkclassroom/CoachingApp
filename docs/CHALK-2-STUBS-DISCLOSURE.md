@@ -31,7 +31,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 | `Messaging.tsx` | `seeded` | Query-string teacher context created local preview thread | Teacher context pre-fills draft editor only | Approved delivery/attachment scope |
 | `PlanDetail.tsx` | `DEMO_PLAN` | Demo action plan powered `/v2/plans/demo-plan` and local draft behavior | Require live plan ID / safe empty state | Live plan contract |
 | `TeacherProfile.tsx` | `DEMO_TEACHERS` | Profile fallback showed fictional teacher summary | Live-or-empty teacher profile | Live teacher profile or legacy delegation |
-| `Reports.tsx` | `DEFAULT_STATS` | Report stats fell back to static values | Live summary or zero/empty stats plus delegation | Live reports contract |
+| `Reports.tsx` | `DEFAULT_STATS` | Report stats fell back to static values | Live summary, live practice trends, and zero/empty fallback | Advanced reports/export contract |
 | `Training.tsx` | `CARDS` | Static training cards looked data-recommended | Curated module labels with persisted status | Data-driven recommendations if implemented |
 
 ---
@@ -41,7 +41,7 @@ The V2 staging preview still includes partial and delegated modules, but the sou
 Use this language before staging signoff:
 
 ```text
-The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, advanced Reports, Leader workflows, profile reports, conference plans, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
+The V2 staging preview includes partial and delegated modules. These are safe for visual/product review but are not all production data paths yet: Admin create/import/program/site writes, report exports/scheduling/profile reports, Leader workflows, profile reports, conference plans, V2 email delivery/attachments, and selected observation completion flows. Production release requires either live integration, explicit legacy delegation, or hiding these controls.
 ```
 
 ---

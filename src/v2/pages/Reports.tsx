@@ -7,24 +7,21 @@ import { Stat } from '../components/Stat'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
-import { DashboardStats } from '../lib/types'
-
-type PracticeRow = { label: string; value: number; tone: 'brand' | 'warm' | 'success' | 'gold' }
+import { DashboardStats, PracticeTrend } from '../lib/types'
 
 const EMPTY_STATS: DashboardStats = { underCoaching: 0, needAttention: 0, observationsThisWeek: 0, activePlans: 0 }
-const PRACTICES: PracticeRow[] = []
 
 function openLegacyReports() {
   window.location.href = '/Reports'
 }
 
-function Bar(props: PracticeRow) {
+function Bar(props: PracticeTrend) {
   const color = props.tone === 'warm' ? 'var(--v2-warm)' : props.tone === 'success' ? 'var(--v2-success)' : props.tone === 'gold' ? 'var(--v2-gold)' : 'var(--v2-brand)'
   return (
     <div style={{ display: 'grid', gap: '0.35rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
         <strong>{props.label}</strong>
-        <span style={{ color: 'var(--v2-muted)' }}>{props.value}%</span>
+        <span style={{ color: 'var(--v2-muted)' }}>{props.count} obs</span>
       </div>
       <div style={{ height: 10, background: 'var(--v2-bg-soft)', borderRadius: 999, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${props.value}%`, background: color }} />
@@ -37,6 +34,7 @@ export function Reports() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const [stats, setStats] = React.useState<DashboardStats>(EMPTY_STATS)
+  const [trends, setTrends] = React.useState<PracticeTrend[]>([])
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
 
@@ -48,9 +46,13 @@ export function Reports() {
     let active = true
     setLoading(true)
     setError(null)
-    createV2Api(firebase).getDashboardStats(auth.user.uid).then(nextStats => {
+    Promise.all([
+      createV2Api(firebase).getDashboardStats(auth.user.uid),
+      createV2Api(firebase).getPracticeTrends(auth.user.uid)
+    ]).then(([nextStats, nextTrends]) => {
       if (!active) return
       setStats(nextStats)
+      setTrends(nextTrends)
       setLoading(false)
     }).catch(fetchError => {
       if (!active) return
@@ -90,16 +92,16 @@ export function Reports() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 0.9fr) minmax(420px, 1.4fr)', gap: '1rem' }}>
         <Card>
-          <CardHeader title="Observation practice trends" />
-          {PRACTICES.length === 0 ? (
+          <CardHeader title="Practice trends" />
+          {trends.length === 0 ? (
             <EmptyState
-              title="No live practice trend data"
-              description="Practice trend charts are delegated to legacy CHALK until V2 can match the report contract with live data."
+              title="No observations in this range"
+              description="Complete observations will populate this V2 practice trend chart."
               cta={<Button onClick={openLegacyReports}>Open legacy reports</Button>}
             />
           ) : (
             <div style={{ display: 'grid', gap: '1rem' }}>
-              {PRACTICES.map(row => <Bar key={row.label} {...row} />)}
+              {trends.map(row => <Bar key={row.label} {...row} />)}
             </div>
           )}
         </Card>

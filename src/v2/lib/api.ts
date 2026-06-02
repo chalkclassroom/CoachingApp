@@ -10,6 +10,7 @@ import {
   ObservationSession,
   PlanDetail,
   PlanItem,
+  PracticeTrend,
   TeacherRow,
   TrainingCard
 } from './types'
@@ -209,6 +210,53 @@ export async function getDashboardStats(firebase: any, uid: string, range: DateR
     observationsThisWeek,
     activePlans: activePlans.length
   }
+}
+
+const PRACTICE_LABELS: Record<string, string> = {
+  TT: 'Transition Time',
+  CC: 'Classroom Climate',
+  MI: 'Math Instruction',
+  SE: 'Student Engagement',
+  LI: 'Literacy Instruction',
+  LC: 'Listening to Children',
+  SA: 'Sequential Activities',
+  IN: 'Level of Instruction',
+  AC: 'Associative/Cooperative'
+}
+
+function normalizePracticeCode(data: any): string {
+  const raw = String(data?.type || data?.storedType || data?.tool || data?.observationType || '').trim()
+  if (!raw) return 'Other'
+  const upper = raw.toUpperCase()
+  if (PRACTICE_LABELS[upper]) return upper
+  const found = Object.keys(PRACTICE_LABELS).find(code => PRACTICE_LABELS[code].toUpperCase() === upper || upper.includes(PRACTICE_LABELS[code].toUpperCase()))
+  return found || raw
+}
+
+export async function getPracticeTrends(firebase: any, uid: string, range: DateRange = lastNDays(90)): Promise<PracticeTrend[]> {
+  return safeRead('Unable to load v2 practice trends', async () => {
+    const snapshot = await firebase.db.collection('observations').where('observedBy', '==', `/user/${uid}`).get()
+    const counts = new Map<string, number>()
+    snapshot.docs.forEach((doc: any) => {
+      const data = doc.data() || {}
+      const end = toDate(data.end || data.date || data.dateModified)
+      if (end && (end < range.startDate || end > range.endDate)) return
+      const code = normalizePracticeCode(data)
+      counts.set(code, (counts.get(code) || 0) + 1)
+    })
+
+    const max = Math.max(1, ...Array.from(counts.values()))
+    const tones: PracticeTrend['tone'][] = ['brand', 'warm', 'success', 'gold']
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([code, count], index) => ({
+        label: PRACTICE_LABELS[code] || code,
+        count,
+        value: Math.max(8, Math.round((count / max) * 100)),
+        tone: tones[index % tones.length]
+      }))
+  }, [])
 }
 
 export async function getCoachAttention(firebase: any, uid: string, opts: { limit?: number } = {}): Promise<AttentionItem[]> {
@@ -530,6 +578,7 @@ export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
     getDashboardStats: (uid: string, range?: DateRange) => getDashboardStats(firebase, uid, range),
+    getPracticeTrends: (uid: string, range?: DateRange) => getPracticeTrends(firebase, uid, range),
     getRecentActivity: (uid: string, limit?: number) => getRecentActivity(firebase, uid, limit),
     getActivePlans: (uid: string) => getActivePlans(firebase, uid),
     getTeachersForCoach: (uid: string, range?: DateRange) => getTeachersForCoach(firebase, uid, range),

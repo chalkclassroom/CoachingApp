@@ -19,7 +19,7 @@ The Path C preview includes these V2 surfaces behind authenticated access and ro
 - Resources backed by real bundled CHALK assets.
 - Training modules with truthful completion persistence behavior.
 - Account settings with live V2 preference persistence and locked identity fields.
-- Reports summary with advanced reports delegated to legacy.
+- Reports summary and practice trends backed by live observations; exports/scheduling remain legacy.
 - Admin live user list with archive/restore; create/import/program/site workflows remain legacy.
 - Leader workflow delegation to legacy routes.
 - Coach/site/program profile report delegation to legacy routes.

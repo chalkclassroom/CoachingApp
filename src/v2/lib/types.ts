@@ -54,6 +54,13 @@ export type DashboardStats = {
   activePlans: number
 }
 
+export type PracticeTrend = {
+  label: string
+  value: number
+  count: number
+  tone: 'brand' | 'warm' | 'success' | 'gold'
+}
+
 export type AttentionItem = {
   id: string
   name: string
