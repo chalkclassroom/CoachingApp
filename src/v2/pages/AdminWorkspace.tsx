@@ -6,6 +6,7 @@ import { Pill } from '../components/Pill'
 import { Skeleton } from '../components/Skeleton'
 import { Stat } from '../components/Stat'
 import { useToast } from '../hooks/useToast'
+import { useQueryState } from '../hooks/useQueryState'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
 import { AdminProgramRow, AdminSiteRow, AdminUserRow } from '../lib/types'
@@ -42,7 +43,7 @@ function upsertById<T extends { id: string }>(rows: T[], next: T): T[] {
 export function AdminWorkspace() {
   const firebase = useV2Firebase()
   const toast = useToast()
-  const [tab, setTab] = React.useState<AdminTab>('users')
+  const [tab, setTab] = useQueryState<AdminTab>('tab', 'users', ['users', 'programs', 'sites'])
   const [users, setUsers] = React.useState<AdminUserRow[]>([])
   const [programs, setPrograms] = React.useState<AdminProgramRow[]>([])
   const [sites, setSites] = React.useState<AdminSiteRow[]>([])

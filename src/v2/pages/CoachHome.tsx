@@ -106,17 +106,12 @@ export function CoachHome(props: { userName: string; programCount?: number }) {
     setLoading(true)
     setError(null)
 
-    Promise.all([
-      api.getDashboardStats(auth.user.uid),
-      api.getCoachAttention(auth.user.uid),
-      api.getRecentActivity(auth.user.uid),
-      api.getActivePlans(auth.user.uid)
-    ]).then(([nextStats, nextAttention, nextActivity, nextPlans]) => {
+    api.getDashboardOverview(auth.user.uid).then(overview => {
       if (!active) return
-      setStats(nextStats)
-      setAttention(nextAttention.length > 0 ? nextAttention : [])
-      setActivity(nextActivity.length > 0 ? nextActivity : [])
-      setPlans(nextPlans.length > 0 ? nextPlans : [])
+      setStats(overview.stats)
+      setAttention(overview.attention)
+      setActivity(overview.activity)
+      setPlans(overview.plans)
       setLoading(false)
     }).catch(fetchError => {
       if (!active) return

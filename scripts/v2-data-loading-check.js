@@ -17,6 +17,12 @@ assert(api.includes('Unable to load v2 active plans'), 'active plan load must de
 assert(api.includes('Unable to load v2 action plan steps'), 'action plan steps load must degrade safely')
 assert(api.includes('Unable to load v2 training status'), 'training status load must degrade safely')
 
+
+const coachHome = fs.readFileSync("src/v2/pages/CoachHome.tsx", "utf8")
+assert(api.includes("export async function getDashboardOverview"), "dashboard home must have one overview API to avoid duplicate teacher/action-plan loads")
+assert(coachHome.includes("api.getDashboardOverview(auth.user.uid)"), "CoachHome must load dashboard data through the consolidated overview API")
+assert(!coachHome.includes("Promise.all([\n      api.getDashboardStats"), "CoachHome must not fan out duplicate dashboard reads on every mount")
+
 const allTeachers = fs.readFileSync("src/v2/pages/AllTeachers.tsx", "utf8")
 assert(!allTeachers.includes("addLocalTeammate"), "AllTeachers must not add local-only teammate rows")
 assert(!allTeachers.includes("importCsv"), "AllTeachers must not import CSV rows into local-only state")
@@ -27,6 +33,11 @@ const app = fs.readFileSync("src/App.tsx", "utf8")
 assert(app.includes("await Promise.all(teacherEntries.map"), "App teacher list load must await teacher document promises before dispatch")
 assert(app.includes("Unable to resolve teacher list entry"), "App teacher list load must isolate individual teacher promise failures")
 assert(!app.includes("teacherList.push(data);"), "App teacher list load must not dispatch before async teacher entries resolve")
+
+
+const useV2Auth = fs.readFileSync("src/v2/hooks/useV2Auth.ts", "utf8")
+assert(useV2Auth.includes("React.createContext<AuthState | null>"), "useV2Auth must expose shared auth context to avoid duplicate user-info reads per page")
+assert(useV2Auth.includes("useSharedV2AuthState"), "useV2Auth must keep the Firebase listener in a single provider-owned hook")
 
 assert(api.includes("normalizeAdminTeacher"), "V2 teacher load must normalize admin getTeacherData fallback rows")
 assert(api.includes("Unable to load v2 admin teacher data"), "V2 teacher load must fall back for admin users with no partners")

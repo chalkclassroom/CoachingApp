@@ -8,7 +8,9 @@ type AuthState = {
   error: Error | null
 }
 
-export function useV2Auth(): AuthState {
+const V2AuthContext = React.createContext<AuthState | null>(null)
+
+function useSharedV2AuthState(): AuthState {
   const firebase = useV2Firebase()
   const [state, setState] = React.useState<AuthState>({
     user: null,
@@ -65,5 +67,18 @@ export function useV2Auth(): AuthState {
     }
   }, [firebase])
 
+  return state
+}
+
+export function V2AuthProvider(props: { children: React.ReactNode }) {
+  const state = useSharedV2AuthState()
+  return React.createElement(V2AuthContext.Provider, { value: state }, props.children)
+}
+
+export function useV2Auth(): AuthState {
+  const state = React.useContext(V2AuthContext)
+  if (!state) {
+    throw new Error('useV2Auth must be used inside V2AuthProvider')
+  }
   return state
 }

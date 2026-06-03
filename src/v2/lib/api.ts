@@ -48,6 +48,13 @@ type ObservationCompletePayload = ObservationDraftPayload & {
   nextStep: string
 }
 
+type DashboardOverview = {
+  stats: DashboardStats
+  attention: AttentionItem[]
+  activity: ActivityItem[]
+  plans: PlanItem[]
+}
+
 export function lastNDays(days: number): DateRange {
   const endDate = new Date()
   const startDate = new Date(endDate.getTime() - days * DAY_MS)
@@ -234,28 +241,82 @@ export async function saveConferencePlanDraft(firebase: any, planId: string, pat
   return getConferencePlanFull(firebase, planId)
 }
 
-export async function getDashboardStats(firebase: any, uid: string, range: DateRange = lastNDays(7)): Promise<DashboardStats> {
-  const teachers = await safeRead('Unable to load v2 dashboard teachers', () => getTeachersForCoach(firebase, uid, lastNDays(30)), [])
-  const activePlans = await safeRead('Unable to load v2 dashboard active plans', () => getActivePlans(firebase, uid), [])
-
-  let observationsThisWeek = 0
-  try {
+async function getDashboardObservationCount(firebase: any, uid: string, range: DateRange): Promise<number> {
+  return safeRead('Unable to load v2 dashboard observation count', async () => {
     const snapshot = await firebase.db.collection('observations')
-      .where('observedBy', '==', `/user/${uid}`)
+      .where('observedBy', '==', '/user/' + uid)
       .where('end', '>=', range.startDate)
       .where('end', '<=', range.endDate)
       .get()
-    observationsThisWeek = snapshot.size
-  } catch (error) {
-    console.error('Unable to load v2 dashboard observation count', error)
-  }
+    return snapshot.size
+  }, 0)
+}
 
+function deriveDashboardStats(teachers: TeacherRow[], activePlans: PlanItem[], observationsThisWeek: number): DashboardStats {
   const needAttention = teachers.filter(teacher => teacher.actionCount === 0 || teacher.lastLogin === 'Never').length
   return {
     underCoaching: teachers.filter(teacher => teacher.role === 'teacher' && teacher.status === 'active').length,
     needAttention,
     observationsThisWeek,
     activePlans: activePlans.length
+  }
+}
+
+function deriveCoachAttention(teachers: TeacherRow[], opts: { limit?: number } = {}): AttentionItem[] {
+  return teachers
+    .filter(teacher => teacher.status === 'active')
+    .map(teacher => {
+      const inactive = teacher.lastLogin === 'Never' || teacher.loginCount === 0
+      const noActions = teacher.actionCount === 0
+      return {
+        id: teacher.id,
+        name: [teacher.firstName, teacher.lastName].filter(Boolean).join(' ').trim(),
+        reason: inactive
+          ? { text: 'No recent login', variant: 'warn' as const }
+          : noActions
+            ? { text: 'No recent activity', variant: 'neutral' as const }
+            : { text: 'Follow-up due', variant: 'warn' as const },
+        context: teacher.role + ' · ' + teacher.program,
+        cta: noActions ? 'Start obs' : 'Open profile'
+      }
+    })
+    .slice(0, opts.limit || 4)
+}
+
+function deriveRecentActivity(teachers: TeacherRow[], limit: number = 4): ActivityItem[] {
+  return teachers
+    .filter(teacher => teacher.lastAction.type !== 'None')
+    .slice(0, limit)
+    .map(teacher => ({
+      id: teacher.id + '-' + teacher.lastAction.type,
+      title: teacher.lastAction.type,
+      meta: [teacher.firstName, teacher.lastName].filter(Boolean).join(' ') + ' · ' + teacher.lastAction.date,
+      tone: teacher.actionCount > 0 ? 'success' : 'brand'
+    }))
+}
+
+export async function getDashboardStats(firebase: any, uid: string, range: DateRange = lastNDays(7)): Promise<DashboardStats> {
+  const [teachers, activePlans, observationsThisWeek] = await Promise.all([
+    safeRead('Unable to load v2 dashboard teachers', () => getTeachersForCoach(firebase, uid, lastNDays(30)), []),
+    safeRead('Unable to load v2 dashboard active plans', () => getActivePlans(firebase, uid), []),
+    getDashboardObservationCount(firebase, uid, range)
+  ])
+
+  return deriveDashboardStats(teachers, activePlans, observationsThisWeek)
+}
+
+export async function getDashboardOverview(firebase: any, uid: string, range: DateRange = lastNDays(7)): Promise<DashboardOverview> {
+  const [teachers, activePlans, observationsThisWeek] = await Promise.all([
+    safeRead('Unable to load v2 dashboard teachers', () => getTeachersForCoach(firebase, uid, lastNDays(30)), []),
+    safeRead('Unable to load v2 dashboard active plans', () => getActivePlans(firebase, uid), []),
+    getDashboardObservationCount(firebase, uid, range)
+  ])
+
+  return {
+    stats: deriveDashboardStats(teachers, activePlans, observationsThisWeek),
+    attention: deriveCoachAttention(teachers),
+    activity: deriveRecentActivity(teachers),
+    plans: activePlans
   }
 }
 
@@ -308,38 +369,13 @@ export async function getPracticeTrends(firebase: any, uid: string, range: DateR
 
 export async function getCoachAttention(firebase: any, uid: string, opts: { limit?: number } = {}): Promise<AttentionItem[]> {
   const teachers = await getTeachersForCoach(firebase, uid, lastNDays(45))
-  return teachers
-    .filter(teacher => teacher.status === 'active')
-    .map(teacher => {
-      const inactive = teacher.lastLogin === 'Never' || teacher.loginCount === 0
-      const noActions = teacher.actionCount === 0
-      return {
-        id: teacher.id,
-        name: `${teacher.firstName} ${teacher.lastName}`.trim(),
-        reason: inactive
-          ? { text: 'No recent login', variant: 'warn' as const }
-          : noActions
-            ? { text: 'No recent activity', variant: 'neutral' as const }
-            : { text: 'Follow-up due', variant: 'warn' as const },
-        context: `${teacher.role} · ${teacher.program}`,
-        cta: noActions ? 'Start obs' : 'Open profile'
-      }
-    })
-    .slice(0, opts.limit || 4)
+  return deriveCoachAttention(teachers, opts)
 }
 
 export async function getRecentActivity(firebase: any, uid: string, limit: number = 4): Promise<ActivityItem[]> {
   const range = lastNDays(30)
   const teachers = await getTeachersForCoach(firebase, uid, range)
-  return teachers
-    .filter(teacher => teacher.lastAction.type !== 'None')
-    .slice(0, limit)
-    .map(teacher => ({
-      id: `${teacher.id}-${teacher.lastAction.type}`,
-      title: teacher.lastAction.type,
-      meta: `${teacher.firstName} ${teacher.lastName} · ${teacher.lastAction.date}`,
-      tone: teacher.actionCount > 0 ? 'success' : 'brand'
-    }))
+  return deriveRecentActivity(teachers, limit)
 }
 
 export async function getActionPlanFull(firebase: any, planId: string): Promise<PlanDetail | null> {
@@ -726,6 +762,7 @@ export async function getLeaderSummary(firebase: any, leader: { role?: string; p
 export function createV2Api(firebase: any) {
   return {
     getCoachAttention: (uid: string, opts?: { limit?: number }) => getCoachAttention(firebase, uid, opts),
+    getDashboardOverview: (uid: string, range?: DateRange) => getDashboardOverview(firebase, uid, range),
     getDashboardStats: (uid: string, range?: DateRange) => getDashboardStats(firebase, uid, range),
     getPracticeTrends: (uid: string, range?: DateRange) => getPracticeTrends(firebase, uid, range),
     getRecentActivity: (uid: string, limit?: number) => getRecentActivity(firebase, uid, limit),

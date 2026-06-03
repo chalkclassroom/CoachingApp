@@ -10,6 +10,7 @@ import { Stat } from '../components/Stat'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
+import { useQueryState } from '../hooks/useQueryState'
 
 type PlanKind = 'action' | 'conference'
 type PlanStatus = 'draft' | 'active' | 'overdue' | 'sent' | 'complete'
@@ -123,7 +124,7 @@ export function ActionPlans() {
   const firebase = useV2Firebase()
   const auth = useV2Auth()
   const [plans, setPlans] = React.useState<PlanRow[]>(EMPTY_PLANS)
-  const [filter, setFilter] = React.useState<PlanFilter>('active')
+  const [filter, setFilter] = useQueryState<PlanFilter>('filter', 'active', ['active', 'overdue', 'sent', 'conference', 'all'])
   const [search, setSearch] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)

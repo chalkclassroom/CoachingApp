@@ -19,7 +19,7 @@ import { EmptyState } from './components/EmptyState'
 import { Button } from './components/Button'
 import { Toast } from './components/Toast'
 import { useTheme } from './hooks/useTheme'
-import { useV2Auth } from './hooks/useV2Auth'
+import { V2AuthProvider, useV2Auth } from './hooks/useV2Auth'
 import { ToastProvider } from './hooks/useToast'
 import { V2FirebaseProvider } from './lib/firebase'
 import { canAccessV2Area, getLegacyDelegationPath, V2Area } from './access'
@@ -136,7 +136,9 @@ export function V2App() {
   return (
     <div className="v2-root" data-theme="light">
       <V2FirebaseProvider>
-        <V2Routes />
+        <V2AuthProvider>
+          <V2Routes />
+        </V2AuthProvider>
       </V2FirebaseProvider>
     </div>
   )

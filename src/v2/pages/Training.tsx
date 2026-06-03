@@ -3,6 +3,7 @@ import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
 import { Skeleton } from '../components/Skeleton'
 import { useToast } from '../hooks/useToast'
+import { useQueryState } from '../hooks/useQueryState'
 import { useV2Auth } from '../hooks/useV2Auth'
 import { useV2Firebase } from '../lib/firebase'
 import { createV2Api } from '../lib/api'
@@ -57,7 +58,7 @@ export function Training() {
   const [cards, setCards] = React.useState<TrainingCard[]>(EMPTY_CARDS)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<Error | null>(null)
-  const [view, setView] = React.useState<TrainingView>('recommended')
+  const [view, setView] = useQueryState<TrainingView>('view', 'recommended', ['recommended', 'all', 'completed'])
   const [completedIds, setCompletedIds] = React.useState<string[]>(() => loadStoredIds(storageKey(undefined, 'completed')))
   const [dismissedIds, setDismissedIds] = React.useState<string[]>(() => loadStoredIds(storageKey(undefined, 'dismissed')))
 

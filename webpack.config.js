@@ -136,7 +136,13 @@ module.exports = (env, argv) => {
                 }),
                 new StaticPublicAssetPlugin([
                     'manifest.json',
-                    'site.webmanifest'
+                    'site.webmanifest',
+                    'favicon-16x16.png',
+                    'favicon-32x32.png',
+                    'android-chrome-192x192.png',
+                    'android-chrome-512x512.png',
+                    'apple-touch-icon.png',
+                    'mstile-150x150.png'
                 ]),
                 new WorkboxPlugin.GenerateSW({
                            // these options encourage the ServiceWorkers to get in there fast

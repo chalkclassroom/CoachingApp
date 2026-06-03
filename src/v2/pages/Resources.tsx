@@ -4,6 +4,7 @@ import { Button } from '../components/Button'
 import { Card, CardHeader } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
 import { Pill } from '../components/Pill'
+import { useQueryState } from '../hooks/useQueryState'
 import CoachHandbookUrl from '../../assets/coaching-docs/Coach Handbook_9.1.21.pdf'
 import TransitionHandoutUrl from '../../assets/coaching-docs/Transition Time CHALK Handout.pdf'
 import ClassroomClimateHandoutUrl from '../../assets/coaching-docs/Classroom Climate CHALK Handout.pdf'
@@ -54,7 +55,7 @@ function formatColor(format: Resource['format']): 'brand' | 'success' {
 
 export function Resources() {
   const history = useHistory()
-  const [category, setCategory] = React.useState<ResourceCategory | 'all'>('all')
+  const [category, setCategory] = useQueryState<ResourceCategory | 'all'>('category', 'all', ['all', 'coaching-cycle', 'professional-development', 'crosswalks', 'best-practices'])
   const [search, setSearch] = React.useState('')
   const normalized = search.trim().toLowerCase()
   const visible = RESOURCES.filter(resource => {
