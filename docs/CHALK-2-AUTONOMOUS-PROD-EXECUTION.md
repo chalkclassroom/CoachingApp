@@ -6,6 +6,10 @@ Branch: `feature/chalk-2.0-renovation`
 
 Remote target: `fork/feature/chalk-2.0-renovation`
 
+Upstream CHALK remote: fetch-only. Local push URL for `origin` must remain disabled.
+
+Planning docs mirror: `docs/chalk-2-planning/`
+
 Production deploy: not approved
 
 ## Why this document exists
@@ -20,9 +24,10 @@ Autonomous execution now targets Path A-quality implementation, while keeping de
 
 ## Non-negotiable execution rules
 
-- Push only to `fork`, not `origin`.
+- Push only to `fork`, not `origin`; `origin` is the CHALK/client repository and must stay fetch-only until the budget is approved.
 - Do not deploy production.
 - Do not commit `.firebaserc` or `functions/.env` unless explicitly requested.
+- Keep V2 planning and audit documentation in the forked repo under `docs/`; `.chalk` copies are local working artifacts, not the canonical handoff.
 - Write the failing check first, then production code, then the passing proof.
 - Unsupported workflows must be hidden, read-only, or explicitly delegated. They must not look live.
 - No demo rows, fictional teacher names, local-only threads, or stub initial state may appear in `src/v2`.
