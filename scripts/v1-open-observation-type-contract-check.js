@@ -46,6 +46,13 @@ for (const storedType of storedTypes) {
 }
 
 assert(page.includes('OPEN_OBSERVATION_TYPE_OPTIONS'), 'OpenObservationPage must render type options from the V1 adapter')
+assert(page.includes('getOpenObservationStoredType'), 'OpenObservationPage must convert the final alignment through getOpenObservationStoredType')
+assert(page.includes('selectedFinalTypeCode'), 'OpenObservationPage must track a final canonical alignment separately from the provisional start type')
+assert(page.includes('open-observation-end'), 'OpenObservationPage must expose an End observation action')
+assert(page.includes('open-observation-final-type'), 'OpenObservationPage must expose a final Magic 9 alignment selector')
+assert(page.includes('open-observation-save'), 'OpenObservationPage must expose a save action for the aligned observation')
+assert(page.includes('openObservationLastSavedType'), 'OpenObservationPage must expose the saved stored type for Cypress contract verification')
+assert(page.includes('getOpenObservationStoredType(this.state.selectedFinalTypeCode)') || page.includes('getOpenObservationStoredType(selectedFinalTypeCode)'), 'OpenObservationPage must save the final alignment type, not the provisional start type')
 
 if (failures.length > 0) {
   console.error('V1 Open Observation type contract failed:')

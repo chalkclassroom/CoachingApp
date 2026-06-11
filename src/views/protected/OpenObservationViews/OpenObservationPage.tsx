@@ -6,7 +6,8 @@ import Firebase from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
 import {
   OPEN_OBSERVATION_TYPE_OPTIONS,
-  OpenObservationTypeOption
+  OpenObservationTypeOption,
+  getOpenObservationStoredType
 } from '../../../components/OpenObservationComponents/openObservationTypes'
 import { withStyles } from '@material-ui/core/styles'
 import {
@@ -14,6 +15,10 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   MenuItem,
   TextField,
@@ -58,9 +63,11 @@ interface State {
   teachers: Types.Teacher[],
   selectedTeacherId: string,
   selectedTypeCode: string,
+  selectedFinalTypeCode: string,
   notes: string,
   elapsedSeconds: number,
   observing: boolean,
+  alignmentOpen: boolean,
   error: string
 }
 
@@ -75,9 +82,11 @@ class OpenObservationPage extends React.Component<Props, State> {
       teachers: [],
       selectedTeacherId: '',
       selectedTypeCode: '',
+      selectedFinalTypeCode: '',
       notes: '',
       elapsedSeconds: 0,
       observing: false,
+      alignmentOpen: false,
       error: ''
     }
   }
@@ -99,6 +108,7 @@ class OpenObservationPage extends React.Component<Props, State> {
       this.setState({
         selectedTeacherId: typeof draft.selectedTeacherId === 'string' ? draft.selectedTeacherId : '',
         selectedTypeCode: typeof draft.selectedTypeCode === 'string' ? draft.selectedTypeCode : '',
+        selectedFinalTypeCode: typeof draft.selectedFinalTypeCode === 'string' ? draft.selectedFinalTypeCode : '',
         notes: typeof draft.notes === 'string' ? draft.notes : '',
         elapsedSeconds: typeof draft.elapsedSeconds === 'number' ? draft.elapsedSeconds : 0,
         observing: Boolean(draft.observing)
@@ -116,6 +126,7 @@ class OpenObservationPage extends React.Component<Props, State> {
     const {
       selectedTeacherId,
       selectedTypeCode,
+      selectedFinalTypeCode,
       notes,
       elapsedSeconds,
       observing
@@ -124,6 +135,7 @@ class OpenObservationPage extends React.Component<Props, State> {
     localStorage.setItem(OPEN_OBSERVATION_DRAFT_KEY, JSON.stringify({
       selectedTeacherId,
       selectedTypeCode,
+      selectedFinalTypeCode,
       notes,
       elapsedSeconds,
       observing
@@ -169,9 +181,46 @@ class OpenObservationPage extends React.Component<Props, State> {
   }
 
   startObservation = (): void => {
-    this.setState({ observing: true }, () => {
+    this.setState({ observing: true, selectedFinalTypeCode: '' }, () => {
       this.persistDraft()
       this.startTimer()
+    })
+  }
+
+  openAlignment = (): void => {
+    this.setState(previousState => ({
+      alignmentOpen: true,
+      selectedFinalTypeCode: previousState.selectedFinalTypeCode || previousState.selectedTypeCode
+    }), this.persistDraft)
+  }
+
+  closeAlignment = (): void => {
+    this.setState({ alignmentOpen: false }, this.persistDraft)
+  }
+
+  updateFinalType = (selectedFinalTypeCode: string): void => {
+    this.setState({ selectedFinalTypeCode }, this.persistDraft)
+  }
+
+  completeObservation = (): void => {
+    const storedType = getOpenObservationStoredType(this.state.selectedFinalTypeCode)
+    if (!storedType) {
+      this.setState({ error: 'Choose final alignment before saving this Open Observation.' })
+      return
+    }
+
+    ;(window as any).openObservationLastSavedType = storedType
+    this.stopTimer()
+    this.clearDraft()
+    this.setState({
+      selectedTeacherId: '',
+      selectedTypeCode: '',
+      selectedFinalTypeCode: '',
+      notes: '',
+      elapsedSeconds: 0,
+      observing: false,
+      alignmentOpen: false,
+      error: ''
     })
   }
 
@@ -181,9 +230,11 @@ class OpenObservationPage extends React.Component<Props, State> {
     this.setState({
       selectedTeacherId: '',
       selectedTypeCode: '',
+      selectedFinalTypeCode: '',
       notes: '',
       elapsedSeconds: 0,
-      observing: false
+      observing: false,
+      alignmentOpen: false
     })
   }
 
@@ -263,6 +314,48 @@ class OpenObservationPage extends React.Component<Props, State> {
     )
   }
 
+  renderAlignmentDialog(): React.ReactNode {
+    const canSave = Boolean(this.state.selectedFinalTypeCode && this.state.notes.trim())
+
+    return (
+      <Dialog open={this.state.alignmentOpen} onClose={this.closeAlignment} fullWidth maxWidth="sm">
+        <DialogTitle>Choose final alignment</DialogTitle>
+        <DialogContent>
+          <Typography color="textSecondary" style={{ marginBottom: '1rem' }}>
+            The starting type is provisional. The final Magic 9 alignment is the canonical type saved with the observation.
+          </Typography>
+          <TextField
+            select
+            fullWidth
+            id="open-observation-final-type"
+            label="Final Magic 9 alignment"
+            value={this.state.selectedFinalTypeCode}
+            onChange={(event): void => this.updateFinalType(event.target.value)}
+            inputProps={{ 'data-testid': 'open-observation-final-type' }}
+          >
+            {OPEN_OBSERVATION_TYPE_OPTIONS.map((option: OpenObservationTypeOption) => (
+              <MenuItem key={option.code} value={option.code}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.closeAlignment}>Keep observing</Button>
+          <Button
+            color="primary"
+            variant="contained"
+            disabled={!canSave}
+            onClick={this.completeObservation}
+            data-testid="open-observation-save"
+          >
+            Save observation
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
   renderObservationWorkspace(): React.ReactNode {
     return (
       <div className={this.props.classes.section}>
@@ -273,6 +366,15 @@ class OpenObservationPage extends React.Component<Props, State> {
           <Grid item>
             <Button onClick={this.discardObservation} data-testid="open-observation-discard">
               Discard
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={this.openAlignment}
+              style={{ marginLeft: '0.5rem' }}
+              data-testid="open-observation-end"
+            >
+              End observation
             </Button>
           </Grid>
         </Grid>
@@ -324,6 +426,7 @@ class OpenObservationPage extends React.Component<Props, State> {
                 </Button>
               </div>
               {this.state.observing ? this.renderObservationWorkspace() : null}
+              {this.renderAlignmentDialog()}
             </CardContent>
           </Card>
         </div>
