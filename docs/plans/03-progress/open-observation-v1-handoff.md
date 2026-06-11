@@ -236,5 +236,14 @@ Files intentionally not touched:
 
 Production: not deployed.  
 Origin: not pushed.  
-Fork: pending push after handoff commit.  
-Staging: pending hosting-only deploy after push.
+Fork: pushed to `fork/feature/chalk-2.0-renovation`.  
+Staging: deployed hosting-only to `https://chalk-dev-c6a5d.web.app` from commit `a71dfc303`.
+
+Verification:
+
+```bash
+curl -I https://chalk-dev-c6a5d.web.app
+curl -I https://chalk-dev-c6a5d.web.app/OpenObservation
+```
+
+Both returned HTTP 200 on 2026-06-11. No Functions deploy was run.
