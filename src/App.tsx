@@ -14,6 +14,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import TransitionTimePage from './views/protected/TransitionViews/TransitionTimePage'
 import ForgotPasswordPage from './views/ForgotPasswordViews/ForgotPasswordPage'
 import HomePage from './views/protected/HomeViews/HomePage'
+import OpenObservationPage from './views/protected/OpenObservationViews/OpenObservationPage'
 import TeacherListPage from './views/protected/MyTeachers/TeacherListPage'
 import ActionPlanListPage from './views/protected/ActionPlanViews/ActionPlanListPage'
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView'
@@ -342,6 +343,15 @@ class App extends React.Component<Props, State> {
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/OpenObservation"
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <OpenObservationPage {...props}/>}
             />
             <PrivateRoute
               auth={auth || !auth}
