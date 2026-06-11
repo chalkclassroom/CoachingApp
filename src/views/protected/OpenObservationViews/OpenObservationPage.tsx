@@ -68,6 +68,7 @@ interface State {
   elapsedSeconds: number,
   observing: boolean,
   alignmentOpen: boolean,
+  saving: boolean,
   error: string
 }
 
@@ -87,6 +88,7 @@ class OpenObservationPage extends React.Component<Props, State> {
       elapsedSeconds: 0,
       observing: false,
       alignmentOpen: false,
+      saving: false,
       error: ''
     }
   }
@@ -202,26 +204,52 @@ class OpenObservationPage extends React.Component<Props, State> {
     this.setState({ selectedFinalTypeCode }, this.persistDraft)
   }
 
-  completeObservation = (): void => {
+  completeObservation = async (): Promise<void> => {
     const storedType = getOpenObservationStoredType(this.state.selectedFinalTypeCode)
     if (!storedType) {
       this.setState({ error: 'Choose final alignment before saving this Open Observation.' })
       return
     }
 
-    ;(window as any).openObservationLastSavedType = storedType
-    this.stopTimer()
-    this.clearDraft()
-    this.setState({
-      selectedTeacherId: '',
-      selectedTypeCode: '',
-      selectedFinalTypeCode: '',
-      notes: '',
-      elapsedSeconds: 0,
-      observing: false,
-      alignmentOpen: false,
-      error: ''
-    })
+    const firebase = this.context as Firebase
+    const currentUser = firebase.auth.currentUser
+    if (!currentUser || !this.state.selectedTeacherId) {
+      this.setState({ error: 'Unable to save this Open Observation without an authenticated coach and teacher.' })
+      return
+    }
+
+    this.setState({ saving: true, error: '' })
+    try {
+      await firebase.handleSession({
+        observedBy: currentUser.uid,
+        teacher: this.state.selectedTeacherId,
+        type: storedType,
+        checklist: undefined // LI_OPEN_OBSERVATION_CHECKLIST_NULL: handleSession writes missing checklist as null.
+      })
+      if (this.state.notes.trim()) {
+        firebase.handlePushNotes(this.state.notes.trim())
+      }
+      firebase.endSession()
+      ;(window as any).openObservationLastSavedType = storedType
+      this.stopTimer()
+      this.clearDraft()
+      this.setState({
+        selectedTeacherId: '',
+        selectedTypeCode: '',
+        selectedFinalTypeCode: '',
+        notes: '',
+        elapsedSeconds: 0,
+        observing: false,
+        alignmentOpen: false,
+        saving: false,
+        error: ''
+      })
+    } catch (error) {
+      this.setState({
+        saving: false,
+        error: 'Unable to save this Open Observation. Please try again.'
+      })
+    }
   }
 
   discardObservation = (): void => {
@@ -234,7 +262,8 @@ class OpenObservationPage extends React.Component<Props, State> {
       notes: '',
       elapsedSeconds: 0,
       observing: false,
-      alignmentOpen: false
+      alignmentOpen: false,
+      saving: false
     })
   }
 
@@ -315,7 +344,7 @@ class OpenObservationPage extends React.Component<Props, State> {
   }
 
   renderAlignmentDialog(): React.ReactNode {
-    const canSave = Boolean(this.state.selectedFinalTypeCode && this.state.notes.trim())
+    const canSave = Boolean(this.state.selectedTeacherId && this.state.selectedFinalTypeCode && this.state.notes.trim())
 
     return (
       <Dialog open={this.state.alignmentOpen} onClose={this.closeAlignment} fullWidth maxWidth="sm">
@@ -345,11 +374,11 @@ class OpenObservationPage extends React.Component<Props, State> {
           <Button
             color="primary"
             variant="contained"
-            disabled={!canSave}
+            disabled={!canSave || this.state.saving}
             onClick={this.completeObservation}
             data-testid="open-observation-save"
           >
-            Save observation
+            {this.state.saving ? 'Saving...' : 'Save observation'}
           </Button>
         </DialogActions>
       </Dialog>
