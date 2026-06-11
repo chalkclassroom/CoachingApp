@@ -18,7 +18,11 @@ function assert(condition, message) {
 }
 
 const pagePath = 'src/views/protected/OpenObservationViews/OpenObservationPage.tsx'
+const appPath = 'src/App.tsx'
+const homePath = 'src/views/protected/HomeViews/HomePage.tsx'
 const page = exists(pagePath) ? read(pagePath) : ''
+const app = exists(appPath) ? read(appPath) : ''
+const home = exists(homePath) ? read(homePath) : ''
 
 assert(exists(pagePath), 'OpenObservationPage must exist under the legacy protected views tree')
 assert(page.includes('OPEN_OBSERVATION_DRAFT_KEY'), 'Open Observation must use a named localStorage draft key')
@@ -31,6 +35,13 @@ assert(!page.includes("collection('observationDraft") && !page.includes('collect
 
 assert(!page.includes("db.collection('observations')") && !page.includes('db.collection("observations")'), 'Open Observation page must not write observations directly')
 assert(!page.includes('/v2/'), 'Open Observation page must not route through V2')
+
+assert(app.includes('OpenObservationPage'), 'App.tsx must import and render OpenObservationPage')
+assert(app.includes('path="/OpenObservation"'), 'App.tsx must expose the /OpenObservation route')
+assert(app.includes('Role.COACH') && app.includes('Role.ADMIN') && app.includes('Role.PROGRAMLEADER') && app.includes('Role.SITELEADER'), 'Open Observation route must be available to coach/admin/program/site leader roles')
+assert(home.includes('/OpenObservation'), 'HomePage must link to /OpenObservation')
+assert(home.includes('Open Observation'), 'HomePage must label the Open Observation entry')
+assert(!home.includes('/v2/'), 'HomePage Open Observation entry must not route through V2')
 
 
 if (failures.length > 0) {
