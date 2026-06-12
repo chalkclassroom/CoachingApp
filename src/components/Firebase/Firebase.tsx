@@ -637,7 +637,7 @@ class Firebase {
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
           console.log('teacher info', doc.data())
-          return doc.data()
+          return ({...doc.data(), id: doc.id})
         } else {
           console.log("Partner's ID is 'undefined' in dB.")
           return ({id: null})
