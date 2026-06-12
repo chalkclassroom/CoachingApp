@@ -21,10 +21,14 @@ const pagePath = 'src/views/protected/OpenObservationViews/OpenObservationPage.t
 const appPath = 'src/App.tsx'
 const homePath = 'src/views/protected/HomeViews/HomePage.tsx'
 const firebasePath = 'src/components/Firebase/Firebase.tsx'
+const reducerPath = 'src/state/reducers/training-literacy-state.ts'
+const webpackPath = 'webpack.config.js'
 const page = exists(pagePath) ? read(pagePath) : ''
 const app = exists(appPath) ? read(appPath) : ''
 const home = exists(homePath) ? read(homePath) : ''
 const firebase = exists(firebasePath) ? read(firebasePath) : ''
+const reducer = exists(reducerPath) ? read(reducerPath) : ''
+const webpack = exists(webpackPath) ? read(webpackPath) : ''
 
 assert(exists(pagePath), 'OpenObservationPage must exist under the legacy protected views tree')
 assert(page.includes('OPEN_OBSERVATION_DRAFT_KEY'), 'Open Observation must use a named localStorage draft key')
@@ -45,6 +49,10 @@ assert(home.includes('/OpenObservation'), 'HomePage must link to /OpenObservatio
 assert(home.includes('Open Observation'), 'HomePage must label the Open Observation entry')
 assert(!home.includes('/v2/'), 'HomePage Open Observation entry must not route through V2')
 assert(firebase.includes('id: doc.id'), 'Firebase.getTeacherInfo must preserve the Firestore doc id for teacher pickers')
+assert(firebase.includes('userRole === "admin"') && firebase.includes("where('role', '==', 'teacher')"), 'Firebase.getTeacherList must let admins load teacher options')
+assert(app.includes('Promise.all') && app.includes('Promise.resolve(teacherEntry)') && app.includes('teacher is Types.Teacher'), 'App.tsx must resolve teacher promises before dispatching getTeacherList')
+assert(reducer.includes('action.literacyTraining || initialState'), 'training literacy reducer must tolerate missing training docs')
+assert(webpack.includes('CopyPublicAssetsPlugin') && webpack.includes('site.webmanifest') && webpack.includes('manifest.json'), 'webpack must copy manifest assets so Firebase hosting does not rewrite them to index.html')
 
 
 if (failures.length > 0) {
