@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -5,6 +6,35 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const SourceMapPlugin = require('webpack').SourceMapDevToolPlugin;
 const DefinePlugin = require('webpack').DefinePlugin;
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
+
+const publicAssets = [
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "apple-touch-icon.png",
+    "browserconfig.xml",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "favicon.ico",
+    "manifest.json",
+    "mstile-150x150.png",
+    "safari-pinned-tab.svg",
+    "site.webmanifest"
+];
+
+class CopyPublicAssetsPlugin {
+    apply(compiler) {
+        compiler.hooks.afterEmit.tap("CopyPublicAssetsPlugin", compilation => {
+            publicAssets.forEach(fileName => {
+                const sourcePath = path.resolve(__dirname, "public", fileName);
+                const outputPath = path.resolve(compilation.outputOptions.path, fileName);
+                if (fs.existsSync(sourcePath)) {
+                    fs.copyFileSync(sourcePath, outputPath);
+                }
+            });
+        });
+    }
+}
+
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
 
@@ -111,6 +141,7 @@ module.exports = (env, argv) => {
                 new HtmlWebpackPlugin({
                     template: "./public/template/index.html"
                 }),
+                new CopyPublicAssetsPlugin(),
                 new WorkboxPlugin.GenerateSW({
                            // these options encourage the ServiceWorkers to get in there fast
                            // and not allow any straggling "old" SWs to hang around
