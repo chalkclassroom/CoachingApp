@@ -73,6 +73,7 @@ interface Observation {
   timezone: string
   type: string
   lastClickTime: Date
+  openObservation?: boolean
   timedOut: boolean
 }
 
@@ -1027,6 +1028,7 @@ class Firebase {
     teacher: string
     type: string
     start?: Date
+    openObservation?: boolean
     checklist?: string // specific literacy type
   }) => {
     this.currentObservation =
@@ -1045,6 +1047,7 @@ class Firebase {
         timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
         activitySetting: null,
         lastClickTime: new Date(),
+        openObservation: Boolean(mEntry.openObservation),
         timedOut: false
       }
   }
@@ -1074,6 +1077,7 @@ class Firebase {
         entries,
         activitySetting,
         notes,
+        openObservation,
         timedOut
       } = this.currentObservation;
       this.sessionRef = this.db.collection('observations').doc()
@@ -1095,6 +1099,7 @@ class Firebase {
         start: firebase.firestore.Timestamp.fromDate(start),
         teacher,
         type,
+        openObservation,
         timezone
       })
       let notesCollection = this.sessionRef.collection('notes')
