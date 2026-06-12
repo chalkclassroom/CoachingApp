@@ -50,6 +50,11 @@ exports.observationsToBQ = functions.firestore
             console.log("Session Finished");
             console.log(`New value is ${JSON.stringify(newValue)}`);
 
+            if (newValue.openObservation === true || newValue.observationMode === 'open') {
+              console.log("Skipping BigQuery metric export for Open Observation " + context.params.observationID);
+              return null;
+            }
+
             // perform desired operations ...
             let datasetName = functions.config().env.bq_dataset;
             let tableName = newValue.type.toLowerCase();

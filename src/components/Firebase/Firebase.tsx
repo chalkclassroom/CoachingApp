@@ -73,6 +73,7 @@ interface Observation {
   timezone: string
   type: string
   lastClickTime: Date
+  openObservation?: boolean
   timedOut: boolean
 }
 
@@ -637,7 +638,7 @@ class Firebase {
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
           console.log('teacher info', doc.data())
-          return doc.data()
+          return ({...doc.data(), id: doc.id})
         } else {
           console.log("Partner's ID is 'undefined' in dB.")
           return ({id: null})
@@ -1028,6 +1029,7 @@ class Firebase {
     teacher: string
     type: string
     start?: Date
+    openObservation?: boolean
     checklist?: string // specific literacy type
   }) => {
     this.currentObservation =
@@ -1046,6 +1048,7 @@ class Firebase {
         timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
         activitySetting: null,
         lastClickTime: new Date(),
+        openObservation: Boolean(mEntry.openObservation),
         timedOut: false
       }
   }
@@ -1075,6 +1078,7 @@ class Firebase {
         entries,
         activitySetting,
         notes,
+        openObservation,
         timedOut
       } = this.currentObservation;
       this.sessionRef = this.db.collection('observations').doc()
@@ -1096,6 +1100,7 @@ class Firebase {
         start: firebase.firestore.Timestamp.fromDate(start),
         teacher,
         type,
+        openObservation,
         timezone
       })
       let notesCollection = this.sessionRef.collection('notes')
