@@ -20,9 +20,11 @@ function assert(condition, message) {
 const pagePath = 'src/views/protected/OpenObservationViews/OpenObservationPage.tsx'
 const appPath = 'src/App.tsx'
 const homePath = 'src/views/protected/HomeViews/HomePage.tsx'
+const firebasePath = 'src/components/Firebase/Firebase.tsx'
 const page = exists(pagePath) ? read(pagePath) : ''
 const app = exists(appPath) ? read(appPath) : ''
 const home = exists(homePath) ? read(homePath) : ''
+const firebase = exists(firebasePath) ? read(firebasePath) : ''
 
 assert(exists(pagePath), 'OpenObservationPage must exist under the legacy protected views tree')
 assert(page.includes('OPEN_OBSERVATION_DRAFT_KEY'), 'Open Observation must use a named localStorage draft key')
@@ -42,6 +44,7 @@ assert(app.includes('Role.COACH') && app.includes('Role.ADMIN') && app.includes(
 assert(home.includes('/OpenObservation'), 'HomePage must link to /OpenObservation')
 assert(home.includes('Open Observation'), 'HomePage must label the Open Observation entry')
 assert(!home.includes('/v2/'), 'HomePage Open Observation entry must not route through V2')
+assert(firebase.includes('id: doc.id'), 'Firebase.getTeacherInfo must preserve the Firestore doc id for teacher pickers')
 
 
 if (failures.length > 0) {
