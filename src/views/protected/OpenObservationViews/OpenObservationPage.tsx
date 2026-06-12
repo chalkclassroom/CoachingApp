@@ -224,6 +224,7 @@ class OpenObservationPage extends React.Component<Props, State> {
         observedBy: currentUser.uid,
         teacher: this.state.selectedTeacherId,
         type: storedType,
+        openObservation: true,
         checklist: undefined // LI_OPEN_OBSERVATION_CHECKLIST_NULL: handleSession writes missing checklist as null.
       })
       if (this.state.notes.trim()) {

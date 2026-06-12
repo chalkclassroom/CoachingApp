@@ -34,11 +34,19 @@ assert(page.includes('handlePushNotes'), 'Open Observation must add free-form no
 assert(page.includes('endSession'), 'Open Observation must finish through legacy endSession')
 assert(!page.includes("db.collection('observations')") && !page.includes('db.collection("observations")'), 'Open Observation must not write observations directly')
 assert(page.includes('checklist: null') || page.includes('checklist: undefined') || page.includes('/* LI_OPEN_OBSERVATION_CHECKLIST_NULL */'), 'Open Observation must document checklist:null behavior for LI/free-form saves')
+assert(page.includes('openObservation: true'), 'Open Observation must mark saved observations as openObservation:true')
 
 assert(firebase.includes('checklist: mEntry.checklist ? mEntry.checklist : null'), 'handleSession must normalize missing checklist to null')
 assert(firebase.includes("this.currentObservation.type === 'LI'") && firebase.includes("handleLiteracyActivitySetting('Not Recorded')"), 'endSession must keep Not Recorded scoped to LI activitySetting, not checklist')
 assert(firebase.includes("this.sessionRef = this.db.collection('observations').doc()"), 'endSession must remain the single legacy observations write path')
 assert(firebase.includes("notesCollection.add"), 'endSession must write notes through the legacy notes subcollection')
+assert(firebase.includes('openObservation?: boolean') && firebase.includes('openObservation: Boolean(mEntry.openObservation)') && firebase.includes('openObservation,'), 'Firebase handleSession/endSession must preserve the openObservation marker on the observation doc')
+
+const openGuardIndex = bq.indexOf('newValue.openObservation === true')
+const tableNameIndex = bq.indexOf('let tableName = newValue.type.toLowerCase()')
+assert(openGuardIndex !== -1, 'BQ pipeline must explicitly detect Open Observation docs')
+assert(tableNameIndex !== -1 && openGuardIndex < tableNameIndex, 'BQ Open Observation guard must run before tableName derivation, including LI literacynull routing')
+assert(bq.includes('Skipping BigQuery metric export for Open Observation') && bq.includes('return null'), 'BQ pipeline must skip metric export for Open Observation docs')
 
 assert(bq.includes("if (newValue.type === 'LI')"), 'BQ pipeline must retain LI table routing')
 assert(bq.includes("tableName = 'literacy' + newValue.checklist"), 'BQ pipeline must derive LI table from checklist')
@@ -47,11 +55,13 @@ assert(!bq.includes('session.type === "LI" && session.checklist === null'), 'BQ 
 
 const openLiObservation = {
   type: 'LI',
+  openObservation: true,
   checklist: null,
   activitySetting: 'Not Recorded',
   notes: [{ Note: 'Free-form literacy note' }]
 }
 assert(openLiObservation.type === 'LI' && openLiObservation.checklist === null, 'LI Open Observation fixture must use checklist:null')
+assert(openLiObservation.openObservation === true, 'LI Open Observation fixture must include the openObservation marker')
 assert('activitySetting' in openLiObservation, 'LI Open Observation fixture must keep Not Recorded as activitySetting only')
 assert(openLiObservation.notes.length === 1, 'LI Open Observation fixture must support free-form notes')
 
