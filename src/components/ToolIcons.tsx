@@ -3,6 +3,10 @@ import * as PropTypes from "prop-types";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import Magic8Card from './Magic8Card';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import Typography from '@material-ui/core/Typography';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
 import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
@@ -364,6 +368,26 @@ function ToolIcons(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         </Grid>
+        {!training && type === 'Observe' && !props.isTeacher ? (
+          <Grid item style={{width: '100%', paddingTop: '1em'}}>
+            <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
+              <Grid item>
+                <Card
+                  data-testid="open-observation-magic8-card"
+                  onClick={(): void => history.push('/OpenObservation')}
+                  style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
+                >
+                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                    <NoteAddIcon style={{fill: '#7a4dff', width: '56%', height: '56%'}} />
+                    <Typography variant="caption" style={{fontFamily: 'Arimo', textAlign: 'center'}}>
+                      Open Observation
+                    </Typography>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        ) : null}
         </>)}
       </Grid>
       {selected === 'LiteracyInstruction' ? (

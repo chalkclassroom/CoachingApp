@@ -10,7 +10,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TrainingIcon from "@material-ui/icons/School";
 import ObserveIcon from "@material-ui/icons/Visibility";
-import OpenObservationIcon from "@material-ui/icons/NoteAdd";
 import PeopleIcon from "@material-ui/icons/People";
 import ResultsIcon from "@material-ui/icons/PieChart";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
@@ -250,28 +249,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
-                {[Role.COACH, Role.ADMIN, Role.SITELEADER, Role.PROGRAMLEADER].find(r => r === userRole) ? <Card
-                  className={classes.card}
-                  onClick={(): void => this.props.history.push("/OpenObservation")}
-                >
-                  <CardContent>
-                    <Grid
-                      container
-                      alignItems="center"
-                      direction="column"
-                      justify="flex-start"
-                    >
-                      <Grid item>
-                        <OpenObservationIcon style={{ fill: "#7a4dff", width: '12vw', height: '12vh' }} />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                          Open Observation
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card> :  null}
+                
                 <Card
                   className={classes.card}
                   onClick={(): void => this.showTeacherModal("Results")}
@@ -426,28 +404,7 @@ class HomePage extends React.Component<Props, State> {
                     </Card>
                   </Grid>
                   <Grid item xs={6}>
-                    {[Role.COACH, Role.ADMIN, Role.SITELEADER, Role.PROGRAMLEADER].find(r => r === userRole) ? <Card
-                      className={classes.card}
-                      onClick={(): void => this.props.history.push("/OpenObservation")}
-                    >
-                      <CardContent>
-                        <Grid
-                          container
-                          alignItems="center"
-                          direction="column"
-                          justify="flex-start"
-                        >
-                          <Grid item>
-                            <OpenObservationIcon style={{ fill: "#7a4dff", width: '12vw', height: '12vh' }} />
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                              Open Observation
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card> : null}
+                    
                   </Grid>
                   <Grid item xs={6}>
                     <Card

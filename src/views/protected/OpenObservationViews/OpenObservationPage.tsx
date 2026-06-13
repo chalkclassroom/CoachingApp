@@ -4,21 +4,13 @@ import AppBar from '../../../components/AppBar'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import Firebase from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
-import {
-  OPEN_OBSERVATION_TYPE_OPTIONS,
-  OpenObservationTypeOption,
-  getOpenObservationStoredType
-} from '../../../components/OpenObservationComponents/openObservationTypes'
+import { OpenObservationNote } from '../../../components/OpenObservationComponents/openObservationSchema'
 import { withStyles } from '@material-ui/core/styles'
 import {
   Button,
   Card,
   CardContent,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Grid,
   MenuItem,
   TextField,
@@ -42,6 +34,10 @@ const styles: object = {
   },
   section: {
     marginTop: '1rem'
+  },
+  noteRow: {
+    borderBottom: '1px solid #e0e0e0',
+    padding: '0.75rem 0'
   }
 }
 
@@ -49,7 +45,8 @@ interface Style {
   root: string,
   content: string,
   card: string,
-  section: string
+  section: string,
+  noteRow: string
 }
 
 interface Props {
@@ -62,14 +59,14 @@ interface State {
   loadingTeachers: boolean,
   teachers: Types.Teacher[],
   selectedTeacherId: string,
-  selectedTypeCode: string,
-  selectedFinalTypeCode: string,
-  notes: string,
+  notes: OpenObservationNote[],
+  noteText: string,
   elapsedSeconds: number,
   observing: boolean,
-  alignmentOpen: boolean,
   saving: boolean,
-  error: string
+  error: string,
+  coachSummary: string,
+  snapshotVisible: boolean
 }
 
 class OpenObservationPage extends React.Component<Props, State> {
@@ -82,14 +79,14 @@ class OpenObservationPage extends React.Component<Props, State> {
       loadingTeachers: true,
       teachers: [],
       selectedTeacherId: '',
-      selectedTypeCode: '',
-      selectedFinalTypeCode: '',
-      notes: '',
+      notes: [],
+      noteText: '',
       elapsedSeconds: 0,
       observing: false,
-      alignmentOpen: false,
       saving: false,
-      error: ''
+      error: '',
+      coachSummary: '',
+      snapshotVisible: false
     }
   }
 
@@ -107,13 +104,21 @@ class OpenObservationPage extends React.Component<Props, State> {
       const rawDraft = localStorage.getItem(OPEN_OBSERVATION_DRAFT_KEY)
       if (!rawDraft) return
       const draft = JSON.parse(rawDraft)
+      const notes = Array.isArray(draft.notes) ? draft.notes.map((note: any) => ({
+        id: String(note.id),
+        wallClockAt: new Date(note.wallClockAt),
+        text: String(note.text || ''),
+        editedAt: note.editedAt ? new Date(note.editedAt) : undefined
+      })).filter((note: OpenObservationNote) => note.id && note.text) : []
+
       this.setState({
         selectedTeacherId: typeof draft.selectedTeacherId === 'string' ? draft.selectedTeacherId : '',
-        selectedTypeCode: typeof draft.selectedTypeCode === 'string' ? draft.selectedTypeCode : '',
-        selectedFinalTypeCode: typeof draft.selectedFinalTypeCode === 'string' ? draft.selectedFinalTypeCode : '',
-        notes: typeof draft.notes === 'string' ? draft.notes : '',
+        notes,
+        noteText: typeof draft.noteText === 'string' ? draft.noteText : '',
         elapsedSeconds: typeof draft.elapsedSeconds === 'number' ? draft.elapsedSeconds : 0,
-        observing: Boolean(draft.observing)
+        observing: Boolean(draft.observing),
+        coachSummary: typeof draft.coachSummary === 'string' ? draft.coachSummary : '',
+        snapshotVisible: Boolean(draft.snapshotVisible)
       }, () => {
         if (this.state.observing) {
           this.startTimer()
@@ -127,20 +132,22 @@ class OpenObservationPage extends React.Component<Props, State> {
   persistDraft = (): void => {
     const {
       selectedTeacherId,
-      selectedTypeCode,
-      selectedFinalTypeCode,
       notes,
+      noteText,
       elapsedSeconds,
-      observing
+      observing,
+      coachSummary,
+      snapshotVisible
     } = this.state
 
     localStorage.setItem(OPEN_OBSERVATION_DRAFT_KEY, JSON.stringify({
       selectedTeacherId,
-      selectedTypeCode,
-      selectedFinalTypeCode,
       notes,
+      noteText,
       elapsedSeconds,
-      observing
+      observing,
+      coachSummary,
+      snapshotVisible
     }))
   }
 
@@ -167,90 +174,66 @@ class OpenObservationPage extends React.Component<Props, State> {
   formatElapsed = (): string => {
     const minutes = Math.floor(this.state.elapsedSeconds / 60).toString().padStart(2, '0')
     const seconds = (this.state.elapsedSeconds % 60).toString().padStart(2, '0')
-    return `${minutes}:${seconds}`
+    return minutes + ':' + seconds
+  }
+
+  formatNoteTime = (time: Date): string => {
+    if (Number.isNaN(time.getTime())) {
+      return '--:--'
+    }
+    return time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
   }
 
   updateTeacher = (selectedTeacherId: string): void => {
     this.setState({ selectedTeacherId }, this.persistDraft)
   }
 
-  updateType = (selectedTypeCode: string): void => {
-    this.setState({ selectedTypeCode }, this.persistDraft)
+  updateNoteText = (noteText: string): void => {
+    this.setState({ noteText }, this.persistDraft)
   }
 
-  updateNotes = (notes: string): void => {
-    this.setState({ notes }, this.persistDraft)
+  updateCoachSummary = (coachSummary: string): void => {
+    this.setState({ coachSummary }, this.persistDraft)
   }
 
   startObservation = (): void => {
-    this.setState({ observing: true, selectedFinalTypeCode: '' }, () => {
+    this.setState({ observing: true, snapshotVisible: false, error: '' }, () => {
       this.persistDraft()
       this.startTimer()
     })
   }
 
-  openAlignment = (): void => {
+  addNote = (): void => {
+    const text = this.state.noteText.trim()
+    if (!text) return
+
+    const now = new Date()
+    const note: OpenObservationNote = {
+      id: 'note-' + now.getTime(),
+      wallClockAt: now,
+      text,
+      editedAt: now
+    }
+
     this.setState(previousState => ({
-      alignmentOpen: true,
-      selectedFinalTypeCode: previousState.selectedFinalTypeCode || previousState.selectedTypeCode
+      notes: [...previousState.notes, note],
+      noteText: ''
     }), this.persistDraft)
   }
 
-  closeAlignment = (): void => {
-    this.setState({ alignmentOpen: false }, this.persistDraft)
+  updateNote = (id: string, text: string): void => {
+    this.setState(previousState => ({
+      notes: previousState.notes.map(note => note.id === id ? {
+        ...note,
+        text,
+        editedAt: new Date()
+      } : note)
+    }), this.persistDraft)
   }
 
-  updateFinalType = (selectedFinalTypeCode: string): void => {
-    this.setState({ selectedFinalTypeCode }, this.persistDraft)
-  }
-
-  completeObservation = async (): Promise<void> => {
-    const storedType = getOpenObservationStoredType(this.state.selectedFinalTypeCode)
-    if (!storedType) {
-      this.setState({ error: 'Choose final alignment before saving this Open Observation.' })
-      return
-    }
-
-    const firebase = this.context as Firebase
-    const currentUser = firebase.auth.currentUser
-    if (!currentUser || !this.state.selectedTeacherId) {
-      this.setState({ error: 'Unable to save this Open Observation without an authenticated coach and teacher.' })
-      return
-    }
-
-    this.setState({ saving: true, error: '' })
-    try {
-      await firebase.handleSession({
-        observedBy: currentUser.uid,
-        teacher: this.state.selectedTeacherId,
-        type: storedType,
-        openObservation: true,
-        checklist: undefined // LI_OPEN_OBSERVATION_CHECKLIST_NULL: handleSession writes missing checklist as null.
-      })
-      if (this.state.notes.trim()) {
-        firebase.handlePushNotes(this.state.notes.trim())
-      }
-      firebase.endSession()
-      ;(window as any).openObservationLastSavedType = storedType
-      this.stopTimer()
-      this.clearDraft()
-      this.setState({
-        selectedTeacherId: '',
-        selectedTypeCode: '',
-        selectedFinalTypeCode: '',
-        notes: '',
-        elapsedSeconds: 0,
-        observing: false,
-        alignmentOpen: false,
-        saving: false,
-        error: ''
-      })
-    } catch (error) {
-      this.setState({
-        saving: false,
-        error: 'Unable to save this Open Observation. Please try again.'
-      })
-    }
+  endObservation = (): void => {
+    this.stopTimer()
+    this.setState({ observing: false, snapshotVisible: true }, this.persistDraft)
   }
 
   discardObservation = (): void => {
@@ -258,13 +241,14 @@ class OpenObservationPage extends React.Component<Props, State> {
     this.clearDraft()
     this.setState({
       selectedTeacherId: '',
-      selectedTypeCode: '',
-      selectedFinalTypeCode: '',
-      notes: '',
+      notes: [],
+      noteText: '',
       elapsedSeconds: 0,
       observing: false,
-      alignmentOpen: false,
-      saving: false
+      saving: false,
+      error: '',
+      coachSummary: '',
+      snapshotVisible: false
     })
   }
 
@@ -328,66 +312,28 @@ class OpenObservationPage extends React.Component<Props, State> {
     )
   }
 
-  renderTypePicker(): React.ReactNode {
-    return (
-      <TextField
-        select
-        fullWidth
-        id="open-observation-type"
-        label="Provisional observation type"
-        value={this.state.selectedTypeCode}
-        onChange={(event): void => this.updateType(event.target.value)}
-        inputProps={{ 'data-testid': 'open-observation-type' }}
-      >
-        {OPEN_OBSERVATION_TYPE_OPTIONS.map((option: OpenObservationTypeOption) => (
-          <MenuItem key={option.code} value={option.code}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-    )
-  }
+  renderNotes(): React.ReactNode {
+    const { classes } = this.props
+    if (this.state.notes.length === 0) {
+      return <Typography color="textSecondary">No notes yet.</Typography>
+    }
 
-  renderAlignmentDialog(): React.ReactNode {
-    const canSave = Boolean(this.state.selectedTeacherId && this.state.selectedFinalTypeCode && this.state.notes.trim())
-
-    return (
-      <Dialog open={this.state.alignmentOpen} onClose={this.closeAlignment} fullWidth maxWidth="sm">
-        <DialogTitle>Choose final alignment</DialogTitle>
-        <DialogContent>
-          <Typography color="textSecondary" style={{ marginBottom: '1rem' }}>
-            The starting type is provisional. The final Magic 9 alignment is the canonical type saved with the observation.
-          </Typography>
+    return this.state.notes.map(note => (
+      <Grid container spacing={2} alignItems="center" key={note.id} className={classes.noteRow} data-testid="open-observation-note-row">
+        <Grid item xs={12} sm={2}>
+          <Typography color="textSecondary">{this.formatNoteTime(note.wallClockAt)}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={10}>
           <TextField
-            select
             fullWidth
-            id="open-observation-final-type"
-            label="Final Magic 9 alignment"
-            value={this.state.selectedFinalTypeCode}
-            onChange={(event): void => this.updateFinalType(event.target.value)}
-            inputProps={{ 'data-testid': 'open-observation-final-type' }}
-          >
-            {OPEN_OBSERVATION_TYPE_OPTIONS.map((option: OpenObservationTypeOption) => (
-              <MenuItem key={option.code} value={option.code}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.closeAlignment}>Keep observing</Button>
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={!canSave || this.state.saving}
-            onClick={this.completeObservation}
-            data-testid="open-observation-save"
-          >
-            {this.state.saving ? 'Saving...' : 'Save observation'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
+            multiline
+            value={note.text}
+            onChange={(event): void => this.updateNote(note.id, event.target.value)}
+            inputProps={{ 'data-testid': 'open-observation-note-text' }}
+          />
+        </Grid>
+      </Grid>
+    ))
   }
 
   renderObservationWorkspace(): React.ReactNode {
@@ -404,7 +350,7 @@ class OpenObservationPage extends React.Component<Props, State> {
             <Button
               color="primary"
               variant="contained"
-              onClick={this.openAlignment}
+              onClick={this.endObservation}
               style={{ marginLeft: '0.5rem' }}
               data-testid="open-observation-end"
             >
@@ -412,15 +358,55 @@ class OpenObservationPage extends React.Component<Props, State> {
             </Button>
           </Grid>
         </Grid>
+        <Grid container spacing={1} alignItems="flex-end">
+          <Grid item xs={12} sm={9}>
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              variant="outlined"
+              label="Add a timestamped note"
+              value={this.state.noteText}
+              onChange={(event): void => this.updateNoteText(event.target.value)}
+              inputProps={{ 'data-testid': 'open-observation-note-input' }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="contained"
+              disabled={!this.state.noteText.trim()}
+              onClick={this.addNote}
+              data-testid="open-observation-add-note"
+            >
+              Add note
+            </Button>
+          </Grid>
+        </Grid>
+        <div className={this.props.classes.section}>{this.renderNotes()}</div>
+      </div>
+    )
+  }
+
+  renderSnapshot(): React.ReactNode {
+    if (!this.state.snapshotVisible) return null
+
+    return (
+      <div className={this.props.classes.section} data-testid="open-observation-snapshot">
+        <Typography variant="h6">Observation snapshot</Typography>
+        <Typography># of notes taken: <span data-testid="open-observation-note-count">{this.state.notes.length}</span></Typography>
+        <Typography>Time elapsed: <span data-testid="open-observation-elapsed-summary">{this.formatElapsed()}</span></Typography>
         <TextField
           fullWidth
           multiline
-          rows={10}
+          rows={4}
           variant="outlined"
-          label="Free-form notes"
-          value={this.state.notes}
-          onChange={(event): void => this.updateNotes(event.target.value)}
-          inputProps={{ 'data-testid': 'open-observation-notes' }}
+          label="Coach summary (optional)"
+          value={this.state.coachSummary}
+          onChange={(event): void => this.updateCoachSummary(event.target.value)}
+          inputProps={{ 'data-testid': 'open-observation-coach-summary' }}
+          style={{ marginTop: '1rem' }}
         />
       </div>
     )
@@ -429,7 +415,7 @@ class OpenObservationPage extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props
     const firebase = this.context as Firebase
-    const canStart = Boolean(this.state.selectedTeacherId && this.state.selectedTypeCode)
+    const canStart = Boolean(this.state.selectedTeacherId && !this.state.observing)
 
     return (
       <div className={classes.root}>
@@ -441,13 +427,12 @@ class OpenObservationPage extends React.Component<Props, State> {
                 Open Observation
               </Typography>
               <Typography color="textSecondary" style={{ marginTop: '0.5rem' }}>
-                Choose a teacher and provisional focus area before taking free-form notes.
+                Choose a teacher, capture timestamped notes as classroom activity changes, then review the snapshot.
               </Typography>
               {this.state.error ? (
                 <Typography color="error" className={classes.section}>{this.state.error}</Typography>
               ) : null}
               <div className={classes.section}>{this.renderTeacherPicker()}</div>
-              <div className={classes.section}>{this.renderTypePicker()}</div>
               <div className={classes.section}>
                 <Button
                   color="primary"
@@ -460,7 +445,7 @@ class OpenObservationPage extends React.Component<Props, State> {
                 </Button>
               </div>
               {this.state.observing ? this.renderObservationWorkspace() : null}
-              {this.renderAlignmentDialog()}
+              {this.renderSnapshot()}
             </CardContent>
           </Card>
         </div>
