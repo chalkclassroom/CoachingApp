@@ -4,7 +4,7 @@ import AppBar from '../../../components/AppBar'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import Firebase from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
-import { OpenObservationNote } from '../../../components/OpenObservationComponents/openObservationSchema'
+import { OpenObservationNote, deserializeOpenObservationNotes, serializeOpenObservationNotes } from '../../../components/OpenObservationComponents/openObservationSchema'
 import { withStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -104,12 +104,7 @@ class OpenObservationPage extends React.Component<Props, State> {
       const rawDraft = localStorage.getItem(OPEN_OBSERVATION_DRAFT_KEY)
       if (!rawDraft) return
       const draft = JSON.parse(rawDraft)
-      const notes = Array.isArray(draft.notes) ? draft.notes.map((note: any) => ({
-        id: String(note.id),
-        wallClockAt: new Date(note.wallClockAt),
-        text: String(note.text || ''),
-        editedAt: note.editedAt ? new Date(note.editedAt) : undefined
-      })).filter((note: OpenObservationNote) => note.id && note.text) : []
+      const notes = deserializeOpenObservationNotes(draft.notes)
 
       this.setState({
         selectedTeacherId: typeof draft.selectedTeacherId === 'string' ? draft.selectedTeacherId : '',
@@ -132,7 +127,7 @@ class OpenObservationPage extends React.Component<Props, State> {
   persistDraft = (): void => {
     const {
       selectedTeacherId,
-      notes,
+      notes: serializeOpenObservationNotes(notes),
       noteText,
       elapsedSeconds,
       observing,
