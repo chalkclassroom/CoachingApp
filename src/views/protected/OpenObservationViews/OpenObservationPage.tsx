@@ -270,12 +270,8 @@ class OpenObservationPage extends React.Component<Props, State> {
 
   loadTeachers = (): void => {
     const firebase = this.context as Firebase
-    firebase.getTeacherList()
-      .then(async (teacherEntries: any = []) => {
-        const entries = Array.isArray(teacherEntries) ? teacherEntries : []
-        const teachers = await Promise.all(entries.map((entry: Promise<Types.Teacher> | Types.Teacher) =>
-          Promise.resolve(entry).catch(() => null)
-        ))
+    firebase.getOpenObservationTeacherList()
+      .then((teachers: Types.Teacher[] = []) => {
         this.setState({
           loadingTeachers: false,
           teachers: teachers.filter((teacher): teacher is Types.Teacher => Boolean(teacher) && Boolean(teacher.id) && !(teacher as any).archived),
@@ -317,7 +313,15 @@ class OpenObservationPage extends React.Component<Props, State> {
       >
         {teachers.map(teacher => (
           <MenuItem key={teacher.id} value={teacher.id}>
-            {teacher.firstName} {teacher.lastName}
+            <div>
+              <Typography>{teacher.firstName} {teacher.lastName}</Typography>
+              <Typography variant="caption" color="textSecondary" display="block" className="open-obs-teacher-school">
+                School: {teacher.school || '-'}
+              </Typography>
+              <Typography variant="caption" color="textSecondary" display="block" className="open-obs-teacher-classroom">
+                Classroom: {teacher.classroom || '-'}
+              </Typography>
+            </div>
           </MenuItem>
         ))}
       </TextField>

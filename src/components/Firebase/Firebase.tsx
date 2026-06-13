@@ -520,6 +520,31 @@ class Firebase {
     }
   }
 
+  getOpenObservationTeacherList = async (): Promise<Array<firebase.firestore.DocumentData>> => {
+    if (!this.auth.currentUser) {
+      return []
+    }
+
+    try {
+      const partners = await this.db
+        .collection('users')
+        .doc(this.auth.currentUser.uid)
+        .collection('partners')
+        .get()
+
+      const teacherList = await Promise.all(partners.docs.map(partner =>
+        this.getTeacherInfo(partner.id.trim())
+      ))
+
+      return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>
+        Boolean(teacher) && Boolean((teacher as firebase.firestore.DocumentData).id) && !(teacher as firebase.firestore.DocumentData).archived
+      )
+    } catch (error) {
+      console.error('Error getting Open Observation teacher list: ', error)
+      return []
+    }
+  }
+
   getTeacherId = async (firstName: string, lastName: string, email: string) => {
     this.query = this.db.collection('users').where("firstName", "==", firstName).where("lastName", "==", lastName).where("email", "==", email );
     let document = await this.query.get();
