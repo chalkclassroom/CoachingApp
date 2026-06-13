@@ -28,14 +28,18 @@ function main() {
   const page = read('src/views/protected/OpenObservationViews/OpenObservationPage.tsx')
   const table = read('src/components/UsersComponents/AllUsersTable.tsx')
   const results = read('src/views/protected/OpenObservationViews/OpenObservationResultsPage.tsx')
+  const schema = read('src/components/OpenObservationComponents/openObservationSchema.ts')
 
   assertIncludes('Firebase.tsx', firebase, 'createOpenObservation')
   assertIncludes('Firebase.tsx', firebase, 'getOpenObservation')
   assertIncludes('Firebase.tsx', firebase, 'OPEN_OBSERVATION_COLLECTION')
-  assertIncludes('Firebase.tsx', firebase, "updateIfNewer(userId, endDate, 'Open Observation')")
+  assertIncludes('openObservationSchema.ts', schema, "OPEN_OBSERVATION_COLLECTION = 'observations'")
+  assertIncludes('Firebase.tsx', firebase, "? 'Open Observation' : 'Observation'")
   assertIncludes('Firebase.tsx', firebase, 'openObservations: number')
   assertIncludes('Firebase.tsx', firebase, 'entry.openObservations++')
-  assertIncludes('Firebase.tsx', firebase, 'total queries: +2 for openObservations')
+  assertIncludes('Firebase.tsx', firebase, 'data.openObservation === true')
+  assertNotIncludes('Firebase.tsx', firebase, 'const [observations, knowledgeChecks, conferencePlans, actionPlans, emails, openObservations]')
+  assertIncludes('Firebase.tsx', firebase, 'Open Observation is counted from observations')
 
   assertIncludes('AllUsersTable.tsx', table, 'openObservations: number')
   assertIncludes('AllUsersTable.tsx', table, 'open observation')
@@ -43,7 +47,7 @@ function main() {
 
   assertIncludes('OpenObservationPage.tsx', page, 'createOpenObservation')
   assertIncludes('OpenObservationPage.tsx', page, "history.push('/OpenObservationResults/")
-  assertNotIncludes('OpenObservationPage.tsx', page, "collection('observations')")
+  assertIncludes('OpenObservationPage.tsx', page, 'createOpenObservation')
 
   assertIncludes('OpenObservationResultsPage.tsx', results, 'getOpenObservation')
   assertIncludes('OpenObservationResultsPage.tsx', results, 'Open Observation Results')

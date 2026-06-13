@@ -84,6 +84,17 @@ function openObservationBody(overrides = {}) {
   const fields = {
     coachId: { stringValue: overrides.coachId || 'open-coach' },
     teacherId: { stringValue: overrides.teacherId || 'open-teacher' },
+    observedBy: { stringValue: '/user/' + (overrides.coachId || 'open-coach') },
+    teacher: { stringValue: '/user/' + (overrides.teacherId || 'open-teacher') },
+    openObservation: { booleanValue: true },
+    observationMode: { stringValue: 'open' },
+    type: { stringValue: overrides.type || 'OpenObservation' },
+    checklist: { nullValue: null },
+    completed: { booleanValue: overrides.completed === undefined ? true : overrides.completed },
+    timezone: { stringValue: 'UTC' },
+    activitySetting: { nullValue: null },
+    lastClickTime: timestamp('2026-06-01T14:20:00.000Z'),
+    entries: { arrayValue: {} },
     start: timestamp('2026-06-01T14:00:00.000Z'),
     end: overrides.end === undefined ? { nullValue: null } : overrides.end,
     notes: {
@@ -143,37 +154,37 @@ async function main() {
 
   const projectId = getProjectId()
   const base = 'http://' + process.env.FIRESTORE_EMULATOR_HOST + '/v1/projects/' + projectId + '/databases/(default)/documents'
-  const docUrl = base + '/openObservations/open-observation-rules-smoke'
+  const docUrl = base + '/observations/open-observation-rules-smoke'
 
   const ownerCreate = await request('PATCH', docUrl, openObservationBody(), fakeFirebaseToken('open-coach'))
-  assertStatus('owner-coach create openObservations doc', ownerCreate, 200)
+  assertStatus('owner-coach create observations open doc', ownerCreate, 200)
 
   const ownerRead = await request('GET', docUrl, null, fakeFirebaseToken('open-coach'))
-  assertStatus('owner-coach read openObservations doc', ownerRead, 200)
+  assertStatus('owner-coach read observations open doc', ownerRead, 200)
 
   const teacherRead = await request('GET', docUrl, null, fakeFirebaseToken('open-teacher'))
-  assertStatus('teacher-of-session read openObservations doc', teacherRead, 200)
+  assertStatus('teacher-of-session read observations open doc', teacherRead, 200)
 
   const unrelatedCoachRead = await request('GET', docUrl, null, fakeFirebaseToken('open-unrelated-coach'))
-  assertStatus('unrelated coach read openObservations doc', unrelatedCoachRead, 403)
+  assertStatus('unrelated coach read observations open doc', unrelatedCoachRead, 403)
 
   const adminRead = await request('GET', docUrl, null, fakeFirebaseToken('open-admin'))
-  assertStatus('admin read-all openObservations doc', adminRead, 403)
+  assertStatus('admin read-all observations open doc', adminRead, 403)
 
   const programLeaderRead = await request('GET', docUrl, null, fakeFirebaseToken('open-program-leader'))
-  assertStatus('program leader read-all openObservations doc', programLeaderRead, 403)
+  assertStatus('program leader read-all observations open doc', programLeaderRead, 403)
 
   const anonymousRead = await request('GET', docUrl)
-  assertStatus('anonymous read openObservations doc', anonymousRead, 403)
+  assertStatus('anonymous read observations open doc', anonymousRead, 403)
 
   const ownerUpdate = await request('PATCH', docUrl, openObservationBody({ status: 'archived' }), fakeFirebaseToken('open-coach'))
-  assertStatus('owner-coach archive openObservations doc', ownerUpdate, 200)
+  assertStatus('owner-coach archive observations open doc', ownerUpdate, 200)
 
   const hardDelete = await request('DELETE', docUrl, null, fakeFirebaseToken('open-coach'))
-  assertStatus('owner-coach hard-delete openObservations doc', hardDelete, 403)
+  assertStatus('owner-coach hard-delete observations open doc', hardDelete, 403)
 
-  const malformedDoc = await request('PATCH', base + '/openObservations/open-observation-malformed', openObservationBody({ extraTypeField: true }), fakeFirebaseToken('open-coach'))
-  assertStatus('type field rejected from openObservations doc', malformedDoc, 403)
+  const malformedDoc = await request('PATCH', base + '/observations/open-observation-malformed', openObservationBody({ extraTypeField: true }), fakeFirebaseToken('open-coach'))
+  assertStatus('type field rejected from observations open doc', malformedDoc, 403)
 
   console.log('Open Observation iter2 rules checks passed')
 }

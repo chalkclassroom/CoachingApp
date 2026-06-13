@@ -1,4 +1,4 @@
-export const OPEN_OBSERVATION_COLLECTION = 'openObservations'
+export const OPEN_OBSERVATION_COLLECTION = 'observations'
 
 export type OpenObservationStatus = 'in_progress' | 'completed' | 'archived'
 
@@ -16,6 +16,17 @@ export interface OpenObservationSnapshot {
 export interface OpenObservationDoc {
   coachId: string,
   teacherId: string,
+  observedBy: string,
+  teacher: string,
+  openObservation: true,
+  observationMode: 'open',
+  type: 'OpenObservation',
+  checklist: null,
+  completed: boolean,
+  timezone: string,
+  activitySetting: null,
+  lastClickTime: Date,
+  entries: [],
   start: Date,
   end: Date | null,
   notes: OpenObservationNote[],

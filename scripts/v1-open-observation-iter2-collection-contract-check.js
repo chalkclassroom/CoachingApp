@@ -30,16 +30,17 @@ function main() {
   }
 
   const schema = read('src/components/OpenObservationComponents/openObservationSchema.ts')
-  const rules = read('firestore.rules')
-  assertIncludes('openObservationSchema.ts', schema, "OPEN_OBSERVATION_COLLECTION = 'openObservations'")
+  assertIncludes('openObservationSchema.ts', schema, "OPEN_OBSERVATION_COLLECTION = 'observations'")
   assertIncludes('openObservationSchema.ts', schema, 'export interface OpenObservationNote')
   assertIncludes('openObservationSchema.ts', schema, 'export interface OpenObservationDoc')
   assertIncludes('openObservationSchema.ts', schema, "status: 'in_progress' | 'completed' | 'archived'")
   assertNotIncludes('openObservationSchema.ts', schema, 'typeCode')
   assertNotIncludes('openObservationSchema.ts', schema, 'storedType')
 
-  assertIncludes('firestore.rules', rules, 'match /openObservations/{observationId}')
-  assertIncludes('firestore.rules', rules, 'allow delete: if false')
+  assertIncludes('openObservationSchema.ts', schema, 'openObservation: true')
+  assertIncludes('openObservationSchema.ts', schema, "observationMode: 'open'")
+  assertIncludes('openObservationSchema.ts', schema, 'teacher: string')
+  assertIncludes('openObservationSchema.ts', schema, 'observedBy: string')
 
   console.log('Open Observation iter2 collection contract checks passed')
 }

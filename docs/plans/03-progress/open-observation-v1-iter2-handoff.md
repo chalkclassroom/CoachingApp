@@ -5,8 +5,10 @@
 Iteration 2 rebuilds V1 Open Observation around Deanna's staging feedback:
 the entry now lives in the observation tool grid, the flow no longer asks for
 Magic 9 at start or end, notes are captured as individual timestamped entries,
-and completed sessions write to `openObservations/{id}` instead of the legacy
-`observations/` collection.
+and completed sessions now write to the shared legacy `observations/`
+collection with `openObservation: true` and `observationMode: open` markers.
+The earlier iter2-only `openObservations/` collection decision is superseded by
+the user clarification that all observations must live together.
 
 No staging deploy or production deploy was performed in this execution.
 
@@ -31,7 +33,7 @@ Red:
 - `node scripts/v1-open-observation-iter2-collection-contract-check.js`
   -> failed because `src/components/OpenObservationComponents/openObservationSchema.ts` did not exist.
 - `./node_modules/.bin/firebase emulators:exec --config firebase.v2-rules.json --only firestore "node scripts/v1-open-observation-iter2-rules-check.js"`
-  -> failed because owner-coach create on `openObservations/{id}` returned HTTP 403 from the fallback deny rule.
+  -> originally failed because owner-coach create on `openObservations/{id}` returned HTTP 403 from the fallback deny rule. Post-clarification, the rules check was moved to `observations/{id}` with Open Observation markers.
 
 Green:
 - `node scripts/v1-open-observation-iter2-collection-contract-check.js`
@@ -125,13 +127,13 @@ Green:
   -> passed with existing Browserslist and bundle-size warnings.
 
 Happy:
-- Open Observation saves to `openObservations/{id}` through `Firebase.createOpenObservation()`.
+- Open Observation saves to `observations/{id}` through `Firebase.createOpenObservation()` with `openObservation: true`, `observationMode: open`, and legacy-compatible `teacher` / `observedBy` fields.
 - Results page loads through `Firebase.getOpenObservation()`.
-- `getUsersLastAction()` exposes `Open Observation` as a sixth action source.
+- `getUsersLastAction()` exposes `Open Observation` by classifying marked docs from the existing `observations` source.
 - `getUsersActionCounts()` includes `openObservations`.
 
 No-happy:
-- The code does not write to legacy `observations/`.
+- The code does not write to a separate `openObservations/` collection.
 - `functions/observationToBQ/index.js` was not changed.
 - Admin/leader read-all is not granted.
 
@@ -150,8 +152,7 @@ Evidence:
 
 ## Decision I Verification
 
-Decision I says `openObservations/{id}` permits only owner-coach create/read/update
-and teacher-of-session read. Admin/leader read-all is denied; delete is denied.
+Decision I is implemented inside the shared `observations/{id}` match for docs marked as Open Observation. Owner-coach create/read/update and teacher-of-session read are allowed. Admin/leader read-all is denied for marked Open Observation docs; delete is denied.
 
 Evidence: `scripts/v1-open-observation-iter2-rules-check.js` covers:
 - owner-coach create: allow
@@ -166,15 +167,15 @@ Evidence: `scripts/v1-open-observation-iter2-rules-check.js` covers:
 
 ## Aggregator Integration
 
-`openObservations` is integrated as the sixth action source:
-- `getUsersLastAction()` reads `openObservations` and emits type `Open Observation`.
-- `getUsersActionCounts()` counts `openObservations`.
+Open Observation is integrated into the existing `observations` source:
+- `getUsersLastAction()` reads `observations` and emits type `Open Observation` when `openObservation === true` or `observationMode === open`.
+- `getUsersActionCounts()` counts marked observation docs separately in the existing `openObservations` UI bucket.
 - `AllUsersTable` shows both full and short breakdown labels.
 
 Query impact:
-- `getUsersLastAction()` adds one collection query.
-- `getUsersActionCounts()` adds one collection query.
-- Net dashboard load increase: approximately +2 queries.
+- `getUsersLastAction()` adds no new collection query.
+- `getUsersActionCounts()` adds no new collection query.
+- Net dashboard load increase: 0 queries; Open Observation is counted from the existing `observations` query.
 
 ## Iter1 Cleanup Checklist
 
@@ -196,7 +197,7 @@ Completed:
 Compatibility residue intentionally retained:
 - `Firebase.handleSession()` `openObservation?: boolean` remains for already-created
   iter1 staging data.
-- `functions/observationToBQ/index.js` skip guard remains untouched.
+- `functions/observationToBQ/index.js` skip guard remains untouched and continues to skip docs marked `openObservation: true` / `observationMode: open`.
 
 ## Remaining Risks
 
