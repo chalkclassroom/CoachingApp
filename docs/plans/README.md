@@ -35,7 +35,8 @@ Iterations of the "how". Each later plan supersedes the earlier ones for active 
 | [`prod-ready-gwt-plan.md`](02-backlogs/prod-ready-gwt-plan.md) | Post-staging prod-readiness backlog. 30 PR items with sizing, DAG, scope cuts, stubs disclosure, monitoring/source-map requirements. |
 | [`goals-tdd-audit-plan.md`](02-backlogs/goals-tdd-audit-plan.md) | TDD execution plan derived from the backlog. 6 goals × 5 tasks with red/green specs, happy/no-happy paths, test layers, rules-posture reconciliation. **All 30 tasks closed as of 2026-06-10.** |
 | [`architecture-doc-plan.md`](02-backlogs/architecture-doc-plan.md) | TDD-style plan for documenting the architecture that emerged. 6 goals (A1-A6) covering C4 L1+L2 (required), C4 L3 + flows (recommended), capability rename (optional), Hexagonal/Clean formalization (out of scope for CHALK 2.0). |
-| [`open-observation-v1-plan.md`](02-backlogs/open-observation-v1-plan.md) | V1 legacy Open Observation execution plan. 1 goal / 5 tasks (OB-1..OB-5), TDD red/green specs, LI `checklist: null` decision, final-type alignment contract, and BQ compatibility guardrails. |
+| [`open-observation-v1-plan.md`](02-backlogs/open-observation-v1-plan.md) | V1 legacy Open Observation execution plan (iteration 1). 1 goal / 5 tasks (OB-1..OB-5), TDD red/green specs, LI `checklist: null` decision, final-type alignment contract, BQ compatibility guardrails. **Shipped to staging; superseded by iter2 plan.** |
+| [`open-observation-v1-iter2-plan.md`](02-backlogs/open-observation-v1-iter2-plan.md) | Iteration 2 plan after Deanna feedback. New `openObservations/` collection, no Magic 9 pickers, timestamped notes, school/classroom subtitle, role-scoped picker, snapshot at end, aggregator extension. F-7 (theme extraction / reclassification) explicitly deferred. **Executed in [`03-progress/open-observation-v1-iter2-handoff.md`](03-progress/open-observation-v1-iter2-handoff.md).** |
 
 ### [03-progress/](03-progress/) — goal handoffs + dated artifacts
 The "what actually happened". Append-only; goals close here.
@@ -50,6 +51,8 @@ The "what actually happened". Append-only; goals close here.
 | [`staging-deploy-2026-06-01.md`](03-progress/staging-deploy-2026-06-01.md) | Staging deploy handoff. Records deployed commit, checks, Firebase target, V1 rollback commands. |
 | [`next-v1-requirement.md`](03-progress/next-v1-requirement.md) | **Confirmed**: Open Observation on V1 (legacy CHALK). Quoted $400 / 3-4 days; Friday start proposed. Includes scope, risks, open technical questions, G/W/T draft. V2 refresh on hold pending CHALK budget. |
 | [`open-observation-v1-handoff.md`](03-progress/open-observation-v1-handoff.md) | Open Observation V1 execution handoff. Records OB-1..OB-5 commits, red/green evidence, LI `checklist: null` proof, final alignment proof, and staging/deploy status. |
+| [`open-observation-deanna-feedback-handoff.md`](03-progress/open-observation-deanna-feedback-handoff.md) | Post-staging audit of Open Observation V1 against Deanna's feedback. Bugs vs product-scope vs new features, teacher-scoping risk, recommended architecture (new `openObservations/` collection), Path Min (~4-6h bug fixes) vs Path Full (~24-40h rebuild), pending verbatim Deanna message. |
+| [`open-observation-v1-iter2-handoff.md`](03-progress/open-observation-v1-iter2-handoff.md) | Open Observation V1 iteration 2 execution handoff. Records OB2-1..OB2-5 commits, red/green evidence, Decision H/I verification, aggregator query impact, iter1 cleanup, and deploy status. |
 
 ### [04-decisions/](04-decisions/) — architectural decisions
 Where the "why" of structural choices lives, separate from operational logs.
@@ -77,12 +80,19 @@ What CHALK and the reviewers see. Stays in sync with what runs in production.
 
 ---
 
+## Companion tree: source materials
+
+Source materials (visual specs, frameworks, meetings, product history,
+engagement data) consolidated under [`../sources/`](../sources/). The
+Iteration 2 plan and the Deanna feedback handoff cite files there directly.
+
 ## How to navigate
 
 - **External auditor without context**: start at [`01-strategic/audit-package.md`](01-strategic/audit-package.md). It is self-contained.
-- **Executor picking up the next task**: start at [`03-progress/next-v1-requirement.md`](03-progress/next-v1-requirement.md). v1 (legacy) work is queued.
+- **Reviewer auditing Open Observation iter2**: start at [`03-progress/open-observation-v1-iter2-handoff.md`](03-progress/open-observation-v1-iter2-handoff.md), then cross-check [`02-backlogs/open-observation-v1-iter2-plan.md`](02-backlogs/open-observation-v1-iter2-plan.md).
 - **Reviewer evaluating prod readiness**: start at [`05-deliverables/staging-review-guide.md`](05-deliverables/staging-review-guide.md), then [`05-deliverables/stubs-disclosure.md`](05-deliverables/stubs-disclosure.md).
 - **LLM auditing a plan**: each plan in [`02-backlogs/`](02-backlogs/) has its own `§0 How to audit` section and a checklist at the end.
+- **Anyone needing Deanna's source materials**: navigate to [`../sources/`](../sources/) — `01-` for the Open Observation feedback, `02-` for CLASS/Pyramid/Conscious-Discipline crosswalks, `03-` for meeting records, `04-` for product history, `05-` for engagement data.
 
 ---
 
@@ -122,4 +132,4 @@ The following live outside `docs/plans/` because they are not planning artifacts
 
 ---
 
-Last updated: 2026-06-10
+Last updated: 2026-06-12
