@@ -3,6 +3,7 @@ import {FirebaseFunctions} from '@firebase/functions-types'
 import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
+import { OPEN_OBSERVATION_COLLECTION, OpenObservationDoc, OpenObservationNote } from '../OpenObservationComponents/openObservationSchema'
 import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
 import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
@@ -543,6 +544,46 @@ class Firebase {
       console.error('Error getting Open Observation teacher list: ', error)
       return []
     }
+  }
+
+  createOpenObservation = async (entry: {
+    teacherId: string,
+    start: Date,
+    end: Date,
+    notes: OpenObservationNote[],
+    coachSummary?: string
+  }): Promise<string> => {
+    if (!this.auth.currentUser) {
+      throw new Error('User must be logged in to create an Open Observation.')
+    }
+
+    const now = new Date()
+    const snapshot = entry.coachSummary && entry.coachSummary.trim()
+      ? { coachSummary: entry.coachSummary.trim() }
+      : undefined
+    const observation: OpenObservationDoc = {
+      coachId: this.auth.currentUser.uid,
+      teacherId: entry.teacherId,
+      start: entry.start,
+      end: entry.end,
+      notes: entry.notes,
+      snapshot,
+      status: 'completed',
+      createdAt: now,
+      updatedAt: now
+    }
+
+    const ref = await this.db.collection(OPEN_OBSERVATION_COLLECTION).add(observation)
+    return ref.id
+  }
+
+  getOpenObservation = async (observationId: string): Promise<(OpenObservationDoc & { id: string }) | null> => {
+    const doc = await this.db.collection(OPEN_OBSERVATION_COLLECTION).doc(observationId).get()
+    if (!doc.exists) {
+      return null
+    }
+
+    return { ...(doc.data() as OpenObservationDoc), id: doc.id }
   }
 
   getTeacherId = async (firstName: string, lastName: string, email: string) => {
@@ -4799,7 +4840,7 @@ class Firebase {
    */
   /**
    * Get last action date and type for all users by querying activity collections.
-   * Uses optimized approach: 5 total queries instead of per-user queries.
+   * Uses optimized approach: 6 total queries instead of per-user queries.
    * @returns Map<userId, {date: Date, type: string}> - Last action info per user
    */
   getUsersLastAction = async (): Promise<Map<string, { date: Date; type: string }>> => {
@@ -4819,13 +4860,14 @@ class Firebase {
       return ref.startsWith('/user/') ? ref.replace('/user/', '') : ref
     }
 
-    // Query all 5 collections in parallel for better performance
-    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
+    // Query all 6 collections in parallel for better performance (total queries: +2 for openObservations across dashboard load).
+    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails, openObservations] = await Promise.all([
       this.db.collection('observations').get(),
       this.db.collection('knowledgeChecks').get(),
       this.db.collection('conferencePlans').get(),
       this.db.collection('actionPlans').get(),
-      this.db.collection('emails').get()
+      this.db.collection('emails').get(),
+      this.db.collection(OPEN_OBSERVATION_COLLECTION).get()
     ])
 
     // 1. Observations (largest collection - 20K+)
@@ -4877,6 +4919,13 @@ class Firebase {
       updateIfNewer(recipientId, modified, 'Email')
     })
 
+    openObservations.docs.forEach(doc => {
+      const data = doc.data()
+      const userId = data.teacherId
+      const endDate = data.end?.toDate?.() || data.updatedAt?.toDate?.() || null
+      updateIfNewer(userId, endDate, 'Open Observation')
+    })
+
     return lastActionMap
   }
 
@@ -4910,6 +4959,7 @@ class Firebase {
     conferencePlans: number
     actionPlans: number
     emails: number
+    openObservations: number
   }>> => {
     type Entry = {
       total: number
@@ -4918,13 +4968,14 @@ class Firebase {
       conferencePlans: number
       actionPlans: number
       emails: number
+      openObservations: number
     }
     const counts = new Map<string, Entry>()
 
     const ensure = (userId: string): Entry => {
       let entry = counts.get(userId)
       if (!entry) {
-        entry = { total: 0, observations: 0, knowledgeChecks: 0, conferencePlans: 0, actionPlans: 0, emails: 0 }
+        entry = { total: 0, observations: 0, knowledgeChecks: 0, conferencePlans: 0, actionPlans: 0, emails: 0, openObservations: 0 }
         counts.set(userId, entry)
       }
       return entry
@@ -4940,12 +4991,12 @@ class Firebase {
       return date >= startDate && date <= endDate
     }
 
-    // Fetch all 5 collections in parallel. observations and knowledgeChecks are
-    // filtered Firestore-side on their single timestamp field. The plan/email
-    // collections have two date fields each (dateCreated + dateModified) and we
-    // want to count the doc if EITHER falls in range, so we fetch all and filter
-    // in memory (these collections are small: ~500/450/440 docs).
-    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
+    // Fetch all 6 collections in parallel. observations, knowledgeChecks, and
+    // openObservations are filtered Firestore-side on their single timestamp field.
+    // The plan/email collections have two date fields each (dateCreated + dateModified)
+    // and we want to count the doc if EITHER falls in range, so we fetch all and filter
+    // in memory (these collections are small: ~500/450/440 docs). total queries: +2 for openObservations.
+    const [observations, knowledgeChecks, conferencePlans, actionPlans, emails, openObservations] = await Promise.all([
       this.db.collection('observations')
         .where('end', '>=', startDate)
         .where('end', '<=', endDate)
@@ -4956,7 +5007,11 @@ class Firebase {
         .get(),
       this.db.collection('conferencePlans').get(),
       this.db.collection('actionPlans').get(),
-      this.db.collection('emails').get()
+      this.db.collection('emails').get(),
+      this.db.collection(OPEN_OBSERVATION_COLLECTION)
+        .where('end', '>=', startDate)
+        .where('end', '<=', endDate)
+        .get()
     ])
 
     observations.docs.forEach(doc => {
@@ -5013,6 +5068,14 @@ class Firebase {
         entry.emails++
         entry.total++
       }
+    })
+
+    openObservations.docs.forEach(doc => {
+      const userId = doc.data().teacherId
+      if (!userId) return
+      const entry = ensure(userId)
+      entry.openObservations++
+      entry.total++
     })
 
     return counts

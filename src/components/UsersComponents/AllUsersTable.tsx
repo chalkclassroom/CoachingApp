@@ -51,6 +51,7 @@ export type ActionCountEntry = {
   conferencePlans: number
   actionPlans: number
   emails: number
+  openObservations: number
 }
 
 interface Props {
@@ -147,6 +148,7 @@ class AllUsersTable extends React.Component<Props, State> {
     if (!entry || entry.total === 0) return 'No actions in range'
     const parts: string[] = []
     if (entry.observations) parts.push(`${entry.observations} observation${entry.observations === 1 ? '' : 's'}`)
+    if (entry.openObservations) parts.push(`${entry.openObservations} open observation${entry.openObservations === 1 ? '' : 's'}`)
     if (entry.knowledgeChecks) parts.push(`${entry.knowledgeChecks} training${entry.knowledgeChecks === 1 ? '' : 's'}`)
     if (entry.conferencePlans) parts.push(`${entry.conferencePlans} conference plan${entry.conferencePlans === 1 ? '' : 's'}`)
     if (entry.actionPlans) parts.push(`${entry.actionPlans} action plan${entry.actionPlans === 1 ? '' : 's'}`)

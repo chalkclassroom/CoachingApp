@@ -4,6 +4,7 @@ import AppBar from '../../../components/AppBar'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import Firebase from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
+import * as H from 'history'
 import { OpenObservationNote, deserializeOpenObservationNotes, serializeOpenObservationNotes } from '../../../components/OpenObservationComponents/openObservationSchema'
 import { withStyles } from '@material-ui/core/styles'
 import {
@@ -50,7 +51,8 @@ interface Style {
 }
 
 interface Props {
-  classes: Style
+  classes: Style,
+  history: H.History
 }
 
 const OPEN_OBSERVATION_DRAFT_KEY = 'chalkOpenObservationDraft'
@@ -62,6 +64,7 @@ interface State {
   notes: OpenObservationNote[],
   noteText: string,
   elapsedSeconds: number,
+  observationStart: Date | null,
   observing: boolean,
   saving: boolean,
   error: string,
@@ -82,6 +85,7 @@ class OpenObservationPage extends React.Component<Props, State> {
       notes: [],
       noteText: '',
       elapsedSeconds: 0,
+      observationStart: null,
       observing: false,
       saving: false,
       error: '',
@@ -104,13 +108,14 @@ class OpenObservationPage extends React.Component<Props, State> {
       const rawDraft = localStorage.getItem(OPEN_OBSERVATION_DRAFT_KEY)
       if (!rawDraft) return
       const draft = JSON.parse(rawDraft)
-      const notes = deserializeOpenObservationNotes(draft.notes)
+      const observationStart = typeof draft.observationStart === 'string' ? new Date(draft.observationStart) : null
 
       this.setState({
         selectedTeacherId: typeof draft.selectedTeacherId === 'string' ? draft.selectedTeacherId : '',
-        notes,
+        notes: deserializeOpenObservationNotes(draft.notes),
         noteText: typeof draft.noteText === 'string' ? draft.noteText : '',
         elapsedSeconds: typeof draft.elapsedSeconds === 'number' ? draft.elapsedSeconds : 0,
+        observationStart: observationStart && !Number.isNaN(observationStart.getTime()) ? observationStart : null,
         observing: Boolean(draft.observing),
         coachSummary: typeof draft.coachSummary === 'string' ? draft.coachSummary : '',
         snapshotVisible: Boolean(draft.snapshotVisible)
@@ -127,9 +132,10 @@ class OpenObservationPage extends React.Component<Props, State> {
   persistDraft = (): void => {
     const {
       selectedTeacherId,
-      notes: serializeOpenObservationNotes(notes),
+      notes,
       noteText,
       elapsedSeconds,
+      observationStart,
       observing,
       coachSummary,
       snapshotVisible
@@ -137,9 +143,10 @@ class OpenObservationPage extends React.Component<Props, State> {
 
     localStorage.setItem(OPEN_OBSERVATION_DRAFT_KEY, JSON.stringify({
       selectedTeacherId,
-      notes,
+      notes: serializeOpenObservationNotes(notes),
       noteText,
       elapsedSeconds,
+      observationStart: observationStart ? observationStart.toISOString() : null,
       observing,
       coachSummary,
       snapshotVisible
@@ -192,7 +199,7 @@ class OpenObservationPage extends React.Component<Props, State> {
   }
 
   startObservation = (): void => {
-    this.setState({ observing: true, snapshotVisible: false, error: '' }, () => {
+    this.setState({ observationStart: new Date(), observing: true, snapshotVisible: false, error: '' }, () => {
       this.persistDraft()
       this.startTimer()
     })
@@ -231,6 +238,40 @@ class OpenObservationPage extends React.Component<Props, State> {
     this.setState({ observing: false, snapshotVisible: true }, this.persistDraft)
   }
 
+  completeObservation = async (): Promise<void> => {
+    const { selectedTeacherId, notes, coachSummary, observationStart, elapsedSeconds } = this.state
+    if (!selectedTeacherId) {
+      this.setState({ error: 'Choose a teacher before saving this Open Observation.' })
+      return
+    }
+    if (notes.length === 0) {
+      this.setState({ error: 'Add at least one note before saving this Open Observation.' })
+      return
+    }
+
+    const firebase = this.context as Firebase
+    const end = new Date()
+    const start = observationStart || new Date(end.getTime() - elapsedSeconds * 1000)
+    this.setState({ saving: true, error: '' })
+
+    try {
+      const observationId = await firebase.createOpenObservation({
+        teacherId: selectedTeacherId,
+        start,
+        end,
+        notes,
+        coachSummary
+      })
+      this.clearDraft()
+      this.props.history.push('/OpenObservationResults/' + observationId)
+    } catch (error) {
+      this.setState({
+        saving: false,
+        error: 'Unable to save this Open Observation. Please try again.'
+      })
+    }
+  }
+
   discardObservation = (): void => {
     this.stopTimer()
     this.clearDraft()
@@ -239,6 +280,7 @@ class OpenObservationPage extends React.Component<Props, State> {
       notes: [],
       noteText: '',
       elapsedSeconds: 0,
+      observationStart: null,
       observing: false,
       saving: false,
       error: '',
@@ -403,6 +445,16 @@ class OpenObservationPage extends React.Component<Props, State> {
           inputProps={{ 'data-testid': 'open-observation-coach-summary' }}
           style={{ marginTop: '1rem' }}
         />
+        <Button
+          color="primary"
+          variant="contained"
+          disabled={this.state.saving || this.state.notes.length === 0}
+          onClick={this.completeObservation}
+          data-testid="open-observation-save"
+          style={{ marginTop: '1rem' }}
+        >
+          {this.state.saving ? 'Saving...' : 'Save observation'}
+        </Button>
       </div>
     )
   }
@@ -410,7 +462,7 @@ class OpenObservationPage extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props
     const firebase = this.context as Firebase
-    const canStart = Boolean(this.state.selectedTeacherId && !this.state.observing)
+    const canStart = Boolean(this.state.selectedTeacherId && !this.state.observing && !this.state.snapshotVisible)
 
     return (
       <div className={classes.root}>
@@ -450,7 +502,8 @@ class OpenObservationPage extends React.Component<Props, State> {
 }
 
 OpenObservationPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(OpenObservationPage)

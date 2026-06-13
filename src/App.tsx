@@ -15,6 +15,7 @@ import TransitionTimePage from './views/protected/TransitionViews/TransitionTime
 import ForgotPasswordPage from './views/ForgotPasswordViews/ForgotPasswordPage'
 import HomePage from './views/protected/HomeViews/HomePage'
 import OpenObservationPage from './views/protected/OpenObservationViews/OpenObservationPage'
+import OpenObservationResultsPage from './views/protected/OpenObservationViews/OpenObservationResultsPage'
 import TeacherListPage from './views/protected/MyTeachers/TeacherListPage'
 import ActionPlanListPage from './views/protected/ActionPlanViews/ActionPlanListPage'
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView'
@@ -343,6 +344,16 @@ class App extends React.Component<Props, State> {
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              path="/OpenObservationResults/:observationId"
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER, Role.TEACHER]}
+              userRole={role}
+              render={(props: {
+                history: H.History,
+                match: { params: { observationId?: string } }
+              }) : React.ReactElement=> <OpenObservationResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={auth}
