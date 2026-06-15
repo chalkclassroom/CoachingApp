@@ -26,9 +26,12 @@ function main() {
   const firebase = read('src/components/Firebase/Firebase.tsx')
   const page = read('src/views/protected/OpenObservationViews/OpenObservationPage.tsx')
   const types = read('src/constants/Types.tsx')
+  const teacherModal = read('src/views/protected/HomeViews/TeacherModal.tsx')
 
   assertIncludes('Firebase.tsx', firebase, 'getOpenObservationTeacherList')
   assertIncludes('Firebase.tsx', firebase, ".collection('partners')")
+  assertIncludes('Firebase.tsx', firebase, 'userDoc.teachers')
+  assertIncludes('Firebase.tsx', firebase, 'partnerIds.length > 0')
   assertIncludes('OpenObservationPage.tsx', page, 'getOpenObservationTeacherList')
   assertNotIncludes('OpenObservationPage.tsx', page, '.getTeacherList()')
   assertIncludes('OpenObservationPage.tsx', page, 'open-obs-teacher-school')
@@ -36,6 +39,8 @@ function main() {
   assertIncludes('OpenObservationPage.tsx', page, "teacher.school || '-'")
   assertIncludes('OpenObservationPage.tsx', page, "teacher.classroom || '-'")
   assertIncludes('Types.tsx', types, 'classroom?: string')
+  assertIncludes('TeacherModal.tsx', teacherModal, 'loading: boolean')
+  assertIncludes('TeacherModal.tsx', teacherModal, 'Fetching your teachers...')
 
   console.log('Open Observation iter2 teacher scope checks passed')
 }

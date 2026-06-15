@@ -510,8 +510,13 @@ class Firebase {
         .get()
         .then((partners: firebase.firestore.QuerySnapshot) => {
           const teacherList: Array<firebase.firestore.DocumentData> = []
-          partners.forEach(partner =>
-            teacherList.push(this.getTeacherInfo(partner.id))
+          const partnerIds = partners.docs.map(partner => partner.id).filter(Boolean)
+          const teacherIds = partnerIds.length > 0
+            ? partnerIds
+            : (Array.isArray(userDoc.teachers) ? userDoc.teachers : [])
+
+          teacherIds.forEach((teacherId: string) =>
+            teacherList.push(this.getTeacherInfo(String(teacherId).trim()))
           )
           return teacherList
         })
@@ -527,14 +532,19 @@ class Firebase {
     }
 
     try {
+      const userDoc = await this.getUserInformation()
       const partners = await this.db
         .collection('users')
         .doc(this.auth.currentUser.uid)
         .collection('partners')
         .get()
+      const partnerIds = partners.docs.map(partner => partner.id).filter(Boolean)
+      const teacherIds = partnerIds.length > 0
+        ? partnerIds
+        : (Array.isArray(userDoc.teachers) ? userDoc.teachers : [])
 
-      const teacherList = await Promise.all(partners.docs.map(partner =>
-        this.getTeacherInfo(partner.id.trim())
+      const teacherList = await Promise.all(teacherIds.map((teacherId: string) =>
+        this.getTeacherInfo(String(teacherId).trim())
       ))
 
       return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>

@@ -89,7 +89,8 @@ interface Push {
 
 interface State {
   open: boolean,
-  teachers: Array<Types.Teacher>
+  teachers: Array<Types.Teacher>,
+  loading: boolean
 }
 
 /**
@@ -104,7 +105,8 @@ class TeacherModal extends React.Component<Props, State> {
     super(props);
     this.state = {
       open: true,
-      teachers: []
+      teachers: [],
+      loading: this.props.teacherList.length === 0
     };
   }
 
@@ -113,21 +115,22 @@ class TeacherModal extends React.Component<Props, State> {
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
+  async componentDidMount(): Promise<void> {
     if (this.props.teacherList.length === 0 && this.props.firebase) {
-      this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
-        const teacherList = [];
-        teacherPromiseList.forEach(tpromise => {
-          tpromise.then((data: Types.Teacher) => {
-            teacherList.push(data);
-            this.setState((previousState) => {
-              return {
-                teachers: previousState.teachers.concat(data)
-              };
-            }, () => { this.props.getTeacherList(this.state.teachers) });
-          });
+      this.setState({ loading: true });
+      try {
+        const teacherPromiseList = await this.props.firebase.getTeacherList();
+        const teachers = await Promise.all((teacherPromiseList || []) as Array<Promise<Types.Teacher>>);
+        const validTeachers = teachers.filter((teacher): teacher is Types.Teacher => Boolean(teacher));
+        this.setState({ teachers: validTeachers, loading: false }, () => {
+          this.props.getTeacherList(this.state.teachers);
         });
-      });
+      } catch (error) {
+        console.error('Error loading teacher list: ', error);
+        this.setState({ loading: false });
+      }
+    } else {
+      this.setState({ loading: false });
     }
   }
 
@@ -177,7 +180,8 @@ class TeacherModal extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props;
     console.log('teacher list', this.props.teacherList);
-    const filteredTeachers = this.props.teacherList.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
+    const modalTeachers = this.props.teacherList.length > 0 ? this.props.teacherList : this.state.teachers;
+    const filteredTeachers = modalTeachers.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
     return (
       <div>
         <Modal open={this.state.open}>
@@ -204,13 +208,10 @@ class TeacherModal extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              {filteredTeachers.length > 0 ?
+              {this.state.loading ? (
+                <p>Fetching your teachers...</p>
+              ) : filteredTeachers.length > 0 ?
                 <List className={classes.list}>
-                  {this.props.teacherList.length === 0 ? (
-                    <>Fetching your teachers...</>
-                  ) : (
-                    <></>
-                  )}
                   {filteredTeachers.map((teacher, index) => (
                     <ListItem
                       key={index}
