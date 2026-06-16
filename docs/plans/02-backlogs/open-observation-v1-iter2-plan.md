@@ -31,6 +31,14 @@ Audit this plan for scope control, data-model safety, and feedback fidelity. A r
 
 #### Decision A — Shared `observations/{id}` collection with Open Observation markers
 
+> **SUPERSEDED 2026-06-12 by user direction.** The actual implementation uses
+> the shared `observations/{id}` collection with marker fields
+> (`openObservation: true`, `observationMode: 'open'`, `type: 'OpenObservation'`).
+> The BigQuery skip guard at `functions/observationToBQ/index.js:53` was
+> confirmed to handle these markers. See
+> [`open-observation-v1-iter2-handoff.md`](../03-progress/open-observation-v1-iter2-handoff.md)
+> for the execution record.
+
 Status: Superseded and replaced on 2026-06-12 after user clarification.
 
 Context: Deanna's feedback removes the Magic 9 type picker (F-1, F-2) and asks for timestamped notes (F-3). The earlier iter2 plan proposed a separate `openObservations/` collection to isolate the shape from the legacy BigQuery pipeline. The user clarified that all observations must remain together.
