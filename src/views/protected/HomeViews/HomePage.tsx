@@ -130,6 +130,13 @@ class HomePage extends React.Component<Props, State> {
     this.setState({ teacherModal: true, type: type });
   };
 
+  showObservationMenu = (): void => {
+    this.props.history.push({
+      pathname: "/Magic8Menu",
+      state: { type: "Observe" }
+    });
+  };
+
   handleClose = (): void => {
     this.setState({
       teacherModal: false,
@@ -229,7 +236,7 @@ class HomePage extends React.Component<Props, State> {
               >
                 <Card
                   className={classes.card}
-                  onClick={(): void => this.showTeacherModal("Observe")}
+                  onClick={this.showObservationMenu}
                 >
                   <CardContent>
                     <Grid
@@ -382,7 +389,7 @@ class HomePage extends React.Component<Props, State> {
                   <Grid item xs={6}>
                     <Card
                       className={classes.card}
-                      onClick={(): void => this.showTeacherModal("Observe")}
+                      onClick={this.showObservationMenu}
                     >
                       <CardContent>
                         <Grid

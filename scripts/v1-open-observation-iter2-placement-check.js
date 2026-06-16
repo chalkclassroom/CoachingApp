@@ -37,6 +37,8 @@ function main() {
   const toolIcons = read('src/components/ToolIcons.tsx')
   const home = read('src/views/protected/HomeViews/HomePage.tsx')
   const page = read('src/views/protected/OpenObservationViews/OpenObservationPage.tsx')
+  const burger = read('src/components/BurgerMenu.tsx')
+  const magic8Menu = read('src/views/protected/Magic8MenuPage.tsx')
   const typeBridgePath = 'src/components/OpenObservationComponents/openObservationTypes.ts'
 
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-magic8-card')
@@ -46,6 +48,12 @@ function main() {
   assertNotIncludes('HomePage.tsx', home, 'OpenObservationIcon')
   assertNotIncludes('HomePage.tsx', home, 'Open Observation')
   assertNotIncludes('HomePage.tsx', home, 'history.push("/OpenObservation")')
+  assertIncludes('HomePage.tsx', home, 'showObservationMenu')
+  assertIncludes('HomePage.tsx', home, 'pathname: "/Magic8Menu"')
+  assertNotIncludes('HomePage.tsx', home, 'this.showTeacherModal("Observe")')
+  assertIncludes('BurgerMenu.tsx', burger, 'pathname: "/Magic8Menu"')
+  assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'getTeacherList(validTeachers)')
+  assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'Loading teachers...')
 
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedTypeCode')
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedFinalTypeCode')

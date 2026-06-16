@@ -440,6 +440,20 @@ class Firebase {
     return {success: true}
   }
 
+  normalizeTeacherId = (teacherId: any): string => {
+    if (!teacherId) {
+      return ''
+    }
+
+    const rawTeacherId = typeof teacherId === 'string'
+      ? teacherId
+      : (teacherId.id || teacherId.path || '')
+
+    return String(rawTeacherId)
+      .trim()
+      .replace(/^\/?users?\//, '')
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -510,13 +524,13 @@ class Firebase {
         .get()
         .then((partners: firebase.firestore.QuerySnapshot) => {
           const teacherList: Array<firebase.firestore.DocumentData> = []
-          const partnerIds = partners.docs.map(partner => partner.id).filter(Boolean)
+          const partnerIds = partners.docs.map(partner => this.normalizeTeacherId(partner.id)).filter(Boolean)
           const teacherIds = partnerIds.length > 0
             ? partnerIds
-            : (Array.isArray(userDoc.teachers) ? userDoc.teachers : [])
+            : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
 
           teacherIds.forEach((teacherId: string) =>
-            teacherList.push(this.getTeacherInfo(String(teacherId).trim()))
+            teacherList.push(this.getTeacherInfo(this.normalizeTeacherId(teacherId)))
           )
           return teacherList
         })
@@ -538,13 +552,13 @@ class Firebase {
         .doc(this.auth.currentUser.uid)
         .collection('partners')
         .get()
-      const partnerIds = partners.docs.map(partner => partner.id).filter(Boolean)
+      const partnerIds = partners.docs.map(partner => this.normalizeTeacherId(partner.id)).filter(Boolean)
       const teacherIds = partnerIds.length > 0
         ? partnerIds
-        : (Array.isArray(userDoc.teachers) ? userDoc.teachers : [])
+        : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
 
       const teacherList = await Promise.all(teacherIds.map((teacherId: string) =>
-        this.getTeacherInfo(String(teacherId).trim())
+        this.getTeacherInfo(this.normalizeTeacherId(teacherId))
       ))
 
       return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>
@@ -725,9 +739,14 @@ class Firebase {
   getTeacherInfo = async (
     partnerID: string
   ): Promise<firebase.firestore.DocumentData | undefined | void> => {
+    const teacherId = this.normalizeTeacherId(partnerID)
+    if (!teacherId) {
+      return {id: null}
+    }
+
     return this.db
       .collection('users')
-      .doc(partnerID)
+      .doc(teacherId)
       .get()
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {

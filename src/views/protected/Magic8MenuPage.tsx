@@ -7,7 +7,7 @@ import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
 import ToolIcons from '../../components/ToolIcons';
 import Grid from '@material-ui/core/Grid';
-import { changeTeacher } from '../../state/actions/teacher';
+import { changeTeacher, getTeacherList } from '../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
@@ -66,7 +66,8 @@ interface Props {
       type: string
     }
   },
-  changeTeacher(teacher: string): void,
+  changeTeacher(teacher: Types.Teacher): void,
+  getTeacherList(teachers: Array<Types.Teacher>): void,
   teacherSelected: Types.Teacher,
   teacherList: Array<Types.Teacher>
 }
@@ -74,7 +75,8 @@ interface Props {
 interface State {
   teacherId: string,
   teacherName: string,
-  teacher: {}
+  teacher: {},
+  loadingTeachers: boolean
 }
 
 /**
@@ -91,15 +93,42 @@ class Magic8MenuPage extends React.Component<Props, State> {
     this.state = {
       teacherId: '',
       teacherName: '',
-      teacher: {}
+      teacher: {},
+      loadingTeachers: this.props.teacherList.length === 0
     };
+  }
+
+  async componentDidMount(): Promise<void> {
+    if (this.props.teacherList.length > 0) {
+      this.setState({ loadingTeachers: false });
+      return;
+    }
+
+    const firebase = this.context as Firebase | null;
+    if (!firebase || typeof firebase.getTeacherList !== 'function') {
+      this.setState({ loadingTeachers: false });
+      return;
+    }
+
+    try {
+      const teacherPromiseList = await firebase.getTeacherList();
+      const teachers = await Promise.all((teacherPromiseList || []) as Array<Promise<Types.Teacher> | Types.Teacher>);
+      const validTeachers = teachers.filter((teacher): teacher is Types.Teacher =>
+        Boolean(teacher) && Boolean((teacher as Types.Teacher).id) && !(teacher as Types.Teacher & { archived?: boolean }).archived
+      );
+      this.props.getTeacherList(validTeachers);
+    } catch (error) {
+      console.error('Error loading teachers for observation menu: ', error);
+    } finally {
+      this.setState({ loadingTeachers: false });
+    }
   }
 
   /**
    * @param {ChangeEvent} event
    */
   changeTeacher = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    this.props.changeTeacher(event.target.value);
+    this.props.changeTeacher(event.target.value as unknown as Types.Teacher);
   };
 
   static propTypes = {
@@ -113,6 +142,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history,
     location: ReactRouterPropTypes.location,
     changeTeacher: PropTypes.func.isRequired,
+    getTeacherList: PropTypes.func.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -132,6 +162,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const menuType = this.props.location.state ? this.props.location.state.type : 'Observe';
     return (
       <div className={classes.root}>
         <div>
@@ -152,7 +183,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
                 <Grid item xs={9}>
                   <Grid container direction="row" justify="flex-start" alignItems="center">
                     <Typography style={{fontSize:'2.5em'}}>
-                      {this.props.location.state.type}
+                      {menuType}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -171,6 +202,9 @@ class Magic8MenuPage extends React.Component<Props, State> {
                           <em>{teacher.firstName + " " + teacher.lastName}</em>
                         </MenuItem>})}
                     </TextField>
+                    {this.state.loadingTeachers ? (
+                      <Typography variant="caption" color="textSecondary" style={{fontFamily: 'Arimo'}}>Loading teachers...</Typography>
+                    ) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -185,7 +219,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
               </Grid>
             </Grid>
             <Grid item style={{width: '70vw'}}>
-              <ToolIcons type={this.props.location.state.type} training={false} history={this.props.history} />
+              <ToolIcons type={menuType} training={false} history={this.props.history} />
             </Grid>
           </Grid>
         </div>
@@ -205,4 +239,4 @@ const mapStateToProps = (state: Types.ReduxState): {
 };
 
 Magic8MenuPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(Magic8MenuPage));
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher, getTeacherList })(Magic8MenuPage));

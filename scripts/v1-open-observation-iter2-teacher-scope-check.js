@@ -32,6 +32,8 @@ function main() {
   assertIncludes('Firebase.tsx', firebase, ".collection('partners')")
   assertIncludes('Firebase.tsx', firebase, 'userDoc.teachers')
   assertIncludes('Firebase.tsx', firebase, 'partnerIds.length > 0')
+  assertIncludes('Firebase.tsx', firebase, 'normalizeTeacherId')
+  assertIncludes('Firebase.tsx', firebase, "replace(/^\\/?users?\\//, '')")
   assertIncludes('OpenObservationPage.tsx', page, 'getOpenObservationTeacherList')
   assertNotIncludes('OpenObservationPage.tsx', page, '.getTeacherList()')
   assertIncludes('OpenObservationPage.tsx', page, 'open-obs-teacher-school')
