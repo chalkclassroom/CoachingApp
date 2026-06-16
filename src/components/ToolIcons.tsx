@@ -5,8 +5,6 @@ import Magic8Card from './Magic8Card';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import Typography from '@material-ui/core/Typography';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
 import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
@@ -15,6 +13,7 @@ import MathIconImage from "../assets/images/MathIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../assets/images/EngagementIconImage.svg";
 import LiteracyIconImage from '../assets/images/LiteracyIconImage.svg';
+import OpenObservationIconImage from "../assets/images/OpenObservationIconImage.png";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import TransitionTimeObservationPopUp from './TransitionComponents/TransitionTimeObservationPopUp';
 import ClassroomClimateObservationPopUp from './ClassroomClimateComponent/ClassroomClimateObservationPopUp';
@@ -377,11 +376,8 @@ function ToolIcons(props: Props): React.ReactElement {
                   onClick={(): void => history.push('/OpenObservation')}
                   style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
                 >
-                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                    <NoteAddIcon style={{fill: '#7a4dff', width: '56%', height: '56%'}} />
-                    <Typography variant="caption" style={{fontFamily: 'Arimo', textAlign: 'center'}}>
-                      Open Observation
-                    </Typography>
+                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
+                    <img src={OpenObservationIconImage} alt="Open Observation" style={{ display: 'block', width: '100%' }} />
                   </CardActionArea>
                 </Card>
               </Grid>
