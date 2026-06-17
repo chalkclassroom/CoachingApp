@@ -16,6 +16,14 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
+Cypress.on('uncaught:exception', (error) => {
+  if (error.message && error.message.includes('this._clsSessionEntries.at is not a function')) {
+    return false
+  }
+
+  return true
+})
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
