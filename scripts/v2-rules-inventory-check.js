@@ -3,8 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 const appRoot = path.resolve(__dirname, '..')
-const repoRoot = path.resolve(appRoot, '..')
-const chalkRoot = path.join(repoRoot, '.chalk')
+const plansRoot = path.join(appRoot, 'docs/plans')
 const failures = []
 
 function assert(condition, message) {
@@ -13,11 +12,11 @@ function assert(condition, message) {
 function readApp(rel) {
   return fs.readFileSync(path.join(appRoot, rel), 'utf8')
 }
-function readChalk(rel) {
-  return fs.readFileSync(path.join(chalkRoot, rel), 'utf8')
+function readPlans(rel) {
+  return fs.readFileSync(path.join(plansRoot, rel), 'utf8')
 }
-function existsChalk(rel) {
-  return fs.existsSync(path.join(chalkRoot, rel))
+function existsPlans(rel) {
+  return fs.existsSync(path.join(plansRoot, rel))
 }
 function tableHasRow(markdown, firstCell) {
   return new RegExp('\\|\\s*' + firstCell + '\\s*\\|').test(markdown)
@@ -25,17 +24,17 @@ function tableHasRow(markdown, firstCell) {
 
 const api = readApp('src/v2/lib/api.ts')
 const rules = readApp('firestore.rules')
-const decisionLogExists = existsChalk('decision-log.md')
-const inventoryExists = existsChalk('CHALK-2-V2-RULES-INVENTORY.md')
-const fixturesExists = existsChalk('CHALK-2-V2-RULES-FIXTURES.md')
+const decisionLogExists = existsPlans('04-decisions/decision-log.md')
+const inventoryExists = existsPlans('03-progress/v2-rules-inventory.md')
+const fixturesExists = existsPlans('03-progress/v2-rules-fixtures.md')
 const fixtureSourceExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-fixtures.js'))
 const seedScriptExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-seed-fixtures.js'))
 const emulatorConfigExists = fs.existsSync(path.join(appRoot, 'firebase.v2-rules.json'))
 const smokeScriptExists = fs.existsSync(path.join(appRoot, 'scripts/v2-rules-emulator-smoke.js'))
 
-assert(decisionLogExists, '.chalk/decision-log.md must exist')
-assert(inventoryExists, '.chalk/CHALK-2-V2-RULES-INVENTORY.md must exist')
-assert(fixturesExists, '.chalk/CHALK-2-V2-RULES-FIXTURES.md must exist')
+assert(decisionLogExists, 'docs/plans/04-decisions/decision-log.md must exist')
+assert(inventoryExists, 'docs/plans/03-progress/v2-rules-inventory.md must exist')
+assert(fixturesExists, 'docs/plans/03-progress/v2-rules-fixtures.md must exist')
 assert(fixtureSourceExists, 'scripts/v2-rules-fixtures.js must exist')
 assert(seedScriptExists, 'scripts/v2-rules-seed-fixtures.js must exist')
 assert(emulatorConfigExists, 'firebase.v2-rules.json must exist for isolated rules tests')
@@ -44,9 +43,9 @@ assert(smokeScriptExists, 'scripts/v2-rules-emulator-smoke.js must exist')
 let decisionLog = ''
 let inventory = ''
 let fixtures = ''
-if (decisionLogExists) decisionLog = readChalk('decision-log.md')
-if (inventoryExists) inventory = readChalk('CHALK-2-V2-RULES-INVENTORY.md')
-if (fixturesExists) fixtures = readChalk('CHALK-2-V2-RULES-FIXTURES.md')
+if (decisionLogExists) decisionLog = readPlans('04-decisions/decision-log.md')
+if (inventoryExists) inventory = readPlans('03-progress/v2-rules-inventory.md')
+if (fixturesExists) fixtures = readPlans('03-progress/v2-rules-fixtures.md')
 
 assert(/2026-06-01 - CHALK 2\.0 V2 Firestore Rules Posture/.test(decisionLog), 'decision log must include the 2026-06-01 V2 rules posture entry')
 assert(/supersedes the 2026-05-28 Posture A/i.test(decisionLog), 'decision log must explicitly supersede or constrain Posture A')
@@ -61,7 +60,7 @@ assert(/G2.5 unsupported-path smoke now passes/i.test(decisionLog), 'decision lo
 
 const createApiBodyMatch = api.match(/export function createV2Api\(firebase: any\) \{[\s\S]*?return \{([\s\S]*?)\n  \}\n\}/)
 assert(Boolean(createApiBodyMatch), 'createV2Api() object must be parseable')
-const writePrefixes = /^(save|add|mark|start|complete|dismiss)/
+const writePrefixes = /^(save|set|add|mark|start|complete|dismiss)/
 const writeFunctions = createApiBodyMatch
   ? Array.from(createApiBodyMatch[1].matchAll(/^\s{4}([a-zA-Z0-9_]+):/gm)).map(match => match[1]).filter(name => writePrefixes.test(name))
   : []

@@ -329,7 +329,8 @@ service cloud.firestore {
 
     // Fallback: unknown paths are denied by default. Add explicit rules before adding V2 reads or writes.
     match /{document=**} {
-      allow read, write: if false;
+      allow read: if false;
+      allow write: if false;
     }
   }
 }
