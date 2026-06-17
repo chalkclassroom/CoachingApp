@@ -17,6 +17,7 @@ import {
   TextField,
   Typography
 } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
 
 const styles: object = {
   root: {
@@ -395,7 +396,8 @@ class OpenObservationPage extends React.Component<Props, State> {
             </Button>
           </Grid>
         </Grid>
-        <Grid container spacing={1} alignItems="flex-end">
+        <div className={this.props.classes.section}>{this.renderNotes()}</div>
+        <Grid container spacing={1} alignItems="flex-end" style={{ marginTop: '1rem' }}>
           <Grid item xs={12} sm={9}>
             <TextField
               fullWidth
@@ -416,12 +418,12 @@ class OpenObservationPage extends React.Component<Props, State> {
               disabled={!this.state.noteText.trim()}
               onClick={this.addNote}
               data-testid="open-observation-add-note"
+              aria-label="Add note"
             >
-              Add note
+              <AddIcon />
             </Button>
           </Grid>
         </Grid>
-        <div className={this.props.classes.section}>{this.renderNotes()}</div>
       </div>
     )
   }
