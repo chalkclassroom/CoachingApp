@@ -567,7 +567,7 @@ class Firebase {
         Boolean(teacher) && Boolean((teacher as firebase.firestore.DocumentData).id) && !(teacher as firebase.firestore.DocumentData).archived
       )
     } catch (error) {
-      console.error('Error getting Open Observation teacher list: ', error)
+      console.error('Error loading Open Observation teachers: ', error)
       return []
     }
   }
