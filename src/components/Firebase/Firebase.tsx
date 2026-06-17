@@ -546,7 +546,6 @@ class Firebase {
     }
 
     try {
-      const practiceTeacherId = 'rJxNhJmzjRZP7xg29Ko6'
       const userDoc = await this.getUserInformation()
       const partners = await this.db
         .collection('users')
@@ -557,7 +556,7 @@ class Firebase {
       const scopedTeacherIds = partnerIds.length > 0
         ? partnerIds
         : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
-      const teacherIds = scopedTeacherIds.length > 0 ? scopedTeacherIds : [practiceTeacherId]
+      const teacherIds = scopedTeacherIds
 
       const teacherList = await Promise.all(teacherIds.map((teacherId: string) =>
         this.getTeacherInfo(this.normalizeTeacherId(teacherId))

@@ -319,7 +319,7 @@ class OpenObservationPage extends React.Component<Props, State> {
     }
 
     if (teachers.length === 0) {
-      return <Typography color="textSecondary">No active teachers are available for Open Observation.</Typography>
+      return <Typography color="textSecondary">No teachers are assigned to you yet — ask an admin to assign teachers.</Typography>
     }
 
     return (
