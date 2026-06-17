@@ -32,6 +32,8 @@ function main() {
   assertIncludes('Firebase.tsx', firebase, ".collection('partners')")
   assertIncludes('Firebase.tsx', firebase, 'userDoc.teachers')
   assertIncludes('Firebase.tsx', firebase, 'partnerIds.length > 0')
+  assertIncludes('Firebase.tsx', firebase, "const practiceTeacherId = 'rJxNhJmzjRZP7xg29Ko6'")
+  assertIncludes('Firebase.tsx', firebase, 'scopedTeacherIds.length > 0 ? scopedTeacherIds : [practiceTeacherId]')
   assertIncludes('Firebase.tsx', firebase, 'normalizeTeacherId')
   assertIncludes('Firebase.tsx', firebase, "replace(/^\\/?users?\\//, '')")
   assertIncludes('OpenObservationPage.tsx', page, 'getOpenObservationTeacherList')
