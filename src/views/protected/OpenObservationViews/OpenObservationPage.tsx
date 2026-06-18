@@ -13,11 +13,14 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  IconButton,
   MenuItem,
   TextField,
   Typography
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
+import CheckIcon from '@material-ui/icons/Check'
+import EditIcon from '@material-ui/icons/Edit'
 
 const styles: object = {
   root: {
@@ -70,7 +73,8 @@ interface State {
   saving: boolean,
   error: string,
   coachSummary: string,
-  snapshotVisible: boolean
+  snapshotVisible: boolean,
+  editingNoteId: string | null
 }
 
 class OpenObservationPage extends React.Component<Props, State> {
@@ -91,7 +95,8 @@ class OpenObservationPage extends React.Component<Props, State> {
       saving: false,
       error: '',
       coachSummary: '',
-      snapshotVisible: false
+      snapshotVisible: false,
+      editingNoteId: null
     }
   }
 
@@ -286,7 +291,8 @@ class OpenObservationPage extends React.Component<Props, State> {
       saving: false,
       error: '',
       coachSummary: '',
-      snapshotVisible: false
+      snapshotVisible: false,
+      editingNoteId: null
     })
   }
 
@@ -356,22 +362,56 @@ class OpenObservationPage extends React.Component<Props, State> {
       return <Typography color="textSecondary">No notes yet.</Typography>
     }
 
-    return this.state.notes.map(note => (
-      <Grid container spacing={2} alignItems="center" key={note.id} className={classes.noteRow} data-testid="open-observation-note-row">
-        <Grid item xs={12} sm={2}>
-          <Typography color="textSecondary">{this.formatNoteTime(note.wallClockAt)}</Typography>
+    return this.state.notes.map(note => {
+      const editing = this.state.editingNoteId === note.id
+
+      return (
+        <Grid container spacing={2} alignItems="center" key={note.id} className={classes.noteRow} data-testid="open-observation-note-row">
+          <Grid item xs={12} sm={2}>
+            <Typography color="textSecondary">{this.formatNoteTime(note.wallClockAt)}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={10}>
+            {editing ? (
+              <Grid container spacing={1} alignItems="center">
+                <Grid item xs>
+                  <TextField
+                    fullWidth
+                    multiline
+                    autoFocus
+                    value={note.text}
+                    onChange={(event): void => this.updateNote(note.id, event.target.value)}
+                    inputProps={{ 'data-testid': 'open-observation-note-text' }}
+                  />
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    aria-label="Done editing note"
+                    onClick={(): void => this.setState({ editingNoteId: null })}
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ) : (
+              <Grid container spacing={1} alignItems="center">
+                <Grid item xs>
+                  <Typography>{note.text}</Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    aria-label="Edit note"
+                    data-testid="open-observation-note-edit"
+                    onClick={(): void => this.setState({ editingNoteId: note.id })}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={10}>
-          <TextField
-            fullWidth
-            multiline
-            value={note.text}
-            onChange={(event): void => this.updateNote(note.id, event.target.value)}
-            inputProps={{ 'data-testid': 'open-observation-note-text' }}
-          />
-        </Grid>
-      </Grid>
-    ))
+      )
+    })
   }
 
   renderObservationWorkspace(): React.ReactNode {
