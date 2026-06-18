@@ -9,10 +9,22 @@ findable.
 > with flexible payment timing. Pricing is in scope for external audit.
 > Technical strategy, risks, implementation quality, and ethics are all auditable.
 
-> **Active work**: **Open Observation on V1 (legacy CHALK)** — confirmed by client,
-> Friday start proposed, $400 / 3-4 days. Details:
-> [`03-progress/next-v1-requirement.md`](03-progress/next-v1-requirement.md).
-> V2 refresh on hold until CHALK secures budget.
+> **Resume entry point (latest)**: read
+> [`03-progress/2026-06-16-session-handoff.md`](03-progress/2026-06-16-session-handoff.md)
+> first. It is the self-contained snapshot for bootstrapping a fresh conversation.
+>
+> **Active work state (06-16)**: Open Observation V1 **iter2 deployed to staging**.
+> 10 commits on the fork; latest `3f1763060` (2026-06-16) fixes G-1 (cypress
+> `/Home`→`/Magic8Menu`) + G-9 (plan SUPERSEDED note) and deploys
+> `firestore:rules,hosting`, so **Decision I rules are now live on staging
+> (G-3 closed)**. All "Observe" entry points (Home, Burger menu) bypass
+> `TeacherModal` → `/Magic8Menu`. Staging `https://chalk-dev-c6a5d.web.app`
+> returning 200 on `/`, `/OpenObservation`, `/Magic8Menu`. Production untouched.
+> Traceability PR #11 (→ fork `develop`). **Ready for Deanna's review** — draft
+> note ready; must disclose R-5 (admin can't read other coaches' Open
+> Observations). Open: G-10 (commit pending docs-reorg deletes), G-2 (cypress
+> seeded-auth, mitigated by manual QA). V2 refresh still on hold until CHALK
+> secures budget.
 
 ---
 
@@ -52,6 +64,11 @@ The "what actually happened". Append-only; goals close here.
 | [`next-v1-requirement.md`](03-progress/next-v1-requirement.md) | **Confirmed**: Open Observation on V1 (legacy CHALK). Quoted $400 / 3-4 days; Friday start proposed. Includes scope, risks, open technical questions, G/W/T draft. V2 refresh on hold pending CHALK budget. |
 | [`open-observation-v1-handoff.md`](03-progress/open-observation-v1-handoff.md) | Open Observation V1 execution handoff. Records OB-1..OB-5 commits, red/green evidence, LI `checklist: null` proof, final alignment proof, and staging/deploy status. |
 | [`open-observation-deanna-feedback-handoff.md`](03-progress/open-observation-deanna-feedback-handoff.md) | Post-staging audit of Open Observation V1 against Deanna's feedback. Bugs vs product-scope vs new features, teacher-scoping risk, recommended architecture (originally new `openObservations/` collection; later superseded by shared `observations/` requirement), Path Min (~4-6h bug fixes) vs Path Full (~24-40h rebuild), pending verbatim Deanna message. |
+| [`open-observation-v1-iter2-preexec-audit.md`](03-progress/open-observation-v1-iter2-preexec-audit.md) | Codex's pre-execution audit before iter2 implementation. Identifies Magic 8 host, classroom field absence, aggregator integration plan, iter1 cleanup scope, 2 blockers that became Decisions H and I in the plan. |
+| [`open-observation-v1-iter2-handoff.md`](03-progress/open-observation-v1-iter2-handoff.md) | Codex's iter2 execution handoff. Records OB2-1..OB2-5 commits, red/green per task, architectural pivot to shared `observations/` + markers, iter1 cleanup checklist, known limitation (admin/leader read deferred). |
+| [`2026-06-15-session-handoff.md`](03-progress/2026-06-15-session-handoff.md) | **Historical** — pre-deploy handoff. Superseded by 2026-06-16. Kept as record of the state before the final staging deploy. |
+| [`open-observation-v1-current-state-consolidation.md`](03-progress/open-observation-v1-current-state-consolidation.md) | **Audit-ready consolidation as of 2026-06-16.** Post-deploy snapshot covering 10 sections: Deanna's asks, iter1→iter2 deltas, current product behavior walkthrough, data + permissions model, navigation entry points, scoping mechanism, deploy scope, known risks, exact QA path, production cutover concerns. Use for external review or as briefing to Deanna. |
+| [`2026-06-16-session-handoff.md`](03-progress/2026-06-16-session-handoff.md) | **🎯 Resume entry point — read this first when starting a fresh conversation.** Self-contained context recovery doc. Includes the §2 prompt to paste as first user message in a new session. Covers: orientation, work streams, latest commits, decisions A→I, code state, docs tree, working tree, deploy status, known gaps, 6 playbooks for next steps, operating rules, sanity checks, MCP tooling, end-of-handoff checklist. |
 | [`open-observation-v1-iter2-handoff.md`](03-progress/open-observation-v1-iter2-handoff.md) | Open Observation V1 iteration 2 execution handoff. Records OB2-1..OB2-5 commits, red/green evidence, Decision H/I verification, aggregator query impact, iter1 cleanup, and deploy status. |
 
 ### [04-decisions/](04-decisions/) — architectural decisions
