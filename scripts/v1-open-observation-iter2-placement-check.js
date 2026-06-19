@@ -33,6 +33,15 @@ function assertMatches(label, text, expected) {
   }
 }
 
+function assertBefore(label, text, first, second) {
+  const firstIndex = text.indexOf(first)
+  const secondIndex = text.indexOf(second)
+  if (firstIndex === -1 || secondIndex === -1 || firstIndex > secondIndex) {
+    console.error(label + ' route order is wrong: expected ' + first + ' before ' + second)
+    process.exit(1)
+  }
+}
+
 function assertMissing(relativePath) {
   if (exists(relativePath)) {
     console.error(relativePath + ' should be retired for iter2.')
@@ -68,6 +77,7 @@ function main() {
   assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'Loading teachers...')
   assertMatches('App.tsx', app, /<PrivateRoute[\s\S]*?exact[\s\S]*?path="\/OpenObservationResults"[\s\S]*?<OpenObservationListPage/)
   assertMatches('App.tsx', app, /<PrivateRoute[\s\S]*?exact[\s\S]*?path="\/OpenObservationResults\/:observationId"[\s\S]*?<OpenObservationResultsPage/)
+  assertBefore('App.tsx', app, 'path="/OpenObservationResults/:observationId"', 'path="/OpenObservationResults"')
 
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedTypeCode')
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedFinalTypeCode')

@@ -319,16 +319,6 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={auth}
               exact
-              path="/OpenObservationResults"
-              allowedRoles={[Role.COACH, Role.ADMIN, Role.TEACHER]}
-              userRole={role}
-              render={(props: {
-                history: H.History
-              }) : React.ReactElement=> <OpenObservationListPage {...props}/>}
-            />
-            <PrivateRoute
-              auth={auth}
-              exact
               path="/OpenObservationResults/:observationId"
               allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER, Role.TEACHER]}
               userRole={role}
@@ -336,6 +326,16 @@ class App extends React.Component<Props, State> {
                 history: H.History,
                 match: { params: { observationId?: string } }
               }) : React.ReactElement=> <OpenObservationResultsPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={auth}
+              exact
+              path="/OpenObservationResults"
+              allowedRoles={[Role.COACH, Role.ADMIN, Role.TEACHER]}
+              userRole={role}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <OpenObservationListPage {...props}/>}
             />
             <PrivateRoute
               auth={auth}
