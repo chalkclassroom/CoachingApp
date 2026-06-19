@@ -169,7 +169,7 @@ async function main() {
   assertStatus('unrelated coach read observations open doc', unrelatedCoachRead, 403)
 
   const adminRead = await request('GET', docUrl, null, fakeFirebaseToken('open-admin'))
-  assertStatus('admin read-all observations open doc', adminRead, 403)
+  assertStatus('admin read-all observations open doc', adminRead, 200)
 
   const programLeaderRead = await request('GET', docUrl, null, fakeFirebaseToken('open-program-leader'))
   assertStatus('program leader read-all observations open doc', programLeaderRead, 403)

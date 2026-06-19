@@ -4,6 +4,54 @@ This document records significant architectural and design decisions made during
 
 ---
 
+## 2026-06-19 - Open Observation: admin read-all (reverses Decision I) for the results list
+
+**Decision:** Admins may read ALL Open Observations (across coaches) to power the new `/OpenObservationResults` list/oversight page. This REVERSES the iter2 Decision I stance ("no admin/leader read-all") for the ADMIN role specifically.
+
+**Context:**
+- User requested a results-list page where a coach/teacher sees their own Open Observations, and an ADMIN can see + filter across all coaches (oversight/review).
+- Firestore rules gate reads; a list query only returns docs the user may read. Decision I's `canReadOpenObservation` allowed only owner-coach or observed-teacher, so an admin list would return nothing.
+- This was disclosed to the client (Deanna) as a limitation ("admin can't yet see other coaches' Open Observations"). That disclosure must now be updated.
+
+**Resolution:**
+- `firestore.rules` `canReadOpenObservation` gains `|| isAdmin()`: `signedIn() && (coachId == uid || teacherId == uid || isAdmin())`.
+- Program-leader / site-leader are NOT granted read-all yet (their program-scoped membership is still unmodeled — remains deferred). The list route is limited to COACH, ADMIN, TEACHER.
+- Coaches and teachers stay scoped to their own (no change for them).
+- The emulator rules-check flips the "admin read" scenario from deny to allow; all other Decision I scenarios (unrelated coach denied, hard-delete denied, etc.) stay.
+- Built/tested on staging; production carries the same admin clause whenever the prod rules cutover (surgical observations-only ruleset, decision-log #10) happens.
+
+**Status:** Accepted per user direction 2026-06-19. Pending staging deploy (user OK) + an updated privacy note to Deanna (admin oversight now available; the prior limitation no longer applies).
+
+**Supersedes:** the "no admin/leader read-all" portion of Decision I (iter2 plan §0) for the ADMIN role only.
+
+---
+
+## 2026-06-18 - Client state: do not persist server-cached collections (redux-persist staleness)
+
+**Decision:** Server-derived collection caches (teacher rosters, partner lists, etc.) must NOT be persisted by redux-persist, and the V2 client-state design must separate durable UI state from server cache with an explicit refetch / invalidation policy.
+
+**Context:**
+- Prod incident (Michelle Sandelin / Yvette Breveard, 2026-06-18): a coach could *see* a teacher but could not *observe* her. Immediate root cause was the teacher record having `archived: true` (observe pickers filter archived); data was corrected (un-archived) in prod + staging.
+- The real software defect surfaced by the incident: `src/state/store.ts` persistConfig has NO blacklist → redux-persist serializes the ENTIRE store to localStorage, including `teacherListState` (the cached roster).
+- `Magic8MenuPage.tsx:102` only refetches `getTeacherList()` when the Redux list is empty; logout (`firebaseSignOut` + `clearCoach`) does NOT purge the persisted roster.
+- Net effect: any server-side teacher change (un-archive, reassignment) is invisible to a coach until they clear browser storage. **Hard refresh and logout/login do NOT pick it up** (the persisted slice rehydrates from localStorage).
+
+**Resolution (V1, now):**
+- Blacklist `teacherListState` from redux-persist so it starts empty on each load and refetches a fresh roster. Targeted fix; does not touch `teacherSelectedState` or the Open Observation flow.
+- The Open Observation feature is unaffected — `OpenObservationPage` fetches a fresh scoped list on every mount (no Redux cache).
+- User-facing workaround until deployed: open in a fresh incognito window (a plain refresh / logout does not clear the persisted cache).
+
+**Implication for V2 (carry forward):**
+- V2 must NOT lean on redux-persist for server data. Persist only durable UI/session state (selected teacher, in-progress draft, theme); treat server collections as cache with explicit invalidation.
+- Prefer a server-cache layer with staleness/invalidation (react-query / SWR style), or — if staying on Redux — an explicit refetch-on-focus / TTL policy plus a persist blacklist for ALL server-derived slices.
+- Any "fetch only if empty" pattern is a staleness trap when combined with persistence — V2 should fetch-and-revalidate, not fetch-once.
+
+**Out of scope:**
+- Broader audit of other wrongly-archived teachers (separate data-quality pass, needs client direction).
+- The full V2 client-state refactor (on hold until CHALK secures budget).
+
+---
+
 ## 2026-05-20 - Security Audit Tracking Strategy
 
 **Decision:** Track security audit as umbrella ticket CHALK-300 with 8 phased sub-tickets (CHALK-301..308) instead of a single monolithic ticket.

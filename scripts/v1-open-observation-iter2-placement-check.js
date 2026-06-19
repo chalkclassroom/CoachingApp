@@ -44,6 +44,8 @@ function main() {
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-magic8-card')
   assertIncludes('ToolIcons.tsx', toolIcons, "history.push('/OpenObservation')")
   assertIncludes('ToolIcons.tsx', toolIcons, 'Open Observation')
+  assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-results-magic8-card')
+  assertIncludes('ToolIcons.tsx', toolIcons, "history.push('/OpenObservationResults')")
 
   assertNotIncludes('HomePage.tsx', home, 'OpenObservationIcon')
   assertNotIncludes('HomePage.tsx', home, 'Open Observation')
@@ -52,6 +54,8 @@ function main() {
   assertIncludes('HomePage.tsx', home, 'pathname: "/Magic8Menu"')
   assertNotIncludes('HomePage.tsx', home, 'this.showTeacherModal("Observe")')
   assertIncludes('BurgerMenu.tsx', burger, 'pathname: "/Magic8Menu"')
+  assertIncludes('BurgerMenu.tsx', burger, 'Open Observations')
+  assertIncludes('BurgerMenu.tsx', burger, 'this.props.history.push("/OpenObservationResults")')
   assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'getTeacherList(validTeachers)')
   assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'Loading teachers...')
 

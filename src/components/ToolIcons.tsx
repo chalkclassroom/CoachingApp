@@ -384,6 +384,23 @@ function ToolIcons(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         ) : null}
+        {!training && type === 'Results' ? (
+          <Grid item style={{width: '100%', paddingTop: '1em'}}>
+            <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
+              <Grid item>
+                <Card
+                  data-testid="open-observation-results-magic8-card"
+                  onClick={(): void => history.push('/OpenObservationResults')}
+                  style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
+                >
+                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
+                    <img src={OpenObservationIconImage} alt="Open Observations" style={{ display: 'block', width: '100%' }} />
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        ) : null}
         </>)}
       </Grid>
       {selected === 'LiteracyInstruction' ? (

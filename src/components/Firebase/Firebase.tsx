@@ -42,6 +42,17 @@ export interface UserDocument {
   lastLogin?: Date
 }
 
+export interface OpenObservationListItem {
+  id: string
+  teacherId: string
+  teacherName: string
+  coachId: string
+  coachName: string
+  date: Date | null
+  noteCount: number
+  summary: string
+}
+
 interface Note {
   id: string
   content: string
@@ -628,6 +639,78 @@ class Firebase {
     })).filter((note: OpenObservationNote) => note.id && note.text && !Number.isNaN(note.wallClockAt.getTime())) : []
 
     return { ...data, notes, id: doc.id }
+  }
+
+  getOpenObservationList = async (): Promise<OpenObservationListItem[]> => {
+    if (!this.auth.currentUser) {
+      return []
+    }
+
+    const uid = this.auth.currentUser.uid
+    const role = await this.getUserRole()
+    let query: firebase.firestore.Query = this.db
+      .collection(OPEN_OBSERVATION_COLLECTION)
+      .where('openObservation', '==', true)
+
+    if (role === 'coach') {
+      query = query.where('coachId', '==', uid)
+    } else if (role === 'teacher') {
+      query = query.where('teacherId', '==', uid)
+    } else if (role !== 'admin') {
+      return []
+    }
+
+    const snapshot = await query.orderBy('start', 'desc').get()
+    const rows = await Promise.all(snapshot.docs.map(async (doc: firebase.firestore.QueryDocumentSnapshot) => {
+      try {
+        const data = doc.data() as OpenObservationDoc
+        const teacherId = this.normalizeTeacherId((data as any).teacherId || (data as any).teacher)
+        const coachId = this.normalizeTeacherId((data as any).coachId || (data as any).observedBy)
+        const teacher = await this.getTeacherInfo(teacherId)
+        const coach = role === 'admin' && coachId
+          ? await this.db.collection('users').doc(coachId).get()
+          : null
+        const coachData = coach && coach.exists ? coach.data() : null
+        const summary = data.snapshot && data.snapshot.coachSummary ? data.snapshot.coachSummary : ''
+
+        return {
+          id: doc.id,
+          teacherId,
+          teacherName: this.formatOpenObservationUserName(teacher),
+          coachId,
+          coachName: this.formatOpenObservationUserName(coachData),
+          date: this.asOpenObservationDate((data as any).start),
+          noteCount: Array.isArray((data as any).notes) ? (data as any).notes.length : 0,
+          summary: this.truncateOpenObservationSummary(summary)
+        }
+      } catch (error) {
+        console.error('Error resolving Open Observation list row: ', error)
+        return null
+      }
+    }))
+
+    return rows.filter((row): row is OpenObservationListItem => Boolean(row))
+  }
+
+  asOpenObservationDate = (value: any): Date | null => {
+    if (!value) return null
+    if (value instanceof Date) return value
+    if (value.toDate) return value.toDate()
+    const date = new Date(value)
+    return Number.isNaN(date.getTime()) ? null : date
+  }
+
+  formatOpenObservationUserName = (user: firebase.firestore.DocumentData | undefined | null | void): string => {
+    if (!user) return 'Unknown'
+    const firstName = user.firstName ? String(user.firstName) : ''
+    const lastName = user.lastName ? String(user.lastName) : ''
+    const name = (firstName + ' ' + lastName).trim()
+    return name || (user.email ? String(user.email) : 'Unknown')
+  }
+
+  truncateOpenObservationSummary = (summary: string): string => {
+    const trimmed = String(summary || '').trim()
+    return trimmed.length > 140 ? trimmed.slice(0, 137) + '...' : trimmed
   }
 
   getTeacherId = async (firstName: string, lastName: string, email: string) => {

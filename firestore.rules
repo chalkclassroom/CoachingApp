@@ -249,7 +249,7 @@ service cloud.firestore {
     }
 
     function canReadOpenObservation(data) {
-      return signedIn() && (data.coachId == request.auth.uid || data.teacherId == request.auth.uid);
+      return signedIn() && (data.coachId == request.auth.uid || data.teacherId == request.auth.uid || isAdmin());
     }
 
     function canCreateOpenObservation(data) {
