@@ -26,6 +26,13 @@ function assertNotIncludes(label, text, forbidden) {
   }
 }
 
+function assertMatches(label, text, expected) {
+  if (!expected.test(text)) {
+    console.error(label + ' is missing expected pattern: ' + expected)
+    process.exit(1)
+  }
+}
+
 function assertMissing(relativePath) {
   if (exists(relativePath)) {
     console.error(relativePath + ' should be retired for iter2.')
@@ -39,6 +46,7 @@ function main() {
   const page = read('src/views/protected/OpenObservationViews/OpenObservationPage.tsx')
   const burger = read('src/components/BurgerMenu.tsx')
   const magic8Menu = read('src/views/protected/Magic8MenuPage.tsx')
+  const app = read('src/App.tsx')
   const typeBridgePath = 'src/components/OpenObservationComponents/openObservationTypes.ts'
 
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-magic8-card')
@@ -58,6 +66,8 @@ function main() {
   assertIncludes('BurgerMenu.tsx', burger, 'this.props.history.push("/OpenObservationResults")')
   assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'getTeacherList(validTeachers)')
   assertIncludes('Magic8MenuPage.tsx', magic8Menu, 'Loading teachers...')
+  assertMatches('App.tsx', app, /<PrivateRoute[\s\S]*?exact[\s\S]*?path="\/OpenObservationResults"[\s\S]*?<OpenObservationListPage/)
+  assertMatches('App.tsx', app, /<PrivateRoute[\s\S]*?exact[\s\S]*?path="\/OpenObservationResults\/:observationId"[\s\S]*?<OpenObservationResultsPage/)
 
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedTypeCode')
   assertNotIncludes('OpenObservationPage.tsx', page, 'selectedFinalTypeCode')

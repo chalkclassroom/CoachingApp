@@ -158,6 +158,7 @@ PrivateRoute.propTypes = {
   auth: PropTypes.bool.isRequired,
   allowedRoles: PropTypes.array,
   userRole: PropTypes.string,
+  exact: PropTypes.bool,
   location: PropTypes.object,
   path: PropTypes.string,
   render: PropTypes.func
@@ -317,6 +318,7 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
               auth={auth}
+              exact
               path="/OpenObservationResults"
               allowedRoles={[Role.COACH, Role.ADMIN, Role.TEACHER]}
               userRole={role}
@@ -326,6 +328,7 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
               auth={auth}
+              exact
               path="/OpenObservationResults/:observationId"
               allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER, Role.TEACHER]}
               userRole={role}
