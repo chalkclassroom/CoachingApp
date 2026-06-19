@@ -170,7 +170,7 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
       },
       {
         label: 'Turn-taking and shared activity',
-        terms: ['ask each other', 'interact', 'interaction', 'group', 'team', 'taking turns', 'take turns', 'game']
+        terms: ['ask each other', 'interact', 'interaction', 'team', 'taking turns', 'take turns', 'game']
       }
     ]
   }
