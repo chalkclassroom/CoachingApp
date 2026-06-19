@@ -4,11 +4,20 @@ import AppBar from '../../../components/AppBar'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'
 import Firebase from '../../../components/Firebase'
 import { OpenObservationDoc, OpenObservationNote } from '../../../components/OpenObservationComponents/openObservationSchema'
+import {
+  analyzeOpenObservationNotes,
+  OpenObservationAnalysis,
+  OpenObservationEvidence,
+  OpenObservationOtherTheme,
+  OpenObservationPracticeAlignment
+} from '../../../components/OpenObservationComponents/openObservationAnalysis'
 import { withStyles } from '@material-ui/core/styles'
 import {
   Card,
   CardContent,
+  Chip,
   CircularProgress,
+  Divider,
   Grid,
   Typography
 } from '@material-ui/core'
@@ -31,6 +40,42 @@ const styles: object = {
   section: {
     marginTop: '1rem'
   },
+  analysisSummary: {
+    marginTop: '0.5rem',
+    marginBottom: '1rem'
+  },
+  practiceBlock: {
+    border: '1px solid #e0e0e0',
+    borderLeftWidth: 6,
+    borderRadius: 4,
+    padding: '1rem',
+    marginTop: '0.75rem',
+    backgroundColor: '#ffffff'
+  },
+  practiceHeader: {
+    marginBottom: '0.5rem'
+  },
+  chipRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+    marginTop: '0.5rem',
+    marginBottom: '0.75rem'
+  },
+  evidenceRow: {
+    padding: '0.75rem 0',
+    borderTop: '1px solid #eeeeee'
+  },
+  evidenceText: {
+    lineHeight: 1.45
+  },
+  otherThemeBlock: {
+    border: '1px solid #e0e0e0',
+    borderRadius: 4,
+    padding: '1rem',
+    marginTop: '0.75rem',
+    backgroundColor: '#ffffff'
+  },
   noteRow: {
     borderBottom: '1px solid #e0e0e0',
     padding: '0.75rem 0'
@@ -42,6 +87,13 @@ interface Style {
   content: string,
   card: string,
   section: string,
+  analysisSummary: string,
+  practiceBlock: string,
+  practiceHeader: string,
+  chipRow: string,
+  evidenceRow: string,
+  evidenceText: string,
+  otherThemeBlock: string,
   noteRow: string
 }
 
@@ -122,6 +174,93 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     return minutes + ':' + seconds
   }
 
+  chipTextColor = (backgroundColor: string): string => {
+    return backgroundColor === '#ffd300' ? '#222222' : '#ffffff'
+  }
+
+  renderEvidence = (evidence: OpenObservationEvidence[]): React.ReactNode => {
+    return evidence.map(item => (
+      <Grid container spacing={2} alignItems="flex-start" key={item.noteId + item.themes.join('-')} className={this.props.classes.evidenceRow}>
+        <Grid item xs={12} sm={3}>
+          <Typography color="textSecondary">{this.formatDate(item.wallClockAt)}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <Typography className={this.props.classes.evidenceText}>{item.text}</Typography>
+        </Grid>
+      </Grid>
+    ))
+  }
+
+  renderPracticeAlignment = (alignment: OpenObservationPracticeAlignment): React.ReactNode => {
+    const color = alignment.color
+    return (
+      <div
+        key={alignment.practiceCode}
+        className={this.props.classes.practiceBlock}
+        style={{ borderLeftColor: color }}
+        data-testid="open-observation-magic9-practice"
+      >
+        <Grid container justify="space-between" alignItems="center" className={this.props.classes.practiceHeader}>
+          <Grid item>
+            <Typography variant="subtitle1">{alignment.practiceName}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography color="textSecondary">{alignment.evidence.length} note{alignment.evidence.length === 1 ? '' : 's'}</Typography>
+          </Grid>
+        </Grid>
+        {alignment.themes.length > 0 ? (
+          <div className={this.props.classes.chipRow}>
+            {alignment.themes.map(theme => (
+              <Chip
+                key={theme}
+                size="small"
+                label={theme}
+                style={{ backgroundColor: color, color: this.chipTextColor(color) }}
+              />
+            ))}
+          </div>
+        ) : null}
+        {this.renderEvidence(alignment.evidence)}
+      </div>
+    )
+  }
+
+  renderOtherTheme = (theme: OpenObservationOtherTheme): React.ReactNode => {
+    return (
+      <div key={theme.theme} className={this.props.classes.otherThemeBlock} data-testid="open-observation-other-theme">
+        <Typography variant="subtitle1">{theme.theme}</Typography>
+        {this.renderEvidence(theme.evidence)}
+      </div>
+    )
+  }
+
+  renderAnalysis = (analysis: OpenObservationAnalysis): React.ReactNode => {
+    return (
+      <div className={this.props.classes.section} data-testid="open-observation-magic9-alignment">
+        <Typography variant="h6">Magic 9 Alignment</Typography>
+        <Typography color="textSecondary" className={this.props.classes.analysisSummary}>
+          {analysis.alignedNoteCount} of {analysis.noteCount} note{analysis.noteCount === 1 ? '' : 's'} include evidence linked to Magic 9 practice areas.
+        </Typography>
+        {analysis.practiceAlignments.length > 0 ? (
+          analysis.practiceAlignments.map(this.renderPracticeAlignment)
+        ) : (
+          <Typography color="textSecondary">No Magic 9 practice alignment was identified from these notes.</Typography>
+        )}
+        <Divider className={this.props.classes.section} />
+        <div className={this.props.classes.section} data-testid="open-observation-other-themes">
+          <Typography variant="h6">Other Themes</Typography>
+          {analysis.otherThemes.length > 0 ? (
+            analysis.otherThemes.map(this.renderOtherTheme)
+          ) : (
+            <Typography color="textSecondary" className={this.props.classes.analysisSummary}>
+              No unaligned themes were identified.
+            </Typography>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   renderNotes(notes: OpenObservationNote[]): React.ReactNode {
     if (!notes.length) {
       return <Typography color="textSecondary">No notes were recorded.</Typography>
@@ -144,6 +283,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     const firebase = this.context as Firebase
     const { loading, observation, error } = this.state
     const coachSummary = observation && observation.snapshot ? observation.snapshot.coachSummary : ''
+    const analysis = observation ? analyzeOpenObservationNotes(observation.notes) : null
 
     return (
       <div className={classes.root}>
@@ -168,6 +308,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
                   ) : (
                     <Typography color="textSecondary" className={classes.section}>No coach summary recorded.</Typography>
                   )}
+                  {analysis ? this.renderAnalysis(analysis) : null}
                   <div className={classes.section}>
                     <Typography variant="h6">Notes</Typography>
                     {this.renderNotes(observation.notes)}
