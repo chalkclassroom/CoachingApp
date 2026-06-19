@@ -72,7 +72,7 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
       },
       {
         label: 'Materials and classroom setup',
-        terms: ['materials', 'room', 'classroom', 'center', 'centers', 'area', 'environment']
+        terms: ['materials', 'room arrangement', 'classroom setup', 'learning area', 'learning environment', 'centers']
       }
     ]
   },
