@@ -475,6 +475,16 @@ class Firebase {
       const userDoc = await this.getUserInformation();
       const userRole = userDoc.role;
 
+      if (userRole === "admin") {
+        const allTeachers = await this.db.collection('users').where('role', '==', 'teacher').get()
+        const teacherList: Array<Promise<firebase.firestore.DocumentData | undefined | void>> = []
+        allTeachers.forEach(teacher => {
+          if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6") {
+            teacherList.push(this.getTeacherInfo(teacher.id))
+          }
+        })
+        return teacherList
+      }
       // Leaders should be getting all teachers that belong to their program/sites. So we need to get their sites first
       if(userRole === "siteLeader" || userRole === "programLeader") {
         let allSiteIds = []

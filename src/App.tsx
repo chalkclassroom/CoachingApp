@@ -2,7 +2,6 @@ import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import './App.css'
-import { V2App } from './v2/App'
 import WelcomePage from './views/WelcomeViews/WelcomePage'
 import LoginPage from './views/WelcomeViews/LoginPage'
 import ClassroomClimatePage from './views/protected/ClassroomClimateViews/ClassroomClimatePage'
@@ -164,28 +163,6 @@ PrivateRoute.propTypes = {
   render: PropTypes.func
 }
 
-function V2PrivateRoute({ auth, ...rest } : {auth: boolean, [key: string]: any}): React.ReactElement {
-  if (auth) {
-    return <Route {...rest} />
-  }
-
-  return <Route
-    {...rest}
-    render={(props): React.ReactNode => {
-      return (
-        <Redirect to={{ pathname: '/', state: {from: props.location}}} />
-      )
-    }}
-  />
-}
-
-V2PrivateRoute.propTypes = {
-  auth: PropTypes.bool.isRequired,
-  location: PropTypes.object,
-  path: PropTypes.string,
-  render: PropTypes.func
-}
-
 interface Props {
   firebase: Firebase,
   coachLoaded(name: string, role: Role): void,
@@ -240,15 +217,13 @@ class App extends React.Component<Props, State> {
         this.props.firebase.getLiteracyTraining().then((result: LiteracyTrainingFlags ) => {
           this.props.setLiteracyTraining(result)
         })
-        this.props.firebase.getTeacherList().then(async (teacherPromiseList: any = []) => {
-          const teacherEntries = Array.isArray(teacherPromiseList) ? teacherPromiseList : [];
-          const teacherList = await Promise.all(teacherEntries.map((teacherEntry: Promise<Types.Teacher> | Types.Teacher) =>
-            Promise.resolve(teacherEntry).catch((error: Error) => {
-              console.error("Unable to resolve teacher list entry", error);
-              return null;
-            })
-          ));
-          this.props.getTeacherList(teacherList.filter((teacher): teacher is Types.Teacher => Boolean(teacher)));
+        this.props.firebase.getTeacherList().then(async (teacherPromiseList: Array<Promise<Types.Teacher> | Types.Teacher> = []) => {
+          const teacherList = await Promise.all(
+            teacherPromiseList.map((teacherEntry: Promise<Types.Teacher> | Types.Teacher) =>
+              Promise.resolve(teacherEntry).catch(() => null)
+            )
+          );
+          this.props.getTeacherList(teacherList.filter((teacher): teacher is Types.Teacher => Boolean(teacher) && Boolean(teacher.id) && !(teacher as any).archived));
         });
       } else {
         this.setState({
@@ -306,12 +281,6 @@ class App extends React.Component<Props, State> {
               }
             />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
-            {/* CHALK 2.0 renovation preview: public only when the staging flag is enabled. */}
-            {process.env.V2_PUBLIC_PREVIEW ? (
-              <Route path="/v2" render={(): React.ReactElement => <V2App />} />
-            ) : (
-              <V2PrivateRoute auth={auth} path="/v2" render={(): React.ReactElement => <V2App />} />
-            )}
             <PrivateRoute
               auth={auth}
               path="/Landing"

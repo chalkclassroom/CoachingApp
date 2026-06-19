@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -6,21 +7,30 @@ const SourceMapPlugin = require('webpack').SourceMapDevToolPlugin;
 const DefinePlugin = require('webpack').DefinePlugin;
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
 
-class StaticPublicAssetPlugin {
-    constructor(files) {
-        this.files = files;
-    }
+const publicAssets = [
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "apple-touch-icon.png",
+    "browserconfig.xml",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "favicon.ico",
+    "manifest.json",
+    "mstile-150x150.png",
+    "safari-pinned-tab.svg",
+    "site.webmanifest"
+];
 
+class CopyPublicAssetsPlugin {
     apply(compiler) {
-        compiler.hooks.emit.tapAsync('StaticPublicAssetPlugin', (compilation, callback) => {
-            this.files.forEach(file => {
-                const source = require('fs').readFileSync(path.resolve(__dirname, 'public', file));
-                compilation.assets[file] = {
-                    source: () => source,
-                    size: () => source.length
-                };
+        compiler.hooks.afterEmit.tap("CopyPublicAssetsPlugin", compilation => {
+            publicAssets.forEach(fileName => {
+                const sourcePath = path.resolve(__dirname, "public", fileName);
+                const outputPath = path.resolve(compilation.outputOptions.path, fileName);
+                if (fs.existsSync(sourcePath)) {
+                    fs.copyFileSync(sourcePath, outputPath);
+                }
             });
-            callback();
         });
     }
 }
@@ -126,24 +136,12 @@ module.exports = (env, argv) => {
                     'process.env.USE_LOCAL_FIRESTORE': process.env.REACT_APP_USE_LOCAL_FIRESTORE === 'true',
                     'process.env.USE_LOCAL_FUNCTIONS': process.env.REACT_APP_USE_LOCAL_FUNCTIONS === 'true',
                     'process.env.USE_LOCAL_AUTH'     : process.env.REACT_APP_USE_LOCAL_AUTH === 'true',
-                    'process.env.V2_PUBLIC_PREVIEW'  : process.env.REACT_APP_V2_PUBLIC_PREVIEW === 'true',
-                    'process.env.V2_RELEASE_ID'      : JSON.stringify(process.env.REACT_APP_V2_RELEASE_ID || 'chalk-v2-local'),
-                    'process.env.V2_MONITORING_ENDPOINT': JSON.stringify(process.env.REACT_APP_V2_MONITORING_ENDPOINT || ''),
                     'process.env.FIREBASE_CONFIG'    : process.env.REACT_APP_FIREBASE_CONFIG
                 }),
                 new HtmlWebpackPlugin({
                     template: "./public/template/index.html"
                 }),
-                new StaticPublicAssetPlugin([
-                    'manifest.json',
-                    'site.webmanifest',
-                    'favicon-16x16.png',
-                    'favicon-32x32.png',
-                    'android-chrome-192x192.png',
-                    'android-chrome-512x512.png',
-                    'apple-touch-icon.png',
-                    'mstile-150x150.png'
-                ]),
+                new CopyPublicAssetsPlugin(),
                 new WorkboxPlugin.GenerateSW({
                            // these options encourage the ServiceWorkers to get in there fast
                            // and not allow any straggling "old" SWs to hang around
