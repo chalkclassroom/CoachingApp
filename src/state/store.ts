@@ -7,6 +7,7 @@ import rootReducer from './root-reducer'
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: ['teacherListState']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
