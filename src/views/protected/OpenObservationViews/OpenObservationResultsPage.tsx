@@ -49,6 +49,12 @@ const styles: object = {
     marginBottom: '0.5rem',
     lineHeight: 1.5
   },
+  analysisDisclaimer: {
+    display: 'block',
+    marginTop: '0.25rem',
+    marginBottom: '0.5rem',
+    lineHeight: 1.4
+  },
   practiceBlock: {
     border: '1px solid #e0e0e0',
     borderLeftWidth: 6,
@@ -100,6 +106,7 @@ interface Style {
   section: string,
   analysisSummary: string,
   analysisIntro: string,
+  analysisDisclaimer: string,
   practiceBlock: string,
   practiceHeader: string,
   chipRow: string,
@@ -300,6 +307,14 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.section} data-testid="open-observation-magic9-alignment">
         <Typography variant="h6">Magic 9 Alignment</Typography>
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          className={this.props.classes.analysisDisclaimer}
+          data-testid="open-observation-analysis-disclaimer"
+        >
+          These alignments are generated automatically by matching keywords in the notes against the Magic 9 practice areas. They are a starting point to review against the full notes, not an AI analysis or a formal score.
+        </Typography>
         <Typography className={this.props.classes.analysisIntro}>
           {analysis.executiveSummary}
         </Typography>
@@ -349,7 +364,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     const firebase = this.context as Firebase
     const { loading, observation, error } = this.state
     const coachSummary = observation && observation.snapshot ? observation.snapshot.coachSummary : ''
-    const analysis = observation ? analyzeOpenObservationNotes(observation.notes) : null
+    const analysis = observation ? analyzeOpenObservationNotes(observation.notes || []) : null
 
     return (
       <div className={classes.root}>
@@ -367,7 +382,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
               {error ? <Typography color="error" className={classes.section}>{error}</Typography> : null}
               {observation ? (
                 <div className={classes.section}>
-                  <Typography># of notes taken: {observation.notes.length}</Typography>
+                  <Typography># of notes taken: {(observation.notes || []).length}</Typography>
                   <Typography>Time elapsed: {this.formatElapsed()}</Typography>
                   {coachSummary ? (
                     <Typography className={classes.section}>Coach summary: {coachSummary}</Typography>
@@ -377,7 +392,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
                   {analysis ? this.renderAnalysis(analysis) : null}
                   <div className={classes.section}>
                     <Typography variant="h6">Notes</Typography>
-                    {this.renderNotes(observation.notes)}
+                    {this.renderNotes(observation.notes || [])}
                   </div>
                 </div>
               ) : null}
