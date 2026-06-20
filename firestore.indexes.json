@@ -1,6 +1,128 @@
 {
   "indexes": [
     {
+      "collectionGroup": "actionPlans",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "coach",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dateModified",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "appointments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "coach",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "teacherID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tool",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "date",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "observations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "openObservation",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "coachId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "start",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "observations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "openObservation",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "teacherId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "start",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "observations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "openObservation",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "start",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "observations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "observedBy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "observations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "observedBy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "teacher",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "start",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "observations",
       "queryScope": "COLLECTION",
       "fields": [

@@ -149,6 +149,7 @@ class BurgerMenu extends React.Component<Props, State>{
    * @return {React.ReactNode}
    */
   coachNavigationMenu(classes): React.ReactNode{
+    const role = (this.props as Props & { role: string }).role
     return <React.Fragment>
       <ListItem
           button
@@ -173,7 +174,7 @@ class BurgerMenu extends React.Component<Props, State>{
           button
           onClick={() => this.props.handleNavigation((event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
             this.setState({ menu: 2, chalkOpen: false });
-            this.showTeacherModal("Observe");
+            this.props.history.push({ pathname: "/Magic8Menu", state: { type: "Observe" } });
             this.props.handleClose(event);
           })}
           className={classes.regular}
@@ -217,6 +218,23 @@ class BurgerMenu extends React.Component<Props, State>{
 
         />
       </ListItem>
+      {(role == Role.COACH || role == Role.ADMIN) ? (
+        <ListItem
+            button
+            onClick={() => this.props.handleNavigation( (): void => {
+              this.setState({ menu: 17, chalkOpen: false });
+              this.props.history.push("/OpenObservationResults")
+            })}
+            className={classes.regular}
+        >
+          <ListItemIcon>
+            <ResultsIcon style={{ fill: Constants.Colors.LC }} />
+          </ListItemIcon>
+          <ListItemText
+              primary="Open Observations"
+          />
+        </ListItem>
+      ) : null}
       <ListItem
           button
           onClick={() => this.props.handleNavigation( (): void => {
@@ -299,6 +317,21 @@ class BurgerMenu extends React.Component<Props, State>{
         </ListItemIcon>
         <ListItemText
             primary="My Action Plans"
+        />
+      </ListItem>
+      <ListItem
+          button
+          onClick={() => this.props.handleNavigation( (): void => {
+            this.setState({ menu: 17, chalkOpen: false });
+            this.props.history.push("/OpenObservationResults")
+          })}
+          className={classes.regular}
+      >
+        <ListItemIcon>
+          <ResultsIcon style={{ fill: Constants.Colors.LC }} />
+        </ListItemIcon>
+        <ListItemText
+            primary="Open Observations"
         />
       </ListItem>
       <ListItem button onClick={() => this.props.handleNavigation( this.togglePracticeCollapse)}>

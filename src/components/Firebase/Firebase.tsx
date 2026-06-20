@@ -3,6 +3,7 @@ import {FirebaseFunctions} from '@firebase/functions-types'
 import * as Constants from '../../constants/Constants'
 import * as MessagingTypes from '../MessagingComponents/MessagingTypes'
 import * as Types from '../../constants/Types'
+import { OPEN_OBSERVATION_COLLECTION, OpenObservationDoc, OpenObservationNote } from '../OpenObservationComponents/openObservationSchema'
 import {v4 as uuidv4} from 'uuid'
 import DateFnsUtils from "@date-io/date-fns";
 import SiteProfileResults from '../SiteProfileComponents/SiteProfileResults'
@@ -39,6 +40,17 @@ export interface UserDocument {
   favouriteQuestions: Array<string>
   playedVideos: Array<string>
   lastLogin?: Date
+}
+
+export interface OpenObservationListItem {
+  id: string
+  teacherId: string
+  teacherName: string
+  coachId: string
+  coachName: string
+  date: Date | null
+  noteCount: number
+  summary: string
 }
 
 interface Note {
@@ -439,6 +451,20 @@ class Firebase {
     return {success: true}
   }
 
+  normalizeTeacherId = (teacherId: any): string => {
+    if (!teacherId) {
+      return ''
+    }
+
+    const rawTeacherId = typeof teacherId === 'string'
+      ? teacherId
+      : (teacherId.id || teacherId.path || '')
+
+    return String(rawTeacherId)
+      .trim()
+      .replace(/^\/?users?\//, '')
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -449,19 +475,16 @@ class Firebase {
       const userDoc = await this.getUserInformation();
       const userRole = userDoc.role;
 
-      if(userRole === "admin") {
+      if (userRole === "admin") {
         const allTeachers = await this.db.collection('users').where('role', '==', 'teacher').get()
         const teacherList: Array<Promise<firebase.firestore.DocumentData | undefined | void>> = []
-
         allTeachers.forEach(teacher => {
           if (teacher.id !== "rJxNhJmzjRZP7xg29Ko6") {
             teacherList.push(this.getTeacherInfo(teacher.id))
           }
         })
-
         return teacherList
       }
-
       // Leaders should be getting all teachers that belong to their program/sites. So we need to get their sites first
       if(userRole === "siteLeader" || userRole === "programLeader") {
         let allSiteIds = []
@@ -522,16 +545,182 @@ class Firebase {
         .get()
         .then((partners: firebase.firestore.QuerySnapshot) => {
           const teacherList: Array<firebase.firestore.DocumentData> = []
-          partners.forEach(partner =>
-            teacherList.push(this.getTeacherInfo(partner.id))
+          const partnerIds = partners.docs.map(partner => this.normalizeTeacherId(partner.id)).filter(Boolean)
+          const teacherIds = partnerIds.length > 0
+            ? partnerIds
+            : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
+
+          teacherIds.forEach((teacherId: string) =>
+            teacherList.push(this.getTeacherInfo(this.normalizeTeacherId(teacherId)))
           )
-          console.log('teacher list', teacherList)
           return teacherList
         })
         .catch((error: Error) =>
           console.error('Error getting partner list: ', error)
         )
     }
+  }
+
+  getOpenObservationTeacherList = async (): Promise<Array<firebase.firestore.DocumentData>> => {
+    if (!this.auth.currentUser) {
+      return []
+    }
+
+    try {
+      const userDoc = await this.getUserInformation()
+      const partners = await this.db
+        .collection('users')
+        .doc(this.auth.currentUser.uid)
+        .collection('partners')
+        .get()
+      const partnerIds = partners.docs.map(partner => this.normalizeTeacherId(partner.id)).filter(Boolean)
+      const scopedTeacherIds = partnerIds.length > 0
+        ? partnerIds
+        : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
+      const teacherIds = scopedTeacherIds
+
+      const teacherList = await Promise.all(teacherIds.map((teacherId: string) =>
+        this.getTeacherInfo(this.normalizeTeacherId(teacherId))
+      ))
+
+      return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>
+        Boolean(teacher) && Boolean((teacher as firebase.firestore.DocumentData).id) && !(teacher as firebase.firestore.DocumentData).archived
+      )
+    } catch (error) {
+      console.error('Error loading Open Observation teachers: ', error)
+      return []
+    }
+  }
+
+  createOpenObservation = async (entry: {
+    teacherId: string,
+    start: Date,
+    end: Date,
+    notes: OpenObservationNote[],
+    coachSummary?: string
+  }): Promise<string> => {
+    if (!this.auth.currentUser) {
+      throw new Error('User must be logged in to create an Open Observation.')
+    }
+
+    const now = new Date()
+    const snapshot = entry.coachSummary && entry.coachSummary.trim()
+      ? { coachSummary: entry.coachSummary.trim() }
+      : undefined
+    const observation: OpenObservationDoc = {
+      coachId: this.auth.currentUser.uid,
+      teacherId: entry.teacherId,
+      observedBy: '/user/' + this.auth.currentUser.uid,
+      teacher: '/user/' + entry.teacherId,
+      openObservation: true,
+      observationMode: 'open',
+      type: 'OpenObservation',
+      checklist: null,
+      completed: true,
+      timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+      activitySetting: null,
+      lastClickTime: entry.end,
+      entries: [],
+      start: entry.start,
+      end: entry.end,
+      notes: entry.notes,
+      snapshot,
+      status: 'completed',
+      createdAt: now,
+      updatedAt: now
+    }
+
+    const ref = await this.db.collection(OPEN_OBSERVATION_COLLECTION).add(observation)
+    return ref.id
+  }
+
+  getOpenObservation = async (observationId: string): Promise<(OpenObservationDoc & { id: string }) | null> => {
+    const doc = await this.db.collection(OPEN_OBSERVATION_COLLECTION).doc(observationId).get()
+    if (!doc.exists) {
+      return null
+    }
+
+    const data = doc.data() as OpenObservationDoc
+    const notes = Array.isArray((data as any).notes) ? (data as any).notes.map((note: any) => ({
+      id: String(note.id || ''),
+      wallClockAt: note.wallClockAt?.toDate?.() || note.Timestamp?.toDate?.() || new Date(note.wallClockAt || note.Timestamp || ''),
+      text: String(note.text || note.content || ''),
+      editedAt: note.editedAt?.toDate?.() || (note.editedAt ? new Date(note.editedAt) : undefined)
+    })).filter((note: OpenObservationNote) => note.id && note.text && !Number.isNaN(note.wallClockAt.getTime())) : []
+
+    return { ...data, notes, id: doc.id }
+  }
+
+  getOpenObservationList = async (): Promise<OpenObservationListItem[]> => {
+    if (!this.auth.currentUser) {
+      return []
+    }
+
+    const uid = this.auth.currentUser.uid
+    const role = await this.getUserRole()
+    let query: firebase.firestore.Query = this.db
+      .collection(OPEN_OBSERVATION_COLLECTION)
+      .where('openObservation', '==', true)
+
+    if (role === 'coach') {
+      query = query.where('coachId', '==', uid)
+    } else if (role === 'teacher') {
+      query = query.where('teacherId', '==', uid)
+    } else if (role !== 'admin') {
+      return []
+    }
+
+    const snapshot = await query.orderBy('start', 'desc').get()
+    const rows = await Promise.all(snapshot.docs.map(async (doc: firebase.firestore.QueryDocumentSnapshot) => {
+      try {
+        const data = doc.data() as OpenObservationDoc
+        const teacherId = this.normalizeTeacherId((data as any).teacherId || (data as any).teacher)
+        const coachId = this.normalizeTeacherId((data as any).coachId || (data as any).observedBy)
+        const teacher = await this.getTeacherInfo(teacherId)
+        const coach = role === 'admin' && coachId
+          ? await this.db.collection('users').doc(coachId).get()
+          : null
+        const coachData = coach && coach.exists ? coach.data() : null
+        const summary = data.snapshot && data.snapshot.coachSummary ? data.snapshot.coachSummary : ''
+
+        return {
+          id: doc.id,
+          teacherId,
+          teacherName: this.formatOpenObservationUserName(teacher),
+          coachId,
+          coachName: this.formatOpenObservationUserName(coachData),
+          date: this.asOpenObservationDate((data as any).start),
+          noteCount: Array.isArray((data as any).notes) ? (data as any).notes.length : 0,
+          summary: this.truncateOpenObservationSummary(summary)
+        }
+      } catch (error) {
+        console.error('Error resolving Open Observation list row: ', error)
+        return null
+      }
+    }))
+
+    return rows.filter((row): row is OpenObservationListItem => Boolean(row))
+  }
+
+  asOpenObservationDate = (value: any): Date | null => {
+    if (!value) return null
+    if (value instanceof Date) return value
+    if (value.toDate) return value.toDate()
+    const date = new Date(value)
+    return Number.isNaN(date.getTime()) ? null : date
+  }
+
+  formatOpenObservationUserName = (user: firebase.firestore.DocumentData | undefined | null | void): string => {
+    if (!user) return 'Unknown'
+    const firstName = user.firstName ? String(user.firstName) : ''
+    const lastName = user.lastName ? String(user.lastName) : ''
+    const name = (firstName + ' ' + lastName).trim()
+    return name || (user.email ? String(user.email) : 'Unknown')
+  }
+
+  truncateOpenObservationSummary = (summary: string): string => {
+    const trimmed = String(summary || '').trim()
+    return trimmed.length > 140 ? trimmed.slice(0, 137) + '...' : trimmed
   }
 
   getTeacherId = async (firstName: string, lastName: string, email: string) => {
@@ -644,9 +833,14 @@ class Firebase {
   getTeacherInfo = async (
     partnerID: string
   ): Promise<firebase.firestore.DocumentData | undefined | void> => {
+    const teacherId = this.normalizeTeacherId(partnerID)
+    if (!teacherId) {
+      return {id: null}
+    }
+
     return this.db
       .collection('users')
-      .doc(partnerID)
+      .doc(teacherId)
       .get()
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
@@ -3253,7 +3447,6 @@ class Firebase {
               })
             }
           )
-          console.log('idArr is2 ', idArr)
           return idArr
         })
         .catch(() => {
@@ -4809,7 +5002,7 @@ class Firebase {
       return ref.startsWith('/user/') ? ref.replace('/user/', '') : ref
     }
 
-    // Query all 5 collections in parallel for better performance
+    // Query all 5 collections in parallel. Open Observation is counted from observations.
     const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
       this.db.collection('observations').get(),
       this.db.collection('knowledgeChecks').get(),
@@ -4821,9 +5014,9 @@ class Firebase {
     // 1. Observations (largest collection - 20K+)
     observations.docs.forEach(doc => {
       const data = doc.data()
-      const userId = extractUserId(data.teacher)
-      const endDate = data.end?.toDate?.() || null
-      updateIfNewer(userId, endDate, 'Observation')
+      const userId = extractUserId(data.teacher || data.teacherId)
+      const endDate = data.end?.toDate?.() || data.updatedAt?.toDate?.() || null
+      updateIfNewer(userId, endDate, data.openObservation === true || data.observationMode === 'open' ? 'Open Observation' : 'Observation')
     })
 
     // 2. Knowledge Checks (6K+)
@@ -4900,6 +5093,7 @@ class Firebase {
     conferencePlans: number
     actionPlans: number
     emails: number
+    openObservations: number
   }>> => {
     type Entry = {
       total: number
@@ -4908,13 +5102,14 @@ class Firebase {
       conferencePlans: number
       actionPlans: number
       emails: number
+      openObservations: number
     }
     const counts = new Map<string, Entry>()
 
     const ensure = (userId: string): Entry => {
       let entry = counts.get(userId)
       if (!entry) {
-        entry = { total: 0, observations: 0, knowledgeChecks: 0, conferencePlans: 0, actionPlans: 0, emails: 0 }
+        entry = { total: 0, observations: 0, knowledgeChecks: 0, conferencePlans: 0, actionPlans: 0, emails: 0, openObservations: 0 }
         counts.set(userId, entry)
       }
       return entry
@@ -4930,10 +5125,9 @@ class Firebase {
       return date >= startDate && date <= endDate
     }
 
-    // Fetch all 5 collections in parallel. observations and knowledgeChecks are
-    // filtered Firestore-side on their single timestamp field. The plan/email
-    // collections have two date fields each (dateCreated + dateModified) and we
-    // want to count the doc if EITHER falls in range, so we fetch all and filter
+    // Fetch all 5 collections in parallel. Open Observation is counted from observations.
+    // The plan/email collections have two date fields each (dateCreated + dateModified)
+    // and we want to count the doc if EITHER falls in range, so we fetch all and filter
     // in memory (these collections are small: ~500/450/440 docs).
     const [observations, knowledgeChecks, conferencePlans, actionPlans, emails] = await Promise.all([
       this.db.collection('observations')
@@ -4950,10 +5144,15 @@ class Firebase {
     ])
 
     observations.docs.forEach(doc => {
-      const userId = extractUserId(doc.data().teacher)
+      const data = doc.data()
+      const userId = extractUserId(data.teacher || data.teacherId)
       if (!userId) return
       const entry = ensure(userId)
-      entry.observations++
+      if (data.openObservation === true || data.observationMode === 'open') {
+        entry.openObservations++
+      } else {
+        entry.observations++
+      }
       entry.total++
     })
 

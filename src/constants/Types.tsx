@@ -137,6 +137,7 @@ export interface Teacher {
   phone: string,
   role: string,
   school: string,
+  classroom?: string,
   unlocked: Array<number>
 }
 

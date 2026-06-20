@@ -1,13 +1,336 @@
+rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+    function signedIn() {
+      return request.auth != null;
     }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function canWriteUserDoc(userId) {
+      return isOwner(userId) || isAdmin();
+    }
+
+    function validObservationDraftValue(draft) {
+      return draft == null || (
+        draft is map &&
+        draft.keys().hasOnly(["teacherUid", "teacherName", "classroomName", "sessionName", "typeCode", "storedType", "checklist", "notes", "elapsedSeconds", "updatedAt"]) &&
+        draft.keys().hasAll(["teacherUid", "typeCode", "storedType", "notes", "elapsedSeconds", "updatedAt"]) &&
+        draft.teacherUid is string &&
+        draft.typeCode is string &&
+        draft.storedType is string &&
+        draft.notes is string &&
+        draft.elapsedSeconds is int &&
+        draft.updatedAt is timestamp &&
+        (!draft.keys().hasAny(["teacherName"]) || draft.teacherName is string) &&
+        (!draft.keys().hasAny(["classroomName"]) || draft.classroomName is string) &&
+        (!draft.keys().hasAny(["sessionName"]) || draft.sessionName is string) &&
+        (!draft.keys().hasAny(["checklist"]) || draft.checklist is string)
+      );
+    }
+
+    function validPreferencesValue(preferences) {
+      return preferences is map &&
+        preferences.keys().hasOnly(["dailyDigestEnabled", "actionPlanAlertsEnabled", "defaultReportRangeDays"]) &&
+        preferences.keys().hasAll(["dailyDigestEnabled", "actionPlanAlertsEnabled", "defaultReportRangeDays"]) &&
+        preferences.dailyDigestEnabled is bool &&
+        preferences.actionPlanAlertsEnabled is bool &&
+        preferences.defaultReportRangeDays is int &&
+        preferences.defaultReportRangeDays in [7, 30, 90];
+    }
+
+    function validOwnerUserUpdate(userId) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return isOwner(userId) &&
+        changed.hasOnly(["observationDraft", "v2TrainingStatus", "v2Preferences"]) &&
+        (!changed.hasAny(["observationDraft"]) || validObservationDraftValue(request.resource.data.observationDraft)) &&
+        (!changed.hasAny(["v2TrainingStatus"]) || request.resource.data.v2TrainingStatus is map) &&
+        (!changed.hasAny(["v2Preferences"]) || validPreferencesValue(request.resource.data.v2Preferences));
+    }
+
+    function validUserUpdate(userId) {
+      return isAdmin() || validOwnerUserUpdate(userId);
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow create, delete: if canWriteUserDoc(userId);
+      allow update: if validUserUpdate(userId);
+
+      // Preserve legacy user subcollection behavior while hardening the user root doc.
+      match /{subcollection}/{document=**} {
+        allow read, write: if signedIn();
+      }
+    }
+
+    // Legacy collections retained during the strangler rollout.
+    function isActionPlanCoach(plan) {
+      return plan.get("coachId", "") == request.auth.uid ||
+        plan.get("coach", "") == request.auth.uid ||
+        plan.get("createdBy", "") == request.auth.uid;
+    }
+
+    function isActionPlanTeacher(plan) {
+      return plan.get("teacherId", "") == request.auth.uid ||
+        plan.get("teacher", "") == request.auth.uid;
+    }
+
+    function canReadActionPlan(plan) {
+      return signedIn() && (isAdmin() || isActionPlanCoach(plan) || isActionPlanTeacher(plan));
+    }
+
+    function canWriteActionPlan(plan) {
+      return signedIn() && (isAdmin() || isActionPlanCoach(plan));
+    }
+
+    function validActionPlanUpdate(plan) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let sentChanged = changed.hasAny(["sentToTeacher", "sentToTeacherAt", "sentToTeacherBy"]);
+      return canWriteActionPlan(plan) &&
+        changed.hasOnly(["tool", "practice", "goal", "benefit", "goalTimeline", "achieveBy", "status", "dateModified", "sentToTeacher", "sentToTeacherAt", "sentToTeacherBy"]) &&
+        (!sentChanged || (
+          changed.hasAll(["sentToTeacher", "sentToTeacherAt", "sentToTeacherBy", "dateModified"]) &&
+          request.resource.data.sentToTeacher == true &&
+          request.resource.data.sentToTeacherBy == request.auth.uid &&
+          request.resource.data.sentToTeacherAt is timestamp &&
+          request.resource.data.dateModified is timestamp
+        ));
+    }
+
+    function isConferencePlanCoach(plan) {
+      return plan.get("coachId", "") == request.auth.uid ||
+        plan.get("coach", "") == request.auth.uid ||
+        plan.get("createdBy", "") == request.auth.uid;
+    }
+
+    function isConferencePlanTeacher(plan) {
+      return plan.get("teacherId", "") == request.auth.uid ||
+        plan.get("teacher", "") == request.auth.uid;
+    }
+
+    function canReadConferencePlan(plan) {
+      return signedIn() && (isAdmin() || isConferencePlanCoach(plan) || isConferencePlanTeacher(plan));
+    }
+
+    function canWriteConferencePlan(plan) {
+      return signedIn() && (isAdmin() || isConferencePlanCoach(plan));
+    }
+
+    function validConferencePlanList(value) {
+      return value is list && value.size() <= 50;
+    }
+
+    function validConferencePlanUpdate(plan) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return canWriteConferencePlan(plan) &&
+        changed.hasOnly(["feedback", "questions", "addedQuestions", "notes", "dateModified"]) &&
+        (!changed.hasAny(["feedback"]) || validConferencePlanList(request.resource.data.feedback)) &&
+        (!changed.hasAny(["questions"]) || validConferencePlanList(request.resource.data.questions)) &&
+        (!changed.hasAny(["addedQuestions"]) || validConferencePlanList(request.resource.data.addedQuestions)) &&
+        (!changed.hasAny(["notes"]) || validConferencePlanList(request.resource.data.notes)) &&
+        (!changed.hasAny(["dateModified"]) || request.resource.data.dateModified is timestamp);
+    }
+
+    function validEmailValue(email) {
+      return email is map &&
+        email.keys().hasOnly(["id", "emailContent", "subject", "recipientId", "recipientFirstName", "recipientName", "recipientEmail", "dateCreated", "dateModified", "type", "user"]) &&
+        email.keys().hasAll(["id", "emailContent", "subject", "recipientId", "recipientFirstName", "recipientName", "recipientEmail", "dateModified", "type", "user"]) &&
+        email.id is string &&
+        email.emailContent is string &&
+        email.emailContent.size() <= 20000 &&
+        email.subject is string &&
+        email.subject.size() <= 300 &&
+        email.recipientId is string &&
+        email.recipientFirstName is string &&
+        email.recipientName is string &&
+        email.recipientEmail is string &&
+        email.dateModified is timestamp &&
+        (!email.keys().hasAny(["dateCreated"]) || email.dateCreated is timestamp) &&
+        email.type in ["draft", "sent"] &&
+        email.user == request.auth.uid;
+    }
+
+    function isEmailOwner(email) {
+      return signedIn() && email.user == request.auth.uid;
+    }
+
+    function validActionPlanComment() {
+      return request.resource.data.keys().hasOnly(["authorName", "authorId", "text", "createdAt"]) &&
+        request.resource.data.authorId == request.auth.uid &&
+        request.resource.data.authorName is string &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 2000 &&
+        request.resource.data.createdAt is timestamp;
+    }
+
+    function actionPlanData(planId) {
+      return get(/databases/$(database)/documents/actionPlans/$(planId)).data;
+    }
+
+    match /actionPlans/{planId} {
+      allow read: if canReadActionPlan(resource.data);
+      allow create: if signedIn();
+      allow update: if validActionPlanUpdate(resource.data);
+      allow delete: if isAdmin();
+
+      match /comments/{commentId} {
+        allow read: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canReadActionPlan(actionPlanData(planId));
+        allow create: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canWriteActionPlan(actionPlanData(planId)) && validActionPlanComment();
+        allow update, delete: if isAdmin();
+      }
+
+      match /actionSteps/{stepId} {
+        allow read: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canReadActionPlan(actionPlanData(planId));
+        allow create, update, delete: if exists(/databases/$(database)/documents/actionPlans/$(planId)) && canWriteActionPlan(actionPlanData(planId));
+      }
+    }
+
+    function isOpenObservationData(data) {
+      return (data.keys().hasAny(["openObservation"]) && data.openObservation == true) ||
+        (data.keys().hasAny(["observationMode"]) && data.observationMode == "open");
+    }
+
+    function validOpenObservationNotes(notes) {
+      return notes is list && notes.size() <= 500;
+    }
+
+    function validOpenObservationSnapshot(data) {
+      return !data.keys().hasAny(["snapshot"]) || (
+        data.snapshot is map &&
+        data.snapshot.keys().hasOnly(["coachSummary"]) &&
+        (!data.snapshot.keys().hasAny(["coachSummary"]) || (
+          data.snapshot.coachSummary is string &&
+          data.snapshot.coachSummary.size() <= 5000
+        ))
+      );
+    }
+
+    function validOpenObservationDoc(data) {
+      return data.keys().hasOnly([
+          "coachId", "teacherId", "observedBy", "teacher", "openObservation",
+          "observationMode", "type", "checklist", "completed", "timezone",
+          "activitySetting", "lastClickTime", "entries", "start", "end",
+          "notes", "snapshot", "status", "createdAt", "updatedAt"
+        ]) &&
+        data.keys().hasAll([
+          "coachId", "teacherId", "observedBy", "teacher", "openObservation",
+          "observationMode", "type", "checklist", "completed", "timezone",
+          "activitySetting", "lastClickTime", "entries", "start", "end",
+          "notes", "status", "createdAt", "updatedAt"
+        ]) &&
+        data.coachId is string &&
+        data.teacherId is string &&
+        data.observedBy is string &&
+        data.teacher is string &&
+        data.openObservation == true &&
+        data.observationMode == "open" &&
+        data.type == "OpenObservation" &&
+        data.checklist == null &&
+        data.completed is bool &&
+        data.timezone is string &&
+        data.activitySetting == null &&
+        data.lastClickTime is timestamp &&
+        data.entries is list &&
+        data.start is timestamp &&
+        (data.end == null || data.end is timestamp) &&
+        validOpenObservationNotes(data.notes) &&
+        data.status in ["in_progress", "completed", "archived"] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        validOpenObservationSnapshot(data);
+    }
+
+    function canReadOpenObservation(data) {
+      return signedIn() && (data.coachId == request.auth.uid || data.teacherId == request.auth.uid || isAdmin());
+    }
+
+    function canCreateOpenObservation(data) {
+      return signedIn() && data.coachId == request.auth.uid && validOpenObservationDoc(data);
+    }
+
+    function canUpdateOpenObservation() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return signedIn() &&
+        resource.data.coachId == request.auth.uid &&
+        request.resource.data.coachId == resource.data.coachId &&
+        request.resource.data.teacherId == resource.data.teacherId &&
+        request.resource.data.observedBy == resource.data.observedBy &&
+        request.resource.data.teacher == resource.data.teacher &&
+        request.resource.data.openObservation == true &&
+        request.resource.data.observationMode == "open" &&
+        request.resource.data.type == "OpenObservation" &&
+        !changed.hasAny(["createdAt", "coachId", "teacherId", "observedBy", "teacher", "openObservation", "observationMode", "type"]) &&
+        validOpenObservationDoc(request.resource.data);
+    }
+
+    match /observations/{document=**} {
+      allow create: if signedIn() && (!isOpenObservationData(request.resource.data) || canCreateOpenObservation(request.resource.data));
+      allow read: if signedIn() && (!isOpenObservationData(resource.data) || canReadOpenObservation(resource.data));
+      allow update: if signedIn() && (
+        (!isOpenObservationData(resource.data) && !isOpenObservationData(request.resource.data)) ||
+        canUpdateOpenObservation()
+      );
+      allow delete: if signedIn() && !isOpenObservationData(resource.data);
+    }
+
+    match /conferencePlans/{planId} {
+      allow read: if canReadConferencePlan(resource.data);
+      allow create: if signedIn() && (isAdmin() || isConferencePlanCoach(request.resource.data));
+      allow update: if validConferencePlanUpdate(resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /emails/{emailId} {
+      allow read: if isEmailOwner(resource.data) || isAdmin();
+      allow create: if signedIn() && request.resource.data.id == emailId && validEmailValue(request.resource.data);
+      allow update: if (isEmailOwner(resource.data) || isAdmin()) && request.resource.data.id == emailId && validEmailValue(request.resource.data);
+      allow delete: if isEmailOwner(resource.data) || isAdmin();
+
+      match /attachments/{attachmentId} {
+        allow read, write: if exists(/databases/$(database)/documents/emails/$(emailId)) && (isEmailOwner(get(/databases/$(database)/documents/emails/$(emailId)).data) || isAdmin());
+      }
+    }
+
+    match /appointments/{document=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /programs/{document=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /sites/{document=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /archives/{document=**} {
+      allow read, write: if signedIn();
+    }
+
     match /pilotForm/{document=**} {
-    	allow write;
+      allow write: if true;
+      allow read: if signedIn();
     }
+
     match /emailList/{document=**} {
-    	allow write;
+      allow write: if true;
+      allow read: if signedIn();
+    }
+
+    // Fallback: unknown paths are denied by default. Add explicit rules before adding V2 reads or writes.
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
     }
   }
 }
