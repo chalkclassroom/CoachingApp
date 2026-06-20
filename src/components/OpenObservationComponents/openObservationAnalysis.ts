@@ -2,10 +2,16 @@ import { OpenObservationNote } from './openObservationSchema'
 import * as Constants from '../../constants/Constants'
 
 export type Magic9PracticeCode = 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC'
+export type OpenObservationConfidence = 'Strong' | 'Moderate' | 'Light'
+
+type TermRule = string | {
+  value: string,
+  weight: number
+}
 
 interface ThemeRule {
   label: string,
-  terms: string[]
+  terms: TermRule[]
 }
 
 interface PracticeRule {
@@ -14,12 +20,27 @@ interface PracticeRule {
   themes: ThemeRule[]
 }
 
+interface ThemeMatch {
+  theme: string,
+  terms: string[],
+  score: number
+}
+
+interface MatchResult {
+  themes: string[],
+  terms: string[],
+  score: number,
+  themeMatches: ThemeMatch[]
+}
+
 export interface OpenObservationEvidence {
   noteId: string,
   wallClockAt: Date,
   text: string,
   matchedTerms: string[],
-  themes: string[]
+  themes: string[],
+  score: number,
+  confidence: OpenObservationConfidence
 }
 
 export interface OpenObservationPracticeAlignment {
@@ -27,18 +48,25 @@ export interface OpenObservationPracticeAlignment {
   practiceName: string,
   color: string,
   themes: string[],
-  evidence: OpenObservationEvidence[]
+  evidence: OpenObservationEvidence[],
+  score: number,
+  confidence: OpenObservationConfidence
 }
 
 export interface OpenObservationOtherTheme {
   theme: string,
-  evidence: OpenObservationEvidence[]
+  evidence: OpenObservationEvidence[],
+  noteCount: number,
+  score: number,
+  confidence: OpenObservationConfidence
 }
 
 export interface OpenObservationAnalysis {
   noteCount: number,
   alignedNoteCount: number,
   unalignedNoteCount: number,
+  notesWithOtherThemesCount: number,
+  executiveSummary: string,
   practiceAlignments: OpenObservationPracticeAlignment[],
   otherThemes: OpenObservationOtherTheme[]
 }
@@ -50,11 +78,33 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Transitions and routines',
-        terms: ['transition', 'transitions', 'line up', 'lining up', 'clean up', 'cleanup', 'arrival', 'dismissal', 'routine', 'routines']
+        terms: [
+          { value: 'transition', weight: 2 },
+          { value: 'transitions', weight: 2 },
+          { value: 'line up', weight: 3 },
+          { value: 'lining up', weight: 3 },
+          { value: 'clean up', weight: 2 },
+          { value: 'cleanup', weight: 2 },
+          'arrival',
+          'dismissal',
+          { value: 'routine', weight: 2 },
+          { value: 'routines', weight: 2 }
+        ]
       },
       {
         label: 'Waiting and moving through the day',
-        terms: ['waiting', 'wait', 'traveling', 'walking', 'hallway', 'outside', 'recess', 'bathroom', 'wash hands', 'handwashing']
+        terms: [
+          'waiting',
+          'wait',
+          'traveling',
+          'walking',
+          'hallway',
+          'outside',
+          'recess',
+          'bathroom',
+          { value: 'wash hands', weight: 2 },
+          { value: 'handwashing', weight: 2 }
+        ]
       }
     ]
   },
@@ -68,11 +118,29 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
       },
       {
         label: 'Behavior expectations and responses',
-        terms: ['behavior', 'behaviour', 'expectation', 'expectations', 'rule', 'rules', 'redirect', 'redirection', 'disapproval', 'approval']
+        terms: [
+          { value: 'behavior', weight: 2 },
+          { value: 'behaviour', weight: 2 },
+          { value: 'expectation', weight: 2 },
+          { value: 'expectations', weight: 2 },
+          'rule',
+          'rules',
+          { value: 'redirect', weight: 2 },
+          { value: 'redirection', weight: 2 },
+          'disapproval',
+          'approval'
+        ]
       },
       {
         label: 'Materials and classroom setup',
-        terms: ['materials', 'room arrangement', 'classroom setup', 'learning area', 'learning environment', 'centers']
+        terms: [
+          'materials',
+          { value: 'room arrangement', weight: 2 },
+          { value: 'classroom setup', weight: 2 },
+          { value: 'learning area', weight: 2 },
+          { value: 'learning environment', weight: 2 },
+          'centers'
+        ]
       }
     ]
   },
@@ -82,7 +150,19 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Counting and numbers',
-        terms: ['math', 'count', 'counting', 'number', 'numbers', 'quantity', 'quantities', 'more', 'less', 'add', 'subtract']
+        terms: [
+          { value: 'math', weight: 2 },
+          'count',
+          { value: 'counting', weight: 2 },
+          'number',
+          'numbers',
+          'quantity',
+          'quantities',
+          'more',
+          'less',
+          'add',
+          'subtract'
+        ]
       },
       {
         label: 'Shapes, measurement, and patterns',
@@ -96,11 +176,21 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Child engagement',
-        terms: ['engaged', 'engagement', 'participate', 'participating', 'attention', 'focused', 'interested', 'on task', 'off task']
+        terms: [
+          { value: 'engaged', weight: 2 },
+          { value: 'engagement', weight: 2 },
+          'participate',
+          'participating',
+          'attention',
+          'focused',
+          'interested',
+          { value: 'on task', weight: 2 },
+          { value: 'off task', weight: 2 }
+        ]
       },
       {
         label: 'Activity choice and involvement',
-        terms: ['activity', 'activities', 'play', 'choice', 'choices', 'involved', 'hands-on', 'center time']
+        terms: ['activity', 'activities', 'play', 'choice', 'choices', 'involved', { value: 'hands-on', weight: 2 }, { value: 'center time', weight: 2 }]
       }
     ]
   },
@@ -110,11 +200,32 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Questions and concept development',
-        terms: ['open ended', 'open-ended', 'question', 'questions', 'why', 'how', 'explain', 'predict', 'prediction', 'concept']
+        terms: [
+          { value: 'open ended', weight: 3 },
+          { value: 'open-ended', weight: 3 },
+          'question',
+          'questions',
+          'why',
+          'how',
+          'explain',
+          'predict',
+          'prediction',
+          'concept'
+        ]
       },
       {
         label: 'Instructional support',
-        terms: ['scaffold', 'scaffolding', 'prompt', 'prompting', 'model', 'modeling', 'demonstrate', 'feedback', 'instruction']
+        terms: [
+          { value: 'scaffold', weight: 3 },
+          { value: 'scaffolding', weight: 3 },
+          { value: 'prompt', weight: 2 },
+          { value: 'prompting', weight: 2 },
+          { value: 'model', weight: 2 },
+          { value: 'modeling', weight: 2 },
+          { value: 'demonstrate', weight: 2 },
+          'feedback',
+          'instruction'
+        ]
       }
     ]
   },
@@ -124,11 +235,33 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Conversation and responsive listening',
-        terms: ['listen', 'listening', 'conversation', 'talk', 'talking', 'respond', 'response', 'repeat', 'repeats', 'clarify', 'clarifies']
+        terms: [
+          'listen',
+          { value: 'listening', weight: 2 },
+          { value: 'conversation', weight: 2 },
+          'talk',
+          'talking',
+          'respond',
+          'response',
+          'repeat',
+          'repeats',
+          'clarify',
+          'clarifies'
+        ]
       },
       {
         label: 'Extending child language',
-        terms: ['expand', 'expands', 'language', 'child says', 'children said', 'comment', 'comments', 'eye level', 'eye-level']
+        terms: [
+          'expand',
+          'expands',
+          { value: 'language', weight: 2 },
+          { value: 'child says', weight: 2 },
+          { value: 'children said', weight: 2 },
+          'comment',
+          'comments',
+          { value: 'eye level', weight: 2 },
+          { value: 'eye-level', weight: 2 }
+        ]
       }
     ]
   },
@@ -142,7 +275,7 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
       },
       {
         label: 'Rules, turns, and pretend play',
-        terms: ['game', 'rules', 'turn', 'turns', 'turn-taking', 'pretend', 'storyline', 'scenario', 'drawing']
+        terms: ['game', 'rules', 'turn', 'turns', { value: 'turn-taking', weight: 2 }, 'pretend', 'storyline', 'scenario', 'drawing']
       }
     ]
   },
@@ -152,7 +285,18 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Book reading and print',
-        terms: ['book', 'reading', 'read', 'story', 'print', 'page', 'pages', 'author', 'illustration']
+        terms: [
+          { value: 'book reading', weight: 3 },
+          'book',
+          'reading',
+          'read',
+          'story',
+          'print',
+          'page',
+          'pages',
+          'author',
+          'illustration'
+        ]
       },
       {
         label: 'Letters, sounds, and writing',
@@ -166,11 +310,30 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
     themes: [
       {
         label: 'Peer interaction and cooperation',
-        terms: ['together', 'cooperative', 'cooperation', 'partner', 'partners', 'peer', 'peers', 'share', 'sharing', 'collaborate']
+        terms: [
+          'together',
+          'cooperative',
+          'cooperation',
+          'partner',
+          'partners',
+          'peer',
+          'peers',
+          { value: 'share', weight: 2 },
+          { value: 'sharing', weight: 2 },
+          { value: 'collaborate', weight: 2 }
+        ]
       },
       {
         label: 'Turn-taking and shared activity',
-        terms: ['ask each other', 'interact', 'interaction', 'team', 'taking turns', 'take turns', 'game']
+        terms: [
+          { value: 'ask each other', weight: 3 },
+          'interact',
+          'interaction',
+          'team',
+          { value: 'taking turns', weight: 3 },
+          { value: 'take turns', weight: 3 },
+          'game'
+        ]
       }
     ]
   }
@@ -179,7 +342,7 @@ export const MAGIC9_PRACTICE_RULES: PracticeRule[] = [
 const OTHER_THEME_RULES: ThemeRule[] = [
   {
     label: 'Care routines',
-    terms: ['snack', 'lunch', 'meal', 'bathroom', 'diaper', 'nap', 'rest', 'handwashing', 'wash hands']
+    terms: ['snack', 'lunch', 'meal', 'bathroom', 'diaper', 'nap', 'rest', { value: 'handwashing', weight: 2 }, { value: 'wash hands', weight: 2 }]
   },
   {
     label: 'Safety or behavior context',
@@ -199,6 +362,15 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+function termValue(term: TermRule): string {
+  return typeof term === 'string' ? term : term.value
+}
+
+function termWeight(term: TermRule): number {
+  if (typeof term !== 'string') return term.weight
+  return term.indexOf(' ') >= 0 || term.indexOf('-') >= 0 ? 2 : 1
+}
+
 function matchesTerm(text: string, term: string): boolean {
   const normalizedTerm = escapeRegExp(term.toLowerCase()).replace(/\s+/g, '\\s+')
   return new RegExp('(^|[^a-z0-9])' + normalizedTerm + '([^a-z0-9]|$)', 'i').test(text)
@@ -208,21 +380,40 @@ function unique(values: string[]): string[] {
   return values.filter((value, index) => values.indexOf(value) === index)
 }
 
-function matchThemes(text: string, themes: ThemeRule[]): { themes: string[], terms: string[] } {
+function confidenceFromScore(score: number, evidenceCount: number = 1): OpenObservationConfidence {
+  const combinedScore = score + Math.max(0, evidenceCount - 1)
+  if (combinedScore >= 5) return 'Strong'
+  if (combinedScore >= 2) return 'Moderate'
+  return 'Light'
+}
+
+function matchThemes(text: string, themes: ThemeRule[]): MatchResult {
   const matchedThemes: string[] = []
   const matchedTerms: string[] = []
+  const themeMatches: ThemeMatch[] = []
+  let score = 0
 
   themes.forEach(theme => {
-    const themeTerms = theme.terms.filter(term => matchesTerm(text, term))
+    const themeTerms = theme.terms.filter(term => matchesTerm(text, termValue(term)))
     if (themeTerms.length > 0) {
+      const terms = themeTerms.map(termValue)
+      const themeScore = themeTerms.reduce((sum, term) => sum + termWeight(term), 0)
       matchedThemes.push(theme.label)
-      matchedTerms.push(...themeTerms)
+      matchedTerms.push(...terms)
+      themeMatches.push({
+        theme: theme.label,
+        terms,
+        score: themeScore
+      })
+      score += themeScore
     }
   })
 
   return {
     themes: unique(matchedThemes),
-    terms: unique(matchedTerms)
+    terms: unique(matchedTerms),
+    score,
+    themeMatches
   }
 }
 
@@ -235,80 +426,160 @@ function addEvidence(
   evidenceByPractice[code]!.push(evidence)
 }
 
-function groupOtherEvidence(notes: OpenObservationEvidence[]): OpenObservationOtherTheme[] {
+function formatList(values: string[]): string {
+  if (values.length === 0) return ''
+  if (values.length === 1) return values[0]
+  if (values.length === 2) return values[0] + ' and ' + values[1]
+  return values.slice(0, values.length - 1).join(', ') + ', and ' + values[values.length - 1]
+}
+
+function buildExecutiveSummary(
+  noteCount: number,
+  alignedNoteCount: number,
+  practiceAlignments: OpenObservationPracticeAlignment[],
+  otherThemes: OpenObservationOtherTheme[]
+): string {
+  if (noteCount === 0) {
+    return 'No notes were recorded for analysis.'
+  }
+
+  if (practiceAlignments.length === 0) {
+    if (otherThemes.length > 0) {
+      return 'No Magic 9 practice area was identified yet. The notes surfaced ' + formatList(otherThemes.slice(0, 2).map(theme => theme.theme)) + '.'
+    }
+    return 'No Magic 9 practice area or repeated context theme was identified from these notes.'
+  }
+
+  const topPractices = practiceAlignments.slice(0, 3).map(alignment => alignment.practiceName)
+  const unalignedCount = noteCount - alignedNoteCount
+  let summary = 'The strongest Magic 9 evidence points to ' + formatList(topPractices) + '.'
+
+  if (unalignedCount > 0) {
+    summary += ' ' + unalignedCount + ' note' + (unalignedCount === 1 ? '' : 's') + ' did not match a Magic 9 practice area.'
+  }
+
+  if (otherThemes.length > 0) {
+    summary += ' Additional context themes include ' + formatList(otherThemes.slice(0, 2).map(theme => theme.theme)) + '.'
+  }
+
+  return summary
+}
+
+function groupOtherEvidence(
+  notes: OpenObservationEvidence[],
+  alignedNoteIds: {[key: string]: boolean}
+): OpenObservationOtherTheme[] {
   const grouped: {[key: string]: OpenObservationEvidence[]} = {}
 
   notes.forEach(note => {
     const match = matchThemes(note.text.toLowerCase(), OTHER_THEME_RULES)
-    const theme = match.themes.length > 0 ? match.themes[0] : 'Context / general classroom notes'
-    grouped[theme] = grouped[theme] || []
-    grouped[theme].push({
-      ...note,
-      themes: match.themes.length > 0 ? match.themes : [theme],
-      matchedTerms: match.terms
-    })
+
+    if (match.themeMatches.length > 0) {
+      match.themeMatches.forEach(themeMatch => {
+        grouped[themeMatch.theme] = grouped[themeMatch.theme] || []
+        grouped[themeMatch.theme].push({
+          ...note,
+          themes: [themeMatch.theme],
+          matchedTerms: themeMatch.terms,
+          score: themeMatch.score,
+          confidence: confidenceFromScore(themeMatch.score)
+        })
+      })
+      return
+    }
+
+    if (!alignedNoteIds[note.noteId]) {
+      const theme = 'Context / general classroom notes'
+      grouped[theme] = grouped[theme] || []
+      grouped[theme].push({
+        ...note,
+        themes: [theme],
+        matchedTerms: [],
+        score: 0,
+        confidence: 'Light'
+      })
+    }
   })
 
-  return Object.keys(grouped).map(theme => ({
-    theme,
-    evidence: grouped[theme]
-  }))
+  return Object.keys(grouped).map(theme => {
+    const evidence = grouped[theme]
+    const score = evidence.reduce((sum, item) => sum + item.score, 0)
+    const noteCount = unique(evidence.map(item => item.noteId)).length
+    return {
+      theme,
+      evidence,
+      noteCount,
+      score,
+      confidence: confidenceFromScore(score, noteCount)
+    }
+  }).sort((left, right) => right.score - left.score || right.noteCount - left.noteCount || left.theme.localeCompare(right.theme))
 }
 
 export function analyzeOpenObservationNotes(notes: OpenObservationNote[]): OpenObservationAnalysis {
   const evidenceByPractice: {[key in Magic9PracticeCode]?: OpenObservationEvidence[]} = {}
   const alignedNoteIds: {[key: string]: boolean} = {}
-  const unalignedEvidence: OpenObservationEvidence[] = []
+  const allEvidence: OpenObservationEvidence[] = []
 
   notes.forEach(note => {
     const text = String(note.text || '').trim()
     if (!text) return
 
-    let hasPracticeMatch = false
+    const baseEvidence: OpenObservationEvidence = {
+      noteId: note.id,
+      wallClockAt: note.wallClockAt,
+      text,
+      matchedTerms: [],
+      themes: [],
+      score: 0,
+      confidence: 'Light'
+    }
+    allEvidence.push(baseEvidence)
+
     const normalizedText = text.toLowerCase()
 
     MAGIC9_PRACTICE_RULES.forEach(rule => {
       const match = matchThemes(normalizedText, rule.themes)
       if (match.terms.length > 0) {
-        hasPracticeMatch = true
         alignedNoteIds[note.id] = true
         addEvidence(evidenceByPractice, rule.code, {
-          noteId: note.id,
-          wallClockAt: note.wallClockAt,
-          text,
+          ...baseEvidence,
           matchedTerms: match.terms,
-          themes: match.themes
+          themes: match.themes,
+          score: match.score,
+          confidence: confidenceFromScore(match.score)
         })
       }
     })
-
-    if (!hasPracticeMatch) {
-      unalignedEvidence.push({
-        noteId: note.id,
-        wallClockAt: note.wallClockAt,
-        text,
-        matchedTerms: [],
-        themes: []
-      })
-    }
   })
 
   const practiceAlignments = MAGIC9_PRACTICE_RULES.map(rule => {
     const evidence = evidenceByPractice[rule.code] || []
+    const score = evidence.reduce((sum, item) => sum + item.score, 0)
     return {
       practiceCode: rule.code,
       practiceName: rule.name,
       color: Constants.Colors[rule.code],
       themes: unique(evidence.reduce((themes, item) => themes.concat(item.themes), [] as string[])),
-      evidence
+      evidence,
+      score,
+      confidence: confidenceFromScore(score, evidence.length)
     }
   }).filter(alignment => alignment.evidence.length > 0)
+    .sort((left, right) => right.score - left.score || left.practiceName.localeCompare(right.practiceName))
+
+  const alignedNoteCount = Object.keys(alignedNoteIds).length
+  const otherThemes = groupOtherEvidence(allEvidence, alignedNoteIds)
+  const notesWithOtherThemesCount = unique(otherThemes.reduce((noteIds, theme) => {
+    return noteIds.concat(theme.evidence.map(item => item.noteId))
+  }, [] as string[])).length
 
   return {
     noteCount: notes.length,
-    alignedNoteCount: Object.keys(alignedNoteIds).length,
-    unalignedNoteCount: unalignedEvidence.length,
+    alignedNoteCount,
+    unalignedNoteCount: allEvidence.length - alignedNoteCount,
+    notesWithOtherThemesCount,
+    executiveSummary: buildExecutiveSummary(notes.length, alignedNoteCount, practiceAlignments, otherThemes),
     practiceAlignments,
-    otherThemes: groupOtherEvidence(unalignedEvidence)
+    otherThemes
   }
 }

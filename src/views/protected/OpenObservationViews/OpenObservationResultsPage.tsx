@@ -44,6 +44,11 @@ const styles: object = {
     marginTop: '0.5rem',
     marginBottom: '1rem'
   },
+  analysisIntro: {
+    marginTop: '0.5rem',
+    marginBottom: '0.5rem',
+    lineHeight: 1.5
+  },
   practiceBlock: {
     border: '1px solid #e0e0e0',
     borderLeftWidth: 6,
@@ -69,6 +74,12 @@ const styles: object = {
   evidenceText: {
     lineHeight: 1.45
   },
+  signalText: {
+    marginTop: '0.35rem'
+  },
+  confidenceChip: {
+    fontWeight: 600
+  },
   otherThemeBlock: {
     border: '1px solid #e0e0e0',
     borderRadius: 4,
@@ -88,11 +99,14 @@ interface Style {
   card: string,
   section: string,
   analysisSummary: string,
+  analysisIntro: string,
   practiceBlock: string,
   practiceHeader: string,
   chipRow: string,
   evidenceRow: string,
   evidenceText: string,
+  signalText: string,
+  confidenceChip: string,
   otherThemeBlock: string,
   noteRow: string
 }
@@ -178,6 +192,21 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     return backgroundColor === '#ffd300' ? '#222222' : '#ffffff'
   }
 
+  confidenceColor = (confidence: string): string => {
+    if (confidence === 'Strong') return '#1b5e20'
+    if (confidence === 'Moderate') return '#795548'
+    return '#616161'
+  }
+
+  renderSignals = (matchedTerms: string[]): React.ReactNode => {
+    if (!matchedTerms.length) return null
+    return (
+      <Typography variant="caption" color="textSecondary" className={this.props.classes.signalText}>
+        Signals: {matchedTerms.slice(0, 6).join(', ')}
+      </Typography>
+    )
+  }
+
   renderEvidence = (evidence: OpenObservationEvidence[]): React.ReactNode => {
     return evidence.map(item => (
       <Grid container spacing={2} alignItems="flex-start" key={item.noteId + item.themes.join('-')} className={this.props.classes.evidenceRow}>
@@ -186,6 +215,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
         </Grid>
         <Grid item xs={12} sm={9}>
           <Typography className={this.props.classes.evidenceText}>{item.text}</Typography>
+          {this.renderSignals(item.matchedTerms)}
         </Grid>
       </Grid>
     ))
@@ -200,12 +230,25 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
         style={{ borderLeftColor: color }}
         data-testid="open-observation-magic9-practice"
       >
-        <Grid container justify="space-between" alignItems="center" className={this.props.classes.practiceHeader}>
+        <Grid container justify="space-between" alignItems="center" spacing={1} className={this.props.classes.practiceHeader}>
           <Grid item>
             <Typography variant="subtitle1">{alignment.practiceName}</Typography>
           </Grid>
           <Grid item>
-            <Typography color="textSecondary">{alignment.evidence.length} note{alignment.evidence.length === 1 ? '' : 's'}</Typography>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <Chip
+                  size="small"
+                  label={alignment.confidence + ' confidence'}
+                  className={this.props.classes.confidenceChip}
+                  style={{ backgroundColor: this.confidenceColor(alignment.confidence), color: '#ffffff' }}
+                  data-testid="open-observation-analysis-confidence"
+                />
+              </Grid>
+              <Grid item>
+                <Typography color="textSecondary">{alignment.evidence.length} note{alignment.evidence.length === 1 ? '' : 's'}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         {alignment.themes.length > 0 ? (
@@ -228,7 +271,26 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
   renderOtherTheme = (theme: OpenObservationOtherTheme): React.ReactNode => {
     return (
       <div key={theme.theme} className={this.props.classes.otherThemeBlock} data-testid="open-observation-other-theme">
-        <Typography variant="subtitle1">{theme.theme}</Typography>
+        <Grid container justify="space-between" alignItems="center" spacing={1}>
+          <Grid item>
+            <Typography variant="subtitle1">{theme.theme}</Typography>
+          </Grid>
+          <Grid item>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <Chip
+                  size="small"
+                  label={theme.confidence + ' confidence'}
+                  className={this.props.classes.confidenceChip}
+                  style={{ backgroundColor: this.confidenceColor(theme.confidence), color: '#ffffff' }}
+                />
+              </Grid>
+              <Grid item>
+                <Typography color="textSecondary">{theme.noteCount} note{theme.noteCount === 1 ? '' : 's'}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         {this.renderEvidence(theme.evidence)}
       </div>
     )
@@ -238,8 +300,12 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.section} data-testid="open-observation-magic9-alignment">
         <Typography variant="h6">Magic 9 Alignment</Typography>
+        <Typography className={this.props.classes.analysisIntro}>
+          {analysis.executiveSummary}
+        </Typography>
         <Typography color="textSecondary" className={this.props.classes.analysisSummary}>
           {analysis.alignedNoteCount} of {analysis.noteCount} note{analysis.noteCount === 1 ? '' : 's'} include evidence linked to Magic 9 practice areas.
+          {analysis.notesWithOtherThemesCount > 0 ? ' ' + analysis.notesWithOtherThemesCount + ' note' + (analysis.notesWithOtherThemesCount === 1 ? '' : 's') + ' also include non-Magic 9 context themes.' : ''}
         </Typography>
         {analysis.practiceAlignments.length > 0 ? (
           analysis.practiceAlignments.map(this.renderPracticeAlignment)
