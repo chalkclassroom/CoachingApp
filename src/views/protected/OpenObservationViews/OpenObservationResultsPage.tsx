@@ -305,7 +305,7 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
         </Typography>
         <Typography color="textSecondary" className={this.props.classes.analysisSummary}>
           {analysis.alignedNoteCount} of {analysis.noteCount} note{analysis.noteCount === 1 ? '' : 's'} include evidence linked to Magic 9 practice areas.
-          {analysis.notesWithOtherThemesCount > 0 ? ' ' + analysis.notesWithOtherThemesCount + ' note' + (analysis.notesWithOtherThemesCount === 1 ? '' : 's') + ' also include non-Magic 9 context themes.' : ''}
+          {analysis.notesWithOtherThemesCount > 0 ? ' ' + analysis.notesWithOtherThemesCount + ' note' + (analysis.notesWithOtherThemesCount === 1 ? '' : 's') + ' also ' + (analysis.notesWithOtherThemesCount === 1 ? 'includes' : 'include') + ' non-Magic 9 context themes.' : ''}
         </Typography>
         {analysis.practiceAlignments.length > 0 ? (
           analysis.practiceAlignments.map(this.renderPracticeAlignment)
