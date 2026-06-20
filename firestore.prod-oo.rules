@@ -1,0 +1,113 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOpenObservationData(data) {
+      return (data.keys().hasAny(["openObservation"]) && data.openObservation == true) ||
+        (data.keys().hasAny(["observationMode"]) && data.observationMode == "open");
+    }
+
+    function validOpenObservationNotes(notes) {
+      return notes is list && notes.size() <= 500;
+    }
+
+    function validOpenObservationSnapshot(data) {
+      return !data.keys().hasAny(["snapshot"]) || (
+        data.snapshot is map &&
+        data.snapshot.keys().hasOnly(["coachSummary"]) &&
+        (!data.snapshot.keys().hasAny(["coachSummary"]) || (
+          data.snapshot.coachSummary is string &&
+          data.snapshot.coachSummary.size() <= 5000
+        ))
+      );
+    }
+
+    function validOpenObservationDoc(data) {
+      return data.keys().hasOnly([
+          "coachId", "teacherId", "observedBy", "teacher", "openObservation",
+          "observationMode", "type", "checklist", "completed", "timezone",
+          "activitySetting", "lastClickTime", "entries", "start", "end",
+          "notes", "snapshot", "status", "createdAt", "updatedAt"
+        ]) &&
+        data.keys().hasAll([
+          "coachId", "teacherId", "observedBy", "teacher", "openObservation",
+          "observationMode", "type", "checklist", "completed", "timezone",
+          "activitySetting", "lastClickTime", "entries", "start", "end",
+          "notes", "status", "createdAt", "updatedAt"
+        ]) &&
+        data.coachId is string &&
+        data.teacherId is string &&
+        data.observedBy is string &&
+        data.teacher is string &&
+        data.openObservation == true &&
+        data.observationMode == "open" &&
+        data.type == "OpenObservation" &&
+        data.checklist == null &&
+        data.completed is bool &&
+        data.timezone is string &&
+        data.activitySetting == null &&
+        data.lastClickTime is timestamp &&
+        data.entries is list &&
+        data.start is timestamp &&
+        (data.end == null || data.end is timestamp) &&
+        validOpenObservationNotes(data.notes) &&
+        data.status in ["in_progress", "completed", "archived"] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        validOpenObservationSnapshot(data);
+    }
+
+    function canReadOpenObservation(data) {
+      return signedIn() && (data.coachId == request.auth.uid || data.teacherId == request.auth.uid || isAdmin());
+    }
+
+    function canCreateOpenObservation(data) {
+      return signedIn() && data.coachId == request.auth.uid && validOpenObservationDoc(data);
+    }
+
+    function canUpdateOpenObservation() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return signedIn() &&
+        resource.data.coachId == request.auth.uid &&
+        request.resource.data.coachId == resource.data.coachId &&
+        request.resource.data.teacherId == resource.data.teacherId &&
+        request.resource.data.observedBy == resource.data.observedBy &&
+        request.resource.data.teacher == resource.data.teacher &&
+        request.resource.data.openObservation == true &&
+        request.resource.data.observationMode == "open" &&
+        request.resource.data.type == "OpenObservation" &&
+        !changed.hasAny(["createdAt", "coachId", "teacherId", "observedBy", "teacher", "openObservation", "observationMode", "type"]) &&
+        validOpenObservationDoc(request.resource.data);
+    }
+
+    match /observations/{document=**} {
+      allow create: if signedIn() && (!isOpenObservationData(request.resource.data) || canCreateOpenObservation(request.resource.data));
+      allow read: if signedIn() && (!isOpenObservationData(resource.data) || canReadOpenObservation(resource.data));
+      allow update: if signedIn() && (
+        (!isOpenObservationData(resource.data) && !isOpenObservationData(request.resource.data)) ||
+        canUpdateOpenObservation()
+      );
+      allow delete: if signedIn() && !isOpenObservationData(resource.data);
+    }
+
+    match /pilotForm/{document=**} {
+      allow write: if true;
+    }
+
+    match /emailList/{document=**} {
+      allow write: if true;
+    }
+
+    match /{collection}/{document=**} {
+      allow read, write: if signedIn() && collection != "observations";
+    }
+  }
+}
