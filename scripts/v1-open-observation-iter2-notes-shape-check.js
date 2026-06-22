@@ -49,6 +49,7 @@ function main() {
   assertIncludes('OpenObservationPage.tsx', page, "inputProps={{ 'data-testid': 'open-observation-note-text' }}")
   assertIncludes('OpenObservationPage.tsx', page, 'data-testid="open-observation-note-count"')
   assertIncludes('OpenObservationPage.tsx', page, 'Coach summary (optional)')
+  assertIncludes('OpenObservationPage.tsx', page, 'Use this space to record any overall reminders or impressions about the classroom')
   assertNotIncludes('OpenObservationPage.tsx', page, 'notes: string')
   assertNotIncludes('OpenObservationPage.tsx', page, 'Free-form notes')
 

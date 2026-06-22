@@ -484,6 +484,7 @@ class OpenObservationPage extends React.Component<Props, State> {
           label="Coach summary (optional)"
           value={this.state.coachSummary}
           onChange={(event): void => this.updateCoachSummary(event.target.value)}
+          helperText="Use this space to record any overall reminders or impressions about the classroom that you want to consider as you review the results and plan for a coaching conversation."
           inputProps={{ 'data-testid': 'open-observation-coach-summary' }}
           style={{ marginTop: '1rem' }}
         />
