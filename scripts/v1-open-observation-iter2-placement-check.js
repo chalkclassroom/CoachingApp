@@ -61,8 +61,13 @@ function main() {
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-magic8-card')
   assertIncludes('ToolIcons.tsx', toolIcons, "history.push('/OpenObservation')")
   assertIncludes('ToolIcons.tsx', toolIcons, 'Open Observation')
+  assertIncludes('ToolIcons.tsx', toolIcons, 'OpenObservationListIconImage.png')
+  assertIncludes('ToolIcons.tsx', toolIcons, 'renderOpenObservationCard()')
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-results-magic8-card')
   assertIncludes('ToolIcons.tsx', toolIcons, "history.push('/OpenObservationResults')")
+  assertIncludes('ToolIcons.tsx', toolIcons, 'renderOpenObservationResultsCard()')
+  assertNotIncludes('ToolIcons.tsx', toolIcons, 'OpenObservationIconImage.png')
+  assertIncludes('ToolIcons.tsx', toolIcons, "</>) : (<>\n        {!training && type === 'Observe' && !props.isTeacher ? renderOpenObservationCard() : null}\n        {!training && type === 'Results' ? renderOpenObservationResultsCard() : null}\n        <Grid item style={{width: '100%'}}>")
 
   assertNotIncludes('HomePage.tsx', home, 'OpenObservationIcon')
   assertNotIncludes('HomePage.tsx', home, 'Open Observation')
