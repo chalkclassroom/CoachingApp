@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import CheckIcon from '@material-ui/icons/Check'
+import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 
 const styles: object = {
@@ -215,18 +216,42 @@ class OpenObservationPage extends React.Component<Props, State> {
     const text = this.state.noteText.trim()
     if (!text) return
 
-    const now = new Date()
-    const note: OpenObservationNote = {
-      id: 'note-' + now.getTime(),
-      wallClockAt: now,
-      text,
-      editedAt: now
-    }
+    const note = this.createNote(text)
 
     this.setState(previousState => ({
       notes: [...previousState.notes, note],
       noteText: ''
     }), this.persistDraft)
+  }
+
+  createNote = (text: string): OpenObservationNote => {
+    const now = new Date()
+    return {
+      id: 'note-' + now.getTime(),
+      wallClockAt: now,
+      text,
+      editedAt: now
+    }
+  }
+
+  flushPendingNote = (): Promise<OpenObservationNote[]> => {
+    const text = this.state.noteText.trim()
+    if (!text) {
+      return Promise.resolve(this.state.notes)
+    }
+
+    const note = this.createNote(text)
+    const notes = [...this.state.notes, note]
+    return new Promise(resolve => {
+      this.setState({
+        notes,
+        noteText: '',
+        editingNoteId: null
+      }, () => {
+        this.persistDraft()
+        resolve(this.state.notes)
+      })
+    })
   }
 
   updateNote = (id: string, text: string): void => {
@@ -239,13 +264,31 @@ class OpenObservationPage extends React.Component<Props, State> {
     }), this.persistDraft)
   }
 
+  removeNote = (id: string): void => {
+    this.setState(previousState => ({
+      notes: previousState.notes.filter(note => note.id !== id),
+      editingNoteId: previousState.editingNoteId === id ? null : previousState.editingNoteId
+    }), this.persistDraft)
+  }
+
   endObservation = (): void => {
     this.stopTimer()
-    this.setState({ observing: false, snapshotVisible: true }, this.persistDraft)
+    this.setState(previousState => {
+      const text = previousState.noteText.trim()
+      const note = text ? this.createNote(text) : null
+      return {
+        notes: note ? [...previousState.notes, note] : previousState.notes,
+        noteText: note ? '' : previousState.noteText,
+        observing: false,
+        snapshotVisible: true,
+        editingNoteId: null
+      }
+    }, this.persistDraft)
   }
 
   completeObservation = async (): Promise<void> => {
-    const { selectedTeacherId, notes, coachSummary, observationStart, elapsedSeconds } = this.state
+    const notes = await this.flushPendingNote()
+    const { selectedTeacherId, coachSummary, observationStart, elapsedSeconds } = this.state
     if (!selectedTeacherId) {
       this.setState({ error: 'Choose a teacher before saving this Open Observation.' })
       return
@@ -278,6 +321,13 @@ class OpenObservationPage extends React.Component<Props, State> {
     }
   }
 
+  resumeObservation = (): void => {
+    this.setState({ observing: true, snapshotVisible: false, error: '' }, () => {
+      this.persistDraft()
+      this.startTimer()
+    })
+  }
+
   discardObservation = (): void => {
     this.stopTimer()
     this.clearDraft()
@@ -302,7 +352,10 @@ class OpenObservationPage extends React.Component<Props, State> {
       .then((teachers: Types.Teacher[] = []) => {
         this.setState({
           loadingTeachers: false,
-          teachers: teachers.filter((teacher): teacher is Types.Teacher => Boolean(teacher) && Boolean(teacher.id) && !(teacher as any).archived),
+          teachers: teachers.filter((teacher): teacher is Types.Teacher => {
+            const teacherWithArchive = teacher as Types.Teacher & { archived?: boolean }
+            return Boolean(teacherWithArchive) && Boolean(teacherWithArchive.id) && !teacherWithArchive.archived
+          }),
           error: ''
         })
       })
@@ -391,6 +444,15 @@ class OpenObservationPage extends React.Component<Props, State> {
                     <CheckIcon />
                   </IconButton>
                 </Grid>
+                <Grid item>
+                  <IconButton
+                    aria-label="Delete note"
+                    data-testid="open-observation-note-delete"
+                    onClick={(): void => this.removeNote(note.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
             ) : (
               <Grid container spacing={1} alignItems="center">
@@ -404,6 +466,15 @@ class OpenObservationPage extends React.Component<Props, State> {
                     onClick={(): void => this.setState({ editingNoteId: note.id })}
                   >
                     <EditIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    aria-label="Delete note"
+                    data-testid="open-observation-note-delete"
+                    onClick={(): void => this.removeNote(note.id)}
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -481,23 +552,42 @@ class OpenObservationPage extends React.Component<Props, State> {
           multiline
           rows={4}
           variant="outlined"
-          label="Coach summary (optional)"
+          label="Observation summary (optional)"
           value={this.state.coachSummary}
           onChange={(event): void => this.updateCoachSummary(event.target.value)}
           helperText="Use this space to record any overall reminders or impressions about the classroom that you want to consider as you review the results and plan for a coaching conversation."
           inputProps={{ 'data-testid': 'open-observation-coach-summary' }}
           style={{ marginTop: '1rem' }}
         />
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={this.state.saving || this.state.notes.length === 0}
-          onClick={this.completeObservation}
-          data-testid="open-observation-save"
-          style={{ marginTop: '1rem' }}
-        >
-          {this.state.saving ? 'Saving...' : 'Save observation'}
-        </Button>
+        <Grid container spacing={1} style={{ marginTop: '1rem' }}>
+          <Grid item>
+            <Button
+              onClick={this.discardObservation}
+              data-testid="open-observation-snapshot-discard"
+            >
+              Discard / Start over
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={this.resumeObservation}
+              data-testid="open-observation-resume"
+            >
+              Resume / Add more notes
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={this.state.saving || this.state.notes.length === 0}
+              onClick={this.completeObservation}
+              data-testid="open-observation-save"
+            >
+              {this.state.saving ? 'Saving...' : 'Save observation'}
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     )
   }
