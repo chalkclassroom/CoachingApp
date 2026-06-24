@@ -105,7 +105,7 @@ function ToolIcons(props: Props): React.ReactElement {
             style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
           >
             <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
-              <img src={OpenObservationIconImage} alt="Open Observation" style={{ display: 'block', width: '100%' }} />
+              <img src={OpenObservationIconImage} alt="Open Observation" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
             </CardActionArea>
           </Card>
         </Grid>
@@ -123,7 +123,7 @@ function ToolIcons(props: Props): React.ReactElement {
             style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
           >
             <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
-              <img src={OpenObservationIconImage} alt="Open Observations" style={{ display: 'block', width: '100%' }} />
+              <img src={OpenObservationIconImage} alt="Open Observations" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
             </CardActionArea>
           </Card>
         </Grid>
