@@ -13,7 +13,7 @@ import MathIconImage from "../assets/images/MathIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../assets/images/EngagementIconImage.svg";
 import LiteracyIconImage from '../assets/images/LiteracyIconImage.svg';
-import OpenObservationIconImage from "../assets/images/OpenObservationIconImage.png";
+import OpenObservationIconImage from "../assets/images/OpenObservationListIconImage.png";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import TransitionTimeObservationPopUp from './TransitionComponents/TransitionTimeObservationPopUp';
 import ClassroomClimateObservationPopUp from './ClassroomClimateComponent/ClassroomClimateObservationPopUp';
@@ -94,6 +94,42 @@ function ToolIcons(props: Props): React.ReactElement {
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
+
+  const renderOpenObservationCard = (): React.ReactElement => (
+    <Grid item style={{width: '100%', paddingBottom: '1em'}}>
+      <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
+        <Grid item>
+          <Card
+            data-testid="open-observation-magic8-card"
+            onClick={(): void => history.push('/OpenObservation')}
+            style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
+          >
+            <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
+              <img src={OpenObservationIconImage} alt="Open Observation" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+            </CardActionArea>
+          </Card>
+        </Grid>
+      </Grid>
+    </Grid>
+  )
+
+  const renderOpenObservationResultsCard = (): React.ReactElement => (
+    <Grid item style={{width: '100%', paddingBottom: '1em'}}>
+      <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
+        <Grid item>
+          <Card
+            data-testid="open-observation-results-magic8-card"
+            onClick={(): void => history.push('/OpenObservationResults')}
+            style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
+          >
+            <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
+              <img src={OpenObservationIconImage} alt="Open Observations" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+            </CardActionArea>
+          </Card>
+        </Grid>
+      </Grid>
+    </Grid>
+  )
 
   const handleClick = (tool: Types.Selected, unlocked: boolean): void => {
     setSelected(tool);
@@ -252,6 +288,8 @@ function ToolIcons(props: Props): React.ReactElement {
           </Grid>
         </Grid>
       </>) : (<>
+        {!training && type === 'Observe' && !props.isTeacher ? renderOpenObservationCard() : null}
+        {!training && type === 'Results' ? renderOpenObservationResultsCard() : null}
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
             <Grid item>
@@ -367,40 +405,6 @@ function ToolIcons(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         </Grid>
-        {!training && type === 'Observe' && !props.isTeacher ? (
-          <Grid item style={{width: '100%', paddingTop: '1em'}}>
-            <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
-              <Grid item>
-                <Card
-                  data-testid="open-observation-magic8-card"
-                  onClick={(): void => history.push('/OpenObservation')}
-                  style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
-                >
-                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
-                    <img src={OpenObservationIconImage} alt="Open Observation" style={{ display: 'block', width: '100%' }} />
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : null}
-        {!training && type === 'Results' ? (
-          <Grid item style={{width: '100%', paddingTop: '1em'}}>
-            <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
-              <Grid item>
-                <Card
-                  data-testid="open-observation-results-magic8-card"
-                  onClick={(): void => history.push('/OpenObservationResults')}
-                  style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
-                >
-                  <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
-                    <img src={OpenObservationIconImage} alt="Open Observations" style={{ display: 'block', width: '100%' }} />
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : null}
         </>)}
       </Grid>
       {selected === 'LiteracyInstruction' ? (
