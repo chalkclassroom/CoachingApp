@@ -624,10 +624,13 @@ class Firebase {
       start: entry.start,
       end: entry.end,
       notes: entry.notes,
-      snapshot,
       status: 'completed',
       createdAt: now,
       updatedAt: now
+    }
+
+    if (snapshot) {
+      observation.snapshot = snapshot
     }
 
     const ref = await this.db.collection(OPEN_OBSERVATION_COLLECTION).add(observation)

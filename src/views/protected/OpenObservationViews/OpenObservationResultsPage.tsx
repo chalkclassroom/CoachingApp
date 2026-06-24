@@ -13,6 +13,7 @@ import {
 } from '../../../components/OpenObservationComponents/openObservationAnalysis'
 import { withStyles } from '@material-ui/core/styles'
 import {
+  Button,
   Card,
   CardContent,
   Chip,
@@ -83,9 +84,6 @@ const styles: object = {
   signalText: {
     marginTop: '0.35rem'
   },
-  confidenceChip: {
-    fontWeight: 600
-  },
   otherThemeBlock: {
     border: '1px solid #e0e0e0',
     borderRadius: 4,
@@ -113,7 +111,6 @@ interface Style {
   evidenceRow: string,
   evidenceText: string,
   signalText: string,
-  confidenceChip: string,
   otherThemeBlock: string,
   noteRow: string
 }
@@ -130,8 +127,11 @@ interface Props {
 interface State {
   loading: boolean,
   observation: (OpenObservationDoc & { id: string }) | null,
-  error: string
+  error: string,
+  notesVisible: boolean
 }
+
+type FirestoreDateValue = Date | string | number | { toDate: () => Date } | null | undefined
 
 class OpenObservationResultsPage extends React.Component<Props, State> {
   static contextType = FirebaseContext
@@ -139,7 +139,8 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
   state: State = {
     loading: true,
     observation: null,
-    error: ''
+    error: '',
+    notesVisible: false
   }
 
   componentDidMount(): void {
@@ -170,15 +171,15 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
       })
   }
 
-  asDate = (value: any): Date | null => {
+  asDate = (value: FirestoreDateValue): Date | null => {
     if (!value) return null
     if (value instanceof Date) return value
-    if (value.toDate) return value.toDate()
+    if (typeof value === 'object' && 'toDate' in value) return value.toDate()
     const date = new Date(value)
     return Number.isNaN(date.getTime()) ? null : date
   }
 
-  formatDate = (value: any): string => {
+  formatDate = (value: FirestoreDateValue): string => {
     const date = this.asDate(value)
     return date ? date.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : '--'
   }
@@ -197,12 +198,6 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
 
   chipTextColor = (backgroundColor: string): string => {
     return backgroundColor === '#ffd300' ? '#222222' : '#ffffff'
-  }
-
-  confidenceColor = (confidence: string): string => {
-    if (confidence === 'Strong') return '#1b5e20'
-    if (confidence === 'Moderate') return '#795548'
-    return '#616161'
   }
 
   renderSignals = (matchedTerms: string[]): React.ReactNode => {
@@ -244,15 +239,6 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
           <Grid item>
             <Grid container spacing={1} alignItems="center">
               <Grid item>
-                <Chip
-                  size="small"
-                  label={alignment.confidence + ' confidence'}
-                  className={this.props.classes.confidenceChip}
-                  style={{ backgroundColor: this.confidenceColor(alignment.confidence), color: '#ffffff' }}
-                  data-testid="open-observation-analysis-confidence"
-                />
-              </Grid>
-              <Grid item>
                 <Typography color="textSecondary">{alignment.evidence.length} note{alignment.evidence.length === 1 ? '' : 's'}</Typography>
               </Grid>
             </Grid>
@@ -284,14 +270,6 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
           </Grid>
           <Grid item>
             <Grid container spacing={1} alignItems="center">
-              <Grid item>
-                <Chip
-                  size="small"
-                  label={theme.confidence + ' confidence'}
-                  className={this.props.classes.confidenceChip}
-                  style={{ backgroundColor: this.confidenceColor(theme.confidence), color: '#ffffff' }}
-                />
-              </Grid>
               <Grid item>
                 <Typography color="textSecondary">{theme.noteCount} note{theme.noteCount === 1 ? '' : 's'}</Typography>
               </Grid>
@@ -342,6 +320,34 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
     )
   }
 
+  toggleNotes = (): void => {
+    this.setState(previousState => ({ notesVisible: !previousState.notesVisible }))
+  }
+
+  downloadNotes = (): void => {
+    const observation = this.state.observation
+    if (!observation) return
+
+    const notes = observation.notes || []
+    const teacher = observation.teacher || observation.teacherId || 'Unknown teacher'
+    const lines = [
+      'Open Observation Notes',
+      'Teacher: ' + teacher,
+      'Date: ' + this.formatDate(observation.start),
+      '',
+      ...notes.map(note => this.formatDate(note.wallClockAt) + '\t' + note.text.replace(/\r?\n/g, ' '))
+    ]
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'open-observation-notes-' + observation.id + '.txt'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  }
+
   renderNotes(notes: OpenObservationNote[]): React.ReactNode {
     if (!notes.length) {
       return <Typography color="textSecondary">No notes were recorded.</Typography>
@@ -362,9 +368,10 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props
     const firebase = this.context as Firebase
-    const { loading, observation, error } = this.state
+    const { loading, observation, error, notesVisible } = this.state
     const coachSummary = observation && observation.snapshot ? observation.snapshot.coachSummary : ''
     const analysis = observation ? analyzeOpenObservationNotes(observation.notes || []) : null
+    const notes = observation ? observation.notes || [] : []
 
     return (
       <div className={classes.root}>
@@ -385,15 +392,38 @@ class OpenObservationResultsPage extends React.Component<Props, State> {
                   <Typography># of notes taken: {(observation.notes || []).length}</Typography>
                   <Typography>Time elapsed: {this.formatElapsed()}</Typography>
                   {coachSummary ? (
-                    <Typography className={classes.section}>Coach summary: {coachSummary}</Typography>
+                    <Typography className={classes.section}>Observation summary: {coachSummary}</Typography>
                   ) : (
-                    <Typography color="textSecondary" className={classes.section}>No coach summary recorded.</Typography>
+                    <Typography color="textSecondary" className={classes.section}>No observation summary recorded.</Typography>
                   )}
                   {analysis ? this.renderAnalysis(analysis) : null}
-                  <div className={classes.section}>
-                    <Typography variant="h6">Notes</Typography>
-                    {this.renderNotes(observation.notes || [])}
-                  </div>
+                  <Grid container spacing={1} className={classes.section}>
+                    <Grid item>
+                      <Button
+                        variant="outlined"
+                        onClick={this.toggleNotes}
+                        data-testid="open-observation-notes-toggle"
+                      >
+                        {notesVisible ? 'Hide notes' : 'Show notes'}
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="outlined"
+                        onClick={this.downloadNotes}
+                        disabled={!notes.length}
+                        data-testid="open-observation-notes-download"
+                      >
+                        Download notes
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  {notesVisible ? (
+                    <div className={classes.section} data-testid="open-observation-notes-section">
+                      <Typography variant="h6">Notes</Typography>
+                      {this.renderNotes(notes)}
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </CardContent>
