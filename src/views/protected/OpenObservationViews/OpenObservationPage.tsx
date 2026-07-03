@@ -373,19 +373,20 @@ class OpenObservationPage extends React.Component<Props, State> {
   loadTeachers = (): void => {
     const routeTeacherState = this.getRouteTeacherState()
     if (routeTeacherState.selectedTeacher) {
+      const selectedTeacher = routeTeacherState.selectedTeacher
       const routeTeachers = routeTeacherState.teachers.length > 0
         ? routeTeacherState.teachers
-        : [routeTeacherState.selectedTeacher]
+        : [selectedTeacher]
       const teachers = this.filterOpenObservationTeachers(routeTeachers)
-      const selectedTeacherIncluded = teachers.some(teacher => teacher.id === routeTeacherState.selectedTeacher!.id)
+      const selectedTeacherIncluded = teachers.some(teacher => teacher.id === selectedTeacher.id)
       const openObservationTeachers = selectedTeacherIncluded
         ? teachers
-        : this.filterOpenObservationTeachers([routeTeacherState.selectedTeacher, ...teachers])
+        : this.filterOpenObservationTeachers([selectedTeacher, ...teachers])
 
       this.setState(previousState => ({
         loadingTeachers: false,
         teachers: openObservationTeachers,
-        selectedTeacherId: previousState.selectedTeacherId || routeTeacherState.selectedTeacher!.id,
+        selectedTeacherId: previousState.selectedTeacherId || selectedTeacher.id,
         error: ''
       }), this.persistDraft)
       return

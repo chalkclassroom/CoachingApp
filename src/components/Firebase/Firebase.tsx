@@ -465,6 +465,59 @@ class Firebase {
       .replace(/^\/?users?\//, '')
   }
 
+  getResolvedOpenObservationTeachers = async (teacherIds: string[]): Promise<Array<firebase.firestore.DocumentData>> => {
+    const uniqueTeacherIds = Array.from(new Set(teacherIds.map(this.normalizeTeacherId).filter(Boolean)))
+    const teacherList = await Promise.all(uniqueTeacherIds.map((teacherId: string) =>
+      this.getTeacherInfo(teacherId)
+    ))
+
+    return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>
+      Boolean(teacher) && Boolean((teacher as firebase.firestore.DocumentData).id) && !(teacher as firebase.firestore.DocumentData).archived
+    )
+  }
+
+  getOpenObservationLeaderTeacherIds = async (
+    userRole: string,
+    userDoc: firebase.firestore.DocumentData
+  ): Promise<string[]> => {
+    let allSiteIds: string[] = []
+
+    if (userRole === 'programLeader') {
+      const userPrograms = ((await this.getProgramsForUser({ userId: 'user' })) || []) as Array<firebase.firestore.DocumentData>
+      for (const tempProgram of userPrograms) {
+        if (tempProgram.sites) {
+          allSiteIds = allSiteIds.concat(tempProgram.sites)
+        }
+      }
+    }
+
+    if (userRole === 'siteLeader' && userDoc.sites) {
+      allSiteIds = userDoc.sites
+    }
+
+    if (allSiteIds.length === 0) {
+      return []
+    }
+
+    const allSiteInfo = ((await this.getMultipleUserProgramOrSite({ siteIds: allSiteIds })) || []) as Array<firebase.firestore.DocumentData>
+    const allSiteNames = allSiteInfo
+      .map((siteInfo: firebase.firestore.DocumentData) => siteInfo.name)
+      .filter(Boolean)
+
+    if (allSiteNames.length === 0) {
+      return []
+    }
+
+    const teacherIds: string[] = []
+    for (let index = 0; index < allSiteNames.length; index += 10) {
+      const siteNameChunk = allSiteNames.slice(index, index + 10)
+      const siteTeachers = await this.db.collection('users').where('school', 'in', siteNameChunk).get()
+      siteTeachers.forEach(teacher => teacherIds.push(teacher.id))
+    }
+
+    return teacherIds
+  }
+
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -568,6 +621,24 @@ class Firebase {
 
     try {
       const userDoc = await this.getUserInformation()
+      const userRole = userDoc.role
+
+      if (userRole === 'admin') {
+        const allTeachers = await this.db.collection('users').where('role', '==', 'teacher').get()
+        const teacherIds: string[] = []
+        allTeachers.forEach(teacher => {
+          if (teacher.id !== 'rJxNhJmzjRZP7xg29Ko6') {
+            teacherIds.push(teacher.id)
+          }
+        })
+        return this.getResolvedOpenObservationTeachers(teacherIds)
+      }
+
+      if (userRole === 'siteLeader' || userRole === 'programLeader') {
+        const leaderTeacherIds = await this.getOpenObservationLeaderTeacherIds(userRole, userDoc)
+        return this.getResolvedOpenObservationTeachers(leaderTeacherIds)
+      }
+
       const partners = await this.db
         .collection('users')
         .doc(this.auth.currentUser.uid)
@@ -579,13 +650,7 @@ class Firebase {
         : (Array.isArray(userDoc.teachers) ? userDoc.teachers.map(this.normalizeTeacherId).filter(Boolean) : [])
       const teacherIds = scopedTeacherIds
 
-      const teacherList = await Promise.all(teacherIds.map((teacherId: string) =>
-        this.getTeacherInfo(this.normalizeTeacherId(teacherId))
-      ))
-
-      return teacherList.filter((teacher): teacher is firebase.firestore.DocumentData =>
-        Boolean(teacher) && Boolean((teacher as firebase.firestore.DocumentData).id) && !(teacher as firebase.firestore.DocumentData).archived
-      )
+      return this.getResolvedOpenObservationTeachers(teacherIds)
     } catch (error) {
       console.error('Error loading Open Observation teachers: ', error)
       return []

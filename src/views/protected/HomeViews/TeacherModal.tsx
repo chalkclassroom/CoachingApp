@@ -136,13 +136,17 @@ class TeacherModal extends React.Component<Props, State> {
   }
 
   /**
-   * @param {object} teacherInfo
+   * returns the non-archived teacher list currently available to the modal
+   * @return {Array<Types.Teacher>}
    */
   getVisibleTeachers = (): Array<Types.Teacher> => {
     const modalTeachers = this.props.teacherList.length > 0 ? this.props.teacherList : this.state.teachers;
     return modalTeachers.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
   }
 
+  /**
+   * @param {object} teacherInfo
+   */
   selectTeacher = (teacherInfo: Types.Teacher): void => {
     if (this.props.destinationPath) {
       this.props.changeTeacher(teacherInfo);
