@@ -29,6 +29,8 @@ import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
 import ResultsTrainingModal from '../components/TrainingComponents/ResultsTrainingModal';
+import TeacherModal from '../views/protected/HomeViews/TeacherModal';
+import FirebaseContext from './Firebase/FirebaseContext';
 import { useState } from 'react';
 import { connect } from "react-redux";
 import * as Types from '../constants/Types';
@@ -59,6 +61,7 @@ function ToolIcons(props: Props): React.ReactElement {
   const [resultsModal, setResultsModal] = useState(false);
   const [lockedModal, setLockedModal] = useState(false);
   const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
+  const [openObservationTeacherModal, setOpenObservationTeacherModal] = useState(false);
 
   // add in other sections later (just tracking knowledge check completion for now)
   const foundationalUnlocked=
@@ -101,7 +104,7 @@ function ToolIcons(props: Props): React.ReactElement {
         <Grid item>
           <Card
             data-testid="open-observation-magic8-card"
-            onClick={(): void => history.push('/OpenObservation')}
+            onClick={(): void => setOpenObservationTeacherModal(true)}
             style={{height: 'min(160px, 20vh)', boxShadow: 'none'}}
           >
             <CardActionArea style={{height: 'min(160px, 20vh)', width: 'min(160px, 20vh)'}}>
@@ -478,6 +481,18 @@ function ToolIcons(props: Props): React.ReactElement {
         reading={readingUnlocked}
         language={languageUnlocked}
       />
+      {openObservationTeacherModal ? (
+        <FirebaseContext.Consumer>
+          {(firebase): React.ReactElement => (
+            <TeacherModal
+              handleClose={(): void => setOpenObservationTeacherModal(false)}
+              firebase={firebase}
+              type="OpenObservation"
+              destinationPath="/OpenObservation"
+            />
+          )}
+        </FirebaseContext.Consumer>
+      ) : null}
     </div>
   );
 }
