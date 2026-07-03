@@ -59,7 +59,10 @@ function main() {
   const typeBridgePath = 'src/components/OpenObservationComponents/openObservationTypes.ts'
 
   assertIncludes('ToolIcons.tsx', toolIcons, 'open-observation-magic8-card')
-  assertIncludes('ToolIcons.tsx', toolIcons, "history.push('/OpenObservation')")
+  assertIncludes('ToolIcons.tsx', toolIcons, 'openObservationTeacherModal')
+  assertIncludes('ToolIcons.tsx', toolIcons, 'setOpenObservationTeacherModal(true)')
+  assertIncludes('ToolIcons.tsx', toolIcons, '<TeacherModal')
+  assertIncludes('ToolIcons.tsx', toolIcons, 'destinationPath="/OpenObservation"')
   assertIncludes('ToolIcons.tsx', toolIcons, 'Open Observation')
   assertIncludes('ToolIcons.tsx', toolIcons, 'OpenObservationListIconImage.png')
   assertIncludes('ToolIcons.tsx', toolIcons, 'renderOpenObservationCard()')

@@ -75,7 +75,8 @@ type Props = RouteComponentProps & {
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
   teacherSelected?: Types.Teacher,
-  teacherList: Array<Types.Teacher>
+  teacherList: Array<Types.Teacher>,
+  destinationPath?: string
 }
 
 interface Push {
@@ -135,9 +136,29 @@ class TeacherModal extends React.Component<Props, State> {
   }
 
   /**
+   * returns the non-archived teacher list currently available to the modal
+   * @return {Array<Types.Teacher>}
+   */
+  getVisibleTeachers = (): Array<Types.Teacher> => {
+    const modalTeachers = this.props.teacherList.length > 0 ? this.props.teacherList : this.state.teachers;
+    return modalTeachers.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
+  }
+
+  /**
    * @param {object} teacherInfo
    */
   selectTeacher = (teacherInfo: Types.Teacher): void => {
+    if (this.props.destinationPath) {
+      this.props.changeTeacher(teacherInfo);
+      this.props.history.push({
+        pathname: this.props.destinationPath,
+        state: { teacher: teacherInfo, type: this.props.type, teachers: this.getVisibleTeachers() }
+      });
+      this.setState({open: false});
+      this.props.handleClose();
+      return;
+    }
+
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}
@@ -160,6 +181,7 @@ class TeacherModal extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history.isRequired,
     changeTeacher: PropTypes.func.isRequired,
     getTeacherList: PropTypes.func.isRequired,
+    destinationPath: PropTypes.string,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -179,9 +201,7 @@ class TeacherModal extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-    console.log('teacher list', this.props.teacherList);
-    const modalTeachers = this.props.teacherList.length > 0 ? this.props.teacherList : this.state.teachers;
-    const filteredTeachers = modalTeachers.filter(teacher => (teacher.id !== null && (!teacher.archived || teacher.archived == false)) );
+    const filteredTeachers = this.getVisibleTeachers();
     return (
       <div>
         <Modal open={this.state.open}>

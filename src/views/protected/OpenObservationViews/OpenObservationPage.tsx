@@ -57,7 +57,11 @@ interface Style {
 
 interface Props {
   classes: Style,
-  history: H.History
+  history: H.History,
+  location?: H.Location<{
+    teacher?: Types.Teacher,
+    teachers?: Types.Teacher[]
+  }>
 }
 
 const OPEN_OBSERVATION_DRAFT_KEY = 'chalkOpenObservationDraft'
@@ -84,10 +88,17 @@ class OpenObservationPage extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
+    const routeState = props.location && props.location.state
+    const routedTeacher = routeState && routeState.teacher && routeState.teacher.id ? routeState.teacher : null
+    const routedTeachers = routeState && Array.isArray(routeState.teachers) ? routeState.teachers : []
+    const initialTeachers = routedTeacher
+      ? [routedTeacher, ...routedTeachers.filter(teacher => teacher.id !== routedTeacher.id)]
+      : routedTeachers
+
     this.state = {
-      loadingTeachers: true,
-      teachers: [],
-      selectedTeacherId: '',
+      loadingTeachers: initialTeachers.length === 0,
+      teachers: initialTeachers,
+      selectedTeacherId: routedTeacher ? routedTeacher.id : '',
       notes: [],
       noteText: '',
       elapsedSeconds: 0,
@@ -346,16 +357,47 @@ class OpenObservationPage extends React.Component<Props, State> {
     })
   }
 
+  getRouteTeacherState = (): { selectedTeacher: Types.Teacher | null, teachers: Types.Teacher[] } => {
+    const routeState = this.props.location && this.props.location.state
+    const selectedTeacher = routeState && routeState.teacher && routeState.teacher.id ? routeState.teacher : null
+    const teachers = routeState && Array.isArray(routeState.teachers) ? routeState.teachers : []
+    return { selectedTeacher, teachers }
+  }
+
+  filterOpenObservationTeachers = (teachers: Types.Teacher[]): Types.Teacher[] =>
+    teachers.filter((teacher): teacher is Types.Teacher => {
+      const teacherWithArchive = teacher as Types.Teacher & { archived?: boolean }
+      return Boolean(teacherWithArchive) && Boolean(teacherWithArchive.id) && !teacherWithArchive.archived
+    })
+
   loadTeachers = (): void => {
+    const routeTeacherState = this.getRouteTeacherState()
+    if (routeTeacherState.selectedTeacher) {
+      const selectedTeacher = routeTeacherState.selectedTeacher
+      const routeTeachers = routeTeacherState.teachers.length > 0
+        ? routeTeacherState.teachers
+        : [selectedTeacher]
+      const teachers = this.filterOpenObservationTeachers(routeTeachers)
+      const selectedTeacherIncluded = teachers.some(teacher => teacher.id === selectedTeacher.id)
+      const openObservationTeachers = selectedTeacherIncluded
+        ? teachers
+        : this.filterOpenObservationTeachers([selectedTeacher, ...teachers])
+
+      this.setState(previousState => ({
+        loadingTeachers: false,
+        teachers: openObservationTeachers,
+        selectedTeacherId: previousState.selectedTeacherId || selectedTeacher.id,
+        error: ''
+      }), this.persistDraft)
+      return
+    }
+
     const firebase = this.context as Firebase
     firebase.getOpenObservationTeacherList()
       .then((teachers: Types.Teacher[] = []) => {
         this.setState({
           loadingTeachers: false,
-          teachers: teachers.filter((teacher): teacher is Types.Teacher => {
-            const teacherWithArchive = teacher as Types.Teacher & { archived?: boolean }
-            return Boolean(teacherWithArchive) && Boolean(teacherWithArchive.id) && !teacherWithArchive.archived
-          }),
+          teachers: this.filterOpenObservationTeachers(teachers),
           error: ''
         })
       })
@@ -636,7 +678,8 @@ class OpenObservationPage extends React.Component<Props, State> {
 
 OpenObservationPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object
 }
 
 export default withStyles(styles)(OpenObservationPage)
