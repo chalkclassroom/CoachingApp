@@ -44,6 +44,7 @@ interface Props {
   unlocked?: Array<number>
   history: H.History,
   isTeacher: boolean,
+  role: Role,
   trainingLiteracy: Types.TrainingLiteracy
   practice?: boolean
 }
@@ -62,6 +63,7 @@ function ToolIcons(props: Props): React.ReactElement {
   const [lockedModal, setLockedModal] = useState(false);
   const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
   const [openObservationTeacherModal, setOpenObservationTeacherModal] = useState(false);
+  const canCaptureOpenObservation = props.role === Role.COACH || props.role === Role.ADMIN;
 
   // add in other sections later (just tracking knowledge check completion for now)
   const foundationalUnlocked=
@@ -291,7 +293,7 @@ function ToolIcons(props: Props): React.ReactElement {
           </Grid>
         </Grid>
       </>) : (<>
-        {!training && type === 'Observe' && !props.isTeacher ? renderOpenObservationCard() : null}
+        {!training && type === 'Observe' && canCaptureOpenObservation ? renderOpenObservationCard() : null}
         {!training && type === 'Results' ? renderOpenObservationResultsCard() : null}
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
@@ -510,6 +512,7 @@ ToolIcons.propTypes = {
 const mapStateToProps = (state: Types.ReduxState): {
   unlocked: Array<number>,
   isTeacher: boolean,
+  role: Role,
   trainingLiteracy: {
     conceptsFoundational: boolean,
     conceptsWriting: boolean,
@@ -531,6 +534,7 @@ const mapStateToProps = (state: Types.ReduxState): {
 } => {
   return {
     isTeacher: state.coachState.role === Role.TEACHER,
+    role: state.coachState.role,
     unlocked: state.unlockedState.unlocked
         || state.coachState.role === Role.TEACHER,
     trainingLiteracy: state.trainingLiteracyState
