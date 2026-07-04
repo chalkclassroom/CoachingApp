@@ -340,7 +340,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={auth}
               path="/OpenObservation"
-              allowedRoles={[Role.COACH, Role.ADMIN, Role.PROGRAMLEADER, Role.SITELEADER]}
+              allowedRoles={[Role.COACH, Role.ADMIN]}
               userRole={role}
               render={(props: {
                 history: H.History
